@@ -7476,7 +7476,7 @@ $(function () {
 
                             var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
                             //Revert cascading tree status: display text, backend value, tree UI
-                            me._setCascadingTreeItemStatus(paramDefinition, savedParam, isTopParent);
+                            me._setTreeItemStatus(paramDefinition, savedParam, isTopParent);
                             $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
                             $control.attr("backendValue", JSON.stringify(savedParam.Value));
                             continue;
@@ -8013,7 +8013,7 @@ $(function () {
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
             $input.attr("readonly", "readonly");
-            me._setTreeNodeDefaultValue(param, predefinedValue, $input, $hidden);
+            me._setTreeDefaultValue(param, predefinedValue, $input, $hidden);
             me._getParameterControlProperty(param, $input);
 
             var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]);
@@ -8027,7 +8027,7 @@ $(function () {
             $input.on("click", function () { me._showTreePanel($treeContainer, $input); });
             $openDropDown.on("click", function () { me._showTreePanel($treeContainer, $input); });
             //generate default value after write parameter panel done
-            me._addWriteParamDoneCallback(function () { me._setCascadingTreeValues($treeContainer); });
+            me._addWriteParamDoneCallback(function () { me._setTreeSelectedValues($treeContainer); });
 
             $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
             return $container;
@@ -8036,7 +8036,7 @@ $(function () {
             var me = this;
 
             if ($tree.is(":visible")) {
-                me._setCascadingTreeValues($tree);
+                me._setTreeSelectedValues($tree);
                 $tree.hide();
             }
             else {
@@ -8053,7 +8053,7 @@ $(function () {
             //$input.attr("disabled", true);
             $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
             $hidden.val("#");
-            me._setTreeNodeDefaultValue(param, predefinedValue, null, $hidden);
+            me._setTreeDefaultValue(param, predefinedValue, null, $hidden);
             //me._getParameterControlProperty(param, $input);
             
             $container.append($hidden);
@@ -8116,6 +8116,7 @@ $(function () {
             $icon.addClass("fr-param-tree-icon");
             $icon.addClass("fr-param-tree-ocl");
 
+            //$icon will handle node expand/collapse work, if child node not loaded send XHR to load first
             $icon.on("click", function () {
                 if ($li.hasClass("fr-param-tree-item-close")) {
                     me._setRuntimeTreeValues($li);
@@ -8130,7 +8131,8 @@ $(function () {
                         }
                     }
 
-                    if (param.MultiValue === false) {//handle siblings
+                    if (param.MultiValue === false) {
+                        //handle siblings, close opened siblings
                         var allSiblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-open");
 
                         $.each(allSiblings, function (index, sibling) {
@@ -8141,20 +8143,19 @@ $(function () {
                     $li.removeClass("fr-param-tree-item-close").addClass("fr-param-tree-item-open");
                 }
                 else if ($li.hasClass("fr-param-tree-item-open")) {
-                    if (hasChild) {
-                        $li.find("ul").hide();
-                    }
-
-                    $li.removeClass("fr-param-tree-item-open").removeClass("fr").addClass("fr-param-tree-item-close");
-
                     if (param.MultiValue === false) {
-                        $li.removeClass("fr-param-tree-item-selected");
-                        $li.find(".fr-param-tree-item-selected").removeClass("fr-param-tree-item-selected");
-                        $li.find(".fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-selected");
+                        //clean all selected children status for single select parameter
+                        me._clearTreeItemStatus($li.children("ul"));
+                    }
+                    else {
+                        //just collapse children for multiple select parameter
+                        if (hasChild) {
+                            $li.children("ul").hide();
+                        }
+
+                        $li.removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
                     }
                 }
-
-                me._setParentStatus($li);
             });
 
             var $checkbox = new $("<i/>");
@@ -8173,20 +8174,35 @@ $(function () {
             var $anchor = new $("<a href=''/>");
             $anchor.addClass("fr-param-tree-anchor");
             $anchor.on("click", function (e) {
+                //$anchor will handle node select/un-select action and update its parent/children status
                 e.preventDefault();
+
+                //remove all siblings selected status for single select parameter
+                if (param.MultiValue === false) {
+                    var siblings;
+                    if (hasChild) {
+                        siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-open");
+                        $.each(siblings, function (index, sibling) {
+                            if ($li.attr("value") === $(sibling).attr("value")) {
+                                return true;
+                            }
+                            $(sibling).children(".fr-param-tree-ocl").trigger("click");
+                        });
+                    }
+                    else {
+                        siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-selected");
+                        $.each(siblings, function (index, sibling) {
+                            if ($li.attr("value") === $(sibling).attr("value")) {
+                                return true;
+                            }
+                            $(sibling).children(".fr-param-tree-anchor").trigger("click");
+                        });
+                    }
+                }
 
                 //if this node has child, either children not loaded or collapsed it will open child instead of select all
                 //in the same time clear all siblings selected status for single select parameter
                 if (hasChild && ($li.children("ul").length === 0 || $li.children("ul").is(":visible") === false)) {
-                    if (param.MultiValue === false) {
-                        var allSiblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-selected");
-
-                        $.each(allSiblings, function (index, sibling) {
-                            $(sibling).removeClass("fr-param-tree-item-selected")
-                                .find(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-udm");
-                        });
-                    }
-
                     $icon.trigger("click");
                     return;
                 }
@@ -8203,20 +8219,21 @@ $(function () {
                     }
                 }
                 else {
-                    $li.addClass("fr-param-tree-item-selected");
-                    $anchor.addClass("fr-param-tree-anchor-selected");
-
                     if (hasChild) {
                         //if children allow multiple then selected all children by default.
                         if ($li.find("ul").attr("allowmultiple") === "true") {
-                            $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                            $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
+                            $li.find("ul[allowmultiple='true']").children("li").children(".fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
+                            $li.find("ul[allowmultiple='true']").children("li").addClass("fr-param-tree-item-selected");
+                            //$li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
+                            //$li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
+
+                            $li.addClass("fr-param-tree-item-selected");
+                            $anchor.addClass("fr-param-tree-anchor-selected");
                         }
-                        else {
-                            //if children not allow multiple then only select the first children by default.
-                            $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
-                            $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
-                        }
+                    }
+                    else {
+                        $li.addClass("fr-param-tree-item-selected");
+                        $anchor.addClass("fr-param-tree-anchor-selected");
                     }
                 }
 
@@ -8302,7 +8319,7 @@ $(function () {
                 me._setRuntimeTreeValues($ul.parent("li"));
             }
         },
-        _setCascadingTreeValues: function ($tree) {
+        _setTreeSelectedValues: function ($tree) {
             var me = this;
             var param = null,
                 $targetElement = null,
@@ -8366,7 +8383,7 @@ $(function () {
                 return displayText.join(", ");
             }
         },
-        _setTreeNodeDefaultValue: function (param, predefinedValue, $input, $hidden) {
+        _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             if (predefinedValue) {
                 if (param.MultiValue) {
@@ -8395,12 +8412,12 @@ $(function () {
             }
         },
         //set each tree item status by specify parameter value
-        _setCascadingTreeItemStatus:  function (param, defaultParam, isTopParent) {
+        _setTreeItemStatus:  function (param, defaultParam, isTopParent) {
             var me = this;
             var $parent = me.element.find(".fr-param-tree ul[name='" + param.Name + "']");
             if (isTopParent) {
                 //clear current tree status
-                me._clearCascadingTreeStatus($parent);
+                $parent.children("li.fr-param-tree-item-open").children(".fr-param-tree-ocl").trigger("click");
             }
 
             //reset tree select status
@@ -8418,21 +8435,20 @@ $(function () {
                 }
             });
         },
-        _clearCascadingTreeStatus: function ($parent) {
+        _clearTreeItemStatus: function ($parent) {
+            //removed selected status from the children node under $parent and collapse all level.
             var me = this;
             var hasChild = $parent.attr("haschild") === "true";
             if (hasChild) {
-                var $children = $parent.children("li.fr-param-tree-item-selected").children("ul");
+                var $children = $parent.children("li.fr-param-tree-item-open").children("ul");
                 $.each($children, function (index, child) {
-                    me._clearCascadingTreeStatus($(child));
+                    me._clearTreeItemStatus($(child));
                 });
             }
-
-            $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").trigger("click");
             
-            if (hasChild) {
-                $parent.children("li.fr-param-tree-item-open").children(".fr-param-tree-ocl").trigger("click");
-            }
+            $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").trigger("click");
+            $parent.hide();
+            $parent.parent("li").removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
         },
         _closeCascadingTree: function (skipVisibleCheck) {
             var me = this;
@@ -8442,7 +8458,7 @@ $(function () {
                 var $tree = $(tree);
 
                 if (skipVisibleCheck || $tree.is(":visible")) {
-                    me._setCascadingTreeValues($tree);
+                    me._setTreeSelectedValues($tree);
                     $tree.hide();
                 }
             });

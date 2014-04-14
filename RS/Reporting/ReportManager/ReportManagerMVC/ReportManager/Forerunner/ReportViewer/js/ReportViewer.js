@@ -404,6 +404,17 @@ $(function () {
                 };
             }
         },
+        // Windows Phones need to be reloaded in order to change their viewport settings
+        // so what we will do in this case is to set our state into the sessionStorage
+        // and reload the page. Then in the loadPage function we will check if this is
+        // a reload page case so as to set the zoom
+        _allowZoomWindowsPhone: function (isEnabled) {
+            var zoomReloadData = {
+                userZoom: isEnabled ? "zoom" : "fixed"
+            };
+            sessionStorage.forerunner_zoomReloadData = JSON.stringify(zoomReloadData);
+            window.location.reload();
+        },
         /**
          * Set zoom enable or disable
          *
@@ -414,7 +425,12 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-            if (isEnabled === true){
+            if (forerunner.device.isWindowsPhone()) {
+                me._allowZoomWindowsPhone(isEnabled);
+                return;
+            }
+
+            if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
             }
@@ -2235,6 +2251,7 @@ $(function () {
             this._destroy();
         },
     });  // $.widget
+
 });   // $(function
 
 

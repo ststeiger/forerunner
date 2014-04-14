@@ -78,7 +78,8 @@
     "parameterSets":"gestire Sets",
     "selectSet":"selezionare Imposta",
     "dsCredential":"datasource credenziale",
-    "addToFavorites":"Aggiungi ai Preferiti"
+    "addToFavorites":"Aggiungi ai Preferiti",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",

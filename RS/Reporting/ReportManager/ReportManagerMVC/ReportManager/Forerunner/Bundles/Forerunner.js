@@ -194,6 +194,8 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            unzoomToolbar: "unzoomToolbar",
 
             /** @constant */
             namespace: "forerunner",

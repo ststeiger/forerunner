@@ -31,6 +31,7 @@
 
 .fr-layout-leftheaderspacer { display: block; }
 
+.fr-layout-unzoomsection { width: 38px; display: none; top: 0px; left: 0px; position: fixed; }
 
 div.fr-layout-pagesection { position: relative; display: block; width: auto; height: auto; }
 

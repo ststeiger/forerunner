@@ -1,4 +1,4 @@
-﻿.fr-param-container { min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
+﻿.fr-param-container { min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; }
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }

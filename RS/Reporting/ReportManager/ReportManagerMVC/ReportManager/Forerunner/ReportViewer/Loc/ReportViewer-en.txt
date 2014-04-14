@@ -78,7 +78,8 @@
     "parameterSets": "Manage Sets",
     "selectSet": "Select Set",
 		"dsCredential":"Datasource Credential",
-    "addToFavorites": "Add to Favorites"
+    "addToFavorites": "Add to Favorites",
+    "unzoom": "unzoom"
     },
     "print":{
     "title": "Print Report",

@@ -58,7 +58,7 @@
     "favorites":"favoriter",
     "find":"hitta",
     "firstPage":"Först",
-    "logOff": "Logga ut",
+    "logOff":"Logga ut",
     "home":"Hem",
     "keyword":"Nyckelord",
     "lastPage":"Sista",
@@ -78,7 +78,8 @@
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

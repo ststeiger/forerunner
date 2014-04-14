@@ -78,7 +78,8 @@
     "parameterSets":"管理參數集",
     "selectSet":"選擇參數集",
     "dsCredential":"數據源驗證",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"打印報表",

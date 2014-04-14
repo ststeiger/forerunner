@@ -79,7 +79,8 @@
     "parameterSets":"Gérer jeux",
     "selectSet":"Sélectionnez Set",
     "dsCredential":"source de données d'identification",
-    "addToFavorites":"Ajouter aux favoris"
+    "addToFavorites":"Ajouter aux favoris",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Imprimer option de mise en",

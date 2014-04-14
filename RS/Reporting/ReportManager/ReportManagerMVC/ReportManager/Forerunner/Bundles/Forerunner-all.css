@@ -31,6 +31,7 @@
 
 .fr-layout-leftheaderspacer { display: block; }
 
+.fr-layout-unzoomsection { width: 38px; display: none; top: 0px; left: 0px; position: fixed; }
 
 div.fr-layout-pagesection { position: relative; display: block; width: auto; height: auto; }
 
@@ -291,6 +292,10 @@ div.fr-layout-position-absolute { position: absolute; }
 
 .fr-icons24x24-logout {
   background-position: -96px -120px;
+}
+
+.fr-icons24x24-unzoom {
+  background-position: -120px -120px;
 }
 /*** IconGen - end automatically generated, do not hand modify ***/
 
@@ -781,7 +786,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-docmap-icon-down { background-image: url(../Images/toolpane/sq_br_down_icon16.png); }
 .fr-docmap-icon-up { background-image: url(../Images/toolpane/sq_br_up_icon16.png); }
 
-.fr-param-container { min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; }
+.fr-param-container { min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -ms-overflow-style: none; }
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
@@ -1067,7 +1072,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-toolbar .fr-toolbar-reportpage-textbox { margin-left: 45px; }
 }
 
-.fr-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; overflow-y: auto; }
+.fr-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; overflow-y: auto; }
   .fr-toolpane input[type=number]::-webkit-inner-spin-button,
   .fr-toolpane input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   .fr-toolpane input { font-size: 13pt; margin: 0; color: #666666; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }

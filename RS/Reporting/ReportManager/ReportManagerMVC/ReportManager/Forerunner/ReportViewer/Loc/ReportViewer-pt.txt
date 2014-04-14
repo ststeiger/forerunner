@@ -78,7 +78,8 @@
     "parameterSets":"Gerenciar conjuntos",
     "selectSet":"Selecione Definir",
     "dsCredential":"DataSource Credencial",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

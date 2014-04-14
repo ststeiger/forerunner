@@ -61,7 +61,7 @@
     "home":"Casa",
     "keyword":"Palabra clave",
     "lastPage":"Último",
-    "logOff": "Cierre de sesión",
+    "logOff":"Cierre de sesión",
     "menu":"Menú",
     "navigation":"Navegación",
     "next":"Después",
@@ -79,7 +79,8 @@
     "parameterSets":"administrar Sets",
     "selectSet":"Seleccione Establecer",
     "dsCredential":"credenciales del origen de datos",
-    "addToFavorites":"Añadir a Favoritos"
+    "addToFavorites":"Añadir a Favoritos",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

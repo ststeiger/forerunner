@@ -780,6 +780,26 @@ $(function () {
     };
 
     /**
+     * Defines all the tools used in the unzoom toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.unZoomToolbar = {
+        /** @member */
+        btnUnZoom: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-unzoom-button",
+            imageClass: "fr-icons24x24-unzoom",
+            tooltip: locData.toolbar.unzoom,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("allowZoom", false);
+                }
+            }
+        }
+    };
+
+    /**
      * Defines all the tools used in the left toolbar.
      *
      * @namespace

@@ -78,7 +78,8 @@
     "parameterSets":"Sätze verwalten",
     "selectSet":"wählen Sätze",
     "dsCredential":"Datenquelle Credential",
-    "addToFavorites":"Zu Favoriten hinzufügen"
+    "addToFavorites":"Zu Favoriten hinzufügen",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Bericht drucken",

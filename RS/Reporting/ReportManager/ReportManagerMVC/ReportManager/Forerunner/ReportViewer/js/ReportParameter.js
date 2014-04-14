@@ -283,41 +283,48 @@ $(function () {
 
                     me.options.$reportViewer.invalidateReportContext();
                 }
-                var submittedParameters = JSON.parse(me._submittedParamsList);
-                var list = submittedParameters.ParamsList;
-                var $control;
-                for (var i = 0; i < list.length; i++) {
-                    var savedParam = list[i];
-                    var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
-                    if (paramDefinition.MultiValue) {
-                        if (paramDefinition.ValidValues !== "") {
-                            $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
-                            me._setCheckBoxes($control, savedParam.Value);
-                            me._setMultipleInputValues(paramDefinition);
-                        } else {
-                            $control = $(".fr-paramname-" + paramDefinition.Name);
-                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
-                            $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
-                            $control.val(me._getTextAreaValue(savedParam.Value, false));
-                            $control.attr("jsonValues", JSON.stringify(savedParam.Value));
-                        }
-                    } else {
-                        $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                        // Only non-multi-value parameters can be nullable.
-                        if (paramDefinition.Nullable && savedParam.Value === null) {
-                            var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                            if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
-                                $cb.trigger("click");
-                        } else if (paramDefinition.ValidValues !== "") {
-                            me._setSelectedIndex($control, savedParam.Value);
-                        } else if (paramDefinition.Type === "Boolean") {
-                            me._setRadioButton($control, savedParam.Value);
-                        } else {
-                            if ($control.attr("datatype").toLowerCase() === "datetime") {
-                                $control.val(me._getDateTimeFromDefault(savedParam.Value));
+                else {
+                    var submittedParameters = JSON.parse(me._submittedParamsList);
+                    var list = submittedParameters.ParamsList;
+                    var $control;
+                    for (var i = 0; i < list.length; i++) {
+                        var savedParam = list[i];
+                        var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
+                        if (paramDefinition.MultiValue) {
+                            if (paramDefinition.ValidValues !== "") {
+                                $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
+                                me._setCheckBoxes($control, savedParam.Value);
+                                me._setMultipleInputValues(paramDefinition);
+                            } else {
+                                $control = $(".fr-paramname-" + paramDefinition.Name);
+                                var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                                $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
+                                $control.val(me._getTextAreaValue(savedParam.Value, false));
+                                $control.attr("jsonValues", JSON.stringify(savedParam.Value));
                             }
-                            else {
-                                $control.val(savedParam.Value);
+                        } else {
+                            $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
+                            // Only non-multi-value parameters can be nullable.
+                            if (paramDefinition.Nullable && savedParam.Value === null) {
+                                var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                                if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                                    $cb.trigger("click");
+                            } else if (paramDefinition.ValidValues !== "") {
+                                if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                                    me._setSelectedIndex($control, savedParam.Value);
+                                }
+                                else {
+                                    me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
+                                }
+                            } else if (paramDefinition.Type === "Boolean") {
+                                me._setRadioButton($control, savedParam.Value);
+                            } else {
+                                if ($control.attr("datatype").toLowerCase() === "datetime") {
+                                    $control.val(me._getDateTimeFromDefault(savedParam.Value));
+                                }
+                                else {
+                                    $control.val(savedParam.Value);
+                                }
                             }
                         }
                     }
@@ -680,6 +687,8 @@ $(function () {
                 },
                 change: function (event, obj) {
                     if (!obj.item) {
+                        //Invalid selection, remove prior select
+                        $control.removeAttr("backendValue");
                         $control.addClass("fr-param-autocomplete-error");
                     }
                     else {
@@ -695,7 +704,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
                         enterLock = false;
                 }
             });
@@ -727,6 +736,17 @@ $(function () {
 
             $container.append($control).append($openDropDown);
             return $container;
+        },
+        _setBigDropDownIndex: function (param, value, $control) {
+            for (var i = 0; i < param.ValidValues.length; i++) {
+                if ((value && value === param.ValidValues[i].Value) || (!value && i === 0)) {
+                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
+                }
+            }
+
+            if ($control.hasClass("fr-param-autocomplete-error")) {
+                $control.removeClass("fr-param-autocomplete-error");
+            }
         },
         _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;

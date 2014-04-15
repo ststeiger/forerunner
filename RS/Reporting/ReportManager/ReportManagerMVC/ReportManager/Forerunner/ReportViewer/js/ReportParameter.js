@@ -989,15 +989,13 @@ $(function () {
             $icon.on("click", function () {
                 if ($li.hasClass("fr-param-tree-item-close")) {
                     me._setRuntimeTreeValues($li);
-
-                    if (hasChild) {
-                        if ($li.children("ul").length === 0) {
-                            $li.addClass("fr-param-tree-loading");
-                            me.refreshParameters(null, true);
-                        }
-                        else {
-                            $li.children("ul").show();
-                        }
+                    
+                    if ($li.children("ul").length === 0) {
+                        $li.addClass("fr-param-tree-loading");
+                        me.refreshParameters(null, true);
+                    }
+                    else {
+                        $li.children("ul").show();
                     }
 
                     if (param.MultiValue === false) {
@@ -1018,10 +1016,7 @@ $(function () {
                     }
                     else {
                         //just collapse children for multiple select parameter
-                        if (hasChild) {
-                            $li.children("ul").hide();
-                        }
-
+                        $li.children("ul").hide();
                         $li.removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
                     }
                 }
@@ -1069,41 +1064,48 @@ $(function () {
                     }
                 }
 
-                //if this node has child, either children not loaded or collapsed it will open child instead of select all
-                //in the same time clear all siblings selected status for single select parameter
-                if (hasChild && ($li.children("ul").length === 0 || $li.children("ul").is(":visible") === false)) {
-                    $icon.trigger("click");
-                    return;
-                }
+                var $ul = $li.children("ul");
+                var allowMultiple = $ul.attr("allowmultiple") === "true";
 
-                $anchor.removeClass("fr-param-tree-anchor-udm");
-                
+                // un-select action -- remove all its children in all level
                 if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
-                    $anchor.removeClass("fr-param-tree-anchor-selected");
-                    $li.removeClass("fr-param-tree-item-selected");
-
                     if (hasChild) {
-                        $li.find(".fr-param-tree-item .fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
-                        $li.find(".fr-param-tree-item").removeClass("fr-param-tree-item-selected");
-                    }
-                }
-                else {
-                    if (hasChild) {
-                        //if children allow multiple then selected all children by default.
-                        if ($li.find("ul").attr("allowmultiple") === "true") {
-                            $li.find("ul[allowmultiple='true']").children("li").children(".fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                            $li.find("ul[allowmultiple='true']").children("li").addClass("fr-param-tree-item-selected");
-                            //$li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                            //$li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
+                        //if it not contain children then it is a children loading click
+                        if ($ul.length !== 0 && $ul.is(":visible")) {
+                            $anchor.removeClass("fr-param-tree-anchor-selected");
+                            $li.removeClass("fr-param-tree-item-selected");
 
-                            $li.addClass("fr-param-tree-item-selected");
-                            $anchor.addClass("fr-param-tree-anchor-selected");
+                            if (allowMultiple && $ul.children("li.fr-param-tree-item-selected").length === 0) {
+                                $anchor.trigger("click");
+                                return;
+                            }
+
+                            $ul.find(".fr-param-tree-item .fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
+                            $ul.find(".fr-param-tree-item").removeClass("fr-param-tree-item-selected");
                         }
                     }
                     else {
-                        $li.addClass("fr-param-tree-item-selected");
-                        $anchor.addClass("fr-param-tree-anchor-selected");
+                        $anchor.removeClass("fr-param-tree-anchor-selected");
+                        $li.removeClass("fr-param-tree-item-selected");
                     }
+                }
+                else {// select action -- do select all only to its directly children
+                    $li.addClass("fr-param-tree-item-selected");
+                    $anchor.addClass("fr-param-tree-anchor-selected");
+
+                    if (hasChild) {
+                        //for multiple select children select all, for single select children do nothing
+                        if (allowMultiple && $ul.is(":visible")) {
+                            $ul.children("li").children(".fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
+                            $ul.children("li").addClass("fr-param-tree-item-selected");
+                        }
+                    }
+                }
+
+                //if this node has child, either children not loaded or collapsed it will open child instead of select all
+                //in the same time clear all siblings selected status for single select parameter
+                if (hasChild && ($ul.length === 0 || $ul.is(":visible") === false)) {
+                    $icon.trigger("click");
                 }
 
                 me._setParentStatus($li);
@@ -1151,21 +1153,26 @@ $(function () {
 
                 if ($ul.find("li a").filter(".fr-param-tree-anchor-selected").length === 0) {//no selected
                     $parent.removeClass("fr-param-tree-item-selected");
-                    $parentAnchor.removeClass("fr-param-tree-anchor-udm").removeClass("fr-param-tree-anchor-selected");
+                    $parentAnchor.removeClass("fr-param-tree-anchor-selected");
                 }
-                else if ($ul.find("li a").filter(".fr-param-tree-anchor-selected").length === $ul.find("li a").length) {//all selected
+                else {//all selected or part selected
                     $parent.addClass("fr-param-tree-item-selected");
-                    $parentAnchor.removeClass("fr-param-tree-anchor-udm").addClass("fr-param-tree-anchor-selected");
+                    $parentAnchor.addClass("fr-param-tree-anchor-selected");
                 }
-                else {//part selected
-                    $parent.addClass("fr-param-tree-item-selected");
-                    if ($parent.parent("ul").attr("allowmultiple").toLowerCase() === "true") {
-                        $parentAnchor.removeClass("fr-param-tree-anchor-selected").addClass("fr-param-tree-anchor-udm");
-                    }
-                    else {
-                        $parentAnchor.addClass("fr-param-tree-anchor-selected");
-                    }
-                }
+                
+                //else if ($ul.find("li a").filter(".fr-param-tree-anchor-selected").length === $ul.find("li a").length) {//all selected
+                //    $parent.addClass("fr-param-tree-item-selected");
+                //    $parentAnchor.removeClass("fr-param-tree-anchor-udm").addClass("fr-param-tree-anchor-selected");
+                //}
+                //else {//part selected
+                //    $parent.addClass("fr-param-tree-item-selected");
+                //    if ($parent.parent("ul").attr("allowmultiple").toLowerCase() === "true") {
+                //        $parentAnchor.removeClass("fr-param-tree-anchor-selected").addClass("fr-param-tree-anchor-udm");
+                //    }
+                //    else {
+                //        $parentAnchor.addClass("fr-param-tree-anchor-selected");
+                //    }
+                //}
 
                 me._setParentStatus($parent);
             }
@@ -1305,7 +1312,7 @@ $(function () {
             });
         },
         _clearTreeItemStatus: function ($parent) {
-            //removed selected status from the children node under $parent and collapse all level.
+            //do recursive to removed selected node under specify parent
             var me = this;
             var hasChild = $parent.attr("haschild") === "true";
             if (hasChild) {
@@ -1315,9 +1322,12 @@ $(function () {
                 });
             }
             
-            $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").trigger("click");
+            $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
+            $parent.children("li.fr-param-tree-item-selected").removeClass("fr-param-tree-item-selected");
+            
             $parent.hide();
-            $parent.parent("li").removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
+            $parent.parent("li").children(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
+            $parent.parent("li").removeClass("fr-param-tree-item-selected").removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
         },
         _closeCascadingTree: function (skipVisibleCheck) {
             var me = this;

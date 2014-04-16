@@ -46,7 +46,10 @@ namespace ReportManager.Controllers
         
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
-            return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);
+            if (result != null)
+                return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);
+            else
+                return GetResponseFromBytes((Stream)null, mimeType, cache, fileName);
         }
 
         private HttpResponseMessage GetResponseFromBytes(Stream result, string mimeType, bool cache = false, string fileName = null)

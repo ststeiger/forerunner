@@ -749,6 +749,10 @@ $(function () {
                     .replace(/&#39;/g, "'")
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">");
+        },
+
+        hasAttr: function ($control, attribute) {
+            return typeof ($control.attr(attribute)) !== "undefined";
         }
     },
         
@@ -1563,7 +1567,8 @@ $(function () {
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
                 min: $.validator.format(error.min),
-                autoCompleteDropdown: error.invalid
+                autoCompleteDropdown: error.invalid,
+                invalidTree: error.invalidTree
             });
             
             // Add custom date validator rule
@@ -1584,6 +1589,17 @@ $(function () {
                         return true;
                 },
                 error.autoCompleteDropdown
+            );
+
+            $.validator.addMethod(
+                "cascadingTree",
+                function (value, element, param) {
+                    if ($(element).hasClass("fr-param-cascadingtree-error"))
+                        return false;
+                    else
+                        return true;
+                },
+                error.invalidTree
             );
         }
     });

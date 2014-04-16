@@ -125,7 +125,8 @@
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
     "min":"Insira um valor maior ou igual a {0}",
-    "invalid":"inválido"
+    "invalid":"inválido",
+    "invalidTree":"{0} não selecionado"
   },
   "dialog": {
     "title":"incitar",
@@ -154,7 +155,7 @@
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
     "defaultName":"Revelia",
-    "selectSet":"<seleto conjunto>"
+    "selectSet":"\u003cseleto conjunto\u003e"
   },
   "manageParamSets": {
     "manageSets":"Gerenciar conjuntos",

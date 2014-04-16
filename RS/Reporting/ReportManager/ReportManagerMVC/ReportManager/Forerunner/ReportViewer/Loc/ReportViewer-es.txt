@@ -61,7 +61,7 @@
     "home":"Casa",
     "keyword":"Palabra clave",
     "lastPage":"Último",
-    "logOff": "Cierre de sesión",
+    "logOff":"Cierre de sesión",
     "menu":"Menú",
     "navigation":"Navegación",
     "next":"Después",
@@ -126,7 +126,8 @@
     "range":"Introduzca un valor entre {0} y {1}",
     "max":"Introduzca un valor menor o igual a {0}",
     "min":"Introduzca un valor mayor o igual a {0}",
-    "invalid":"Inválido"
+    "invalid":"Inválido",
+    "invalidTree":"{0} No seleccionado"
   },
   "dialog": {
     "title":"pronto",
@@ -155,7 +156,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
     "defaultName":"Defecto",
-    "selectSet":"<conjunto de selección>"
+    "selectSet":"\u003cconjunto de selección\u003e"
   },
   "manageParamSets": {
     "manageSets":"Administrar Sets",

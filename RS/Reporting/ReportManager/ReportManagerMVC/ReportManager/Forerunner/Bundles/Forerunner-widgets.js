@@ -7179,6 +7179,7 @@ $(function () {
         _init: function () {
             var me = this;
             me.element.html(null);
+            me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on";
         },
         _destroy: function () {
 
@@ -7245,7 +7246,7 @@ $(function () {
             var me = this;
 
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
-            if (isCascading && me._isDropdownTree) {
+            if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
                 var $li = me.element.find(".fr-param-tree-loading");
                 me._dataPreprocess(data.ParametersList);
                 var level = $li.parent("ul").attr("level");
@@ -7329,13 +7330,13 @@ $(function () {
             me.$form.validate({
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
-                    if ($(element).is(":radio"))
+                    if (element.is(":radio"))
                         error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
                     else {
-                        if ($(element).attr("ismultiple") === "true") {
+                        if (element.attr("ismultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
                         }
-                        else if ($(element).hasClass("ui-autocomplete-input")) {
+                        else if (element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
                             error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
                         }
                         else
@@ -7471,8 +7472,7 @@ $(function () {
                         var savedParam = list[i];
                         var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
 
-                        if (me._isDropdownTree && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on"
-                            && (paramDefinition.isParent || paramDefinition.isChild)) {
+                        if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
 
                             var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
                             //Revert cascading tree status: display text, backend value, tree UI
@@ -7522,7 +7522,7 @@ $(function () {
                     }
 
                     //set tree selected status after revert
-                    if (me._isDropdownTree && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on") {
+                    if (me._isDropdownTree && me.enableCascadingTree) {
                         me._closeCascadingTree(true);
                     }
                 }
@@ -7569,16 +7569,15 @@ $(function () {
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
             var $element = null;
             
-            if (me._isDropdownTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true
-                && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on") {
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
             
-            if (me._isDropdownTree && me._parameterDefinitions[param.Name].isChild === true && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on") {
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
-                $parent.addClass("fr-param-hidden");
+                $parent.addClass("fr-param-tree-hidden");
             }
 
             if ($element === null) {
@@ -7625,8 +7624,11 @@ $(function () {
             $container.append($element);
             //for cascading hidden elements, don't add null checkbox constraint
             //they are assist elements to generate parameter list
-            if (!$parent.hasClass("fr-param-hidden")) {
-                $container.append(me._addNullableCheckBox(param, $element, predefinedValue)).append($errorMsg);
+            if (!$parent.hasClass("fr-param-tree-hidden")) {
+                if (!$element.find(".fr-param").hasClass("fr-param-required")) {
+                    $container.append(me._addNullableCheckBox(param, $element, predefinedValue));
+                }
+                $container.append($errorMsg);
             }
                 
             $parent.append($label).append($container);
@@ -7637,7 +7639,7 @@ $(function () {
 
             $control.attr("allowblank", param.AllowBlank);
             $control.attr("nullable", param.Nullable);
-            if ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false) {
+            if (param.QueryParameter || ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false)) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
@@ -8011,10 +8013,12 @@ $(function () {
 
             var $container = me._createDiv(["fr-param-element-container fr-param-tree-container"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
-            var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
-            $input.attr("readonly", "readonly");
-            me._setTreeDefaultValue(param, predefinedValue, $input, $hidden);
+            $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input");
             me._getParameterControlProperty(param, $input);
+
+            var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
+            me._setTreeElementProperty(param, $hidden);
+            me._setTreeDefaultValue(param, predefinedValue, $input, $hidden);
 
             var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]);
             var $tree = me._getCascadingTree(param, nodeLevel);
@@ -8032,7 +8036,7 @@ $(function () {
             $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
             return $container;
         },
-        _showTreePanel: function ($tree, $textbox) {
+        _showTreePanel: function ($tree, $input) {
             var me = this;
 
             if ($tree.is(":visible")) {
@@ -8040,8 +8044,10 @@ $(function () {
                 $tree.hide();
             }
             else {
+                $input.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
                 $tree.show();
-                $tree.position({ my: "left top", at: "left bottom", of: $textbox });
+                $tree.position({ my: "left top", at: "left bottom", of: $input });
+                $input.blur();
             }
         },
         _writeCascadingChildren: function (param, predefinedValue) {
@@ -8049,12 +8055,12 @@ $(function () {
             var $container = null, $hidden = null;
 
             $container = me._createDiv(["fr-param-element-container"]);
-            //$input = me._createInput(param, "text", false, ["fr-param-client", "fr-paramname-" + param.Name]);
-            //$input.attr("disabled", true);
+            
             $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
             $hidden.val("#");
+            me._setTreeElementProperty(param, $hidden);
+
             me._setTreeDefaultValue(param, predefinedValue, null, $hidden);
-            //me._getParameterControlProperty(param, $input);
             
             $container.append($hidden);
             return $container;
@@ -8331,7 +8337,13 @@ $(function () {
             var param = null,
                 $targetElement = null,
                 displayText = null,
-                backendValue = null;
+                backendValue = null,
+                temp = null,
+                isValid = true,
+                invalidList = null;
+                $parent = $tree.siblings(".fr-param-tree-input");
+
+                $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
             for (var i in me._parameterDefinitions) {
                 if (me._parameterDefinitions.hasOwnProperty(i)) {
@@ -8340,30 +8352,57 @@ $(function () {
                     //set backend value
                     if (param.isParent || param.isChild) {
                         $targetElement = me.element.find(".fr-paramname-" + param.Name);
+                        backendValue = "";
 
                         if (param.MultiValue) {
-                            backendValue = [];
+                            temp = [];
 
                             $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
-                                backendValue.push($(li).attr("value"));
+                                temp.push($(li).attr("value"));
                             });
 
-                            $targetElement.filter(".fr-param").attr("backendValue", JSON.stringify(backendValue));
+                            if (temp.length) {
+                                backendValue = JSON.stringify(temp);
+                            }
                         }
                         else {
                             var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
-                            backendValue = $selected.attr("value");
-                            $targetElement.filter(".fr-param").attr("backendValue", backendValue);
+                            temp = $selected.attr("value");
+                            if (temp) {
+                                backendValue = temp;
+                            }
                         }
+
+                        //if target parameter is required and backend value is empty, then it's not valid
+                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
+                            invalidList = invalidList || [];
+                            invalidList.push(param.Prompt);
+                            isValid = false;
+                        }
+                        $targetElement.filter(".fr-param").attr("backendValue", backendValue);
 
                         //set display text only for top parameter
                         if (param.isParent && !param.isChild) {
                             displayText = me._getTreeDisplayText($tree);
-                            $targetElement.val(displayText);
+                            if (displayText) {
+                                $targetElement.val(displayText);
+                            }
+                            else {
+                                $targetElement.val("");
+                            }
                         }
                     }
                 }
             }
+
+            if (isValid === false) {
+                if (invalidList.length) {
+                    $parent.attr("cascadingTree", "[" + invalidList.join() + "]");
+                }
+                $parent.addClass("fr-param-cascadingtree-error");
+            }
+
+            $parent.blur();
         },
         _getTreeDisplayText: function ($container) {
             var me = this;
@@ -8392,26 +8431,25 @@ $(function () {
         },
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
+            var valids = param.ValidValues;
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (var i = 0; i < param.ValidValues.length; i++) {
-                        if (me._contains(predefinedValue, param.ValidValues[i].Value)) {
-                            keys.push(param.ValidValues[i].Key);
+                    for (var i = 0; i < valids.length; i++) {
+                        if (me._contains(predefinedValue, valids[i].Value)) {
+                            keys.push(valids[i].Key);
                         }
                     }
-                    if ($input) {
-                        $input.val(keys.join());
+                    if (keys.length) {
+                        if ($input) { $input.val(keys.join()); } //set display text
+                        $hidden.attr("backendValue", JSON.stringify(predefinedValue)); //set backend value
                     }
-                    $hidden.attr("backendValue", JSON.stringify(predefinedValue));
                 }
                 else {
-                    for (var i = 0; i < param.ValidValues.length; i++) {
-                        if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
-                            if ($input) {
-                                $input.val(param.ValidValues[i].Key);
-                            }
-                            $hidden.attr("backendValue", param.ValidValues[i].Value);
+                    for (var i = 0; i < valids.length; i++) {
+                        if ((predefinedValue && predefinedValue === valids[i].Value)) {
+                            if ($input) { $input.val(valids[i].Key); } //set display text
+                            $hidden.attr("backendValue", valids[i].Value); //set backend value
                             break;
                         }
                     }
@@ -8473,6 +8511,20 @@ $(function () {
                 }
             });
         },
+        _setTreeElementProperty: function (param, $control) {
+            var me = this;
+
+            $control.attr("treeInput", "");
+            $control.attr("backendValue", "");
+            $control.attr("allowblank", param.AllowBlank);
+            $control.attr("nullable", param.Nullable);
+            $control.addClass("fr-param-tree-hidden-input");
+
+            if (param.QueryParameter || (param.Nullable === false && param.AllowBlank === false)) {
+                $control.attr("required");
+                $control.addClass("fr-param-required");
+            }
+        },
         _createInput: function (param, type, readonly, listOfClasses) {
             var $input = new $("<Input />");
             $input.attr("type", type);
@@ -8518,7 +8570,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $multipleCheckBox);
-            var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name + "-hidden"]);
+            var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
 
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
@@ -8674,7 +8726,7 @@ $(function () {
 
                 newValue = showValue.substr(0, showValue.length - 1);
                 $(".fr-paramname-" + param.Name, me.$params).val(newValue).attr("title", newValue);
-                $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(JSON.stringify(hiddenValue));
+                $(".fr-paramname-" + param.Name, me.$params).filter(".fr-param").val(JSON.stringify(hiddenValue));
             }
             else {
                 newValue = $(".fr-paramname-" + param.Name + "-dropdown-textArea", me.$params).val();
@@ -8854,6 +8906,7 @@ $(function () {
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
 
                 var paramsObject = { "ParamsList": a };
+                console.log(paramsObject);
                 return JSON.stringify(paramsObject);
             } else {
                 return null;
@@ -8865,19 +8918,24 @@ $(function () {
         },
         _isParamNullable: function (param) {
             var me = this;
-            //var $element = $(".fr-paramname-" + param.name, this.$params);
+            var $param = $(".fr-paramname-" + param.name, this.$params).filter(".fr-param");
 
             //check nullable
             if (me._isNullChecked(param)) {
                 return null;
-            } else if (param.attributes.allowblank && param.attributes.allowblank.nodeValue === "true" && param.value === "") {
+            } else if ($param.hasClass("fr-param-tree-hidden-input")) {
+                if ($param.attr("backendValue") === "" && $param.attr("nullable") === "true") {
+                    return null;
+                }
+                return $param.attr("backendValue");                
+            } else if ($param.attr("allowblank") === "true" && $param.val() === "") {
                 //check allow blank
                 return "";
-            } else if (param.attributes.backendValue) {
+            } else if (forerunner.helper.hasAttr($param, "backendValue")) {
                 //Take care of the big dropdown list
-                return param.attributes.backendValue.nodeValue;
-            } else if (param.attributes.datatype.nodeValue.toLowerCase() === "datetime") {
-                var m = moment(param.value, forerunner.ssr._internal.getMomentDateFormat(), true);
+                return $param.attr("backendValue");
+            } else if ($param.attr("datatype") === "datetime") {
+                var m = moment($param.val(), forerunner.ssr._internal.getMomentDateFormat(), true);
 
                 //hard code a sql server accept date format here to parse all culture
                 //date format to it. It's ISO 8601 format below 
@@ -8885,7 +8943,7 @@ $(function () {
             }
             else {
                 //Otherwise handle the case where the parameter has not been touched
-                return param.value !== "" ? param.value : null;
+                return $param.val() !== "" ? $param.val() : null;
             }
         },
         _hasValidValues: function (param) {

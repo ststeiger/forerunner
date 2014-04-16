@@ -61,7 +61,7 @@
     "home":"Forsíða",
     "keyword":"leitarorð",
     "lastPage":"síðast",
-    "logOff": "nafnplata",
+    "logOff":"nafnplata",
     "menu":"Valmynd",
     "navigation":"Navigation",
     "next":"Næsta",
@@ -125,7 +125,8 @@
     "range":"Sláðu inn gildið á milli {0} og {1}",
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
     "min":"Sláðu inn gildið stærra en eða jafnt og {0}",
-    "invalid":"ógild"
+    "invalid":"ógild",
+    "invalidTree":"{0} ekki valinn"
   },
   "dialog": {
     "title":"hvetja",
@@ -154,7 +155,7 @@
     "dayNamesMin":["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"]},
   "parameterModel": {
     "defaultName":"Sjálfgefið",
-    "selectSet":"<Veldu Velja>"
+    "selectSet":"\u003cVeldu Velja\u003e"
   },
   "manageParamSets": {
     "manageSets":"stjórna Leikmynd",

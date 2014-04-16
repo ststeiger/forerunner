@@ -47,6 +47,14 @@
       <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Cascading Parameter single category.rdl</Name>
+      <FullPath>Cascading Parameter single category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Cascading Parameter single product.rdl</Name>
+      <FullPath>Cascading Parameter single product.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Checkin Test Report.rdl</Name>
       <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>
@@ -222,14 +230,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Cascading Parameter single category.rdl</Name>
-      <FullPath>Cascading Parameter single category.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Cascading Parameter single product.rdl</Name>
-      <FullPath>Cascading Parameter single product.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -238,7 +238,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

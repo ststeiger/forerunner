@@ -103,6 +103,16 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("Resource")]
+        public HttpResponseMessage Resource(string path, string instance = null)
+        {
+            byte[] result = null;
+            string mimetype = null;
+            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            return GetResponseFromBytes(result,mimetype);
+        }
+
+        [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");

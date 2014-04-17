@@ -47,6 +47,14 @@
       <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Cascading Parameter single category.rdl</Name>
+      <FullPath>Cascading Parameter single category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Cascading Parameter single product.rdl</Name>
+      <FullPath>Cascading Parameter single product.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Checkin Test Report.rdl</Name>
       <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>
@@ -129,6 +137,10 @@
     <ProjectItem>
       <Name>Multiple Cascade Parameters.rdl</Name>
       <FullPath>Multiple Cascade Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
@@ -217,18 +229,6 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Cascading Parameter single category.rdl</Name>
-      <FullPath>Cascading Parameter single category.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Cascading Parameter single product.rdl</Name>
-      <FullPath>Cascading Parameter single product.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Mutiple Parameter.rdl</Name>
-      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

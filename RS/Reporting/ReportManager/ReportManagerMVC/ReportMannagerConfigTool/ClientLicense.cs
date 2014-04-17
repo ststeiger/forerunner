@@ -242,7 +242,7 @@ namespace ForerunnerLicense
             if (resp.StatusCode == 0)
             {
                 DeActivate();
-                return Activate(LicenseKey);
+                return ActivateFromKey(LicenseKey);
             }
             else
             {
@@ -274,19 +274,26 @@ namespace ForerunnerLicense
             }
 
         }
-        public static string Activate(string LicenceKey)
+        public static string GetActivateString(string LicenceKey)
         {
             MachineId mid;
-            ServerResponse resp;
-
+            
             LicenseData License = GetLicense();
             if (License == null)
                 mid = new MachineId();
             else
                 mid = License.MachineData;
 
-            string request = string.Format(requestString, "Activate", LicenceKey, mid.Serialize(false), LicenseString);
-            resp = Post(request);
+            return string.Format(requestString, "Activate", LicenceKey, mid.Serialize(false), LicenseString);
+        }
+        public static string ActivateFromKey(string LicenceKey)
+        {
+            return ActivateFromResponce(Post(GetActivateString(LicenceKey)));
+        }
+
+        public static string ActivateFromResponce(ServerResponse resp)
+        {
+
             if (resp.StatusCode == 0)
             {
                 LicenseString = resp.Response;
@@ -322,7 +329,7 @@ namespace ForerunnerLicense
            
         }
 
-        public static void Validate(bool forceValidate = false)
+        public static void CheckLicense()
         {
             Init(true);
 
@@ -338,9 +345,14 @@ namespace ForerunnerLicense
                 LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
             //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
-            if ( License.SKU.Substring(0,5) == "Mob10" )
+            if (License.SKU.Substring(0, 5) == "Mob10")
                 LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
+        }
 
+        public static void Validate(bool forceValidate = false)
+        {
+            CheckLicense();
+            LicenseData License = GetLicense();
             if (License.RequireValidation == 1)
             {
                 TimeSpan LastTry = DateTime.Now - LastServerValidationTry;
@@ -367,16 +379,23 @@ namespace ForerunnerLicense
             
 
         }
+
+        public static string GetValidateKey()
+        {
+            LicenseData License = GetLicense();
+            return string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
+        }
+
         private static void ValidateInner()
         {
             ServerResponse resp = new ServerResponse();
             resp.StatusCode = LastStatus;
             TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
-            LicenseData License = GetLicense();
+            
             try
             {
                 LastServerValidationTry = DateTime.Now;
-                string request = string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
+                string request = GetValidateKey();
                 resp = Post(request);
                 LastStatus = resp.StatusCode;
             }
@@ -388,7 +407,16 @@ namespace ForerunnerLicense
                     LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
                 return;
             }
+            ValidatefromResponce(resp);
                     
+        }
+
+        public static void ValidatefromResponce(ServerResponse resp, bool LicenseCheck = false)
+        {
+            if (LicenseCheck)
+                CheckLicense();
+
+            TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
 
             if (resp.StatusCode != 0)
             {
@@ -449,7 +477,7 @@ namespace ForerunnerLicense
             return ProcessResponse(responseFromServer);
 
         }
-        private static ServerResponse ProcessResponse(string response)
+        public static ServerResponse ProcessResponse(string response)
         {
 
             XmlReader XMLReq = XmlReader.Create(new StringReader(response));

@@ -58,7 +58,7 @@
     "favorites":"favoriter",
     "find":"hitta",
     "firstPage":"Först",
-    "logOff": "Logga ut",
+    "logOff":"Logga ut",
     "home":"Hem",
     "keyword":"Nyckelord",
     "lastPage":"Sista",
@@ -125,7 +125,8 @@
     "range":"Ange ett värde mellan {0} och {1}",
     "max":"Ange ett värde mindre än eller lika med {0}",
     "min":"Ange ett värde som är större än eller lika med {0}",
-    "invalid":"Ogiltig"
+    "invalid":"Ogiltig",
+    "invalidTree":"{0} Ej valt"
   },
   "dialog": {
     "title":"föranleda",
@@ -154,7 +155,7 @@
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
     "defaultName":"Standard",
-    "selectSet":"<välj set>"
+    "selectSet":"\u003cvälj set\u003e"
   },
   "manageParamSets": {
     "manageSets":"Hantera Satser",

@@ -37,7 +37,7 @@
   },
   "toolPane": {
     "pageOf":"of",
-    "home":"Home",	
+    "home":"Home",
     "navigation":"Navigation",
     "favorites":"Favorites",
     "back":"Back",
@@ -61,7 +61,7 @@
     "home":"Home",
     "keyword":"Keyword",
     "lastPage":"Last",
-    "logOff": "Logoff",
+    "logOff":"Logoff",
     "menu":"Menu",
     "navigation":"Navigation",
     "next":"Next",
@@ -125,7 +125,8 @@
     "range":"Enter a value between {0} and {1}",
     "max":"Enter a value less than or equal to {0}",
     "min":"Enter a value greater than or equal to {0}",
-    "invalid":"Invalid"
+    "invalid":"Invalid",
+    "invalidTree":"{0} not selected"
   },
   "dialog": {
     "title":"Prompt",

@@ -75,7 +75,13 @@ namespace Forerunner.SSRS.Management
                 return RSSPS.GetPermissions(path);
         }
 
-
+        public byte[] GetResourceContents(string path, out string mimetype)
+        {
+            if (IsNative)
+                return RSNative.GetResourceContents(path, out mimetype);
+            else
+                return RSSPS.GetResourceContents(path, out mimetype);
+        }
         public Property[] GetProperties(string path, Property[] props)
         {
             if (IsNative)

@@ -17,33 +17,54 @@ namespace Forerunner.RenderingExtensions
 
     public class ThumbnailRenderer : IRenderingExtension
     {
-        private IRenderingExtension InnerRender;
+        private IRenderingExtension InnerRender = null;
         public string LocalizedName { get { return "ForerunnerThumbnail"; } }
         static Type RendererType = null;
         private Stream RegisteredStream = null;
 
 
-        public ThumbnailRenderer()
+        private IRenderingExtension GetInnerRender()
+        {
+            if (InnerRender == null)
+                Init();
+            if (InnerRender == null)
+            {
+                ExceptionLogGenerator.LogException("Inner Render null", "Init");
+                throw new Exception("Inner Render null");
+            }
+
+            return InnerRender;
+
+        }
+
+        public void Init()
         {
             if (RendererType == null)
             {
-                // Use a disassembler tool like ILSpy to find The AssemblyName, type and constructor methods for other internal renderers in their respective .dlls
-                Assembly IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.HtmlRendering, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
+                Assembly IR;
+                // Use a disassembler tool like ILSpy to find The AssemblyName, type and constructor methods for other internal renderers in their respective .dlls                    
+                IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.HtmlRendering, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
 
                 //Read the PdfRenderer type from the Assembly
-                RendererType = IR.GetType("Microsoft.ReportingServices.Rendering.HtmlRenderer.MHtmlRenderingExtension");
+                if (IR != null)
+                    RendererType = IR.GetType("Microsoft.ReportingServices.Rendering.HtmlRenderer.MHtmlRenderingExtension");
+                else
+                    Logger.Trace(LogType.Error, "ThumbnailRenderer cannot get type");
             }
-
             //Create an instance of type RPLRenderer. 
             //Now, RPLRenderer inherits from IRenderingExtension which is a public interface so cast it.
-            InnerRender = (IRenderingExtension)RendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
+            if (InnerRender != null)
+                InnerRender = (IRenderingExtension)RendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
+            else
+                Logger.Trace(LogType.Error, "ThumbnailRenderer cannot get inner Render");
+
         }
 
         public void GetRenderingResource(CreateAndRegisterStream createAndRegisterStreamCallback, NameValueCollection deviceInfo)
         {
-            InnerRender.GetRenderingResource(createAndRegisterStreamCallback, deviceInfo);
+            GetInnerRender().GetRenderingResource(createAndRegisterStreamCallback, deviceInfo);
         }
-        
+
         public bool Render(Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
         {
             try
@@ -52,7 +73,7 @@ namespace Forerunner.RenderingExtensions
                 bool retval;
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    retval = InnerRender.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
+                    retval = GetInnerRender().Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
                     RegisteredStream.Position = 0;
                     string fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
@@ -95,12 +116,12 @@ namespace Forerunner.RenderingExtensions
 
         public bool RenderStream(string streamName, Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
         {
-            return InnerRender.RenderStream(streamName, report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, createAndRegisterStream);
+            return GetInnerRender().RenderStream(streamName, report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, createAndRegisterStream);
         }
 
         public void SetConfiguration(string configuration)
         {
-            InnerRender.SetConfiguration(configuration);
+            GetInnerRender().SetConfiguration(configuration);
         }
         Stream IntermediateCreateAndRegisterStream(
             string name,
@@ -120,6 +141,6 @@ namespace Forerunner.RenderingExtensions
                 this.RegisteredStream = crss.Stream;
 
             return crss.Stream;
-        }   
+        }
     }
 }

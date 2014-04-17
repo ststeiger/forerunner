@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -810,12 +810,12 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-checkbox-container { display: inline-block; min-width: 180px; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
-.fr-param-error { border-width: thin; border-color: red; }
+.fr-param-form .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-placeholder { margin-left: 4px; }
 .fr-param-nullable { display:inline-block; }
 .fr-param-required{}
 .fr-param-watermark {color:lightgray;}
-.fr-param-hidden{ display:none; }
+.fr-param-tree-hidden { display:none; }
 
 .fr-param-tree {
     display:none; 

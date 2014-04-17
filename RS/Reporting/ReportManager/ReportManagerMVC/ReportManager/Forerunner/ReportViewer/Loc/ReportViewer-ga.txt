@@ -61,7 +61,7 @@
     "home":"Baile",
     "keyword":"Eochairfhocal",
     "lastPage":"Last",
-    "logOff": "logoff",
+    "logOff":"logoff",
     "menu":"Menu",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",
@@ -125,7 +125,8 @@
     "range":"Iontráil luach idir {0} agus {1}",
     "max":"Iontráil luach níos lú ná nó cothrom le {0}",
     "min":"Iontráil luach níos mó ná nó cothrom le {0}",
-    "invalid":"neamhbhailí"
+    "invalid":"neamhbhailí",
+    "invalidTree":"{0} nach roghnaithe"
   },
   "dialog": {
     "title":"incitar",
@@ -154,7 +155,7 @@
     "dayNamesMin":["Do", "Lu", "Má", "Cé", "Dé", "hA", "Sa"]},
   "parameterModel": {
     "defaultName":"Réamhshocraithe",
-    "selectSet":"<leagtar a roghnú>"
+    "selectSet":"\u003cleagtar a roghnú\u003e"
   },
   "manageParamSets": {
     "manageSets":"Socraigh Bainistigh",

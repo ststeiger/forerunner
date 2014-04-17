@@ -110,7 +110,14 @@ $(function () {
 
             var $anchor = new $("<a />");
             //action
-            var action = (catalogItem.Type === 1 || catalogItem.Type === 7)? "explore" : "browse";
+            var action;
+            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+                action = "explore";
+            else if (catalogItem.Type === 3)
+                action = "open";
+            else
+                action = "browse";
+
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
@@ -215,9 +222,37 @@ $(function () {
                 setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
-        
+        _renderResource: function (path) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/Resource?"
+            url += "path=" + encodeURIComponent(path);
+            url += "&instance=" + me.options.rsInstance;
+
+            var $if = $("<iframe/>")
+            $if.addClass("fr-report-explorer fr-core-widget");
+            $if.attr("src", url);
+            $if.attr("scrolling", "no");
+            $if.css("width", "100%");
+            $if.css("height", "100%");
+            $if.css("overflow", "hidden");
+            me.element.append($if);
+
+            $if.load(function () {
+                this.style.height = $(this.contentWindow.document.body).outerHeight() + 'px';
+            });
+
+            
+        },
+
         _fetch: function (view,path) {
             var me = this;
+
+            if (view === "resource") {
+                me._renderResource(path);
+                return;
+            }
+
             var url = me.options.reportManagerAPI + "/GetItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({

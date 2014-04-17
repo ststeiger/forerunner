@@ -126,7 +126,8 @@
     "range":"Entrez une valeur comprise entre {0} et {1}",
     "max":"Entrez une valeur inférieure ou égale à {0}",
     "min":"Entrez une valeur supérieure ou égale à {0}",
-    "invalid":"invalide"
+    "invalid":"invalide",
+    "invalidTree":"{0} non sélectionné"
   },
   "dialog": {
     "title":"invite",
@@ -155,7 +156,7 @@
     "dayNamesMin":["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Défaut",
-    "selectSet":"<sélectionnez ensemble>"
+    "selectSet":"\u003csélectionnez ensemble\u003e"
   },
   "manageParamSets": {
     "manageSets":"Gérer jeux",

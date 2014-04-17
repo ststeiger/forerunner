@@ -53,7 +53,7 @@ namespace Forerunner.RenderingExtensions
             }
             //Create an instance of type RPLRenderer. 
             //Now, RPLRenderer inherits from IRenderingExtension which is a public interface so cast it.
-            if (InnerRender != null)
+            if (RendererType != null)
                 InnerRender = (IRenderingExtension)RendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
             else
                 Logger.Trace(LogType.Error, "ThumbnailRenderer cannot get inner Render"); 

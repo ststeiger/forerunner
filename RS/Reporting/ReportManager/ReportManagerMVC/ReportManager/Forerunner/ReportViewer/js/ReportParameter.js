@@ -1791,7 +1791,6 @@ $(function () {
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
 
                 var paramsObject = { "ParamsList": a };
-                console.log(paramsObject);
                 return JSON.stringify(paramsObject);
             } else {
                 return null;

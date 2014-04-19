@@ -913,7 +913,8 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
-                    e.data.me.options.navigateTo("back", null);
+                    e.data.$reportExplorer.reportExplorer("reportExplorerBack");
+                    //e.data.me.options.navigateTo("back", null);
                 }
             }
         },
@@ -945,18 +946,59 @@ $(function () {
         },
         /** @member */
         btnSetup: {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-setup",
-        imageClass: "fr-icons24x24-setup",
-        tooltip: locData.toolbar.userSettings,
-        events: {
-            click: function (e) {
-                e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
-                //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-setup",
+            imageClass: "fr-icons24x24-setup",
+            tooltip: locData.toolbar.userSettings,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
+                    //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                }
+            },
+        },
+        /** @member */
+        btnKeyword: {
+            toolType: toolTypes.input,
+            selectorClass: "fr-toolbar-keyword-textbox",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            tooltip: locData.toolbar.keyword,
+            events: {
+                keydown: function (e) {
+                    if (e.keyCode === 13 || e.keyCode === 9) {
+                        var value = $.trim(this.value);
+                        e.data.$reportExplorer.reportExplorer("findItems", value, "push");
+                        //e.data.$reportExplorer.reportExplorer("findItems", $.trim(this.value));
+                        return false;
+                    }
+                },
+                blur: function (e) {
+                    //e.data.$reportViewer.reportViewer("onInputBlur");
+                },
+                focus: function (e) {
+                    //e.data.$reportViewer.reportViewer("onInputFocus");
+                }
             }
-        }
-    }
-};
+        },
+        /** @member */
+        btnFind: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-toolbar-find-button",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            iconClass: null,
+            toolContainerClass: null,
+            imageClass: "fr-toolbar-search-icon",
+            toolStateClass: null,
+            tooltip: locData.toolbar.find,
+            events: {
+                click: function (e) {
+                    var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
+                    e.data.$reportExplorer.reportExplorer("findItems", value, "push");
+                    //e.data.$reportViewer.reportViewer("find", value);
+                }
+            }
+        },
+    };
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolbar
@@ -1034,6 +1076,7 @@ $(function () {
 
     var tb = forerunner.ssr.tools.toolbar;
     var tp = forerunner.ssr.tools.toolpane;
+    var ret = forerunner.ssr.tools.reportExplorerToolbar;
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolpane
@@ -1173,6 +1216,12 @@ $(function () {
             selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
             tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
+        },
+        explorerFindGroup: {
+            toolType: toolTypes.toolGroup,
+            selectorClass: "fr-ex-toolbar-find-group",
+            tools: [ret.btnKeyword,
+                    ret.btnFind]
         }
     };
 

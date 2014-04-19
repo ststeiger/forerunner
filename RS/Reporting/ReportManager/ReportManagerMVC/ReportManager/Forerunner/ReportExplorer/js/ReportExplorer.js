@@ -208,8 +208,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
-                                "</div>");
+            me.element.html("<div class='fr-report-explorer fr-core-widget'></div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
                 $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
@@ -308,6 +307,9 @@ $(function () {
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
+            me.findKeywordList = me.findKeywordList || [];
+            me.priorKeyword = null;
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
@@ -338,5 +340,65 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        reportExplorerBack: function () {
+            var me = this;
+
+            if (me.findKeywordList.length === 0) {
+                me.options.navigateTo("back", null);
+            }
+            else if (me.findKeywordList.length === 1) {
+                me.$selectedItem = me.findKeywordList.pop();
+                me._fetch(me.options.view, me.options.path);
+            }
+            else {
+                me.findItems(me.findKeywordList.pop(), "back");
+            }
+        },
+        findItems: function (keyword, actionType) {
+            var me = this;
+
+            if (keyword === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
+                return;
+            }
+
+            if (me.findKeywordList.length === 0 && me.$selectedItem) {
+                me.findKeywordList.push(me.$selectedItem);
+                me.$selectedItem = null;
+            }
+
+            if (actionType === "push" && me.priorKeyword) {
+                me.findKeywordList.push(me.priorKeyword);
+            }
+
+            me.priorKeyword = keyword;
+
+            var url = me.options.reportManagerAPI + "/FindItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
+            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                data: {
+                    searchCriteria: JSON.stringify(searchCriteria)
+                },
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    }
+                    else {
+                        me._render(data);
+                        console.log(data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+
     });  // $.widget
 });  // function()

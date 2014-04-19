@@ -172,6 +172,23 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        public CatalogItem[] FindItems(string searchCriteria, bool showAll = false, bool showHidden = false)
+        {
+            rs.Credentials = GetCredentials();
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem[] catalogItems = rs.FindItems("/", Management.Native.BooleanOperatorEnum.Or, JsonUtility.getNativeSearchCondition(searchCriteria));
+
+            foreach (CatalogItem catalog in catalogItems)
+            {
+                if ((catalog.Type == ItemTypeEnum.Folder || catalog.Type == ItemTypeEnum.Report || catalog.Type == ItemTypeEnum.Resource || showAll) && (!catalog.Hidden || showHidden))
+                {
+                    list.Add(catalog);
+                }
+            }
+
+            return list.ToArray();
+        }
+
         private ICredentials credentials = null;
         public void SetCredentials(ICredentials credentials)
         {

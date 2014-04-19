@@ -86,6 +86,20 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage FindItems(string searchCriteria, string instance = null) 
+        {
+            try
+            {
+                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(searchCriteria);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {

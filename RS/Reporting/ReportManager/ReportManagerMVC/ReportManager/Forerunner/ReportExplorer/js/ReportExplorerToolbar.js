@@ -13,6 +13,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
 
     /**
@@ -30,7 +31,9 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
             navigateTo: null,
-            toolClass: "fr-toolbar"
+            toolClass: "fr-toolbar",
+            $appContainer: null,
+            $reportExplorer: null
         },
         /**
          * Set specify tool to active state
@@ -57,10 +60,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
+            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tb.btnLogOff]);
             }
+
+            me.element.find(".fr-toolbar-keyword-textbox").watermark("Search", { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -68,7 +73,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
+            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(6, true, [tb.btnLogOff]);
             }

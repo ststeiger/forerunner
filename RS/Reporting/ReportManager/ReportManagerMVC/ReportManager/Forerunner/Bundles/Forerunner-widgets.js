@@ -2975,7 +2975,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },
@@ -4612,6 +4612,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
 
     /**
@@ -4629,7 +4630,9 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
             navigateTo: null,
-            toolClass: "fr-toolbar"
+            toolClass: "fr-toolbar",
+            $appContainer: null,
+            $reportExplorer: null
         },
         /**
          * Set specify tool to active state
@@ -4656,10 +4659,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
+            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tb.btnLogOff]);
             }
+
+            me.element.find(".fr-toolbar-keyword-textbox").watermark("Search", { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -4667,7 +4672,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
+            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(6, true, [tb.btnLogOff]);
             }
@@ -4900,8 +4905,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
-                                "</div>");
+            me.element.html("<div class='fr-report-explorer fr-core-widget'></div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
                 $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
@@ -5000,6 +5004,9 @@ $(function () {
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
+            me.findKeywordList = me.findKeywordList || [];
+            me.priorKeyword = null;
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
@@ -5030,6 +5037,66 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        reportExplorerBack: function () {
+            var me = this;
+
+            if (me.findKeywordList.length === 0) {
+                me.options.navigateTo("back", null);
+            }
+            else if (me.findKeywordList.length === 1) {
+                me.$selectedItem = me.findKeywordList.pop();
+                me._fetch(me.options.view, me.options.path);
+            }
+            else {
+                me.findItems(me.findKeywordList.pop(), "back");
+            }
+        },
+        findItems: function (keyword, actionType) {
+            var me = this;
+
+            if (keyword === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
+                return;
+            }
+
+            if (me.findKeywordList.length === 0 && me.$selectedItem) {
+                me.findKeywordList.push(me.$selectedItem);
+                me.$selectedItem = null;
+            }
+
+            if (actionType === "push" && me.priorKeyword) {
+                me.findKeywordList.push(me.priorKeyword);
+            }
+
+            me.priorKeyword = keyword;
+
+            var url = me.options.reportManagerAPI + "/FindItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
+            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                data: {
+                    searchCriteria: JSON.stringify(searchCriteria)
+                },
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    }
+                    else {
+                        me._render(data);
+                        console.log(data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportExplorer/js/UserSettings.js

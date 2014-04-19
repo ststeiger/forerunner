@@ -7367,10 +7367,10 @@ $(function () {
 
                 $li.removeClass("fr-param-tree-loading");
             }
-            //else {
-            //    this.removeParameter();
-            //    this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
-            //}
+            else {
+                this.removeParameter();
+                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
+            }
 
             this._hasPostedBackWithoutSubmitForm = true;
         },

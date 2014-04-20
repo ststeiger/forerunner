@@ -135,11 +135,20 @@ $(function () {
            
 
             //Images
+            
             if (catalogItem.Type === 1 || catalogItem.Type === 7)
-                if (isSelected)
+                if (isSelected) {
                     outerImage.addClass("fr-explorer-folder-selected");
-                else
+                }
+                else {
                     outerImage.addClass("fr-explorer-folder");
+                }
+            else if (catalogItem.Type === 3) {//resource files
+                outerImage.addClass("fr-icons128x128");
+
+                var fileTypeClass = me._getFileTypeClass(catalogItem.MimeType);
+                outerImage.addClass(fileTypeClass);
+            }
             else {
                 
                 var innerImage = new $("<img />");                
@@ -194,6 +203,7 @@ $(function () {
             me.$UL = me.element.find(".fr-report-explorer");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
+            
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
                 var isSelected = false;
@@ -265,9 +275,10 @@ $(function () {
                 success: function (data) {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    } 
-                    else
+                    }
+                    else {
                         me._render(data);
+                    }
                 },
                 error: function (data) {
                     console.log(data);
@@ -399,6 +410,72 @@ $(function () {
                 }
             });
         },
+        _getFileTypeClass: function (mimeType) {
+            var fileTypeClass = null;
+            switch (mimeType) {
+                case "application/pdf":
+                    fileTypeClass = "fr-icons128x128-file-pdf";
+                    break;
+                case "application/vnd.ms-excel":
+                    fileTypeClass = "fr-icons128x128-file-xls";
+                    break;
+                case "application/msword":
+                    fileTypeClass = "fr-icons128x128-file-doc";
+                    break;
+                case "application/vnd.ms-powerpoint":
+                    fileTypeClass = "fr-icons128x128-file-ppt";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"://xlsx
+                    fileTypeClass = "fr-icons128x128-file-xls";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document"://docx
+                    fileTypeClass = "fr-icons128x128-file-doc";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.presentationml.presentation"://pptx
+                    fileTypeClass = "fr-icons128x128-file-ppt";
+                    break;
+                case "text/html":
+                    fileTypeClass = "fr-icons128x128-file-html";
+                    break;
+                case "audio/mpeg":
+                    fileTypeClass = "fr-icons128x128-file-mp3";
+                    break;
+                case "image/tiff":
+                    fileTypeClass = "fr-icons128x128-file-tiff";
+                    break;
+                case "application/xml":
+                    fileTypeClass = "fr-icons128x128-file-xml";
+                    break;
+                case "image/jpeg":
+                    fileTypeClass = "fr-icons128x128-file-jpeg";
+                    break;
+                case "application/x-zip-compressed":
+                    fileTypeClass = "fr-icons128x128-file-zip";
+                    break;
+                case "application/octet-stream":
+                    fileTypeClass = "fr-icons128x128-file-ini";
+                    break;
+                case "image/gif":
+                    fileTypeClass = "fr-icons128x128-file-gif";
+                    break;
+                case "image/png":
+                    fileTypeClass = "fr-icons128x128-file-png";
+                    break;
+                case "image/bmp":
+                    fileTypeClass = "fr-icons128x128-file-bmp";
+                    break;
+                case "text/plain":
+                    fileTypeClass = "fr-icons128x128-file-text";
+                    break;
+                case "text/css":
+                    fileTypeClass = "fr-icons128x128-file-css";
+                    break;
+                default://unknown
+                    fileTypeClass = "fr-icons128x128-file-unknown";
+                    break;
+            }
 
+            return fileTypeClass;
+        }
     });  // $.widget
 });  // function()

@@ -277,7 +277,7 @@ namespace Forerunner.SSRS.Manager
                         CatalogItem[] folder = callListChildren(ci.Path, false);
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || ci.Type == ItemTypeEnum.Resource || showAll)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
                             {
                                 if (!ci.Hidden || showHidden) 
                                 {

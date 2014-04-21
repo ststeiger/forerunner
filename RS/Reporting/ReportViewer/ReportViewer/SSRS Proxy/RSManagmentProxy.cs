@@ -98,6 +98,15 @@ namespace Forerunner.SSRS.Management
                 return RSSPS.ListChildren(path);
         }
 
+        public CatalogItem[] FindItems(string folder, Native.BooleanOperatorEnum booleanOperator, Native.SearchCondition[] searchCriteria)
+        {
+            if (IsNative)
+            {
+                return RSNative.FindItems(folder, booleanOperator, searchCriteria);
+            }
+            return null;
+        }
+
         public string CreateSubscription(string Report, ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData, ParameterValue[] Parameters)
         {
             if (IsNative)

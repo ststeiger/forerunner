@@ -2975,7 +2975,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },
@@ -4612,6 +4612,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
 
     /**
@@ -4629,7 +4630,9 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
             navigateTo: null,
-            toolClass: "fr-toolbar"
+            toolClass: "fr-toolbar",
+            $appContainer: null,
+            $reportExplorer: null
         },
         /**
          * Set specify tool to active state
@@ -4645,6 +4648,11 @@ $(function () {
                 $btn.addClass(btnActiveClass);
             }
         },
+        setSearchKeyword: function (keyword) {
+            var me = this;
+
+            me.element.find(".fr-toolbar-keyword-textbox").val(keyword);
+        },
         _clearFolderBtnState: function () {
             var me = this;
             $.each(me.folderBtns, function (index, $btn) {
@@ -4656,10 +4664,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
+            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tb.btnLogOff]);
             }
+
+            me.element.find(".fr-toolbar-keyword-textbox").watermark("Search", { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -4667,7 +4677,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
+            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(6, true, [tb.btnLogOff]);
             }
@@ -4827,11 +4837,20 @@ $(function () {
            
 
             //Images
+            
             if (catalogItem.Type === 1 || catalogItem.Type === 7)
-                if (isSelected)
+                if (isSelected) {
                     outerImage.addClass("fr-explorer-folder-selected");
-                else
+                }
+                else {
                     outerImage.addClass("fr-explorer-folder");
+                }
+            else if (catalogItem.Type === 3) {//resource files
+                outerImage.addClass("fr-icons128x128");
+
+                var fileTypeClass = me._getFileTypeClass(catalogItem.MimeType);
+                outerImage.addClass(fileTypeClass);
+            }
             else {
                 
                 var innerImage = new $("<img />");                
@@ -4886,6 +4905,7 @@ $(function () {
             me.$UL = me.element.find(".fr-report-explorer");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
+            
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
                 var isSelected = false;
@@ -4900,8 +4920,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
-                                "</div>");
+            me.element.html("<div class='fr-report-explorer fr-core-widget'></div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
                 $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
@@ -4922,26 +4941,65 @@ $(function () {
             url += "&instance=" + me.options.rsInstance;
 
             var $if = $("<iframe/>")
-            $if.addClass("fr-report-explorer fr-core-widget");
+            $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
-            $if.attr("scrolling", "no");
-            $if.css("width", "100%");
-            $if.css("height", "100%");
-            $if.css("overflow", "hidden");
+            //$if.attr("scrolling", "no");
             me.element.append($if);
 
-            $if.load(function () {
-                this.style.height = $(this.contentWindow.document.body).outerHeight() + 'px';
-            });
+            //for IE iframe onload is not working so used below compatible code to detect readyState
+            if (forerunner.device.isMSIE()) {
+                var frame = $if[0];
 
-            
+                var fmState = function () {
+                    var state = null;
+                    if (document.readyState) {
+                        try {
+                            state = frame.document.readyState;
+                        }
+                        catch (e) { state = null; }
+
+                        if (state == "complete" || !state) {//loading,interactive,complete       
+                            me._setIframeHeight(frame);
+                        }
+                        else {
+                            //check frame document state until it turn to complete
+                            setTimeout(fmState, 10);
+                        }
+                    }
+                };
+
+                if (fmState.TimeoutInt) {
+                    clearTimeout(fmState.timeoutInt);
+                    fmState.TimeoutInt = null;
+                }
+
+                fmState.timeoutInt = setTimeout(fmState, 100);
+            }
+            else {
+                $if.load(function () {
+                    me._setIframeHeight(this);
+                });
+            }
         },
-
+        //set iframe height with body height
+        _setIframeHeight: function (frame) {
+            var me = this;
+            //use app container height minus toolbar height
+            //also there is an offset margin-botton:-20px defined in ReportExplorer.css 
+            //to prevent document scroll bar (except IE8)
+            var iframeHeight = me.options.$appContainer.height() - 38;
+            frame.style.height = iframeHeight + "px";
+        },
         _fetch: function (view,path) {
             var me = this;
 
             if (view === "resource") {
                 me._renderResource(path);
+                return;
+            }
+
+            if (view === "search") {
+                me._searchItems(path);
                 return;
             }
 
@@ -4958,9 +5016,10 @@ $(function () {
                 success: function (data) {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    } 
-                    else
+                    }
+                    else {
                         me._render(data);
+                    }
                 },
                 error: function (data) {
                     console.log(data);
@@ -5000,6 +5059,7 @@ $(function () {
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
@@ -5030,6 +5090,106 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        _searchItems: function (keyword) {
+            var me = this;
+
+            if (keyword === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
+                return;
+            }
+
+            var url = me.options.reportManagerAPI + "/FindItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
+            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                data: {
+                    searchCriteria: JSON.stringify(searchCriteria)
+                },
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    }
+                    else {
+                        me._render(data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+        _getFileTypeClass: function (mimeType) {
+            var fileTypeClass = null;
+            switch (mimeType) {
+                case "application/pdf":
+                    fileTypeClass = "fr-icons128x128-file-pdf";
+                    break;
+                case "application/vnd.ms-excel":
+                    fileTypeClass = "fr-icons128x128-file-xls";
+                    break;
+                case "application/msword":
+                    fileTypeClass = "fr-icons128x128-file-doc";
+                    break;
+                case "application/vnd.ms-powerpoint":
+                    fileTypeClass = "fr-icons128x128-file-ppt";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"://xlsx
+                    fileTypeClass = "fr-icons128x128-file-xls";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document"://docx
+                    fileTypeClass = "fr-icons128x128-file-doc";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.presentationml.presentation"://pptx
+                    fileTypeClass = "fr-icons128x128-file-ppt";
+                    break;
+                case "text/html":
+                    fileTypeClass = "fr-icons128x128-file-html";
+                    break;
+                case "audio/mpeg":
+                    fileTypeClass = "fr-icons128x128-file-mp3";
+                    break;
+                case "image/tiff":
+                    fileTypeClass = "fr-icons128x128-file-tiff";
+                    break;
+                case "application/xml":
+                    fileTypeClass = "fr-icons128x128-file-xml";
+                    break;
+                case "image/jpeg":
+                    fileTypeClass = "fr-icons128x128-file-jpeg";
+                    break;
+                case "application/x-zip-compressed":
+                    fileTypeClass = "fr-icons128x128-file-zip";
+                    break;
+                case "application/octet-stream":
+                    fileTypeClass = "fr-icons128x128-file-ini";
+                    break;
+                case "image/gif":
+                    fileTypeClass = "fr-icons128x128-file-gif";
+                    break;
+                case "image/png":
+                    fileTypeClass = "fr-icons128x128-file-png";
+                    break;
+                case "image/bmp":
+                    fileTypeClass = "fr-icons128x128-file-bmp";
+                    break;
+                case "text/plain":
+                    fileTypeClass = "fr-icons128x128-file-text";
+                    break;
+                case "text/css":
+                    fileTypeClass = "fr-icons128x128-file-css";
+                    break;
+                default://unknown
+                    fileTypeClass = "fr-icons128x128-file-unknown";
+                    break;
+            }
+
+            return fileTypeClass;
+        }
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportExplorer/js/UserSettings.js
@@ -7300,10 +7460,10 @@ $(function () {
 
                 $li.removeClass("fr-param-tree-loading");
             }
-            //else {
-            //    this.removeParameter();
-            //    this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
-            //}
+            else {
+                this.removeParameter();
+                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
+            }
 
             this._hasPostedBackWithoutSubmitForm = true;
         },
@@ -11047,7 +11207,11 @@ $(function () {
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                if (view === "search") {
+                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
 
                 layout.$rightheader.height(layout.$topdiv.height());
                 layout.$leftheader.height(layout.$topdiv.height());

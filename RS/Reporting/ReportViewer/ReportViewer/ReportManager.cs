@@ -172,6 +172,23 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        public CatalogItem[] FindItems(string searchCriteria, bool showAll = false, bool showHidden = false)
+        {
+            rs.Credentials = GetCredentials();
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem[] catalogItems = rs.FindItems("/", Management.Native.BooleanOperatorEnum.Or, JsonUtility.getNativeSearchCondition(searchCriteria));
+
+            foreach (CatalogItem catalog in catalogItems)
+            {
+                if ((catalog.Type == ItemTypeEnum.Folder || catalog.Type == ItemTypeEnum.Report || catalog.Type == ItemTypeEnum.Resource || showAll) && (!catalog.Hidden || showHidden))
+                {
+                    list.Add(catalog);
+                }
+            }
+
+            return list.ToArray();
+        }
+
         private ICredentials credentials = null;
         public void SetCredentials(ICredentials credentials)
         {
@@ -260,7 +277,7 @@ namespace Forerunner.SSRS.Manager
                         CatalogItem[] folder = callListChildren(ci.Path, false);
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || ci.Type == ItemTypeEnum.Resource || showAll)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
                             {
                                 if (!ci.Hidden || showHidden) 
                                 {

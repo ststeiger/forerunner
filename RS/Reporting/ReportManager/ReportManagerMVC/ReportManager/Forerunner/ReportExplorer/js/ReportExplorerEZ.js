@@ -104,7 +104,11 @@ $(function () {
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                if (view === "search") {
+                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
 
                 layout.$rightheader.height(layout.$topdiv.height());
                 layout.$leftheader.height(layout.$topdiv.height());

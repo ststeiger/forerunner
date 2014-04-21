@@ -4648,6 +4648,11 @@ $(function () {
                 $btn.addClass(btnActiveClass);
             }
         },
+        setSearchKeyword: function (keyword) {
+            var me = this;
+
+            me.element.find(".fr-toolbar-keyword-textbox").val(keyword);
+        },
         _clearFolderBtnState: function () {
             var me = this;
             $.each(me.folderBtns, function (index, $btn) {
@@ -4993,6 +4998,11 @@ $(function () {
                 return;
             }
 
+            if (view === "search") {
+                me._searchItems(path);
+                return;
+            }
+
             var url = me.options.reportManagerAPI + "/GetItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
@@ -5049,8 +5059,6 @@ $(function () {
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
-            me.findKeywordList = me.findKeywordList || [];
-            me.priorKeyword = null;
 
             if (me.options.explorerSettings) {
                 me._initOverrides();
@@ -5082,38 +5090,13 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        reportExplorerBack: function () {
-            var me = this;
-
-            if (me.findKeywordList.length === 0) {
-                me.options.navigateTo("back", null);
-            }
-            else if (me.findKeywordList.length === 1) {
-                me.$selectedItem = me.findKeywordList.pop();
-                me._fetch(me.options.view, me.options.path);
-            }
-            else {
-                me.findItems(me.findKeywordList.pop(), "back");
-            }
-        },
-        findItems: function (keyword, actionType) {
+        _searchItems: function (keyword) {
             var me = this;
 
             if (keyword === "") {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
                 return;
             }
-
-            if (me.findKeywordList.length === 0 && me.$selectedItem) {
-                me.findKeywordList.push(me.$selectedItem);
-                me.$selectedItem = null;
-            }
-
-            if (actionType === "push" && me.priorKeyword) {
-                me.findKeywordList.push(me.priorKeyword);
-            }
-
-            me.priorKeyword = keyword;
 
             var url = me.options.reportManagerAPI + "/FindItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
@@ -5132,7 +5115,6 @@ $(function () {
                     }
                     else {
                         me._render(data);
-                        console.log(data);
                     }
                 },
                 error: function (data) {
@@ -11225,7 +11207,11 @@ $(function () {
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                if (view === "search") {
+                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
 
                 layout.$rightheader.height(layout.$topdiv.height());
                 layout.$leftheader.height(layout.$topdiv.height());

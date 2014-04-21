@@ -913,8 +913,7 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
-                    e.data.$reportExplorer.reportExplorer("reportExplorerBack");
-                    //e.data.me.options.navigateTo("back", null);
+                    e.data.me.options.navigateTo("back", null);
                 }
             }
         },
@@ -966,9 +965,12 @@ $(function () {
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
-                        var value = $.trim(this.value);
-                        e.data.$reportExplorer.reportExplorer("findItems", value, "push");
-                        //e.data.$reportExplorer.reportExplorer("findItems", $.trim(this.value));
+                        var keyword = $.trim(this.value);
+                        if (keyword === "") {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, "Please input valid keyword", "Prompt");
+                            return;
+                        }
+                        e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
                 },
@@ -992,9 +994,12 @@ $(function () {
             tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
-                    var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
-                    e.data.$reportExplorer.reportExplorer("findItems", value, "push");
-                    //e.data.$reportViewer.reportViewer("find", value);
+                    var keyword = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
+                    if (keyword === "") {
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, "Please input valid keyword", "Prompt");
+                        return;
+                    }
+                    e.data.me.options.navigateTo("search", keyword);
                 }
             }
         },

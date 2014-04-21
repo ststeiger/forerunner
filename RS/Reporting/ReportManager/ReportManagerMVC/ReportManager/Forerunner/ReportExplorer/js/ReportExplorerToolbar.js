@@ -49,6 +49,11 @@ $(function () {
                 $btn.addClass(btnActiveClass);
             }
         },
+        setSearchKeyword: function (keyword) {
+            var me = this;
+
+            me.element.find(".fr-toolbar-keyword-textbox").val(keyword);
+        },
         _clearFolderBtnState: function () {
             var me = this;
             $.each(me.folderBtns, function (index, $btn) {

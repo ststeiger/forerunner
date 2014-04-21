@@ -4936,21 +4936,55 @@ $(function () {
             url += "&instance=" + me.options.rsInstance;
 
             var $if = $("<iframe/>")
-            $if.addClass("fr-report-explorer fr-core-widget");
+            $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
-            $if.attr("scrolling", "no");
-            $if.css("width", "100%");
-            $if.css("height", "100%");
-            $if.css("overflow", "hidden");
+            //$if.attr("scrolling", "no");
             me.element.append($if);
 
-            $if.load(function () {
-                this.style.height = $(this.contentWindow.document.body).outerHeight() + 'px';
-            });
+            //for IE iframe onload is not working so used below compatible code to detect readyState
+            if (forerunner.device.isMSIE()) {
+                var frame = $if[0];
 
-            
+                var fmState = function () {
+                    var state = null;
+                    if (document.readyState) {
+                        try {
+                            state = frame.document.readyState;
+                        }
+                        catch (e) { state = null; }
+
+                        if (state == "complete" || !state) {//loading,interactive,complete       
+                            me._setIframeHeight(frame);
+                        }
+                        else {
+                            //check frame document state until it turn to complete
+                            setTimeout(fmState, 10);
+                        }
+                    }
+                };
+
+                if (fmState.TimeoutInt) {
+                    clearTimeout(fmState.timeoutInt);
+                    fmState.TimeoutInt = null;
+                }
+
+                fmState.timeoutInt = setTimeout(fmState, 100);
+            }
+            else {
+                $if.load(function () {
+                    me._setIframeHeight(this);
+                });
+            }
         },
-
+        //set iframe height with body height
+        _setIframeHeight: function (frame) {
+            var me = this;
+            //use app container height minus toolbar height
+            //also there is an offset margin-botton:-20px defined in ReportExplorer.css 
+            //to prevent document scroll bar (except IE8)
+            var iframeHeight = me.options.$appContainer.height() - 38;
+            frame.style.height = iframeHeight + "px";
+        },
         _fetch: function (view,path) {
             var me = this;
 

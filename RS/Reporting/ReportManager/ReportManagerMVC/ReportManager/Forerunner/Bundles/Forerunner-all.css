@@ -646,6 +646,8 @@ table, td, tr {
 
 .fr-rm-button-fav { }
 
+.fr-explorer-iframe { width:100%; height:100%; overflow:hidden; padding-bottom:0px; margin-bottom:-20px; }
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
   /* Styles */

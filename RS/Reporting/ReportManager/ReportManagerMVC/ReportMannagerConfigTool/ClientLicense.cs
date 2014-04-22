@@ -365,6 +365,7 @@ namespace ForerunnerLicense
                     {
                         try
                         {
+                            //ValidateInner();
                             Thread t = new Thread(new ThreadStart(ValidateInner));
                             t.Start();
                             t.Join();

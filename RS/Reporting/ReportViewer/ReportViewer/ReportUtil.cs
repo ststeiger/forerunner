@@ -258,74 +258,81 @@ namespace Forerunner
 
         public static string WriteExceptionJSON(Exception e, String userName = null)
         {
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("Exception");
-            w.WriteStartObject();
-
-            if(e is LicenseException)
+            try
             {
-                w.WriteMember("Type");
-                w.WriteString("LicenseException");
-                w.WriteMember("Reason");
-                w.WriteString(e.Data[LicenseException.failKey].ToString());
-                w.WriteMember("Message");
-                w.WriteString(e.Message);
-            }
-            else
-            {
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Exception");
+                w.WriteStartObject();
 
-                w.WriteMember("Type");
-                if (e.Message.Contains("ForerunnerLicense.LicenseException"))
-                    w.WriteString("LicenseException");
-                else
-                    w.WriteString(e.GetType().ToString());
-
-                w.WriteMember("TargetSite");
-                if (e.TargetSite != null)
-                    w.WriteString(e.TargetSite.ToString());
-                else
-                    w.WriteString("unknown");
-                w.WriteMember("Source");
-                w.WriteString(e.Source);
-                w.WriteMember("Message");
-
-                string[] split = { "--->" };
-                string[] Messages = e.Message.Split(split,StringSplitOptions.None);
-                string message = "";
-                string lastMess = "";
-                string curMess = "";
-                foreach (string mes in Messages)
+                if (e is LicenseException)
                 {
-                    int start = mes.IndexOf(":") + 1;
-                    int end = mes.IndexOf("  at", start ) - 1;
+                    w.WriteMember("Type");
+                    w.WriteString("LicenseException");
+                    w.WriteMember("Reason");
+                    w.WriteString(e.Data[LicenseException.failKey].ToString());
+                    w.WriteMember("Message");
+                    w.WriteString(e.Message);
+                }
+                else
+                {
 
-                    if (start <= 0)
-                        curMess = mes;
-                    else if (start > 0 && end > 0)
-                        curMess = mes.Substring(start, end - start);
+                    w.WriteMember("Type");
+                    if (e.Message.Contains("ForerunnerLicense.LicenseException"))
+                        w.WriteString("LicenseException");
                     else
-                        curMess = mes.Substring(start);
-                    
-                    curMess = curMess.Trim(new char[] {' ', '\n'});
-                    if (curMess != lastMess)
-                        message += curMess;
-                    lastMess = curMess;
-                }               
-                w.WriteString(message);
-                w.WriteMember("DetailMessage");
-                w.WriteString(e.Message);
+                        w.WriteString(e.GetType().ToString());
 
-                w.WriteMember("StackTrace");
-                w.WriteString(e.StackTrace);
+                    w.WriteMember("TargetSite");
+                    if (e.TargetSite != null)
+                        w.WriteString(e.TargetSite.ToString());
+                    else
+                        w.WriteString("unknown");
+                    w.WriteMember("Source");
+                    w.WriteString(e.Source);
+                    w.WriteMember("Message");
 
-                w.WriteMember("UserName");
-                w.WriteString(userName != null ? userName : "null");
+                    string[] split = { "--->" };
+                    string[] Messages = e.Message.Split(split, StringSplitOptions.None);
+                    string message = "";
+                    string lastMess = "";
+                    string curMess = "";
+                    foreach (string mes in Messages)
+                    {
+                        int start = mes.IndexOf(":") + 1;
+                        int end = mes.IndexOf("  at", start) - 1;
+
+                        if (start <= 0)
+                            curMess = mes;
+                        else if (start > 0 && end > 0)
+                            curMess = mes.Substring(start, end - start);
+                        else
+                            curMess = mes.Substring(start);
+
+                        curMess = curMess.Trim(new char[] { ' ', '\n' });
+                        if (curMess != lastMess)
+                            message += curMess;
+                        lastMess = curMess;
+                    }
+                    w.WriteString(message);
+                    w.WriteMember("DetailMessage");
+                    w.WriteString(e.Message);
+
+                    w.WriteMember("StackTrace");
+                    w.WriteString(e.StackTrace);
+
+                    w.WriteMember("UserName");
+                    w.WriteString(userName != null ? userName : "null");
+                }
+                w.WriteEndObject();
+                w.WriteEndObject();
+
+                return w.ToString();
             }
-            w.WriteEndObject();
-            w.WriteEndObject();
-
-            return w.ToString();
+            catch
+            {
+                return "";
+            }
         }
 
         public static string ConvertParamemterToJSON(ReportParameter [] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)

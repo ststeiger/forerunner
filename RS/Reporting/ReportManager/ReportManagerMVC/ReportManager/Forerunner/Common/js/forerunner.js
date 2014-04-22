@@ -1015,14 +1015,28 @@ $(function () {
         * @member
         */
         ajax: function (options) {
-            var errorCallback = options.error;
             var me = this;
-            options.error = function (data) {
-                me._handleRedirect(data);
+            var errorCallback = options.error;
+            var successCallback = options.success;
+            options.success = null;
+
+            if (options.fail)
+                errorCallback = options.fail;
+           
+            var jqXHR = $.ajax(options);
+
+            if (options.done)
+                jqXHR.done(options.done);
+            if (successCallback)
+                jqXHR.done(successCallback);
+
+
+            jqXHR.fail( function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 if (errorCallback)
-                    errorCallback(data);
-            };
-            return $.ajax(options);
+                    errorCallback(jqXHR, textStatus, errorThrown,this);
+            });
+            return jqXHR;
         },
         /**
         * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
@@ -1040,11 +1054,11 @@ $(function () {
                 if (done)
                     done(data);
             })
-            .fail(function (data) {
-                me._handleRedirect(data);
-                console.log(data);
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
+                console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         },
         /**
@@ -1062,11 +1076,11 @@ $(function () {
                 if (success && typeof (success) === "function") {
                     success(data);
                 }
-            }).fail(function(data, textStatus, jqXHR) {
-                me._handleRedirect(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         }
     };

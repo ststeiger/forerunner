@@ -187,7 +187,7 @@ namespace ReportManager.Controllers
         [ActionName("SortReport")]
         public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort = true, string instance = null)
         {
-
+            
             try
             {
                 byte[] result = null;

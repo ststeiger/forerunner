@@ -43,7 +43,7 @@ namespace Forerunner.RenderingExtensions
             {
                 Assembly IR;
                 // Use a disassembler tool like ILSpy to find The AssemblyName, type and constructor methods for other internal renderers in their respective .dlls                    
-                IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.HtmlRendering, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
+                IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.HtmlRendering, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
 
                 //Read the PdfRenderer type from the Assembly
                 if (IR != null)

@@ -172,11 +172,21 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
-        public CatalogItem[] FindItems(string searchCriteria, bool showAll = false, bool showHidden = false)
+        public CatalogItem[] FindItems(string folder,string searchOperator, string searchCriteria, bool showAll = false, bool showHidden = false)
         {
+            //specify search area, default to search global
+            string searchArea = folder == null ? "/" : folder;
+            //default search operator to or
+            Management.Native.BooleanOperatorEnum oper = Management.Native.BooleanOperatorEnum.Or;
+
+            if (searchOperator == "and")
+            {
+                oper = Management.Native.BooleanOperatorEnum.And;
+            }
+
             rs.Credentials = GetCredentials();
             List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem[] catalogItems = rs.FindItems("/", Management.Native.BooleanOperatorEnum.Or, JsonUtility.getNativeSearchCondition(searchCriteria));
+            CatalogItem[] catalogItems = rs.FindItems(searchArea, oper, JsonUtility.getNativeSearchCondition(searchCriteria));
 
             foreach (CatalogItem catalog in catalogItems)
             {

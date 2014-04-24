@@ -71,7 +71,9 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
                 isAdmin: me.options.isAdmin,
-            });            
+                onInputFocus: layout.onInputFocus,
+                onInputBlur: layout.onInputBlur
+            });
         },
         /**
          * Transition to ReportManager view.
@@ -84,9 +86,9 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
-                me.DefaultAppTemplate.$mainsection.html("");
-                me.DefaultAppTemplate.$mainsection.hide();
+            if (layout.$mainsection.html() !== "" && layout.$mainsection.html() !== null) {
+                layout.$mainsection.html("");
+                layout.$mainsection.hide();
             }
             layout.cleanUp();
             forerunner.device.allowZoom(false);

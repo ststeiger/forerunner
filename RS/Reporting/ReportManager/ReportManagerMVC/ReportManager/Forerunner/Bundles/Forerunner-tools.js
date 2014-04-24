@@ -970,15 +970,17 @@ $(function () {
                             forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                             return;
                         }
+
+                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
                 },
                 blur: function (e) {
-                    //e.data.$reportViewer.reportViewer("onInputBlur");
+                    e.data.$reportExplorer.reportExplorer("onInputBlur");
                 },
                 focus: function (e) {
-                    //e.data.$reportViewer.reportViewer("onInputFocus");
+                    e.data.$reportExplorer.reportExplorer("onInputFocus");
                 }
             }
         },
@@ -999,6 +1001,8 @@ $(function () {
                         forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                         return;
                     }
+
+                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }

@@ -3644,43 +3644,41 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            var onInputFocus = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionAbsolute();
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+        },
+        onInputFocus: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                        me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }, 50);
+            }
+        },
+        onInputBlur: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-            var onInputBlur = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionFixed();
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
 
-                        if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                            me.$container.removeClass("fr-layout-container-noscroll");
-                        }
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
-
-            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
+                    me.ResetSize();
+                }, 50);
+            }
         },
         getScrollPosition: function () {
             var me = this;
@@ -4750,6 +4748,8 @@ $(function () {
             explorerSettings: null,
             rsInstance: null,
             isAdmin: false,
+            onInputBlur: null,
+            onInputFocus: null,
         },
         /**
          * Save the user settings
@@ -5090,6 +5090,13 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        savedPath: function(){
+            var me = this;
+            if (me.options.view === "catalog") {
+                me.priorExplorerPath = me.options.path;
+            }
+
+        },
         _searchItems: function (keyword) {
             var me = this;
 
@@ -5097,16 +5104,22 @@ $(function () {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
                 return;
             }
-
+            
             var url = me.options.reportManagerAPI + "/FindItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            //specify the search folder, not default to global
+            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
+            //folder = folder.replace("%2f", "/");
 
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
                 async: false,
                 data: {
+                    folder: "",
+                    searchOperator: "",
                     searchCriteria: JSON.stringify(searchCriteria)
                 },
                 success: function (data) {
@@ -5134,6 +5147,26 @@ $(function () {
             var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
             $explorer.append($notFound);            
             me.element.append($explorer);
+        },
+        /**
+        * Function execute when input element blur
+        *
+        * @function $.forerunner.reportViewer#onInputBlur
+        */
+        onInputBlur: function () {
+            var me = this;
+            if (me.options.onInputBlur)
+                me.options.onInputBlur();
+        },
+        /**
+         * Function execute when input element focus
+         *
+         * @function $.forerunner.reportViewer#onInputFocus
+         */
+        onInputFocus: function () {
+            var me = this;
+            if (me.options.onInputFocus)
+                me.options.onInputFocus();
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;
@@ -11186,7 +11219,9 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
                 isAdmin: me.options.isAdmin,
-            });            
+                onInputFocus: layout.onInputFocus,
+                onInputBlur: layout.onInputBlur
+            });
         },
         /**
          * Transition to ReportManager view.
@@ -11199,9 +11234,9 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
-                me.DefaultAppTemplate.$mainsection.html("");
-                me.DefaultAppTemplate.$mainsection.hide();
+            if (layout.$mainsection.html() !== "" && layout.$mainsection.html() !== null) {
+                layout.$mainsection.html("");
+                layout.$mainsection.hide();
             }
             layout.cleanUp();
             forerunner.device.allowZoom(false);

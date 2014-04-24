@@ -48,6 +48,8 @@ $(function () {
             explorerSettings: null,
             rsInstance: null,
             isAdmin: false,
+            onInputBlur: null,
+            onInputFocus: null,
         },
         /**
          * Save the user settings
@@ -388,6 +390,13 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        savedPath: function(){
+            var me = this;
+            if (me.options.view === "catalog") {
+                me.priorExplorerPath = me.options.path;
+            }
+
+        },
         _searchItems: function (keyword) {
             var me = this;
 
@@ -395,16 +404,22 @@ $(function () {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
                 return;
             }
-
+            
             var url = me.options.reportManagerAPI + "/FindItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            //specify the search folder, not default to global
+            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
+            //folder = folder.replace("%2f", "/");
 
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
                 async: false,
                 data: {
+                    folder: "",
+                    searchOperator: "",
                     searchCriteria: JSON.stringify(searchCriteria)
                 },
                 success: function (data) {
@@ -432,6 +447,26 @@ $(function () {
             var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
             $explorer.append($notFound);            
             me.element.append($explorer);
+        },
+        /**
+        * Function execute when input element blur
+        *
+        * @function $.forerunner.reportViewer#onInputBlur
+        */
+        onInputBlur: function () {
+            var me = this;
+            if (me.options.onInputBlur)
+                me.options.onInputBlur();
+        },
+        /**
+         * Function execute when input element focus
+         *
+         * @function $.forerunner.reportViewer#onInputFocus
+         */
+        onInputFocus: function () {
+            var me = this;
+            if (me.options.onInputFocus)
+                me.options.onInputFocus();
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;

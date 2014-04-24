@@ -446,43 +446,41 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            var onInputFocus = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionAbsolute();
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+        },
+        onInputFocus: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                        me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }, 50);
+            }
+        },
+        onInputBlur: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-            var onInputBlur = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionFixed();
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
 
-                        if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                            me.$container.removeClass("fr-layout-container-noscroll");
-                        }
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
-
-            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
+                    me.ResetSize();
+                }, 50);
+            }
         },
         getScrollPosition: function () {
             var me = this;

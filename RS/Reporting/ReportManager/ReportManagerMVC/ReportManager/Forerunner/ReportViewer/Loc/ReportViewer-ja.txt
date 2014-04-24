@@ -176,5 +176,10 @@
     "username":"ログイン名:",
     "password":"パスワード:",
     "reset":"リセット"
+  },
+  "explorerSearch": {
+    "search":"検索",
+    "emptyError":"検索基準は、空にすることはできません",
+    "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
   }
 }

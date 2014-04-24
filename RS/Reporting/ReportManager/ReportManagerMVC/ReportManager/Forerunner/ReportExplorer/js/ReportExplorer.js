@@ -412,7 +412,12 @@ $(function () {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
                     }
                     else {
-                        me._render(data);
+                        if (data.length) {
+                            me._render(data);
+                        }
+                        else {
+                            me._showNotFound();
+                        }
                     }
                 },
                 error: function (data) {
@@ -420,6 +425,13 @@ $(function () {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
                 }
             });
+        },
+        _showNotFound:function(){
+            var me = this;
+            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            $explorer.append($notFound);            
+            me.element.append($explorer);
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;

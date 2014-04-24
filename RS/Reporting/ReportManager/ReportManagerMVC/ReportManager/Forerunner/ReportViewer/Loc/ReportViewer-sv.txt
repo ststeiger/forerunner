@@ -176,5 +176,10 @@
     "username":"Inloggningsnamn:",
     "password":"lösenord:",
     "reset":"Återställ"
+  },
+  "explorerSearch": {
+    "search":"Sökning",
+    "emptyError":"Sökkriterier kan inte vara tomt",
+    "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
   }
 }

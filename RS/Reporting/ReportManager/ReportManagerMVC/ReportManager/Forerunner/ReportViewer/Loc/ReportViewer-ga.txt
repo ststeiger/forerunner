@@ -176,5 +176,10 @@
     "username":"ainm Logáil isteach:",
     "password":"Pasfhocal:",
     "reset":"Athshocraigh"
+  },
+  "explorerSearch": {
+    "search":"Cuardaigh",
+    "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
+    "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
   }
 }

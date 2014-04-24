@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4613,6 +4613,7 @@ $(function () {
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -4668,7 +4669,7 @@ $(function () {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-toolbar-keyword-textbox").watermark("Search", { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -5113,7 +5114,12 @@ $(function () {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
                     }
                     else {
-                        me._render(data);
+                        if (data.length) {
+                            me._render(data);
+                        }
+                        else {
+                            me._showNotFound();
+                        }
                     }
                 },
                 error: function (data) {
@@ -5121,6 +5127,13 @@ $(function () {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
                 }
             });
+        },
+        _showNotFound:function(){
+            var me = this;
+            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            $explorer.append($notFound);            
+            me.element.append($explorer);
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;

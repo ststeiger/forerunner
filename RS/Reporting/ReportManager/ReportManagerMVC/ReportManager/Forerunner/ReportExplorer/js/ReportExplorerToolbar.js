@@ -15,6 +15,7 @@ $(function () {
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -70,7 +71,7 @@ $(function () {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-toolbar-keyword-textbox").watermark("Search", { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;

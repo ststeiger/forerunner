@@ -176,5 +176,10 @@
     "username":"Login name:",
     "password":"Password:",
     "reset":"Reset"
+  },
+  "explorerSearch": {
+    "search":"ricerca",
+    "emptyError":"Criteri di ricerca non possono essere vuoti",
+    "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
   }
 }

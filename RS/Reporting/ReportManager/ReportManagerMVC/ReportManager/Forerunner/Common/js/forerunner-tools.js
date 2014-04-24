@@ -966,7 +966,7 @@ $(function () {
                     if (e.keyCode === 13 || e.keyCode === 9) {
                         var keyword = $.trim(this.value);
                         if (keyword === "") {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, "Please input valid keyword", "Prompt");
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                             return;
                         }
                         e.data.me.options.navigateTo("search", keyword);
@@ -995,7 +995,7 @@ $(function () {
                 click: function (e) {
                     var keyword = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
                     if (keyword === "") {
-                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, "Please input valid keyword", "Prompt");
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                         return;
                     }
                     e.data.me.options.navigateTo("search", keyword);

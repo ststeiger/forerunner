@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the reportExplorerToolbar widget.
+ * @file Contains the reportExplorerToolpane widget.
  *
  */
 
@@ -8,57 +8,58 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 forerunner.ssr.tools = forerunner.ssr.tools || {};
-forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorerToolbar || {};
+forerunner.ssr.tools.reportExplorerToolpane = forerunner.ssr.tools.reportExplorerToolpane || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var tp = forerunner.ssr.tools.reportExplorerToolpane;
     var tg = forerunner.ssr.tools.groups;
-    var btnActiveClass = "fr-toolbase-persistent-active-state";
+    var itemActiveClass = "fr-toolbase-persistent-active-state";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toolbar widget used by the Report Explorer
      *
-     * @namespace $.forerunner.reportExplorerToolbar
-     * @prop {Object} options - The options for toolbar
+     * @namespace $.forerunner.reportExplorerToolpane
+     * @prop {Object} options - The options for toolpane
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
-     * $("#reportExplorerToolbarId").reportExplorerToolbar({
+     * $("#reportExplorerToolpaneId").reportExplorerToolpane({
      *  navigateTo: navigateTo
      * });
      */
-    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
+    $.widget(widgets.getFullname(widgets.reportExplorerToolpane), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolpane */ {
         options: {
             navigateTo: null,
-            toolClass: "fr-toolbar",
+            toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
         },
         /**
          * Set specify tool to active state
          *
-         * @function $.forerunner.reportExplorerToolbar#setFolderBtnActive
+         * @function $.forerunner.reportExplorerToolpane#setFolderItemActive
          * @param {String} selectorClass - selector class name
          */
-        setFolderBtnActive: function (selectorClass) {
+        setFolderItemActive: function (selectorClass) {
+        
             var me = this;
-            me._clearFolderBtnState();
+            me._clearFolderItemState();
             if (selectorClass) {
-                var $btn = me.element.find("." + selectorClass);
-                $btn.addClass(btnActiveClass);
+                var $item = me.element.find("." + selectorClass);
+                $item.addClass(itemActiveClass);
             }
         },
         setSearchKeyword: function (keyword) {
             var me = this;
 
-            me.element.find(".fr-rm-keyword-textbox").val(keyword);
+            me.element.find(".fr-rm-item-keyword").val(keyword);
         },
-        _clearFolderBtnState: function () {
+        _clearFolderItemState: function () {
             var me = this;
-            $.each(me.folderBtns, function (index, $btn) {
-                $btn.removeClass(btnActiveClass);
+            $.each(me.folderItems, function (index, $item) {
+                $item.removeClass(itemActiveClass);
             });
         },
         _initCallbacks: function () {
@@ -66,12 +67,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
+            me.enableTools([tp.itemHome, tp.itemBack, tp.itemFav, tp.itemRecent, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tb.btnLogOff]);
+                me.enableTools([tp.itemLogOff]);
             }
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -79,24 +80,24 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemSetup, tp.itemHome, tp.itemRecent, tp.itemFav, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tb.btnLogOff]);
+                me.addTools(6, true, [tp.itemLogOff]);
             }
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
-            var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
-            var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
-            var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
-            me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+            var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
+            var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
+            var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
+            me.folderItems = [$itemHome, $itemRecent, $itemFav];
         },
 
         _destroy: function () {
         },
 
         _create: function () {
-            var me = this;
+            
         },
     });  // $.widget
 });  // function()

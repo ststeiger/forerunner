@@ -944,7 +944,7 @@ $(function () {
                     me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         
@@ -1056,11 +1056,7 @@ $(function () {
                     else
                         me.lock = 0;
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
 
@@ -1119,11 +1115,7 @@ $(function () {
                         }
                     }
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
 
@@ -1196,11 +1188,7 @@ $(function () {
                         }
                     }
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         /**
@@ -1228,11 +1216,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         /**
@@ -1370,7 +1354,7 @@ $(function () {
                             }
                         }
                     },
-                    function () { console.log("error"); me.removeLoadingIndicator(); }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 );
             }
         },
@@ -1555,7 +1539,7 @@ $(function () {
                 },
                 dataType: "json",
                 async: false,
-                success: function (data) {
+                done: function (data) {
                     if (data.Exception) {
                         me._renderPageError(me.$reportContainer, data);
                         me.removeLoadingIndicator();
@@ -1566,12 +1550,12 @@ $(function () {
                         me._showParameters(pageNum, data);
                     }
                 },
-                error: function (data) {
-                    console.log("error");
-                    me.removeLoadingIndicator();
+                fail: function (jqXHR, textStatus, errorThrown, request) {
+                    me._writeError(jqXHR, textStatus, errorThrown, request);                                        
                 }
             });
         },
+
         _showParameters: function (pageNum, data) {
             var me = this;
             
@@ -1672,7 +1656,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport) {
                 me.paramLoaded = false;
-                me._removeSetTimeout();
+                me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
@@ -1796,7 +1780,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.jsonPath,
                     async: false,
-                    success: function (data) {
+                    done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
                             if (data.ReportContainer) {
@@ -1809,7 +1793,7 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1853,7 +1837,7 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     async: true,
-                    success: function (data) {
+                    done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
                             if (data.ReportContainer) {
@@ -1871,10 +1855,25 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
-        
+        _writeError: function (jqXHR, textStatus, errorThrown,request) {
+            var me = this;
+
+            var data = { Exception: 
+                {
+                    DetailMessage: errorThrown,
+                    Type: "Error",
+                    TargetSite: request.url,
+                    Source: "" ,
+                    Message: textStatus,
+                    StackTrace: JSON.stringify(request)
+                }                        
+            };
+
+            me._renderPageError(me.$reportContainer, data);
+        },
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
             var $report = $("<Div/>");
@@ -2171,8 +2170,10 @@ $(function () {
             //me.autoRefreshID will be set to undefined when report viewer destory.
             if (me.autoRefreshID !== undefined) {
                 //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
-                if (me.autoRefreshID !== null) me._removeSetTimeout();
-
+                if (me.autoRefreshID !== null) {
+                    me._removeAutoRefreshTimeout();
+                    
+                }
                 me.autoRefreshID = setTimeout(function () {
                     if (me.lock === 1) {
                         //if report viewer is lock then set it again.
@@ -2197,12 +2198,14 @@ $(function () {
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }
+
+                    me.autoRefreshID = null;
                 }, period * 1000);
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
-        _removeSetTimeout: function () {
+        _removeAutoRefreshTimeout: function () {
             var me = this;
 
             if (me.autoRefreshID !== null) {
@@ -2219,7 +2222,7 @@ $(function () {
         destroy: function () {
             var me = this;
 
-            me._removeSetTimeout();
+            me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
             if (me.$credentialDialog)

@@ -176,5 +176,10 @@
     "username":"登录名:",
     "password":"密码:",
     "reset":"重置"
+  },
+   "explorerSearch":{
+	"search":"搜索",
+	"emptyError":"搜索条件不能为空",
+	"notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
   }
 }

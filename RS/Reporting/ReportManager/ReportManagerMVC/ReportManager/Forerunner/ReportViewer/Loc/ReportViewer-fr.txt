@@ -177,5 +177,10 @@
     "username":"Connexion nom:",
     "password":"mot de passe:",
     "reset":"remettre"
+  },
+  "explorerSearch": {
+    "search":"recherche",
+    "emptyError":"Critères de recherche ne peuvent pas être vide",
+    "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
   }
 }

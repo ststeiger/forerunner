@@ -86,11 +86,11 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage FindItems(string searchCriteria, string instance = null) 
+        public HttpResponseMessage FindItems(string folder, string searchOperator, string searchCriteria, string instance = null) 
         {
             try
             {
-                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(searchCriteria);
+                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
             }
             catch (Exception e)

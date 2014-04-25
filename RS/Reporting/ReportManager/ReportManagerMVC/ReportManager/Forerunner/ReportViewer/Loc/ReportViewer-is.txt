@@ -176,5 +176,10 @@
     "username":"notandanafn:",
     "password":"lykilorð:",
     "reset":"endurstilla"
+  },
+  "explorerSearch": {
+    "search":"Leita",
+    "emptyError":"Leitarskilyrðum má ekki vera autt",
+    "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
   }
 }

@@ -10,6 +10,7 @@
   <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
   <file>/Forerunner/ReportViewer/js/PageNav.js</file>
   <file>/Forerunner/ReportExplorer/js/ReportExplorerToolbar.js</file>
+  <file>/Forerunner/ReportExplorer/js/ReportExplorerToolpane.js</file>
   <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
   <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
   <file>/Forerunner/ReportViewer/js/ReportRender.js</file>

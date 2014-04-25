@@ -150,8 +150,6 @@ $(function () {
             /** @constant */
             reportExplorerEZ: "reportExplorerEZ",
             /** @constant */
-            reportExplorerToolbar: "reportExplorerToolbar",
-            /** @constant */
             pageNav: "pageNav",
             /** @constant */
             reportDocumentMap: "reportDocumentMap",
@@ -193,6 +191,10 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            reportExplorerToolbar: "reportExplorerToolbar",
+            /** @constant */
+            reportExplorerToolpane: "reportExplorerToolpane",
 
             /** @constant */
             namespace: "forerunner",
@@ -216,6 +218,8 @@ $(function () {
             actionStarted: "actionstarted",
             /** widget + event, lowercase */
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
+            /** widget + event, lowercase */
+            reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
             allowZoom: "allowZoom",
@@ -229,6 +233,8 @@ $(function () {
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
             /** widget + event, lowercase */
             leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            reportExplorerToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.reportExplorerToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
@@ -1015,14 +1021,28 @@ $(function () {
         * @member
         */
         ajax: function (options) {
-            var errorCallback = options.error;
             var me = this;
-            options.error = function (data) {
-                me._handleRedirect(data);
+            var errorCallback = options.error;
+            var successCallback = options.success;
+            options.success = null;
+
+            if (options.fail)
+                errorCallback = options.fail;
+           
+            var jqXHR = $.ajax(options);
+
+            if (options.done)
+                jqXHR.done(options.done);
+            if (successCallback)
+                jqXHR.done(successCallback);
+
+
+            jqXHR.fail( function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 if (errorCallback)
-                    errorCallback(data);
-            };
-            return $.ajax(options);
+                    errorCallback(jqXHR, textStatus, errorThrown,this);
+            });
+            return jqXHR;
         },
         /**
         * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
@@ -1040,11 +1060,11 @@ $(function () {
                 if (done)
                     done(data);
             })
-            .fail(function (data) {
-                me._handleRedirect(data);
-                console.log(data);
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
+                console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         },
         /**
@@ -1062,11 +1082,11 @@ $(function () {
                 if (success && typeof (success) === "function") {
                     success(data);
                 }
-            }).fail(function(data, textStatus, jqXHR) {
-                me._handleRedirect(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         }
     };
@@ -1374,6 +1394,8 @@ $(function () {
                         clone.remove();
                     }
                 }
+
+                me._timer = null;
             }, 100);
         },
         _bindKeyboard: function (event) {

@@ -1656,7 +1656,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport) {
                 me.paramLoaded = false;
-                me._removeSetTimeout();
+                me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
@@ -2170,8 +2170,10 @@ $(function () {
             //me.autoRefreshID will be set to undefined when report viewer destory.
             if (me.autoRefreshID !== undefined) {
                 //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
-                if (me.autoRefreshID !== null) me._removeSetTimeout();
-
+                if (me.autoRefreshID !== null) {
+                    me._removeAutoRefreshTimeout();
+                    
+                }
                 me.autoRefreshID = setTimeout(function () {
                     if (me.lock === 1) {
                         //if report viewer is lock then set it again.
@@ -2196,12 +2198,14 @@ $(function () {
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }
+
+                    me.autoRefreshID = null;
                 }, period * 1000);
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
-        _removeSetTimeout: function () {
+        _removeAutoRefreshTimeout: function () {
             var me = this;
 
             if (me.autoRefreshID !== null) {
@@ -2218,7 +2222,7 @@ $(function () {
         destroy: function () {
             var me = this;
 
-            me._removeSetTimeout();
+            me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
             if (me.$credentialDialog)

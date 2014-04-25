@@ -1657,7 +1657,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport) {
                 me.paramLoaded = false;
-                me._removeSetTimeout();
+                me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
@@ -2171,8 +2171,10 @@ $(function () {
             //me.autoRefreshID will be set to undefined when report viewer destory.
             if (me.autoRefreshID !== undefined) {
                 //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
-                if (me.autoRefreshID !== null) me._removeSetTimeout();
-
+                if (me.autoRefreshID !== null) {
+                    me._removeAutoRefreshTimeout();
+                    
+                }
                 me.autoRefreshID = setTimeout(function () {
                     if (me.lock === 1) {
                         //if report viewer is lock then set it again.
@@ -2197,12 +2199,14 @@ $(function () {
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }
+
+                    me.autoRefreshID = null;
                 }, period * 1000);
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
-        _removeSetTimeout: function () {
+        _removeAutoRefreshTimeout: function () {
             var me = this;
 
             if (me.autoRefreshID !== null) {
@@ -2219,7 +2223,7 @@ $(function () {
         destroy: function () {
             var me = this;
 
-            me._removeSetTimeout();
+            me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
             if (me.$credentialDialog)
@@ -3206,6 +3210,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var toolTypes = ssr.constants.toolTypes;
     var events = forerunner.ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
 
     // This class provides the default app template for our app.
     // The EZ Viewer widget should use this template
@@ -3343,11 +3348,13 @@ $(function () {
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
+            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
@@ -3746,6 +3753,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
@@ -3753,7 +3762,12 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                me.$mainheadersection.toolbar("showAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("showAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("showAllTools");
+                }
             }
             
             if (me.showModal !== true) {
@@ -3789,6 +3803,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -3800,7 +3816,12 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                me.$mainheadersection.toolbar("hideAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("hideAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("hideAllTools");
+                }
 
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", false);
@@ -4308,7 +4329,7 @@ $(function () {
         },
         _clearItemStates: function () {
             var me = this;
-            me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-keyword-textbox").val("");
             me.element.find(".fr-item-textbox-reportpage").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
         },
@@ -4649,7 +4670,7 @@ $(function () {
         setSearchKeyword: function (keyword) {
             var me = this;
 
-            me.element.find(".fr-toolbar-keyword-textbox").val(keyword);
+            me.element.find(".fr-rm-keyword-textbox").val(keyword);
         },
         _clearFolderBtnState: function () {
             var me = this;
@@ -4662,12 +4683,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
+            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -4675,7 +4696,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(6, true, [tb.btnLogOff]);
             }
@@ -4693,6 +4714,111 @@ $(function () {
 
         _create: function () {
             var me = this;
+        },
+    });  // $.widget
+});  // function()
+
+///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerToolpane.js
+/**
+ * @file Contains the reportExplorerToolpane widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.reportExplorerToolpane = forerunner.ssr.tools.reportExplorerToolpane || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var tp = forerunner.ssr.tools.reportExplorerToolpane;
+    var tg = forerunner.ssr.tools.groups;
+    var itemActiveClass = "fr-toolbase-persistent-active-state";
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+     * Toolbar widget used by the Report Explorer
+     *
+     * @namespace $.forerunner.reportExplorerToolpane
+     * @prop {Object} options - The options for toolpane
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @example
+     * $("#reportExplorerToolpaneId").reportExplorerToolpane({
+     *  navigateTo: navigateTo
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorerToolpane), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolpane */ {
+        options: {
+            navigateTo: null,
+            toolClass: "fr-toolpane",
+            $appContainer: null,
+            $reportExplorer: null
+        },
+        /**
+         * Set specify tool to active state
+         *
+         * @function $.forerunner.reportExplorerToolpane#setFolderItemActive
+         * @param {String} selectorClass - selector class name
+         */
+        setFolderItemActive: function (selectorClass) {
+        
+            var me = this;
+            me._clearFolderItemState();
+            if (selectorClass) {
+                var $item = me.element.find("." + selectorClass);
+                $item.addClass(itemActiveClass);
+            }
+        },
+        setSearchKeyword: function (keyword) {
+            var me = this;
+
+            me.element.find(".fr-rm-item-keyword").val(keyword);
+        },
+        _clearFolderItemState: function () {
+            var me = this;
+            $.each(me.folderItems, function (index, $item) {
+                $item.removeClass(itemActiveClass);
+            });
+        },
+        _initCallbacks: function () {
+            var me = this;
+            // Hook up any / all custom events that the report viewer may trigger
+
+            // Hook up the toolbar element events
+            me.enableTools([tp.itemHome, tp.itemBack, tp.itemFav, tp.itemRecent, tg.explorerItemFindGroup]);
+            if (forerunner.ajax.isFormsAuth()) {
+                me.enableTools([tp.itemLogOff]);
+            }
+
+            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+
+            me.element.empty();
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
+            me.addTools(1, true, [tp.itemBack, tp.itemSetup, tp.itemHome, tp.itemRecent, tp.itemFav, tg.explorerItemFindGroup]);
+            if (forerunner.ajax.isFormsAuth()) {
+                me.addTools(6, true, [tp.itemLogOff]);
+            }
+            me._initCallbacks();
+
+            // Hold onto the folder buttons for later
+            var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
+            var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
+            var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
+            me.folderItems = [$itemHome, $itemRecent, $itemFav];
+        },
+
+        _destroy: function () {
+        },
+
+        _create: function () {
+            
         },
     });  // $.widget
 });  // function()
@@ -11159,10 +11285,17 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
+    var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
         recent: rtb.btnRecent.selectorClass,
+    };
+
+    var viewToItemMap = {
+        catalog: rtp.itemHome.selectorClass,
+        favorites: rtp.itemFav.selectorClass,
+        recent: rtp.itemRecent.selectorClass,
     };
 
     /**
@@ -11258,6 +11391,23 @@ $(function () {
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                 if (view === "search") {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
+
+                var $lefttoolbar = layout.$leftheader;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
+                }
+
+                var $toolpane = layout.$leftpanecontent;
+                $toolpane.reportExplorerToolpane({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
+                });
+
+                $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
+                if (view === "search") {
+                    $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
 
                 layout.$rightheader.height(layout.$topdiv.height());

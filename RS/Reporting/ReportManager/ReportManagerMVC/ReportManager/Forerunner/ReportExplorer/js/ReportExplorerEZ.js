@@ -11,10 +11,17 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
+    var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
         recent: rtb.btnRecent.selectorClass,
+    };
+
+    var viewToItemMap = {
+        catalog: rtp.itemHome.selectorClass,
+        favorites: rtp.itemFav.selectorClass,
+        recent: rtp.itemRecent.selectorClass,
     };
 
     /**
@@ -110,6 +117,23 @@ $(function () {
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                 if (view === "search") {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
+
+                var $lefttoolbar = layout.$leftheader;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
+                }
+
+                var $toolpane = layout.$leftpanecontent;
+                $toolpane.reportExplorerToolpane({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
+                });
+
+                $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
+                if (view === "search") {
+                    $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
 
                 layout.$rightheader.height(layout.$topdiv.height());

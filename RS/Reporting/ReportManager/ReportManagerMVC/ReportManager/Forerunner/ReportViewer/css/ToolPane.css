@@ -26,17 +26,11 @@
 
 .fr-item-find-composite-group { display: inline-block; position: relative; padding-left: 12px; }
 
-.fr-item-textbox-keyword { width: 94px; padding-left: 4px; padding-right: 20px; padding-top: 1px; padding-bottom: 1px;  }
-
-.fr-item-find { position: absolute; right: 4px; top: 4px; }
-
 .fr-toolpane-icon16x16 { width: 16px; height: 16px; display: inline-block; margin-top: 10px; margin-right: 5px; }
 
 .fr-toolpane-down-icon { background-image: url(../Images/toolpane/sq_br_down_icon16.png); }
 
 .fr-toolpane-up-icon { background-image: url(../Images/toolpane/sq_br_up_icon16.png); }
-
-.fr-item-search-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
 
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {

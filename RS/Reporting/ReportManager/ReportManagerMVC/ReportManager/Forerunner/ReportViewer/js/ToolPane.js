@@ -194,7 +194,7 @@ $(function () {
         },
         _clearItemStates: function () {
             var me = this;
-            me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-keyword-textbox").val("");
             me.element.find(".fr-item-textbox-reportpage").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
         },

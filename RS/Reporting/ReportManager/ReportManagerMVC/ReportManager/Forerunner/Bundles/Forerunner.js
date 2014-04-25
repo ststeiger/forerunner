@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -151,8 +151,6 @@ $(function () {
             /** @constant */
             reportExplorerEZ: "reportExplorerEZ",
             /** @constant */
-            reportExplorerToolbar: "reportExplorerToolbar",
-            /** @constant */
             pageNav: "pageNav",
             /** @constant */
             reportDocumentMap: "reportDocumentMap",
@@ -194,6 +192,10 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            reportExplorerToolbar: "reportExplorerToolbar",
+            /** @constant */
+            reportExplorerToolpane: "reportExplorerToolpane",
 
             /** @constant */
             namespace: "forerunner",
@@ -217,6 +219,8 @@ $(function () {
             actionStarted: "actionstarted",
             /** widget + event, lowercase */
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
+            /** widget + event, lowercase */
+            reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
             allowZoom: "allowZoom",
@@ -230,6 +234,8 @@ $(function () {
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
             /** widget + event, lowercase */
             leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            reportExplorerToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.reportExplorerToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
@@ -1389,6 +1395,8 @@ $(function () {
                         clone.remove();
                     }
                 }
+
+                me._timer = null;
             }, 100);
         },
         _bindKeyboard: function (event) {

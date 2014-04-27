@@ -3529,9 +3529,6 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
-
-            me.$unzoomsection.css("top", diff > 0 ? diff : me.$container.scrollTop());
-            me.$unzoomsection.css("left", me.$container.scrollLeft());
         },
         
         toggleZoom: function () {

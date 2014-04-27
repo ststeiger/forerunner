@@ -11,7 +11,7 @@ using System.ServiceProcess;
 using System.Xml;
 using Forerunner.Security;
 using Microsoft.Win32;
-using System.ServiceProcess;
+
 
 namespace ReportMannagerConfigTool
 {

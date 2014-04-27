@@ -25,7 +25,7 @@ namespace Forerunner.SSRS.JSONRender
         RPLReader RPL;
         Dictionary<string, string> SharedStyles = new Dictionary<string, string>();
 
-        struct TempProperty
+        class TempProperty
         {
             public string Name;
             public string Type;
@@ -128,7 +128,7 @@ namespace Forerunner.SSRS.JSONRender
                     {
                         tmp.Name = PropArray[i].Name;
                         tmp.Type = PropArray[i].DataType;
-                        r.TempPropertyBag.Add(tmp.Name, tmp);
+                        r.TempPropertyBag.Add(tmp.Name, tmp);                        
                     }
                     else
                     {
@@ -416,7 +416,7 @@ namespace Forerunner.SSRS.JSONRender
                     w.WriteNumber((Int64)tmp.Value);
                     break;
                 case "Single":
-                    w.WriteNumber((Single)tmp.Value);
+                    w.WriteNumber((Double)tmp.Value); //Default type is double
                     break;
                 case "Float":
                     w.WriteNumber((float)tmp.Value);
@@ -529,7 +529,7 @@ namespace Forerunner.SSRS.JSONRender
                         
                         //Write properties from page that belong on section                        
                         WriteTempProperty("ColumnSpacing");
-                        WriteTempProperty("ColumnCount");
+                        WriteTempProperty("Columns");
 
                         //if for some reason there is another onw skip it too - this is probably some other error
                         if (RPL.InspectByte() == 0xFF)
@@ -763,7 +763,7 @@ namespace Forerunner.SSRS.JSONRender
 
            string ID = LastID;
 
-            if (!SharedStyles.ContainsKey(ID))
+            if (ID != null && !SharedStyles.ContainsKey(ID))
                 SharedStyles.Add(ID, tmpWriter.ToString());
             
             //Add ID reference to report

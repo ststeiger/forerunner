@@ -126,7 +126,8 @@
     "range":"Immettere un valore compreso tra {0} e {1}",
     "max":"Immettere un valore inferiore o uguale a {0}",
     "min":"Immettere un valore maggiore o uguale a {0}",
-    "invalid":"non valido"
+    "invalid":"non valido",
+    "invalidTree":"{0} non selezionato"
   },
   "dialog": {
     "title":"promt",
@@ -155,7 +156,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Difetto",
-    "selectSet":"<selezionare set>"
+    "selectSet":"\u003cselezionare set\u003e"
   },
   "manageParamSets": {
     "manageSets":"Gestire Sets",
@@ -176,5 +177,10 @@
     "username":"Login name:",
     "password":"Password:",
     "reset":"Reset"
+  },
+  "explorerSearch": {
+    "search":"ricerca",
+    "emptyError":"Criteri di ricerca non possono essere vuoti",
+    "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
   }
 }

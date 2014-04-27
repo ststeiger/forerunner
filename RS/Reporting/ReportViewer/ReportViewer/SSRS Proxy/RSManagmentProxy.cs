@@ -75,7 +75,13 @@ namespace Forerunner.SSRS.Management
                 return RSSPS.GetPermissions(path);
         }
 
-
+        public byte[] GetResourceContents(string path, out string mimetype)
+        {
+            if (IsNative)
+                return RSNative.GetResourceContents(path, out mimetype);
+            else
+                return RSSPS.GetResourceContents(path, out mimetype);
+        }
         public Property[] GetProperties(string path, Property[] props)
         {
             if (IsNative)
@@ -90,6 +96,15 @@ namespace Forerunner.SSRS.Management
                 return RSNative.ListChildren(path, isRecursive);
             else
                 return RSSPS.ListChildren(path);
+        }
+
+        public CatalogItem[] FindItems(string folder, Native.BooleanOperatorEnum booleanOperator, Native.SearchCondition[] searchCriteria)
+        {
+            if (IsNative)
+            {
+                return RSNative.FindItems(folder, booleanOperator, searchCriteria);
+            }
+            return null;
         }
 
         public string CreateSubscription(string Report, ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData, ParameterValue[] Parameters)

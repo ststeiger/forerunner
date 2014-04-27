@@ -126,7 +126,8 @@
     "range":"{0}との間の値を入力して{1}",
     "max":"以下{0}に等しい値を入力してください",
     "min":"以上{0}に等しい値を入力します",
-    "invalid":"無効"
+    "invalid":"無効",
+    "invalidTree":"{0} 選択されていない"
   },
   "dialog": {
     "title":"プロンプト",
@@ -155,7 +156,7 @@
     "dayNamesMin":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]},
   "parameterModel": {
     "defaultName":"既定",
-    "selectSet":"<選択した一連>"
+    "selectSet":"\u003c選択した一連\u003e"
   },
   "manageParamSets": {
     "manageSets":"セットを管理",
@@ -176,5 +177,10 @@
     "username":"ログイン名:",
     "password":"パスワード:",
     "reset":"リセット"
+  },
+  "explorerSearch": {
+    "search":"検索",
+    "emptyError":"検索基準は、空にすることはできません",
+    "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
   }
 }

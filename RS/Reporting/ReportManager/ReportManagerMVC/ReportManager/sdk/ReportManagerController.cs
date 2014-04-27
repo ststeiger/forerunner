@@ -80,9 +80,23 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{\"error\": \"" + e.Message + "\"}"), "text/JSON");  
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");  
             }
             
+        }
+
+        [HttpGet]
+        public HttpResponseMessage FindItems(string folder, string searchOperator, string searchCriteria, string instance = null) 
+        {
+            try
+            {
+                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]
@@ -100,6 +114,16 @@ namespace ReportManager.Controllers
         public HttpResponseMessage Thumbnail(string ReportPath,string DefDate, string instance = null)
         {
             return GetResponseFromBytes(GetReportManager(instance).GetCatalogImage(ReportPath), "image/JPEG",true);            
+        }
+
+        [HttpGet]
+        [ActionName("Resource")]
+        public HttpResponseMessage Resource(string path, string instance = null)
+        {
+            byte[] result = null;
+            string mimetype = null;
+            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            return GetResponseFromBytes(result,mimetype);
         }
 
         [HttpGet]

@@ -126,7 +126,8 @@
     "range":"Geben Sie einen Wert zwischen {0} und {1}",
     "max":"Geben Sie einen Wert kleiner oder gleich {0}",
     "min":"Geben Sie einen Wert größer oder gleich {0}",
-    "invalid":"ungültig"
+    "invalid":"ungültig",
+    "invalidTree":"{0} nicht gewählt"
   },
   "dialog": {
     "title":"Eingabeaufforderung",
@@ -155,7 +156,7 @@
     "dayNamesMin":["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"<Auswahlsatz>"
+    "selectSet":"\u003cAuswahlsatz\u003e"
   },
   "manageParamSets": {
     "manageSets":"Sets verwalten",
@@ -176,5 +177,10 @@
     "username":"Login name:",
     "password":"Passwort:",
     "reset":"rücksetzen"
+  },
+  "explorerSearch": {
+    "search":"Suche",
+    "emptyError":"Suchkriterien können nicht leer sein",
+    "notFound":"Keine Ergebnisse gefunden, bitte verfeinern Sie Ihre Suche."
   }
 }

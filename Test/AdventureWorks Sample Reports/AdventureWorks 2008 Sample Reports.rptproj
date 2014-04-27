@@ -22,10 +22,6 @@
       <FullPath>Product Catalog 2008.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Product Line Sales 2008 - Cascading Test.rdl</Name>
-      <FullPath>Product Line Sales 2008 - Cascading Test.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Product Line Sales 2008.rdl</Name>
       <FullPath>Product Line Sales 2008.rdl</FullPath>
     </ProjectItem>
@@ -45,10 +41,6 @@
       <Name>Territory Sales Drilldown 2008.rdl</Name>
       <FullPath>Territory Sales Drilldown 2008.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Report1.rdl</Name>
-      <FullPath>Report1.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -57,7 +49,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/ReportServer</TargetServerURL>
+        <TargetServerURL>http://192.168.1.80/ReportServer</TargetServerURL>
         <TargetFolder>AdventureWorks 2008 Sample Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <StartItem>Company Sales 2008.rdl</StartItem>

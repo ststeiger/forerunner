@@ -8,6 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var toolTypes = ssr.constants.toolTypes;
     var events = forerunner.ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
 
     // This class provides the default app template for our app.
     // The EZ Viewer widget should use this template
@@ -150,11 +151,13 @@ $(function () {
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
+            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
@@ -458,43 +461,41 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            var onInputFocus = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionAbsolute();
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+        },
+        onInputFocus: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                        me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }, 50);
+            }
+        },
+        onInputBlur: function () {
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-            var onInputBlur = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionFixed();
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
 
-                        if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                            me.$container.removeClass("fr-layout-container-noscroll");
-                        }
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
-
-            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
+                    me.ResetSize();
+                }, 50);
+            }
         },
         getScrollPosition: function () {
             var me = this;
@@ -562,6 +563,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
@@ -569,7 +572,12 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                me.$mainheadersection.toolbar("showAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("showAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("showAllTools");
+                }
             }
             
             if (me.showModal !== true) {
@@ -618,6 +626,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -629,7 +639,12 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                me.$mainheadersection.toolbar("hideAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("hideAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("hideAllTools");
+                }
 
                 me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {

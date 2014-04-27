@@ -590,7 +590,7 @@ table, td, tr {
 .fr-toolbase-selectinner { height: 36px; vertical-align: middle; display: table-cell; }
   .fr-toolbase-selectinner select { margin: auto 0; font-size: 13pt; color: #666666; height: 26px; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; }
 .fr-toolbase-textcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; margin: 1px; display: inline-block; text-align: center; color: white; }
-.fr-toolbase-groupcontainer { position: relative; display: inline-block; }
+.fr-toolbase-groupcontainer { /*height: 36px;*/ line-height:36px; position: relative; display: inline-block; }
 .fr-toolbase-itemcontainer { border-top-width: 1px; border-top-style: groove; border-top-color: #858ea3; vertical-align: top; color: white; display: block; }
 .fr-toolbase-item-text-container { margin: 5px; display: inline-block; }
 .fr-toolbase-item-text { height: 31px; display: table-cell; vertical-align: middle; }
@@ -603,14 +603,37 @@ table, td, tr {
 .fr-toolbase-persistent-active-state { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
 .fr-toolbase-hide-if-touch {  }
 .fr-toolbase-show-if-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
+.fr-toolbase-find-button { position: absolute; right: 4px; top: 10px; }
+.fr-toolbase-find-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
+.fr-toolbase-find-textbox { width: 94px; padding:1px 20px 1px 4px; }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
   .fr-toolbase-state:hover { background: #4f73a6; /* Old browsers */ background: -moz-linear-gradient(top, #4f73a6 0%, #32508a 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4f73a6), color-stop(100%,#32508a)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* IE10+ */ background: linear-gradient(to bottom, #4f73a6 0%,#32508a 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f73a6', endColorstr='#32508a',GradientType=0 ); /* IE6-9 */ }
   .fr-toolbase-state:active { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
   .fr-toolbase-dropdown-item:hover { background-color: #316198; }
 }
-/* @media */
 
+/* Small toolbar (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-toolbar .fr-toolbar-hidden-on-small { display: none; }
+  .fr-toolbar .fr-toolbar-reportpage-textbox { margin-left: 45px; }
+}
+
+/* Medium toolbar (E.g., for phones, landscape) */
+@media only screen and (min-width : 480px) and (max-width : 567px) {
+  .fr-toolbar .fr-toolbar-hidden-on-medium { display: none; }
+}
+
+/* Large toolbar (E.g., for larger phones, landscape) */
+@media only screen and (min-width : 568px) and (max-width : 768px) {
+  .fr-toolbar .fr-toolbar-hidden-on-large { display: none; }
+}
+
+/* Full toolbar (I.e., width of greater than or equal to 768 devices) */
+@media only screen and (min-width : 769px) {
+  /*.fr-toolbar .fr-toolbar-menu-button { display: none; }*/
+  .fr-toolbar .fr-toolbar-hidden-on-very-large { display: none; }
+}
 .fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
 
 .fr-explorer-item { display: inline-block; margin: 20px; padding: 28px 28px 28px 28px; cursor: pointer; width: 200px; height: 250px; }
@@ -647,9 +670,13 @@ table, td, tr {
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff { float: right; }
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-ex-toolbar-find-group { float: right; }
 
 .fr-rm-button-fav { }
+
+.fr-explorer-iframe { width:100%; height:100%; overflow:hidden; padding-bottom:0px; margin-bottom:-20px; }
+
+.fr-explorer-notfound{ margin:4px; font-size:large; }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
@@ -815,11 +842,168 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-checkbox-container { display: inline-block; min-width: 180px; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
-.fr-param-error { border-width: thin; border-color: red; }
+.fr-param-form .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-placeholder { margin-left: 4px; }
 .fr-param-nullable { display:inline-block; }
 .fr-param-required{}
 .fr-param-watermark {color:lightgray;}
+.fr-param-tree-hidden { display:none; }
+
+.fr-param-tree {
+    display:none; 
+    position:absolute; 
+    max-height:300px;
+    overflow:auto;
+    padding-right:16px;
+    border-bottom: 1px solid black;
+    min-width:180px; 
+    max-width:240px; 
+    background:#fff 50% 50% repeat-x; 
+    z-index:5;
+    color:black;
+    font-size:11pt;
+}
+
+.fr-param-tree ul{
+    padding:0;
+}
+.fr-param-tree-item
+{
+    list-style-image: none;
+    list-style-type: none;
+    min-height: 24px;
+    min-width: 24px;
+    line-height: 24px;
+    background-position: -292px -4px;
+    background-repeat: repeat-y;
+    white-space:nowrap;
+}
+.fr-param-tree .fr-param-tree-icon,
+.fr-param-tree .fr-param-tree-item{
+    background-image: url("../images/JSTree32px.png");
+}
+
+.fr-param-tree .fr-param-tree-item
+{
+    min-height: 24px;
+    line-height: 24px;
+    margin-left: 24px;
+    min-width: 24px;
+}
+
+.fr-param-tree > .fr-param-tree-ul > .fr-param-tree-item {
+    margin-left:0;
+    margin-right:0;
+}
+
+.fr-param-tree-icon {
+  display: inline-block;
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  text-align: center;
+}
+
+.fr-param-tree-icon:empty
+{
+    display: inline-block;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+    text-align: center;
+}
+
+.fr-param-tree .fr-param-tree-icon {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  cursor:pointer;
+  background-repeat:no-repeat;
+  background-color:transparent;
+}
+.fr-param-tree-anchor > .fr-param-tree-icon-hidden {
+  display:none;
+}
+
+.fr-param-tree .fr-param-tree-icon-cb {
+    background-position: -164px -4px;
+}
+.fr-param-tree .fr-param-tree-icon-cb:hover {
+    background-position: -164px -36px;
+}
+.fr-param-tree .fr-param-tree-anchor-udm > .fr-param-tree-icon-cb {
+    background-position: -196px -4px;
+}
+.fr-param-tree .fr-param-tree-anchor-udm > .fr-param-tree-icon-cb:hover {
+    background-position: -196px -36px;
+}
+.fr-param-tree .fr-param-tree-anchor-selected > .fr-param-tree-icon-cb {
+    background-position: -228px -4px;
+}
+.fr-param-tree .fr-param-tree-anchor-selected > .fr-param-tree-icon-cb:hover {
+    background-position: -228px -36px;
+}
+.fr-param-tree-ocl{
+    cursor:pointer;
+}
+.fr-param-tree .fr-param-tree-item > .fr-param-tree-ocl{
+    background-position: -68px -4px;
+}
+.fr-param-tree .fr-param-tree-item-open > .fr-param-tree-ocl{
+    background-position: -132px -4px;
+}
+.fr-param-tree .fr-param-tree-item-close > .fr-param-tree-ocl{
+    background-position: -100px -4px;
+}
+.fr-param-tree .fr-param-tree-item-last{
+    background:transparent;
+}
+
+.fr-param-tree-anchor{
+    transition: background-color 0.15s, box-shadow 0.15s;
+    -webkit-transition:background-color 0.15s, box-shadow 0.15s;
+    -moz-transition:background-color 0.15s, box-shadow 0.15s;
+    -o-transition:background-color 0.15s, box-shadow 0.15s;
+
+    display:inline-block;
+    padding: 0 4px 0 1px;
+    margin:0;
+    vertical-align:top;
+
+    line-height:24px;
+    height:24px;
+}
+
+.fr-param-tree-anchor:focus {
+  outline: 0;
+}
+
+.fr-param-tree-anchor, .fr-param-tree-anchor:link, .fr-param-tree-anchor:visited, .fr-param-tree-anchor:hover, .fr-param-tree-anchor:active
+{
+    text-decoration: none;
+    color: inherit;
+}
+
+.fr-param-tree-anchor-selected,.fr-param-tree-item-selected .fr-param-tree-anchor-udm {
+    background-color:#beebff;
+    border-radius:2px;
+    box-shadow:inset 0 0 1px #999;
+}
+
+.fr-param-tree-anchor > .fr-param-tree-icon-theme {
+  display:none;
+}
+
+
+.fr-param-tree .fr-param-tree-loading .fr-param-tree-icon-theme {
+    display:inline-block;
+    background: url("../Images/JSTreeThrobber.gif") center center no-repeat;
+}
+.fr-param-tree-container {
+    z-index: inherit;
+}
 
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }
@@ -1053,17 +1237,12 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-toolbar-zoom { margin: 0px; padding: 0px; width: 100%; height: 38px; }
 
 .fr-toolbar-reportpage-textbox { width: 32px; text-align: right; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; }
-.fr-toolbar-keyword-textbox { width: 94px; padding-left: 4px; padding-right: 20px; padding-top: 1px; padding-bottom: 1px; }
 .fr-rtb-select-set { width: 156px; padding-left: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .fr-rtb-select-set option { }
 
 .fr-toolbar-pageOf-button { width: 15px; color: white; line-height: 36px; text-align: center; }
 .fr-toolbar-numPages-button { min-width: 10mm; max-width: 15mm; padding-left: 4px; color: white; line-height: 36px; }
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
-
-.fr-toolbar-find-button { position: absolute; right: 4px; top: 4px; }
-.fr-toolbar-search-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
-
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
 
 /* The following toolbar sizes will be supported and are device agnostic */
@@ -1101,17 +1280,11 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-item-find-composite-group { display: inline-block; position: relative; padding-left: 12px; }
 
-.fr-item-textbox-keyword { width: 94px; padding-left: 4px; padding-right: 20px; padding-top: 1px; padding-bottom: 1px;  }
-
-.fr-item-find { position: absolute; right: 4px; top: 4px; }
-
 .fr-toolpane-icon16x16 { width: 16px; height: 16px; display: inline-block; margin-top: 10px; margin-right: 5px; }
 
 .fr-toolpane-down-icon { background-image: url(../Images/toolpane/sq_br_down_icon16.png); }
 
 .fr-toolpane-up-icon { background-image: url(../Images/toolpane/sq_br_up_icon16.png); }
-
-.fr-item-search-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
 
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {

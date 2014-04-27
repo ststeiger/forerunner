@@ -126,7 +126,8 @@
     "range":"輸入介於 {0}的{1} 值",
     "max":"輸入小於等於{0}的數",
     "min":"輸入大於等於{0}的數",
-    "invalid":"無效"
+    "invalid":"無效",
+    "invalidTree":"{0} 未選擇"
   },
   "dialog": {
     "title":"提示",
@@ -176,5 +177,10 @@
     "username":"登錄名:",
     "password":"密碼:",
     "reset":"重置"
+  },
+  "explorerSearch": {
+    "search":"搜索 ",
+    "emptyError":"搜索條件不能為空",
+    "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
   }
 }

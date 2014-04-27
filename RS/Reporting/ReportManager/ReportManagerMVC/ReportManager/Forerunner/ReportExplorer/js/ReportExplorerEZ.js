@@ -11,10 +11,17 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
+    var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
         recent: rtb.btnRecent.selectorClass,
+    };
+
+    var viewToItemMap = {
+        catalog: rtp.itemHome.selectorClass,
+        favorites: rtp.itemFav.selectorClass,
+        recent: rtp.itemRecent.selectorClass,
     };
 
     /**
@@ -71,7 +78,9 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
                 isAdmin: me.options.isAdmin,
-            });            
+                onInputFocus: layout.onInputFocus,
+                onInputBlur: layout.onInputBlur
+            });
         },
         /**
          * Transition to ReportManager view.
@@ -84,9 +93,9 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
-                me.DefaultAppTemplate.$mainsection.html("");
-                me.DefaultAppTemplate.$mainsection.hide();
+            if (layout.$mainsection.html() !== "" && layout.$mainsection.html() !== null) {
+                layout.$mainsection.html("");
+                layout.$mainsection.hide();
             }
             layout.cleanUp();
             forerunner.device.allowZoom(false);
@@ -104,7 +113,28 @@ $(function () {
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                if (view === "search") {
+                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
+
+                var $lefttoolbar = layout.$leftheader;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
+                }
+
+                var $toolpane = layout.$leftpanecontent;
+                $toolpane.reportExplorerToolpane({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
+                });
+
+                $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
+                if (view === "search") {
+                    $toolpane.reportExplorerToolpane("setSearchKeyword", path);
+                }
 
                 layout.$rightheader.height(layout.$topdiv.height());
                 layout.$leftheader.height(layout.$topdiv.height());

@@ -127,7 +127,8 @@
     "range":"Introduzca un valor entre {0} y {1}",
     "max":"Introduzca un valor menor o igual a {0}",
     "min":"Introduzca un valor mayor o igual a {0}",
-    "invalid":"Inválido"
+    "invalid":"Inválido",
+    "invalidTree":"{0} No seleccionado"
   },
   "dialog": {
     "title":"pronto",
@@ -156,7 +157,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
     "defaultName":"Defecto",
-    "selectSet":"<conjunto de selección>"
+    "selectSet":"\u003cconjunto de selección\u003e"
   },
   "manageParamSets": {
     "manageSets":"Administrar Sets",
@@ -177,5 +178,10 @@
     "username":"nombre de acceso:",
     "password":"contraseña:",
     "reset":"reajustar"
+  },
+  "explorerSearch": {
+    "search":"búsqueda",
+    "emptyError":"Los criterios de búsqueda no pueden estar vacíos",
+    "notFound":"Ningún resultado coincide con su criterio de búsqueda, por favor, modifique su búsqueda."
   }
 }

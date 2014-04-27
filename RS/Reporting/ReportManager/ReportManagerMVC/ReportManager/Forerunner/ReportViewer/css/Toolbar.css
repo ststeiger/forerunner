@@ -8,17 +8,12 @@
 .fr-toolbar-zoom { margin: 0px; padding: 0px; width: 100%; height: 38px; }
 
 .fr-toolbar-reportpage-textbox { width: 32px; text-align: right; padding-right: 4px; padding-top: 1px; padding-bottom: 1px; }
-.fr-toolbar-keyword-textbox { width: 94px; padding-left: 4px; padding-right: 20px; padding-top: 1px; padding-bottom: 1px; }
 .fr-rtb-select-set { width: 156px; padding-left: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .fr-rtb-select-set option { }
 
 .fr-toolbar-pageOf-button { width: 15px; color: white; line-height: 36px; text-align: center; }
 .fr-toolbar-numPages-button { min-width: 10mm; max-width: 15mm; padding-left: 4px; color: white; line-height: 36px; }
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
-
-.fr-toolbar-find-button { position: absolute; right: 4px; top: 4px; }
-.fr-toolbar-search-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
-
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
 
 /* The following toolbar sizes will be supported and are device agnostic */

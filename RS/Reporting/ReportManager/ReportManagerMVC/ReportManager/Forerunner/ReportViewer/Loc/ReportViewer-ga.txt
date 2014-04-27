@@ -126,7 +126,8 @@
     "range":"Iontráil luach idir {0} agus {1}",
     "max":"Iontráil luach níos lú ná nó cothrom le {0}",
     "min":"Iontráil luach níos mó ná nó cothrom le {0}",
-    "invalid":"neamhbhailí"
+    "invalid":"neamhbhailí",
+    "invalidTree":"{0} nach roghnaithe"
   },
   "dialog": {
     "title":"incitar",
@@ -155,7 +156,7 @@
     "dayNamesMin":["Do", "Lu", "Má", "Cé", "Dé", "hA", "Sa"]},
   "parameterModel": {
     "defaultName":"Réamhshocraithe",
-    "selectSet":"<leagtar a roghnú>"
+    "selectSet":"\u003cleagtar a roghnú\u003e"
   },
   "manageParamSets": {
     "manageSets":"Socraigh Bainistigh",
@@ -176,5 +177,10 @@
     "username":"ainm Logáil isteach:",
     "password":"Pasfhocal:",
     "reset":"Athshocraigh"
+  },
+  "explorerSearch": {
+    "search":"Cuardaigh",
+    "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
+    "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
   }
 }

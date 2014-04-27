@@ -106,7 +106,7 @@ $(function () {
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
             me.$unzoomsection = $unzoomsection;
-            $("body").append(me.$unzoomsection);
+            $mainviewport.append(me.$unzoomsection);
 
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -254,7 +254,7 @@ $(function () {
                 });
             }
         },
-       
+
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -270,6 +270,9 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
+
+            me.$unzoomsection.css("top", diff > 0 ? diff : me.$container.scrollTop());
+            me.$unzoomsection.css("left", me.$container.scrollLeft());
         },
         
         toggleZoom: function () {
@@ -592,7 +595,7 @@ $(function () {
         },
         _allowZoom: function (zoom) {
             var me = this;
-            if (!forerunner.device.isWindowsPhone()) {
+            if (!forerunner.device.isWindowsPhone() &&  enableWPZoom !== true) {
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", zoom);
                 } else {

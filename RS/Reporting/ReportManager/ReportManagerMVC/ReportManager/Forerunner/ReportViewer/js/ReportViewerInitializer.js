@@ -326,7 +326,7 @@ $(function () {
         options: {
             $reportViewer: null,
             $ReportViewerInitializer: null,
-            toolClass: "fr-toolbar-slide",
+            toolClass: "fr-toolbar-zoom",
             $appContainer: null
         },
         _init: function () {

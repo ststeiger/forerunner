@@ -122,16 +122,16 @@ $(function () {
             me._render();
             
             if (me.options.isFullScreen &&
-                forerunner.device.isWindowsPhone()) {
+                (forerunner.device.isWindowsPhone() || enableWPZoom === true)) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.
                 var $viewportStyle = $("#fr-viewport-style");
                 if ($viewportStyle.length === 0) {
                     var userZoom = "fixed";
-                    if (sessionStorage.forerunner_zoomReloadData) {
-                        var zoomReloadStringData = sessionStorage.forerunner_zoomReloadData;
-                        delete sessionStorage.forerunner_zoomReloadData;
+                    if (sessionStorage.forerunner_zoomReload_userZoom) {
+                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                        delete sessionStorage.forerunner_zoomReload_userZoom;
                         var zoomReloadData = JSON.parse(zoomReloadStringData);
                         if (zoomReloadData.userZoom) {
                             userZoom = zoomReloadData.userZoom;

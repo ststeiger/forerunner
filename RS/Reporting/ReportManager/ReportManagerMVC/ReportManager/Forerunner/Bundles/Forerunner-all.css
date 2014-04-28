@@ -1264,6 +1264,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-toolpane-up-icon { background-image: url(../Images/toolpane/sq_br_up_icon16.png); }
 
+.fr-rm-item-findgroup{ border-bottom-width: 1px; border-bottom-style: groove; border-bottom-color: lightblue;  }
+
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-toolpane .fr-id-home .fr-toolbase-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }

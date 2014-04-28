@@ -295,6 +295,8 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples\WP8\DetectZoom_1.html" />
+    <Content Include="Samples\WP8\StringifyTest.html" />
     <Content Include="Samples\WP8\NoZoom_6.html" />
     <Content Include="Samples\WP8\NoZoom_5.html" />
     <Content Include="Samples\WP8\NoZoom.html" />
@@ -379,16 +381,16 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="sdk\readme.docx" />
+    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
-      <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
-    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
+      <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

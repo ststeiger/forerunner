@@ -781,6 +781,26 @@ $(function () {
     };
 
     /**
+     * Defines all the tools used in the unzoom toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.unZoomToolbar = {
+        /** @member */
+        btnUnZoom: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-unzoom-button",
+            imageClass: "fr-icons24x24-unzoom",
+            tooltip: locData.toolbar.unzoom,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("allowZoom", false);
+                }
+            }
+        }
+    };
+
+    /**
      * Defines all the tools used in the left toolbar.
      *
      * @namespace
@@ -885,7 +905,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
+            //sharedClass: "fr-toolbar-hidden-on-very-large",
+            sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -974,7 +995,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-keyword-textbox",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbase-find-textbox",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -1002,7 +1023,7 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-find",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbase-find-button",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",

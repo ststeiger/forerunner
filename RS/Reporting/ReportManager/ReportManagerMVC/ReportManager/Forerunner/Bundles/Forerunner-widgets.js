@@ -7,6 +7,9 @@
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
+// Enable the testing of windows phone style zooming on a pc
+enableWPZoom = true;
+
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -20,9 +23,8 @@ $(function () {
     }
 
     // The page object holds the data for each page
-    function reportPage($container, reportObj) {
+    function reportPage(reportObj) {
         this.reportObj = reportObj;
-        this.$container = $container;
         this.isRendered = false;
     }
 
@@ -328,7 +330,7 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
                 for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
                     me.pages[i].isRendered = false;
-                    me.pages[i].$container.html("");
+                    me._getPageContainer(i).html("");
                 }
                 me._setPage(me.curPage);
             }
@@ -358,13 +360,13 @@ $(function () {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                 me._touchNav();
                 me._removeDocMap();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                
             }
 
@@ -405,6 +407,34 @@ $(function () {
                 };
             }
         },
+        // Windows Phones need to be reloaded in order to change their viewport settings
+        // so what we will do in this case is to set our state into the sessionStorage
+        // and reload the page. Then in the loadPage function we will check if this is
+        // a reload page case so as to set the zoom
+        _allowZoomWindowsPhone: function (isEnabled) {
+            var me = this;
+
+            // Save a copy of the page into the action history
+            me.backupCurPage(true);
+
+            // Make the action history ready to stringify (I.e., remove any unneeded object references)
+            $.each(me.actionHistory, function (index, actionItem) {
+                $.each(actionItem.reportPages, function (index, reportPage) {
+                    reportPage.$container = null;
+                    reportPage.CSS = null;
+                    reportPage.isRendered = false;
+                });
+            });
+
+            // Save the action history into the session storage
+            sessionStorage.forerunner_zoomReload_actionHistory = JSON.stringify({ actionHistory: me.actionHistory });
+
+            // Save the reuested zoom state
+            sessionStorage.forerunner_zoomReload_userZoom = JSON.stringify({ userZoom: isEnabled ? "zoom" : "fixed" });
+
+            // Now reload the page from the saved state
+            window.location.reload();
+        },
         /**
          * Set zoom enable or disable
          *
@@ -415,7 +445,12 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-            if (isEnabled === true){
+            if (forerunner.device.isWindowsPhone() || enableWPZoom === true) {
+                me._allowZoomWindowsPhone(isEnabled);
+                return;
+            }
+
+            if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
             }
@@ -741,6 +776,7 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -1672,6 +1708,20 @@ $(function () {
             me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
+        _reloadFromSessionStorage: function () {
+            var me = this;
+            if (sessionStorage.forerunner_zoomReload_actionHistory) {
+                var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
+                delete sessionStorage.forerunner_zoomReload_actionHistory;
+                var zoomReloadData = JSON.parse(zoomReloadStringData);
+                if (zoomReloadData.actionHistory) {
+                    me.actionHistory = zoomReloadData.actionHistory;
+                    me.back();
+                    return true;
+                }
+            }
+            return false;
+        },
         /**
          * Load the given report
          *
@@ -1683,7 +1733,13 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
-            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum});
+
+            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
+
+            if (me._reloadFromSessionStorage()) {
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                return;
+            }
 
             if (me.reportPath && me.reportPath !== reportPath) {
                 //Do some clean work if it's a new report
@@ -1804,7 +1860,7 @@ $(function () {
                 me.flushCache();
 
             if (me.pages[newPageNum])
-                if (me.pages[newPageNum].$container) {
+                if (me._getPageContainer(newPageNum)) {
                     if (!loadOnly) {
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
@@ -1875,24 +1931,28 @@ $(function () {
 
             me._renderPageError(me.$reportContainer, data);
         },
+        _getPageContainer: function(pageNum) {
+            var me = this;
+            if (!me.pages[pageNum].$container) {
+                me.pages[pageNum].$container = $("<div class='Page'/>");
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
+            }
+
+            return me.pages[pageNum].$container;
+        },
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
-            var $report = $("<Div/>");
-            $report.addClass("Page");
             //Error, need to handle this better
             if (!data) return;
             
-            var responsiveUI = false;
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
-                responsiveUI = true;
-            }
-
             if (data.CredentialsRequired) {
                 me._writeDSCredential(data);
                 return;
             }
-
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
 
             if (!loadOnly && data.ReportContainer && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
@@ -1900,10 +1960,10 @@ $(function () {
                 });
             }
 
-            if (!me.pages[newPageNum])
-                me.pages[newPageNum] = new reportPage($report, data);
+            if (!me.pages[newPageNum]) {
+                me.pages[newPageNum] = new reportPage(data);
+            }
             else {
-                me.pages[newPageNum].$container = $report;
                 me.pages[newPageNum].reportObj = data;
             }
 
@@ -1934,7 +1994,7 @@ $(function () {
                 return;
 
             if (me.pages[pageNum].reportObj.Exception) {
-                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+                me._renderPageError(me._getPageContainer(pageNum), me.pages[pageNum].reportObj);
             }
             else {
                 me.renderError = false;
@@ -1946,8 +2006,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
             }
 
             me.pages[pageNum].isRendered = true;
@@ -2240,6 +2299,7 @@ $(function () {
             this._destroy();
         },
     });  // $.widget
+
 });   // $(function
 
 
@@ -2899,6 +2959,27 @@ $(function () {
                 }
             });
         },
+        onWindowResize: function () {
+            var me = this;
+            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
+            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
+            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
+            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
+
+            // Remove any previously added fr-toolbar-hidden classes
+            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
+
+            var width = me.element.width();
+            if (width < 480) {
+                me.element.find(smallClass).addClass("fr-toolbar-hidden");
+            } else if (width < 568) {
+                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
+            } else if (width < 768) {
+                me.element.find(largeClass).addClass("fr-toolbar-hidden");
+            } else {  // Screen >= 769
+                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
+            }
+        },
         _getToolHtml: function (toolInfo) {
             var me = this;
 
@@ -3306,6 +3387,11 @@ $(function () {
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
 
+            // Define the unzoom toolbar
+            var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
+            me.$unzoomsection = $unzoomsection;
+            $mainviewport.append(me.$unzoomsection);
+
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
@@ -3440,21 +3526,21 @@ $(function () {
                 });
             }
             
-            //IOS safari have a bug that report the window height wrong
+            //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
                 $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
                     // Hiding the tool pane and / or the parameter pane is in response to bugs like 670 and
-                    // 532. on iOS the buttons clicks and scrolling were having trouble is the panes were left
+                    // 532. On iOS, the button clicks and scrolling were having trouble if the panes were left
                     // up. So we are going to close them here. The user can reopen if they want.
                     me.hideSlideoutPane(true);
                     me.hideSlideoutPane(false);
                 });
             }
         },
-       
+
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -3489,7 +3575,7 @@ $(function () {
 
             if (!me.isZoomed() && me.wasZoomed) {
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
-                $viewer.reportViewer("allowZoom", false);
+                me._allowZoom(false);
                 me.wasZoomed = false;
                 if (forerunner.device.isAndroid()) {
                     me.$topdiv.css("width", "100%");
@@ -3507,6 +3593,8 @@ $(function () {
                 return false;
         },
         _firstTime: true,
+        // Debug
+        _lastHeight: 0,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -3569,6 +3657,18 @@ $(function () {
             $(".fr-toolpane", me.$container).css({ height: "100%" });
         },
 
+        showTopDiv: function (isEnabled) {
+            var me = this;
+            if (isEnabled === true) {
+                me.$topdiv.hide();
+                me.$viewer.reportViewer("option", "toolbarHeight", 0);
+            }
+            else {
+                me.$topdiv.show();
+                me.$viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
+            }
+        },
+
         bindViewerEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -3610,14 +3710,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
-                if (data.isEnabled === true) {
-                    me.$topdiv.hide();
-                    $viewer.reportViewer("option", "toolbarHeight", 0);
-                }
-                else {
-                    me.$topdiv.show();
-                    $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
-                }
+                me.showTopDiv.call(me, data.isEnabled);
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -3788,14 +3881,27 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
         },
+        _allowZoom: function (zoom) {
+            var me = this;
+            if (!forerunner.device.isWindowsPhone() &&  enableWPZoom !== true) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("allowZoom", zoom);
+                } else {
+                    forerunner.device.allowZoom(zoom);
+                }
+            }
+        },
+        showUnZoomPane: function () {
+            var me = this;
+            me.showTopDiv(true);
+            me.$unzoomsection.show();
+        },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
+            me._allowZoom(false);
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
-            } else {
-                forerunner.device.allowZoom(false);
             }
 
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -3823,11 +3929,9 @@ $(function () {
                     me.$mainheadersection.toolbar("hideAllTools");
                 }
 
+                me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
-                } else {
-                    forerunner.device.allowZoom(false);
                 }
             }
 
@@ -4011,35 +4115,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
-            $(window).resize(function () {
-                me._onWindowResize.call(me);
-            });
-
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
             //me.enableTools([tb.btnMenu, tb.btnReportBack]);
-        },
-        _onWindowResize: function () {
-            var me = this;
-            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
-            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
-            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
-            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
-
-            // Remove any previously added fr-toolbar-hidden classes
-            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
-
-            var width = me.element.width();
-            if (width < 480) {
-                me.element.find(smallClass).addClass("fr-toolbar-hidden");
-            } else if (width < 568) {
-                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
-            } else if (width < 768) {
-                me.element.find(largeClass).addClass("fr-toolbar-hidden");
-            } else {  // Screen >= 769
-                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
-            }
         },
         _init: function () {
             var me = this;
@@ -4062,9 +4141,7 @@ $(function () {
             else
                 listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
 
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
                 else
@@ -4128,6 +4205,10 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()
@@ -4277,9 +4358,7 @@ $(function () {
             else
                 listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
@@ -4689,6 +4768,8 @@ $(function () {
             }
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -4698,7 +4779,7 @@ $(function () {
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tb.btnLogOff]);
+                me.addTools(7, true, [tb.btnLogOff]);
             }
             me._initCallbacks();
 
@@ -4714,6 +4795,10 @@ $(function () {
 
         _create: function () {
             var me = this;
+
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()
@@ -10392,6 +10477,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -10450,6 +10536,11 @@ $(function () {
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+
+            var $unzoomtoolbar = me.options.$unzoomtoolbar;
+            if ($unzoomtoolbar !== null) {
+                $unzoomtoolbar.unzoomToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
+            }
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
@@ -10673,6 +10764,27 @@ $(function () {
         }
     };  // ssr.ReportViewerInitializer.prototype
 
+    // Unzoom Toolbar
+    $.widget(widgets.getFullname(widgets.unzoomToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-zoom",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+            var utb = forerunner.ssr.tools.unZoomToolbar;
+
+            me.element.html("");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [utb.btnUnZoom]);
+        },
+    }); //$.widget
+
     // Left Toolbar
     $.widget(widgets.getFullname(widgets.leftToolbar), $.forerunner.toolBase, {
         options: {
@@ -10819,6 +10931,7 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
+                $unzoomtoolbar: layout.$unzoomsection
             });
 
             initializer.render();
@@ -10864,6 +10977,33 @@ $(function () {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
             me._render();
+            
+            if (me.options.isFullScreen &&
+                (forerunner.device.isWindowsPhone() || enableWPZoom === true)) {
+                // if the viewer is full screen, we will set up the viewport here. Note that on Windows
+                // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
+                // with the meta tag.
+                var $viewportStyle = $("#fr-viewport-style");
+                if ($viewportStyle.length === 0) {
+                    var userZoom = "fixed";
+                    if (sessionStorage.forerunner_zoomReload_userZoom) {
+                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                        delete sessionStorage.forerunner_zoomReload_userZoom;
+                        var zoomReloadData = JSON.parse(zoomReloadStringData);
+                        if (zoomReloadData.userZoom) {
+                            userZoom = zoomReloadData.userZoom;
+                        }
+                    }
+
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
+                    $("head").slice(0).append($viewportStyle);
+
+                    // Show the unzoom toolbar
+                    if (userZoom === "zoom") {
+                        me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+                    }
+                }
+            }
         },
         /**
          * Get report viewer page navigation

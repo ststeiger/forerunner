@@ -78,7 +78,8 @@
     "parameterSets":"Manage Sets",
     "selectSet":"Select Set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Print Report",
@@ -155,7 +156,7 @@
     "dayNamesMin":["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<select set>"
   },
   "manageParamSets": {
     "manageSets":"Manage Sets",

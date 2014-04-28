@@ -195,6 +195,8 @@ $(function () {
             reportExplorerToolbar: "reportExplorerToolbar",
             /** @constant */
             reportExplorerToolpane: "reportExplorerToolpane",
+            /** @constant */
+            unzoomToolbar: "unzoomToolbar",
 
             /** @constant */
             namespace: "forerunner",
@@ -1164,7 +1166,7 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE 9)/);
         },
-        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key word */
         isMSIEAndTouch :function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE)/) !== null && ua.match(/(Touch)/) !== null;

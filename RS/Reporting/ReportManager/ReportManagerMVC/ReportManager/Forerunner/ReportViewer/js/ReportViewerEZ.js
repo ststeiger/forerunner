@@ -74,6 +74,7 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
+                $unzoomtoolbar: layout.$unzoomsection
             });
 
             initializer.render();
@@ -119,6 +120,33 @@ $(function () {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
             me._render();
+            
+            if (me.options.isFullScreen &&
+                (forerunner.device.isWindowsPhone() || enableWPZoom === true)) {
+                // if the viewer is full screen, we will set up the viewport here. Note that on Windows
+                // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
+                // with the meta tag.
+                var $viewportStyle = $("#fr-viewport-style");
+                if ($viewportStyle.length === 0) {
+                    var userZoom = "fixed";
+                    if (sessionStorage.forerunner_zoomReload_userZoom) {
+                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                        delete sessionStorage.forerunner_zoomReload_userZoom;
+                        var zoomReloadData = JSON.parse(zoomReloadStringData);
+                        if (zoomReloadData.userZoom) {
+                            userZoom = zoomReloadData.userZoom;
+                        }
+                    }
+
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
+                    $("head").slice(0).append($viewportStyle);
+
+                    // Show the unzoom toolbar
+                    if (userZoom === "zoom") {
+                        me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+                    }
+                }
+            }
         },
         /**
          * Get report viewer page navigation

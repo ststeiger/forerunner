@@ -149,6 +149,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\icons24x24.png"
   File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
   File "${LOCALROOT}\Forerunner\Common\images\ForerunnerLogo.png"
+  File "${LOCALROOT}\Forerunner\Common\Images\search.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\animated-overlay.gif"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png"
@@ -217,7 +218,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\search.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortDecending.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortAccending.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Parameter_Expand.png"
@@ -744,6 +744,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
+  Delete "$INSTDIR\Forerunner\Common\images\search.png"
   
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"

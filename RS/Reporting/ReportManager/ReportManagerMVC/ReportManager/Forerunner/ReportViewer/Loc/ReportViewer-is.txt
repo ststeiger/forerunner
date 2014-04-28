@@ -78,7 +78,8 @@
     "parameterSets":"stjórna Leikmynd",
     "selectSet":"valið er Stilla",
     "dsCredential":"DataSource persónuskilríki",
-    "addToFavorites":"Bæta við uppáhöld"
+    "addToFavorites":"Bæta við uppáhöld",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Print Report",

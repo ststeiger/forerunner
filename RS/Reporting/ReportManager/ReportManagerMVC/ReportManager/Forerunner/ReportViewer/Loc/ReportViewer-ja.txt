@@ -78,7 +78,8 @@
     "parameterSets":"セットを管理",
     "selectSet":"セットを選択します。",
     "dsCredential":"データソースクレデンシャル",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

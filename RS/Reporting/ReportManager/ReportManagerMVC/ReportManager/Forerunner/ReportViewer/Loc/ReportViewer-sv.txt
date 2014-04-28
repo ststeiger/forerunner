@@ -78,7 +78,8 @@
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

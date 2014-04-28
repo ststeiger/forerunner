@@ -156,7 +156,7 @@
     "dayNamesMin":["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"]},
   "parameterModel": {
     "defaultName":"Sjálfgefið",
-    "selectSet":"\u003cVeldu Velja\u003e"
+    "selectSet":"<Veldu Velja>"
   },
   "manageParamSets": {
     "manageSets":"stjórna Leikmynd",

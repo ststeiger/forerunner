@@ -156,7 +156,7 @@
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
     "defaultName":"дефолт",
-    "selectSet":"\u003cвыберите набор\u003e"
+    "selectSet":"<cвыберите набор>"
   },
   "manageParamSets": {
     "manageSets":"Управление наборы",

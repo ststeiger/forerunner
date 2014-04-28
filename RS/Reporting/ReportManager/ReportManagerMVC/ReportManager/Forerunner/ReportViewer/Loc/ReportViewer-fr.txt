@@ -80,7 +80,7 @@
     "selectSet":"Sélectionnez Set",
     "dsCredential":"source de données d'identification",
     "addToFavorites":"Ajouter aux favoris",
-    "unzoom":"unzoom"
+    "unzoom":"dézoomer"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -157,7 +157,7 @@
     "dayNamesMin":["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Défaut",
-    "selectSet":"\u003csélectionnez ensemble\u003e"
+    "selectSet":"<sélectionnez ensemble>"
   },
   "manageParamSets": {
     "manageSets":"Gérer jeux",

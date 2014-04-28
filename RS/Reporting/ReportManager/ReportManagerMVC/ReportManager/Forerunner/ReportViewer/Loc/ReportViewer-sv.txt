@@ -79,7 +79,7 @@
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
     "addToFavorites":"Lägg till i favoriter",
-    "unzoom":"unzoom"
+    "unzoom":"Zooma ut"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -156,7 +156,7 @@
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
     "defaultName":"Standard",
-    "selectSet":"\u003cvälj set\u003e"
+    "selectSet":"<cvälj set>"
   },
   "manageParamSets": {
     "manageSets":"Hantera Satser",

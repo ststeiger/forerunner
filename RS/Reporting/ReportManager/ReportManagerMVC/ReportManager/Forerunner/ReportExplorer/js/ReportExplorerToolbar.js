@@ -72,6 +72,8 @@ $(function () {
             }
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -97,6 +99,10 @@ $(function () {
 
         _create: function () {
             var me = this;
+
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()

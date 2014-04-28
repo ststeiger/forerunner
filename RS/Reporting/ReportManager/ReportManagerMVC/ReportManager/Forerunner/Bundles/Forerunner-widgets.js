@@ -4779,7 +4779,7 @@ $(function () {
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tb.btnLogOff]);
+                me.addTools(7, true, [tb.btnLogOff]);
             }
             me._initCallbacks();
 

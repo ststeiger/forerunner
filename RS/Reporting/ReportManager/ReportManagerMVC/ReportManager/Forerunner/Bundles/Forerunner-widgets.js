@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -10270,11 +10270,7 @@ $(function () {
 	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Report service instance name
      * @example
-     * $("#reportExplorerEZId").reportExplorerEZ({
-     *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack,
-     *  explorerSettings: explorerSettings
-     * });
+     * $("#reportExplorerEZId").reportExplorerEZ();
      */
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {
         options: {
@@ -10289,6 +10285,9 @@ $(function () {
             var path0 = path;
             var layout = me.DefaultAppTemplate;
             
+            if (!me.options.navigateTo)
+                me.options.navigateTo = me._NavigateTo;
+
             if (!path)
                 path = "/";
             if (!view)
@@ -10312,6 +10311,35 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
             });
+        },
+        _NavigateTo: function (action, path) {
+            var me = this;
+
+            var $container = me.$appContainer;
+            var encodedPath = String(path).replace(/\//g, "%2f");
+            var targetUrl = "#" + action
+            if (path) targetUrl += "/" + encodedPath;
+
+            if (action === "explore") {
+                $container.reportExplorerEZ("transitionToReportManager", path, null);
+            }
+            else if (action === "home") {
+                targetUrl = "#";
+                $container.reportExplorerEZ("transitionToReportManager", path, null);
+            }
+            else if (action === "back") {
+                window.history.back();
+                return;
+            }
+            else if (action === "browse") {
+                $container.reportExplorerEZ("transitionToReportViewer", path);
+            }
+            else {
+                $container.reportExplorerEZ("transitionToReportManager", path, action);
+            }
+
+            window.location.hash = targetUrl;
+
         },
         /**
          * Transition to ReportManager view.

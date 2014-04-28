@@ -20,7 +20,7 @@ $(function () {
      * @prop {String} options.view - View passed to the GetItems REST call
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
-     * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
      * @prop {Object} options.$appContainer - Report page container
      * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Report service instance name

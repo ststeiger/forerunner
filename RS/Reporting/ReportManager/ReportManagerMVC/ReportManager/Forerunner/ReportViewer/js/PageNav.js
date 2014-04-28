@@ -21,7 +21,7 @@ $(function () {
      *  $reportViewer: me.$reportViewer
      * });
      */
-    $.widget(widgets.getFullname(widgets.pageNav), {
+    $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {
         options: {
             $reportViewer: null,
             rsInstance: null,

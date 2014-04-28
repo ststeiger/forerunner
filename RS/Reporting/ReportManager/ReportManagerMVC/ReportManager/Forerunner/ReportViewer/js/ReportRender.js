@@ -43,8 +43,23 @@ $(function () {
         this.$rowHeader = $rowHeader;
         this.$colHeader = $colHeader;
     }
+
+    /**
+    * Widget used to render the report
+    *
+    * @namespace $.forerunner.reportRender
+    * @prop {Object} options - The options for reportRender
+    * @prop {String} options.reportViewer - The ReportViewer object  that is rendering this report
+    * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
+    * @prop {Number} options.renderTime - Unique id for this report
+    * @example
+    * $("#reportRenderId").reportRender({ reportViewer: this, responsive: true, renderTime: new Date().getTime() });
+    * $("#reportViewerId").reportRender("render", 1);
+    */
+
+
     // report render widget
-    $.widget(widgets.getFullname(widgets.reportRender), {
+    $.widget(widgets.getFullname(widgets.reportRender),/** @lends $.forerunner.reportRender */ {
         // Default options
         options: {
             reportViewer: null,

@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -668,8 +668,6 @@ table, td, tr {
 .fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-ex-toolbar-find-group { float: right; }
 
 .fr-rm-button-fav { }
-
-.fr-rm-item-findgroup{ border-bottom-width: 1px; border-bottom-style: groove; border-bottom-color: #add8e6; }
 
 .fr-explorer-iframe { width:100%; height:100%; overflow:hidden; padding-bottom:0px; margin-bottom:-20px; }
 

@@ -14,7 +14,7 @@ $(function () {
      *
      * @namespace $.forerunner.pageNav
      * @prop {Object} options - The options for pageNav
-     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$reportViewer - Report viewer widget
      * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#pageNavContainer").pageNav({

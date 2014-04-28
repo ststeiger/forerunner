@@ -17,7 +17,7 @@ $(function () {
     /**
      * Widget used to manage report datasource credential
      *
-     * @namespace $.forerunner.dsCredemtial
+     * @namespace $.forerunner.dsCredential
      * @prop {Object} options - The options for dsCredential
      * @prop {String} options.$reportViewer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container

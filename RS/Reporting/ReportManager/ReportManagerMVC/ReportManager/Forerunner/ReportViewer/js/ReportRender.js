@@ -50,7 +50,7 @@ $(function () {
     * @namespace $.forerunner.reportRender
     * @prop {Object} options - The options for reportRender
     * @prop {String} options.reportViewer - The ReportViewer object  that is rendering this report
-    * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
+    * @prop {boolean} options.responsive - Whether the report layout should be based on the device size or the RDL defintion
     * @prop {Number} options.renderTime - Unique id for this report
     * @example
     * $("#reportRenderId").reportRender({ reportViewer: this, responsive: true, renderTime: new Date().getTime() });
@@ -78,6 +78,13 @@ $(function () {
             }
         },
          
+        /**
+        * Renders the report
+        *
+        * @function $.forerunner.reportRender#render
+        *
+        * @param {integer} Page - The page number of the report to render
+        */
         render: function (Page) {
             var me = this;
             var reportDiv = me.element;
@@ -144,7 +151,13 @@ $(function () {
 
             return svg;
         },
-
+         /**
+         * Writes error data to the page
+         *
+         * @function $.forerunner.reportRender#writeError
+         *
+         * @param {object} errorData - Error data object to srite error page from.
+         */
         writeError: function (errorData) {
             var me = this;
             var errorTag = me.options.reportViewer.locData.errorTag;

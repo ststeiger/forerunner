@@ -123,7 +123,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: reportPrint</h1>
+			<h1 class="page-title">Namespace: reportExplorerToolpane</h1>
 			 
 
 
@@ -134,7 +134,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    reportPrint
+    reportExplorerToolpane
     </h2>
     
 </header>  
@@ -145,7 +145,7 @@
     
     
         
-            <div class="description">Widget used to show print dialog</div>
+            <div class="description">Toolbar widget used by the Report Explorer</div>
         
         
         
@@ -194,7 +194,7 @@
             
             
             
-            <td class="description last">The options for document map
+            <td class="description last">The options for toolpane
                 <h6>Properties</h6>
 
 <table class="props">
@@ -219,7 +219,7 @@
 	
         <tr>
             
-                <td class="name"><code>$reportViewer</code></td>
+                <td class="name"><code>navigateTo</code></td>
             
             
             <td class="type">
@@ -235,20 +235,20 @@
             
             
             
-            <td class="description last">The report viewer widget</td>
+            <td class="description last">Callback function used to navigate to a specific page</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>$appContainer</code></td>
+                <td class="name"><code>toolClass</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
             
@@ -258,7 +258,7 @@
             
             
             
-            <td class="description last">Report page container</td>
+            <td class="description last">The top level class for this tool (E.g., fr-toolbar)</td>
         </tr>
 	
 	
@@ -302,7 +302,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>  $("#docMap").reportDocumentMap({      $reportViewer: $viewer   });   </code></pre>
+    <pre class="prettyprint"><code>$("#reportExplorerToolpaneId").reportExplorerToolpane({ navigateTo: navigateTo});</code></pre>
 
         
     
@@ -326,7 +326,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="openDialog"><span class="type-signature"></span>openDialog<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setFolderItemActive"><span class="type-signature"></span>setFolderItemActive<span class="signature">(selectorClass)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -334,135 +334,7 @@
     
     
     <div class="description">
-        Open print dialog
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="openDialog"><span class="type-signature"></span>openDialog<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Close print dialog
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="setPrint"><span class="type-signature"></span>setPrint<span class="signature">(pageLayout)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Set report page layout
+        Set specify tool to active state
     </div>
     
 
@@ -496,13 +368,13 @@
 	
         <tr>
             
-                <td class="name"><code>pageLayout</code></td>
+                <td class="name"><code>selectorClass</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
             
@@ -512,7 +384,7 @@
             
             
             
-            <td class="description last">Report page layout data</td>
+            <td class="description last">selector class name</td>
         </tr>
 	
 	

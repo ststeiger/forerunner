@@ -144,8 +144,8 @@ function generateSourceFiles(sourceFiles) {
             handle(e);
         }
 
-        generate('Source: ' + sourceFiles[file].shortened, [source], sourceOutfile,
-            false);
+        //generate('Source: ' + sourceFiles[file].shortened, [source], sourceOutfile,
+        //    false);
     });
 }
 

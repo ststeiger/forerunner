@@ -157,7 +157,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
     "defaultName":"Defecto",
-    "selectSet":"\u003cconjunto de selección\u003e"
+    "selectSet":"<conjunto de selección>"
   },
   "manageParamSets": {
     "manageSets":"Administrar Sets",

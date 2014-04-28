@@ -156,7 +156,7 @@
     "dayNamesMin":["Do", "Lu", "Má", "Cé", "Dé", "hA", "Sa"]},
   "parameterModel": {
     "defaultName":"Réamhshocraithe",
-    "selectSet":"\u003cleagtar a roghnú\u003e"
+    "selectSet":"<leagtar a roghnú>"
   },
   "manageParamSets": {
     "manageSets":"Socraigh Bainistigh",

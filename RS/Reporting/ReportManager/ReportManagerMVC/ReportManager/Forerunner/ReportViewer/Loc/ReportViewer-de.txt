@@ -156,7 +156,7 @@
     "dayNamesMin":["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"\u003cAuswahlsatz\u003e"
+    "selectSet":"<Auswahlsatz>"
   },
   "manageParamSets": {
     "manageSets":"Sets verwalten",

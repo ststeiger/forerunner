@@ -156,7 +156,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Difetto",
-    "selectSet":"\u003cselezionare set\u003e"
+    "selectSet":"<selezionare set>"
   },
   "manageParamSets": {
     "manageSets":"Gestire Sets",

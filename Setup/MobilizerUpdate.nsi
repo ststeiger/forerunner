@@ -131,6 +131,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\Common\Images"
   File "${LOCALROOT}\Forerunner\Common\Images\icons24x24.png"
   File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
+  File "${LOCALROOT}\Forerunner\Common\images\search.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"
@@ -665,6 +666,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
+  Delete "$INSTDIR\Forerunner\Common\images\search.png"
   
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"

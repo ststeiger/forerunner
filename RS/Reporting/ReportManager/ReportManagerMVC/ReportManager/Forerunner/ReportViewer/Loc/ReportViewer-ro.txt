@@ -78,7 +78,8 @@
     "parameterSets":"Gestionați Seturi",
     "selectSet":"Selectați Set",
     "dsCredential":"DataSource acreditare",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"imprima raportul",

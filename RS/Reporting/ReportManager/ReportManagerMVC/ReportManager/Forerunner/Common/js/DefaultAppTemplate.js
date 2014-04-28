@@ -104,6 +104,11 @@ $(function () {
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
 
+            // Define the unzoom toolbar
+            var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
+            me.$unzoomsection = $unzoomsection;
+            $mainviewport.append(me.$unzoomsection);
+
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
@@ -238,21 +243,21 @@ $(function () {
                 });
             }
             
-            //IOS safari have a bug that report the window height wrong
+            //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
                 $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
                     // Hiding the tool pane and / or the parameter pane is in response to bugs like 670 and
-                    // 532. on iOS the buttons clicks and scrolling were having trouble is the panes were left
+                    // 532. On iOS, the button clicks and scrolling were having trouble if the panes were left
                     // up. So we are going to close them here. The user can reopen if they want.
                     me.hideSlideoutPane(true);
                     me.hideSlideoutPane(false);
                 });
             }
         },
-       
+
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -287,7 +292,7 @@ $(function () {
 
             if (!me.isZoomed() && me.wasZoomed) {
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
-                $viewer.reportViewer("allowZoom", false);
+                me._allowZoom(false);
                 me.wasZoomed = false;
                 if (forerunner.device.isAndroid()) {
                     me.$topdiv.css("width", "100%");
@@ -305,6 +310,8 @@ $(function () {
                 return false;
         },
         _firstTime: true,
+        // Debug
+        _lastHeight: 0,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -367,6 +374,18 @@ $(function () {
             $(".fr-toolpane", me.$container).css({ height: "100%" });
         },
 
+        showTopDiv: function (isEnabled) {
+            var me = this;
+            if (isEnabled === true) {
+                me.$topdiv.hide();
+                me.$viewer.reportViewer("option", "toolbarHeight", 0);
+            }
+            else {
+                me.$topdiv.show();
+                me.$viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
+            }
+        },
+
         bindViewerEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -408,14 +427,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
-                if (data.isEnabled === true) {
-                    me.$topdiv.hide();
-                    $viewer.reportViewer("option", "toolbarHeight", 0);
-                }
-                else {
-                    me.$topdiv.show();
-                    $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
-                }
+                me.showTopDiv.call(me, data.isEnabled);
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -586,14 +598,27 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
         },
+        _allowZoom: function (zoom) {
+            var me = this;
+            if (!forerunner.device.isWindowsPhone() &&  enableWPZoom !== true) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("allowZoom", zoom);
+                } else {
+                    forerunner.device.allowZoom(zoom);
+                }
+            }
+        },
+        showUnZoomPane: function () {
+            var me = this;
+            me.showTopDiv(true);
+            me.$unzoomsection.show();
+        },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
+            me._allowZoom(false);
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
-            } else {
-                forerunner.device.allowZoom(false);
             }
 
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -621,11 +646,9 @@ $(function () {
                     me.$mainheadersection.toolbar("hideAllTools");
                 }
 
+                me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
-                } else {
-                    forerunner.device.allowZoom(false);
                 }
             }
 

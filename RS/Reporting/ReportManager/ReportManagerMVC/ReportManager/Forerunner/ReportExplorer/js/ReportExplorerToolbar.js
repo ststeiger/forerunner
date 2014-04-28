@@ -72,6 +72,8 @@ $(function () {
             }
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -81,7 +83,7 @@ $(function () {
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tb.btnLogOff]);
+                me.addTools(7, true, [tb.btnLogOff]);
             }
             me._initCallbacks();
 
@@ -97,6 +99,10 @@ $(function () {
 
         _create: function () {
             var me = this;
+
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()

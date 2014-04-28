@@ -78,7 +78,8 @@
     "parameterSets":"управлять наборами",
     "selectSet":"Выбор набора",
     "dsCredential":"источник данных учетных",
-    "addToFavorites":"Добавить в избранное"
+    "addToFavorites":"Добавить в избранное",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Печать отчета",

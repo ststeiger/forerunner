@@ -37,6 +37,7 @@
     <sourcefile name="24x24icons\Folders.png" classname="fr-icons24x24-folders"></sourcefile>
     <sourcefile name="24x24icons\DataSourceCred.png" classname="fr-icons24x24-dataSourceCred"></sourcefile>
     <sourcefile name="24x24icons\Logout.png" classname="fr-icons24x24-logout"></sourcefile>
+    <sourcefile name="24x24icons\UnZoom.png" classname="fr-icons24x24-unzoom"></sourcefile>
   </compositeimage>
   <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>

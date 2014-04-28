@@ -78,7 +78,8 @@
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
     "dsCredential":"credential Datasource",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "unzoom":"unzoom"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

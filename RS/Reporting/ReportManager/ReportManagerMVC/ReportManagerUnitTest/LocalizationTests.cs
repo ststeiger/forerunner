@@ -231,6 +231,8 @@ namespace ReportManagerUnitTest
             jsonString = Regex.Replace(jsonString, @""":\[(?<list>(""[^""]*"",)*)(?<last>""[^""]*"")\]", MatchEvaluator);
             // Get rid of any extraneous escape sequesnces
             jsonString = jsonString.Replace("\\u0027", "'");
+            jsonString = jsonString.Replace("\\u003c", "<");
+            jsonString = jsonString.Replace("\\u003e", ">");
             // Put members on new lines
             jsonString = jsonString.Replace("\",\"", "\",\n    \"");
             // Put members following an array on a new line

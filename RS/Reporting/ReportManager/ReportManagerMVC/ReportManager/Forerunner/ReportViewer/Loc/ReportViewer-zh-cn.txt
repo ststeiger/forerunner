@@ -79,7 +79,7 @@
     "selectSet":"选择参数集",
     "dsCredential":"数据源验证",
     "addToFavorites":"添加到收藏",
-    "unzoom":"unzoom"
+    "unzoom":"取消缩放"
   },
   "print": {
     "title":"打印报表",

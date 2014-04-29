@@ -79,7 +79,8 @@
     "selectSet":"wählen Sätze",
     "dsCredential":"Datenquelle Credential",
     "addToFavorites":"Zu Favoriten hinzufügen",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"Suche"
   },
   "print": {
     "title":"Bericht drucken",
@@ -179,7 +180,6 @@
     "reset":"rücksetzen"
   },
   "explorerSearch": {
-    "search":"Suche",
     "emptyError":"Suchkriterien können nicht leer sein",
     "notFound":"Keine Ergebnisse gefunden, bitte verfeinern Sie Ihre Suche."
   }

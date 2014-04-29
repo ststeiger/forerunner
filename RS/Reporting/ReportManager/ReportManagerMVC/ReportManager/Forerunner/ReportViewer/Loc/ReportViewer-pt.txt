@@ -79,7 +79,8 @@
     "selectSet":"Selecione Definir",
     "dsCredential":"DataSource Credencial",
     "addToFavorites":"Adicionar aos favoritos",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"pesquisa"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -179,7 +180,6 @@
     "reset":"restabelecer"
   },
   "explorerSearch": {
-    "search":"pesquisa",
     "emptyError":"Critérios de busca não pode estar vazio",
     "notFound":"Nenhum resultado correspondem aos seus critérios de busca, por favor refinar sua busca."
   }

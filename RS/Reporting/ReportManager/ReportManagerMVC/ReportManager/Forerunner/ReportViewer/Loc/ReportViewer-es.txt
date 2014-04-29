@@ -80,7 +80,8 @@
     "selectSet":"Seleccione Establecer",
     "dsCredential":"credenciales del origen de datos",
     "addToFavorites":"Añadir a Favoritos",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"búsqueda"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -180,7 +181,6 @@
     "reset":"reajustar"
   },
   "explorerSearch": {
-    "search":"búsqueda",
     "emptyError":"Los criterios de búsqueda no pueden estar vacíos",
     "notFound":"Ningún resultado coincide con su criterio de búsqueda, por favor, modifique su búsqueda."
   }

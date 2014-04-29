@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4005,7 +4005,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toobar widget used by the reportViewer
@@ -4050,6 +4050,11 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tb.btnCredential]);
                     }
+                    
+                    //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
+                    //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
+                    //forerunner-tools.js so need to make sure the blur event from watermark actually work
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -4190,6 +4195,7 @@ $(function () {
         },
         _clearBtnStates: function () {
             var me = this;
+
             me.element.find(".fr-toolbar-keyword-textbox").val("");
             me.element.find(".fr-toolbar-reportpage-textbox").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
@@ -4228,6 +4234,7 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * ToolPane widget used with the reportViewer
@@ -4268,6 +4275,8 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tp.itemCredential]);
                     }
+
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -4324,7 +4333,7 @@ $(function () {
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
             });
-
+            
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
             //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
@@ -4767,7 +4776,7 @@ $(function () {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
         },
@@ -4878,7 +4887,7 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;

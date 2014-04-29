@@ -72,7 +72,7 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;

@@ -12,6 +12,7 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * ToolPane widget used with the reportViewer
@@ -52,6 +53,8 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tp.itemCredential]);
                     }
+
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -108,7 +111,7 @@ $(function () {
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
             });
-
+            
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
             //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);

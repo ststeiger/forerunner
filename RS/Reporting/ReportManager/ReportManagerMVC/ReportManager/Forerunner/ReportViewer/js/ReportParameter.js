@@ -252,7 +252,8 @@ $(function () {
             pc.removeAttr("style");
 
             me._setDatePicker();
-            $(document).on("click", function (e) { me._checkExternalClick(e); });
+            $(document).off("click", me._checkExternalClick);
+            $(document).on("click", { me: me }, me._checkExternalClick);
 
 
             $(":text", me.$params).each(
@@ -1072,6 +1073,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-ocl").trigger("click");
                         });
                     }
@@ -1081,6 +1083,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-anchor").trigger("click");
                         });
                     }
@@ -1389,7 +1392,6 @@ $(function () {
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
-
                 if (skipVisibleCheck || $tree.is(":visible")) {
                     me._setTreeSelectedValues($tree);
                     $tree.hide();
@@ -1670,13 +1672,13 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
+            //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
-
+            //close cascading tree and set value
             me._closeCascadingTree(false);
         },
         _checkExternalClick: function (e) {
-            var me = this;
+            var me = e.data.me;
 
             if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {
                 me._closeAllDropdown();
@@ -1715,6 +1717,12 @@ $(function () {
         getParamsList: function (noValid) {
             var me = this;
             var i;
+
+            //for all get request that need validate, close all dropdown panel to get latest value first
+            if (!noValid) {
+                me._closeAllDropdown();
+            }
+            
             if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
@@ -1962,5 +1970,10 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        destroy: function () {
+            var me = this;
+
+            $(document).off("click", me._checkExternalClick);
+        }
     });  // $.widget
 });

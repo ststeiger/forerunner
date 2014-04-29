@@ -782,6 +782,7 @@ $(function () {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
                         me.paramLoaded = true;
+                        me.$paramarea = me.options.paramArea;
                     }
 
                     // Restore the parameterModel state from the action history
@@ -1609,6 +1610,7 @@ $(function () {
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
 
                     me.paramLoaded = true;
+                    me.$paramarea = me.options.paramArea;
                 }
             }
             else if (data.Exception) {
@@ -1671,6 +1673,7 @@ $(function () {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                 }
                 me.paramLoaded = true;
+                me.$paramarea = me.options.paramArea;
             }
         },
         _removeParameters: function () {
@@ -2289,6 +2292,10 @@ $(function () {
 
             if (me.$printDialog)
                 me.$printDialog.reportPrint("destroy");
+
+            if (me.$paramarea) {
+                me.$paramarea.reportParameter("destroy");
+            }
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx

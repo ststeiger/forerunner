@@ -8339,7 +8339,7 @@ $(function () {
                 enterLock = false;
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
@@ -8377,7 +8377,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
+                    $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
 
@@ -8393,7 +8393,7 @@ $(function () {
                 autoFocus: true,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -11703,6 +11703,21 @@ $(function () {
             var me = this;
             if (me.DefaultAppTemplate) {
                 return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report explorer toolpane
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
+         * 
+         * @return {Object} - report explorer toolpane jQuery object
+         */
+        getReportExplorerToolpane: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftpanecontent;
             }
 
             return null;

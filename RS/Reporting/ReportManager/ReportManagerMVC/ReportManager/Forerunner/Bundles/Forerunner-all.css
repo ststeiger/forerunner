@@ -1,4 +1,4 @@
-﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -796,7 +796,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
 .fr-param, .fr-param-form .fr-param-client { margin: 4px; width: 180px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
-.fr-param-form .fr-param-dropdown-textbox { width: 180px; padding-right: 24px; overflow:hidden;text-overflow:ellipsis; white-space:nowrap; }
+.fr-param-form .fr-param-dropdown-textbox, .fr-param-autocomplete-textbox { width: 180px; padding-right: 24px; overflow:hidden;text-overflow:ellipsis; white-space:nowrap; word-wrap: break-word; }
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; font-weight:normal; font-size: medium; }

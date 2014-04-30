@@ -235,6 +235,21 @@ $(function () {
             }
 
             return null;
+        },
+        /**
+         * Get report explorer toolpane
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
+         * 
+         * @return {Object} - report explorer toolpane jQuery object
+         */
+        getReportExplorerToolpane: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftpanecontent;
+            }
+
+            return null;
         }
     });  // $.widget
 });  // function()

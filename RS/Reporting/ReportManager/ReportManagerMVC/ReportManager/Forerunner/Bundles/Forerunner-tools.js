@@ -1029,7 +1029,7 @@ $(function () {
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
-            tooltip: locData.toolbar.find,
+            tooltip: locData.toolbar.search,
             events: {
                 click: function (e) {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-keyword-textbox").val());
@@ -1050,8 +1050,9 @@ $(function () {
         itemHome: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-home",
-            imageClass: "fr-icons24x24-home",
+            imageClass: "fr-icons24x24-homeBlue",
             text: locData.toolbar.home,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1091,8 +1092,9 @@ $(function () {
         itemFav: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-fav",
-            imageClass: "fr-icons24x24-favorites",
+            imageClass: "fr-icons24x24-favoritesBlue",
             text: locData.toolbar.favorites,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1105,8 +1107,9 @@ $(function () {
         itemRecent: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-recent",
-            imageClass: "fr-icons24x24-recent",
+            imageClass: "fr-icons24x24-recentBlue",
             text: locData.toolbar.recent,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1179,6 +1182,27 @@ $(function () {
                 }
             }
         },
+        /** @member */
+        itemFolders: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-folders",
+            imageClass: "fr-icons24x24-folders",
+            text: locData.toolPane.views,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            events: {
+                click: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-rm-item-folders"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
+                }
+            }
+        },
+
     };
 
     /**
@@ -1399,25 +1423,36 @@ $(function () {
             groupContainerClass: "fr-toolpane-dropdown-group-container",
             tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
         },
+        /** @member */
         explorerFindGroup: {
             toolType: toolTypes.toolGroup,
-            selectorClass: "fr-ex-toolbar-find-group",
+            selectorClass: "fr-rm-toolbar-find-group",
             tools: [ret.btnKeyword,
                     ret.btnFind]
         },
+        /** @member */
         explorerItemFindCompositeGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-item-find-composite-group",
             groupContainerClass: null,
             tools: [rep.itemKeyword,
                     rep.itemFind]
-        }
+        },
+        /** @member */
+        explorerItemFolderGroup: {
+            toolType: toolTypes.toolGroup,
+            visible: false,
+            selectorClass: "fr-rm-item-folders-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
+            tools: [rep.itemFav, rep.itemRecent, rep.itemHome]
+        },
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
+    rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;
 
     /** @member */
     tg.itemFindGroup = {
@@ -1434,7 +1469,7 @@ $(function () {
             }
         }
     };
-
+    /** @member */
     tg.explorerItemFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-rm-item-findgroup",

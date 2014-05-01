@@ -185,8 +185,6 @@ $(function () {
         transitionToReportViewer: function (path, params) {
             var me = this;
 
-            // We need to create the report explorer here so as to get the UserSettings needed in the case where
-            // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);

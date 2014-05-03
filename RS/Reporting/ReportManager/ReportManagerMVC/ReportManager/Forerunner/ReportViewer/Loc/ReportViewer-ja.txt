@@ -79,7 +79,8 @@
     "selectSet":"セットを選択します。",
     "dsCredential":"データソースクレデンシャル",
     "addToFavorites":"お気に入りに追加",
-    "unzoom":"ズーム解除"
+    "unzoom":"ズーム解除",
+    "search":"検索"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -179,7 +180,6 @@
     "reset":"リセット"
   },
   "explorerSearch": {
-    "search":"検索",
     "emptyError":"検索基準は、空にすることはできません",
     "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
   }

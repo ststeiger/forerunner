@@ -79,7 +79,8 @@
     "selectSet":"Selectați Set",
     "dsCredential":"DataSource acreditare",
     "addToFavorites":"Adauga la Favorite",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"căutare"
   },
   "print": {
     "title":"imprima raportul",
@@ -179,7 +180,6 @@
     "reset":"restabili"
   },
   "explorerSearch": {
-    "search":"căutare",
     "emptyError":"Criterii de căutare nu poate fi gol",
     "notFound":"Nu exista rezultate pentru criteriile de căutare, vă rugăm să rafinați căutarea."
   }

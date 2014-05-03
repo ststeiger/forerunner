@@ -79,7 +79,8 @@
     "selectSet":"roghnaigh Socraigh",
     "dsCredential":"credential Datasource",
     "addToFavorites":"Add to Favorites",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"Cuardaigh"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -179,7 +180,6 @@
     "reset":"Athshocraigh"
   },
   "explorerSearch": {
-    "search":"Cuardaigh",
     "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
     "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
   }

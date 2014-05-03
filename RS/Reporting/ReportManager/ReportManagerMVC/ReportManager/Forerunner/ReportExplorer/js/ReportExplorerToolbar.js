@@ -71,7 +71,7 @@ $(function () {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
         },

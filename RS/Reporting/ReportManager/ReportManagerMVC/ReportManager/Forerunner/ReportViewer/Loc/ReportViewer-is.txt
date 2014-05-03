@@ -79,7 +79,8 @@
     "selectSet":"valið er Stilla",
     "dsCredential":"DataSource persónuskilríki",
     "addToFavorites":"Bæta við uppáhöld",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"Leita"
   },
   "print": {
     "title":"Print Report",
@@ -179,7 +180,6 @@
     "reset":"endurstilla"
   },
   "explorerSearch": {
-    "search":"Leita",
     "emptyError":"Leitarskilyrðum má ekki vera autt",
     "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
   }

@@ -252,7 +252,8 @@ $(function () {
             pc.removeAttr("style");
 
             me._setDatePicker();
-            $(document).on("click", function (e) { me._checkExternalClick(e); });
+            $(document).off("click", me._checkExternalClick);
+            $(document).on("click", { me: me }, me._checkExternalClick);
 
 
             $(":text", me.$params).each(
@@ -712,7 +713,7 @@ $(function () {
                 enterLock = false;
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
@@ -750,7 +751,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
+                    $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
 
@@ -766,7 +767,7 @@ $(function () {
                 autoFocus: true,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -1072,6 +1073,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-ocl").trigger("click");
                         });
                     }
@@ -1081,6 +1083,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-anchor").trigger("click");
                         });
                     }
@@ -1389,7 +1392,6 @@ $(function () {
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
-
                 if (skipVisibleCheck || $tree.is(":visible")) {
                     me._setTreeSelectedValues($tree);
                     $tree.hide();
@@ -1670,13 +1672,13 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
+            //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
-
+            //close cascading tree and set value
             me._closeCascadingTree(false);
         },
         _checkExternalClick: function (e) {
-            var me = this;
+            var me = e.data.me;
 
             if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {
                 me._closeAllDropdown();
@@ -1715,6 +1717,12 @@ $(function () {
         getParamsList: function (noValid) {
             var me = this;
             var i;
+
+            //for all get request that need validate, close all dropdown panel to get latest value first
+            if (!noValid) {
+                me._closeAllDropdown();
+            }
+            
             if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
@@ -1962,5 +1970,10 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        destroy: function () {
+            var me = this;
+
+            $(document).off("click", me._checkExternalClick);
+        }
     });  // $.widget
 });

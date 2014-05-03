@@ -79,7 +79,8 @@
     "selectSet":"選擇參數集",
     "dsCredential":"數據源驗證",
     "addToFavorites":"添加到收藏",
-    "unzoom":"取消縮放"
+    "unzoom":"取消縮放",
+    "search":"搜索",
   },
   "print": {
     "title":"打印報表",
@@ -179,7 +180,6 @@
     "reset":"重置"
   },
   "explorerSearch": {
-    "search":"搜索 ",
     "emptyError":"搜索條件不能為空",
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
   }

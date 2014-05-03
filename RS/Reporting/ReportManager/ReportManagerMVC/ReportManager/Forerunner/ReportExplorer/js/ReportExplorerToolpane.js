@@ -67,12 +67,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tp.itemHome, tp.itemBack, tp.itemFav, tp.itemRecent, tg.explorerItemFindGroup]);
+            me.enableTools([tp.itemBack, tp.itemFolders, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tp.itemLogOff]);
             }
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -80,9 +80,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemSetup, tp.itemHome, tp.itemRecent, tp.itemFav, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+                me.addTools(5, true, [tp.itemLogOff]);
             }
             me._initCallbacks();
 

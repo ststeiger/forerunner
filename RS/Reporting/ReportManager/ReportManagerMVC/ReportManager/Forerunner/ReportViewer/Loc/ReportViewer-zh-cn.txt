@@ -79,7 +79,8 @@
     "selectSet":"选择参数集",
     "dsCredential":"数据源验证",
     "addToFavorites":"添加到收藏",
-    "unzoom":"取消缩放"
+    "unzoom":"取消缩放",
+    "search":"搜索"
   },
   "print": {
     "title":"打印报表",
@@ -178,9 +179,8 @@
     "password":"密码:",
     "reset":"重置"
   },
-   "explorerSearch":{
-	"search":"搜索",
-	"emptyError":"搜索条件不能为空",
-	"notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
+  "explorerSearch": {
+    "emptyError":"搜索条件不能为空",
+    "notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
   }
 }

@@ -79,7 +79,8 @@
     "selectSet":"Select Set",
     "dsCredential":"Datasource Credential",
     "addToFavorites":"Add to Favorites",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"Search"
   },
   "print": {
     "title":"Print Report",
@@ -179,7 +180,6 @@
     "reset":"Reset"
   },
   "explorerSearch": {
-    "search":"Search",
     "emptyError":"Search criteria cannot be empty",
     "notFound":"No results match your search criteria. Please refine your search."
   }

@@ -79,7 +79,8 @@
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
     "addToFavorites":"Lägg till i favoriter",
-    "unzoom":"Zooma ut"
+    "unzoom":"Zooma ut",
+    "search":"Sökning"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -179,7 +180,6 @@
     "reset":"Återställ"
   },
   "explorerSearch": {
-    "search":"Sökning",
     "emptyError":"Sökkriterier kan inte vara tomt",
     "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
   }

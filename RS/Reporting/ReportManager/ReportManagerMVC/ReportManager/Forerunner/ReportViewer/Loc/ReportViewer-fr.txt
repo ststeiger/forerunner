@@ -80,7 +80,8 @@
     "selectSet":"Sélectionnez Set",
     "dsCredential":"source de données d'identification",
     "addToFavorites":"Ajouter aux favoris",
-    "unzoom":"dézoomer"
+    "unzoom":"dézoomer",
+    "search":"recherche"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -180,7 +181,6 @@
     "reset":"remettre"
   },
   "explorerSearch": {
-    "search":"recherche",
     "emptyError":"Critères de recherche ne peuvent pas être vide",
     "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
   }

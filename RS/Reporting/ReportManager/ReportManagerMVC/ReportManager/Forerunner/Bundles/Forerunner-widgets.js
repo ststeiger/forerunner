@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -784,6 +784,7 @@ $(function () {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
                         me.paramLoaded = true;
+                        me.$paramarea = me.options.paramArea;
                     }
 
                     // Restore the parameterModel state from the action history
@@ -1612,6 +1613,7 @@ $(function () {
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
 
                     me.paramLoaded = true;
+                    me.$paramarea = me.options.paramArea;
                 }
             }
             else if (data.Exception) {
@@ -1674,6 +1676,7 @@ $(function () {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                 }
                 me.paramLoaded = true;
+                me.$paramarea = me.options.paramArea;
             }
         },
         _removeParameters: function () {
@@ -2314,6 +2317,10 @@ $(function () {
 
             if (me.$printDialog)
                 me.$printDialog.reportPrint("destroy");
+
+            if (me.$paramarea) {
+                me.$paramarea.reportParameter("destroy");
+            }
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -4029,7 +4036,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toobar widget used by the reportViewer
@@ -4074,6 +4081,11 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tb.btnCredential]);
                     }
+                    
+                    //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
+                    //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
+                    //forerunner-tools.js so need to make sure the blur event from watermark actually work
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -4214,6 +4226,7 @@ $(function () {
         },
         _clearBtnStates: function () {
             var me = this;
+
             me.element.find(".fr-toolbar-keyword-textbox").val("");
             me.element.find(".fr-toolbar-reportpage-textbox").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
@@ -4252,6 +4265,7 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * ToolPane widget used with the reportViewer
@@ -4292,6 +4306,8 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tp.itemCredential]);
                     }
+
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -4348,7 +4364,7 @@ $(function () {
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
             });
-
+            
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
             //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
@@ -4791,7 +4807,7 @@ $(function () {
                 me.enableTools([tb.btnLogOff]);
             }
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
         },
@@ -4897,12 +4913,12 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tp.itemHome, tp.itemBack, tp.itemFav, tp.itemRecent, tg.explorerItemFindGroup]);
+            me.enableTools([tp.itemBack, tp.itemFolders, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tp.itemLogOff]);
             }
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.explorerSearch.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
             var me = this;
@@ -4910,9 +4926,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemSetup, tp.itemHome, tp.itemRecent, tp.itemFav, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+                me.addTools(5, true, [tp.itemLogOff]);
             }
             me._initCallbacks();
 
@@ -7906,7 +7922,8 @@ $(function () {
             pc.removeAttr("style");
 
             me._setDatePicker();
-            $(document).on("click", function (e) { me._checkExternalClick(e); });
+            $(document).off("click", me._checkExternalClick);
+            $(document).on("click", { me: me }, me._checkExternalClick);
 
 
             $(":text", me.$params).each(
@@ -8366,7 +8383,7 @@ $(function () {
                 enterLock = false;
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
@@ -8404,7 +8421,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
+                    $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
 
@@ -8420,7 +8437,7 @@ $(function () {
                 autoFocus: true,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -8726,6 +8743,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-ocl").trigger("click");
                         });
                     }
@@ -8735,6 +8753,7 @@ $(function () {
                             if ($li.attr("value") === $(sibling).attr("value")) {
                                 return true;
                             }
+
                             $(sibling).children(".fr-param-tree-anchor").trigger("click");
                         });
                     }
@@ -9043,7 +9062,6 @@ $(function () {
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
-
                 if (skipVisibleCheck || $tree.is(":visible")) {
                     me._setTreeSelectedValues($tree);
                     $tree.hide();
@@ -9324,13 +9342,13 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
+            //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
-
+            //close cascading tree and set value
             me._closeCascadingTree(false);
         },
         _checkExternalClick: function (e) {
-            var me = this;
+            var me = e.data.me;
 
             if (!forerunner.helper.containElement(e.target, ["fr-param-not-close"])) {
                 me._closeAllDropdown();
@@ -9369,6 +9387,12 @@ $(function () {
         getParamsList: function (noValid) {
             var me = this;
             var i;
+
+            //for all get request that need validate, close all dropdown panel to get latest value first
+            if (!noValid) {
+                me._closeAllDropdown();
+            }
+            
             if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
@@ -9616,6 +9640,11 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        destroy: function () {
+            var me = this;
+
+            $(document).off("click", me._checkExternalClick);
+        }
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportDocumentMap.js
@@ -11718,6 +11747,21 @@ $(function () {
             var me = this;
             if (me.DefaultAppTemplate) {
                 return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report explorer toolpane
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
+         * 
+         * @return {Object} - report explorer toolpane jQuery object
+         */
+        getReportExplorerToolpane: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftpanecontent;
             }
 
             return null;

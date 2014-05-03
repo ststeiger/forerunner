@@ -79,7 +79,8 @@
     "selectSet":"selezionare Imposta",
     "dsCredential":"datasource credenziale",
     "addToFavorites":"Aggiungi ai Preferiti",
-    "unzoom":"unzoom"
+    "unzoom":"unzoom",
+    "search":"ricerca"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -179,7 +180,6 @@
     "reset":"Reset"
   },
   "explorerSearch": {
-    "search":"ricerca",
     "emptyError":"Criteri di ricerca non possono essere vuoti",
     "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
   }

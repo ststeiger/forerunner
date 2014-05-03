@@ -405,7 +405,7 @@ $(function () {
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall($viewer))
                         me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");

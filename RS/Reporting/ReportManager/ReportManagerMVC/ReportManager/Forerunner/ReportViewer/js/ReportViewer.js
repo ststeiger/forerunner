@@ -120,6 +120,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
+            me.RDLExtProperty = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -835,7 +836,7 @@ $(function () {
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -1017,7 +1018,8 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1750,10 +1752,13 @@ $(function () {
             }
             
             me._resetViewer();
-
+            
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1765,6 +1770,25 @@ $(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
             });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
@@ -2005,7 +2029,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum], me.RDLExtProperty);
             }
 
             me.pages[pageNum].isRendered = true;

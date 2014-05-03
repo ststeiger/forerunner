@@ -94,7 +94,7 @@ $(function () {
             this._on($thumbnail, {
                 click: function (event) {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall(me.options.$reportViewer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });

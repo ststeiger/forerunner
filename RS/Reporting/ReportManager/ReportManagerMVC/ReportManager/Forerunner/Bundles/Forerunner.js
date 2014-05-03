@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1247,11 +1247,22 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function () {
-            if ($(window).height() < 768)
+        isSmall: function (container) {
+            if (container.width() < 768)
                 return true;
             else
                 return false;
+        },
+
+        /** @return {integer} 1 small (phone), 2 med (tablet), 3 large (desktop) */
+        formFactor: function (container) {
+            var width = container.width();
+            if (width < 800)
+                return 1;
+            else if (width < 2048)
+                return 2;
+            else
+                return 3;
         },
     };
 

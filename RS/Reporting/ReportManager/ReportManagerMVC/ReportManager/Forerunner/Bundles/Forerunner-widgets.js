@@ -121,6 +121,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
+            me.RDLExtProperty = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -836,7 +837,7 @@ $(function () {
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -1018,7 +1019,8 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1751,10 +1753,13 @@ $(function () {
             }
             
             me._resetViewer();
-
+            
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1766,6 +1771,25 @@ $(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
             });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
@@ -2006,7 +2030,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum], me.RDLExtProperty);
             }
 
             me.pages[pageNum].isRendered = true;
@@ -3688,7 +3712,7 @@ $(function () {
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall($viewer))
                         me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
@@ -4519,7 +4543,7 @@ $(function () {
             this._on($thumbnail, {
                 click: function (event) {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall(me.options.$reportViewer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -5685,13 +5709,14 @@ $(function () {
         *
         * @param {integer} Page - The page number of the report to render
         */
-        render: function (Page) {
+        render: function (Page, RLDExt) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            me.RDLExt = RLDExt;
 
             me._createStyles(reportViewer);
             $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
@@ -6730,8 +6755,27 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");
+                var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
+                var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
+                var tablixExt = null;
+                if (me.RDLExt)
+                    tablixExt = me.RDLExt[sharedElements.Name];
+
+                var respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+
                 for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                    respCols[cols] = true;
+
+                    //If it is a responsive layout and the auther has supplied instructions for minimizing the tablix determine coluimns here
+                    if (me.options.responsive && tablixExt) {
+                        if (tablixExt[cols] && tablixExt[cols].HideOrder >= formFactor) {
+                            respCols[cols] = false;
+                        }
+                    }
+                    
+                    if (respCols[cols]) {                        
+                        colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                    }
                 }
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
@@ -6747,7 +6791,7 @@ $(function () {
                 
             }
 
-            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
+            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext, respCols: respCols };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
             TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
@@ -6786,7 +6830,7 @@ $(function () {
 
 
 
-        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State) {
+        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State,repCols) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
             var LastObjType = State.LastObjType;
@@ -6855,7 +6899,7 @@ $(function () {
 
             for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
                 var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
-                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
+                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State, Tablix.respCols);
                 if (Tablix.State.HasFixedRows === true)
                     Tablix.HasFixedRows = true;
                 if (Tablix.State.HasFixedCols === true)

@@ -10228,6 +10228,18 @@ $(function () {
                 me._onClickDefault(e);
             });
 
+            $(":text", me.element).each(
+               function (index) {
+                   var textinput = $(this);
+                   textinput.on("blur", function () {
+                       me.options.$reportViewer.reportViewer("onInputBlur");
+                   });
+                   textinput.on("focus", function () {
+                       me.options.$reportViewer.reportViewer("onInputFocus");
+                   });
+               }
+           );
+
             // Set up the form validation
             me._validateForm(me.$form);
         },

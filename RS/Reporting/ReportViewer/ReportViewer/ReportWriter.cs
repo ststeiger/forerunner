@@ -611,11 +611,15 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("PageName", "String", 0x30);
             prop.Add("Columns", "Int32", 0x17, true);
             prop.Add("ColumnSpacing", "Single", 0x16, true);
-            prop.Add("PageStyle", "Object", 0x06, this.WriteJSONNonSharedStyle);
+            prop.Add("PageStyle", "Object", 0x06, this.WriteJSONPageStyle);
 
             prop.Write(this);
 
 
+        }
+        private Boolean WriteJSONPageStyle()
+        {
+            return WriteJSONStyle(w, false,true);
         }
         private Boolean WriteJSONSections()
         {
@@ -2026,59 +2030,68 @@ namespace Forerunner.SSRS.JSONRender
         {
             return WriteJSONStyle(w, false);
         }
-        private Boolean WriteJSONStyle(JsonWriter jw, Boolean shared)
+        private Boolean WriteJSONStyle(JsonWriter jw, Boolean shared, Boolean PageStyle = false)
         {
             if (RPL.ReadByte() != 0x06)
                 ThrowParseError("Not a Style Element");
             RPLProperties prop;
+            bool notDone = true;
 
-            if (RPL.InspectByte() == 0x00)
-                prop = new RPLProperties(0x00);
-            else
-                prop = new RPLProperties(0x01);
+            while (notDone)
+            {
+                if (RPL.InspectByte() == 0x00)
+                    prop = new RPLProperties(0x00);
+                else
+                    prop = new RPLProperties(0x01);
 
 
-            prop.Add("BorderColor", "String", 0x00);
-            prop.Add("BorderColorLeft", "String", 0x01);
-            prop.Add("BorderColorRight", "String", 0x02);
-            prop.Add("BorderColorTop", "String", 0x03);
-            prop.Add("BorderColorBottom", "String", 0x04);
-            prop.Add("BorderStyle", "Byte", 0x05);
-            prop.Add("BorderStyleLeft", "Byte", 0x06);
-            prop.Add("BorderStyleRight", "Byte", 0x07);
-            prop.Add("BorderStyleTop", "Byte", 0x08);
-            prop.Add("BorderStyleBottom", "Byte", 0x09);
-            prop.Add("BorderWidth", "String", 0x0A);
-            prop.Add("BorderWidthLeft", "String", 0x0B);
-            prop.Add("BorderWidthRight", "String", 0x0C);
-            prop.Add("BorderWidthTop", "String", 0x0D);
-            prop.Add("BorderWidthBottom", "String", 0x0E);
-            prop.Add("PaddingLeft", "String", 0x0F);
-            prop.Add("PaddingRight", "String", 0x10);
-            prop.Add("PaddingTop", "String", 0x11);
-            prop.Add("PaddingBottom", "String", 0x12);
-            prop.Add("FontStyle", "Byte", 0x13);
-            prop.Add("FontFamily", "String", 0x14);
-            prop.Add("FontSize", "String", 0x15);
-            prop.Add("FontWeight", "Byte", 0x16);
-            prop.Add("Format", "String", 0x17);
-            prop.Add("TextDecoration", "Byte", 0x18);
-            prop.Add("TextAlign", "Byte", 0x19);
-            prop.Add("VerticalAlign", "Byte", 0x1A);
-            prop.Add("Color", "String", 0x1B);
-            prop.Add("LineHeight", "String", 0x1C);
-            prop.Add("Direction", "Byte", 0x1D);
-            prop.Add("WritingMode", "Byte", 0x1E);
-            prop.Add("UnicodeBiDi", "Byte", 0x1F);
-            prop.Add("Language", "String", 0x20);
-            prop.Add("BackgroundImage", "Object", 0x21, WriteJSONImageDataProperties, false, true);
-            prop.Add("BackgroundColor", "String", 0x22);
-            prop.Add("BackgroundRepeat", "Byte", 0x23);
-            prop.Add("NumeralLanguage", "String", 0x24);
-            prop.Add("NumeralVariant", "Int32", 0x25);
-            prop.Add("Calendar", "Byte", 0x26);
+                prop.Add("BorderColor", "String", 0x00);
+                prop.Add("BorderColorLeft", "String", 0x01);
+                prop.Add("BorderColorRight", "String", 0x02);
+                prop.Add("BorderColorTop", "String", 0x03);
+                prop.Add("BorderColorBottom", "String", 0x04);
+                prop.Add("BorderStyle", "Byte", 0x05);
+                prop.Add("BorderStyleLeft", "Byte", 0x06);
+                prop.Add("BorderStyleRight", "Byte", 0x07);
+                prop.Add("BorderStyleTop", "Byte", 0x08);
+                prop.Add("BorderStyleBottom", "Byte", 0x09);
+                prop.Add("BorderWidth", "String", 0x0A);
+                prop.Add("BorderWidthLeft", "String", 0x0B);
+                prop.Add("BorderWidthRight", "String", 0x0C);
+                prop.Add("BorderWidthTop", "String", 0x0D);
+                prop.Add("BorderWidthBottom", "String", 0x0E);
+                prop.Add("PaddingLeft", "String", 0x0F);
+                prop.Add("PaddingRight", "String", 0x10);
+                prop.Add("PaddingTop", "String", 0x11);
+                prop.Add("PaddingBottom", "String", 0x12);
+                prop.Add("FontStyle", "Byte", 0x13);
+                prop.Add("FontFamily", "String", 0x14);
+                prop.Add("FontSize", "String", 0x15);
+                prop.Add("FontWeight", "Byte", 0x16);
+                prop.Add("Format", "String", 0x17);
+                prop.Add("TextDecoration", "Byte", 0x18);
+                prop.Add("TextAlign", "Byte", 0x19);
+                prop.Add("VerticalAlign", "Byte", 0x1A);
+                prop.Add("Color", "String", 0x1B);
+                prop.Add("LineHeight", "String", 0x1C);
+                prop.Add("Direction", "Byte", 0x1D);
+                prop.Add("WritingMode", "Byte", 0x1E);
+                prop.Add("UnicodeBiDi", "Byte", 0x1F);
+                prop.Add("Language", "String", 0x20);
+                prop.Add("BackgroundImage", "Object", 0x21, WriteJSONImageDataProperties, false, true);
+                prop.Add("BackgroundColor", "String", 0x22);
+                prop.Add("BackgroundRepeat", "Byte", 0x23);
+                prop.Add("NumeralLanguage", "String", 0x24);
+                prop.Add("NumeralVariant", "Int32", 0x25);
+                prop.Add("Calendar", "Byte", 0x26);
 
-            prop.Write(this, jw);
+                prop.Write(this, jw);
+
+                if (RPL.InspectByte() == 0x01 && PageStyle)
+                    notDone = true;
+                else
+                    notDone = false;
+            }
             return true;
         }
         private void WriteJSONRepProp()

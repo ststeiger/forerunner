@@ -636,6 +636,9 @@ $(function () {
             }
         },
         setBackgroundLayout: function () {
+            //Not sure we need this anymore.  It causes issies with resizing, commenting out for now.
+            return;
+
             var me = this;
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();

@@ -8435,9 +8435,10 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
+                appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value }).blur();
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -10271,6 +10272,18 @@ $(function () {
             me.element.find(".fr-mps-default-id").on("click", function (e) {
                 me._onClickDefault(e);
             });
+
+            $(":text", me.element).each(
+               function (index) {
+                   var textinput = $(this);
+                   textinput.on("blur", function () {
+                       me.options.$reportViewer.reportViewer("onInputBlur");
+                   });
+                   textinput.on("focus", function () {
+                       me.options.$reportViewer.reportViewer("onInputFocus");
+                   });
+               }
+           );
 
             // Set up the form validation
             me._validateForm(me.$form);

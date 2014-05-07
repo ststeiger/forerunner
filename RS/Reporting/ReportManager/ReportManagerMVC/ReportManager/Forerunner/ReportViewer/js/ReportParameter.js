@@ -662,9 +662,10 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
+                appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value }).blur();
                     enterLock = true;
                     
                     if (me.getNumOfVisibleParameters() === 1) {

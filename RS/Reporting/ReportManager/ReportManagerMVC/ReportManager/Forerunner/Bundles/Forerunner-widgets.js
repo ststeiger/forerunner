@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -6389,6 +6389,7 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
+                Tablix.BigTablixDone = true;
             }
         },
 

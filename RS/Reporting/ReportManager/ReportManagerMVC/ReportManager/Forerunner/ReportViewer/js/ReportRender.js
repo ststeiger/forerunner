@@ -1242,6 +1242,7 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
+                Tablix.BigTablixDone = true;
             }
         },
 

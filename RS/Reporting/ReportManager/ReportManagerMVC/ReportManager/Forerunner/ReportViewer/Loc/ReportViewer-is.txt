@@ -80,7 +80,9 @@
     "dsCredential":"DataSource persónuskilríki",
     "addToFavorites":"Bæta við uppáhöld",
     "unzoom":"unzoom",
-    "search":"Leita"
+    "search":"Leita",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Print Report",

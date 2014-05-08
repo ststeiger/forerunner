@@ -80,7 +80,9 @@
     "dsCredential":"DataSource Credencial",
     "addToFavorites":"Adicionar aos favoritos",
     "unzoom":"unzoom",
-    "search":"pesquisa"
+    "search":"pesquisa",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

@@ -80,7 +80,9 @@
     "dsCredential":"Datenquelle Credential",
     "addToFavorites":"Zu Favoriten hinzufügen",
     "unzoom":"unzoom",
-    "search":"Suche"
+    "search":"Suche",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Bericht drucken",

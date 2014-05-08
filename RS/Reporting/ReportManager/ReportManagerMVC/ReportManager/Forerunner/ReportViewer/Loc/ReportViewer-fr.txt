@@ -81,7 +81,9 @@
     "dsCredential":"source de données d'identification",
     "addToFavorites":"Ajouter aux favoris",
     "unzoom":"dézoomer",
-    "search":"recherche"
+    "search":"recherche",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprimer option de mise en",

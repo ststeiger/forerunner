@@ -53,7 +53,7 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             
             if (!me.options.navigateTo)
-                me.options.navigateTo = me._NavigateTo;
+                me.options.navigateTo = me._navigateTo;
 
             if (!path)
                 path = "/";
@@ -83,7 +83,7 @@ $(function () {
             });
         },
 
-        _NavigateTo: function (action, path) {
+        _navigateTo: function (action, path) {
             var me = this;
             
             var $container = me.$appContainer;
@@ -105,12 +105,14 @@ $(function () {
             else if (action === "browse") {
                 $container.reportExplorerEZ("transitionToReportViewer", path);                
             }
+            else if (action === "createDashboard") {
+                $container.reportExplorerEZ("transitionToCreateDashboard", path);
+            }
             else {            
                 $container.reportExplorerEZ("transitionToReportManager", path, action);
             }
-          
+
             window.location.hash = targetUrl;
-            
         },
         /**
          * Transition to ReportManager view.
@@ -214,6 +216,16 @@ $(function () {
             }, timeout);
 
             me.element.css("background-color", "");
+        },
+        /**
+         * Transition to Create Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @param {String} template - Name of the dashboard template file
+         */
+        transitionToCreateDashboard: function (template) {
+            // TODO
+            alert("Under Contruction");
         },
         _init: function () {
             var me = this;

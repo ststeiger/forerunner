@@ -4793,9 +4793,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(7, true, [tb.btnLogOff]);
+                me.addTools(8, true, [tb.btnLogOff]);
             }
             me._initCallbacks();
 
@@ -11524,7 +11524,7 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             
             if (!me.options.navigateTo)
-                me.options.navigateTo = me._NavigateTo;
+                me.options.navigateTo = me._navigateTo;
 
             if (!path)
                 path = "/";
@@ -11554,7 +11554,7 @@ $(function () {
             });
         },
 
-        _NavigateTo: function (action, path) {
+        _navigateTo: function (action, path) {
             var me = this;
             
             var $container = me.$appContainer;
@@ -11576,12 +11576,14 @@ $(function () {
             else if (action === "browse") {
                 $container.reportExplorerEZ("transitionToReportViewer", path);                
             }
+            else if (action === "createDashboard") {
+                $container.reportExplorerEZ("transitionToCreateDashboard", path);
+            }
             else {            
                 $container.reportExplorerEZ("transitionToReportManager", path, action);
             }
-          
+
             window.location.hash = targetUrl;
-            
         },
         /**
          * Transition to ReportManager view.
@@ -11656,8 +11658,6 @@ $(function () {
         transitionToReportViewer: function (path, params) {
             var me = this;
 
-            // We need to create the report explorer here so as to get the UserSettings needed in the case where
-            // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
@@ -11687,6 +11687,16 @@ $(function () {
             }, timeout);
 
             me.element.css("background-color", "");
+        },
+        /**
+         * Transition to Create Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @param {String} template - Name of the dashboard template file
+         */
+        transitionToCreateDashboard: function (template) {
+            // TODO
+            alert("Under Contruction");
         },
         _init: function () {
             var me = this;

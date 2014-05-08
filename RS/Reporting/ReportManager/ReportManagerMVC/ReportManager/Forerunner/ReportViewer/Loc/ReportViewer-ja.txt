@@ -80,7 +80,9 @@
     "dsCredential":"データソースクレデンシャル",
     "addToFavorites":"お気に入りに追加",
     "unzoom":"ズーム解除",
-    "search":"検索"
+    "search":"検索",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

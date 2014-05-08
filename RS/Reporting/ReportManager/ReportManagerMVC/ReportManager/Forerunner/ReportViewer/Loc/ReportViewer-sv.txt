@@ -80,7 +80,9 @@
     "dsCredential":"Datasource Credential",
     "addToFavorites":"Lägg till i favoriter",
     "unzoom":"Zooma ut",
-    "search":"Sökning"
+    "search":"Sökning",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

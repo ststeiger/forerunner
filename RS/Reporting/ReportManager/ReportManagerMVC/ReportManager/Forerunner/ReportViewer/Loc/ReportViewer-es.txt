@@ -81,7 +81,9 @@
     "dsCredential":"credenciales del origen de datos",
     "addToFavorites":"Añadir a Favoritos",
     "unzoom":"unzoom",
-    "search":"búsqueda"
+    "search":"búsqueda",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

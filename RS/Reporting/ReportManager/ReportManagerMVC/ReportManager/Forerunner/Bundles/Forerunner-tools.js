@@ -929,6 +929,18 @@ $(function () {
             }
         },
         /** @member */
+        btnCreateDashboard: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-createdashboard",
+            imageClass: "fr-icons24x24-createdashboard",
+            tooltip: locData.toolbar.createDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("createDashboard", null);
+                }
+            }
+        },
+        /** @member */
         btnLogOff: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",

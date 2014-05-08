@@ -80,7 +80,9 @@
     "dsCredential":"credential Datasource",
     "addToFavorites":"Add to Favorites",
     "unzoom":"unzoom",
-    "search":"Cuardaigh"
+    "search":"Cuardaigh",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

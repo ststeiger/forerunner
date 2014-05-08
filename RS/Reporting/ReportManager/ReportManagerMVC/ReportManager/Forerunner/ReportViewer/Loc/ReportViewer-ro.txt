@@ -80,7 +80,9 @@
     "dsCredential":"DataSource acreditare",
     "addToFavorites":"Adauga la Favorite",
     "unzoom":"unzoom",
-    "search":"căutare"
+    "search":"căutare",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"imprima raportul",

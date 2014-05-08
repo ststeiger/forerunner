@@ -197,6 +197,10 @@ $(function () {
             reportExplorerToolpane: "reportExplorerToolpane",
             /** @constant */
             unzoomToolbar: "unzoomToolbar",
+            /** @constant */
+            router: "router",
+            /** @constant */
+            history: "history",
 
             /** @constant */
             namespace: "forerunner",
@@ -391,6 +395,13 @@ $(function () {
             findDone: "finddone",
             /** widget + event, lowercase */
             reportViewerFindDone: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.findDone).toLowerCase(); },
+
+            /** @constant */
+            route: "route",
+            /** widget + event, lowercase */
+            routerRoute: function () { return (forerunner.ssr.constants.widgets.router + this.route).toLowerCase(); },
+            /** widget + event, lowercase */
+            historyRoute: function () { return (forerunner.ssr.constants.widgets.history + this.route).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

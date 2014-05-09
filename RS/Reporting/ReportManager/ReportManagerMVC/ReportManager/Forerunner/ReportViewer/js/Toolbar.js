@@ -90,6 +90,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolbar after close navigation panel
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
                 }
             });
 

@@ -6,7 +6,7 @@ var TestMetrics = function () {
 }
 
 TestMetrics.prototype = {
-    reportPath: "%2fNorthwind Test Suite%2faction URL",
+    reportPath: "/Northwind Test Suite/action URL",
     resetCounters: function () {
         this.homeCount = 0;
         this.favoritesCount = 0;
@@ -92,7 +92,7 @@ test("Backbone Router Callback Test", function () {
 
     // Cycle through the routes
     router.navigate("#favorites", { trigger: true, replace: false });
-    router.navigate("#browse/" + metrics.reportPath, { trigger: true, replace: false });
+    router.navigate("#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     Backbone.history.stop();
@@ -115,7 +115,7 @@ test("Forerunner Router Callback Test", function () {
 
     // Cycle through the routes
     router.router("navigate", "#favorites", { trigger: true, replace: false });
-    router.router("navigate", "#browse/" + metrics.reportPath, { trigger: true, replace: false });
+    router.router("navigate", "#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     forerunner.history.history("stop");
@@ -156,7 +156,7 @@ test("Forerunner Router Event Test", function () {
 
     // Cycle through the routes
     router.router("navigate", "#favorites", { trigger: true, replace: false });
-    router.router("navigate", "#browse/" + metrics.reportPath, { trigger: true, replace: false });
+    router.router("navigate", "#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     forerunner.history.history("stop");

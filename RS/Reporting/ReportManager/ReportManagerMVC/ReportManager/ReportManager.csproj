@@ -286,6 +286,7 @@
     <Content Include="Forerunner\version.txt" />
     <Content Include="QUnit\Index.html" />
     <Content Include="QUnit\js\HistoryTests.js" />
+    <Content Include="QUnit\lib\backbone-1.1.2\backbone.js" />
     <Content Include="QUnit\lib\QUnit\css\qunit-1.12.0.css" />
     <Content Include="QUnit\lib\QUnit\js\qunit-1.12.0.js" />
     <Content Include="Samples\BottomNav.html" />

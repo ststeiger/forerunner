@@ -1,8 +1,14 @@
-﻿var forerunner = forerunner || {};
+﻿// HistoryTests.js
+//
+// This file contains all QUnit based test that will verify that the forrunner.history and
+// forerunner.router widgets are functions properly.
+
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
-var TestMetrics = function () {
+var TestMetrics = function (SDKName) {
     TestMetrics.prototype.resetCounters();
+    this.SDKName = SDKName;
 }
 
 TestMetrics.prototype = {
@@ -13,35 +19,37 @@ TestMetrics.prototype = {
         this.browseCount = 0;
     },
     verifyReportPath: function (path) {
-        ok(path === this.reportPath, "Verify that the path argument is correct");
+        ok(path === this.reportPath, this.SDKName + " - Verify that the path argument is correct");
     },
     verifyCounters: function (homeCount, favoritesCount, browseCount) {
-        ok(this.homeCount === homeCount, "homeCount =" + this.homeCount);
-        ok(this.favoritesCount === favoritesCount, "favoritesCount =" + this.favoritesCount);
-        ok(this.browseCount === browseCount, "browseCount =" + this.browseCount);
+        ok(this.homeCount === homeCount, this.SDKName + " - homeCount = " + this.homeCount);
+        ok(this.favoritesCount === favoritesCount, this.SDKName + " - favoritesCount = " + this.favoritesCount);
+        ok(this.browseCount === browseCount, this.SDKName + " - browseCount = " + this.browseCount);
     }
 }
 
 // All the tests can share these metrics
-var metrics = new TestMetrics();
+var frMetrics = new TestMetrics("forerunner");
+var bbMetrics = new TestMetrics("backbone");
 
 // Backbone router defined a BB router that uses callbacks. This will be used as the benchmark
 // test data by which all the other forerunner router tests will be compared
 var BBRouter = Backbone.Router.extend({
     routes: {
         "": "home",
-        "favorites": "favorites",
-        "browse/:path": "browse"
+        "bbHome": "home",
+        "bbFavorites": "favorites",
+        "bbBrowse/:path": "browse"
     },
     home: function () {
-        metrics.homeCount++;
+        bbMetrics.homeCount++;
     },
     favorites: function () {
-        metrics.favoritesCount++;
+        bbMetrics.favoritesCount++;
     },
     browse: function (path) {
-        metrics.browseCount++;
-        metrics.verifyReportPath(path);
+        bbMetrics.browseCount++;
+        bbMetrics.verifyReportPath(path);
     }
 });
 
@@ -50,18 +58,19 @@ var CallbackRouter = function () {
     var router = $({}).router({
         routes: {
             "": "home",
-            "favorites": "favorites",
-            "browse/:path": "browse"
+            "frHome": "home",
+            "frFavorites": "favorites",
+            "frBrowse/:path": "browse"
         },
         home: function () {
-            metrics.homeCount++;
+            frMetrics.homeCount++;
         },
         favorites: function () {
-            metrics.favoritesCount++;
+            frMetrics.favoritesCount++;
         },
         browse: function (path) {
-            metrics.browseCount++;
-            metrics.verifyReportPath(path);
+            frMetrics.browseCount++;
+            frMetrics.verifyReportPath(path);
         },
     });
     return router;
@@ -72,8 +81,9 @@ var EventRouter = function () {
     var router = $({}).router({
         routes: {
             "": "home",
-            "favorites": "favorites",
-            "browse/:path": "browse"
+            "frHome": "home",
+            "frFavorites": "favorites",
+            "frBrowse/:path": "browse"
         },
     });
     return router;
@@ -81,7 +91,7 @@ var EventRouter = function () {
 
 // This is the benchmark test. All forerunner tests must work like this test
 test("Backbone Router Callback Test", function () {
-    metrics.resetCounters();
+    bbMetrics.resetCounters();
 
     // Make sure the hash is at the home before we start the tests
     location.hash = "#";
@@ -91,20 +101,19 @@ test("Backbone Router Callback Test", function () {
     Backbone.history.start();
 
     // Cycle through the routes
-    router.navigate("#favorites", { trigger: true, replace: false });
-    router.navigate("#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
+    router.navigate("#bbFavorites", { trigger: true, replace: false });
+    router.navigate("#bbBrowse/" + encodeURIComponent(bbMetrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     Backbone.history.stop();
 
     // Verify the results
-    metrics.verifyCounters(1, 1, 1);
+    bbMetrics.verifyCounters(1, 1, 1);
 });
 
-// This is the exact same test done using the forerunner widgets. This
-// test must work exactly the same as the "Backbone Router Callback Test"
+// This test must produce the exact same results as the "Backbone Router Callback Test"
 test("Forerunner Router Callback Test", function () {
-    metrics.resetCounters();
+    frMetrics.resetCounters();
 
     // Make sure the hash is at the home before we start the tests
     location.hash = "#";
@@ -114,32 +123,32 @@ test("Forerunner Router Callback Test", function () {
     forerunner.history.history("start");
 
     // Cycle through the routes
-    router.router("navigate", "#favorites", { trigger: true, replace: false });
-    router.router("navigate", "#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
+    router.router("navigate", "#frFavorites", { trigger: true, replace: false });
+    router.router("navigate", "#frBrowse/" + encodeURIComponent(frMetrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     forerunner.history.history("stop");
 
     // Verify the results
-    metrics.verifyCounters(1, 1, 1);
+    frMetrics.verifyCounters(1, 1, 1);
 });
 
 // This test will verify that the event handlers work correctly. The router event
 // processing will trigger two events for each route one is triggered by the route
 // and the second by the history object
 test("Forerunner Router Event Test", function () {
-    metrics.resetCounters();
+    frMetrics.resetCounters();
 
     var me = this;
     var events = forerunner.ssr.constants.events;
     var onRoute = function (event, data) {
         if (data.name === "home") {
-            metrics.homeCount++;
+            frMetrics.homeCount++;
         } else if (data.name === "favorites") {
-            metrics.favoritesCount++;
+            frMetrics.favoritesCount++;
         } else if (data.name === "browse") {
-            metrics.browseCount++;
-            metrics.verifyReportPath(data.args[0]);
+            frMetrics.browseCount++;
+            frMetrics.verifyReportPath(data.args[0]);
         }
     }
 
@@ -155,12 +164,44 @@ test("Forerunner Router Event Test", function () {
     forerunner.history.history("start");
 
     // Cycle through the routes
-    router.router("navigate", "#favorites", { trigger: true, replace: false });
-    router.router("navigate", "#browse/" + encodeURIComponent(metrics.reportPath), { trigger: true, replace: false });
+    router.router("navigate", "#frFavorites", { trigger: true, replace: false });
+    router.router("navigate", "#frBrowse/" + encodeURIComponent(frMetrics.reportPath), { trigger: true, replace: false });
 
     // Unhook the history event handlers
     forerunner.history.history("stop");
+    router.off(events.routerRoute(), onRoute);
+    forerunner.history.off(events.historyRoute(), onRoute);
 
     // Verify the results
-    metrics.verifyCounters(2, 2, 2);
+    frMetrics.verifyCounters(2, 2, 2);
+});
+
+test("Backbone & forerunner Coexist Test", function () {
+    bbMetrics.resetCounters();
+    frMetrics.resetCounters();
+
+    // Make sure the hash is at the home before we start the tests
+    location.hash = "#";
+
+    // Start forerunner.history widget
+    var frRouter = new CallbackRouter();
+    forerunner.history.history("start");
+
+    // Start the Backbone.history
+    var bbRouter = new BBRouter();
+    Backbone.history.start();
+
+    // Cycle through the routes in an inter-leaved order
+    bbRouter.navigate("#bbFavorites", { trigger: true, replace: false });
+    frRouter.router("navigate", "#frFavorites", { trigger: true, replace: false });
+    bbRouter.navigate("#bbBrowse/" + encodeURIComponent(bbMetrics.reportPath), { trigger: true, replace: false });
+    frRouter.router("navigate", "#frBrowse/" + encodeURIComponent(frMetrics.reportPath), { trigger: true, replace: false });
+
+    // Unhook the history event handlers
+    Backbone.history.stop();
+    forerunner.history.stop();
+
+    // Verify the results
+    frMetrics.verifyCounters(1, 1, 1);
+    bbMetrics.verifyCounters(1, 1, 1);
 });

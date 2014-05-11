@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -796,7 +796,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
@@ -3955,6 +3955,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolbar after nav pane closed.
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
                 }
             });
 
@@ -4192,6 +4196,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolpane after nav pane closed.
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateItemStates(data.newPageNum, maxNumPages);
                 }
             });
 
@@ -7815,7 +7823,10 @@ $(function () {
                 if ($control.attr("disabled"))
                     return;
 
-                $control.focus();
+                //only set focus to its textbox for no-touch device by default
+                if (!forerunner.device.isTouch()) {
+                    $control.focus();
+                }
 
                 if (isOpen) {
                     return;
@@ -7846,7 +7857,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value }).blur();
+                    $control.blur().attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
                     
                     if (me.getNumOfVisibleParameters() === 1) {

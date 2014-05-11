@@ -73,6 +73,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolpane after nav pane closed.
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateItemStates(data.newPageNum, maxNumPages);
                 }
             });
 

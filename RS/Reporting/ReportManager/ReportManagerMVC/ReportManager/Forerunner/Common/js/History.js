@@ -18,11 +18,11 @@ $(function () {
     // ---------------------------
     // Underscore.js 1.4.3
     var isFunction = function (obj) {
-        return typeof obj === 'function';
+        return typeof obj === "function";
     };
 
     var isRegExp = function (obj) {
-        return toString.call(obj) == '[object RegExp]';
+        return "[object RegExp]" === Object.prototype.toString.call(obj);
     };
 
     // If the value of the named property is a function then invoke it;

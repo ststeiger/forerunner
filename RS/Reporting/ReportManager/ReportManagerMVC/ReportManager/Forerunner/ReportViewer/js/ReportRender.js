@@ -264,13 +264,13 @@ $(function () {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
             var Measurements;
-            var RecLayout;
+            //var RecLayout;
             var Style;
             var me = this;
+            var ReportItems = {};
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
-            RecLayout = me._getRectangleLayout(Measurements);
-
+            
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
                 Style = "";
@@ -290,16 +290,17 @@ $(function () {
                 $LocDiv.append($RI);
                 Style = "";
 
-                RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                RecLayout.ReportItems[Index].HTMLElement = $LocDiv;
-                RecLayout.ReportItems[Index].Type = Obj.Type;
+                //RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                ReportItems[Index] = {};
+                ReportItems[Index].HTMLElement = $LocDiv;
+                ReportItems[Index].Type = Obj.Type;
 
                 if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
-                    RecLayout.ReportItems[Index].BigTablix = true;
+                    ReportItems[Index].BigTablix = true;
                 }
 
-                if (RecLayout.ReportItems[Index].IndexAbove === null)
-                    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
+                //if (RecLayout.ReportItems[Index].IndexAbove === null)
+                //    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
 
                 Style += "position:absolute;";
 
@@ -332,32 +333,32 @@ $(function () {
             me._writeTooltip(RIContext);
 
             //Add Rec to Rec collection to layout later
-            me._rectangles.push({ RecLayout: RecLayout, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext });
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext });
 
             return RIContext.$HTMLParent;
         },
 
         _LayoutReport: function(isLoaded){
             var me = this;
-           
+            
             for (var r = 0; r < me._rectangles.length; r++) {
                 var rec = me._rectangles[r];
-                var RecLayout = rec.RecLayout;
+                var RecLayout = me._getRectangleLayout(rec.Measurements);
                 var Measurements = rec.Measurements;
                 var RIContext = rec.RIContext;
 
                 for (var Index = 0; Index < forerunner.helper.objectSize(RecLayout.ReportItems); Index++) {                   
 
                     //Determin height and location
-                    if (RecLayout.ReportItems[Index].Type === "Image" || RecLayout.ReportItems[Index].Type === "Chart" || RecLayout.ReportItems[Index].Type === "Gauge" || RecLayout.ReportItems[Index].Type === "Map" || RecLayout.ReportItems[Index].Type === "Line")
+                    if (rec.ReportItems[Index].Type === "Image" || rec.ReportItems[Index].Type === "Chart" || rec.ReportItems[Index].Type === "Gauge" || RecLayout.ReportItems[Index].Type === "Map" || rec.ReportItems[Index].Type === "Line")
                         RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                     else {
                         if (isLoaded)
                             RecLayout.ReportItems[Index].NewHeight = me._convertToMM(RecLayout.ReportItems[Index].HTMLElement.outerHeight() + "px");
-                        else if (RecLayout.ReportItems[Index].BigTablix)
+                        else if (rec.ReportItems[Index].BigTablix)
                             RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                         else
-                            RecLayout.ReportItems[Index].NewHeight = me._getHeight(RecLayout.ReportItems[Index].HTMLElement);
+                            RecLayout.ReportItems[Index].NewHeight = me._getHeight(rec.ReportItems[Index].HTMLElement);
                         
                     }
 
@@ -366,8 +367,8 @@ $(function () {
                     else
                         RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
                 
-                    RecLayout.ReportItems[Index].HTMLElement.css("top", me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm");
-                    RecLayout.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
+                    rec.ReportItems[Index].HTMLElement.css("top", me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm");
+                    rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
                 }
 
                 

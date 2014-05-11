@@ -148,6 +148,19 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
+            // Handle any / all layout changes when the history routes change
+            forerunner.history.on(events.historyRoute(), function (e, data) {
+                if (data.name === "transitionToReportManager" ||
+                    data.name === "transitionToOpenResource" ||
+                    data.name === "transitionToSearch") {
+                    forerunner.device.allowZoom(false);
+                    $("html").addClass("fr-Explorer-background");
+                } else if (data.name === "transitionToReportViewer" ||
+                           data.name === "transitionToReportViewerWithRSURLAccess") {
+                    $("html").removeClass("fr-Explorer-background");
+                }
+            });
+
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });

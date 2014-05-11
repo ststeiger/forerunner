@@ -4,7 +4,8 @@
  *
  *  This code was converted from the Backbone.js fragments. The Event
  *  handling specific to Backbone was re-written to use jquery event
- *  support.
+ *  support as well as to remove any / all underlying undecore.js and
+ *  Backbone.js dependencies (E.g., Events).
  */
 
 var forerunner = forerunner || {};
@@ -66,18 +67,60 @@ $(function () {
 
     /**
      * The router widget is used to provide methods for routing client-side pages,
-     * and connecting them to actions and events.
+     * and connecting them to actions and events. It works in concert with the 
+     * forerunner.history widget.
      *
      * @namespace $.forerunner.router
      * @prop {Object} options - The options for router
      * @prop {String} options.routes - hash of routes.
      * @example
-     * routes: {
-     *   "help/:page":         "help",
-     *   "download/*path":     "download",
-     *   "folder/:name":       "openFolder",
-     *   "folder/:name-:mode": "openFolder"
-     * }
+     *  //
+     *  // Callback Router Example
+     *  var router = $({}).router({
+     *      routes: {
+     *          "": "home",
+     *          "home": "home",
+     *          "favorites": "favorites",
+     *          "browse/:path": "browse"
+     *      },
+     *      home: function () {
+     *          // Your code goes here
+     *      },
+     *      favorites: function () {
+     *          // Your code goes here
+     *      },
+     *      browse: function (path) {
+     *          // Your code goes here
+     *      },
+     *  });
+     *
+     *  //
+     *  // Event Router Example
+     *  var EventRouter = $({}).router({
+     *      routes: {
+     *          "": "home",
+     *          "home": "home",
+     *          "favorites": "favorites",
+     *          "browse/:path": "browse"
+     *      },
+     *  });
+     * 
+     *  // Hook up to the router events
+     *  var onRoute = function (event, data) {
+     *      if (data.name === "home") {
+     *          // Your code goes here
+     *      } else if (data.name === "favorites") {
+     *          // Your code goes here
+     *      } else if (data.name === "browse") {
+     *          // Your code goes here
+     *      }
+     *  }
+     *
+     *  // Hook up the onRoute handler to the route event
+     *  router.on(events.routerRoute(), onRoute);
+     *
+     * Notes:
+     *  - The callback functions are defined as members of the options
      */
     $.widget(widgets.getFullname(widgets.router), {
         options: {
@@ -98,10 +141,50 @@ $(function () {
          * @function $.forerunner.router#route
          *
          * @param {String} route - routing string or regular expression
-         * @param {String} name - will be triggered as an event
+         * @param {String} name - Used as the callback function name and / or a
+         *                        property of the data object passed to the route
+         *                        event.
          * @param {String} callback - function to call when a route is matched if
          *                            callback is ommitted me[name] will be used
          * @example
+         * 
+         * The routes hash maps URLs with parameters to functions on your router (or just
+         * direct function definitions, if you prefer). Routes can contain parameter parts,
+         * :param, which match a single URL component between slashes; and splat parts *splat,
+         * which can match any number of URL components.
+         *
+         * Part of a route can be made optional by surrounding it in parentheses (/:optional). 
+         * For example, a route of "search/:query/p:page" will match a fragment of 
+         * #search/obama/p2, passing "obama" and "2" to the action. A route of "file/*path" will
+         * match #file/nested/folder/file.txt, passing "nested/folder/file.txt" to the action. 
+         * A route of "docs/:section(/:subsection)" will match #docs/faq and #docs/faq/installing,
+         * passing "faq" to the action in the first case, and passing "faq" and "installing" to the
+         * action in the second. 
+         *
+         * Trailing slashes are treated as part of the URL, and (correctly) treated as a unique route
+         * when accessed. docs and docs/ will fire different callbacks. If you can't avoid generating
+         * both types of URLs, you can define a "docs(/)" matcher to capture both cases. 
+         * 
+         * When the visitor presses the back button, or enters a URL, and a particular route is matched,
+         * the name of the action will be fired as an event, so that other objects can listen to the
+         * router, and be notified. In the following example, visiting #help/uploading will fire a
+         * forerunner.ssr.constants.events.routerRoute() event from the router. 
+         *
+         * routes: {
+         *   "help/:page":         "help",
+         *   "download/*path":     "download",
+         *   "folder/:name":       "openFolder",
+         *   "folder/:name-:mode": "openFolder"
+         * }
+         * 
+         * router.on(forerunner.ssr.constants.events.routerRoute(), function(data) {
+         *  // Where:
+         *  //  data.name = "help"
+         *  //  data.args[0] = "uploading"
+         * });
+         *
+         * // You can also hook routes on the history object as follows
+         * forerunner.history.on(events.historyRoute(), onRoute);
          */
         route: function (route, name, callback) {
             var me = this;
@@ -117,7 +200,7 @@ $(function () {
             }
             forerunner.history.history("route", route, function (fragment) {
                 var args = me._extractParameters(route, fragment);
-                me.execute(callback, args);
+                me._execute(callback, args);
                 me._trigger(events.route, null, { name: name, args: args });
                 forerunner.history.history("triggerRoute", { route: me, name: name, args: args });
             });
@@ -126,7 +209,7 @@ $(function () {
 
         // Execute a route handler with the provided parameters.  This is an
         // excellent place to do pre-route setup or post-route cleanup.
-        execute: function (callback, args) {
+        _execute: function (callback, args) {
             if (callback) callback.apply(this, args);
         },
 
@@ -207,9 +290,28 @@ $(function () {
      * forerunner.history.
      *
      * @namespace $.forerunner.history
-     * @prop {Object} options - The options for router
-     * @prop {String} options.oooo - oooo option
+     *
      * @example
+     *      forerunner.history.history("start");
+     *
+     * Notes:
+     *  - history is adapted from backbone.js 1.1.2 but it is packaged as a widget
+     *    and all backbone and underscore dependencies have been removed.
+     *  - history has been designed and tested to peacefully co-exist with
+     *    Backbone.history
+     *  - You shouldn't ever have to create this widget
+     *  - pushState support exists on a purely opt-in basis. See the options
+     *    above. Older browsers that don't support pushState will continue to
+     *    use hash-based URL fragments, and if a hash URL is visited by a
+     *    pushState-capable browser, it will be transparently upgraded to the
+     *    true URL. Note that using real URLs requires your web server to be
+     *    able to correctly render those pages, so back-end changes are required
+     *    as well. For example, if you have a route of /documents/100, your web
+     *    server must be able to serve that page, if the browser visits that URL
+     *    directly. For full search-engine crawlability, it's best to have the
+     *    server generate the complete HTML for the page ... but if it's a web
+     *    application, just rendering the same content you would have for the root
+     *    URL, and filling in the rest with Backbone Views and JavaScript works fine. 
      */
     $.widget(widgets.getFullname(widgets.history), {
         options: {
@@ -224,6 +326,14 @@ $(function () {
                 this.location = window.location;
                 this.history = window.history;
             }
+        },
+        /**
+         * Returns true if forerunner.history has been started
+         *
+         * @function $.forerunner.history#isStarted
+         */
+        isStarted: function () {
+            return historyStarted;
         },
         // The default interval to poll for hash changes, if necessary, is
         // twenty times a second.
@@ -256,13 +366,6 @@ $(function () {
             return fragment.replace(routeStripper, '');
         },
 
-        /**
-         * triggers a historyroute event
-         *
-         * @function $.forerunner.history#triggerRoute
-         *
-         * @param {Object} data - Data passed to the event
-         */
         triggerRoute: function (data) {
             this._trigger(events.route, null, data);
         },
@@ -274,6 +377,14 @@ $(function () {
          * @function $.forerunner.history#start
          *
          * @param {Object} options - Start options
+         * @prop {Object} options - The options for router
+         * @prop {Bool} options.pushState - True indicates you would like to use
+         *                                  pushState support in your application
+         * @prop {String} options.root - If your application is not being served
+         *                               from the root url / of your domain, use
+         *                               this parameter.
+         * @prop {String} options.silent - True indicates to not trigger the initial
+         *                                 route when starting up.
          * @example
          *  forerunner.history.history("start");
          *
@@ -293,7 +404,9 @@ $(function () {
          */
         start: function (options) {
             var me = this;
-            if (historyStarted) throw new Error("forerunner.history has already been started");
+            if (historyStarted) {
+                return false;
+            }
             historyStarted = true;
 
             // Figure out the initial configuration. Do we need an iframe?

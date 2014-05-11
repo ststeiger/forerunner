@@ -315,7 +315,7 @@
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />
-    <Content Include="Scripts\App\router.js" />
+    <Content Include="Scripts\App\mobilizer.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
     <Content Include="Forerunner\ReportViewer\css\ToolPane.css" />
@@ -340,13 +340,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\Util\backbone.js" />
-    <Content Include="Scripts\Util\backbone_ui.js" />
-    <Content Include="Scripts\Util\collection_view.js" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
-    <Content Include="Scripts\Util\laconic.js" />
-    <Content Include="Scripts\Util\modernizr-2.5.3.js" />
-    <Content Include="Scripts\Util\underscore.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -359,7 +353,6 @@
     <Content Include="Forerunner\ReportExplorer\images\accent.png" />
     <Content Include="Forerunner\ReportExplorer\images\bullet.png" />
     <Content Include="Forerunner\ReportExplorer\images\heroAccent.png" />
-    <Content Include="Scripts\Util\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />

@@ -737,7 +737,10 @@ $(function () {
                 if ($control.attr("disabled"))
                     return;
 
-                $control.focus();
+                //only set focus to its textbox for no-touch device by default
+                if (!forerunner.device.isTouch()) {
+                    $control.focus();
+                }
 
                 if (isOpen) {
                     return;
@@ -768,7 +771,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value }).blur();
+                    $control.blur().attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {

@@ -833,7 +833,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
@@ -4087,6 +4087,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolbar after close navigation panel
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
                 }
             });
 
@@ -4305,6 +4309,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolpane after close navigation panel
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateItemStates(data.newPageNum, maxNumPages);
                 }
             });
 

@@ -603,7 +603,7 @@ $(function () {
         },
         _allowZoom: function (zoom) {
             var me = this;
-            if (!forerunner.device.isWindowsPhone() &&  enableWPZoom !== true) {
+            if (!forerunner.device.isWindowsPhone() ) {
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", zoom);
                 } else {

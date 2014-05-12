@@ -1258,7 +1258,7 @@ $(function () {
             var width = container.width();
             var settings = forerunner.config.getCustomSettingsValue("DeviceFormFactor", [800, 2048]);
 
-            for (var i = 0; i < settings.lenght; i++) {
+            for (var i = 0; i < settings.length; i++) {
                 if (width < settings[i])
                     break;
             }

@@ -1116,9 +1116,9 @@ $(function () {
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;
-            var respCols;
+            var respCols = {isResp: false};
 
-            Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+            //Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
@@ -1137,20 +1137,28 @@ $(function () {
                 if (me.RDLExt)
                     tablixExt = me.RDLExt[sharedElements.Name];
 
-                respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);                
+                respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                if (respCols.ColHeaderRow === undefined)
+                    respCols.ColHeaderRow = 0;
+                if (respCols.BackgroundColor === undefined)
+                    respCols.BackgroundColor = "#F2F2F2";
+
 
                 for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    respCols[cols] = { show: true };
+                    respCols.Columns[cols] = { show: true };
 
                     //If it is a responsive layout and the author has supplied instructions for minimizing the tablix, determine columns here
                     if (me.options.responsive && tablixExt) {
-                        if (tablixExt[cols] && tablixExt[cols].HideOrder >= formFactor) {
-                            respCols[cols].show = false;
-                            respCols[cols].Ext = tablixExt[cols];
+                        if (tablixExt.Columns[cols] && tablixExt.Columns[cols].HideOrder >= formFactor) {
+                            respCols.Columns[cols].show = false;
+                            respCols.Columns[cols].Ext = tablixExt[cols];
+                            respCols.isResp = true;
+                            respCols.ColumnCount--;
                         }
                     }
                     
-                    if (respCols[cols].show) {                        
+                    if (respCols.Columns[cols].show) {
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
                 }
@@ -1207,18 +1215,27 @@ $(function () {
 
 
 
-        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State,repCols) {
+        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State,respCols) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
             var LastObjType = State.LastObjType;
             var $Row = State.Row;
             var HasFixedCols = false;
-            var HasFixedRows = false;
-            var cell;
+            var HasFixedRows = false;           
             var $ExtRow = State.ExtRow;
+            var $ExtCell = State.ExtCell;
+
+            if (State.ExtRow === undefined) {
+                $ExtRow = new $("<TR/>");
+                $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                $ExtRow.append($ExtCell);
+            }
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
+
+                if (respCols.isResp)
+                    $Tablix.append($ExtRow);
 
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
@@ -1227,7 +1244,8 @@ $(function () {
 
                 $Row = new $("<TR/>");
                 $ExtRow = new $("<TR/>");
-                $ExtRow.attr("colspan", repCols.length);
+                $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                $ExtRow.append($ExtCell);
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -1259,29 +1277,29 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {
-                    cell = me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex);
-                    if (repCols[BRObj.ColumnIndex].show)
-                        $Row.append(cell);
+                $.each(Obj.Cells, function (BRIndex, BRObj) {                    
+                    if (respCols.Columns[BRObj.ColumnIndex].show)
+                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
                     else {
-                        $ExtRow.append(repCols[BRObj.ColumnIndex].Header);
-                        $ExtRow.append(cell);
+                        if (respCols.ColHeaderRow === Obj.RowIndex) {
+                            respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0)));
+                        }
+                        else {
+                            $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
+                            $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0))));
+                        }
                     }
                 });
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell) {
-                    cell = me._writeTablixCell(RIContext, Obj, Index);
-                    $Row.append(cell);
+                if (Obj.Cell) {                    
+                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
                     State.CellCount += 1;
-                    if (Obj.Type === "ColumnHeader") {
-                        repCols[Obj.ColumnIndex].Header = cell.clone(true,true);
-                    }
                 }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
         _batchSize: 3000,
         _tablixStream: {},
@@ -1307,6 +1325,8 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
+                if (Tablix.respCols.isResp)
+                    Tablix.$Tablix.append(Tablix.State.ExtRow);
             }
         },
 

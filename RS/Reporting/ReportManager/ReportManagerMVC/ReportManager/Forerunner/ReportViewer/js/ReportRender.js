@@ -1116,7 +1116,7 @@ $(function () {
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;
-            
+            var respCols;
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             
@@ -1137,19 +1137,20 @@ $(function () {
                 if (me.RDLExt)
                     tablixExt = me.RDLExt[sharedElements.Name];
 
-                var respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
 
                 for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    respCols[cols] = true;
+                    respCols[cols] = { show: true };
 
-                    //If it is a responsive layout and the auther has supplied instructions for minimizing the tablix determine coluimns here
+                    //If it is a responsive layout and the author has supplied instructions for minimizing the tablix, determine columns here
                     if (me.options.responsive && tablixExt) {
                         if (tablixExt[cols] && tablixExt[cols].HideOrder >= formFactor) {
-                            respCols[cols] = false;
+                            respCols[cols].show = false;
+                            respCols[cols].Ext = tablixExt[cols];
                         }
                     }
                     
-                    if (respCols[cols]) {                        
+                    if (respCols[cols].show) {                        
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
                 }
@@ -1213,6 +1214,8 @@ $(function () {
             var $Row = State.Row;
             var HasFixedCols = false;
             var HasFixedRows = false;
+            var cell;
+            var $ExtRow = State.ExtRow;
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -1223,6 +1226,8 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
+                $ExtRow = new $("<TR/>");
+                $ExtRow.attr("colspan", repCols.length);
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -1245,6 +1250,8 @@ $(function () {
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
+           
+            
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
             if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
@@ -1252,19 +1259,29 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
-                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                $.each(Obj.Cells, function (BRIndex, BRObj) {
+                    cell = me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex);
+                    if (repCols[BRObj.ColumnIndex].show)
+                        $Row.append(cell);
+                    else {
+                        $ExtRow.append(repCols[BRObj.ColumnIndex].Header);
+                        $ExtRow.append(cell);
+                    }
                 });
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell){
-                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                if (Obj.Cell) {
+                    cell = me._writeTablixCell(RIContext, Obj, Index);
+                    $Row.append(cell);
                     State.CellCount += 1;
+                    if (Obj.Type === "ColumnHeader") {
+                        repCols[Obj.ColumnIndex].Header = cell.clone(true,true);
                     }
+                }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
         _batchSize: 3000,
         _tablixStream: {},

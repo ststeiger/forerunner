@@ -1,5 +1,7 @@
 {
 	"MaxBigDropdownItem": 50,
 	"MinItemToEnableBigDropdownOnTouch": 10,
-	"EnableCascadingTree": "on"
+	"EnableCascadingTree": "on",
+	"DeviceFormFactor" : [800,2048],
+	"FullScreenPageNavSize" : 768
 }

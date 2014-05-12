@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -837,6 +837,7 @@ $(function () {
             me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
+            var me = this;
             var pageSection = $(".fr-layout-pagesection");
             if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
@@ -983,7 +984,7 @@ $(function () {
                     me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         
@@ -1096,7 +1097,7 @@ $(function () {
                     else
                         me.lock = 0;
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1155,7 +1156,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1228,7 +1229,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1256,7 +1257,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1394,7 +1395,7 @@ $(function () {
                             }
                         }
                     },
-                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 );
             }
         },
@@ -1742,7 +1743,7 @@ $(function () {
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
                 return;
             }
 
@@ -1772,7 +1773,7 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
             });
         },
         _getRDLExtProp: function () {
@@ -1877,7 +1878,7 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1939,7 +1940,7 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
@@ -3779,6 +3780,8 @@ $(function () {
             $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
         },
         onInputFocus: function () {
+            var me = this;
+
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)
@@ -3794,6 +3797,7 @@ $(function () {
             }
         },
         onInputBlur: function () {
+            var me = this;
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)
@@ -4596,7 +4600,7 @@ $(function () {
             }
 
             if (me._maxNumPages !== me.options.$reportViewer.reportViewer("getNumPages")) {
-                var $loadMore = new $("<LI />")
+                var $loadMore = new $("<LI />");
                 $loadMore.addClass("fr-nav-loadmore");
                 $loadMore.addClass("fr-nav-item");
                 $loadMore.addClass("fr-core-cursorpointer");
@@ -6764,7 +6768,7 @@ $(function () {
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;
-            
+            var respCols;
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             
@@ -6785,19 +6789,20 @@ $(function () {
                 if (me.RDLExt)
                     tablixExt = me.RDLExt[sharedElements.Name];
 
-                var respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
 
                 for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    respCols[cols] = true;
+                    respCols[cols] = { show: true };
 
-                    //If it is a responsive layout and the auther has supplied instructions for minimizing the tablix determine coluimns here
+                    //If it is a responsive layout and the author has supplied instructions for minimizing the tablix, determine columns here
                     if (me.options.responsive && tablixExt) {
                         if (tablixExt[cols] && tablixExt[cols].HideOrder >= formFactor) {
-                            respCols[cols] = false;
+                            respCols[cols].show = false;
+                            respCols[cols].Ext = tablixExt[cols];
                         }
                     }
                     
-                    if (respCols[cols]) {                        
+                    if (respCols[cols].show) {                        
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
                 }
@@ -6861,6 +6866,8 @@ $(function () {
             var $Row = State.Row;
             var HasFixedCols = false;
             var HasFixedRows = false;
+            var cell;
+            var $ExtRow = State.ExtRow;
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -6871,6 +6878,8 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
+                $ExtRow = new $("<TR/>");
+                $ExtRow.attr("colspan", repCols.length);
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -6893,6 +6902,8 @@ $(function () {
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
+           
+            
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
             if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
@@ -6900,19 +6911,29 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
-                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                $.each(Obj.Cells, function (BRIndex, BRObj) {
+                    cell = me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex);
+                    if (repCols[BRObj.ColumnIndex].show)
+                        $Row.append(cell);
+                    else {
+                        $ExtRow.append(repCols[BRObj.ColumnIndex].Header);
+                        $ExtRow.append(cell);
+                    }
                 });
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell){
-                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                if (Obj.Cell) {
+                    cell = me._writeTablixCell(RIContext, Obj, Index);
+                    $Row.append(cell);
                     State.CellCount += 1;
+                    if (Obj.Type === "ColumnHeader") {
+                        repCols[Obj.ColumnIndex].Header = cell.clone(true,true);
                     }
+                }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
         _batchSize: 3000,
         _tablixStream: {},
@@ -8053,7 +8074,7 @@ $(function () {
                             if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
                                 $cb.trigger("click");
                         } else if (paramDefinition.ValidValues !== "") {
-                            if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                            if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
                                 me._setSelectedIndex($control, savedParam.Value);
                             }
                             else {
@@ -8489,7 +8510,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type === "click")
                         enterLock = false;
                 }
             });
@@ -8659,7 +8680,7 @@ $(function () {
                     }
                     
                     var item = me._getCascadingTreeItem(param, param.ValidValues[i], hasChild, i === length - 1, isDefault, level);
-                    $list.append(item)
+                    $list.append(item);
                 }
             }
 
@@ -8892,7 +8913,7 @@ $(function () {
             var $param = me.element.find(".fr-paramname-" + parentName);
             //set single selected item as backend value to load data dynamically
             if ($ul.attr("allowmultiple") === "true") {
-                $param.filter(".fr-param").val("#").attr("backendValue", '["' + $item.attr("value") + '"]');
+                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("value") + "\"]");
             }
             else {
                 $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("value"));
@@ -8911,7 +8932,7 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-                $parent = $tree.siblings(".fr-param-tree-input");
+                var $parent = $tree.siblings(".fr-param-tree-input");
 
                 $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
@@ -8944,7 +8965,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && !backendValue === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;

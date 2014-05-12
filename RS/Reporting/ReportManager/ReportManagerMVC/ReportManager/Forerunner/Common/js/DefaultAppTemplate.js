@@ -465,6 +465,8 @@ $(function () {
             $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
         },
         onInputFocus: function () {
+            var me = this;
+
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)
@@ -480,6 +482,7 @@ $(function () {
             }
         },
         onInputBlur: function () {
+            var me = this;
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)

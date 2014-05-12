@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -71,6 +71,8 @@ $(function () {
         },
 
         _destroy: function () {
+            //This needs to be changed to only remove the view function
+            $(window).off("resize");
         },
 
         // Constructor
@@ -130,7 +132,10 @@ $(function () {
 
             //setup orientation change
             if (!forerunner.device.isMSIE8())
-                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+                window.addEventListener("orientationchange", function () { me._ReRender.call(me); }, false);
+
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", function () { me._ReRender.call(me); });
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -327,10 +332,9 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
                 for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me.pages[i].$container.html("");
+                    me.pages[i].needsLayout = true;
                 }
-                me._setPage(me.curPage);
+                me._reLayoutPage(me.curPage);                
             }
         },
         _removeCSS: function () {
@@ -350,6 +354,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -372,6 +377,9 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -1927,6 +1935,14 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
+        _reLayoutPage: function(pageNum){
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].$container.reportRender("layoutReport", true);
+                me.pages[pageNum].needsLayout = false;
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -1947,7 +1963,8 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum], true);
+                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;
@@ -5221,7 +5238,7 @@ $(function () {
             }
         },
          
-        render: function (Page) {
+        render: function (Page,delayLayout) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
@@ -5235,7 +5252,9 @@ $(function () {
                me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
-            me._LayoutReport();
+
+            if (delayLayout !== true)
+                me.layoutReport();
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -5496,7 +5515,7 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        _LayoutReport: function(isLoaded){
+        layoutReport: function(isLoaded){
             var me = this;
             
             for (var r = 0; r < me._rectangles.length; r++) {
@@ -5512,7 +5531,7 @@ $(function () {
                         RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                     else {
                         if (isLoaded)
-                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(RecLayout.ReportItems[Index].HTMLElement.outerHeight() + "px");
+                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(rec.ReportItems[Index].HTMLElement.outerHeight() + "px");
                         else if (rec.ReportItems[Index].BigTablix)
                             RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                         else
@@ -6462,7 +6481,7 @@ $(function () {
 
                     //If we are done re-size the report to the new size
                     if (me._tablixStream[name].BigTablixDone) {
-                        me._LayoutReport(true);
+                        me.layoutReport(true);
                     }
                 }
 
@@ -7897,7 +7916,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type ==="click")
                         enterLock = false;
                 }
             });

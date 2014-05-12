@@ -524,7 +524,7 @@ $(function () {
         * @param {Object} Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
-            this._customSettings = settingObjectl
+            this._customSettings = settingObject;
         },
 
         /**
@@ -561,7 +561,7 @@ $(function () {
         getCustomSettingsValue: function (setting, defaultval) {
             var settings = this.getCustomSettings();
             if (settings && settings[setting])
-                return settings[setting]
+                return settings[setting];
             else
                 return defaultval;
         },
@@ -1458,10 +1458,10 @@ $(function () {
         // The multiple valued parameter simply are treated 
         getParametersFromUrl: function (url) {
             var params = [];
-            var start = url.indexOf('?') + 1;
-            var vars = url.substring(start).split('&');
+            var start = url.indexOf("?") + 1;
+            var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
+                var pair = vars[i].split("=");
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
                 var ssrsPram = key.substring(0, 3);

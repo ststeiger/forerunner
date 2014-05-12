@@ -708,7 +708,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type ==="click")
                         enterLock = false;
                 }
             });

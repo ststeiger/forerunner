@@ -63,7 +63,7 @@ $(function () {
             }
         },
          
-        render: function (Page) {
+        render: function (Page,delayLayout) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
@@ -77,7 +77,9 @@ $(function () {
                me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
-            me._LayoutReport();
+
+            if (delayLayout !== true)
+                me.layoutReport();
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -338,7 +340,7 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        _LayoutReport: function(isLoaded){
+        layoutReport: function(isLoaded){
             var me = this;
             
             for (var r = 0; r < me._rectangles.length; r++) {
@@ -354,7 +356,7 @@ $(function () {
                         RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                     else {
                         if (isLoaded)
-                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(RecLayout.ReportItems[Index].HTMLElement.outerHeight() + "px");
+                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(rec.ReportItems[Index].HTMLElement.outerHeight() + "px");
                         else if (rec.ReportItems[Index].BigTablix)
                             RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                         else
@@ -1304,7 +1306,7 @@ $(function () {
 
                     //If we are done re-size the report to the new size
                     if (me._tablixStream[name].BigTablixDone) {
-                        me._LayoutReport(true);
+                        me.layoutReport(true);
                     }
                 }
 

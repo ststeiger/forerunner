@@ -70,6 +70,8 @@ $(function () {
         },
 
         _destroy: function () {
+            //This needs to be changed to only remove the view function
+            $(window).off("resize");
         },
 
         // Constructor
@@ -129,7 +131,10 @@ $(function () {
 
             //setup orientation change
             if (!forerunner.device.isMSIE8())
-                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+                window.addEventListener("orientationchange", function () { me._ReRender.call(me); }, false);
+
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", function () { me._ReRender.call(me); });
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -326,10 +331,9 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
                 for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me.pages[i].$container.html("");
+                    me.pages[i].needsLayout = true;
                 }
-                me._setPage(me.curPage);
+                me._reLayoutPage(me.curPage);                
             }
         },
         _removeCSS: function () {
@@ -349,6 +353,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -371,6 +376,9 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -1926,6 +1934,14 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
+        _reLayoutPage: function(pageNum){
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].$container.reportRender("layoutReport", true);
+                me.pages[pageNum].needsLayout = false;
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -1946,7 +1962,8 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum], true);
+                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;

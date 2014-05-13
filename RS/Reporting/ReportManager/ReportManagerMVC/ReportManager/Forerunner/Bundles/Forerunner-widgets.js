@@ -6760,7 +6760,7 @@ $(function () {
                 }
             }
         },
-        _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex) {
+        _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex,$Drilldown) {
             var $Cell = new $("<TD/>");
             var Style = "";
             var width;
@@ -6822,6 +6822,10 @@ $(function () {
                 $Cell.addClass("fr-r-tC");
                 var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
                 RI.addClass("fr-r-tCI");
+                //Add Repsponsive table expand
+                if ($Drilldown)
+                    RI.prepend($Drilldown);
+
                 $Cell.append(RI);
             }
             else
@@ -6907,7 +6911,7 @@ $(function () {
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext, respCols: respCols };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
-            TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
+            TS.State = { "LastRowIndex": 0, "LastObjType": "", "StartIndex": 0, CellCount: 0 };
             TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
             me._writeTablixRowBatch(TS);
 
@@ -6959,6 +6963,11 @@ $(function () {
                 $ExtRow.append($ExtCell);
             }
 
+            if (State.Row === undefined) {
+                $Row = new $("<TR/>");
+            }
+
+
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
@@ -6974,6 +6983,7 @@ $(function () {
                 $ExtRow = new $("<TR/>");
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
                 $ExtRow.append($ExtCell);
+                $ExtRow.hide();
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -7005,9 +7015,25 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {                    
-                    if (respCols.Columns[BRObj.ColumnIndex].show)
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                $.each(Obj.Cells, function (BRIndex, BRObj) {
+                    var $Drilldown = undefined;
+                    if (respCols.Columns[BRObj.ColumnIndex].show) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.ColumnIndex ===0) {
+                            //If responsive table add the show hide image and hook up
+                            $Drilldown = new $("<div/>");
+                            $Drilldown.html("&nbsp");
+                            $Drilldown.addClass("fr-render-drilldown-collapse");
+
+                            $Drilldown.on("click", { ToggleElement: $ExtRow }, function (e) {
+                                if (e.data.ToggleElement.is(":visible"))
+                                    e.data.ToggleElement.hide();
+                                else
+                                    e.data.ToggleElement.show();
+                            });
+                            $Drilldown.addClass("fr-core-cursorpointer");
+                        }
+                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex,$Drilldown));
+                    }
                     else {
                         if (respCols.ColHeaderRow === Obj.RowIndex) {
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0)));
@@ -7055,8 +7081,10 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
-                if (Tablix.respCols.isResp)
+                if (Tablix.respCols.isResp) {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
+                    Tablix.State.ExtRow.hide();
+                }
                 Tablix.BigTablixDone = true;
             }
         },
@@ -7847,7 +7875,7 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
-        _revertLock: false,
+        _revertLock: false, 
 
         _init: function () {
             var me = this;

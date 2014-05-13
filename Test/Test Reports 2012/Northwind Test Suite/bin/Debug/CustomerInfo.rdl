@@ -110,13 +110,13 @@ FROM            Customers INNER JOIN
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>1.55208in</Width>
+                  <Width>2.125in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.33334in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.44792in</Width>
+                  <Width>2.67709in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>1.29167in</Width>
@@ -838,7 +838,7 @@ FROM            Customers INNER JOIN
             <Top>0.73833in</Top>
             <Left>0.26958in</Left>
             <Height>0.5in</Height>
-            <Width>8.62501in</Width>
+            <Width>10.42709in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>
@@ -850,7 +850,7 @@ FROM            Customers INNER JOIN
         <Height>2.08333in</Height>
         <Style />
       </Body>
-      <Width>8.89583in</Width>
+      <Width>10.69667in</Width>
       <Page>
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>

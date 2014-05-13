@@ -44,7 +44,7 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
-        _revertLock: false,
+        _revertLock: false, 
 
         _init: function () {
             var me = this;

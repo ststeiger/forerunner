@@ -88,7 +88,7 @@ $(function () {
             
             var $container = me.$appContainer;
             var encodedPath = String(path).replace(/\//g, "%2f");
-            var targetUrl = "#" + action           
+            var targetUrl = "#" + action;
             if (path) targetUrl += "/" + encodedPath;
             
             if (action === "explore") {                
@@ -172,7 +172,7 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },

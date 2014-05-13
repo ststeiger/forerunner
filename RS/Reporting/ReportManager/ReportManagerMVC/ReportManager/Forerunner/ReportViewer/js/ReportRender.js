@@ -85,21 +85,33 @@ $(function () {
         *
         * @param {integer} Page - The page number of the report to render
         */
-        render: function (Page, RLDExt) {
+        render: function (Page, delayLayout, RLDExt) {
             var me = this;
-            var reportDiv = me.element;
-            var reportViewer = me.options.reportViewer;
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
             me.RDLExt = RLDExt;
-
-            me._createStyles(reportViewer);
-            $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
-               me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
-            });
-            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
+            me._rectangles = [];
+            me._currentFormFactor = forerunner.device.formFactor(me.options.reportViewer.element);
+            
+            me._createStyles(me.options.reportViewer);
+            me._reRender();
                      
+            if (delayLayout !== true)
+                me.layoutReport();
+        },
+        _reRender: function(){
+            var me = this;
+            var reportDiv = me.element;
+            var reportViewer = me.options.reportViewer;
+
+            reportDiv.html("");
+
+            $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+                me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+            });
+            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);         
+
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -292,13 +304,13 @@ $(function () {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
             var Measurements;
-            var RecLayout;
+            //var RecLayout;
             var Style;
             var me = this;
+            var ReportItems = {};
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
-            RecLayout = me._getRectangleLayout(Measurements);
-
+            
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
                 Style = "";
@@ -318,22 +330,19 @@ $(function () {
                 $LocDiv.append($RI);
                 Style = "";
 
-                //Determin height and location
-                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line" )
-                    RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                else {
-                    if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
-                        RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                    }
-                    else
-                        RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                //RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                ReportItems[Index] = {};
+                ReportItems[Index].HTMLElement = $LocDiv;
+                ReportItems[Index].Type = Obj.Type;
+
+                if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
+                    ReportItems[Index].BigTablix = true;
                 }
 
-                if (RecLayout.ReportItems[Index].IndexAbove === null)
-                    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
-                else
-                    RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
-                Style += "position:absolute;top:" + me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm;left:" + me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm;";
+                //if (RecLayout.ReportItems[Index].IndexAbove === null)
+                //    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
+
+                Style += "position:absolute;";
 
                 if (Measurements[Index].zIndex)
                     Style += "z-index:" + Measurements[Index].zIndex + ";";
@@ -346,7 +355,7 @@ $(function () {
                 $LocDiv.append($RI);
                 RIContext.$HTMLParent.append($LocDiv);
             });
-
+           
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
@@ -357,27 +366,77 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
-            if (RIContext.CurrLocation) {
-                Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
-                if (RIContext.CurrObj.ReportItems.length === 0)
-                    Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
-                else {
-                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
-                                       parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
-                                       (parseFloat(RIContext.CurrLocation.Height) -
-                                            (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
-                                            parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
-                                       1;
-                    Style += "height:" + me._roundToTwo(parentHeight) + "mm;";
-                }
-        
-            }
             RIContext.$HTMLParent.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
+
+            //Add Rec to Rec collection to layout later
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext });
+
             return RIContext.$HTMLParent;
+        },
+
+        layoutReport: function(isLoaded){
+            var me = this;
+            var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
+
+            //Need to re-render
+            if (me._currentFormFactor !== formFactor && me.RDLExt) {
+                me._currentFormFactor = formFactor;
+                me._reRender();
+            }
+            
+            for (var r = 0; r < me._rectangles.length; r++) {
+                var rec = me._rectangles[r];
+                var RecLayout = me._getRectangleLayout(rec.Measurements);
+                var Measurements = rec.Measurements;
+                var RIContext = rec.RIContext;
+
+                for (var Index = 0; Index < forerunner.helper.objectSize(RecLayout.ReportItems); Index++) {                   
+
+                    //Determin height and location
+                    if (rec.ReportItems[Index].Type === "Image" || rec.ReportItems[Index].Type === "Chart" || rec.ReportItems[Index].Type === "Gauge" || RecLayout.ReportItems[Index].Type === "Map" || rec.ReportItems[Index].Type === "Line")
+                        RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
+                    else {
+                        if (isLoaded)
+                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(rec.ReportItems[Index].HTMLElement.outerHeight() + "px");
+                        else if (rec.ReportItems[Index].BigTablix)
+                            RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
+                        else
+                            RecLayout.ReportItems[Index].NewHeight = me._getHeight(rec.ReportItems[Index].HTMLElement);
+                        
+                    }
+
+                    if (RecLayout.ReportItems[Index].IndexAbove === null)
+                        RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
+                    else
+                        RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
+                
+                    rec.ReportItems[Index].HTMLElement.css("top", me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm");
+                    rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
+                }
+
+                
+                if (RIContext.CurrLocation) {
+                    rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
+
+                    if (RIContext.CurrObj.ReportItems.length === 0)
+                        rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
+                    else {
+                        var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
+                                           parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
+                                           (parseFloat(RIContext.CurrLocation.Height) -
+                                                (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
+                                                parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
+                                           1;
+                        rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
+                    }
+
+                }
+            }
+
         },
         _getRectangleLayout: function (Measurements) {
             var l = new layout();
@@ -1118,8 +1177,7 @@ $(function () {
             var HasFixedCols = false;
             var respCols = {isResp: false};
 
-            //Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-            
+                      
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
             $Tablix.attr("Style", Style);
@@ -1131,7 +1189,7 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");
-                var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
+                var formFactor = me._currentFormFactor;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                 var tablixExt = null;
                 if (me.RDLExt)
@@ -1162,6 +1220,10 @@ $(function () {
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
                 }
+
+                //Set Tablix width if not responsive.
+                if (respCols.isResp ===false)
+                    Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
@@ -1299,16 +1361,18 @@ $(function () {
                 }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
-        _batchSize: 3000,
+        _batchSize: function () {
+            return forerunner.config.getCustomSettingsValue("BigTablixBatchSize", 3000);
+        },
         _tablixStream: {},
         _writeTablixRowBatch: function (Tablix) {
             var me = this;
             
             //me.options.reportViewer.showLoadingIndictator(me.options.reportViewer,true);
 
-            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
+            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize(); Index++) {
                 var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
                 Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State, Tablix.respCols);
                 if (Tablix.State.HasFixedRows === true)
@@ -1327,6 +1391,7 @@ $(function () {
                 Tablix.$Tablix.append(Tablix.State.Row);
                 if (Tablix.respCols.isResp)
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
+                Tablix.BigTablixDone = true;
             }
         },
 
@@ -1342,6 +1407,11 @@ $(function () {
                 if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
                     me._tablixStream[name].EndRow.detach();
                     me._writeTablixRowBatch(me._tablixStream[name]);
+
+                    //If we are done re-size the report to the new size
+                    if (me._tablixStream[name].BigTablixDone) {
+                        me.layoutReport(true);
+                    }
                 }
 
             }

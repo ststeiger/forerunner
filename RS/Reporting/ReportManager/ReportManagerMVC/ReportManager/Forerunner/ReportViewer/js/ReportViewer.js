@@ -1962,7 +1962,7 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum], true);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum], false);
                 me.pages[pageNum].needsLayout= true;
             }
 

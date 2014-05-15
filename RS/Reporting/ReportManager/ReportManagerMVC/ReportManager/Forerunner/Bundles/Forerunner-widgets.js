@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -12440,7 +12440,7 @@ $(function () {
 
             // Assign the default navigateTo handler
             me.options.navigateTo = function (action, path) {
-            var targetUrl = "#" + action;
+                me._navigateTo.apply(me, arguments);
             };
 
             // Create the forerunner router widget

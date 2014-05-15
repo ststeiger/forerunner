@@ -184,6 +184,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\moment.min.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\CreateDashboard.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ManageSubscription.css"
@@ -263,6 +264,13 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
   
+  SetOutPath "$INSTDIR\Forerunner\Dashboard\css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\dashboards.css"
+
+  SetOutPath "$INSTDIR\Forerunner\Dashboard\dashboards"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
   
   SetOutPath "$INSTDIR\Forerunner\Bundles"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner.min.js"
@@ -671,7 +679,6 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ToolPane.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\DSCredential.css"
-  Delete "$INSTDIR\Forerunner\ReportExplorer\images\accent.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\bullet.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\Folder-icon.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\heroAccent.png"
@@ -684,6 +691,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\icons128x128.png"
 
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\CreateDashboard.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ManageSubscription.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\UserSettings.css"
@@ -730,12 +738,17 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   Delete "$INSTDIR\Forerunner\Common\images\search.png"
-  
+
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"
   Delete "$INSTDIR\Custom\MobilizerSettings.txt"
   Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   
+  Delete "$INSTDIR\Forerunner\Dashboard\css\dashboards.css"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
+
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
   Delete "$INSTDIR\bin\Forerunner.Json.dll"
@@ -772,6 +785,7 @@ Section Uninstall
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"
+
   RMDir "$SMPROGRAMS\ForerunnerMobilizerV2"
   
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
@@ -791,6 +805,9 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\ReportExplorer\images"
   RMDir "$INSTDIR\Forerunner\ReportExplorer\css"
   RMDir "$INSTDIR\Forerunner\ReportExplorer"
+  RMDir "$INSTDIR\Forerunner\Dashboard\css"
+  RMDir "$INSTDIR\Forerunner\Dashboard\dashboards"
+  RMDir "$INSTDIR\Forerunner\Dashboard"
   RMDir "$INSTDIR\Forerunner\Lib\Misc\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\css\images"
@@ -803,6 +820,11 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner\Bundles"
   RMDir "$INSTDIR\Forerunner\Controllers"
+  
+  RMDir "$INSTDIR\Forerunner\Dashboard\css"
+  RMDir "$INSTDIR\Forerunner\Dashboard\dashboards"
+  RMDir "$INSTDIR\Forerunner\Dashboard"
+
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\Controllers"
   RMDir "$INSTDIR\Custom"

@@ -37,8 +37,49 @@ $(function () {
     // Shortcut function for checking if an object has a given property directly
     // on itself (in other words, not on a prototype).
     has = function (obj, key) {
-        return hasOwnProperty.call(obj, key);
+        return Object.hasOwnProperty.call(obj, key);
     };
+
+    // Keep the identity function around for default iterators.
+    var identity = function (value) {
+        return value;
+    };
+
+    // Establish the object that gets returned to break out of a loop iteration.
+    var breaker = {};
+
+    // Save bytes in the minified (but not gzipped) version:
+    var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+    // Determine if at least one element in the object matches a truth test.
+    // Delegates to **ECMAScript 5**'s native `some` if available.
+    // Aliased as `any`.
+    var nativeSome = ArrayProto.some;
+    var any = function (obj, predicate, context) {
+        predicate || (predicate = identity);
+        var result = false;
+        if (obj == null) return result;
+        if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+        $.each(obj, function (index, value) {
+            if (result || (result = predicate.call(context, value, index, obj))) return breaker;
+        });
+        return !!result;
+    };
+
+    // Return the results of applying the iterator to each element.
+    // Delegates to **ECMAScript 5**'s native `map` if available.
+    var nativeMap = ArrayProto.map;
+    var map = collect = function (obj, iterator, context) {
+        var results = [];
+        if (obj == null) return results;
+        if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+        $.each(obj, function (index, value) {
+            results.push(iterator.call(context, value, index, obj));
+        });
+        return results;
+    };
+
+
 
     // Retrieve the names of an object's properties.
     // Delegates to **ECMAScript 5**'s native `Object.keys`
@@ -258,11 +299,9 @@ $(function () {
         // treated as `null` to normalize cross-browser behavior.
         _extractParameters: function (route, fragment) {
             var params = route.exec(fragment).slice(1);
-            return params.map(function (param, i) {
+            return map(params, function (param, i) {
                 // Don't decode the search params.
-                if (i === params.length - 1) {
-                    return param || null;
-                }
+                if (i === params.length - 1) return param || null;
                 return param ? decodeURIComponent(param) : null;
             });
         }
@@ -511,17 +550,15 @@ $(function () {
         // Attempt to load the current URL fragment. If a route succeeds with a
         // match, returns `true`. If no defined routes matches the fragment,
         // returns `false`.
-        loadUrl: function (fragmentOverride) {
-            var fragment = this.fragment = this.getFragment(fragmentOverride);
-            var matched = this.handlers.some(function (handler) {
+        loadUrl: function (fragment) {
+            fragment = this.fragment = this.getFragment(fragment);
+            return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);
                     return true;
                 }
             });
-            return matched;
         },
-
 
         // Save a fragment into the hash history, or replace the URL state if the
         // 'replace' option is passed. You are responsible for properly URL-encoding
@@ -5398,7 +5435,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, /*tb.btnCreateDashboard,*/ tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(8, true, [tb.btnLogOff]);
             }
@@ -5914,15 +5951,34 @@ $(function () {
             }
         },
         /**
+         * Show the create dashboard modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showCreateDashboardDialog
+         */
+        showCreateDashboardDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-cdb-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.createDashboard({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+                me._createDashboardDialog = $dlg;
+            }
+            me._createDashboardDialog.createDashboard("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          */
-        showUserSettingsDialog : function() {
+        showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function(){
+        savedPath: function () {
             var me = this;
             if (me.options.view === "catalog") {
                 me.priorExplorerPath = me.options.path;
@@ -10764,7 +10820,7 @@ $(function () {
      * Widget used to manage parameter set
      *
      * @namespace $.forerunner.manageParamSets
-     * @prop {Object} options - The options for dsCredential
+     * @prop {Object} options - The options for Managed Parameter Sets dialog
      * @prop {String} options.$reportViewer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
      * @prop {String} options.model - Parameter model widget instance
@@ -12177,6 +12233,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
+                    "createDashboard/:name": "transitionToCreateDashboard"
                 }
             });
 
@@ -12196,7 +12253,7 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
-            var path = args = keyword = data.args[0];
+            var path = args = keyword = name = data.args[0];
 
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -12221,14 +12278,18 @@ $(function () {
                 me.transitionToReportManager(null, "favorites");
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToCreateDashboard") {
+                me.transitionToCreateDashboard(name);
             }
         },
         _lastAction: null,
         _navigateTo: function (action, path) {
             var me = this;
+
             if (path !== null) {
                 path = encodeURIComponent(path);
             }
+
             if (action === "home") {
                 me.router.router("navigate", "#", { trigger: true, replace: false });
             } else if (action === "back") {
@@ -12240,10 +12301,10 @@ $(function () {
             } else {
                 var targetUrl = "#" + action + "/" + path;
                 // Do not trigger for Firefox when we are changing the anchor
-                var trigger = !forerunner.device.isFirefox() || this._lastAction === action || !this._lastAction;
+                var trigger = !forerunner.device.isFirefox() || me._lastAction === action || !me._lastAction;
                 me.router.router("navigate", targetUrl, { trigger: trigger, replace: false });
             }
-            this._lastAction = action;
+            me._lastAction = action;
         },
 
         /**
@@ -12353,11 +12414,29 @@ $(function () {
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
-         * @param {String} template - Name of the dashboard template file
+         * @param {String} name - Name of the dashboard template
          */
-        transitionToCreateDashboard: function (template) {
-            // TODO
-            alert("Under Contruction");
+        transitionToCreateDashboard: function (templateName) {
+            var me = this;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack
+                });
+
+                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+            }, timeout);
+
+            me.element.css("background-color", "");
         },
         _init: function () {
             var me = this;
@@ -12399,3 +12478,257 @@ $(function () {
         }
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
+/**
+ * @file Contains the print widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+    var templates = dashboards.templates;
+    var createDashboard = locData.createDashboard;
+
+    /**
+     * Widget used to select a new dashbard template
+     *
+     * @namespace $.forerunner.createDashboard
+     * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     * $("#createDashboardDialog").createDashboard({
+     *    $appContainer: me.options.$appContainer,
+     *    $reportViewer: $viewer,
+     /  });
+     */
+    $.widget(widgets.getFullname(widgets.createDashboard), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null,
+            model: null
+        },
+        _createOptions: function() {
+            var me = this;
+
+            me.$select = me.element.find(".fr-cdb-select-id")
+
+            for (item in templates) {
+                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+                me.$select.append($option);
+            }
+        },
+        _init: function() {
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-cdb-form fr-core-dialog-form'>" +
+                        "<div class='fr-core-center'>" +
+                            "<select class='fr-cdb-select-id'>" +
+                            "</select>" +
+                            "<div class='fr-core-dialog-submit-container'>" +
+                                "<div class='fr-core-center'>" +
+                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "</div>" +
+                            "</div>" +
+
+                        "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            me._createOptions();
+
+            me.$form = me.element.find(".fr-cdb-form");
+
+            me.element.find(".fr-cdb-cancel").on("click", function(e) {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-cdb-submit-id").on("click", function (e) {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        _submit: function () {
+            var me = this;
+
+            // Call navigateTo to bring up the create dashboard view
+            var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
+            var name = me.$select.val();
+            navigateTo("createDashboard", name);
+
+            me.closeDialog();
+        },
+        /**
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.createDashboard#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/Dashboard/js/DashboardBase.js
+/**
+ * @file Contains the dashboardBase widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * The dashboardBase widget is used as a base namespace for dashboardEditor and
+     * dashboardViewer
+     *
+     * @namespace $.forerunner.dashboardBase
+     * @prop {Object} options - The options for dashboardBase
+     * @prop {String} options.dashboardState - The dashboardState holds the complete
+     *                                         state of the dashboard editing and / or
+     *                                         viewing experience.
+     */
+    $.widget(widgets.getFullname(widgets.dashboardBase), {
+        options: {
+        },
+        _init: function () {
+            var me = this;
+            me.clearState();
+            me.element.html("");
+        },
+        clearState: function () {
+            var me = this;
+            me.dashboardDef = {
+                templateName: null,
+                template: null,
+                reports: {}
+            };
+        },
+        _destory: function () {
+        }
+    });  // $widget
+});  // function()
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardEditor.js
+/**
+ * @file Contains the reportViewer widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to create and edit dashboards
+     *
+     * @namespace $.forerunner.dashboardEditor
+     * @prop {Object} options - The options for dashboardEditor
+     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     */
+    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
+        options: {
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+        },
+        loadTemplate: function (templateName) {
+            var me = this;
+            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
+            me.dashboardDef.template = template;
+            me._renderTemplate();
+        },
+        _renderTemplate: function () {
+            var me = this;
+            me.element.html(me.dashboardDef.template);
+        },
+        _create: function () {
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+        },
+        _destroy: function () {
+        }
+    });  // $.widget
+});   // $(function
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
+/**
+ * @file Contains the dashboardViewer widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to view dashboards
+     *
+     * @namespace $.forerunner.dashboardViewer
+     * @prop {Object} options - The options for dashboardEditor
+     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     */
+    $.widget(widgets.getFullname(widgets.dashboardViewer), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardViewer */, {
+        options: {
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+        },
+        _create: function () {
+            var me = this;
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+        },
+        _destroy: function () {
+        },
+    });  // $.widget
+});   // $(function
+
+
+

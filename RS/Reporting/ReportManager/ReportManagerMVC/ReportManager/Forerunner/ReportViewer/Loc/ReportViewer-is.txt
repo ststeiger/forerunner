@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Leitarskilyrðum má ekki vera autt",
     "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

@@ -174,16 +174,21 @@
     "apply": "Save",
     "newSet": "New Set"
   },
-   "dsCredential": {
+  "dsCredential": {
     "title":"Data Source Credential",
-	"cancel":"Cancel",
-	"submit":"Submit",
-	"username":"Login name:",
-	"password":"Password:",
-	"reset":"Reset"
+	  "cancel":"Cancel",
+	  "submit":"Submit",
+	  "username":"Login name:",
+	  "password":"Password:",
+	  "reset":"Reset"
   },
   "explorerSearch":{
-	"emptyError":"Search criteria cannot be empty",
-	"notFound":"No results match your search criteria. Please refine your search."
+	  "emptyError":"Search criteria cannot be empty",
+	  "notFound":"No results match your search criteria. Please refine your search."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+	  "cancel":"Cancel",
+	  "submit":"Submit"
   }
 }

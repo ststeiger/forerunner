@@ -101,6 +101,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
+                    "createDashboard/:name": "transitionToCreateDashboard"
                 }
             });
 
@@ -120,7 +121,7 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
-            var path = args = keyword = data.args[0];
+            var path = args = keyword = name = data.args[0];
 
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -145,14 +146,18 @@ $(function () {
                 me.transitionToReportManager(null, "favorites");
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToCreateDashboard") {
+                me.transitionToCreateDashboard(name);
             }
         },
         _lastAction: null,
         _navigateTo: function (action, path) {
             var me = this;
+
             if (path !== null) {
                 path = encodeURIComponent(path);
             }
+
             if (action === "home") {
                 me.router.router("navigate", "#", { trigger: true, replace: false });
             } else if (action === "back") {
@@ -164,10 +169,10 @@ $(function () {
             } else {
                 var targetUrl = "#" + action + "/" + path;
                 // Do not trigger for Firefox when we are changing the anchor
-                var trigger = !forerunner.device.isFirefox() || this._lastAction === action || !this._lastAction;
+                var trigger = !forerunner.device.isFirefox() || me._lastAction === action || !me._lastAction;
                 me.router.router("navigate", targetUrl, { trigger: trigger, replace: false });
             }
-            this._lastAction = action;
+            me._lastAction = action;
         },
 
         /**
@@ -277,11 +282,29 @@ $(function () {
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
-         * @param {String} template - Name of the dashboard template file
+         * @param {String} name - Name of the dashboard template
          */
-        transitionToCreateDashboard: function (template) {
-            // TODO
-            alert("Under Contruction");
+        transitionToCreateDashboard: function (templateName) {
+            var me = this;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack
+                });
+
+                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+            }, timeout);
+
+            me.element.css("background-color", "");
         },
         _init: function () {
             var me = this;

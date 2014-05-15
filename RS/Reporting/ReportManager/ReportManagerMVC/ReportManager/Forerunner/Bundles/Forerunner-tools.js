@@ -936,7 +936,7 @@ $(function () {
             tooltip: locData.toolbar.createDashboard,
             events: {
                 click: function (e) {
-                    e.data.me.options.navigateTo("createDashboard", null);
+                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
                 }
             }
         },

@@ -36,8 +36,49 @@ $(function () {
     // Shortcut function for checking if an object has a given property directly
     // on itself (in other words, not on a prototype).
     has = function (obj, key) {
-        return hasOwnProperty.call(obj, key);
+        return Object.hasOwnProperty.call(obj, key);
     };
+
+    // Keep the identity function around for default iterators.
+    var identity = function (value) {
+        return value;
+    };
+
+    // Establish the object that gets returned to break out of a loop iteration.
+    var breaker = {};
+
+    // Save bytes in the minified (but not gzipped) version:
+    var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+    // Determine if at least one element in the object matches a truth test.
+    // Delegates to **ECMAScript 5**'s native `some` if available.
+    // Aliased as `any`.
+    var nativeSome = ArrayProto.some;
+    var any = function (obj, predicate, context) {
+        predicate || (predicate = identity);
+        var result = false;
+        if (obj == null) return result;
+        if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+        $.each(obj, function (index, value) {
+            if (result || (result = predicate.call(context, value, index, obj))) return breaker;
+        });
+        return !!result;
+    };
+
+    // Return the results of applying the iterator to each element.
+    // Delegates to **ECMAScript 5**'s native `map` if available.
+    var nativeMap = ArrayProto.map;
+    var map = collect = function (obj, iterator, context) {
+        var results = [];
+        if (obj == null) return results;
+        if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+        $.each(obj, function (index, value) {
+            results.push(iterator.call(context, value, index, obj));
+        });
+        return results;
+    };
+
+
 
     // Retrieve the names of an object's properties.
     // Delegates to **ECMAScript 5**'s native `Object.keys`
@@ -257,11 +298,9 @@ $(function () {
         // treated as `null` to normalize cross-browser behavior.
         _extractParameters: function (route, fragment) {
             var params = route.exec(fragment).slice(1);
-            return params.map(function (param, i) {
+            return map(params, function (param, i) {
                 // Don't decode the search params.
-                if (i === params.length - 1) {
-                    return param || null;
-                }
+                if (i === params.length - 1) return param || null;
                 return param ? decodeURIComponent(param) : null;
             });
         }
@@ -510,17 +549,15 @@ $(function () {
         // Attempt to load the current URL fragment. If a route succeeds with a
         // match, returns `true`. If no defined routes matches the fragment,
         // returns `false`.
-        loadUrl: function (fragmentOverride) {
-            var fragment = this.fragment = this.getFragment(fragmentOverride);
-            var matched = this.handlers.some(function (handler) {
+        loadUrl: function (fragment) {
+            fragment = this.fragment = this.getFragment(fragment);
+            return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);
                     return true;
                 }
             });
-            return matched;
         },
-
 
         // Save a fragment into the hash history, or replace the URL state if the
         // 'replace' option is passed. You are responsible for properly URL-encoding

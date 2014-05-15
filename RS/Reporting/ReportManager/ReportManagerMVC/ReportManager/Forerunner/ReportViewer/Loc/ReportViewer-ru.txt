@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Критерии поиска не может быть пустым",
     "notFound":"Никого не соответствуют вашим критериям поиска, расширенный поиск."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

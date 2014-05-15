@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Sökkriterier kan inte vara tomt",
     "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

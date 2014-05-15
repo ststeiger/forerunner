@@ -147,6 +147,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\images"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\icons128x128.png"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\CreateDashboard.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ManageSubscription.css"
@@ -191,8 +192,15 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ro.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
+
+  SetOutPath "$INSTDIR\Forerunner\Dashboard\css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\dashboards.css"
   
-  
+  SetOutPath "$INSTDIR\Forerunner\Dashboard\dashboards"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
+
   SetOutPath "$INSTDIR\Forerunner\Bundles"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner.min.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.js"
@@ -614,6 +622,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\icons128x128.png"
 
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\CreateDashboard.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\UserSettings.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ManageSubscription.css"
@@ -666,6 +675,11 @@ Section Uninstall
   Delete "$INSTDIR\Custom\MobilizerSettings.txt"
   Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   
+  Delete "$INSTDIR\Forerunner\Dashboard\css\dashboards.css"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
+
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
   Delete "$INSTDIR\bin\Forerunner.Json.dll"
@@ -721,6 +735,8 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\ReportExplorer\images"
   RMDir "$INSTDIR\Forerunner\ReportExplorer\css"
   RMDir "$INSTDIR\Forerunner\ReportExplorer"
+  RMDir "$INSTDIR\Forerunner\Dashboard\css"
+  RMDir "$INSTDIR\Forerunner\Dashboard\dashboards"
   RMDir "$INSTDIR\Forerunner\Lib\Misc\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\css\images"

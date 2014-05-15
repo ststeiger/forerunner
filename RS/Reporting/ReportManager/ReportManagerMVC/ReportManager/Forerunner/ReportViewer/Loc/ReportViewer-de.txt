@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Suchkriterien können nicht leer sein",
     "notFound":"Keine Ergebnisse gefunden, bitte verfeinern Sie Ihre Suche."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

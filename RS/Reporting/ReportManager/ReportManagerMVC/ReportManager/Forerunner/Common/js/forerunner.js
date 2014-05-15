@@ -201,6 +201,14 @@ $(function () {
             router: "router",
             /** @constant */
             history: "history",
+            /** @constant */
+            createDashboard: "createDashboard",
+            /** @constant */
+            dashboardBase: "dashboardBase",
+            /** @constant */
+            dashboardEditor: "dashboardEditor",
+            /** @constant */
+            dashboardViewer: "dashboardViewer",
 
             /** @constant */
             namespace: "forerunner",
@@ -887,10 +895,10 @@ $(function () {
     forerunner.localize = {
         _locData: {},
 
-        _getFallBackLanguage : function(locFileLocation, lang) {
+        _getFallBackLanguage: function (locFileLocation, lang, dataType) {
             if (lang.length > 2) {
                 lang = lang.toLocaleLowerCase().substring(0, 2);
-                return this._loadFile(locFileLocation, lang);
+                return this._loadFile(locFileLocation, lang, dataType);
             }
             return null;
         },
@@ -899,10 +907,11 @@ $(function () {
          * Returns the language specific data.
          *
          * @param {String} locFileLocation - The localization file location without the language qualifier
+         * @param {String} dataType - optional, ajax dataType. defaults to "json"
          *
          * @return {Object} Localization data
          */
-        getLocData: function (locFileLocation) {
+        getLocData: function (locFileLocation, dataType) {
             var languageList = this._getLanguages();
             var i;
             var lang;
@@ -912,7 +921,7 @@ $(function () {
                 for (i = 0; i < languageList.length && langData === null; i++) {
                     lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
-                    langData = this._loadFile(locFileLocation, lang);
+                    langData = this._loadFile(locFileLocation, lang, dataType);
                     if (forerunner.device.isAndroid() && langData === null) {
                         langData = this._getFallBackLanguage(locFileLocation, lang);
                     }
@@ -920,14 +929,14 @@ $(function () {
                 if (!forerunner.device.isAndroid()) {
                     for ( i = 0; i < languageList.length && langData === null; i++) {
                         lang = languageList[i];
-                        langData = this._getFallBackLanguage(locFileLocation, lang);
+                        langData = this._getFallBackLanguage(locFileLocation, lang, dataType);
                     }
                 }
             }
             
             // When all fails, load English.
             if (langData === null)
-                langData = this._loadFile(locFileLocation, "en");
+                langData = this._loadFile(locFileLocation, "en", dataType);
 
             return langData;
             
@@ -950,8 +959,11 @@ $(function () {
             });
             return returnValue;
         },        
-        _loadFile: function (locFileLocation, lang) {
+        _loadFile: function (locFileLocation, lang, dataType) {
             var me = this;
+            if (!dataType) {
+                dataType = "json";
+            }
             if (me._locData[locFileLocation] === undefined)
                 me._locData[locFileLocation] = {};
             if (me._locData[locFileLocation][lang] === undefined) {
@@ -959,7 +971,7 @@ $(function () {
                 // not require authn,
                 $.ajax({
                     url: locFileLocation + "-" + lang + ".txt",
-                    dataType: "json",
+                    dataType: dataType,
                     async: false,
                     success: function (data) {
                         me._locData[locFileLocation][lang] = data;

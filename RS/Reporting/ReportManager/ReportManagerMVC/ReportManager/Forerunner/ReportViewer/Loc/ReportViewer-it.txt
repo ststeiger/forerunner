@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Criteri di ricerca non possono essere vuoti",
     "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

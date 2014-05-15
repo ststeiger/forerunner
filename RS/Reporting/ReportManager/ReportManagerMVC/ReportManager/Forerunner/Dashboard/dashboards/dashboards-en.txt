@@ -1,0 +1,6 @@
+﻿{
+  "templates": {
+    "2Up1Down": "2 Up, 1 Down",
+    "SideBySide": "Side by Side"
+  }
+}

@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
     "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

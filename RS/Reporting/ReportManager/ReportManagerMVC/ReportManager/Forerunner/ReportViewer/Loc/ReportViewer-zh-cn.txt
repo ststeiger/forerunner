@@ -184,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"搜索条件不能为空",
     "notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

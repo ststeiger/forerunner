@@ -382,15 +382,34 @@ $(function () {
             }
         },
         /**
+         * Show the create dashboard modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showCreateDashboardDialog
+         */
+        showCreateDashboardDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-cdb-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.createDashboard({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+                me._createDashboardDialog = $dlg;
+            }
+            me._createDashboardDialog.createDashboard("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          */
-        showUserSettingsDialog : function() {
+        showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function(){
+        savedPath: function () {
             var me = this;
             if (me.options.view === "catalog") {
                 me.priorExplorerPath = me.options.path;

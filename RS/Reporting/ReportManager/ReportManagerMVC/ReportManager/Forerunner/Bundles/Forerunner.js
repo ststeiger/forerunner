@@ -100,7 +100,9 @@ jQuery.fn.extend({
                 var clone = $(this.cloneNode(true)).hide().css("position", "absolute").css("overflow", "visible").width(el.width()).height("auto");
                 el.after(clone);
 
-                function height() { return clone.height() > el.height(); }
+                function height() {
+                    return clone.height() > el.height();
+                }
 
                 if (height()) {
                     var myElipse = " ...";

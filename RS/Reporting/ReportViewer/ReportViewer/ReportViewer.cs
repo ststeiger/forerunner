@@ -43,6 +43,7 @@ namespace Forerunner.SSRS.Viewer
         {
             this.ReportServerURL = ReportServerURL;
             RSTimeOut = TimeOut;
+            this.Credentials = Credentials;
             SetRSURL();            
             GetServerRendering();
         }

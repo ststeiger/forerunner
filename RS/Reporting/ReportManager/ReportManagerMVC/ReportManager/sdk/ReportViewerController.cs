@@ -40,7 +40,11 @@ namespace ReportManager.Controllers
  
         private ReportViewer GetReportViewer(string instance)
         {
-            return ForerunnerUtil.GetReportViewerInstance(instance, url, ReportServerTimeout, webConfigSection);
+            ReportViewer rv = ForerunnerUtil.GetReportViewerInstance(instance, url, ReportServerTimeout, webConfigSection);
+            
+            //If you need to specify your own credentials set them here, otherwise we will the forms auth cookie or the default network credentials
+            //rv.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));
+            return rv;
         }
 
         

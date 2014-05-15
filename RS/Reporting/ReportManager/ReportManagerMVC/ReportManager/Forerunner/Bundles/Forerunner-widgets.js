@@ -4904,6 +4904,7 @@ $(function () {
             $desctext.addClass("fr-explorer-item-desc");
             $desctext.attr("title", catalogItem.Description);
             $desctext.html(catalogItem.Description);
+            //$desctext.multiLineEllipsis();
             $desc.append($desctext);
             $item.append($desc);
            
@@ -4926,6 +4927,7 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
+            me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -5911,6 +5911,7 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
+            me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;
@@ -7669,10 +7670,10 @@ $(function () {
                         tablixwidth -= tablixCols[foundCol].Width;
 
                         //Check if we are done                        
-                        if (tablixwidth < viewerWidth) {
+                        if (tablixwidth < viewerWidth || respCols.ColumnCount ===0) {
                             notdone = false;
                             //Show if more then half is visible
-                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width / 2) {
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width / 2 || respCols.ColumnCount===0) {
                                 respCols.Columns[foundCol].show = true;
                                 respCols.ColumnCount++;
                             }
@@ -7832,11 +7833,13 @@ $(function () {
                                     e.data.ToggleElement.hide();
                                     $(this).removeClass("fr-render-drilldown-collapse");
                                     $(this).addClass("fr-render-drilldown-expand");
+                                    me.layoutReport(true);
                                 }
                                 else {
                                     e.data.ToggleElement.show();
                                     $(this).addClass("fr-render-drilldown-collapse");
                                     $(this).removeClass("fr-render-drilldown-expand");
+                                    me.layoutReport(true);
                                 }
                             });
                             $Drilldown.addClass("fr-core-cursorpointer");

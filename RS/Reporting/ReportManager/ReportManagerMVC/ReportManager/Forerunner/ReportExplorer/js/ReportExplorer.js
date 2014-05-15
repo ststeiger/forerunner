@@ -227,6 +227,7 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
+            me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;

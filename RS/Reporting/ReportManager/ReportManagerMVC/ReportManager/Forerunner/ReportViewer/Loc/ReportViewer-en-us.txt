@@ -191,11 +191,10 @@
 	"submit":"Submit",
 	"cancel": "Cancel",
 	"dialogTitle" : "RDL Extension JSON"
-	}
+	},
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
-	
   }
 }

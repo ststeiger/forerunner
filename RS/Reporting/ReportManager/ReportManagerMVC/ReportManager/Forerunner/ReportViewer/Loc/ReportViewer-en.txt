@@ -190,7 +190,7 @@
 	"title":"RDL Extensions",
 	"submit":"Submit",
 	"cancel": "Cancel"
-	}
+	},
   "createDashboard": {
     "title":"Create Dashboard",
 	  "cancel":"Cancel",

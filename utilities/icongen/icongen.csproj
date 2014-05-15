@@ -112,6 +112,7 @@
     <Content Include="images\24x24icons\align_just_icon.png" />
     <Content Include="images\24x24icons\BackOff.png" />
     <Content Include="images\24x24icons\BackPageOff.png" />
+    <Content Include="images\24x24icons\CreateDashboard.png" />
     <Content Include="images\24x24icons\UnZoom.png" />
     <Content Include="images\24x24icons\CSV.png" />
     <Content Include="images\24x24icons\DataSourceCred.png" />
@@ -156,6 +157,10 @@
     <Content Include="images\25x31icons\tiff.png" />
     <Content Include="images\25x31icons\xls.png" />
     <Content Include="images\25x31icons\xml.png" />
+    <Content Include="output\icons128x128.css" />
+    <Content Include="output\icons128x128.png" />
+    <Content Include="output\icons25x31.css" />
+    <Content Include="output\icons25x31.png" />
     <Content Include="preBetaImages\align_just_icon.png" />
     <Content Include="preBetaImages\arrow_left_icon.png" />
     <Content Include="preBetaImages\burst_icon.png" />

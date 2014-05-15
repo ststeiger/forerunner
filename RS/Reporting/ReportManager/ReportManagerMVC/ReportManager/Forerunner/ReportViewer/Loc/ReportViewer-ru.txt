@@ -80,7 +80,9 @@
     "dsCredential":"источник данных учетных",
     "addToFavorites":"Добавить в избранное",
     "unzoom":"unzoom",
-    "search":"поиск"
+    "search":"поиск",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Печать отчета",
@@ -182,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Критерии поиска не может быть пустым",
     "notFound":"Никого не соответствуют вашим критериям поиска, расширенный поиск."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

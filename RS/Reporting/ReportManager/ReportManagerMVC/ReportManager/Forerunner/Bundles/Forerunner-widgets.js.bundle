@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bundle minify="true" runOnBuild="true" output="Forerunner-widgets.js">
   <!--The order of the <file> elements determines the order of them when bundled.-->
+  <file>/Forerunner/Common/js/History.js</file>
   <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
   <file>/Forerunner/ReportExplorer/js/ParameterModel.js</file>
   <file>/Forerunner/Common/js/Toolbase.js</file>
@@ -23,4 +24,8 @@
   <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
   <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
   <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
+  <file>/Forerunner/ReportExplorer/js/CreateDashboard.js</file>
+  <file>/Forerunner/Dashboard/js/DashboardBase.js</file>
+  <file>/Forerunner/Dashboard/js/DashboardEditor.js</file>
+  <file>/Forerunner/Dashboard/js/DashboardViewer.js</file>
 </bundle>

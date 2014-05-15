@@ -80,7 +80,9 @@
     "dsCredential":"datasource credenziale",
     "addToFavorites":"Aggiungi ai Preferiti",
     "unzoom":"unzoom",
-    "search":"ricerca"
+    "search":"ricerca",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -182,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"Criteri di ricerca non possono essere vuoti",
     "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

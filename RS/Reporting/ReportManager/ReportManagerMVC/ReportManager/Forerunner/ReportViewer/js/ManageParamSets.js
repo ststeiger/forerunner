@@ -19,7 +19,7 @@ $(function () {
      * Widget used to manage parameter set
      *
      * @namespace $.forerunner.manageParamSets
-     * @prop {Object} options - The options for dsCredential
+     * @prop {Object} options - The options for Managed Parameter Sets dialog
      * @prop {String} options.$reportViewer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
      * @prop {String} options.model - Parameter model widget instance

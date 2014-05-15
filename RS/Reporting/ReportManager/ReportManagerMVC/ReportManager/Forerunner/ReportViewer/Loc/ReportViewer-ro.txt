@@ -98,7 +98,8 @@
     "title":"Setari utilizator",
     "submit":"bine",
     "cancel":"Anula",
-    "ResponsiveUI":"UI receptiv"
+    "ResponsiveUI":"UI receptiv",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Null",

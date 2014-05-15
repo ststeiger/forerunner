@@ -98,7 +98,8 @@
     "title":"自定义设置",
     "submit":"保存",
     "cancel":"取消",
-    "ResponsiveUI":"动态UI"
+    "ResponsiveUI":"动态UI",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"空值",

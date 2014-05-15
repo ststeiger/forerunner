@@ -98,7 +98,8 @@
     "title":"ユーザー設定",
     "submit":"オーケー",
     "cancel":"キャンセル",
-    "ResponsiveUI":"レスポンシブUI"
+    "ResponsiveUI":"レスポンシブUI",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"ゼロ",

@@ -98,7 +98,8 @@
     "title":"Настройки пользователя",
     "submit":"Оклахома",
     "cancel":"Oтменить",
-    "ResponsiveUI":"Отзывчивый интерфейс"
+    "ResponsiveUI":"Отзывчивый интерфейс",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Ноль",

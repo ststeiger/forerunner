@@ -193,6 +193,8 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            emailSubscription: "emailSubscription",
 
             /** @constant */
             namespace: "forerunner",

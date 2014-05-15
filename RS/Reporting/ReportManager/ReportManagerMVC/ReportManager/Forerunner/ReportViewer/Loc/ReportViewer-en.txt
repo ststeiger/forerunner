@@ -98,7 +98,8 @@
 	    "title": "User Settings",
 		"submit": "Ok",
 		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
+		"ResponsiveUI": "Responsive UI",
+		"Email":"Email"
 	},
 	"paramPane": {
     "nullField": "Null",

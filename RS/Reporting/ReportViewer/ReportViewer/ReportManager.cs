@@ -994,6 +994,18 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public bool CanCreateSubscription(string path)
+        {
+            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
+            {
+                if (permission.IndexOf("Create Subscription", StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;
@@ -1140,43 +1152,92 @@ namespace Forerunner.SSRS.Manager
 
         public Schedule[] ListSchedules(string siteName)
         {
-            rs.Credentials = GetCredentials();
-            return rs.ListSchedules(siteName);
-        }
-
-
-        public class SubscriptionInfo
-        {
-            public SubscriptionInfo(string subscriptionID, string report, ExtensionSettings extensionSettings, string description, string eventType, ScheduleReference scheduleReferene, ParameterValue[] parameters)
+            Impersonator impersonator = null;
+            try
             {
-                SubscriptionID = subscriptionID;
-                Report = report;
-                ExtensionSettings = extensionSettings;
-                Description = description;
-                EventType = eventType;
-                ScheduleReference = scheduleReferene;
-                Parameters = parameters;
+                impersonator = tryImpersonate();
+                List<Schedule> retVal = new List<Schedule>();
+                string SQL = @"Select ScheduleID, Name From dbo.Schedule Where EventType = 'TimedSubscription'";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        if (SQLReader.HasRows)
+                        {
+                            SQLReader.Read();
+                            Schedule item = new Schedule();
+                            item.ScheduleID = SQLReader.GetGuid(0).ToString();
+                            item.Name = SQLReader.GetString(1);
+                            retVal.Add(item);
+                        }
+                    }
+                }
+                return retVal.ToArray<Schedule>();
             }
-            public string SubscriptionID { get; set; }
-            public string Report { get; set; }
-            public ExtensionSettings ExtensionSettings { get; set; }
-            public string Description { get; set; }
-            public string EventType { get; set; }
-            public ScheduleReference ScheduleReference { get; set; }
-            public ParameterValue[] Parameters { get; set; }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
+            //rs.Credentials = GetCredentials();
+            //return rs.ListSchedules(siteName);
         }
+
+        public class ExtensionSettings
+        {
+
+            private string extensionField;
+
+            private ParameterValue[] parameterValues;
+
+            /// <remarks/>
+            public string Extension
+            {
+                get
+                {
+                    return this.extensionField;
+                }
+                set
+                {
+                    this.extensionField = value;
+                }
+            }
+
+            /// <remarks/>
+            [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterValue))]
+            public ParameterValue[] ParameterValues
+            {
+                get
+                {
+                    return this.parameterValues;
+                }
+                set
+                {
+                    this.parameterValues = value;
+                }
+            }
+        }
+        
 
         public string CreateSubscription(SubscriptionInfo info)
         {
             rs.Credentials = GetCredentials();
-            string MatchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            return rs.CreateSubscription(info.Report, info.ExtensionSettings, info.Description, info.EventType, MatchData, info.Parameters);
+
+            string MatchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.SubscriptionSchedule.ScheduleReference);
+            Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
+            settings.Extension = info.ExtensionSettings.Extension;
+            settings.ParameterValues = info.ExtensionSettings.ParameterValues;
+            return rs.CreateSubscription(info.Report, settings, info.Description, info.EventType, MatchData, info.Parameters);
         }
 
         public SubscriptionInfo GetSubscription(string subscriptionID)
         {
             rs.Credentials = GetCredentials();
-            ExtensionSettings extensionSettings;
+            Forerunner.SSRS.Management.ExtensionSettings settings;
             string description;
             ActiveState activeState;
             string status;
@@ -1184,23 +1245,50 @@ namespace Forerunner.SSRS.Manager
             string matchData;
             ParameterValue[] parameters;
             rs.GetSubscriptionProperties(subscriptionID,
-                out extensionSettings,
+                out settings,
                 out description,
                 out activeState,
                 out status,
                 out eventType,
                 out matchData,
                 out parameters);
-            ScheduleReference scheduleReference = MatchDataSerialization.GetScheduleFromMatchData(matchData);
+            SubscriptionSchedule scheduleReference = MatchDataSerialization.GetScheduleFromMatchData(matchData);
+            SubscriptionExtensionSettings extensionSettings = new SubscriptionExtensionSettings();
+            extensionSettings.Extension = settings.Extension;
+            extensionSettings.ParameterValues = (ParameterValue[])settings.ParameterValues;
             SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, scheduleReference, parameters);
             return retVal;
         }
 
+        private string GetMatchData(SubscriptionSchedule subscriptionSchedule)
+        {
+            if (subscriptionSchedule.ScheduleReference != null)
+            {
+                return MatchDataSerialization.GetMatchDataFromScheduleReference(subscriptionSchedule.ScheduleReference);
+            }
+
+            ScheduleDefinition definition = new ScheduleDefinition();
+            definition.StartDateTime = subscriptionSchedule.StartTime;
+            definition.EndDateSpecified = (subscriptionSchedule.EndTime != null);
+            if (definition.EndDateSpecified)
+                definition.EndDate = subscriptionSchedule.EndTime;
+
+            XmlDocument xmlDoc = MatchDataSerialization.GetScheduleAsXml(definition);
+            StringWriter stringWriter = new StringWriter();
+            XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter);
+
+            xmlDoc.WriteTo(xmlTextWriter);
+
+            return stringWriter.ToString();
+        }
         public void SetSubscription(SubscriptionInfo info)
         {
             rs.Credentials = GetCredentials();
-            string matchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            rs.SetSubscriptionProperties(info.SubscriptionID, info.ExtensionSettings, info.Description, info.EventType, matchData , info.Parameters);
+            string matchData =GetMatchData(info.SubscriptionSchedule);
+            Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
+            settings.Extension = info.ExtensionSettings.Extension;
+            settings.ParameterValues = info.ExtensionSettings.ParameterValues;
+            rs.SetSubscriptionProperties(info.SubscriptionID, settings, info.Description, info.EventType, matchData , info.Parameters);
         }
 
         public void DeleteSubscription(string subscriptionID)

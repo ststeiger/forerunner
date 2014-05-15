@@ -27,7 +27,8 @@ namespace ReportManager
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
-                "~/Forerunner/ReportExplorer/css/UserSettings.css"
+                "~/Forerunner/ReportExplorer/css/UserSettings.css",
+                "~/Forerunner/ReportExplorer/css/ManageSubscription.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(

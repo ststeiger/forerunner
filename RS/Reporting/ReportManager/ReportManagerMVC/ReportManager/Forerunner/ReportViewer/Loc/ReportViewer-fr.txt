@@ -99,7 +99,8 @@
     "title":"Paramètres de l'utilisateur",
     "submit":"Ok",
     "cancel":"Résilier",
-    "ResponsiveUI":"Interface utilisateur réactive"
+    "ResponsiveUI":"Interface utilisateur réactive",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Zéro",

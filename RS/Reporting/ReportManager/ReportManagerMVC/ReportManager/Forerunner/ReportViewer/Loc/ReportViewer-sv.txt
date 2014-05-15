@@ -98,7 +98,8 @@
     "title":"Användarinställningar",
     "submit":"Ok",
     "cancel":"Avbryta",
-    "ResponsiveUI":"Lyhörd UI"
+    "ResponsiveUI":"Lyhörd UI",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Noll",

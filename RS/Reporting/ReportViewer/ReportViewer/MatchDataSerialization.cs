@@ -56,9 +56,10 @@ namespace Forerunner.Subscription
             return reference.ScheduleID;
         }
 
-        static public ScheduleReference GetScheduleFromMatchData(string matchData)
+        static public SubscriptionSchedule GetScheduleFromMatchData(string matchData)
         {
-            ScheduleReference retVal = new ScheduleReference();
+            SubscriptionSchedule retVal = new SubscriptionSchedule();
+            ScheduleReference reference = new ScheduleReference();
             ScheduleDefinition definition = null;
             try
             {
@@ -69,11 +70,37 @@ namespace Forerunner.Subscription
             }
             if (definition == null)
             {
-                retVal.ScheduleID = matchData;
+                reference.ScheduleID = matchData;
+                retVal.ScheduleReference = reference;
             }
             else
             {
-                retVal.Definition = definition;
+                retVal.StartTime = definition.StartDateTime;
+                if (definition.EndDateSpecified)
+                {
+                    retVal.EndTime = definition.EndDate;
+                }
+
+                if (definition.Item is DailyRecurrence)
+                {
+                    retVal.DailyRecurrence = definition.Item as DailyRecurrence;
+                }
+                else if (definition.Item is MinuteRecurrence)
+                {
+                    retVal.MinuteRecurrence = definition.Item as MinuteRecurrence;
+                }
+                else if (definition.Item is WeeklyRecurrence)
+                {
+                    retVal.WeeklyRecurrence = definition.Item as WeeklyRecurrence;
+                }
+                else if (definition.Item is MonthlyRecurrence)
+                {
+                    retVal.MonthlyRecurrence = definition.Item as MonthlyRecurrence;
+                }
+                else if (definition.Item is MonthlyDOWRecurrence)
+                {
+                    retVal.MonthlyDOWRecurrence = definition.Item as MonthlyDOWRecurrence;
+                }
             }
             return retVal;
         }
@@ -84,12 +111,14 @@ namespace Forerunner.Subscription
             XmlAttributes attrs = new XmlAttributes();
             attrs.Xmlns = false;
             overrides.Add(typeof(ScheduleDefinition), attrs);
+            overrides.Add(typeof(DailyRecurrence), attrs);
             overrides.Add(typeof(MinuteRecurrence), attrs);
             overrides.Add(typeof(WeeklyRecurrence), attrs);
             overrides.Add(typeof(MonthlyRecurrence), attrs);
             overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             overrides.Add(typeof(DaysOfWeekSelector), attrs);
             overrides.Add(typeof(MonthsOfYearSelector), attrs);
+            overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             return overrides;
         }
 

@@ -98,7 +98,8 @@
     "title":"Socruithe Úsáideoir",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"Chomhéadain sofhreagrach"
+    "ResponsiveUI":"Chomhéadain sofhreagrach",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Null",

@@ -360,6 +360,19 @@ $(function () {
             }
         },
         /** @member */
+        btnEmailSubscription: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-toolbar-email-button",
+            imageClass: "fr-icons24x24-printreport",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            tooltip: "Email",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showEmailSubscription");
+                }
+            }
+        },
+        /** @member */
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
@@ -717,6 +730,19 @@ $(function () {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-printreport"]);
+                }
+            }
+        },
+        /** @member */
+        itemEmailSubscription: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-emailsubscription",
+            imageClass: "fr-icons24x24-printreport",
+            text: "Email",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showEmailSubscription");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-emailsubscription"]);
                 }
             }
         },

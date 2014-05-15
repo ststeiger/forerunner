@@ -1477,6 +1477,23 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
+        showEmailSubscription : function () {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var paramList = null;
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
+                }
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("openDialog");
+            }
+        },
         /**
          * Print current reprot in PDF format
          *
@@ -1495,6 +1512,11 @@ $(function () {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
             me.$printDialog.reportPrint("setPrint", pageLayout);
+        },
+        _setEmailSubscriptionUI : function() {
+            var me = this;
+            if (!me.$emailSub)
+                me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
         },
        
         //Page Loading
@@ -2226,6 +2248,9 @@ $(function () {
 
             if (me.$printDialog)
                 me.$printDialog.reportPrint("destroy");
+
+            if (me.$emailSub)
+                me.$emailSub.emailSubscription("destroy");
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx

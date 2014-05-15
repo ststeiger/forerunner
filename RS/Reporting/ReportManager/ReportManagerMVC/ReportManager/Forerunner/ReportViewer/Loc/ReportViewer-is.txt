@@ -98,7 +98,8 @@
     "title":"notandi Stillingar",
     "submit":"Ok",
     "cancel":"Hætta",
-    "ResponsiveUI":"móttækilegur HÍ"
+    "ResponsiveUI":"móttækilegur HÍ",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Zero",

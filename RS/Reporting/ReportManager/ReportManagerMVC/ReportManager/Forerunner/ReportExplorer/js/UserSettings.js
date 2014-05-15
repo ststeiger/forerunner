@@ -49,8 +49,13 @@ $(function () {
                 // form
                 "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
+                        "<table><tr><td>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                        "</tr></td><tr><td>" +
+                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
+                        "</td></tr></table>" +
                     "</div>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -106,12 +111,15 @@ $(function () {
             var me = this;
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
+            me.$email.val(me.settings.email);
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.email = me.$email.val();
 
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 

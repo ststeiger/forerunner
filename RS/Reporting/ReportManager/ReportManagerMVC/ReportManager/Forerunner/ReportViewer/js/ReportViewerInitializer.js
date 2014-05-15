@@ -46,6 +46,11 @@ $(function () {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
+
+        me.subscriptionModel = null;
+        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+            me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+        }
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -114,7 +119,7 @@ $(function () {
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
                 if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 13, true, [mi.itemLogOff]);
+                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
                 }
 
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
@@ -158,6 +163,20 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+            $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
+            if ($dlg.length === 0) {
+            //    $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+            //    me.options.$appContainer.append($dlg);
+            }
+            //$dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+
+            $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-emailsubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
             $dlg = me.options.$appContainer.find(".fr-dsc-section");
             if ($dlg.length === 0) {

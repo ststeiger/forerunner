@@ -98,7 +98,8 @@
     "title":"Benutzereinstellungen",
     "submit":"Ok",
     "cancel":"Abbestellen",
-    "ResponsiveUI":"Responsive UI"
+    "ResponsiveUI":"Responsive UI",
+	"Email":"Email"
   },
   "paramPane": {
     "nullField":"Null",

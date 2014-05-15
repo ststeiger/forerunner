@@ -38,6 +38,7 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
                   "~/Forerunner/ReportViewer/css/ReportParameter.css",
                   "~/Forerunner/ReportViewer/css/ReportPrint.css",
+                  "~/Forerunner/ReportViewer/css/RDLExtDialog.css",
                   "~/Forerunner/ReportViewer/css/ReportRender.css",
                   "~/Forerunner/ReportViewer/css/ReportViewer.css",
                   "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",

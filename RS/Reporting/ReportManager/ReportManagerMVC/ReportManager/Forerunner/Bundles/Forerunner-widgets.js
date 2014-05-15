@@ -67,6 +67,7 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
+            isAdmin: false,
         },
 
         _destroy: function () {
@@ -122,6 +123,9 @@ $(function () {
             me.SaveThumbnail = false;
             me.RDLExtProperty = null;
             
+            //Test admin
+            me.options.isAdmin = true;
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -2047,7 +2051,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],true, me.RDLExtProperty);       
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
                 me.pages[pageNum].needsLayout= true;
             }
 
@@ -2307,6 +2311,59 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        showRDLExtDialog: function () {
+            var me = this;
+
+            var dlg = $(".fr-rdl-section").first();
+
+            if (dlg.length ===0) {
+                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append(dlg);
+                dlg.reportRDLExt({ reportViewer: me });
+            }
+            dlg.reportRDLExt("openDialog");
+            
+        },
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try{
+                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       value:RDL,
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       return true;
+                   },
+                   fail: function (data){
+                       return false;
+                   },
+                   async: false
+               });
+            
+
+        },
+
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -2336,6 +2393,10 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+            if (me.$RDLExtDialog) {
+                me.$RDLExtDialog.reportRDLExt("destroy");
+            }
+            
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -4418,12 +4479,14 @@ $(function () {
         },
         _viewerItems: function (allButtons) {
             var listOfItems;
+            var me = this;
 
             if (allButtons === true || allButtons === undefined)
                 listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
                 listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
+            //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
@@ -4431,6 +4494,8 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
+            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
+                listOfItems = listOfItems.concat([tp.itemRDLExt]);
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -4441,7 +4506,7 @@ $(function () {
                 me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
             }
             else {
-                me.element.find('.fr-toolbar-numPages-button').html("?");
+                me.element.find(".fr-toolbar-numPages-button").html("?");
             }
             
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
@@ -5172,7 +5237,17 @@ $(function () {
             $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
-            $item.append($caption);            
+            $item.append($caption);
+
+            //Description
+            var $desc = new $("<div />");
+            //$desc.addClass("fr-explorer-caption");
+            var $desctext = new $("<div />");
+            $desctext.addClass("fr-explorer-item-desc");
+            $desctext.attr("title", catalogItem.Description);
+            $desctext.html(catalogItem.Description);
+            $desc.append($desctext);
+            $item.append($desc);
            
             return $item;
         },
@@ -5213,11 +5288,11 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?"
+            var url = me.options.reportManagerAPI + "/Resource?";
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
-            var $if = $("<iframe/>")
+            var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
             //$if.attr("scrolling", "no");
@@ -5235,7 +5310,7 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state == "complete" || !state) {//loading,interactive,complete       
+                        if (state === "complete" || !state) {//loading,interactive,complete       
                             me._setIframeHeight(frame);
                         }
                         else {
@@ -5559,7 +5634,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -6049,7 +6124,7 @@ $(function () {
             var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
 
             //Need to re-render
-            if (me._currentFormFactor !== formFactor && me.RDLExt) {
+            if (me._currentFormFactor !== formFactor && me.options.responsive) {
                 me._currentFormFactor = formFactor;
                 me._reRender();
             }
@@ -6850,7 +6925,7 @@ $(function () {
                       
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
-            $Tablix.attr("Style", Style);
+            
             $Tablix.addClass("fr-render-tablix");
             $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
@@ -6859,33 +6934,97 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");
-                var formFactor = me._currentFormFactor;
+                //var formFactor = me._currentFormFactor;
+                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                 var tablixExt = null;
                 if (me.RDLExt)
                     tablixExt = me.RDLExt[sharedElements.Name];
 
-                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);                
+                //Setup the responsive columns def
+                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
                 if (respCols.ColHeaderRow === undefined)
                     respCols.ColHeaderRow = 0;
                 if (respCols.BackgroundColor === undefined)
                     respCols.BackgroundColor = "#F2F2F2";
 
-
-                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    respCols.Columns[cols] = { show: true };
-
-                    //If it is a responsive layout and the author has supplied instructions for minimizing the tablix, determine columns here
-                    if (me.options.responsive && tablixExt) {
-                        if (tablixExt.Columns[cols] && tablixExt.Columns[cols].HideOrder >= formFactor) {
-                            respCols.Columns[cols].show = false;
-                            respCols.Columns[cols].Ext = tablixExt[cols];
-                            respCols.isResp = true;
-                            respCols.ColumnCount--;
+                if (me.options.responsive) {
+                    var notdone = true;
+                    var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                    var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
+                    var maxPri = -1;
+                    var foundCol;
+                    
+                    if (tablixExt && tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                        for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
                         }
                     }
-                    
+                     
+
+                    while (notdone) {
+                        maxPri = -1;
+
+                        //If the author has supplied instructions for minimizing the tablix, determine columns here                            
+                        if (tablixExt && tablixExt.Columns) {
+
+                            //if not all columns are in the array, use the ones that are missing first
+                            if (respCols.ColumnCount > tablixExt.Columns.length) {
+                                for (cols = respCols.ColumnCount-1; cols >= 0; cols--) {
+                                    if (respCols.Columns[cols] === undefined) {
+                                        foundCol = cols;
+                                        respCols.Columns[foundCol] = { show: false };
+                                        break;
+                                    }
+                                }
+
+                            }
+                            else {
+                                for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                        nextColIndex = cols;
+                                        maxPri = tablixExt.Columns[cols].Pri;
+                                    }
+                                }
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
+                                respCols.Columns[foundCol] = { show: false };
+                            }
+                                                                                 
+                            respCols.ColumnCount--;
+                        
+                            }
+                        //Just remove from the right
+                        else {
+                            nextColIndex--;
+                            foundCol = nextColIndex;
+                            respCols.Columns[foundCol] = { show: false };
+                            respCols.ColumnCount--;
+                        }
+
+                        tablixwidth -= tablixCols[foundCol].Width;
+
+                        //Check if we are done                        
+                        if (tablixwidth < viewerWidth) {
+                            notdone = false;
+                            //Show if more then half is visible
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width / 2) {
+                                respCols.Columns[foundCol].show = true;
+                                respCols.ColumnCount++;
+                            }
+                        }
+                    }
+                }
+               //create the colgroup from visible columns
+                for (cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    if (respCols.Columns[cols]=== undefined)
+                        respCols.Columns[cols] = { show: true };
+                    else if (respCols.Columns[cols].show === false)
+                        respCols.isResp = true;
+
                     if (respCols.Columns[cols].show) {
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
@@ -6894,6 +7033,7 @@ $(function () {
                 //Set Tablix width if not responsive.
                 if (respCols.isResp ===false)
                     Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
@@ -6957,7 +7097,7 @@ $(function () {
             var $ExtRow = State.ExtRow;
             var $ExtCell = State.ExtCell;
 
-            if (State.ExtRow === undefined) {
+            if (State.ExtRow === undefined && respCols.isResp) {
                 $ExtRow = new $("<TR/>");
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
                 $ExtRow.append($ExtCell);
@@ -6980,10 +7120,12 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
-                $ExtRow = new $("<TR/>");
-                $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
-                $ExtRow.append($ExtCell);
-                $ExtRow.hide();
+                if (respCols.isResp) {
+                    $ExtRow = new $("<TR/>");
+                    $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtRow.append($ExtCell);
+                    $ExtRow.hide();
+                }
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -7016,19 +7158,25 @@ $(function () {
 
             if (Obj.Type === "BodyRow") {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
-                    var $Drilldown = undefined;
+                    var $Drilldown;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.ColumnIndex ===0) {
                             //If responsive table add the show hide image and hook up
                             $Drilldown = new $("<div/>");
                             $Drilldown.html("&nbsp");
-                            $Drilldown.addClass("fr-render-drilldown-collapse");
+                            $Drilldown.addClass("fr-render-drilldown-expand");
 
                             $Drilldown.on("click", { ToggleElement: $ExtRow }, function (e) {
-                                if (e.data.ToggleElement.is(":visible"))
+                                if (e.data.ToggleElement.is(":visible")) {
                                     e.data.ToggleElement.hide();
-                                else
+                                    $(this).removeClass("fr-render-drilldown-collapse");
+                                    $(this).addClass("fr-render-drilldown-expand");
+                                }
+                                else {
                                     e.data.ToggleElement.show();
+                                    $(this).addClass("fr-render-drilldown-collapse");
+                                    $(this).removeClass("fr-render-drilldown-expand");
+                                }
                             });
                             $Drilldown.addClass("fr-core-cursorpointer");
                         }
@@ -9097,7 +9245,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;
@@ -10346,6 +10494,125 @@ $(function () {
         }
     }); //$.widget
 });
+///#source 1 1 /Forerunner/ReportViewer/js/RDLExtDialog.js
+/**
+ * @file Contains the RDL Extensions widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to manage user settings
+     *
+     * @namespace $.forerunner.userSettings
+     * @prop {Object} options - The options for userSettings
+     * @prop {Object} options.$reportExplorer - The report explorer widget
+     * @example
+     * $("#userSettingsId").userSettings({
+     *  $reportExplorer: me.$reportExplorer
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportRDLExt), {
+        options: {
+            reportViewer: null,
+        },
+        _create: function () {
+        },
+        _init: function () {
+            var me = this;
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer").RDLExt;
+            
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", locData.title, "fr-rdl-cancel", locData.cancel);
+            var $theForm = new $(
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
+                // form
+                "<form class='fr-rdl-form fr-core-dialog-form'>" +
+                    "<div class='fr-rdl-container'>" +
+                        "<label class='fr-rdl-label'>" + locData.dialogTitle + "</label>" +
+                        "<textarea class='fr-rdl-text' rows='5' class='fr-rdl-id '  name='RDL' />  " +
+                    "</div>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-rdl-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + locData.submit + "'/>" +
+                    "</div>" +
+                "</form>" +
+            "</div>");
+
+            me.element.append($theForm);
+
+            me.element.find(".fr-rdl-submit-id").on("click", function (e) {
+                me._saveSettings();
+            });
+
+            me.element.find(".fr-rdl-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+
+        _getSettings: function () {
+            var me = this;
+            me.settings = me.options.reportViewer.getRDLExt();
+            me.$RLDExt = me.element.find(".fr-rdl-text");
+
+            if (me.settings)
+                me.$RLDExt.val(JSON.stringify(me.settings));
+        },
+        _saveSettings: function () {
+            var me = this;
+            
+            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())) {
+                me.closeDialog();
+            }
+        },
+        /**
+         * Open user setting dialog
+         *
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+
+            me._getSettings();
+            forerunner.dialog.showModalDialog(me.options.reportViewer.options.$appContainer, me);
+
+        },
+        /**
+         * Close user setting dialog
+         *
+         * @function $.forerunner.userSettings#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.closeModalDialog(me.options.reportViewer.options.$appContainer, me);
+
+        }
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
 /**
  * @file Contains the print widget.
@@ -10755,7 +11022,8 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null
+            $unzoomtoolbar: null,
+            isAdmin:false,
         };
 
         // Merge options with the default settings
@@ -10793,6 +11061,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
+                isAdmin: me.options.isAdmin,
             });
 
             // Create / render the toolbar
@@ -11177,6 +11446,7 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
+            isAdmin: false,
         },
         _render: function () {
             var me = this;
@@ -11209,7 +11479,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                isAdmin: me.options.isAdmin,
             });
 
             initializer.render();
@@ -11896,12 +12167,12 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
+                    isAdmin: me.options.isAdmin,
                 });
 
                 var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-
+                    path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }

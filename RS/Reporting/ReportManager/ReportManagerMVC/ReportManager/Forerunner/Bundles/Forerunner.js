@@ -171,6 +171,8 @@ $(function () {
             /** @constant */
             reportPrint: "reportPrint",
             /** @constant */
+            reportRDLExt: "reportRDLExt",          
+            /** @constant */
             userSettings: "userSettings",
             /** @constant */
             messageBox: "messageBox",
@@ -581,6 +583,21 @@ $(function () {
      * @namespace
      */
     forerunner.helper = {
+
+        /**
+         * Returns a number array sorted in the given direction
+         *
+         * @member
+         * @param {array} array - Array to sort
+         * @param {boolean} asc - true for ascending false for decending
+         */
+        sortNumberArray: function (array, asc) {
+            if (asc)
+                array.sort(function (a, b) { return a - b; });
+            else
+                array.sort(function (a, b) { return b - a;});
+            return array;
+        },
         /**
          * Returns the number of elements or properties in an object
          *
@@ -1257,7 +1274,7 @@ $(function () {
         /** @return {integer} represetning custom device size in settings, for example: 1 small (phone), 2 med (tablet), 3 large (desktop) */
         formFactor: function (container) {
             var width = container.width();
-            var settings = forerunner.config.getCustomSettingsValue("DeviceFormFactor", [800, 2048]);
+            var settings = forerunner.config.getCustomSettingsValue("ResizeInterval", [400, 600, 800, 1000]);
 
             for (var i = 0; i < settings.length; i++) {
                 if (width < settings[i])
@@ -1322,7 +1339,8 @@ $(function () {
 
             me._removeEventsBinding();
             target.element.dialog("destroy");
-           
+            target.element.hide();
+
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },

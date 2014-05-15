@@ -383,7 +383,7 @@ $(function () {
             var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
 
             //Need to re-render
-            if (me._currentFormFactor !== formFactor && me.RDLExt) {
+            if (me._currentFormFactor !== formFactor && me.options.responsive) {
                 me._currentFormFactor = formFactor;
                 me._reRender();
             }
@@ -1184,7 +1184,7 @@ $(function () {
                       
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
-            $Tablix.attr("Style", Style);
+            
             $Tablix.addClass("fr-render-tablix");
             $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
@@ -1193,33 +1193,97 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");
-                var formFactor = me._currentFormFactor;
+                //var formFactor = me._currentFormFactor;
+                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                 var tablixExt = null;
                 if (me.RDLExt)
                     tablixExt = me.RDLExt[sharedElements.Name];
 
-                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);                
+                //Setup the responsive columns def
+                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
                 if (respCols.ColHeaderRow === undefined)
                     respCols.ColHeaderRow = 0;
                 if (respCols.BackgroundColor === undefined)
                     respCols.BackgroundColor = "#F2F2F2";
 
-
-                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
-                    respCols.Columns[cols] = { show: true };
-
-                    //If it is a responsive layout and the author has supplied instructions for minimizing the tablix, determine columns here
-                    if (me.options.responsive && tablixExt) {
-                        if (tablixExt.Columns[cols] && tablixExt.Columns[cols].HideOrder >= formFactor) {
-                            respCols.Columns[cols].show = false;
-                            respCols.Columns[cols].Ext = tablixExt[cols];
-                            respCols.isResp = true;
-                            respCols.ColumnCount--;
+                if (me.options.responsive) {
+                    var notdone = true;
+                    var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                    var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
+                    var maxPri = -1;
+                    var foundCol;
+                    
+                    if (tablixExt && tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                        for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
                         }
                     }
-                    
+                     
+
+                    while (notdone) {
+                        maxPri = -1;
+
+                        //If the author has supplied instructions for minimizing the tablix, determine columns here                            
+                        if (tablixExt && tablixExt.Columns) {
+
+                            //if not all columns are in the array, use the ones that are missing first
+                            if (respCols.ColumnCount > tablixExt.Columns.length) {
+                                for (cols = respCols.ColumnCount-1; cols >= 0; cols--) {
+                                    if (respCols.Columns[cols] === undefined) {
+                                        foundCol = cols;
+                                        respCols.Columns[foundCol] = { show: false };
+                                        break;
+                                    }
+                                }
+
+                            }
+                            else {
+                                for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                        nextColIndex = cols;
+                                        maxPri = tablixExt.Columns[cols].Pri;
+                                    }
+                                }
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
+                                respCols.Columns[foundCol] = { show: false };
+                            }
+                                                                                 
+                            respCols.ColumnCount--;
+                        
+                            }
+                        //Just remove from the right
+                        else {
+                            nextColIndex--;
+                            foundCol = nextColIndex;
+                            respCols.Columns[foundCol] = { show: false };
+                            respCols.ColumnCount--;
+                        }
+
+                        tablixwidth -= tablixCols[foundCol].Width;
+
+                        //Check if we are done                        
+                        if (tablixwidth < viewerWidth) {
+                            notdone = false;
+                            //Show if more then half is visible
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width / 2) {
+                                respCols.Columns[foundCol].show = true;
+                                respCols.ColumnCount++;
+                            }
+                        }
+                    }
+                }
+               //create the colgroup from visible columns
+                for (cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    if (respCols.Columns[cols]=== undefined)
+                        respCols.Columns[cols] = { show: true };
+                    else if (respCols.Columns[cols].show === false)
+                        respCols.isResp = true;
+
                     if (respCols.Columns[cols].show) {
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                     }
@@ -1228,6 +1292,7 @@ $(function () {
                 //Set Tablix width if not responsive.
                 if (respCols.isResp ===false)
                     Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+                $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
@@ -1291,7 +1356,7 @@ $(function () {
             var $ExtRow = State.ExtRow;
             var $ExtCell = State.ExtCell;
 
-            if (State.ExtRow === undefined) {
+            if (State.ExtRow === undefined && respCols.isResp) {
                 $ExtRow = new $("<TR/>");
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
                 $ExtRow.append($ExtCell);
@@ -1314,10 +1379,12 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
-                $ExtRow = new $("<TR/>");
-                $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
-                $ExtRow.append($ExtCell);
-                $ExtRow.hide();
+                if (respCols.isResp) {
+                    $ExtRow = new $("<TR/>");
+                    $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtRow.append($ExtCell);
+                    $ExtRow.hide();
+                }
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -1350,19 +1417,25 @@ $(function () {
 
             if (Obj.Type === "BodyRow") {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
-                    var $Drilldown = undefined;
+                    var $Drilldown;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.ColumnIndex ===0) {
                             //If responsive table add the show hide image and hook up
                             $Drilldown = new $("<div/>");
                             $Drilldown.html("&nbsp");
-                            $Drilldown.addClass("fr-render-drilldown-collapse");
+                            $Drilldown.addClass("fr-render-drilldown-expand");
 
                             $Drilldown.on("click", { ToggleElement: $ExtRow }, function (e) {
-                                if (e.data.ToggleElement.is(":visible"))
+                                if (e.data.ToggleElement.is(":visible")) {
                                     e.data.ToggleElement.hide();
-                                else
+                                    $(this).removeClass("fr-render-drilldown-collapse");
+                                    $(this).addClass("fr-render-drilldown-expand");
+                                }
+                                else {
                                     e.data.ToggleElement.show();
+                                    $(this).addClass("fr-render-drilldown-collapse");
+                                    $(this).removeClass("fr-render-drilldown-expand");
+                                }
                             });
                             $Drilldown.addClass("fr-core-cursorpointer");
                         }

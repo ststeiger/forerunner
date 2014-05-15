@@ -66,6 +66,7 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
+            isAdmin: false,
         },
 
         _destroy: function () {
@@ -121,6 +122,9 @@ $(function () {
             me.SaveThumbnail = false;
             me.RDLExtProperty = null;
             
+            //Test admin
+            me.options.isAdmin = true;
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -2046,7 +2050,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],true, me.RDLExtProperty);       
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
                 me.pages[pageNum].needsLayout= true;
             }
 
@@ -2306,6 +2310,59 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        showRDLExtDialog: function () {
+            var me = this;
+
+            var dlg = $(".fr-rdl-section").first();
+
+            if (dlg.length ===0) {
+                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append(dlg);
+                dlg.reportRDLExt({ reportViewer: me });
+            }
+            dlg.reportRDLExt("openDialog");
+            
+        },
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try{
+                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       value:RDL,
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       return true;
+                   },
+                   fail: function (data){
+                       return false;
+                   },
+                   async: false
+               });
+            
+
+        },
+
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -2335,6 +2392,10 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+            if (me.$RDLExtDialog) {
+                me.$RDLExtDialog.reportRDLExt("destroy");
+            }
+            
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx

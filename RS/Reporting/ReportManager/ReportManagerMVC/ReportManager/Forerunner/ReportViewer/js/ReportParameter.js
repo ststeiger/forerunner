@@ -1266,7 +1266,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;

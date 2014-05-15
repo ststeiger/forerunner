@@ -195,7 +195,17 @@ $(function () {
             $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
-            $item.append($caption);            
+            $item.append($caption);
+
+            //Description
+            var $desc = new $("<div />");
+            //$desc.addClass("fr-explorer-caption");
+            var $desctext = new $("<div />");
+            $desctext.addClass("fr-explorer-item-desc");
+            $desctext.attr("title", catalogItem.Description);
+            $desctext.html(catalogItem.Description);
+            $desc.append($desctext);
+            $item.append($desc);
            
             return $item;
         },
@@ -236,11 +246,11 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?"
+            var url = me.options.reportManagerAPI + "/Resource?";
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
-            var $if = $("<iframe/>")
+            var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
             //$if.attr("scrolling", "no");
@@ -258,7 +268,7 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state == "complete" || !state) {//loading,interactive,complete       
+                        if (state === "complete" || !state) {//loading,interactive,complete       
                             me._setIframeHeight(frame);
                         }
                         else {

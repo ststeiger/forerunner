@@ -49,7 +49,8 @@
     "print":"Print",
     "dsCredential":"Credential",
     "views":"Views",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+	"RDLExt": "RDL Extension"
   },
   "toolbar": {
     "back":"Back",
@@ -182,5 +183,11 @@
   "explorerSearch": {
     "emptyError":"Search criteria cannot be empty",
     "notFound":"No results match your search criteria. Please refine your search."
+  },
+  "RDLExt":{
+	"title":"RDL Extensions",
+	"submit":"Submit",
+	"cancel": "Cancel",
+	"dialogTitle" : "RDL Extension JSON"
   }
 }

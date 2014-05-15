@@ -111,8 +111,9 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
         }
-        [HttpPost]
-        public HttpResponseMessage ReportProperty(string value, string path, string propertyName, string instance = null)
+        [HttpGet]
+        [ActionName("SaveReportProperty")]
+        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try

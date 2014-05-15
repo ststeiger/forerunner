@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -44,7 +44,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
+            sharedClass: "",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -779,6 +779,19 @@ $(function () {
                 }
             }
         },
+        /** @member */
+        itemRDLExt: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-button-RDLExt",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolPane.RDLExt,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showRDLExtDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
+                }
+            }
+        }
     };
 
     /**
@@ -907,7 +920,7 @@ $(function () {
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
             //sharedClass: "fr-toolbar-hidden-on-very-large",
-            sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
+            sharedClass: "z",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1201,7 +1214,7 @@ $(function () {
                     $accordionGroup.toggle();
                 }
             }
-        },
+        }
 
     };
 
@@ -1277,6 +1290,7 @@ $(function () {
                 }
             }
         }
+       
     };
 
     var tb = forerunner.ssr.tools.toolbar;

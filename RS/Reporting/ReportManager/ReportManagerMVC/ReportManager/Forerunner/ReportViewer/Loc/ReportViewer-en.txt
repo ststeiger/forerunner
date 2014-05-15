@@ -183,5 +183,10 @@
   "explorerSearch":{
 	"emptyError":"Search criteria cannot be empty",
 	"notFound":"No results match your search criteria. Please refine your search."
+  },
+  "RDLExt":{
+	"title":"RDL Extensions",
+	"submit":"Submit",
+	"cancel": "Cancel"
   }
 }

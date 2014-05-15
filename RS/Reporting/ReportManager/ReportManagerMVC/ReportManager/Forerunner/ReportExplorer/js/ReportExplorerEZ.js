@@ -204,12 +204,12 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
+                    isAdmin: me.options.isAdmin,
                 });
 
                 var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-
+                    path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }

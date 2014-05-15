@@ -12,6 +12,7 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * ToolPane widget used with the reportViewer
@@ -52,6 +53,8 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tp.itemCredential]);
                     }
+
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -73,6 +76,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolpane after close navigation panel
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateItemStates(data.newPageNum, maxNumPages);
                 }
             });
 
@@ -108,7 +115,7 @@ $(function () {
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
             });
-
+            
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
             //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
@@ -142,9 +149,7 @@ $(function () {
             else
                 listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
 
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
                 else
@@ -194,7 +199,7 @@ $(function () {
         },
         _clearItemStates: function () {
             var me = this;
-            me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-keyword-textbox").val("");
             me.element.find(".fr-item-textbox-reportpage").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
         },

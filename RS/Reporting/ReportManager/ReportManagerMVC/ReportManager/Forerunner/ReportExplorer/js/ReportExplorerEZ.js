@@ -11,10 +11,17 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
+    var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
         recent: rtb.btnRecent.selectorClass,
+    };
+
+    var viewToItemMap = {
+        catalog: rtp.itemHome.selectorClass,
+        favorites: rtp.itemFav.selectorClass,
+        recent: rtp.itemRecent.selectorClass,
     };
 
     /**
@@ -22,17 +29,14 @@ $(function () {
      *
      * @namespace $.forerunner.reportExplorerEZ
      * @prop {Object} options - The options for reportExplorerEZ
-     * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
-	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
-	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
-     * @prop {String} options.rsInstance - Report service instance name
+     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
+     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
+	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
+	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Optional,Report service instance name
+     * @prop {String} options.isAdmin - Optional,Report service instance name
      * @example
-     * $("#reportExplorerEZId").reportExplorerEZ({
-     *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack,
-     *  explorerSettings: explorerSettings
-     * });
+     * $("#reportExplorerEZId").reportExplorerEZ();
      */
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {
         options: {
@@ -48,6 +52,9 @@ $(function () {
             var path0 = path;
             var layout = me.DefaultAppTemplate;
             
+            if (!me.options.navigateTo)
+                me.options.navigateTo = me._NavigateTo;
+
             if (!path)
                 path = "/";
             if (!view)
@@ -71,7 +78,39 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
                 isAdmin: me.options.isAdmin,
-            });            
+                onInputFocus: layout.onInputFocus,
+                onInputBlur: layout.onInputBlur
+            });
+        },
+
+        _NavigateTo: function (action, path) {
+            var me = this;
+            
+            var $container = me.$appContainer;
+            var encodedPath = String(path).replace(/\//g, "%2f");
+            var targetUrl = "#" + action;
+            if (path) targetUrl += "/" + encodedPath;
+            
+            if (action === "explore") {                
+                $container.reportExplorerEZ("transitionToReportManager", path, null);                
+            }
+            else if (action === "home") {
+                targetUrl = "#";
+                $container.reportExplorerEZ("transitionToReportManager", path, null);
+            }
+            else if (action === "back") {
+                window.history.back();
+                return;
+            }
+            else if (action === "browse") {
+                $container.reportExplorerEZ("transitionToReportViewer", path);                
+            }
+            else {            
+                $container.reportExplorerEZ("transitionToReportManager", path, action);
+            }
+          
+            window.location.hash = targetUrl;
+            
         },
         /**
          * Transition to ReportManager view.
@@ -84,9 +123,9 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
-                me.DefaultAppTemplate.$mainsection.html("");
-                me.DefaultAppTemplate.$mainsection.hide();
+            if (layout.$mainsection.html() !== "" && layout.$mainsection.html() !== null) {
+                layout.$mainsection.html("");
+                layout.$mainsection.hide();
             }
             layout.cleanUp();
             forerunner.device.allowZoom(false);
@@ -104,7 +143,28 @@ $(function () {
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                if (view === "search") {
+                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                }
+
+                var $lefttoolbar = layout.$leftheader;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
+                }
+
+                var $toolpane = layout.$leftpanecontent;
+                $toolpane.reportExplorerToolpane({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
+                });
+
+                $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
+                if (view === "search") {
+                    $toolpane.reportExplorerToolpane("setSearchKeyword", path);
+                }
 
                 layout.$rightheader.height(layout.$topdiv.height());
                 layout.$leftheader.height(layout.$topdiv.height());
@@ -112,7 +172,7 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
@@ -172,6 +232,21 @@ $(function () {
             var me = this;
             if (me.DefaultAppTemplate) {
                 return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report explorer toolpane
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
+         * 
+         * @return {Object} - report explorer toolpane jQuery object
+         */
+        getReportExplorerToolpane: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftpanecontent;
             }
 
             return null;

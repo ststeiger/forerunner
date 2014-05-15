@@ -8,6 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var toolTypes = ssr.constants.toolTypes;
     var events = forerunner.ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
 
     // This class provides the default app template for our app.
     // The EZ Viewer widget should use this template
@@ -103,6 +104,11 @@ $(function () {
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
 
+            // Define the unzoom toolbar
+            var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
+            me.$unzoomsection = $unzoomsection;
+            $mainviewport.append(me.$unzoomsection);
+
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
@@ -145,11 +151,13 @@ $(function () {
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
+            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
@@ -235,21 +243,21 @@ $(function () {
                 });
             }
             
-            //IOS safari have a bug that report the window height wrong
+            //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
                 $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
                     // Hiding the tool pane and / or the parameter pane is in response to bugs like 670 and
-                    // 532. on iOS the buttons clicks and scrolling were having trouble is the panes were left
+                    // 532. On iOS, the button clicks and scrolling were having trouble if the panes were left
                     // up. So we are going to close them here. The user can reopen if they want.
                     me.hideSlideoutPane(true);
                     me.hideSlideoutPane(false);
                 });
             }
         },
-       
+
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -284,7 +292,7 @@ $(function () {
 
             if (!me.isZoomed() && me.wasZoomed) {
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
-                $viewer.reportViewer("allowZoom", false);
+                me._allowZoom(false);
                 me.wasZoomed = false;
                 if (forerunner.device.isAndroid()) {
                     me.$topdiv.css("width", "100%");
@@ -302,6 +310,8 @@ $(function () {
                 return false;
         },
         _firstTime: true,
+        // Debug
+        _lastHeight: 0,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -364,6 +374,18 @@ $(function () {
             $(".fr-toolpane", me.$container).css({ height: "100%" });
         },
 
+        showTopDiv: function (isEnabled) {
+            var me = this;
+            if (isEnabled === true) {
+                me.$topdiv.hide();
+                me.$viewer.reportViewer("option", "toolbarHeight", 0);
+            }
+            else {
+                me.$topdiv.show();
+                me.$viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
+            }
+        },
+
         bindViewerEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -383,7 +405,7 @@ $(function () {
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall($viewer))
                         me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
@@ -405,14 +427,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
-                if (data.isEnabled === true) {
-                    me.$topdiv.hide();
-                    $viewer.reportViewer("option", "toolbarHeight", 0);
-                }
-                else {
-                    me.$topdiv.show();
-                    $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
-                }
+                me.showTopDiv.call(me, data.isEnabled);
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -446,43 +461,44 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            var onInputFocus = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionAbsolute();
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+        },
+        onInputFocus: function () {
+            var me = this;
 
-                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                        me.$container.addClass("fr-layout-container-noscroll");
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
 
-            var onInputBlur = function () {
-                if (forerunner.device.isiOS()) {
-                    setTimeout(function () {
-                        if (me.options.isFullScreen)
-                            me._makePositionFixed();
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }, 50);
+            }
+        },
+        onInputBlur: function () {
+            var me = this;
+            if (forerunner.device.isiOS()) {
+                setTimeout(function () {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-                        if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                            me.$container.removeClass("fr-layout-container-noscroll");
-                        }
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
 
-                        $(window).scrollTop(0);
-                        $(window).scrollLeft(0);
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
 
-                        me.ResetSize();
-                    }, 50);
-                }
-            };
-
-            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
+                    me.ResetSize();
+                }, 50);
+            }
         },
         getScrollPosition: function () {
             var me = this;
@@ -550,6 +566,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
@@ -557,7 +575,12 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                me.$mainheadersection.toolbar("showAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("showAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("showAllTools");
+                }
             }
             
             if (me.showModal !== true) {
@@ -578,14 +601,27 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
         },
+        _allowZoom: function (zoom) {
+            var me = this;
+            if (!forerunner.device.isWindowsPhone() ) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("allowZoom", zoom);
+                } else {
+                    forerunner.device.allowZoom(zoom);
+                }
+            }
+        },
+        showUnZoomPane: function () {
+            var me = this;
+            me.showTopDiv(true);
+            me.$unzoomsection.show();
+        },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
+            me._allowZoom(false);
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
-            } else {
-                forerunner.device.allowZoom(false);
             }
 
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -593,6 +629,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
+            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -604,13 +642,16 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                me.$mainheadersection.toolbar("hideAllTools");
+                if (isReportExplorerToolbar) {
+                    me.$mainheadersection.reportExplorerToolbar("hideAllTools");
+                }
+                else {
+                    me.$mainheadersection.toolbar("hideAllTools");
+                }
 
+                me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
-                } else {
-                    forerunner.device.allowZoom(false);
                 }
             }
 

@@ -34,6 +34,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -97,6 +98,11 @@ $(function () {
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+
+            var $unzoomtoolbar = me.options.$unzoomtoolbar;
+            if ($unzoomtoolbar !== null) {
+                $unzoomtoolbar.unzoomToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
+            }
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
@@ -333,6 +339,27 @@ $(function () {
             }
         }
     };  // ssr.ReportViewerInitializer.prototype
+
+    // Unzoom Toolbar
+    $.widget(widgets.getFullname(widgets.unzoomToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-zoom",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+            var utb = forerunner.ssr.tools.unZoomToolbar;
+
+            me.element.html("");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [utb.btnUnZoom]);
+        },
+    }); //$.widget
 
     // Left Toolbar
     $.widget(widgets.getFullname(widgets.leftToolbar), $.forerunner.toolBase, {

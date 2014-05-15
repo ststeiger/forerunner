@@ -78,7 +78,9 @@
     "parameterSets":"セットを管理",
     "selectSet":"セットを選択します。",
     "dsCredential":"データソースクレデンシャル",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "unzoom":"ズーム解除",
+    "search":"検索"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -126,7 +128,8 @@
     "range":"{0}との間の値を入力して{1}",
     "max":"以下{0}に等しい値を入力してください",
     "min":"以上{0}に等しい値を入力します",
-    "invalid":"無効"
+    "invalid":"無効",
+    "invalidTree":"{0} 選択されていない"
   },
   "dialog": {
     "title":"プロンプト",
@@ -176,5 +179,9 @@
     "username":"ログイン名:",
     "password":"パスワード:",
     "reset":"リセット"
+  },
+  "explorerSearch": {
+    "emptyError":"検索基準は、空にすることはできません",
+    "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
   }
 }

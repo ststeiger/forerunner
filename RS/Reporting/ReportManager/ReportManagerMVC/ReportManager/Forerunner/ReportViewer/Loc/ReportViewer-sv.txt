@@ -58,7 +58,7 @@
     "favorites":"favoriter",
     "find":"hitta",
     "firstPage":"Först",
-    "logOff": "Logga ut",
+    "logOff":"Logga ut",
     "home":"Hem",
     "keyword":"Nyckelord",
     "lastPage":"Sista",
@@ -78,7 +78,9 @@
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "unzoom":"Zooma ut",
+    "search":"Sökning"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -126,7 +128,8 @@
     "range":"Ange ett värde mellan {0} och {1}",
     "max":"Ange ett värde mindre än eller lika med {0}",
     "min":"Ange ett värde som är större än eller lika med {0}",
-    "invalid":"Ogiltig"
+    "invalid":"Ogiltig",
+    "invalidTree":"{0} Ej valt"
   },
   "dialog": {
     "title":"föranleda",
@@ -155,7 +158,7 @@
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
     "defaultName":"Standard",
-    "selectSet":"<välj set>"
+    "selectSet":"<cvälj set>"
   },
   "manageParamSets": {
     "manageSets":"Hantera Satser",
@@ -176,5 +179,9 @@
     "username":"Inloggningsnamn:",
     "password":"lösenord:",
     "reset":"Återställ"
+  },
+  "explorerSearch": {
+    "emptyError":"Sökkriterier kan inte vara tomt",
+    "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
   }
 }

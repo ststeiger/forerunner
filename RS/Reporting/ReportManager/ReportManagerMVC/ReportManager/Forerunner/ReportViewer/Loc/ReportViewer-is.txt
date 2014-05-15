@@ -61,7 +61,7 @@
     "home":"Forsíða",
     "keyword":"leitarorð",
     "lastPage":"síðast",
-    "logOff": "nafnplata",
+    "logOff":"nafnplata",
     "menu":"Valmynd",
     "navigation":"Navigation",
     "next":"Næsta",
@@ -78,7 +78,9 @@
     "parameterSets":"stjórna Leikmynd",
     "selectSet":"valið er Stilla",
     "dsCredential":"DataSource persónuskilríki",
-    "addToFavorites":"Bæta við uppáhöld"
+    "addToFavorites":"Bæta við uppáhöld",
+    "unzoom":"unzoom",
+    "search":"Leita"
   },
   "print": {
     "title":"Print Report",
@@ -126,7 +128,8 @@
     "range":"Sláðu inn gildið á milli {0} og {1}",
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
     "min":"Sláðu inn gildið stærra en eða jafnt og {0}",
-    "invalid":"ógild"
+    "invalid":"ógild",
+    "invalidTree":"{0} ekki valinn"
   },
   "dialog": {
     "title":"hvetja",
@@ -176,5 +179,9 @@
     "username":"notandanafn:",
     "password":"lykilorð:",
     "reset":"endurstilla"
+  },
+  "explorerSearch": {
+    "emptyError":"Leitarskilyrðum má ekki vera autt",
+    "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
   }
 }

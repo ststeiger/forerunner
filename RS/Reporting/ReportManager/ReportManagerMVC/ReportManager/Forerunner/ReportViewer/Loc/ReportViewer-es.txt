@@ -61,7 +61,7 @@
     "home":"Casa",
     "keyword":"Palabra clave",
     "lastPage":"Último",
-    "logOff": "Cierre de sesión",
+    "logOff":"Cierre de sesión",
     "menu":"Menú",
     "navigation":"Navegación",
     "next":"Después",
@@ -79,7 +79,9 @@
     "parameterSets":"administrar Sets",
     "selectSet":"Seleccione Establecer",
     "dsCredential":"credenciales del origen de datos",
-    "addToFavorites":"Añadir a Favoritos"
+    "addToFavorites":"Añadir a Favoritos",
+    "unzoom":"unzoom",
+    "search":"búsqueda"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -127,7 +129,8 @@
     "range":"Introduzca un valor entre {0} y {1}",
     "max":"Introduzca un valor menor o igual a {0}",
     "min":"Introduzca un valor mayor o igual a {0}",
-    "invalid":"Inválido"
+    "invalid":"Inválido",
+    "invalidTree":"{0} No seleccionado"
   },
   "dialog": {
     "title":"pronto",
@@ -177,5 +180,9 @@
     "username":"nombre de acceso:",
     "password":"contraseña:",
     "reset":"reajustar"
+  },
+  "explorerSearch": {
+    "emptyError":"Los criterios de búsqueda no pueden estar vacíos",
+    "notFound":"Ningún resultado coincide con su criterio de búsqueda, por favor, modifique su búsqueda."
   }
 }

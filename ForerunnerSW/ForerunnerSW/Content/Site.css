@@ -48,8 +48,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
 
 .DownloadFormInput{height:35px;width:410px;border:1px solid #b8b8b8;margin-bottom:25px;}
-.DownloadButton{background-color:#ff9900;color:white;width:200px;height:36px;display:block;padding-top:7px;text-align:center;font-size:14px;}
-.DownloadButton:hover{background-color:#f38c06}
+.DownloadButton{background-color:#ff9900;color:white;width:200px;height:36px;display:block;padding-top:7px;text-align:center;font-size:14px;cursor:pointer;}
+.DownloadButton:hover{background-color:#f38c06;color:white;}
 .DownloadButton a {color:white;}
 .DownloadButton a:hover{color:white;}
 

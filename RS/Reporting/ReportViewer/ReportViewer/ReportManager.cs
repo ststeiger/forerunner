@@ -172,6 +172,33 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        public CatalogItem[] FindItems(string folder,string searchOperator, string searchCriteria, bool showAll = false, bool showHidden = false)
+        {
+            //specify search area, default to search global
+            string searchArea = folder == null ? "/" : folder;
+            //default search operator to or
+            Management.Native.BooleanOperatorEnum oper = Management.Native.BooleanOperatorEnum.Or;
+
+            if (searchOperator == "and")
+            {
+                oper = Management.Native.BooleanOperatorEnum.And;
+            }
+
+            rs.Credentials = GetCredentials();
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem[] catalogItems = rs.FindItems(searchArea, oper, JsonUtility.getNativeSearchCondition(searchCriteria));
+
+            foreach (CatalogItem catalog in catalogItems)
+            {
+                if ((catalog.Type == ItemTypeEnum.Folder || catalog.Type == ItemTypeEnum.Report || catalog.Type == ItemTypeEnum.Resource || showAll) && (!catalog.Hidden || showHidden))
+                {
+                    list.Add(catalog);
+                }
+            }
+
+            return list.ToArray();
+        }
+
         private ICredentials credentials = null;
         public void SetCredentials(ICredentials credentials)
         {
@@ -225,6 +252,15 @@ namespace Forerunner.SSRS.Manager
 
             return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
+        private void callSetProperties(string path, Property[] props)
+        {
+            // Please review this call stack.
+            // This call is already in the impersonated context
+            // No need to impersonate again.
+            rs.Credentials = GetCredentials();
+
+             rs.SetProperties(HttpUtility.UrlDecode(path), props);
+        }
 
         private string[] callGetPermissions(string path)
         {
@@ -232,27 +268,37 @@ namespace Forerunner.SSRS.Manager
             return rs.GetPermissions(path);
         }
 
-        public CatalogItem[] ListChildren(string path, Boolean isRecursive)
+        public byte[] GetCatalogResource(string path, out string mimetype)
+        {
+            rs.Credentials = GetCredentials();
+            return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
+
+        }
+        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = false)
         {
             Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem[] items = callListChildren(path, isRecursive);
+            bool added = false;
+
             foreach (CatalogItem ci in items)
             {
-                if (ci.Type == ItemTypeEnum.Report && !ci.Hidden)
+                added = false;
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || showAll) && (!ci.Hidden || showHidden))
                 {
                     list.Add(ci);
+                    added = true;
                 }
                 if (RecurseFolders)
                 {
-                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
                     {
                         CatalogItem[] folder = callListChildren(ci.Path, false);
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
                             {
-                                if (!ci.Hidden)
+                                if (!ci.Hidden || showHidden) 
                                 {
                                     list.Add(ci);
                                     break;
@@ -261,7 +307,7 @@ namespace Forerunner.SSRS.Manager
                         }
                     }
                 }
-                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
                 {
                     list.Add(ci);
                 }
@@ -643,15 +689,34 @@ namespace Forerunner.SSRS.Manager
         }
         private string GetItemID(string path)
         {            
+
+            return GetProperty(path,"ID");
+
+        }
+        public string GetProperty(string path,string propName)
+        {
             Property[] props = new Property[1];
             Property retrieveProp = new Property();
-            retrieveProp.Name = "ID";
+            retrieveProp.Name = propName;
             props[0] = retrieveProp;
 
             Property[] properties = callGetProperties(path, props);
 
-            return properties[0].Value;
+            if (properties.Length > 0)
+                return properties[0].Value;
+            else
+                return "";
+        }
+        public void SetProperty(string path, string propName,string value)
+        {
+            Property[] props = new Property[1];
+            Property retrieveProp = new Property();
+            retrieveProp.Name = propName;
+            retrieveProp.Value = value;
 
+            props[0] = retrieveProp;
+
+            callSetProperties(path, props);            
         }
         public string IsFavorite(string path)
         {

@@ -19,9 +19,8 @@ $(function () {
     }
 
     // The page object holds the data for each page
-    function reportPage($container, reportObj) {
+    function reportPage(reportObj) {
         this.reportObj = reportObj;
-        this.$container = $container;
         this.isRendered = false;
     }
 
@@ -70,6 +69,8 @@ $(function () {
         },
 
         _destroy: function () {
+            //This needs to be changed to only remove the view function
+            $(window).off("resize");
         },
 
         // Constructor
@@ -118,6 +119,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
+            me.RDLExtProperty = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -130,6 +132,9 @@ $(function () {
             //setup orientation change
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", function () { me._ReRender.call(me); });
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -326,10 +331,9 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
                 for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me.pages[i].$container.html("");
+                    me.pages[i].needsLayout = true;
                 }
-                me._setPage(me.curPage);
+                me._reLayoutPage(me.curPage);                
             }
         },
         _removeCSS: function () {
@@ -349,6 +353,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -357,13 +362,13 @@ $(function () {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                 me._touchNav();
                 me._removeDocMap();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                
             }
 
@@ -371,6 +376,9 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -404,6 +412,34 @@ $(function () {
                 };
             }
         },
+        // Windows Phones need to be reloaded in order to change their viewport settings
+        // so what we will do in this case is to set our state into the sessionStorage
+        // and reload the page. Then in the loadPage function we will check if this is
+        // a reload page case so as to set the zoom
+        _allowZoomWindowsPhone: function (isEnabled) {
+            var me = this;
+
+            // Save a copy of the page into the action history
+            me.backupCurPage(true);
+
+            // Make the action history ready to stringify (I.e., remove any unneeded object references)
+            $.each(me.actionHistory, function (index, actionItem) {
+                $.each(actionItem.reportPages, function (index, reportPage) {
+                    reportPage.$container = null;
+                    reportPage.CSS = null;
+                    reportPage.isRendered = false;
+                });
+            });
+
+            // Save the action history into the session storage
+            sessionStorage.forerunner_zoomReload_actionHistory = JSON.stringify({ actionHistory: me.actionHistory });
+
+            // Save the reuested zoom state
+            sessionStorage.forerunner_zoomReload_userZoom = JSON.stringify({ userZoom: isEnabled ? "zoom" : "fixed" });
+
+            // Now reload the page from the saved state
+            window.location.reload();
+        },
         /**
          * Set zoom enable or disable
          *
@@ -413,6 +449,11 @@ $(function () {
          */
         allowZoom: function (isEnabled) {
             var me = this;
+
+            if (forerunner.device.isWindowsPhone()) {
+                me._allowZoomWindowsPhone(isEnabled);
+                return;
+            }
 
             if (isEnabled === true){
                 forerunner.device.allowZoom(true);
@@ -740,12 +781,14 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
                         me.paramLoaded = true;
+                        me.$paramarea = me.options.paramArea;
                     }
 
                     // Restore the parameterModel state from the action history
@@ -795,11 +838,12 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
+            var me = this;
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -944,7 +988,7 @@ $(function () {
                     me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         
@@ -981,7 +1025,8 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1056,11 +1101,7 @@ $(function () {
                     else
                         me.lock = 0;
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1119,11 +1160,7 @@ $(function () {
                         }
                     }
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1196,11 +1233,7 @@ $(function () {
                         }
                     }
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1228,11 +1261,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function () {
-                    me.lock = 0;
-                    console.log("error");
-                    me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1370,7 +1399,7 @@ $(function () {
                             }
                         }
                     },
-                    function () { console.log("error"); me.removeLoadingIndicator(); }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 );
             }
         },
@@ -1577,7 +1606,7 @@ $(function () {
                 },
                 dataType: "json",
                 async: false,
-                success: function (data) {
+                done: function (data) {
                     if (data.Exception) {
                         me._renderPageError(me.$reportContainer, data);
                         me.removeLoadingIndicator();
@@ -1588,12 +1617,12 @@ $(function () {
                         me._showParameters(pageNum, data);
                     }
                 },
-                error: function (data) {
-                    console.log("error");
-                    me.removeLoadingIndicator();
+                fail: function (jqXHR, textStatus, errorThrown, request) {
+                    me._writeError(jqXHR, textStatus, errorThrown, request);                                        
                 }
             });
         },
+
         _showParameters: function (pageNum, data) {
             var me = this;
             
@@ -1611,6 +1640,7 @@ $(function () {
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
 
                     me.paramLoaded = true;
+                    me.$paramarea = me.options.paramArea;
                 }
             }
             else if (data.Exception) {
@@ -1630,8 +1660,9 @@ $(function () {
          * @param {Boolean} Submit form if the parameters are satisfied.
          * @param {Integer} The page to load.  Specify -1 to load the current page.
          * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
+         * @param {Boolean} Indicate it's a cascading refresh or whole refresh
          */
-        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
+        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
             if (pageNum === -1) {
                 pageNum = me.getCurPage();
@@ -1656,22 +1687,23 @@ $(function () {
                         } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
-                            me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading);
                         }
                     }
                 });
             }
         },
-        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea) {
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                 }
                 me.paramLoaded = true;
+                me.$paramarea = me.options.paramArea;
             }
         },
         _removeParameters: function () {
@@ -1693,7 +1725,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport) {
                 me.paramLoaded = false;
-                me._removeSetTimeout();
+                me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
@@ -1708,6 +1740,20 @@ $(function () {
             me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
+        _reloadFromSessionStorage: function () {
+            var me = this;
+            if (sessionStorage.forerunner_zoomReload_actionHistory) {
+                var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
+                delete sessionStorage.forerunner_zoomReload_actionHistory;
+                var zoomReloadData = JSON.parse(zoomReloadStringData);
+                if (zoomReloadData.actionHistory) {
+                    me.actionHistory = zoomReloadData.actionHistory;
+                    me.back();
+                    return true;
+                }
+            }
+            return false;
+        },
         /**
          * Load the given report
          *
@@ -1719,7 +1765,13 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
-            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum});
+
+            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
+
+            if (me._reloadFromSessionStorage()) {
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                return;
+            }
 
             if (me.reportPath && me.reportPath !== reportPath) {
                 //Do some clean work if it's a new report
@@ -1731,10 +1783,13 @@ $(function () {
             }
             
             me._resetViewer();
-
+            
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1744,8 +1799,27 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
             });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
@@ -1817,7 +1891,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.jsonPath,
                     async: false,
-                    success: function (data) {
+                    done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
                             if (data.ReportContainer) {
@@ -1830,7 +1904,7 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1840,7 +1914,7 @@ $(function () {
                 me.flushCache();
 
             if (me.pages[newPageNum])
-                if (me.pages[newPageNum].$container) {
+                if (me._getPageContainer(newPageNum)) {
                     if (!loadOnly) {
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
@@ -1874,7 +1948,7 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     async: true,
-                    success: function (data) {
+                    done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
                             if (data.ReportContainer) {
@@ -1892,28 +1966,47 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        
+        _writeError: function (jqXHR, textStatus, errorThrown,request) {
+            var me = this;
+
+            var data = { Exception: 
+                {
+                    DetailMessage: errorThrown,
+                    Type: "Error",
+                    TargetSite: request.url,
+                    Source: "" ,
+                    Message: textStatus,
+                    StackTrace: JSON.stringify(request)
+                }                        
+            };
+
+            me._renderPageError(me.$reportContainer, data);
+        },
+        _getPageContainer: function(pageNum) {
+            var me = this;
+            if (!me.pages[pageNum].$container) {
+                me.pages[pageNum].$container = $("<div class='Page'/>");
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
+            }
+
+            return me.pages[pageNum].$container;
+        },
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
-            var $report = $("<Div/>");
-            $report.addClass("Page");
             //Error, need to handle this better
             if (!data) return;
             
-            var responsiveUI = false;
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
-                responsiveUI = true;
-            }
-
             if (data.CredentialsRequired) {
                 me._writeDSCredential(data);
                 return;
             }
-
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
 
             if (!loadOnly && data.ReportContainer && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
@@ -1921,10 +2014,10 @@ $(function () {
                 });
             }
 
-            if (!me.pages[newPageNum])
-                me.pages[newPageNum] = new reportPage($report, data);
+            if (!me.pages[newPageNum]) {
+                me.pages[newPageNum] = new reportPage(data);
+            }
             else {
-                me.pages[newPageNum].$container = $report;
                 me.pages[newPageNum].reportObj = data;
             }
 
@@ -1948,6 +2041,14 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
+        _reLayoutPage: function(pageNum){
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].$container.reportRender("layoutReport", true);
+                me.pages[pageNum].needsLayout = false;
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -1955,7 +2056,7 @@ $(function () {
                 return;
 
             if (me.pages[pageNum].reportObj.Exception) {
-                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+                me._renderPageError(me._getPageContainer(pageNum), me.pages[pageNum].reportObj);
             }
             else {
                 me.renderError = false;
@@ -1967,8 +2068,8 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],true, me.RDLExtProperty);       
+                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;
@@ -2192,8 +2293,10 @@ $(function () {
             //me.autoRefreshID will be set to undefined when report viewer destory.
             if (me.autoRefreshID !== undefined) {
                 //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
-                if (me.autoRefreshID !== null) me._removeSetTimeout();
-
+                if (me.autoRefreshID !== null) {
+                    me._removeAutoRefreshTimeout();
+                    
+                }
                 me.autoRefreshID = setTimeout(function () {
                     if (me.lock === 1) {
                         //if report viewer is lock then set it again.
@@ -2218,12 +2321,14 @@ $(function () {
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }
+
+                    me.autoRefreshID = null;
                 }, period * 1000);
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
-        _removeSetTimeout: function () {
+        _removeAutoRefreshTimeout: function () {
             var me = this;
 
             if (me.autoRefreshID !== null) {
@@ -2240,7 +2345,7 @@ $(function () {
         destroy: function () {
             var me = this;
 
-            me._removeSetTimeout();
+            me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
             if (me.$credentialDialog)
@@ -2251,6 +2356,9 @@ $(function () {
 
             if (me.$emailSub)
                 me.$emailSub.emailSubscription("destroy");
+            if (me.$paramarea) {
+                me.$paramarea.reportParameter("destroy");
+            }
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -2260,6 +2368,7 @@ $(function () {
             this._destroy();
         },
     });  // $.widget
+
 });   // $(function
 
 

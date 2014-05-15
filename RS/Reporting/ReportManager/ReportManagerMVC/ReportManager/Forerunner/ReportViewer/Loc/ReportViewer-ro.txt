@@ -78,7 +78,9 @@
     "parameterSets":"Gestionați Seturi",
     "selectSet":"Selectați Set",
     "dsCredential":"DataSource acreditare",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "unzoom":"unzoom",
+    "search":"căutare"
   },
   "print": {
     "title":"imprima raportul",
@@ -126,7 +128,8 @@
     "range":"Introduceti o valoare între {0} şi {1}",
     "max":"Introduceti o valoare mai mică decât sau egală cu a {0}",
     "min":"Introduceti o valoare mai mare sau egal cu {0}",
-    "invalid":"Invalid"
+    "invalid":"Invalid",
+    "invalidTree":"{0} nu selectat"
   },
   "dialog": {
     "title":"prompt",
@@ -176,5 +179,9 @@
     "username":"nume de login:",
     "password":"parolă:",
     "reset":"restabili"
+  },
+  "explorerSearch": {
+    "emptyError":"Criterii de căutare nu poate fi gol",
+    "notFound":"Nu exista rezultate pentru criteriile de căutare, vă rugăm să rafinați căutarea."
   }
 }

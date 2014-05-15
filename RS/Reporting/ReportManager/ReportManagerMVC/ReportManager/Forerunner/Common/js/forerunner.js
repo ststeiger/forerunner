@@ -150,8 +150,6 @@ $(function () {
             /** @constant */
             reportExplorerEZ: "reportExplorerEZ",
             /** @constant */
-            reportExplorerToolbar: "reportExplorerToolbar",
-            /** @constant */
             pageNav: "pageNav",
             /** @constant */
             reportDocumentMap: "reportDocumentMap",
@@ -195,6 +193,12 @@ $(function () {
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
             /** @constant */
             emailSubscription: "emailSubscription",
+            /** @constant */
+            reportExplorerToolbar: "reportExplorerToolbar",
+            /** @constant */
+            reportExplorerToolpane: "reportExplorerToolpane",
+            /** @constant */
+            unzoomToolbar: "unzoomToolbar",
 
             /** @constant */
             namespace: "forerunner",
@@ -218,6 +222,8 @@ $(function () {
             actionStarted: "actionstarted",
             /** widget + event, lowercase */
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
+            /** widget + event, lowercase */
+            reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
             allowZoom: "allowZoom",
@@ -231,6 +237,8 @@ $(function () {
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
             /** widget + event, lowercase */
             leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            reportExplorerToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.reportExplorerToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
@@ -525,7 +533,7 @@ $(function () {
         * @param {Object} Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
-            this._customSettings =settingObjectl            
+            this._customSettings = settingObject;
         },
 
         /**
@@ -562,7 +570,7 @@ $(function () {
         getCustomSettingsValue: function (setting, defaultval) {
             var settings = this.getCustomSettings();
             if (settings && settings[setting])
-                return settings[setting]
+                return settings[setting];
             else
                 return defaultval;
         },
@@ -750,6 +758,10 @@ $(function () {
                     .replace(/&#39;/g, "'")
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">");
+        },
+
+        hasAttr: function ($control, attribute) {
+            return typeof ($control.attr(attribute)) !== "undefined";
         }
     },
         
@@ -1013,14 +1025,28 @@ $(function () {
         * @member
         */
         ajax: function (options) {
-            var errorCallback = options.error;
             var me = this;
-            options.error = function (data) {
-                me._handleRedirect(data);
+            var errorCallback = options.error;
+            var successCallback = options.success;
+            options.success = null;
+
+            if (options.fail)
+                errorCallback = options.fail;
+           
+            var jqXHR = $.ajax(options);
+
+            if (options.done)
+                jqXHR.done(options.done);
+            if (successCallback)
+                jqXHR.done(successCallback);
+
+
+            jqXHR.fail( function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 if (errorCallback)
-                    errorCallback(data);
-            };
-            return $.ajax(options);
+                    errorCallback(jqXHR, textStatus, errorThrown,this);
+            });
+            return jqXHR;
         },
         /**
         * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
@@ -1038,11 +1064,11 @@ $(function () {
                 if (done)
                     done(data);
             })
-            .fail(function (data) {
-                me._handleRedirect(data);
-                console.log(data);
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
+                console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         },
         /**
@@ -1060,11 +1086,11 @@ $(function () {
                 if (success && typeof (success) === "function") {
                     success(data);
                 }
-            }).fail(function(data, textStatus, jqXHR) {
-                me._handleRedirect(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                me._handleRedirect(jqXHR);
                 console.log(jqXHR);
                 if (fail)
-                    fail(data);
+                    fail(jqXHR, textStatus, errorThrown,this);
             });
         }
     };
@@ -1142,7 +1168,7 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE 9)/);
         },
-        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key word */
         isMSIEAndTouch :function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE)/) !== null && ua.match(/(Touch)/) !== null;
@@ -1187,10 +1213,10 @@ $(function () {
             this._allowZoomFlag = flag;
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
-                $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
+                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=yes' />");
             } else {
                 $("head meta[name=viewport]").remove();
-                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0' />");
+                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no' />");
             }
         },
 
@@ -1222,11 +1248,23 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function () {
-            if ($(window).height() < 768)
+        isSmall: function (container) {
+            if (container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
                 return true;
             else
                 return false;
+        },
+
+        /** @return {integer} represetning custom device size in settings, for example: 1 small (phone), 2 med (tablet), 3 large (desktop) */
+        formFactor: function (container) {
+            var width = container.width();
+            var settings = forerunner.config.getCustomSettingsValue("DeviceFormFactor", [800, 2048]);
+
+            for (var i = 0; i < settings.length; i++) {
+                if (width < settings[i])
+                    break;
+            }
+            return i + 1;
         },
     };
 
@@ -1372,6 +1410,8 @@ $(function () {
                         clone.remove();
                     }
                 }
+
+                me._timer = null;
             }, 100);
         },
         _bindKeyboard: function (event) {
@@ -1459,10 +1499,10 @@ $(function () {
         // The multiple valued parameter simply are treated 
         getParametersFromUrl: function (url) {
             var params = [];
-            var start = url.indexOf('?') + 1;
-            var vars = url.substring(start).split('&');
+            var start = url.indexOf("?") + 1;
+            var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
+                var pair = vars[i].split("=");
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
                 var ssrsPram = key.substring(0, 3);
@@ -1564,7 +1604,8 @@ $(function () {
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
                 min: $.validator.format(error.min),
-                autoCompleteDropdown: error.invalid
+                autoCompleteDropdown: error.invalid,
+                invalidTree: error.invalidTree
             });
             
             // Add custom date validator rule
@@ -1585,6 +1626,17 @@ $(function () {
                         return true;
                 },
                 error.autoCompleteDropdown
+            );
+
+            $.validator.addMethod(
+                "cascadingTree",
+                function (value, element, param) {
+                    if ($(element).hasClass("fr-param-cascadingtree-error"))
+                        return false;
+                    else
+                        return true;
+                },
+                error.invalidTree
             );
         }
     });

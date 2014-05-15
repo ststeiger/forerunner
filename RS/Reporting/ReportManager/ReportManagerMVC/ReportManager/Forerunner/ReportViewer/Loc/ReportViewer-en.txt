@@ -78,7 +78,9 @@
     "parameterSets": "Manage Sets",
     "selectSet": "Select Set",
 		"dsCredential":"Datasource Credential",
-    "addToFavorites": "Add to Favorites"
+    "addToFavorites": "Add to Favorites",
+    "unzoom": "unzoom",
+	"search":"Search"
     },
     "print":{
     "title": "Print Report",
@@ -126,7 +128,8 @@
 		"range": "Enter a value between {0} and {1}",
 		"max": "Enter a value less than or equal to {0}",
 		"min": "Enter a value greater than or equal to {0}",
-		"invalid":"Invalid"
+		"invalid":"Invalid",
+		"invalidTree": "{0} not selected"
 	},
 	"dialog":{
     "title":"Prompt",
@@ -177,7 +180,9 @@
 	"username":"Login name:",
 	"password":"Password:",
 	"reset":"Reset"
+  },
+  "explorerSearch":{
+	"emptyError":"Search criteria cannot be empty",
+	"notFound":"No results match your search criteria. Please refine your search."
   }
 }
-
-        

@@ -13,6 +13,7 @@ using System.Web.Security;
 using Forerunner.Security;
 using Forerunner.Logging;
 using ForerunnerLicense;
+using Forerunner.SSRS.Manager;
 
 namespace Forerunner.SSRS.Viewer
 {

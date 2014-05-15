@@ -358,7 +358,7 @@ namespace ReportMannagerConfigTool
             Cursor.Current = Cursors.WaitCursor;   
             try
             {
-                rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
+                rtbCurLicense.Text = ClientLicense.ActivateFromKey(txtNewKey.Text);
                 ValidateLicense();
             }
             catch (Exception ex)
@@ -375,8 +375,9 @@ namespace ReportMannagerConfigTool
 
         private void btnManualActivation_Click(object sender, EventArgs e)
         {
-            //frmManualActivation frm = new frmManualActivation();
-            //DialogResult result = frm.ShowDialog();
+            frmActivation frm = new frmActivation();
+            frm.ShowDialog();
+            rtbCurLicense.Text = ClientLicense.GetLicenseString();
         }
 
         private void btnProductInfo_Click(object sender, EventArgs e)
@@ -536,7 +537,7 @@ namespace ReportMannagerConfigTool
                     string newLic = ClientLicense.Split(cores);
                     txtNewKey.Text = newLic;
                     MessageBox.Show("Your new Licenses key is " + newLic + ", we will now activate it on this machine.", "Forerunner Software Mobilizer", MessageBoxButtons.OK);
-                    rtbCurLicense.Text = ClientLicense.Activate(newLic);
+                    rtbCurLicense.Text = ClientLicense.ActivateFromKey(newLic);
                     ValidateLicense();
                 }
             }
@@ -549,6 +550,11 @@ namespace ReportMannagerConfigTool
                 }
             }
             Cursor.Current = Cursors.Default;
+        }
+
+        private void tabActivation_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

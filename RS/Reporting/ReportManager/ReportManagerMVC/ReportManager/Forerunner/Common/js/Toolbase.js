@@ -330,6 +330,27 @@ $(function () {
                 }
             });
         },
+        onWindowResize: function () {
+            var me = this;
+            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
+            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
+            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
+            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
+
+            // Remove any previously added fr-toolbar-hidden classes
+            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
+
+            var width = me.element.width();
+            if (width < 480) {
+                me.element.find(smallClass).addClass("fr-toolbar-hidden");
+            } else if (width < 568) {
+                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
+            } else if (width < 768) {
+                me.element.find(largeClass).addClass("fr-toolbar-hidden");
+            } else {  // Screen >= 769
+                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
+            }
+        },
         _getToolHtml: function (toolInfo) {
             var me = this;
 
@@ -409,7 +430,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },

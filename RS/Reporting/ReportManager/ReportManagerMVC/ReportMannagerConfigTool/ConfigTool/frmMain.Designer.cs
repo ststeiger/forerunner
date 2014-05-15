@@ -449,6 +449,7 @@
             resources.ApplyResources(this.tabActivation, "tabActivation");
             this.tabActivation.Name = "tabActivation";
             this.tabActivation.UseVisualStyleBackColor = true;
+            this.tabActivation.Click += new System.EventHandler(this.tabActivation_Click);
             // 
             // btnSplit
             // 

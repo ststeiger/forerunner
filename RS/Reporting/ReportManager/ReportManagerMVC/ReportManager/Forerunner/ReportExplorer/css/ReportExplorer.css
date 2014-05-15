@@ -34,9 +34,13 @@
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff { float: right; }
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group { float: right; }
 
 .fr-rm-button-fav { }
+
+.fr-explorer-iframe { width:100%; height:100%; overflow:hidden; padding-bottom:0px; margin-bottom:-20px; }
+
+.fr-explorer-notfound{ margin:4px; font-size:large; }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {

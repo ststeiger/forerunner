@@ -78,7 +78,9 @@
     "parameterSets":"Gerenciar conjuntos",
     "selectSet":"Selecione Definir",
     "dsCredential":"DataSource Credencial",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "unzoom":"unzoom",
+    "search":"pesquisa"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -126,7 +128,8 @@
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
     "min":"Insira um valor maior ou igual a {0}",
-    "invalid":"inválido"
+    "invalid":"inválido",
+    "invalidTree":"{0} não selecionado"
   },
   "dialog": {
     "title":"incitar",
@@ -176,5 +179,9 @@
     "username":"nome de login:",
     "password":"senha:",
     "reset":"restabelecer"
+  },
+  "explorerSearch": {
+    "emptyError":"Critérios de busca não pode estar vazio",
+    "notFound":"Nenhum resultado correspondem aos seus critérios de busca, por favor refinar sua busca."
   }
 }

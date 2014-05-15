@@ -79,7 +79,9 @@
     "parameterSets":"Gérer jeux",
     "selectSet":"Sélectionnez Set",
     "dsCredential":"source de données d'identification",
-    "addToFavorites":"Ajouter aux favoris"
+    "addToFavorites":"Ajouter aux favoris",
+    "unzoom":"dézoomer",
+    "search":"recherche"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -127,7 +129,8 @@
     "range":"Entrez une valeur comprise entre {0} et {1}",
     "max":"Entrez une valeur inférieure ou égale à {0}",
     "min":"Entrez une valeur supérieure ou égale à {0}",
-    "invalid":"invalide"
+    "invalid":"invalide",
+    "invalidTree":"{0} non sélectionné"
   },
   "dialog": {
     "title":"invite",
@@ -177,5 +180,9 @@
     "username":"Connexion nom:",
     "password":"mot de passe:",
     "reset":"remettre"
+  },
+  "explorerSearch": {
+    "emptyError":"Critères de recherche ne peuvent pas être vide",
+    "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
   }
 }

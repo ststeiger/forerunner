@@ -35,16 +35,16 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>A-ParamReportWithTwoDS.rdl</Name>
-      <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>bar chart with border and texture.rdl</Name>
       <FullPath>bar chart with border and texture.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>B-ParamReportWithOneDS.rdl</Name>
-      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
+      <Name>Cascading Parameter single category.rdl</Name>
+      <FullPath>Cascading Parameter single category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Cascading Parameter single product.rdl</Name>
+      <FullPath>Cascading Parameter single product.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Checkin Test Report.rdl</Name>
@@ -61,10 +61,6 @@
     <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>D-NormalReportNeedCredential.rdl</Name>
-      <FullPath>D-NormalReportNeedCredential.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
@@ -127,6 +123,10 @@
       <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Multiple Cascade Parameters.rdl</Name>
+      <FullPath>Multiple Cascade Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Mutiple Parameter.rdl</Name>
       <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
@@ -165,6 +165,10 @@
     <ProjectItem>
       <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
       <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SingleGuage.rdl</Name>
+      <FullPath>SingleGuage.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
@@ -214,10 +218,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>SingleGuage.rdl</Name>
-      <FullPath>SingleGuage.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -226,7 +226,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

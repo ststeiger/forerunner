@@ -37,6 +37,7 @@
     <sourcefile name="24x24icons\Folders.png" classname="fr-icons24x24-folders"></sourcefile>
     <sourcefile name="24x24icons\DataSourceCred.png" classname="fr-icons24x24-dataSourceCred"></sourcefile>
     <sourcefile name="24x24icons\Logout.png" classname="fr-icons24x24-logout"></sourcefile>
+    <sourcefile name="24x24icons\UnZoom.png" classname="fr-icons24x24-unzoom"></sourcefile>
   </compositeimage>
   <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>
@@ -46,5 +47,27 @@
     <sourcefile name="25x31icons\tiff.png" classname="fr-icons25x31-exportTIFF"></sourcefile>
     <sourcefile name="25x31icons\xls.png" classname="fr-icons25x31-exportExcel"></sourcefile>
     <sourcefile name="25x31icons\xml.png" classname="fr-icons25x31-exportXML"></sourcefile>
+  </compositeimage>
+  <compositeimage name="icons128x128.png" cssname="icons128x128.css" classname="fr-icons128x128" relativeurlpath="../images" width="128" height="128" margin="5">
+    <sourcefile name="128x128icons\avi.png" classname="fr-icons128x128-file-avi"></sourcefile>
+    <sourcefile name="128x128icons\bmp.png" classname="fr-icons128x128-file-bmp"></sourcefile>
+    <sourcefile name="128x128icons\css.png" classname="fr-icons128x128-file-css"></sourcefile>
+    <sourcefile name="128x128icons\doc.png" classname="fr-icons128x128-file-doc"></sourcefile>
+    <sourcefile name="128x128icons\gif.png" classname="fr-icons128x128-file-gif"></sourcefile>
+    <sourcefile name="128x128icons\html.png" classname="fr-icons128x128-file-html"></sourcefile>
+    <sourcefile name="128x128icons\ini.png" classname="fr-icons128x128-file-ini"></sourcefile>
+    <sourcefile name="128x128icons\jpeg.png" classname="fr-icons128x128-file-jpeg"></sourcefile>
+    <sourcefile name="128x128icons\mp3.png" classname="fr-icons128x128-file-mp3"></sourcefile>
+    <sourcefile name="128x128icons\mpeg.png" classname="fr-icons128x128-file-mpeg"></sourcefile>
+    <sourcefile name="128x128icons\pdf.png" classname="fr-icons128x128-file-pdf"></sourcefile>
+    <sourcefile name="128x128icons\ppt.png" classname="fr-icons128x128-file-ppt"></sourcefile>
+    <sourcefile name="128x128icons\rar.png" classname="fr-icons128x128-file-rar"></sourcefile>
+    <sourcefile name="128x128icons\text.png" classname="fr-icons128x128-file-text"></sourcefile>
+    <sourcefile name="128x128icons\tiff.png" classname="fr-icons128x128-file-tiff"></sourcefile>
+    <sourcefile name="128x128icons\xls.png" classname="fr-icons128x128-file-xls"></sourcefile>
+    <sourcefile name="128x128icons\zip.png" classname="fr-icons128x128-file-zip"></sourcefile>
+    <sourcefile name="128x128icons\xml.png" classname="fr-icons128x128-file-xml"></sourcefile>
+    <sourcefile name="128x128icons\png.png" classname="fr-icons128x128-file-png"></sourcefile>
+    <sourcefile name="128x128icons\unknown.png" classname="fr-icons128x128-file-unknown"></sourcefile>
   </compositeimage>
 </iconfiles>

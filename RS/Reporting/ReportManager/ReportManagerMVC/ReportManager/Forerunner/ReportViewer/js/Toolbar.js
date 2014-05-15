@@ -15,7 +15,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
      * Toobar widget used by the reportViewer
@@ -60,6 +60,11 @@ $(function () {
                     if (data.credentialRequired === false) {
                         me.disableTools([tb.btnCredential]);
                     }
+                    
+                    //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
+                    //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
+                    //forerunner-tools.js so need to make sure the blur event from watermark actually work
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
                 }
             });
 
@@ -85,6 +90,10 @@ $(function () {
                 else {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
+
+                    //update navigation buttons status in toolbar after close navigation panel
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
                 }
             });
 
@@ -125,35 +134,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
-            $(window).resize(function () {
-                me._onWindowResize.call(me);
-            });
-
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
             //me.enableTools([tb.btnMenu, tb.btnReportBack]);
-        },
-        _onWindowResize: function () {
-            var me = this;
-            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
-            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
-            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
-            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
-
-            // Remove any previously added fr-toolbar-hidden classes
-            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
-
-            var width = me.element.width();
-            if (width < 480) {
-                me.element.find(smallClass).addClass("fr-toolbar-hidden");
-            } else if (width < 568) {
-                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
-            } else if (width < 768) {
-                me.element.find(largeClass).addClass("fr-toolbar-hidden");
-            } else {  // Screen >= 769
-                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
-            }
         },
         _init: function () {
             var me = this;
@@ -176,9 +160,7 @@ $(function () {
             else
                 listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
 
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
                 else
@@ -227,6 +209,7 @@ $(function () {
         },
         _clearBtnStates: function () {
             var me = this;
+
             me.element.find(".fr-toolbar-keyword-textbox").val("");
             me.element.find(".fr-toolbar-reportpage-textbox").val("");
             me.element.find(".fr-toolbar-numPages-button").html(0);
@@ -242,6 +225,10 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()

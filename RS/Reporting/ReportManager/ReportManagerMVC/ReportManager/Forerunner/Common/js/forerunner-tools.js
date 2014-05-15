@@ -194,7 +194,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -215,10 +215,10 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-button",
             iconClass: null,
             toolContainerClass: null,
-            imageClass: "fr-toolbar-search-icon",
+            imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
             tooltip: locData.toolbar.find,
             events: {
@@ -683,7 +683,8 @@ $(function () {
         /** @member */
         itemKeyword: {
             toolType: toolTypes.input,
-            selectorClass: "fr-item-textbox-keyword",
+            selectorClass: "fr-item-keyword-textbox",
+            sharedClass: "fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -709,12 +710,13 @@ $(function () {
             iconClass: null,
             toolContainerClass: null,
             toolStateClass: null,
-            imageClass: "fr-item-search-icon",
+            sharedClass: "fr-toolbase-find-button",
+            imageClass: "fr-toolbase-find-icon",
             text: locData.toolPane.find,
             tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
-                    var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
+                    var value = $.trim(e.data.me.element.find(".fr-item-keyword-textbox").val());
                     e.data.$reportViewer.reportViewer("find", value);
                     //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                 }
@@ -802,6 +804,26 @@ $(function () {
                 }
             }
         },
+    };
+
+    /**
+     * Defines all the tools used in the unzoom toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.unZoomToolbar = {
+        /** @member */
+        btnUnZoom: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-unzoom-button",
+            imageClass: "fr-icons24x24-unzoom",
+            tooltip: locData.toolbar.unzoom,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("allowZoom", false);
+                }
+            }
+        }
     };
 
     /**
@@ -905,6 +927,20 @@ $(function () {
       */
     forerunner.ssr.tools.reportExplorerToolbar = {
         /** @member */
+        btnMenu: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-menu",
+            imageClass: "fr-icons24x24-menu",
+            //sharedClass: "fr-toolbar-hidden-on-very-large",
+            sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
+            tooltip: locData.toolbar.menu,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.menuClick, null, {});
+                }
+            }
+        },
+        /** @member */
         btnHome: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-home",
@@ -970,18 +1006,229 @@ $(function () {
         },
         /** @member */
         btnSetup: {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-setup",
-        imageClass: "fr-icons24x24-setup",
-        tooltip: locData.toolbar.userSettings,
-        events: {
-            click: function (e) {
-                e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
-                //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-setup",
+            imageClass: "fr-icons24x24-setup",
+            tooltip: locData.toolbar.userSettings,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
+                    //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                }
+            },
+        },
+        /** @member */
+        btnKeyword: {
+            toolType: toolTypes.input,
+            selectorClass: "fr-rm-keyword-textbox",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-textbox",
+            tooltip: locData.toolbar.keyword,
+            events: {
+                keydown: function (e) {
+                    if (e.keyCode === 13 || e.keyCode === 9) {
+                        var keyword = $.trim(this.value);
+                        if (keyword === "") {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                            return;
+                        }
+
+                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                        e.data.me.options.navigateTo("search", keyword);
+                        return false;
+                    }
+                },
+                blur: function (e) {
+                    e.data.$reportExplorer.reportExplorer("onInputBlur");
+                },
+                focus: function (e) {
+                    e.data.$reportExplorer.reportExplorer("onInputFocus");
+                }
             }
-        }
-    }
-};
+        },
+        /** @member */
+        btnFind: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-find",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-button",
+            iconClass: null,
+            toolContainerClass: null,
+            imageClass: "fr-toolbase-find-icon",
+            toolStateClass: null,
+            tooltip: locData.toolbar.search,
+            events: {
+                click: function (e) {
+                    var keyword = $.trim(e.data.me.element.find(".fr-rm-keyword-textbox").val());
+                    if (keyword === "") {
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                        return;
+                    }
+
+                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                    e.data.me.options.navigateTo("search", keyword);
+                }
+            }
+        },
+    };
+
+    forerunner.ssr.tools.reportExplorerToolpane = {
+        /** @member */
+        itemHome: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-home",
+            imageClass: "fr-icons24x24-homeBlue",
+            text: locData.toolbar.home,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            events: {
+                click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
+                    e.data.me.options.navigateTo("home", null);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-home"]);
+                }
+            }
+        },
+        /** @member */
+        itemLogOff: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-logOff",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-logOff"]);
+                }
+            }
+        },
+        /** @member */
+        itemBack: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-back",
+            imageClass: "fr-icons24x24-back",
+            text: locData.toolbar.back,
+            events: {
+                click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
+                    e.data.me.options.navigateTo("back", null);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-back"]);
+                }
+            }
+        },
+        /** @member */
+        itemFav: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-fav",
+            imageClass: "fr-icons24x24-favoritesBlue",
+            text: locData.toolbar.favorites,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            events: {
+                click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
+                    e.data.me.options.navigateTo("favorites", null);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-fav"]);
+                }
+            }
+        },
+        /** @member */
+        itemRecent: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-recent",
+            imageClass: "fr-icons24x24-recentBlue",
+            text: locData.toolbar.recent,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            events: {
+                click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
+                    e.data.me.options.navigateTo("recent", null);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-recent"]);
+                }
+            }
+        },
+        /** @member */
+        itemSetup: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-setup",
+            imageClass: "fr-icons24x24-setup",
+            text: locData.toolbar.userSettings,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-setup"]);
+                }
+            },
+        },
+        /** @member */
+        itemKeyword: {
+            toolType: toolTypes.input,
+            selectorClass: "fr-rm-item-keyword",
+            tooltip: locData.toolbar.keyword,
+            sharedClass: "fr-toolbase-find-textbox",
+            events: {
+                keydown: function (e) {
+                    if (e.keyCode === 13 || e.keyCode === 9) {
+                        var keyword = $.trim(this.value);
+                        if (keyword === "") {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                            return;
+                        }
+
+                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                        e.data.me.options.navigateTo("search", keyword);
+                        return false;
+                    }
+                },
+                blur: function (e) {
+                    e.data.$reportExplorer.reportExplorer("onInputBlur");
+                },
+                focus: function (e) {
+                    e.data.$reportExplorer.reportExplorer("onInputFocus");
+                }
+            }
+        },
+        /** @member */
+        itemFind: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-item-find",
+            sharedClass: "fr-toolbase-find-button",
+            iconClass: null,
+            toolContainerClass: null,
+            imageClass: "fr-toolbase-find-icon",
+            toolStateClass: null,
+            tooltip: locData.toolbar.find,
+            events: {
+                click: function (e) {
+                    var keyword = $.trim(e.data.me.element.find(".fr-rm-item-keyword").val());
+                    if (keyword === "") {
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                        return;
+                    }
+
+                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                    e.data.me.options.navigateTo("search", keyword);
+                }
+            }
+        },
+        /** @member */
+        itemFolders: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-folders",
+            imageClass: "fr-icons24x24-folders",
+            text: locData.toolPane.views,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            events: {
+                click: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-rm-item-folders"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
+                }
+            }
+        },
+
+    };
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolbar
@@ -1059,6 +1306,8 @@ $(function () {
 
     var tb = forerunner.ssr.tools.toolbar;
     var tp = forerunner.ssr.tools.toolpane;
+    var ret = forerunner.ssr.tools.reportExplorerToolbar;
+    var rep = forerunner.ssr.tools.reportExplorerToolpane;
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolpane
@@ -1198,13 +1447,37 @@ $(function () {
             selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
             tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
-        }
+        },
+        /** @member */
+        explorerFindGroup: {
+            toolType: toolTypes.toolGroup,
+            selectorClass: "fr-rm-toolbar-find-group",
+            tools: [ret.btnKeyword,
+                    ret.btnFind]
+        },
+        /** @member */
+        explorerItemFindCompositeGroup: {
+            toolType: toolTypes.toolGroup,
+            selectorClass: "fr-item-find-composite-group",
+            groupContainerClass: null,
+            tools: [rep.itemKeyword,
+                    rep.itemFind]
+        },
+        /** @member */
+        explorerItemFolderGroup: {
+            toolType: toolTypes.toolGroup,
+            visible: false,
+            selectorClass: "fr-rm-item-folders-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
+            tools: [rep.itemFav, rep.itemRecent, rep.itemHome]
+        },
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
+    rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;
 
     /** @member */
     tg.itemFindGroup = {
@@ -1214,10 +1487,27 @@ $(function () {
         events: {
             click: function (e) {
                 if (!forerunner.helper.containElement(e.target, ["fr-item-find-composite-group"])) {
-                    var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
+                    var value = $.trim(e.data.me.element.find(".fr-item-keyword-textbox").val());
                     e.data.$reportViewer.reportViewer("find", value);
                 }
                 //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+            }
+        }
+    };
+    /** @member */
+    tg.explorerItemFindGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-rm-item-findgroup",
+        tools: [tg.explorerItemFindCompositeGroup],
+        events: {
+            click: function (e) {
+                if (!forerunner.helper.containElement(e.target, ["fr-item-find-composite-group"])) {
+                    var keyword = $.trim(e.data.me.element.find(".fr-rm-item-keyword").val());
+                    if (keyword === "") { return; }
+
+                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                    e.data.me.options.navigateTo("search", keyword);
+                }
             }
         }
     };

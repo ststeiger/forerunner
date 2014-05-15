@@ -78,7 +78,9 @@
     "parameterSets":"gestire Sets",
     "selectSet":"selezionare Imposta",
     "dsCredential":"datasource credenziale",
-    "addToFavorites":"Aggiungi ai Preferiti"
+    "addToFavorites":"Aggiungi ai Preferiti",
+    "unzoom":"unzoom",
+    "search":"ricerca"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -126,7 +128,8 @@
     "range":"Immettere un valore compreso tra {0} e {1}",
     "max":"Immettere un valore inferiore o uguale a {0}",
     "min":"Immettere un valore maggiore o uguale a {0}",
-    "invalid":"non valido"
+    "invalid":"non valido",
+    "invalidTree":"{0} non selezionato"
   },
   "dialog": {
     "title":"promt",
@@ -176,5 +179,9 @@
     "username":"Login name:",
     "password":"Password:",
     "reset":"Reset"
+  },
+  "explorerSearch": {
+    "emptyError":"Criteri di ricerca non possono essere vuoti",
+    "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
   }
 }

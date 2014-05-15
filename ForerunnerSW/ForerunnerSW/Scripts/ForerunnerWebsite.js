@@ -1,4 +1,27 @@
 ﻿
+
+
+function MaunualLicense() {
+
+    var data = $("#Key").val() ;
+    $.ajax(
+        {
+            type: "POST",
+            dataType: "text",
+            url: "/register/api/License",
+            data: data,                    
+            async: false,
+            success: function (data) {
+                $("#ManualResponce").val(data);
+            },
+            error: function ( jqXHR ,  textStatus, errorThrown)
+            {
+                alert("License Server Error");
+            }
+        });
+
+}
+
 function ReSizeFooter() {
     var footer = $(".Footer");
     var Page = $(".ForerunnerPage");

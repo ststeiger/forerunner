@@ -13,6 +13,8 @@ var ApplicationRouter = Backbone.Router.extend({
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
             "view/:args": "transitionToReportViewerWithRSURLAccess",
+            "open/:path": "transitionToOpenResource",
+            "search/:keyword": "transitionToSearch",
             "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
@@ -64,6 +66,18 @@ var ApplicationRouter = Backbone.Router.extend({
                 g_App.router.navigate(targetUrl, { trigger: trigger, replace: false });
             }
             this._lastAction = action;
+        },
+
+        transitionToOpenResource: function (path) {
+            forerunner.device.allowZoom(false);
+            $("body").reportExplorerEZ("transitionToReportManager", path, "resource");
+            $("html").addClass("fr-Explorer-background");
+        },
+
+        transitionToSearch: function (keyword) {
+            forerunner.device.allowZoom(false);
+            $("body").reportExplorerEZ("transitionToReportManager", keyword, "search");
+            $("html").addClass("fr-Explorer-background");
         },
 
         transitionToReportViewer: function (path) {

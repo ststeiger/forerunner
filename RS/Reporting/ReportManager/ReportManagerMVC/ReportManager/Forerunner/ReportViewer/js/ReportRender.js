@@ -70,6 +70,8 @@ $(function () {
         _create: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
+            me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
+
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -383,7 +385,7 @@ $(function () {
             var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
 
             //Need to re-render
-            if (me._currentFormFactor !== formFactor && me.options.responsive) {
+            if (me._currentFormFactor !== formFactor && me.options.responsive && me._defaultResponsizeTablix === "on") {
                 me._currentFormFactor = formFactor;
                 me._reRender();
             }
@@ -1210,7 +1212,7 @@ $(function () {
                 if (respCols.BackgroundColor === undefined)
                     respCols.BackgroundColor = "#F2F2F2";
 
-                if (me.options.responsive) {
+                if (me.options.responsive && me._defaultResponsizeTablix === "on") {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
                     var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;

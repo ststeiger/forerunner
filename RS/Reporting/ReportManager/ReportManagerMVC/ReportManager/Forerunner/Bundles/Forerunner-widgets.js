@@ -4895,7 +4895,17 @@ $(function () {
             $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
-            $item.append($caption);            
+            $item.append($caption);
+
+            //Description
+            var $desc = new $("<div />");
+            //$desc.addClass("fr-explorer-caption");
+            var $desctext = new $("<div />");
+            $desctext.addClass("fr-explorer-item-desc");
+            $desctext.attr("title", catalogItem.Description);
+            $desctext.html(catalogItem.Description);
+            $desc.append($desctext);
+            $item.append($desc);
            
             return $item;
         },

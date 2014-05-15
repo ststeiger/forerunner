@@ -94,7 +94,7 @@ $(function () {
             this._on($thumbnail, {
                 click: function (event) {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall(me.options.$reportViewer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -123,7 +123,7 @@ $(function () {
             }
 
             if (me._maxNumPages !== me.options.$reportViewer.reportViewer("getNumPages")) {
-                var $loadMore = new $("<LI />")
+                var $loadMore = new $("<LI />");
                 $loadMore.addClass("fr-nav-loadmore");
                 $loadMore.addClass("fr-nav-item");
                 $loadMore.addClass("fr-core-cursorpointer");

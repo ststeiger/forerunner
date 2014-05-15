@@ -6,9 +6,6 @@
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
-// Enable the testing of windows phone style zooming on a pc
-enableWPZoom = true;
-
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -72,6 +69,8 @@ $(function () {
         },
 
         _destroy: function () {
+            //This needs to be changed to only remove the view function
+            $(window).off("resize");
         },
 
         // Constructor
@@ -120,6 +119,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
+            me.RDLExtProperty = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -132,6 +132,9 @@ $(function () {
             //setup orientation change
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", function () { me._ReRender.call(me); });
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -328,10 +331,9 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
                 for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me._getPageContainer(i).html("");
+                    me.pages[i].needsLayout = true;
                 }
-                me._setPage(me.curPage);
+                me._reLayoutPage(me.curPage);                
             }
         },
         _removeCSS: function () {
@@ -351,6 +353,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -373,6 +376,9 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -444,12 +450,12 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone() || enableWPZoom === true) {
+            if (forerunner.device.isWindowsPhone()) {
                 me._allowZoomWindowsPhone(isEnabled);
                 return;
             }
 
-            if (isEnabled === true) {
+            if (isEnabled === true){
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
             }
@@ -832,11 +838,12 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
+            var me = this;
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -981,7 +988,7 @@ $(function () {
                     me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         
@@ -1018,7 +1025,8 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1093,7 +1101,7 @@ $(function () {
                     else
                         me.lock = 0;
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1152,7 +1160,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1225,7 +1233,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1253,7 +1261,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1391,7 +1399,7 @@ $(function () {
                             }
                         }
                     },
-                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 );
             }
         },
@@ -1739,7 +1747,7 @@ $(function () {
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
                 return;
             }
 
@@ -1753,10 +1761,13 @@ $(function () {
             }
             
             me._resetViewer();
-
+            
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1766,8 +1777,27 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
             });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
@@ -1852,7 +1882,7 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1914,7 +1944,7 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
@@ -1989,6 +2019,14 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
+        _reLayoutPage: function(pageNum){
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].$container.reportRender("layoutReport", true);
+                me.pages[pageNum].needsLayout = false;
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -2008,7 +2046,8 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],true, me.RDLExtProperty);       
+                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;

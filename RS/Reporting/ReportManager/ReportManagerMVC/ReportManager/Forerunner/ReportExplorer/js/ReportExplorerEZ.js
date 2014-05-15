@@ -235,7 +235,7 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },

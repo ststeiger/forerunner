@@ -100,6 +100,37 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
+        {
+            try
+            {             
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetProperty(path,propertyName)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+        [HttpPost]
+        public HttpResponseMessage ReportProperty(string value, string path, string propertyName, string instance = null)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            {
+                GetReportManager(instance).SetProperty(path, propertyName, value);
+                resp.StatusCode = HttpStatusCode.OK;
+
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.BadRequest;
+            }
+            
+            return resp;
+            
+        }
+
+        [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {

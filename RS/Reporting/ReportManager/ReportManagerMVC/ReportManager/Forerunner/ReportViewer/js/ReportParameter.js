@@ -44,7 +44,7 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
-        _revertLock: false,
+        _revertLock: false, 
 
         _init: function () {
             var me = this;
@@ -375,7 +375,7 @@ $(function () {
                             if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
                                 $cb.trigger("click");
                         } else if (paramDefinition.ValidValues !== "") {
-                            if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                            if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
                                 me._setSelectedIndex($control, savedParam.Value);
                             }
                             else {
@@ -737,7 +737,10 @@ $(function () {
                 if ($control.attr("disabled"))
                     return;
 
-                $control.focus();
+                //only set focus to its textbox for no-touch device by default
+                if (!forerunner.device.isTouch()) {
+                    $control.focus();
+                }
 
                 if (isOpen) {
                     return;
@@ -765,9 +768,10 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
+                appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.blur().attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -807,7 +811,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type === "click")
                         enterLock = false;
                 }
             });
@@ -977,7 +981,7 @@ $(function () {
                     }
                     
                     var item = me._getCascadingTreeItem(param, param.ValidValues[i], hasChild, i === length - 1, isDefault, level);
-                    $list.append(item)
+                    $list.append(item);
                 }
             }
 
@@ -1210,7 +1214,7 @@ $(function () {
             var $param = me.element.find(".fr-paramname-" + parentName);
             //set single selected item as backend value to load data dynamically
             if ($ul.attr("allowmultiple") === "true") {
-                $param.filter(".fr-param").val("#").attr("backendValue", '["' + $item.attr("value") + '"]');
+                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("value") + "\"]");
             }
             else {
                 $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("value"));
@@ -1229,7 +1233,7 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-                $parent = $tree.siblings(".fr-param-tree-input");
+                var $parent = $tree.siblings(".fr-param-tree-input");
 
                 $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
@@ -1262,7 +1266,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && !backendValue === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;

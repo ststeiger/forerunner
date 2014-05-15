@@ -89,7 +89,13 @@ namespace Forerunner.SSRS.Management
             else
                 return RSSPS.GetProperties(path, props);
         }
-
+        public void SetProperties(string path, Property[] props)
+        {
+            if (IsNative)
+                RSNative.SetProperties(path, props);
+            else
+                RSSPS.SetProperties(path, props);
+        }
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
         {
             if (IsNative)

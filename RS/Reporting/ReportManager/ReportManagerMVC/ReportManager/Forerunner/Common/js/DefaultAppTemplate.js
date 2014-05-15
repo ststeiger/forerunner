@@ -418,7 +418,7 @@ $(function () {
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
+                    if (forerunner.device.isSmall($viewer))
                         me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
@@ -478,6 +478,8 @@ $(function () {
             $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
         },
         onInputFocus: function () {
+            var me = this;
+
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)
@@ -493,6 +495,7 @@ $(function () {
             }
         },
         onInputBlur: function () {
+            var me = this;
             if (forerunner.device.isiOS()) {
                 setTimeout(function () {
                     if (me.options.isFullScreen)
@@ -613,7 +616,7 @@ $(function () {
         },
         _allowZoom: function (zoom) {
             var me = this;
-            if (!forerunner.device.isWindowsPhone() &&  enableWPZoom !== true) {
+            if (!forerunner.device.isWindowsPhone() ) {
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", zoom);
                 } else {

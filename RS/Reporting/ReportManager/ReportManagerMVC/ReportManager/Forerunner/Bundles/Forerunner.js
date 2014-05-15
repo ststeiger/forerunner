@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -551,7 +551,7 @@ $(function () {
         * @param {Object} Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
-            this._customSettings =settingObjectl            
+            this._customSettings = settingObject;
         },
 
         /**
@@ -588,7 +588,7 @@ $(function () {
         getCustomSettingsValue: function (setting, defaultval) {
             var settings = this.getCustomSettings();
             if (settings && settings[setting])
-                return settings[setting]
+                return settings[setting];
             else
                 return defaultval;
         },
@@ -1270,11 +1270,23 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function () {
-            if ($(window).height() < 768)
+        isSmall: function (container) {
+            if (container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
                 return true;
             else
                 return false;
+        },
+
+        /** @return {integer} represetning custom device size in settings, for example: 1 small (phone), 2 med (tablet), 3 large (desktop) */
+        formFactor: function (container) {
+            var width = container.width();
+            var settings = forerunner.config.getCustomSettingsValue("DeviceFormFactor", [800, 2048]);
+
+            for (var i = 0; i < settings.length; i++) {
+                if (width < settings[i])
+                    break;
+            }
+            return i + 1;
         },
     };
 
@@ -1509,10 +1521,10 @@ $(function () {
         // The multiple valued parameter simply are treated 
         getParametersFromUrl: function (url) {
             var params = [];
-            var start = url.indexOf('?') + 1;
-            var vars = url.substring(start).split('&');
+            var start = url.indexOf("?") + 1;
+            var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
+                var pair = vars[i].split("=");
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
                 var ssrsPram = key.substring(0, 3);

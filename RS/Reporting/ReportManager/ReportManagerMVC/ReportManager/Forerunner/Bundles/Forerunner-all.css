@@ -608,7 +608,7 @@ table, td, tr {
 
 .fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
 
-.fr-explorer-item { display: inline-block;  padding: 28px  28px 0px 28px; cursor: pointer; }
+.fr-explorer-item { display: inline-block; margin-left:20px; padding: 28px  28px 0px 28px; cursor: pointer; }
 
 
 .fr-explorer-item-selected { border: 2px solid darkblue; }

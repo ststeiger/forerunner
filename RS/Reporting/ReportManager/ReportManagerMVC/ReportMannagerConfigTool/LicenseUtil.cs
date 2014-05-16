@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Net;
 using System.Management;
 using Forerunner.Logging;
+using System.Globalization;
 
 namespace ForerunnerLicense
 {
@@ -324,10 +325,10 @@ namespace ForerunnerLicense
                         RequireValidation = XMLReq.ReadElementContentAsInt();
                         break;
                     case "ActivationDate":
-                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString());
+                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString(),  CultureInfo.CreateSpecificCulture("en-us"));
                         break;
                     case "LastActivationDate":
-                        LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString());
+                        LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString(), CultureInfo.CreateSpecificCulture("en-us"));
                         break;
                     case "IsSubscription":
                         IsSubscription = XMLReq.ReadElementContentAsInt();

@@ -10,6 +10,7 @@ using System.Text;
 using System.IO;
 using System.Collections;
 using ForerunnerWebService;
+using System.Globalization;
 
 namespace ForerunnerLicense
 {
@@ -111,7 +112,7 @@ namespace ForerunnerLicense
         private string GetActivatePackage(LicenseData ld)
         {
             string value = "<License><SKU>{0}</SKU><Quantity>{1}</Quantity>{2}<LicenseKey>{3}</LicenseKey><RequireValidation>{4}</RequireValidation><ActivationDate>{5}</ActivationDate><LicenseDuration>{6}</LicenseDuration><IsTrial>{7}</IsTrial></License>";
-            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate, ld.LicenseDuration,ld.IsTrial), pkey);
+            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate.ToString( CultureInfo.CreateSpecificCulture("en-us")), ld.LicenseDuration,ld.IsTrial), pkey);
         }
 
         private string ProcessMerge()

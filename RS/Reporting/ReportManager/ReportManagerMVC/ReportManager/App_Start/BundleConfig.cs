@@ -33,6 +33,10 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/icons128x128.css"
                 ));
 
+            bundles.Add(new StyleBundle("~/Forerunner/Dashboard/css/bundle").Include(
+                "~/Forerunner/Dashboard/css/dashboards.css"
+                ));
+
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(
                   "~/Forerunner/ReportViewer/css/ManageParamSets.css",
                   "~/Forerunner/ReportViewer/css/PageNav.css",

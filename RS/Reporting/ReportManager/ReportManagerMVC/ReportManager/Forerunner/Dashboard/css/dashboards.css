@@ -1,3 +1,6 @@
-﻿body { background-color: rgb(210, 223, 237); }
+﻿.fr-dashboard-report-container { box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 
-.fr-report-container { box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
+.fr-2up1down { background-color: rgb(210, 223, 237); }
+  .fr-2up1down #Report1 { min-width:543px; min-height: 500px;}
+  .fr-2up1down #Report2 { min-width:543px; min-height: 500px;}
+  .fr-2up1down #Report3 { min-width:1096px; min-height: 406px;}

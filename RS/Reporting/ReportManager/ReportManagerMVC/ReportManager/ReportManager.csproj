@@ -189,6 +189,7 @@
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
     <Content Include="Forerunner\Common\js\History.js" />
     <Content Include="Forerunner\Common\js\MessageBox.js" />
+    <Content Include="Forerunner\Dashboard\css\Dashboard-all.css" />
     <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardBase.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardEditor.js" />
@@ -404,7 +405,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Forerunner\Dashboard\images\" />
     <Folder Include="QUnit\css\" />
-    <Folder Include="Scripts\Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

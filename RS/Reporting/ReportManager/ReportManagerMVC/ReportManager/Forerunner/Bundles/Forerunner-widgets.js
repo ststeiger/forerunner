@@ -330,11 +330,11 @@ $(function () {
         _ReRender: function () {
             var me = this;
 
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
-                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].needsLayout = true;
-                }
-                me._reLayoutPage(me.curPage);                
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                $.each(me.pages, function (index, page) {
+                    page.needsLayout = true;
+                });
+                me._reLayoutPage(me.curPage);
             }
         },
         _removeCSS: function () {

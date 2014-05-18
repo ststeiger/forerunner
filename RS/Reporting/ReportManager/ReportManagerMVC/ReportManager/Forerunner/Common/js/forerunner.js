@@ -209,6 +209,8 @@ $(function () {
             dashboardEditor: "dashboardEditor",
             /** @constant */
             dashboardViewer: "dashboardViewer",
+            /** @constant */
+            reportProperties: "reportProperties",
 
             /** @constant */
             namespace: "forerunner",

@@ -192,5 +192,10 @@
   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
+  },
+  "reportProperties": {
+    "title":"Report Properties",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

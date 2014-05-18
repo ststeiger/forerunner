@@ -286,6 +286,7 @@ $(function () {
          */
         transitionToCreateDashboard: function (templateName) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
 
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
@@ -298,7 +299,8 @@ $(function () {
             setTimeout(function () {
                 var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
                     navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack
+                    historyBack: me.options.historyBack,
+                    $appContainer: layout.$container
                 });
 
                 $dashboardEditor.dashboardEditor("loadTemplate", templateName);

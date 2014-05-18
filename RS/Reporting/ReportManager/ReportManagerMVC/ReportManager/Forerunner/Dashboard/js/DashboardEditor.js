@@ -18,10 +18,17 @@ $(function () {
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
+     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
+     * @prop {Object} options.$appContainer - Dashboard container
      */
+
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+            navigateTo: null,
+            historyBack: null,
+            $appContainer: null
         },
         loadTemplate: function (templateName) {
             var me = this;
@@ -50,7 +57,20 @@ $(function () {
             });
         },
         _onClickProperties: function (e) {
-            alert("_onClickProperties - name: " + e.target.name);
+            var me = this;
+            me._showReportPropertiesDialog();
+        },
+        _showReportPropertiesDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-rp-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.reportProperties({
+                    $appContainer: me.options.$appContainer
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.reportProperties("openDialog");
         },
         _create: function () {
         },

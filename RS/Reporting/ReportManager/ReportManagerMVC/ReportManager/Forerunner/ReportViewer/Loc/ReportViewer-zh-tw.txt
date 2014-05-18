@@ -81,6 +81,8 @@
     "addToFavorites":"添加到收藏",
     "unzoom":"取消縮放",
     "search":"搜索",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"打印報表",
@@ -182,5 +184,18 @@
   "explorerSearch": {
     "emptyError":"搜索條件不能為空",
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "reportProperties": {
+    "title":"Report Properties",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"Properties"
   }
 }

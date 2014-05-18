@@ -34,7 +34,8 @@ namespace ReportManager
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Dashboard/css/bundle").Include(
-                "~/Forerunner/Dashboard/css/dashboards.css"
+                "~/Forerunner/Dashboard/css/dashboards.css",
+                "~/Forerunner/Dashboard/css/ReportProperties.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(

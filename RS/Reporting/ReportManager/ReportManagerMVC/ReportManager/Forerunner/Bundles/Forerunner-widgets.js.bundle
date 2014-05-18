@@ -27,4 +27,5 @@
   <file>/Forerunner/Dashboard/js/DashboardBase.js</file>
   <file>/Forerunner/Dashboard/js/DashboardEditor.js</file>
   <file>/Forerunner/Dashboard/js/DashboardViewer.js</file>
+  <file>/Forerunner/Dashboard/js/ReportProperties.js</file>
 </bundle>

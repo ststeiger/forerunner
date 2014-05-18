@@ -1729,8 +1729,11 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        
                     }
                     else
                         me.lock = 0;
@@ -2519,7 +2522,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
             var me = this;
 
             if (flushCache === true)
@@ -2573,6 +2576,8 @@ $(function () {
                                 me._navToLink(bookmarkID);
                             if (flushCache !== true)
                                 me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -6500,10 +6505,12 @@ $(function () {
             me.RDLExt = RLDExt;
             me._rectangles = [];
             me._currentWidth = me.options.reportViewer.element.width();
-            
+            if (me.Page.Replay === undefined)
+                me.Page.Replay = {};
+
             me._createStyles(me.options.reportViewer);
             me._reRender();
-                     
+            
             if (delayLayout !== true)
                 me.layoutReport();
         },
@@ -7831,9 +7838,10 @@ $(function () {
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.ColumnIndex ===0) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
                             //If responsive table add the show hide image and hook up
-                            $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix);
+                            $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
+                            $ExtRow.HasDrill = true;
                         }
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
                     }
@@ -7864,12 +7872,14 @@ $(function () {
                         $ExtRow = null;
                     }
                     else {
-                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan ===undefined) {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
                             //add drill  - rowspan and of none means most detail RowHeader
-                            $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix);
-                            $ExtCell.attr("colspan", respCols.ColumnCount-Obj.ColumnIndex);
+                            $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
+                            $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
+                            $ExtRow.HasDrill = true;
                         }
-                        if (respCols.isResp && Obj.RowSpan !== undefined) {
+                        //This is a hack for now, colIndex 0 makes a big assumption - but a pretty safe one
+                        if (respCols.isResp && Obj.RowSpan !== undefined && Obj.ColumnIndex===0) {
                             if (Obj.Type === "Corner")
                                 $Row.addClass("fr-resp-corner");
                             else
@@ -7885,63 +7895,91 @@ $(function () {
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
 
-        _addTablixRespDrill: function ($ExtRow,ColIndex,$Tablix) {
+        replayRespTablix: function (replay) {
+            var me = this;
+
+            if (replay) {
+                $.each(replay, function (i, obj) {
+                    var icon;
+                    var ExtRow;
+                    var cell;
+
+                    if (obj.Visible) {
+                        //find cell
+                        cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
+                        icon = cell.prev();
+                        ExtRow = icon.parent().parent().parent().next();
+
+                        me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+                    }
+                });
+            }
+
+        },
+        _addTablixRespDrill: function ($ExtRow,ColIndex,$Tablix,Cell) {
             var me = this;
 
             var $Drilldown = new $("<div/>");
             $Drilldown.html("&nbsp");
             $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respIcon");
 
-            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex }, function (e) {
-                if (e.data.ExtRow.is(":visible")) {
- 
-                    if (e.data.ColIndex > 0) {
-                        $.each(e.data.ExtRow.prevAll(), function (r, tr) {
+            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
 
-                            //if the corrner stop
-                            if ($(tr).hasClass("fr-resp-corner"))
-                                return false;
+                me._TablixRespShow(this, e.data.ExtRow, e.data.ColIndex, e.data.UniqueName, e.data.$Tablix);
+                return;
 
-                            $.each($(tr).children("[rowspan]"), function (c, td) {
-                                if ($(td).height() > 0)
-                                    $(td).attr("rowspan", parseInt($(td).attr("rowspan")) - 1);
-                            });
-                            if ($(tr).hasClass("fr-resp-rowspan"))
-                                return false;
-                        });
-                    }
-                    e.data.ExtRow.hide();
-                    $(this).removeClass("fr-render-drilldown-collapse");
-                    $(this).addClass("fr-render-drilldown-expand");
-                    me.layoutReport(true);
-                }
-                else {
-                    e.data.ExtRow.show();
-
-                    if (e.data.ColIndex > 0) {
-                        $.each(e.data.ExtRow.prevAll(), function (r, tr) {
-
-                            //if the corrner stop
-                            if ($(tr).hasClass("fr-resp-corner"))
-                                return false;
-                            $.each($(tr).children("[rowspan]"), function (c, td) {
-                                if ($(td).height() > 0)
-                                    $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + 1);
-                            });
-                            if ($(tr).hasClass("fr-resp-rowspan"))
-                                return false;
-                        });
-                    }
-                    $(this).addClass("fr-render-drilldown-collapse");
-                    $(this).removeClass("fr-render-drilldown-expand");
-                    me.layoutReport(true);
-                }
-                $Tablix.hide().show(0);
             });
             $Drilldown.addClass("fr-core-cursorpointer");
             return $Drilldown;
         },
 
+        _TablixRespShow: function (icon,ExtRow,ColIndex,UniqueName,$Tablix) {
+            var me = this;
+            var show = !ExtRow.is(":visible");
+            var delta;
+
+            if (show) {
+                ExtRow.show();
+                delta = 1;
+                me.Page.Replay[UniqueName] = { Visible: true, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+            else {
+                delta = -1;
+                me.Page.Replay[UniqueName] = { Visible: false, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+
+
+            if (ColIndex > 0) {
+                $.each(ExtRow.prevAll(), function (r, tr) {
+
+                    //if the corrner stop
+                    if ($(tr).hasClass("fr-resp-corner"))
+                        return false;
+
+                    $.each($(tr).children("[rowspan]"), function (c, td) {
+                        if ($(td).height() > 0)
+                            $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + delta);
+                    });
+                    if ($(tr).hasClass("fr-resp-rowspan"))
+                        return false;
+                });
+            }
+
+            if (show) {
+                $(icon).addClass("fr-render-drilldown-collapse");
+                $(icon).removeClass("fr-render-drilldown-expand");
+            }
+            else {
+                ExtRow.hide();
+                $(icon).removeClass("fr-render-drilldown-collapse");
+                $(icon).addClass("fr-render-drilldown-expand");
+            }
+            me.layoutReport(true);
+            if ($Tablix)
+                $Tablix.hide().show(0);
+    
+        },
         _batchSize: function () {
             return forerunner.config.getCustomSettingsValue("BigTablixBatchSize", 3000);
         },

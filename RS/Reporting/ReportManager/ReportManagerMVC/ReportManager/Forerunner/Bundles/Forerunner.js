@@ -1294,17 +1294,6 @@ $(function () {
                 return false;
         },
 
-        /** @return {integer} represetning custom device size in settings, for example: 1 small (phone), 2 med (tablet), 3 large (desktop) */
-        formFactor: function (container) {
-            var width = container.width();
-            var settings = forerunner.config.getCustomSettingsValue("ResizeInterval", [400, 600, 800, 1000]);
-
-            for (var i = 0; i < settings.length; i++) {
-                if (width < settings[i])
-                    break;
-            }
-            return i + 1;
-        },
     };
 
     /**

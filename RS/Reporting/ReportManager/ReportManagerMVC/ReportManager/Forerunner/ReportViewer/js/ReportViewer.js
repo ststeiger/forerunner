@@ -1099,8 +1099,11 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        
                     }
                     else
                         me.lock = 0;
@@ -1889,7 +1892,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
             var me = this;
 
             if (flushCache === true)
@@ -1943,6 +1946,8 @@ $(function () {
                                 me._navToLink(bookmarkID);
                             if (flushCache !== true)
                                 me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
                             me._updateTableHeaders(me);
                             me._saveThumbnail();

@@ -9,6 +9,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboardEditor = locData.dashboardEditor;
 
     /**
      * Widget used to create and edit dashboards
@@ -30,6 +32,25 @@ $(function () {
         _renderTemplate: function () {
             var me = this;
             me.element.html(me.dashboardDef.template);
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                // Create the button
+                var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+                var $item = $(item);
+                $item.append($btn);
+
+                // Hook the onClick event
+                $btn.on("click", function (e) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+
+                // Position the button
+                var left = $item.width() / 2 - ($btn.width() / 2);
+                var top = $item.height() / 2 - ($btn.height() / 2);
+                $btn.css({position: "absolute", left:left + "px", top: top + "px"});
+            });
+        },
+        _onClickProperties: function (e) {
+            alert("_onClickProperties - name: " + e.target.name);
         },
         _create: function () {
         },

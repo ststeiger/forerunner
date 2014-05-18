@@ -189,5 +189,8 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"Properties"
   }
 }

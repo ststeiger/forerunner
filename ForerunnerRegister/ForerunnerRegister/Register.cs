@@ -173,7 +173,7 @@ namespace ForerunnerRegister
             SqlCommand SQLComm;
 
             //Check for bot
-            if (RegData.zip != "")
+            if (RegData.zip.Trim() != "")
             {
                 SQLConn.Open();
                 SQLComm = new SqlCommand("INSERT BotReg (email,CreateDate) SELECT @Email,GETDATE()", SQLConn);
@@ -183,43 +183,48 @@ namespace ForerunnerRegister
                 return "";
             }
 
-            SqlDataReader SQLReader;
-            Guid ID = Guid.NewGuid();
-            RegData.LicenseID = ForerunnerDB.NewLicenseID();
+            if (RegData.Email.Trim() != "")
+            {
 
-            string SQL = @" 
+                SqlDataReader SQLReader;
+                Guid ID = Guid.NewGuid();
+                RegData.LicenseID = ForerunnerDB.NewLicenseID();
+
+                string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
                                 INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber,Referrer) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber,@Referrer
                             ELSE
                                 UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1 WHERE Email = @Email
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
-            SQLConn.Open();
-            SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@ID", ID);
-            SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
-            SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
-            SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
-            SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
-            SQLComm.Parameters.AddWithValue("@PhoneNumber", RegData.PhoneNumber);
-            SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
-            SQLComm.Parameters.AddWithValue("@Referrer", RegData.referrer);
-            
+                SQLConn.Open();
+                SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", ID);
+                SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
+                SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
+                SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
+                SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
+                SQLComm.Parameters.AddWithValue("@PhoneNumber", RegData.PhoneNumber);
+                SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
+                SQLComm.Parameters.AddWithValue("@Referrer", RegData.referrer);
 
-            SQLReader = SQLComm.ExecuteReader();
-            string DownloadID = null;
-            while (SQLReader.Read())
-            {
-                DownloadID = SQLReader.GetGuid(0).ToString();
-                RegData.LicenseID = SQLReader.GetString(1);
+
+                SQLReader = SQLComm.ExecuteReader();
+                string DownloadID = null;
+                while (SQLReader.Read())
+                {
+                    DownloadID = SQLReader.GetGuid(0).ToString();
+                    RegData.LicenseID = SQLReader.GetString(1);
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+
+                RegData.SetID(DownloadID);
+                new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100, RegData.LicenseID);
+                SaveEmailTask(RegData);
+                return DownloadID;
             }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            RegData.SetID(DownloadID);
-            new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100, RegData.LicenseID);
-            SaveEmailTask(RegData);
-            return DownloadID;
+            return "";
 
         }
 

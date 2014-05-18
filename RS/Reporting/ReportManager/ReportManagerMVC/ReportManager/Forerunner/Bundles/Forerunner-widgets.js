@@ -6411,7 +6411,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
    
     //  The ReportIemContext simplifies the signature for all of the functions to pass context around
-    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
+    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation,ApplyBackgroundColor) {
         this.RS = RS;
         this.CurrObj = CurrObj;
         this.CurrObjIndex = CurrObjIndex;
@@ -6419,6 +6419,7 @@ $(function () {
         this.$HTMLParent = $HTMLParent;
         this.Style = Style;
         this.CurrLocation = CurrLocation;
+        this.ApplyBackgroundColor = ApplyBackgroundColor;
     }
     function layout() {
         this.ReportItems = {};
@@ -6474,7 +6475,7 @@ $(function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
             me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
-
+            me._maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -6788,7 +6789,7 @@ $(function () {
             var formFactor = forerunner.device.formFactor(me.options.reportViewer.element);
 
             //Need to re-render
-            if (me._currentFormFactor !== formFactor && me.options.responsive && me._defaultResponsizeTablix === "on") {
+            if (me._currentFormFactor !== formFactor && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                 me._currentFormFactor = formFactor;
                 me._reRender();
             }
@@ -6993,7 +6994,7 @@ $(function () {
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
             //This fixed an IE bug for duplicate syyles
-            if (RIContext.CurrObjParent.Type !== "Tablix") {
+            if (RIContext.CurrObjParent.Type !== "Tablix" || RIContext.ApplyBackgroundColor) {
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
@@ -7537,8 +7538,9 @@ $(function () {
                 Style += "height:" + height + "mm;";
             
             //Row and column span
-            if (Obj.RowSpan !== undefined)
+            if (Obj.RowSpan !== undefined) {
                 $Cell.attr("rowspan", Obj.RowSpan);
+            }
             if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
                 
@@ -7615,7 +7617,7 @@ $(function () {
                 if (respCols.BackgroundColor === undefined)
                     respCols.BackgroundColor = "#F2F2F2";
 
-                if (me.options.responsive && me._defaultResponsizeTablix === "on") {
+                if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
                     var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
@@ -7765,6 +7767,7 @@ $(function () {
                 $ExtRow = new $("<TR/>");
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
                 $ExtRow.append($ExtCell);
+                $ExtRow.hide();
             }
 
             if (State.Row === undefined) {
@@ -7827,13 +7830,13 @@ $(function () {
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.ColumnIndex ===0) {
                             //If responsive table add the show hide image and hook up
-                            $Drilldown = me._addTablixRespDrill($ExtRow);
+                            $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix);
                         }
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
                     }
                     else {
                         if (respCols.ColHeaderRow === Obj.RowIndex) {
-                            respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0)));
+                            respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0),true));
                             $ExtRow = null;
                         }
                         else {
@@ -7847,13 +7850,20 @@ $(function () {
             else {
                 if (Obj.Cell) {
                     if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
-                        respCols.Columns[Obj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0)));
+                        respCols.Columns[Obj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(0, 0),true));
                         $ExtRow = null;
                     }
                     else {
                         if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan ===undefined) {
-                            //add drill  - rowspan and of 0 means most detail RowHeader
-                            $Drilldown = me._addTablixRespDrill($ExtRow);
+                            //add drill  - rowspan and of none means most detail RowHeader
+                            $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix);
+                            $ExtCell.attr("colspan", respCols.ColumnCount-Obj.ColumnIndex);
+                        }
+                        if (respCols.isResp && Obj.RowSpan !== undefined) {
+                            if (Obj.Type === "Corner")
+                                $Row.addClass("fr-resp-corner");
+                            else
+                                $Row.addClass("fr-resp-rowspan");
                         }
                         $Row.append(me._writeTablixCell(RIContext, Obj, Index, undefined, $Drilldown));
                     }
@@ -7865,26 +7875,59 @@ $(function () {
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
 
-        _addTablixRespDrill: function ($ExtRow) {
+        _addTablixRespDrill: function ($ExtRow,ColIndex,$Tablix) {
             var me = this;
 
             var $Drilldown = new $("<div/>");
             $Drilldown.html("&nbsp");
             $Drilldown.addClass("fr-render-drilldown-expand");
 
-            $Drilldown.on("click", { ToggleElement: $ExtRow }, function (e) {
-                if (e.data.ToggleElement.is(":visible")) {
-                    e.data.ToggleElement.hide();
+            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex }, function (e) {
+                if (e.data.ExtRow.is(":visible")) {
+ 
+                    if (e.data.ColIndex > 0) {
+                        $.each(e.data.ExtRow.prevAll(), function (r, tr) {
+
+                            //if the corrner stop
+                            if ($(tr).hasClass("fr-resp-corner"))
+                                return false;
+
+                            $.each($(tr).children("[rowspan]"), function (c, td) {
+                                if ($(td).height() > 0)
+                                    $(td).attr("rowspan", parseInt($(td).attr("rowspan")) - 1);
+                            });
+                            if ($(tr).hasClass("fr-resp-rowspan"))
+                                return false;
+                        });
+                    }
+                    e.data.ExtRow.hide();
                     $(this).removeClass("fr-render-drilldown-collapse");
                     $(this).addClass("fr-render-drilldown-expand");
                     me.layoutReport(true);
                 }
                 else {
-                    e.data.ToggleElement.show();
+                    e.data.ExtRow.show();
+
+                    if (e.data.ColIndex > 0) {
+                        $.each(e.data.ExtRow.prevAll(), function (r, tr) {
+
+                            //if the corrner stop
+                            if ($(tr).hasClass("fr-resp-corner"))
+                                return false;
+                            $.each($(tr).children("[rowspan]"), function (c, td) {
+                                if ($(td).height() > 0)
+                                    $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + 1);
+                            });
+                            if ($(tr).hasClass("fr-resp-rowspan"))
+                                return false;
+                        });
+                    }
                     $(this).addClass("fr-render-drilldown-collapse");
                     $(this).removeClass("fr-render-drilldown-expand");
                     me.layoutReport(true);
                 }
+                $Tablix.hide();
+                $Tablix.show(0);
             });
             $Drilldown.addClass("fr-core-cursorpointer");
             return $Drilldown;

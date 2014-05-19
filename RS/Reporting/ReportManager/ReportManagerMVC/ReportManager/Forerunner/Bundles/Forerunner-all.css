@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -179,123 +179,127 @@ div.fr-layout-position-absolute { position: absolute; }
 }
 
 .fr-icons24x24-paramarea {
-  background-position: 0 -24px;
+  background-position: -144px 0;
 }
 
 .fr-icons24x24-documentmap {
-  background-position: -24px -24px;
+  background-position: 0 -24px;
 }
 
 .fr-icons24x24-lastpage {
-  background-position: -48px -24px;
+  background-position: -24px -24px;
 }
 
 .fr-icons24x24-next {
-  background-position: -72px -24px;
+  background-position: -48px -24px;
 }
 
 .fr-icons24x24-prev {
-  background-position: -96px -24px;
+  background-position: -72px -24px;
 }
 
 .fr-icons24x24-refresh {
-  background-position: -120px -24px;
+  background-position: -96px -24px;
 }
 
 .fr-icons24x24-firstpage {
-  background-position: 0 -48px;
+  background-position: -120px -24px;
 }
 
 .fr-icons24x24-export {
-  background-position: -24px -48px;
+  background-position: -144px -24px;
 }
 
 .fr-icons24x24-exportCSV {
-  background-position: -48px -48px;
+  background-position: 0 -48px;
 }
 
 .fr-icons24x24-exportExcel {
-  background-position: -72px -48px;
+  background-position: -24px -48px;
 }
 
 .fr-icons24x24-exportMHT {
-  background-position: -96px -48px;
+  background-position: -48px -48px;
 }
 
 .fr-icons24x24-exportPDF {
-  background-position: -120px -48px;
+  background-position: -72px -48px;
 }
 
 .fr-icons24x24-exportTIFF {
-  background-position: 0 -72px;
+  background-position: -96px -48px;
 }
 
 .fr-icons24x24-exportWord {
-  background-position: -24px -72px;
+  background-position: -120px -48px;
 }
 
 .fr-icons24x24-exportXML {
-  background-position: -48px -72px;
+  background-position: -144px -48px;
 }
 
 .fr-icons24x24-zoom {
-  background-position: -72px -72px;
+  background-position: 0 -72px;
 }
 
 .fr-icons24x24-printreport {
-  background-position: -96px -72px;
+  background-position: -24px -72px;
 }
 
 .fr-icons24x24-favorites {
-  background-position: -120px -72px;
+  background-position: -48px -72px;
 }
 
 .fr-icons24x24-favoritesBlue {
-  background-position: 0 -96px;
+  background-position: -72px -72px;
 }
 
 .fr-icons24x24-favorite-plus {
-  background-position: -24px -96px;
+  background-position: -96px -72px;
 }
 
 .fr-icons24x24-favorite-minus {
-  background-position: -48px -96px;
+  background-position: -120px -72px;
 }
 
 .fr-icons24x24-save-param {
-  background-position: -72px -96px;
+  background-position: -144px -72px;
 }
 
 .fr-icons24x24-recent {
-  background-position: -96px -96px;
+  background-position: 0 -96px;
 }
 
 .fr-icons24x24-recentBlue {
-  background-position: -120px -96px;
+  background-position: -24px -96px;
 }
 
 .fr-icons24x24-setup {
-  background-position: 0 -120px;
+  background-position: -48px -96px;
 }
 
 .fr-icons24x24-parameterSets {
-  background-position: -24px -120px;
+  background-position: -72px -96px;
 }
 
 .fr-icons24x24-folders {
-  background-position: -48px -120px;
+  background-position: -96px -96px;
 }
 
 .fr-icons24x24-dataSourceCred {
-  background-position: -72px -120px;
+  background-position: -120px -96px;
 }
 
 .fr-icons24x24-logout {
-  background-position: -96px -120px;
+  background-position: -144px -96px;
 }
 
 .fr-icons24x24-unzoom {
-  background-position: -120px -120px;
+  background-position: 0 -120px;
+}
+
+.fr-icons24x24-createdashboard {
+  background-position: -24px -120px;
 }
 /*** IconGen - end automatically generated, do not hand modify ***/
 
@@ -614,21 +618,22 @@ table, td, tr {
 }
 .fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
 
-.fr-explorer-item { display: inline-block; margin: 20px; padding: 28px 28px 28px 28px; cursor: pointer; width: 200px; height: 250px; }
+.fr-explorer-item { display: inline-block;  margin-left:20px; padding: 28px 28px 0px 28px; cursor: pointer; }
 
 
 .fr-explorer-item-selected { border: 2px solid darkblue; }
 
 .fr-explorer-caption { width: 200px; display: table-caption; margin-left: auto; margin-right: auto; }
 
-.fr-explorer-item-title { text-align: center; font-size: 13pt; color: #212729; font-weight: 700; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; display: block; height:64px; overflow:hidden; }
+.fr-explorer-item-title { text-align: center; font-size: 13pt;width: 200px;  color: #212729; font-weight: 700; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; display: block; height:45px; overflow:hidden; }
+.fr-explorer-item-desc { text-align: center; font-size: 9pt; width: 200px; color: #212729; font-weight: 500; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; display: block; height:60px; overflow:hidden; }
 
 
 .fr-explorer-item:hover { /*background: steelblue;*/ -webkit-transform: scale(1.1); -moz-transform: scale(1.1); -ms-transform: scale(1.1); -o-transform: scale(1.1); transform: scale(1.1); /*-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1.1, M12=0, M21=0, M22=1.1, SizingMethod='auto expand')";*/ /*user-select for IE8 overlaps with IE9*/ }
 
 .fr-explorer-item-center { display: block; margin-left: auto; margin-right: auto; }
 
-.fr-report-item-image-block { height: 100%; width: 100%; position: relative; }
+.fr-report-item-image-block { width: 200px; height: 250px; position: relative; }
 
 .fr-report-item-image-base { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background-repeat: no-repeat; background-position: center; }
 
@@ -648,7 +653,7 @@ table, td, tr {
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group { float: right; }
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group, .fr-rm-button-createdashboard { float: right; }
 
 .fr-rm-button-fav { }
 
@@ -702,6 +707,22 @@ table, td, tr {
   .fr-us-form .fr-us-checkbox { display: inline-block; margin: 0 6px 0 12px; }
 
 .fr-buildversion-container { font-size: 8pt; margin: 16px 0 0 0; }
+
+.fr-cdb-section { display: none; }
+
+.fr-cdb-form { margin-right: 16px; }
+  .fr-cdb-form .fr-cdb-text-input { display: block; width: 156px; margin: auto 0; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+  .fr-cdb-form select { margin: auto 0; font-size: 13px; height: 26px; min-width: 200px; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; }
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-cdb-form { margin-right: 4px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-cdb-form { margin-right: 4px; }
+}
 
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:0px;}
 .fr-sub-listitem {display: inline-block; border-bottom: 1px solid #000000; width: 100%;}
@@ -1032,6 +1053,10 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-print-unit-label { width: 20px; font-size: 10pt; color: #999999; margin-left: 4px; }
 
 
+.fr-rdl-section { display: none; }
+.fr-rdl-form {width:480px; }
+.fr-rdl-label { width: 400px; margin: 0 11px 16px 0; display: block; }
+.fr-rdl-text { width: 400px; margin:  0 11px 16px 11px;border:1px solid black; display: block; } 
 .fr-render-sort-unsorted { background-image: url('../../reportviewer/Images/NotSorted.gif'); display: table-cell;  width:15px; background-repeat: no-repeat; padding: 2px 2px 2px 2px; background-position: center; cursor: pointer; float: right; }
 
 .fr-render-sort-descending { background-image: url(../../reportviewer/Images/SortDecending.gif); display: table-cell;  width:15px; background-repeat: no-repeat; padding: 2px 2px 2px 2px; background-position: center; cursor: pointer; float: right; }

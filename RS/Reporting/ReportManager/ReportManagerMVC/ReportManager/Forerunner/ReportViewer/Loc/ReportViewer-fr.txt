@@ -81,7 +81,9 @@
     "dsCredential":"source de données d'identification",
     "addToFavorites":"Ajouter aux favoris",
     "unzoom":"dézoomer",
-    "search":"recherche"
+    "search":"recherche",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -184,5 +186,10 @@
   "explorerSearch": {
     "emptyError":"Critères de recherche ne peuvent pas être vide",
     "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

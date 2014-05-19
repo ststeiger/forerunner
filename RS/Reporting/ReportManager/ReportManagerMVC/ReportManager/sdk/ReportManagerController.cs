@@ -52,7 +52,11 @@ namespace ReportManager.Controllers
 
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
         {
-            return ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            Forerunner.SSRS.Manager.ReportManager rm = ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            
+            //If you need to specify your own credentials set them here, otherwise we will the forms auth cookie or the default network credentials
+            //rm.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));            
+            return rm;
         }
         
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
@@ -116,8 +120,9 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
         }
-        [HttpPost]
-        public HttpResponseMessage ReportProperty(string value, string path, string propertyName, string instance = null)
+        [HttpGet]
+        [ActionName("SaveReportProperty")]
+        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try

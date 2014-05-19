@@ -143,12 +143,14 @@ $(function () {
         },
         _viewerItems: function (allButtons) {
             var listOfItems;
+            var me = this;
 
             if (allButtons === true || allButtons === undefined)
                 listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tg.itemFindGroup];
             else
                 listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
 
+            //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
@@ -156,6 +158,8 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
             }
 
+            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
+                listOfItems = listOfItems.concat([tp.itemRDLExt]);
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -166,7 +170,7 @@ $(function () {
                 me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
             }
             else {
-                me.element.find('.fr-toolbar-numPages-button').html("?");
+                me.element.find(".fr-toolbar-numPages-button").html("?");
             }
             
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))

@@ -80,7 +80,9 @@
     "dsCredential":"credential Datasource",
     "addToFavorites":"Add to Favorites",
     "unzoom":"unzoom",
-    "search":"Cuardaigh"
+    "search":"Cuardaigh",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -183,5 +185,10 @@
   "explorerSearch": {
     "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
     "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

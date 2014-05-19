@@ -30,6 +30,7 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
                 "~/Forerunner/ReportExplorer/css/UserSettings.css",
                 "~/Forerunner/ReportExplorer/css/ManageSubscription.css",
+                "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
                 "~/Forerunner/ReportExplorer/css/icons128x128.css"
                 ));
 
@@ -39,6 +40,7 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
                   "~/Forerunner/ReportViewer/css/ReportParameter.css",
                   "~/Forerunner/ReportViewer/css/ReportPrint.css",
+                  "~/Forerunner/ReportViewer/css/RDLExtDialog.css",
                   "~/Forerunner/ReportViewer/css/ReportRender.css",
                   "~/Forerunner/ReportViewer/css/ReportViewer.css",
                   "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",

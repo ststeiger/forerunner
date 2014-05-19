@@ -195,7 +195,17 @@ $(function () {
             $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
-            $item.append($caption);            
+            $item.append($caption);
+
+            //Description
+            var $desc = new $("<div />");
+            //$desc.addClass("fr-explorer-caption");
+            var $desctext = new $("<div />");
+            $desctext.addClass("fr-explorer-item-desc");
+            $desctext.attr("title", catalogItem.Description);
+            $desctext.html(catalogItem.Description);
+            $desc.append($desctext);
+            $item.append($desc);
            
             return $item;
         },
@@ -217,6 +227,7 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
+            me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;
@@ -236,11 +247,11 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?"
+            var url = me.options.reportManagerAPI + "/Resource?";
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
-            var $if = $("<iframe/>")
+            var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
             //$if.attr("scrolling", "no");
@@ -258,7 +269,7 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state == "complete" || !state) {//loading,interactive,complete       
+                        if (state === "complete" || !state) {//loading,interactive,complete       
                             me._setIframeHeight(frame);
                         }
                         else {
@@ -382,15 +393,34 @@ $(function () {
             }
         },
         /**
+         * Show the create dashboard modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showCreateDashboardDialog
+         */
+        showCreateDashboardDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-cdb-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.createDashboard({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+                me._createDashboardDialog = $dlg;
+            }
+            me._createDashboardDialog.createDashboard("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          */
-        showUserSettingsDialog : function() {
+        showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function(){
+        savedPath: function () {
             var me = this;
             if (me.options.view === "catalog") {
                 me.priorExplorerPath = me.options.path;

@@ -80,7 +80,9 @@
     "dsCredential":"Datenquelle Credential",
     "addToFavorites":"Zu Favoriten hinzufügen",
     "unzoom":"unzoom",
-    "search":"Suche"
+    "search":"Suche",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Bericht drucken",
@@ -183,5 +185,10 @@
   "explorerSearch": {
     "emptyError":"Suchkriterien können nicht leer sein",
     "notFound":"Keine Ergebnisse gefunden, bitte verfeinern Sie Ihre Suche."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

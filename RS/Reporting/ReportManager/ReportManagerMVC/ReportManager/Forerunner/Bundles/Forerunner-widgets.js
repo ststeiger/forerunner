@@ -1429,7 +1429,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
@@ -7786,8 +7786,11 @@ $(function () {
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
-                if (respCols.isResp && $ExtRow)
+                //Dont add the ext row if no data and hide the expand icon
+                if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
                     $Tablix.append($ExtRow);
+                else
+                    $Row.find(".fr-render-respIcon").hide();
 
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
@@ -7852,7 +7855,8 @@ $(function () {
                             $ExtRow = null;
                         }
                         else {
-                            $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
+                            if (respCols.Columns[BRObj.ColumnIndex].Header)
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                         }
                     }

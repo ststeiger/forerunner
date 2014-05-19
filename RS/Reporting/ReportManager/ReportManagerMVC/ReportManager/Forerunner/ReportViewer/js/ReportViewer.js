@@ -799,7 +799,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {

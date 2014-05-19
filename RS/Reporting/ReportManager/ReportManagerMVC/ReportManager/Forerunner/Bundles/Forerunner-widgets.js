@@ -18950,12 +18950,12 @@ $(function () {
             var $dlg = me.options.$appContainer.find(".fr-rp-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.reportProperties({
-                    reportManagerAPI: me.options.reportManagerAPI,
-                    $appContainer: me.options.$appContainer
-                });
                 me.options.$appContainer.append($dlg);
             }
+            $dlg.reportProperties({
+                reportManagerAPI: me.options.reportManagerAPI,
+                $appContainer: me.options.$appContainer
+            });
             $dlg.reportProperties("openDialog");
         },
         _create: function () {
@@ -19070,8 +19070,20 @@ $(function () {
                 } else if (item.Type === me._itemType.report) {
                     newNode.icon = "jstree-file"
                     newNode.li_attr = {dataReport: true};
-        }
+                }
             });
+        },
+        _init: function () {
+            var me = this;
+            // Open the top level nodes
+            me.$tree.jstree("close_all");
+            me.$tree.jstree("open_node", "j1_1");
+
+            // Remove any previous value in the input textbox
+            me.$reportInput.val("");
+
+            // Deselect any previouslu selected report
+            me.$tree.jstree("deselect_all", true);
         },
         _create: function () {
             var me = this;

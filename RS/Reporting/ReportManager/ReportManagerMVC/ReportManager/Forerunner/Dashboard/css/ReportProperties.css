@@ -7,6 +7,10 @@
   .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
   .fr-rp-form .fr-rp-popup-container { display: none; position:fixed; border: 1px solid #424242; background-color: white; }
   .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 400px; }
+  .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+  .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
+  .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {

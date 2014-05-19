@@ -195,7 +195,8 @@
     "title":"Report Properties",
     "cancel":"Cancel",
     "submit":"Submit",
-    "selectReport": "<select report>"
+    "selectReport": "<select report>",
+    "hideToolbar": "Hide Toolbar"
   },
   "dashboardEditor": {
     "propertiesBtn": "Properties"

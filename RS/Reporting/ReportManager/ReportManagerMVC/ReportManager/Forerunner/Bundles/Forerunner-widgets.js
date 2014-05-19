@@ -19084,6 +19084,9 @@ $(function () {
 
             // Deselect any previouslu selected report
             me.$tree.jstree("deselect_all", true);
+
+            // Uncheck the hide toolbar checkbox
+            me.$hideToolbar.prop("checked", false);
         },
         _create: function () {
             var me = this;
@@ -19095,6 +19098,11 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
+                        // Hide toolbar checkbox
+                        "<div class='fr-rp-setting-container'>" +
+                            "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                            "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                        "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
                             "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='required' />" +
@@ -19104,7 +19112,7 @@ $(function () {
                         "</div>" +
                         // Popup container
                         "<div class='fr-rp-popup-container'>" +
-                            "<div class='fr-reportTree-id fr-rp-tree-container'></div>" +
+                            "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
@@ -19122,12 +19130,12 @@ $(function () {
                 me._onClickTreeDropdown.apply(me, arguments);
             })
 
+            me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-
             me.$popup = me.element.find(".fr-rp-popup-container");
+            me.$tree = me.element.find(".fr-report-tree-id");
 
             // Setup the report selector UI
-            me.$tree = me.element.find(".fr-reportTree-id");
             var JSData = me._createJSData("/");
             me.$tree.jstree({
                 core: {
@@ -19160,6 +19168,9 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.$popup.hide();
+            }
+            else {
+                me.$tree.jstree("toggle_node", data.node);
             }
         },
         _onClickTreeDropdown: function (e) {

@@ -18907,15 +18907,14 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      */
-
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
-            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
             $appContainer: null
@@ -18952,6 +18951,7 @@ $(function () {
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportProperties({
+                    reportManagerAPI: me.options.reportManagerAPI,
                     $appContainer: me.options.$appContainer
                 });
                 me.options.$appContainer.append($dlg);
@@ -19030,17 +19030,46 @@ $(function () {
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
      * @prop {Object} options.$appContainer - Dashboard container
      *
      * @example
      * $("#reportPropertiesDialog").reportProperties({
-     /  });
+     *      reportManagerAPI: me.options.reportManagerAPI,
+     *      $appContainer: me.options.$appContainer
+     * });
      */
     $.widget(widgets.getFullname(widgets.reportProperties), {
         options: {
+            reportManagerAPI: null,
             $appContainer: null
         },
         _init: function() {
+        },
+        _createReportsTree: function () {
+            var me = this;
+            var $rootList = $("<ul>");
+            me.$tree.append($rootList);
+            me._createTreeItems($rootList, "catalog", "/");
+            me.$tree.append($("</ul>"));
+        },
+        _createTreeItems: function ($curList, view, path) {
+            var me = this;
+            var folderCount = 0;
+            var items = me._getItems(view, path);
+            $.each(items, function (index, item) {
+                if (item.Type === me._itemType.folder) {
+                    var $folder = $("<li data-isfolder='true'>" + item.Name + "</li>");
+                    var $newList = $("<ul>");
+                    $folder.append($newList);
+                    $curList.append($folder);
+                    me._createTreeItems($newList, view, item.Path)
+                    $folder.append($("</ul>"));
+                } else if (item.Type === me._itemType.report) {
+                    var $report = $("<li data-isfolder='false'>" + item.Name + "</li>");
+                    $curList.append($report);
+                }
+            });
         },
         _create: function () {
             var me = this;
@@ -19061,20 +19090,7 @@ $(function () {
                         "</div>" +
                         // Popup container
                         "<div class='fr-rp-popup-container'>" +
-                            "<div class='fr-reportTree-id fr-rp-tree-container'>" +
-                                "<ul>" +
-                                    "<li>root 1" +
-                                        "<ul>" +
-                                            "<li>foo bang boo</li>" +
-                                            "<li>foo bang 2</li>" +
-                                            "<li>foo bang 3</li>" +
-                                            "<li>foo bang 4</li>" +
-                                            "<li>foo bang 5</li>" +
-                                        "</ul>" +
-                                    "</li>" +
-                                    "<li>root 2</li>" +
-                                "</ul>" +
-                            "</div>" +
+                            "<div class='fr-reportTree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
@@ -19096,27 +19112,25 @@ $(function () {
 
             me.$popup = me.element.find(".fr-rp-popup-container");
 
+            // Setup the report selector UI
             me.$tree = me.element.find(".fr-reportTree-id");
+            me._createReportsTree();
             me.$tree.jstree();
-
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });
 
-            me.$form = me.element.find(".fr-rp-form");
 
+            // Hook the cancel and submit events
             me.element.find(".fr-rp-cancel").on("click", function(e) {
                 me.closeDialog();
             });
-
             me.element.find(".fr-rp-submit-id").on("click", function (e) {
                 me._submit();
             });
-
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._submit();
             });
-
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
@@ -19143,6 +19157,47 @@ $(function () {
             var me = this;
 
             me.closeDialog();
+        },
+        // _getItems will return back an array of CatalogItem objects where:
+        //
+        // var = CatalogItem {
+        //          ID: string,     - GUID
+        //          Name: string,   - Item Name
+        //          Path: string,   - Item Path
+        //          Type: number,   - itemType (see below)
+        // }
+        _getItems: function (view, path) {
+            var me = this;
+            var items = null;
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: me.options.reportManagerAPI + "GetItems",
+                async: false,
+                data: {
+                    view: view,
+                    path: path
+                },
+                success: function (data) {
+                    items = data;
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+            return items;
+        },
+        // itemType is the number returned in the CatalogItem.Type member
+        _itemType: {
+            unknown: 0,
+            folder: 1,
+            report: 2,
+            resource: 3,
+            linkedReport: 4,
+            dataSource: 5,
+            model: 6,
+            site: 7
         },
         /**
          * Open parameter set dialog

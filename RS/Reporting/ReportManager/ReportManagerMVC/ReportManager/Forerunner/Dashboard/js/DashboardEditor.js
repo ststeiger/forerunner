@@ -17,15 +17,14 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      */
-
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
-            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
             $appContainer: null
@@ -62,6 +61,7 @@ $(function () {
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportProperties({
+                    reportManagerAPI: me.options.reportManagerAPI,
                     $appContainer: me.options.$appContainer
                 });
                 me.options.$appContainer.append($dlg);

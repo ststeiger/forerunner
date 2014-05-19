@@ -34,31 +34,33 @@ $(function () {
             reportManagerAPI: null,
             $appContainer: null
         },
-        _init: function() {
-        },
-        _createReportsTree: function () {
+        _createJSData: function (path) {
             var me = this;
-            var $rootList = $("<ul>");
-            me.$tree.append($rootList);
-            me._createTreeItems($rootList, "catalog", "/");
-            me.$tree.append($("</ul>"));
+            var nodeTree = {
+                text: path,
+                state: {
+                    opened: true
+                },
+                children: []
+            };
+            me._createTreeItems(nodeTree, "catalog", path);
+            return [nodeTree];
         },
-        _createTreeItems: function ($curList, view, path) {
+        _createTreeItems: function (curNode, view, path) {
             var me = this;
-            var folderCount = 0;
             var items = me._getItems(view, path);
             $.each(items, function (index, item) {
+                var newNode = {
+                    text: item.Name,
+                    children: []
+                };
+                curNode.children.push(newNode);
                 if (item.Type === me._itemType.folder) {
-                    var $folder = $("<li data-isfolder='true'>" + item.Name + "</li>");
-                    var $newList = $("<ul>");
-                    $folder.append($newList);
-                    $curList.append($folder);
-                    me._createTreeItems($newList, view, item.Path)
-                    $folder.append($("</ul>"));
+                    me._createTreeItems(newNode, view, item.Path)
                 } else if (item.Type === me._itemType.report) {
-                    var $report = $("<li data-isfolder='false'>" + item.Name + "</li>");
-                    $curList.append($report);
-                }
+                    newNode.icon = "jstree-file"
+                    newNode.li_attr = {dataReport: true};
+        }
             });
         },
         _create: function () {
@@ -104,8 +106,12 @@ $(function () {
 
             // Setup the report selector UI
             me.$tree = me.element.find(".fr-reportTree-id");
-            me._createReportsTree();
-            me.$tree.jstree();
+            var JSData = me._createJSData("/");
+            me.$tree.jstree({
+                core: {
+                    data: JSData
+                }
+            });
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });
@@ -128,8 +134,8 @@ $(function () {
         _onChangedjsTree: function (e, data) {
             var me = this;
 
-            // TODO - Change this to explicitally check for a folder node
-            if (data.node.children.length === 0) {
+            // Set the value if this is a report
+            if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.$popup.hide();
             }

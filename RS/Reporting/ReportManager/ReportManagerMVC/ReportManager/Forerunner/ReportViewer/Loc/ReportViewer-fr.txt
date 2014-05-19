@@ -197,6 +197,7 @@
   "reportProperties": {
     "title":"Report Properties",
     "cancel":"Cancel",
-    "submit":"Submit"
+    "submit":"Submit",
+    "selectReport":"<select report>"
   }
 }

@@ -38,6 +38,10 @@ namespace ReportManager
                 "~/Forerunner/Dashboard/css/ReportProperties.css"
                 ));
 
+            bundles.Add(new StyleBundle("~/Forerunner/Lib/jsTree/themes/default/bundle").Include(
+                "~/Forerunner/Lib/jsTree/themes/default/style.css"
+                ));
+
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(
                   "~/Forerunner/ReportViewer/css/ManageParamSets.css",
                   "~/Forerunner/ReportViewer/css/PageNav.css",

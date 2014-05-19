@@ -58,10 +58,6 @@ $(function () {
         },
         _onClickProperties: function (e) {
             var me = this;
-            me._showReportPropertiesDialog();
-        },
-        _showReportPropertiesDialog: function () {
-            var me = this;
             var $dlg = me.options.$appContainer.find(".fr-rp-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");

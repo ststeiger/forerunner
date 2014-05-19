@@ -64,7 +64,9 @@ $(function () {
             }
             $dlg.reportProperties({
                 reportManagerAPI: me.options.reportManagerAPI,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                $dashboardEditor: me,
+                reportId: e.target.name
             });
             $dlg.reportProperties("openDialog");
         },

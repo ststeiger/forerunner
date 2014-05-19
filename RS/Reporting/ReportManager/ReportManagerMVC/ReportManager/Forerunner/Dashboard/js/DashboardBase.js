@@ -25,10 +25,10 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.clearState();
+            me._clearState();
             me.element.html("");
         },
-        clearState: function () {
+        _clearState: function () {
             var me = this;
             me.dashboardDef = {
                 templateName: null,
@@ -36,7 +36,13 @@ $(function () {
                 reports: {}
             };
         },
-        _destory: function () {
+        getReportProperties: function (reportId) {
+            var me = this;
+            return me.dashboardDef.reports[reportId];
+        },
+        setReportProperties: function (reportId, properties) {
+            var me = this;
+            me.dashboardDef.reports[reportId] = properties;
         }
     });  // $widget
 });  // function()

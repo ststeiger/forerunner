@@ -400,7 +400,7 @@ $(function () {
                     var root = this.root.replace(trailingSlash, '');
                     if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
                 } else {
-                    fragment = this.getHash();
+                    fragment = decodeURIComponent(this.getHash());
                 }
             }
             return fragment.replace(routeStripper, '');
@@ -18871,10 +18871,10 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.clearState();
+            me._clearState();
             me.element.html("");
         },
-        clearState: function () {
+        _clearState: function () {
             var me = this;
             me.dashboardDef = {
                 templateName: null,
@@ -18882,7 +18882,13 @@ $(function () {
                 reports: {}
             };
         },
-        _destory: function () {
+        getReportProperties: function (reportId) {
+            var me = this;
+            return me.dashboardDef.reports[reportId];
+        },
+        setReportProperties: function (reportId, properties) {
+            var me = this;
+            me.dashboardDef.reports[reportId] = properties;
         }
     });  // $widget
 });  // function()
@@ -18954,7 +18960,9 @@ $(function () {
             }
             $dlg.reportProperties({
                 reportManagerAPI: me.options.reportManagerAPI,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                $dashboardEditor: me,
+                reportId: e.target.name
             });
             $dlg.reportProperties("openDialog");
         },
@@ -19032,17 +19040,49 @@ $(function () {
      * @prop {Object} options - The options for the create dashboard dialog
      * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
      * @prop {Object} options.$appContainer - Dashboard container
+     * @prop {Object} options.$dashboardEditor - Dashboard Editor widget
+     * @prop {Object} options.reportId - Target Report Id
      *
      * @example
      * $("#reportPropertiesDialog").reportProperties({
      *      reportManagerAPI: me.options.reportManagerAPI,
-     *      $appContainer: me.options.$appContainer
+     *      $appContainer: me.options.$appContainer,
+     *      $dashboardEditor: me,
+     *      reportId: e.target.name
      * });
      */
     $.widget(widgets.getFullname(widgets.reportProperties), {
         options: {
             reportManagerAPI: null,
-            $appContainer: null
+            $appContainer: null,
+            $dashboardEditor: null,
+            reportId: null
+        },
+        _init: function () {
+            var me = this;
+
+            me.properties = me.options.$dashboardEditor.getReportProperties(me.options.reportId) || {};
+
+            // Open the top level nodes and deselect any previous selection
+            me.$tree.jstree("close_all");
+            me.$tree.jstree("open_node", "j1_1");
+            me.$tree.jstree("deselect_all", true);
+
+            // Restore the report name
+            if (me.properties &&
+                me.properties.catalogItem &&
+                me.properties.catalogItem.Name) {
+                me.$reportInput.val(me.properties.catalogItem.Name);
+            } else {
+                me.$reportInput.val("");
+            }
+
+            // Restore the hide toolbar checkbox
+            if (me.properties && me.properties.hideToolbar === true) {
+                me.$hideToolbar.prop("checked", true);
+            } else {
+                me.$hideToolbar.prop("checked", false);
+            }
         },
         _createJSData: function (path) {
             var me = this;
@@ -19062,6 +19102,9 @@ $(function () {
             $.each(items, function (index, item) {
                 var newNode = {
                     text: item.Name,
+                    li_attr: {
+                        dataCatalogItem: item
+                    },
                     children: []
                 };
                 curNode.children.push(newNode);
@@ -19069,24 +19112,9 @@ $(function () {
                     me._createTreeItems(newNode, view, item.Path)
                 } else if (item.Type === me._itemType.report) {
                     newNode.icon = "jstree-file"
-                    newNode.li_attr = {dataReport: true};
+                    newNode.li_attr.dataReport = true;
                 }
             });
-        },
-        _init: function () {
-            var me = this;
-            // Open the top level nodes
-            me.$tree.jstree("close_all");
-            me.$tree.jstree("open_node", "j1_1");
-
-            // Remove any previous value in the input textbox
-            me.$reportInput.val("");
-
-            // Deselect any previouslu selected report
-            me.$tree.jstree("deselect_all", true);
-
-            // Uncheck the hide toolbar checkbox
-            me.$hideToolbar.prop("checked", false);
         },
         _create: function () {
             var me = this;
@@ -19167,6 +19195,7 @@ $(function () {
             // Set the value if this is a report
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
+                me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
                 me.$popup.hide();
             }
             else {
@@ -19184,7 +19213,8 @@ $(function () {
         },
         _submit: function () {
             var me = this;
-
+            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
             me.closeDialog();
         },
         // _getItems will return back an array of CatalogItem objects where:

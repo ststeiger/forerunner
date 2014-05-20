@@ -193,12 +193,6 @@ $(function () {
             me.$popup.css({ top: top, left: left, width: width });
             me.$popup.toggle();
         },
-        _submit: function () {
-            var me = this;
-            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
-            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
-            me.closeDialog();
-        },
         // _getItems will return back an array of CatalogItem objects where:
         //
         // var = CatalogItem {
@@ -249,6 +243,22 @@ $(function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        _triggerClose: function (isSubmit) {
+            var me = this;
+            var data = {
+                reportId: me.options.reportId,
+                isSubmit: isSubmit
+            };
+            me._trigger(events.close, null, data);
+        },
+        _submit: function () {
+            var me = this;
+            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+
+            me._triggerClose(true);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
         /**
          * Close parameter set dialog
          *
@@ -256,6 +266,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            me._triggerClose(false);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
     }); //$.widget

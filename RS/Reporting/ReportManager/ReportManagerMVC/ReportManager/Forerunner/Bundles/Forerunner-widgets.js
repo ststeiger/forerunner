@@ -18935,9 +18935,10 @@ $(function () {
             var me = this;
             me.element.html(me.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+
                 // Create the button
                 var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
-                var $item = $(item);
                 $item.append($btn);
 
                 // Hook the onClick event
@@ -18957,6 +18958,9 @@ $(function () {
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 me.options.$appContainer.append($dlg);
+                $dlg.on(events.reportPropertiesClose(), function (e, data) {
+                    me._onReportPropertiesClose.apply(me, arguments);
+                });
             }
             $dlg.reportProperties({
                 reportManagerAPI: me.options.reportManagerAPI,
@@ -18965,6 +18969,27 @@ $(function () {
                 reportId: e.target.name
             });
             $dlg.reportProperties("openDialog");
+        },
+        _onReportPropertiesClose: function (e, data) {
+            var me = this;
+            if (!data.isSubmit) {
+                // Wasn't a submit so just return
+                return;
+            }
+
+            // Create the reportViewerEZ
+            var $item = me.element.find("#" + data.reportId);
+            $item.reportViewerEZ({
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                isReportManager: false,
+                isFullScreen: false
+            });
+
+            // Load the selected report
+            var catalogItem = me.dashboardDef.reports[data.reportId].catalogItem;
+            var $reportViewer = $item.reportViewerEZ("getReportViewer");
+            $reportViewer.reportViewer("loadReport", catalogItem.Path);
         },
         _create: function () {
         },
@@ -19211,12 +19236,6 @@ $(function () {
             me.$popup.css({ top: top, left: left, width: width });
             me.$popup.toggle();
         },
-        _submit: function () {
-            var me = this;
-            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
-            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
-            me.closeDialog();
-        },
         // _getItems will return back an array of CatalogItem objects where:
         //
         // var = CatalogItem {
@@ -19267,6 +19286,22 @@ $(function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        _triggerClose: function (isSubmit) {
+            var me = this;
+            var data = {
+                reportId: me.options.reportId,
+                isSubmit: isSubmit
+            };
+            me._trigger(events.close, null, data);
+        },
+        _submit: function () {
+            var me = this;
+            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+
+            me._triggerClose(true);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
         /**
          * Close parameter set dialog
          *
@@ -19274,6 +19309,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            me._triggerClose(false);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
     }); //$.widget

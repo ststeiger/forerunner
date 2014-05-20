@@ -192,6 +192,7 @@
     <Content Include="Forerunner\Common\js\MessageBox.js" />
     <Content Include="Forerunner\Dashboard\css\ReportProperties.css" />
     <Content Include="Forerunner\Dashboard\css\Dashboard-all.css" />
+    <Content Include="Forerunner\Dashboard\dashboards\2up2down-en.txt" />
     <Content Include="Forerunner\Dashboard\js\ReportProperties.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardBase.js" />

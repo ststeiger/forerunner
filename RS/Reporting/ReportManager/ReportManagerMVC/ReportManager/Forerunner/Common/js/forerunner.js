@@ -412,6 +412,11 @@ $(function () {
             routerRoute: function () { return (forerunner.ssr.constants.widgets.router + this.route).toLowerCase(); },
             /** widget + event, lowercase */
             historyRoute: function () { return (forerunner.ssr.constants.widgets.history + this.route).toLowerCase(); },
+
+            /** @constant */
+            close: "close",
+            /** widget + event, lowercase */
+            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); }
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

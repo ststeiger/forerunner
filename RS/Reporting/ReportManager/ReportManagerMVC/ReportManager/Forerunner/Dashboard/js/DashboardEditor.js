@@ -39,9 +39,10 @@ $(function () {
             var me = this;
             me.element.html(me.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+
                 // Create the button
                 var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
-                var $item = $(item);
                 $item.append($btn);
 
                 // Hook the onClick event
@@ -61,6 +62,9 @@ $(function () {
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-rp-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 me.options.$appContainer.append($dlg);
+                $dlg.on(events.reportPropertiesClose(), function (e, data) {
+                    me._onReportPropertiesClose.apply(me, arguments);
+                });
             }
             $dlg.reportProperties({
                 reportManagerAPI: me.options.reportManagerAPI,
@@ -69,6 +73,27 @@ $(function () {
                 reportId: e.target.name
             });
             $dlg.reportProperties("openDialog");
+        },
+        _onReportPropertiesClose: function (e, data) {
+            var me = this;
+            if (!data.isSubmit) {
+                // Wasn't a submit so just return
+                return;
+            }
+
+            // Create the reportViewerEZ
+            var $item = me.element.find("#" + data.reportId);
+            $item.reportViewerEZ({
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                isReportManager: false,
+                isFullScreen: false
+            });
+
+            // Load the selected report
+            var catalogItem = me.dashboardDef.reports[data.reportId].catalogItem;
+            var $reportViewer = $item.reportViewerEZ("getReportViewer");
+            $reportViewer.reportViewer("loadReport", catalogItem.Path);
         },
         _create: function () {
         },

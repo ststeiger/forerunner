@@ -1210,6 +1210,14 @@ $(function () {
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                respCols.ColumnHeaders = {};
+
+                if (tablixExt.ColumnHeaders) {
+                    for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
+                        //Just creating index, can all object later if needed
+                        respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
+                    }
+                }
                 if (respCols.ColHeaderRow === undefined)
                     respCols.ColHeaderRow = 0;
                 if (respCols.BackgroundColor === undefined)
@@ -1433,7 +1441,7 @@ $(function () {
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
                             //If responsive table add the show hide image and hook up
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
@@ -1441,7 +1449,7 @@ $(function () {
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
                     }
                     else {
-                        if (respCols.ColHeaderRow === Obj.RowIndex) {
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
@@ -1468,7 +1476,7 @@ $(function () {
                         $ExtRow = null;
                     }
                     else {
-                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow && $ExtRow.HasDrill !==true) {
                             //add drill  - rowspan and of none means most detail RowHeader
                             $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
                             $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
@@ -1491,6 +1499,16 @@ $(function () {
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
 
+        _isHeader: function(respCols,cell){
+            var me = this;
+
+            var cellDefName = (me._getSharedElements(cell.ReportItem.Elements.SharedElements)).Name ;
+            if (respCols.ColumnHeaders[cellDefName])
+                return true;
+            return false;
+
+
+        },
         replayRespTablix: function (replay) {
             var me = this;
 

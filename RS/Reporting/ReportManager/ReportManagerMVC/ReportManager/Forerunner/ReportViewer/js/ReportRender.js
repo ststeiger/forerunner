@@ -1210,7 +1210,7 @@ $(function () {
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
-                respCols.ColumnHeaders = {};
+                respCols.ColumnHeaders = {}; 
 
                 if (tablixExt && tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {

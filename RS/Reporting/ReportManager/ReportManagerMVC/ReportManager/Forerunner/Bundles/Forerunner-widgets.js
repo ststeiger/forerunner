@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2166,9 +2166,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {
@@ -9549,7 +9550,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.blur().attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {

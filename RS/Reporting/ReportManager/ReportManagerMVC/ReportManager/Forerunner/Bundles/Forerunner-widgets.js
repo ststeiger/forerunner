@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -7888,7 +7888,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
-                    $control.blur().attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
                     
                     if (me.getNumOfVisibleParameters() === 1) {

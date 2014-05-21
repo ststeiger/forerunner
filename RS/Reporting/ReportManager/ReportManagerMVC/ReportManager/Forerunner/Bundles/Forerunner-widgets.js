@@ -2166,9 +2166,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {

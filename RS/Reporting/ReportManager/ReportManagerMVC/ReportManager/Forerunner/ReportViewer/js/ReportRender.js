@@ -1212,7 +1212,7 @@ $(function () {
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
                 respCols.ColumnHeaders = {};
 
-                if (tablixExt.ColumnHeaders) {
+                if (tablixExt && tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
                         //Just creating index, can all object later if needed
                         respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;

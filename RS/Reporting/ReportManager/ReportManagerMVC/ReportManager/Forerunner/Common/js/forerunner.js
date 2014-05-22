@@ -1183,7 +1183,7 @@ $(function () {
 
             return (me.isiOS() || me.isAndroid() || me.isWindowsPhone());
 
-        },
+        }, 
         _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag

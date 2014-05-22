@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -1521,7 +1521,7 @@ $(function () {
                 me.element.append(pif);
             }
             
-
+             
         },
         _setPrint: function (pageLayout) {
             var me = this;

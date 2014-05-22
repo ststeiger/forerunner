@@ -62,6 +62,7 @@ namespace ReportManager.Controllers
                 result.Position = 0;
                 resp.Content = new StreamContent(result);               
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                resp.Headers.Add("Access-Control-Allow-Origin", "*");
 
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour

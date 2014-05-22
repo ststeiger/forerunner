@@ -955,39 +955,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   text-align:center;
 }
 
-/* Smartphones (landscape) ----------- */
-@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-    /* Styles */
 
-
-}
-
-/* iPads (landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-    /* Styles */
- 
-}
-
-/* iPads (portrait) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-    /* Styles */
- 
-}
-
-/* Desktops and laptops ----------- */
-@media only screen and (min-width : 1224px) {
-    /* Styles */
-}
-
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-    /* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
-    /* Styles */
-}
 .fr-ezviewer-container {
   display:block; 
   height: 100%; 

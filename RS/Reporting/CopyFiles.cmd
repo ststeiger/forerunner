@@ -24,6 +24,11 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportViewer\ReportViewer\PDFsharp\code\PdfSharp\bin\Release" %Destination%\bin
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\bin\Release" %Destination%\Config
 if ERRORLEVEL 8 (
 	goto :Error

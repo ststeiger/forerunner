@@ -1497,8 +1497,24 @@ $(function () {
             var me = this;
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;           
+
+            if (forerunner.device.isFirefox() || forerunner.device.isMobile()) {
+                window.open(url);
+            }
+            else {
+                var pif = me.element.find(".fr-print-iframe");
+                if (pif.length === 1) pif.detach();
+
+                var pif = $("<iframe/>");
+                pif.addClass("fr-print-iframe");
+                pif.attr("name", me.viewerID);
+                pif.attr("src", url);
+                pif.hide();
+                me.element.append(pif);
+            }
+            
+
         },
         _setPrint: function (pageLayout) {
             var me = this;

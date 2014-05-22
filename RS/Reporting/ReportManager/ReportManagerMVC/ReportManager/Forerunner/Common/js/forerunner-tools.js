@@ -43,7 +43,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "",
+            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -967,7 +967,7 @@ $(function () {
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
             //sharedClass: "fr-toolbar-hidden-on-very-large",
-            sharedClass: "z",
+            sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {

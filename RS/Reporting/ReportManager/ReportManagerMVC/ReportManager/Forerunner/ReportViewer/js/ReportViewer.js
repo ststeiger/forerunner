@@ -71,7 +71,8 @@ $(function () {
 
         _destroy: function () {
             //This needs to be changed to only remove the view function
-            $(window).off("resize");
+            //Baotong upadte it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
@@ -134,7 +135,7 @@ $(function () {
                 window.addEventListener("orientationchange", function () { me._ReRender.call(me); }, false);
 
             //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", function () { me._ReRender.call(me); });
+            $(window).on("resize", { me: me }, me._ReRenderCall);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -335,6 +336,12 @@ $(function () {
                 });
                 me._reLayoutPage(me.curPage);
             }
+        },
+        //Wrapper function, used to register window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+
+            me._ReRender.call(me);
         },
         _removeCSS: function () {
             var me = this;

@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -72,7 +72,8 @@ $(function () {
 
         _destroy: function () {
             //This needs to be changed to only remove the view function
-            $(window).off("resize");
+            //Baotong upadte it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
@@ -135,7 +136,7 @@ $(function () {
                 window.addEventListener("orientationchange", function () { me._ReRender.call(me); }, false);
 
             //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", function () { me._ReRender.call(me); });
+            $(window).on("resize", { me: me }, me._ReRenderCall);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -336,6 +337,12 @@ $(function () {
                 });
                 me._reLayoutPage(me.curPage);
             }
+        },
+        //Wrapper function, used to register window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+
+            me._ReRender.call(me);
         },
         _removeCSS: function () {
             var me = this;
@@ -1525,9 +1532,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {
@@ -2999,7 +3007,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.off(key);
+                    $toolEl.off(key, toolInfo.events[key]);
                 }
             }
         },
@@ -7904,7 +7912,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
-                    $control.blur().attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).attr("title", obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;
                     
                     if (me.getNumOfVisibleParameters() === 1) {

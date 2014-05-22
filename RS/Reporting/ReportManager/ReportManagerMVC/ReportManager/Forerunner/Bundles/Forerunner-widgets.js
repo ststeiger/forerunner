@@ -3800,7 +3800,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.off(key);
+                    $toolEl.off(key, toolInfo.events[key]);
                 }
             }
         },

@@ -1243,6 +1243,14 @@ $(function () {
             return ua.match(/(Chrome)/) !== null;
         },
 
+        /** @return {Boolean} Returns a boolean that indicates if it is a Mobile device */
+        isMobile: function(){
+            var me = this;
+
+            return (me.isiOS() || me.isAndroid() || me.isWindowsPhone());
+            
+        },
+
         _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag

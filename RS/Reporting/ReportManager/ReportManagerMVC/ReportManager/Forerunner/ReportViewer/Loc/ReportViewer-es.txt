@@ -81,7 +81,9 @@
     "dsCredential":"credenciales del origen de datos",
     "addToFavorites":"Añadir a Favoritos",
     "unzoom":"unzoom",
-    "search":"búsqueda"
+    "search":"búsqueda",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -183,5 +185,10 @@
   "explorerSearch": {
     "emptyError":"Los criterios de búsqueda no pueden estar vacíos",
     "notFound":"Ningún resultado coincide con su criterio de búsqueda, por favor, modifique su búsqueda."
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

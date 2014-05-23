@@ -80,7 +80,9 @@
 		"dsCredential":"Datasource Credential",
     "addToFavorites": "Add to Favorites",
     "unzoom": "unzoom",
-	"search":"Search"
+    "search":"Search",
+    "createDashboard": "Create Dashboard",
+    "editDashboard": "Edit Dashboard"
     },
     "print":{
     "title": "Print Report",
@@ -172,16 +174,26 @@
     "apply": "Save",
     "newSet": "New Set"
   },
-   "dsCredential": {
+  "dsCredential": {
     "title":"Data Source Credential",
-	"cancel":"Cancel",
-	"submit":"Submit",
-	"username":"Login name:",
-	"password":"Password:",
-	"reset":"Reset"
+	  "cancel":"Cancel",
+	  "submit":"Submit",
+	  "username":"Login name:",
+	  "password":"Password:",
+	  "reset":"Reset"
   },
   "explorerSearch":{
-	"emptyError":"Search criteria cannot be empty",
-	"notFound":"No results match your search criteria. Please refine your search."
+	  "emptyError":"Search criteria cannot be empty",
+	  "notFound":"No results match your search criteria. Please refine your search."
+  },
+  "RDLExt":{
+	"title":"RDL Extensions",
+	"submit":"Submit",
+	"cancel": "Cancel"
+	},
+  "createDashboard": {
+    "title":"Create Dashboard",
+	  "cancel":"Cancel",
+	  "submit":"Submit"
   }
 }

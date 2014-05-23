@@ -187,7 +187,11 @@
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
+    <Content Include="Forerunner\Common\js\History.js" />
     <Content Include="Forerunner\Common\js\MessageBox.js" />
+    <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />
+    <Content Include="Forerunner\Dashboard\js\DashboardBase.js" />
+    <Content Include="Forerunner\Dashboard\js\DashboardEditor.js" />
     <Content Include="Forerunner\Lib\jQuery\css\images\animated-overlay.gif" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_75_416ca3_40x100.png" />
@@ -218,10 +222,15 @@
     <Content Include="Forerunner\Lib\Misc\js\moment.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
+    <Content Include="Forerunner\Dashboard\css\dashboards.css" />
     <Content Include="Forerunner\ReportExplorer\css\icons128x128.css" />
+    <Content Include="Forerunner\ReportExplorer\css\CreateDashboard.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
+    <Content Include="Forerunner\Dashboard\dashboards\2Up1Down-en.txt" />
+    <Content Include="Forerunner\Dashboard\dashboards\SideBySide-en.txt" />
+    <Content Include="Forerunner\Dashboard\dashboards\dashboards-en.txt" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\icons128x128.png" />
@@ -229,6 +238,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
+    <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
@@ -239,6 +249,7 @@
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
+    <Content Include="Forerunner\ReportViewer\css\RDLExtDialog.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -262,6 +273,7 @@
     <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\DSCredential.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
+    <Content Include="Forerunner\ReportViewer\js\RDLExtDialog.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
@@ -284,9 +296,11 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
     <Content Include="Forerunner\version.txt" />
     <Content Include="QUnit\Index.html" />
-    <Content Include="QUnit\js\LocalizationTests.js" />
+    <Content Include="QUnit\js\HistoryTests.js" />
+    <Content Include="QUnit\lib\backbone-1.1.2\backbone.js" />
     <Content Include="QUnit\lib\QUnit\css\qunit-1.12.0.css" />
     <Content Include="QUnit\lib\QUnit\js\qunit-1.12.0.js" />
+    <Content Include="QUnit\lib\underscore-1.6.0\underscore.js" />
     <Content Include="Samples\BottomNav.html" />
     <Content Include="Samples\RenderJson.html" />
     <Content Include="Samples\FullPage.html" />
@@ -313,7 +327,7 @@
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />
-    <Content Include="Scripts\App\router.js" />
+    <Content Include="Scripts\App\mobilizer.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
     <Content Include="Forerunner\ReportViewer\css\ToolPane.css" />
@@ -338,13 +352,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\Util\backbone.js" />
-    <Content Include="Scripts\Util\backbone_ui.js" />
-    <Content Include="Scripts\Util\collection_view.js" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
-    <Content Include="Scripts\Util\laconic.js" />
-    <Content Include="Scripts\Util\modernizr-2.5.3.js" />
-    <Content Include="Scripts\Util\underscore.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -357,7 +365,6 @@
     <Content Include="Forerunner\ReportExplorer\images\accent.png" />
     <Content Include="Forerunner\ReportExplorer\images\bullet.png" />
     <Content Include="Forerunner\ReportExplorer\images\heroAccent.png" />
-    <Content Include="Scripts\Util\_references.js" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -397,6 +404,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Forerunner\Dashboard\images\" />
     <Folder Include="QUnit\css\" />
     <Folder Include="Scripts\Views\" />
   </ItemGroup>

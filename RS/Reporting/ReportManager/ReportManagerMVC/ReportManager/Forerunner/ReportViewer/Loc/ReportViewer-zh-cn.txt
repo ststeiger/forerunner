@@ -80,7 +80,9 @@
     "dsCredential":"数据源验证",
     "addToFavorites":"添加到收藏",
     "unzoom":"取消缩放",
-    "search":"搜索"
+    "search":"搜索",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"打印报表",
@@ -182,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"搜索条件不能为空",
     "notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

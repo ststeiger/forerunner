@@ -47,7 +47,11 @@ namespace ReportManager.Controllers
 
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
         {
-            return ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            Forerunner.SSRS.Manager.ReportManager rm = ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            
+            //If you need to specify your own credentials set them here, otherwise we will the forms auth cookie or the default network credentials
+            //rm.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));            
+            return rm;
         }
         
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
@@ -100,6 +104,9 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [HttpGet]
+        [ActionName("SaveReportProperty")]
+        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {

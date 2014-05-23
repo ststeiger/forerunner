@@ -170,6 +170,8 @@ $(function () {
             /** @constant */
             reportPrint: "reportPrint",
             /** @constant */
+            reportRDLExt: "reportRDLExt",          
+            /** @constant */
             userSettings: "userSettings",
             /** @constant */
             messageBox: "messageBox",
@@ -197,6 +199,18 @@ $(function () {
             reportExplorerToolpane: "reportExplorerToolpane",
             /** @constant */
             unzoomToolbar: "unzoomToolbar",
+            /** @constant */
+            router: "router",
+            /** @constant */
+            history: "history",
+            /** @constant */
+            createDashboard: "createDashboard",
+            /** @constant */
+            dashboardBase: "dashboardBase",
+            /** @constant */
+            dashboardEditor: "dashboardEditor",
+            /** @constant */
+            dashboardViewer: "dashboardViewer",
 
             /** @constant */
             namespace: "forerunner",
@@ -391,6 +405,13 @@ $(function () {
             findDone: "finddone",
             /** widget + event, lowercase */
             reportViewerFindDone: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.findDone).toLowerCase(); },
+
+            /** @constant */
+            route: "route",
+            /** widget + event, lowercase */
+            routerRoute: function () { return (forerunner.ssr.constants.widgets.router + this.route).toLowerCase(); },
+            /** widget + event, lowercase */
+            historyRoute: function () { return (forerunner.ssr.constants.widgets.history + this.route).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -580,6 +601,21 @@ $(function () {
      * @namespace
      */
     forerunner.helper = {
+
+        /**
+         * Returns a number array sorted in the given direction
+         *
+         * @member
+         * @param {array} array - Array to sort
+         * @param {boolean} asc - true for ascending false for decending
+         */
+        sortNumberArray: function (array, asc) {
+            if (asc)
+                array.sort(function (a, b) { return a - b; });
+            else
+                array.sort(function (a, b) { return b - a;});
+            return array;
+        },
         /**
          * Returns the number of elements or properties in an object
          *
@@ -876,10 +912,10 @@ $(function () {
     forerunner.localize = {
         _locData: {},
 
-        _getFallBackLanguage : function(locFileLocation, lang) {
+        _getFallBackLanguage: function (locFileLocation, lang, dataType) {
             if (lang.length > 2) {
                 lang = lang.toLocaleLowerCase().substring(0, 2);
-                return this._loadFile(locFileLocation, lang);
+                return this._loadFile(locFileLocation, lang, dataType);
             }
             return null;
         },
@@ -888,10 +924,11 @@ $(function () {
          * Returns the language specific data.
          *
          * @param {String} locFileLocation - The localization file location without the language qualifier
+         * @param {String} dataType - optional, ajax dataType. defaults to "json"
          *
          * @return {Object} Localization data
          */
-        getLocData: function (locFileLocation) {
+        getLocData: function (locFileLocation, dataType) {
             var languageList = this._getLanguages();
             var i;
             var lang;
@@ -901,7 +938,7 @@ $(function () {
                 for (i = 0; i < languageList.length && langData === null; i++) {
                     lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
-                    langData = this._loadFile(locFileLocation, lang);
+                    langData = this._loadFile(locFileLocation, lang, dataType);
                     if (forerunner.device.isAndroid() && langData === null) {
                         langData = this._getFallBackLanguage(locFileLocation, lang);
                     }
@@ -909,14 +946,14 @@ $(function () {
                 if (!forerunner.device.isAndroid()) {
                     for ( i = 0; i < languageList.length && langData === null; i++) {
                         lang = languageList[i];
-                        langData = this._getFallBackLanguage(locFileLocation, lang);
+                        langData = this._getFallBackLanguage(locFileLocation, lang, dataType);
                     }
                 }
             }
             
             // When all fails, load English.
             if (langData === null)
-                langData = this._loadFile(locFileLocation, "en");
+                langData = this._loadFile(locFileLocation, "en", dataType);
 
             return langData;
             
@@ -939,8 +976,11 @@ $(function () {
             });
             return returnValue;
         },        
-        _loadFile: function (locFileLocation, lang) {
+        _loadFile: function (locFileLocation, lang, dataType) {
             var me = this;
+            if (!dataType) {
+                dataType = "json";
+            }
             if (me._locData[locFileLocation] === undefined)
                 me._locData[locFileLocation] = {};
             if (me._locData[locFileLocation][lang] === undefined) {
@@ -948,7 +988,7 @@ $(function () {
                 // not require authn,
                 $.ajax({
                     url: locFileLocation + "-" + lang + ".txt",
-                    dataType: "json",
+                    dataType: dataType,
                     async: false,
                     success: function (data) {
                         me._locData[locFileLocation][lang] = data;
@@ -1309,7 +1349,8 @@ $(function () {
 
             me._removeEventsBinding();
             target.element.dialog("destroy");
-           
+            target.element.hide();
+
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },

@@ -10,6 +10,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
@@ -51,9 +52,6 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            
-            if (!me.options.navigateTo)
-                me.options.navigateTo = me._NavigateTo;
 
             if (!path)
                 path = "/";
@@ -83,35 +81,100 @@ $(function () {
             });
         },
 
-        _NavigateTo: function (action, path) {
+        // Initalize our internal navigateTo processing
+        _initNavigateTo: function () {
             var me = this;
-            
-            var $container = me.$appContainer;
-            var encodedPath = String(path).replace(/\//g, "%2f");
-            var targetUrl = "#" + action           
-            if (path) targetUrl += "/" + encodedPath;
-            
-            if (action === "explore") {                
-                $container.reportExplorerEZ("transitionToReportManager", path, null);                
+
+            // Assign the default navigateTo handler
+            me.options.navigateTo = function (action, path) {
+                me._navigateTo.apply(me, arguments);
+            };
+
+            // Create the forerunner router widget
+            me.router = $({}).router({
+                routes: {
+                    "": "transitionToReportManager",
+                    "explore/:path": "transitionToReportManager",
+                    "browse/:path": "transitionToReportViewer",
+                    "view/:args": "transitionToReportViewerWithRSURLAccess",
+                    "open/:path": "transitionToOpenResource",
+                    "search/:keyword": "transitionToSearch",
+                    "favorites": "transitionToFavorites",
+                    "recent": "transitionToRecent",
+                    "createDashboard/:name": "transitionToCreateDashboard"
+                }
+            });
+
+            // Hook the router route event
+            me.router.on(events.routerRoute(), function (event, data) {
+                me._onRoute.apply(me, arguments);
+            });
+
+            if (!me.options.historyBack) {
+                // Assign the default history back handler
+                me.options.historyBack = function () {
+                    window.history.back();
+                };
             }
-            else if (action === "home") {
-                targetUrl = "#";
-                $container.reportExplorerEZ("transitionToReportManager", path, null);
-            }
-            else if (action === "back") {
-                window.history.back();
-                return;
-            }
-            else if (action === "browse") {
-                $container.reportExplorerEZ("transitionToReportViewer", path);                
-            }
-            else {            
-                $container.reportExplorerEZ("transitionToReportManager", path, action);
-            }
-          
-            window.location.hash = targetUrl;
-            
+
+            forerunner.history.history("start");
         },
+        _onRoute: function (event, data) {
+            var me = this;
+            var path = args = keyword = name = data.args[0];
+
+            if (data.name === "transitionToReportManager") {
+                me.transitionToReportManager(path, null);
+            } else if (data.name === "transitionToReportViewer") {
+                var parts = path.split("?");
+                path = parts[0];
+                var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+                if (params) params = JSON.stringify({ "ParamsList": params });
+                me.transitionToReportViewer(path, params);
+            } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
+                var startParam = args.indexOf("&");
+                var path = startParam > 0 ? args.substring(1, startParam) : args;
+                var params = startParam > 0 ? args.substring(startParam + 1) : null;
+                if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
+                if (params) params = JSON.stringify({ "ParamsList": params });
+                me.transitionToReportViewer(path, params);
+            } else if (data.name === "transitionToOpenResource") {
+                me.transitionToReportManager(path, "resource");
+            } else if (data.name === "transitionToSearch") {
+                me.transitionToReportManager(keyword, "search");
+            } else if (data.name === "transitionToFavorites") {
+                me.transitionToReportManager(null, "favorites");
+            } else if (data.name === "transitionToRecent") {
+                me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToCreateDashboard") {
+                me.transitionToCreateDashboard(name);
+            }
+        },
+        _lastAction: null,
+        _navigateTo: function (action, path) {
+            var me = this;
+
+            if (path !== null) {
+                path = encodeURIComponent(path);
+            }
+
+            if (action === "home") {
+                me.router.router("navigate", "#", { trigger: true, replace: false });
+            } else if (action === "back") {
+                me.options.historyBack();
+            } else if (action === "favorites") {
+                me.router.router("navigate", "#favorites", { trigger: true, replace: false });
+            } else if (action === "recent") {
+                me.router.router("navigate", "#recent", { trigger: true, replace: false });
+            } else {
+                var targetUrl = "#" + action + "/" + path;
+                // Do not trigger for Firefox when we are changing the anchor
+                var trigger = !forerunner.device.isFirefox() || me._lastAction === action || !me._lastAction;
+                me.router.router("navigate", targetUrl, { trigger: trigger, replace: false });
+            }
+            me._lastAction = action;
+        },
+
         /**
          * Transition to ReportManager view.
          *
@@ -185,8 +248,6 @@ $(function () {
         transitionToReportViewer: function (path, params) {
             var me = this;
 
-            // We need to create the report explorer here so as to get the UserSettings needed in the case where
-            // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
@@ -204,12 +265,12 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
+                    isAdmin: me.options.isAdmin,
                 });
 
                 var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-
+                    path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }
@@ -217,9 +278,41 @@ $(function () {
 
             me.element.css("background-color", "");
         },
+        /**
+         * Transition to Create Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @param {String} name - Name of the dashboard template
+         */
+        transitionToCreateDashboard: function (templateName) {
+            var me = this;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack
+                });
+
+                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+            }, timeout);
+
+            me.element.css("background-color", "");
+        },
         _init: function () {
             var me = this;
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+
+            if (!me.options.navigateTo) {
+                me._initNavigateTo();
+            }
         },
         /**
          * Get report explorer toolbar

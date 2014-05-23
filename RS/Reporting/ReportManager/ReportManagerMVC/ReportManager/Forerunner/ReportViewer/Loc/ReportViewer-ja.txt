@@ -80,7 +80,9 @@
     "dsCredential":"データソースクレデンシャル",
     "addToFavorites":"お気に入りに追加",
     "unzoom":"ズーム解除",
-    "search":"検索"
+    "search":"検索",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -182,5 +184,10 @@
   "explorerSearch": {
     "emptyError":"検索基準は、空にすることはできません",
     "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

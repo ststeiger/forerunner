@@ -43,7 +43,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
+            sharedClass: "",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -778,6 +778,19 @@ $(function () {
                 }
             }
         },
+        /** @member */
+        itemRDLExt: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-button-RDLExt",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolPane.RDLExt,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showRDLExtDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
+                }
+            }
+        }
     };
 
     /**
@@ -906,7 +919,7 @@ $(function () {
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
             //sharedClass: "fr-toolbar-hidden-on-very-large",
-            sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
+            sharedClass: "z",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -924,6 +937,18 @@ $(function () {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
+        btnCreateDashboard: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-createdashboard",
+            imageClass: "fr-icons24x24-createdashboard",
+            tooltip: locData.toolbar.createDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
                 }
             }
         },
@@ -1200,7 +1225,7 @@ $(function () {
                     $accordionGroup.toggle();
                 }
             }
-        },
+        }
 
     };
 
@@ -1276,6 +1301,7 @@ $(function () {
                 }
             }
         }
+       
     };
 
     var tb = forerunner.ssr.tools.toolbar;

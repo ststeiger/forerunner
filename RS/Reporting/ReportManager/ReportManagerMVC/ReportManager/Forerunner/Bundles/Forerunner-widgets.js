@@ -1,3 +1,632 @@
+///#source 1 1 /Forerunner/Common/js/History.js
+/**
+ * @file
+ *  Defines the forerunner router and history widgets
+ *
+ *  This code was converted from the Backbone.js fragments. The Event
+ *  handling specific to Backbone was re-written to use jquery event
+ *  support as well as to remove any / all underlying undecore.js and
+ *  Backbone.js dependencies (E.g., Events).
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    // ---------------------------
+    // Underscore.js 1.4.3
+    var isFunction = function (obj) {
+        return typeof obj === "function";
+    };
+
+    var isRegExp = function (obj) {
+        return "[object RegExp]" === Object.prototype.toString.call(obj);
+    };
+
+    // If the value of the named property is a function then invoke it;
+    // otherwise, return it.
+    var result = function (object, property) {
+        if (object == null) return null;
+        var value = object[property];
+        return isFunction(value) ? value.call(object) : value;
+    };
+
+    // Shortcut function for checking if an object has a given property directly
+    // on itself (in other words, not on a prototype).
+    has = function (obj, key) {
+        return Object.hasOwnProperty.call(obj, key);
+    };
+
+    // Keep the identity function around for default iterators.
+    var identity = function (value) {
+        return value;
+    };
+
+    // Establish the object that gets returned to break out of a loop iteration.
+    var breaker = {};
+
+    // Save bytes in the minified (but not gzipped) version:
+    var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+    // Determine if at least one element in the object matches a truth test.
+    // Delegates to **ECMAScript 5**'s native `some` if available.
+    // Aliased as `any`.
+    var nativeSome = ArrayProto.some;
+    var any = function (obj, predicate, context) {
+        predicate || (predicate = identity);
+        var result = false;
+        if (obj == null) return result;
+        if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+        $.each(obj, function (index, value) {
+            if (result || (result = predicate.call(context, value, index, obj))) return breaker;
+        });
+        return !!result;
+    };
+
+    // Return the results of applying the iterator to each element.
+    // Delegates to **ECMAScript 5**'s native `map` if available.
+    var nativeMap = ArrayProto.map;
+    var map = collect = function (obj, iterator, context) {
+        var results = [];
+        if (obj == null) return results;
+        if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+        $.each(obj, function (index, value) {
+            results.push(iterator.call(context, value, index, obj));
+        });
+        return results;
+    };
+
+
+
+    // Retrieve the names of an object's properties.
+    // Delegates to **ECMAScript 5**'s native `Object.keys`
+    var nativeKeys = Object.keys;
+    var keys = nativeKeys || function (obj) {
+        if (obj !== Object(obj)) throw new TypeError('Invalid object');
+        var keysArray = [];
+        for (var key in obj) if (has(obj, key)) keysArray[keysArray.length] = key;
+        return keysArray;
+    };
+
+    var slice = Array.prototype.slice;
+    var splice = Array.prototype.splice;
+
+    // Underscore.js 1.4.3
+    // ---------------------------
+
+    // ---------------------------
+    // Adapted from backbone.js 1.1.2
+
+    // Cached regular expressions for matching named param parts and splatted
+    // parts of route strings.
+    var optionalParam = /\((.*?)\)/g;
+    var namedParam = /(\(\?)?:\w+/g;
+    var splatParam = /\*\w+/g;
+    var escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+
+    /**
+     * The router widget is used to provide methods for routing client-side pages,
+     * and connecting them to actions and events. It works in concert with the 
+     * forerunner.history widget.
+     *
+     * @namespace $.forerunner.router
+     * @prop {Object} options - The options for router
+     * @prop {String} options.routes - hash of routes.
+     * @example
+     *  //
+     *  // Callback Router Example
+     *  var router = $({}).router({
+     *      routes: {
+     *          "": "home",
+     *          "home": "home",
+     *          "favorites": "favorites",
+     *          "browse/:path": "browse"
+     *      },
+     *      home: function () {
+     *          // Your code goes here
+     *      },
+     *      favorites: function () {
+     *          // Your code goes here
+     *      },
+     *      browse: function (path) {
+     *          // Your code goes here
+     *      },
+     *  });
+     *
+     *  //
+     *  // Event Router Example
+     *  var EventRouter = $({}).router({
+     *      routes: {
+     *          "": "home",
+     *          "home": "home",
+     *          "favorites": "favorites",
+     *          "browse/:path": "browse"
+     *      },
+     *  });
+     * 
+     *  // Hook up to the router events
+     *  var onRoute = function (event, data) {
+     *      if (data.name === "home") {
+     *          // Your code goes here
+     *      } else if (data.name === "favorites") {
+     *          // Your code goes here
+     *      } else if (data.name === "browse") {
+     *          // Your code goes here
+     *      }
+     *  }
+     *
+     *  // Hook up the onRoute handler to the route event
+     *  router.on(events.routerRoute(), onRoute);
+     *
+     * Notes:
+     *  - The callback functions are defined as members of the options
+     */
+    $.widget(widgets.getFullname(widgets.router), {
+        options: {
+            routes: {}
+        },
+        _create: function () {
+            var me = this;
+            if (me.options.routes) {
+                me.routes = me.options.routes;
+            }
+            me._bindRoutes();
+        },
+        _init: function () {
+        },
+        /**
+         * Manually create a route for the router/
+         *
+         * @function $.forerunner.router#route
+         *
+         * @param {String} route - routing string or regular expression
+         * @param {String} name - Used as the callback function name and / or a
+         *                        property of the data object passed to the route
+         *                        event.
+         * @param {String} callback - function to call when a route is matched if
+         *                            callback is ommitted me[name] will be used
+         * @example
+         * 
+         * The routes hash maps URLs with parameters to functions on your router (or just
+         * direct function definitions, if you prefer). Routes can contain parameter parts,
+         * :param, which match a single URL component between slashes; and splat parts *splat,
+         * which can match any number of URL components.
+         *
+         * Part of a route can be made optional by surrounding it in parentheses (/:optional). 
+         * For example, a route of "search/:query/p:page" will match a fragment of 
+         * #search/obama/p2, passing "obama" and "2" to the action. A route of "file/*path" will
+         * match #file/nested/folder/file.txt, passing "nested/folder/file.txt" to the action. 
+         * A route of "docs/:section(/:subsection)" will match #docs/faq and #docs/faq/installing,
+         * passing "faq" to the action in the first case, and passing "faq" and "installing" to the
+         * action in the second. 
+         *
+         * Trailing slashes are treated as part of the URL, and (correctly) treated as a unique route
+         * when accessed. docs and docs/ will fire different callbacks. If you can't avoid generating
+         * both types of URLs, you can define a "docs(/)" matcher to capture both cases. 
+         * 
+         * When the visitor presses the back button, or enters a URL, and a particular route is matched,
+         * the name of the action will be fired as an event, so that other objects can listen to the
+         * router, and be notified. In the following example, visiting #help/uploading will fire a
+         * forerunner.ssr.constants.events.routerRoute() event from the router. 
+         *
+         * routes: {
+         *   "help/:page":         "help",
+         *   "download/*path":     "download",
+         *   "folder/:name":       "openFolder",
+         *   "folder/:name-:mode": "openFolder"
+         * }
+         * 
+         * router.on(forerunner.ssr.constants.events.routerRoute(), function(data) {
+         *  // Where:
+         *  //  data.name = "help"
+         *  //  data.args[0] = "uploading"
+         * });
+         *
+         * // You can also hook routes on the history object as follows
+         * forerunner.history.on(events.historyRoute(), onRoute);
+         */
+        route: function (route, name, callback) {
+            var me = this;
+            if (!isRegExp(route)) {
+                route = me._routeToRegExp(route);
+            }
+            if (isFunction(name)) {
+                callback = name;
+                name = '';
+            }
+            if (!callback) {
+                callback = me.options[name];
+            }
+            forerunner.history.history("route", route, function (fragment) {
+                var args = me._extractParameters(route, fragment);
+                me._execute(callback, args);
+                me._trigger(events.route, null, { name: name, args: args });
+                forerunner.history.history("triggerRoute", { route: me, name: name, args: args });
+            });
+            return me;
+        },
+
+        // Execute a route handler with the provided parameters.  This is an
+        // excellent place to do pre-route setup or post-route cleanup.
+        _execute: function (callback, args) {
+            if (callback) callback.apply(this, args);
+        },
+
+        /**
+         * Updates the URL. If you wish to also call the route function, set the
+         * trigger option to true. To update the URL without creating an entry in
+         * the browser's history, set the replace option to true.
+         *
+         * @function $.forerunner.router#navigate
+         *
+         * @param {String} fragment - URL fragment
+         * @param {Object} options - Navigation options
+         */
+        navigate: function (fragment, options) {
+            forerunner.history.history("navigate", fragment, options);
+            return this;
+        },
+
+        // Bind all defined routes to `Backbone.history`. We have to reverse the
+        // order of the routes here to support behavior where the most general
+        // routes can be defined at the bottom of the route map.
+        _bindRoutes: function () {
+            if (!this.routes) return;
+            this.routes = result(this, 'routes');
+            var route, routes = keys(this.routes);
+            while ((route = routes.pop()) != null) {
+                this.route(route, this.routes[route]);
+            }
+        },
+
+        // Convert a route string into a regular expression, suitable for matching
+        // against the current location hash.
+        _routeToRegExp: function (route) {
+            route = route.replace(escapeRegExp, '\\$&')
+                         .replace(optionalParam, '(?:$1)?')
+                         .replace(namedParam, function (match, optional) {
+                             return optional ? match : '([^/?]+)';
+                         })
+                         .replace(splatParam, '([^?]*?)');
+            return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
+        },
+
+        // Given a route, and a URL fragment that it matches, return the array of
+        // extracted decoded parameters. Empty or unmatched parameters will be
+        // treated as `null` to normalize cross-browser behavior.
+        _extractParameters: function (route, fragment) {
+            var params = route.exec(fragment).slice(1);
+            return map(params, function (param, i) {
+                // Don't decode the search params.
+                if (i === params.length - 1) return param || null;
+                return param ? decodeURIComponent(param) : null;
+            });
+        }
+    });  // $.widget router
+
+    // Cached regex for stripping a leading hash/slash and trailing space.
+    var routeStripper = /^[#\/]|\s+$/g;
+
+    // Cached regex for stripping leading and trailing slashes.
+    var rootStripper = /^\/+|\/+$/g;
+
+    // Cached regex for detecting MSIE.
+    var isExplorer = /msie [\w.]+/;
+
+    // Cached regex for removing a trailing slash.
+    var trailingSlash = /\/$/;
+
+    // Cached regex for stripping urls of hash.
+    var pathStripper = /#.*$/;
+
+    // Has the history handling already been started?
+    var historyStarted = false;
+
+    /**
+     * The history widget is a singleton widget accessed via the reference
+     * forerunner.history.
+     *
+     * @namespace $.forerunner.history
+     *
+     * @example
+     *      forerunner.history.history("start");
+     *
+     * Notes:
+     *  - history is adapted from backbone.js 1.1.2 but it is packaged as a widget
+     *    and all backbone and underscore dependencies have been removed.
+     *  - history has been designed and tested to peacefully co-exist with
+     *    Backbone.history
+     *  - You shouldn't ever have to create this widget
+     *  - pushState support exists on a purely opt-in basis. See the options
+     *    above. Older browsers that don't support pushState will continue to
+     *    use hash-based URL fragments, and if a hash URL is visited by a
+     *    pushState-capable browser, it will be transparently upgraded to the
+     *    true URL. Note that using real URLs requires your web server to be
+     *    able to correctly render those pages, so back-end changes are required
+     *    as well. For example, if you have a route of /documents/100, your web
+     *    server must be able to serve that page, if the browser visits that URL
+     *    directly. For full search-engine crawlability, it's best to have the
+     *    server generate the complete HTML for the page ... but if it's a web
+     *    application, just rendering the same content you would have for the root
+     *    URL, and filling in the rest with Backbone Views and JavaScript works fine. 
+     */
+    $.widget(widgets.getFullname(widgets.history), {
+        options: {
+        },
+        _create: function () {
+            var me = this;
+            this.handlers = [];
+        },
+        _init: function () {
+            // Ensure that `History` can be used outside of the browser.
+            if (typeof window !== 'undefined') {
+                this.location = window.location;
+                this.history = window.history;
+            }
+        },
+        /**
+         * Returns true if forerunner.history has been started
+         *
+         * @function $.forerunner.history#isStarted
+         */
+        isStarted: function () {
+            return historyStarted;
+        },
+        // The default interval to poll for hash changes, if necessary, is
+        // twenty times a second.
+        _interval: 50,
+
+        // Are we at the app root?
+        atRoot: function () {
+            return this.location.pathname.replace(/[^\/]$/, '$&/') === this.root;
+        },
+
+        // Gets the true hash value. Cannot use location.hash directly due to bug
+        // in Firefox where location.hash will always be decoded.
+        getHash: function (window) {
+            var match = (window || this).location.href.match(/#(.*)$/);
+            return match ? match[1] : '';
+        },
+
+        // Get the cross-browser normalized URL fragment, either from the URL,
+        // the hash, or the override.
+        getFragment: function (fragment, forcePushState) {
+            if (fragment == null) {
+                if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+                    fragment = decodeURI(this.location.pathname + this.location.search);
+                    var root = this.root.replace(trailingSlash, '');
+                    if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
+                } else {
+                    fragment = this.getHash();
+                }
+            }
+            return fragment.replace(routeStripper, '');
+        },
+
+        triggerRoute: function (data) {
+            this._trigger(events.route, null, data);
+        },
+
+        /**
+         * Starts monitoring hashChanged events and triggers all registered routes and / or
+         * callbacks
+         *
+         * @function $.forerunner.history#start
+         *
+         * @param {Object} options - Start options
+         * @prop {Object} options - The options for router
+         * @prop {Bool} options.pushState - True indicates you would like to use
+         *                                  pushState support in your application
+         * @prop {String} options.root - If your application is not being served
+         *                               from the root url / of your domain, use
+         *                               this parameter.
+         * @prop {String} options.silent - True indicates to not trigger the initial
+         *                                 route when starting up.
+         * @example
+         *  forerunner.history.history("start");
+         *
+         *  Notes:
+         *  To indicate that you'd like to use HTML5 pushState support in your application,
+         *  use Backbone.history.start({pushState: true}). If you'd like to use pushState,
+         *  but have browsers that don't support it natively use full page refreshes
+         *  instead, you can add {hashChange: false} to the options. 
+         *
+         *  If your application is not being served from the root url / of your domain, be
+         *  sure to tell History where the root really is, as an option:
+         *  forerunner.history.history("start", {pushState: true, root: "/public/search/"});
+         *
+         *  When called, if a route succeeds with a match for the current URL, 
+         *  forerunner.history.start() returns true. If no defined route matches the
+         *  current URL, it returns false. 
+         */
+        start: function (options) {
+            var me = this;
+            if (historyStarted) {
+                return false;
+            }
+            historyStarted = true;
+
+            // Figure out the initial configuration. Do we need an iframe?
+            // Is pushState desired ... is it available?
+            $.extend(me.options, { root: '/' }, options);
+            me.root = me.options.root;
+            me._wantsHashChange = me.options.hashChange !== false;
+            me._wantsPushState = !!me.options.pushState;
+            me._hasPushState = !!(me.options.pushState && me.history && me.history.pushState);
+            var fragment = me.getFragment();
+            var docMode = document.documentMode;
+            var oldIE = (isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
+
+            // Normalize root to always include a leading and trailing slash.
+            me.root = ('/' + me.root + '/').replace(rootStripper, '/');
+
+            if (oldIE && me._wantsHashChange) {
+                var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
+                me.iframe = frame.hide().appendTo('body')[0].contentWindow;
+                me.navigate(fragment);
+            }
+
+            // Depending on whether we're using pushState or hashes, and whether
+            // 'onhashchange' is supported, determine how we check the URL state.
+            if (me._hasPushState) {
+                $(window).on('popstate', function () {
+                    me.checkUrl.call(me);
+                });
+            } else if (me._wantsHashChange && ('onhashchange' in window) && !oldIE) {
+                $(window).on('hashchange', function () {
+                    me.checkUrl.call(me);
+                });
+            } else if (me._wantsHashChange) {
+                me._checkUrlInterval = setInterval(function () {
+                    me.checkUrl.call(me);
+                }, me.interval);
+            }
+
+            // Determine if we need to change the base url, for a pushState link
+            // opened by a non-pushState browser.
+            me.fragment = fragment;
+            var loc = me.location;
+
+            // Transition from hashChange to pushState or vice versa if both are
+            // requested.
+            if (me._wantsHashChange && me._wantsPushState) {
+
+                // If we've started off with a route from a `pushState`-enabled
+                // browser, but we're currently in a browser that doesn't support it...
+                if (!me._hasPushState && !me.atRoot()) {
+                    me.fragment = me.getFragment(null, true);
+                    me.location.replace(me.root + '#' + me.fragment);
+                    // Return immediately as browser will do redirect to new url
+                    return true;
+
+                    // Or if we've started out with a hash-based route, but we're currently
+                    // in a browser where it could be `pushState`-based instead...
+                } else if (me._hasPushState && me.atRoot() && loc.hash) {
+                    me.fragment = me.getHash().replace(routeStripper, '');
+                    me.history.replaceState({}, document.title, me.root + me.fragment);
+                }
+
+            }
+
+            if (!me.options.silent) {
+                return me.loadUrl();
+            }
+        },
+
+        // Disable Backbone.history, perhaps temporarily. Not useful in a real app,
+        // but possibly useful for unit testing Routers.
+        stop: function () {
+            $(window).off('popstate').off('hashchange');
+            clearInterval(this._checkUrlInterval);
+            historyStarted = false;
+
+            // Clear all the route handlers. This is done this way to support unit testing.
+            // Each time a test is run and start is called the routes must be setup for that
+            // test. Then at the end of the test call stop.
+            this.handlers.length = 0;
+        },
+
+        // Add a route to be tested when the fragment changes. Routes added later
+        // may override previous routes.
+        route: function (route, callback) {
+            this.handlers.unshift({ route: route, callback: callback });
+        },
+
+        // Checks the current URL to see if it has changed, and if it has,
+        // calls `loadUrl`, normalizing across the hidden iframe.
+        checkUrl: function (e) {
+            var current = this.getFragment();
+            if (current === this.fragment && this.iframe) {
+                current = this.getFragment(this.getHash(this.iframe));
+            }
+            if (current === this.fragment) return false;
+            if (this.iframe) this.navigate(current);
+            this.loadUrl();
+        },
+
+        // Attempt to load the current URL fragment. If a route succeeds with a
+        // match, returns `true`. If no defined routes matches the fragment,
+        // returns `false`.
+        loadUrl: function (fragment) {
+            fragment = this.fragment = this.getFragment(fragment);
+            return any(this.handlers, function (handler) {
+                if (handler.route.test(fragment)) {
+                    handler.callback(fragment);
+                    return true;
+                }
+            });
+        },
+
+        // Save a fragment into the hash history, or replace the URL state if the
+        // 'replace' option is passed. You are responsible for properly URL-encoding
+        // the fragment in advance.
+        //
+        // The options object can contain `trigger: true` if you wish to have the
+        // route callback be fired (not usually desirable), or `replace: true`, if
+        // you wish to modify the current URL without adding an entry to the history.
+        navigate: function (fragment, options) {
+            if (!historyStarted) return false;
+            if (!options || options === true) options = { trigger: !!options };
+
+            var url = this.root + (fragment = this.getFragment(fragment || ''));
+
+            // Strip the hash for matching.
+            fragment = fragment.replace(pathStripper, '');
+
+            if (this.fragment === fragment) return;
+            this.fragment = fragment;
+
+            // Don't include a trailing slash on the root.
+            if (fragment === '' && url !== '/') url = url.slice(0, -1);
+
+            // If pushState is available, we use it to set the fragment as a real URL.
+            if (this._hasPushState) {
+                this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
+
+                // If hash changes haven't been explicitly disabled, update the hash
+                // fragment to store history.
+            } else if (this._wantsHashChange) {
+                this._updateHash(this.location, fragment, options.replace);
+                if (this.iframe && (fragment !== this.getFragment(this.getHash(this.iframe)))) {
+                    // Opening and closing the iframe tricks IE7 and earlier to push a
+                    // history entry on hash-tag change.  When replace is true, we don't
+                    // want this.
+                    if (!options.replace) this.iframe.document.open().close();
+                    this._updateHash(this.iframe.location, fragment, options.replace);
+                }
+
+                // If you've told us that you explicitly don't want fallback hashchange-
+                // based history, then `navigate` becomes a page refresh.
+            } else {
+                return this.location.assign(url);
+            }
+            if (options.trigger) return this.loadUrl(fragment);
+        },
+
+        // Update the hash location, either replacing the current entry, or adding
+        // a new one to the browser history.
+        _updateHash: function (location, fragment, replace) {
+            if (replace) {
+                var href = location.href.replace(/(javascript:|#).*$/, '');
+                location.replace(href + '#' + fragment);
+            } else {
+                // Some browsers require that `hash` contains a leading #.
+                location.hash = '#' + fragment;
+            }
+        }
+    });  // $.widget
+
+    // Adapted from backbone.js
+    // ---------------------------
+
+    // Create the singleton history object
+    forerunner.history = $({}).history({});
+
+});  // $(function
+
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
@@ -70,6 +699,7 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
+            isAdmin: false,
         },
 
         _destroy: function () {
@@ -122,6 +752,9 @@ $(function () {
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
             
+            //Test admin
+            me.options.isAdmin = true;
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -327,11 +960,10 @@ $(function () {
         _ReRender: function () {
             var me = this;
 
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
-                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me._getPageContainer(i).html("");
-                }
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                $.each(me.pages, function (index, page) {
+                    page.needsLayout = true;
+                });
                 me._setPage(me.curPage);
             }
         },
@@ -1088,8 +1720,11 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        
                     }
                     else
                         me.lock = 0;
@@ -1856,7 +2491,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
             var me = this;
 
             if (flushCache === true)
@@ -1910,6 +2545,8 @@ $(function () {
                                 me._navToLink(bookmarkID);
                             if (flushCache !== true)
                                 me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -2009,7 +2646,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
             }
 
             me.pages[pageNum].isRendered = true;
@@ -2268,6 +2905,59 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        showRDLExtDialog: function () {
+            var me = this;
+
+            var dlg = $(".fr-rdl-section").first();
+
+            if (dlg.length ===0) {
+                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append(dlg);
+                dlg.reportRDLExt({ reportViewer: me });
+            }
+            dlg.reportRDLExt("openDialog");
+            
+        },
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try{
+                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       value:RDL,
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       return true;
+                   },
+                   fail: function (data){
+                       return false;
+                   },
+                   async: false
+               });
+            
+
+        },
+
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -2297,6 +2987,10 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+            if (me.$RDLExtDialog) {
+                me.$RDLExtDialog.reportRDLExt("destroy");
+            }
+            
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -3438,6 +4132,19 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
+            // Handle any / all layout changes when the history routes change
+            forerunner.history.on(events.historyRoute(), function (e, data) {
+                if (data.name === "transitionToReportManager" ||
+                    data.name === "transitionToOpenResource" ||
+                    data.name === "transitionToSearch") {
+                    forerunner.device.allowZoom(false);
+                    $("html").addClass("fr-Explorer-background");
+                } else if (data.name === "transitionToReportViewer" ||
+                           data.name === "transitionToReportViewerWithRSURLAccess") {
+                    $("html").removeClass("fr-Explorer-background");
+                }
+            });
+
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
@@ -4376,12 +5083,14 @@ $(function () {
         },
         _viewerItems: function (allButtons) {
             var listOfItems;
+            var me = this;
 
             if (allButtons === true || allButtons === undefined)
                 listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
                 listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
+            //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
@@ -4389,6 +5098,8 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
+            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
+                listOfItems = listOfItems.concat([tp.itemRDLExt]);
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -4399,7 +5110,7 @@ $(function () {
                 me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
             }
             else {
-                me.element.find('.fr-toolbar-numPages-button').html("?");
+                me.element.find(".fr-toolbar-numPages-button").html("?");
             }
             
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
@@ -4801,9 +5512,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, /*tb.btnCreateDashboard,*/ tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(7, true, [tb.btnLogOff]);
+                me.addTools(8, true, [tb.btnLogOff]);
             }
             me._initCallbacks();
 
@@ -5130,7 +5841,17 @@ $(function () {
             $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
-            $item.append($caption);            
+            $item.append($caption);
+
+            //Description
+            var $desc = new $("<div />");
+            //$desc.addClass("fr-explorer-caption");
+            var $desctext = new $("<div />");
+            $desctext.addClass("fr-explorer-item-desc");
+            $desctext.attr("title", catalogItem.Description);
+            $desctext.html(catalogItem.Description);
+            $desc.append($desctext);
+            $item.append($desc);
            
             return $item;
         },
@@ -5152,6 +5873,7 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
+            me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;
@@ -5171,11 +5893,11 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?"
+            var url = me.options.reportManagerAPI + "/Resource?";
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
-            var $if = $("<iframe/>")
+            var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
             //$if.attr("scrolling", "no");
@@ -5193,7 +5915,7 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state == "complete" || !state) {//loading,interactive,complete       
+                        if (state === "complete" || !state) {//loading,interactive,complete       
                             me._setIframeHeight(frame);
                         }
                         else {
@@ -5317,15 +6039,34 @@ $(function () {
             }
         },
         /**
+         * Show the create dashboard modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showCreateDashboardDialog
+         */
+        showCreateDashboardDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-cdb-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.createDashboard({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+                me._createDashboardDialog = $dlg;
+            }
+            me._createDashboardDialog.createDashboard("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          */
-        showUserSettingsDialog : function() {
+        showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function(){
+        savedPath: function () {
             var me = this;
             if (me.options.view === "catalog") {
                 me.priorExplorerPath = me.options.path;
@@ -5517,7 +6258,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -5632,7 +6373,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
    
     //  The ReportIemContext simplifies the signature for all of the functions to pass context around
-    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
+    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation,ApplyBackgroundColor) {
         this.RS = RS;
         this.CurrObj = CurrObj;
         this.CurrObjIndex = CurrObjIndex;
@@ -5640,6 +6381,7 @@ $(function () {
         this.$HTMLParent = $HTMLParent;
         this.Style = Style;
         this.CurrLocation = CurrLocation;
+        this.ApplyBackgroundColor = ApplyBackgroundColor;
     }
     function layout() {
         this.ReportItems = {};
@@ -5694,6 +6436,9 @@ $(function () {
         _create: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
+            me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
+            me._maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -5716,6 +6461,11 @@ $(function () {
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            me._currentWidth = me.options.reportViewer.element.width();
+            if (me.Page.Replay === undefined)
+                me.Page.Replay = {};
+
+            
 
             me._createStyles(reportViewer);
             $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
@@ -5980,6 +6730,9 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
+            
+            if (Math.abs(me._currentWidth - me.options.reportViewer.element.width()) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                me._currentWidth = me.options.reportViewer.element.width();
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
@@ -5996,7 +6749,7 @@ $(function () {
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
-            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+            me.element.hide().show(0);
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
@@ -6152,7 +6905,7 @@ $(function () {
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
             //This fixed an IE bug for duplicate syyles
-            if (RIContext.CurrObjParent.Type !== "Tablix") {
+            if (RIContext.CurrObjParent.Type !== "Tablix" || RIContext.ApplyBackgroundColor) {
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
@@ -6696,8 +7449,9 @@ $(function () {
                 Style += "height:" + height + "mm;";
             
             //Row and column span
-            if (Obj.RowSpan !== undefined)
+            if (Obj.RowSpan !== undefined) {
                 $Cell.attr("rowspan", Obj.RowSpan);
+            }
             if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
                 
@@ -6745,7 +7499,7 @@ $(function () {
             
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
-            $Tablix.attr("Style", Style);
+            
             $Tablix.addClass("fr-render-tablix");
             $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
@@ -6753,10 +7507,87 @@ $(function () {
 
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
-                var colgroup = $("<colgroup/>");
-                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                var colgroup = $("<colgroup/>");               
+                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var cols;
+                //Setup the responsive columns def
+                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                    var notdone = true;
+                    var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                    var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
+                    var maxPri = -1;
+                    var foundCol;
+                    
+                    if (tablixExt && tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                        for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
+                        }
+                    }
+                     
+
+                    while (notdone) {
+                        maxPri = -1;
+
+                        //If the author has supplied instructions for minimizing the tablix, determine columns here                            
+                        if (tablixExt && tablixExt.Columns) {
+
+                            //if not all columns are in the array, use the ones that are missing first
+                            if (respCols.ColumnCount > tablixExt.Columns.length) {
+                                for (cols = respCols.ColumnCount-1; cols >= 0; cols--) {
+                                    if (respCols.Columns[cols] === undefined) {
+                                        foundCol = cols;
+                                        respCols.Columns[foundCol] = { show: false };
+                                        break;
+                                    }
+                                }
+
+                            }
+                            else {
+                                for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                        nextColIndex = cols;
+                                        maxPri = tablixExt.Columns[cols].Pri;
+                                    }
+                                }
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
+                                respCols.Columns[foundCol] = { show: false };
+                            }
+                                                                                 
+                            respCols.ColumnCount--;
+                        
+                            }
+                        //Just remove from the right
+                        else {
+                            nextColIndex--;
+                            foundCol = nextColIndex;
+                            respCols.Columns[foundCol] = { show: false };
+
+                        tablixwidth -= tablixCols[foundCol].Width;
+
+                        //Check if we are done                        
+                        if (tablixwidth < viewerWidth || respCols.ColumnCount ===0) {
+                            notdone = false;
+                            //Show if more then half is visible
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * .9 || respCols.ColumnCount===0) {
+                                respCols.Columns[foundCol].show = true;
+                                respCols.ColumnCount++;
+                            }
+                        }
+                    }
+                }
+               //create the colgroup from visible columns
+                for (cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    if (respCols.Columns[cols]=== undefined)
+                        respCols.Columns[cols] = { show: true };
+                    else if (respCols.Columns[cols].show === false)
+                        respCols.isResp = true;
+
                     colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                 }
+                $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
@@ -6817,16 +7648,27 @@ $(function () {
             var $Row = State.Row;
             var HasFixedCols = false;
             var HasFixedRows = false;
+            var CellHeight;
+            var CellWidth;
+            if (State.ExtRow === undefined && respCols.isResp) {
+                $ExtRow.hide();
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
+                if (respCols.isResp && $ExtRow)
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                    $FixedColHeader.append($Row.clone(true, true));
                 }
 
                 $Row = new $("<TR/>");
+                if (respCols.isResp) {
+                    $ExtRow = new $("<TR/>");
+                    $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtRow.append($ExtCell);
+                    $ExtRow.hide();
+                }
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -6855,22 +7697,144 @@ $(function () {
                     HasFixedCols = true;
             }
 
+            var $Drilldown;
+            CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
             if (Obj.Type === "BodyRow") {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {                  
-                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                    CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
+                    $Drilldown = undefined;
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
+                            $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
+                            $ExtRow.HasDrill = true;
+                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
+                            respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
+                            respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
+                            $ExtRow = null;
+                            $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell){
-                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
+                if (Obj.Cell) {
+                    if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
+                        var h = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
+                        if (respCols.Columns[Obj.ColumnIndex].Header ===undefined)
+                            respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");
+                        
+                        respCols.Columns[Obj.ColumnIndex].Header.append(h);                                                   
+                        respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
+                        $ExtRow = null;
+                    }
+                    else {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
+                            //add drill  - rowspan and of none means most detail RowHeader
+                            $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
+                            $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
+                            $ExtRow.HasDrill = true;
+                        }
+                        //This is a hack for now, colIndex 0 makes a big assumption - but a pretty safe one
+                        if (respCols.isResp && Obj.RowSpan !== undefined && Obj.ColumnIndex===0) {
+                            if (Obj.Type === "Corner")
+                                $Row.addClass("fr-resp-corner");
+                            else
+                                $Row.addClass("fr-resp-rowspan");
+                        }
+                        $Row.append(me._writeTablixCell(RIContext, Obj, Index, undefined, $Drilldown));
+                    }
                     State.CellCount += 1;
+                
                     }
             }
             LastObjType = Obj.Type;
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
-        _batchSize: 3000,
+
+        replayRespTablix: function (replay) {
+            var me = this;
+
+            if (replay) {
+                $.each(replay, function (i, obj) {
+                    var icon;
+                    var ExtRow;
+                    var cell;
+
+                    if (obj.Visible) {
+                        //find cell
+                        cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
+                        icon = cell.prev();
+                        ExtRow = icon.parent().parent().parent().next();
+
+                        me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+                    }
+                });
+            }
+
+        },
+        _addTablixRespDrill: function ($ExtRow,ColIndex,$Tablix,Cell) {
+            var me = this;
+
+            var $Drilldown = new $("<div/>");
+            $Drilldown.html("&nbsp");
+            $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respIcon");
+
+            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
+
+                me._TablixRespShow(this, e.data.ExtRow, e.data.ColIndex, e.data.UniqueName, e.data.$Tablix);
+                return;
+
+            });
+            $Drilldown.addClass("fr-core-cursorpointer");
+            return $Drilldown;
+        },
+
+        _TablixRespShow: function (icon,ExtRow,ColIndex,UniqueName,$Tablix) {
+            var me = this;
+            var show = !ExtRow.is(":visible");
+            var delta;
+
+            if (show) {
+                ExtRow.show();
+                delta = 1;
+                me.Page.Replay[UniqueName] = { Visible: true, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+            else {
+                delta = -1;
+                me.Page.Replay[UniqueName] = { Visible: false, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+
+
+            if (ColIndex > 0) {
+                $.each(ExtRow.prevAll(), function (r, tr) {
+
+                    //if the corrner stop
+                    if ($(tr).hasClass("fr-resp-corner"))
+                        return false;
+
+                    $.each($(tr).children("[rowspan]"), function (c, td) {
+                        if ($(td).height() > 0)
+                            $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + delta);
+                    });
+                    if ($(tr).hasClass("fr-resp-rowspan"))
+                        return false;
+                });
+            }
+
+            if (show) {
+                $(icon).addClass("fr-render-drilldown-collapse");
+                $(icon).removeClass("fr-render-drilldown-expand");
+            }
+            else {
+                ExtRow.hide();
+                $(icon).removeClass("fr-render-drilldown-collapse");
+                $(icon).addClass("fr-render-drilldown-expand");
+            }
+            me.layoutReport(true);
+            if ($Tablix)
+                $Tablix.hide().show(0);
+    
+        },
         _tablixStream: {},
         _writeTablixRowBatch: function (Tablix) {
             var me = this;
@@ -10149,6 +11113,125 @@ $(function () {
         }
     }); //$.widget
 });
+///#source 1 1 /Forerunner/ReportViewer/js/RDLExtDialog.js
+/**
+ * @file Contains the RDL Extensions widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to manage user settings
+     *
+     * @namespace $.forerunner.userSettings
+     * @prop {Object} options - The options for userSettings
+     * @prop {Object} options.$reportExplorer - The report explorer widget
+     * @example
+     * $("#userSettingsId").userSettings({
+     *  $reportExplorer: me.$reportExplorer
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportRDLExt), {
+        options: {
+            reportViewer: null,
+        },
+        _create: function () {
+        },
+        _init: function () {
+            var me = this;
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer").RDLExt;
+            
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", locData.title, "fr-rdl-cancel", locData.cancel);
+            var $theForm = new $(
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
+                // form
+                "<form class='fr-rdl-form fr-core-dialog-form'>" +
+                    "<div class='fr-rdl-container'>" +
+                        "<label class='fr-rdl-label'>" + locData.dialogTitle + "</label>" +
+                        "<textarea class='fr-rdl-text' rows='5' class='fr-rdl-id '  name='RDL' />  " +
+                    "</div>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-rdl-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + locData.submit + "'/>" +
+                    "</div>" +
+                "</form>" +
+            "</div>");
+
+            me.element.append($theForm);
+
+            me.element.find(".fr-rdl-submit-id").on("click", function (e) {
+                me._saveSettings();
+            });
+
+            me.element.find(".fr-rdl-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+
+        _getSettings: function () {
+            var me = this;
+            me.settings = me.options.reportViewer.getRDLExt();
+            me.$RLDExt = me.element.find(".fr-rdl-text");
+
+            if (me.settings)
+                me.$RLDExt.val(JSON.stringify(me.settings));
+        },
+        _saveSettings: function () {
+            var me = this;
+            
+            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())) {
+                me.closeDialog();
+            }
+        },
+        /**
+         * Open user setting dialog
+         *
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+
+            me._getSettings();
+            forerunner.dialog.showModalDialog(me.options.reportViewer.options.$appContainer, me);
+
+        },
+        /**
+         * Close user setting dialog
+         *
+         * @function $.forerunner.userSettings#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.closeModalDialog(me.options.reportViewer.options.$appContainer, me);
+
+        }
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
 /**
  * @file Contains the print widget.
@@ -10171,7 +11254,7 @@ $(function () {
      * Widget used to manage parameter set
      *
      * @namespace $.forerunner.manageParamSets
-     * @prop {Object} options - The options for dsCredential
+     * @prop {Object} options - The options for Managed Parameter Sets dialog
      * @prop {String} options.$reportViewer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
      * @prop {String} options.model - Parameter model widget instance
@@ -10558,7 +11641,8 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null
+            $unzoomtoolbar: null,
+            isAdmin:false,
         };
 
         // Merge options with the default settings
@@ -10596,6 +11680,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
+                isAdmin: me.options.isAdmin,
             });
 
             // Create / render the toolbar
@@ -10980,6 +12065,7 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
+            isAdmin: false,
         },
         _render: function () {
             var me = this;
@@ -11012,7 +12098,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                isAdmin: me.options.isAdmin,
             });
 
             initializer.render();
@@ -11505,6 +12592,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var viewToBtnMap = {
@@ -11546,9 +12634,6 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            
-            if (!me.options.navigateTo)
-                me.options.navigateTo = me._NavigateTo;
 
             if (!path)
                 path = "/";
@@ -11578,35 +12663,100 @@ $(function () {
             });
         },
 
-        _NavigateTo: function (action, path) {
+        // Initalize our internal navigateTo processing
+        _initNavigateTo: function () {
             var me = this;
-            
-            var $container = me.$appContainer;
-            var encodedPath = String(path).replace(/\//g, "%2f");
-            var targetUrl = "#" + action           
-            if (path) targetUrl += "/" + encodedPath;
-            
-            if (action === "explore") {                
-                $container.reportExplorerEZ("transitionToReportManager", path, null);                
+
+            // Assign the default navigateTo handler
+            me.options.navigateTo = function (action, path) {
+                me._navigateTo.apply(me, arguments);
+            };
+
+            // Create the forerunner router widget
+            me.router = $({}).router({
+                routes: {
+                    "": "transitionToReportManager",
+                    "explore/:path": "transitionToReportManager",
+                    "browse/:path": "transitionToReportViewer",
+                    "view/:args": "transitionToReportViewerWithRSURLAccess",
+                    "open/:path": "transitionToOpenResource",
+                    "search/:keyword": "transitionToSearch",
+                    "favorites": "transitionToFavorites",
+                    "recent": "transitionToRecent",
+                    "createDashboard/:name": "transitionToCreateDashboard"
+                }
+            });
+
+            // Hook the router route event
+            me.router.on(events.routerRoute(), function (event, data) {
+                me._onRoute.apply(me, arguments);
+            });
+
+            if (!me.options.historyBack) {
+                // Assign the default history back handler
+                me.options.historyBack = function () {
+                    window.history.back();
+                };
             }
-            else if (action === "home") {
-                targetUrl = "#";
-                $container.reportExplorerEZ("transitionToReportManager", path, null);
-            }
-            else if (action === "back") {
-                window.history.back();
-                return;
-            }
-            else if (action === "browse") {
-                $container.reportExplorerEZ("transitionToReportViewer", path);                
-            }
-            else {            
-                $container.reportExplorerEZ("transitionToReportManager", path, action);
-            }
-          
-            window.location.hash = targetUrl;
-            
+
+            forerunner.history.history("start");
         },
+        _onRoute: function (event, data) {
+            var me = this;
+            var path = args = keyword = name = data.args[0];
+
+            if (data.name === "transitionToReportManager") {
+                me.transitionToReportManager(path, null);
+            } else if (data.name === "transitionToReportViewer") {
+                var parts = path.split("?");
+                path = parts[0];
+                var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+                if (params) params = JSON.stringify({ "ParamsList": params });
+                me.transitionToReportViewer(path, params);
+            } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
+                var startParam = args.indexOf("&");
+                var path = startParam > 0 ? args.substring(1, startParam) : args;
+                var params = startParam > 0 ? args.substring(startParam + 1) : null;
+                if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
+                if (params) params = JSON.stringify({ "ParamsList": params });
+                me.transitionToReportViewer(path, params);
+            } else if (data.name === "transitionToOpenResource") {
+                me.transitionToReportManager(path, "resource");
+            } else if (data.name === "transitionToSearch") {
+                me.transitionToReportManager(keyword, "search");
+            } else if (data.name === "transitionToFavorites") {
+                me.transitionToReportManager(null, "favorites");
+            } else if (data.name === "transitionToRecent") {
+                me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToCreateDashboard") {
+                me.transitionToCreateDashboard(name);
+            }
+        },
+        _lastAction: null,
+        _navigateTo: function (action, path) {
+            var me = this;
+
+            if (path !== null) {
+                path = encodeURIComponent(path);
+            }
+
+            if (action === "home") {
+                me.router.router("navigate", "#", { trigger: true, replace: false });
+            } else if (action === "back") {
+                me.options.historyBack();
+            } else if (action === "favorites") {
+                me.router.router("navigate", "#favorites", { trigger: true, replace: false });
+            } else if (action === "recent") {
+                me.router.router("navigate", "#recent", { trigger: true, replace: false });
+            } else {
+                var targetUrl = "#" + action + "/" + path;
+                // Do not trigger for Firefox when we are changing the anchor
+                var trigger = !forerunner.device.isFirefox() || me._lastAction === action || !me._lastAction;
+                me.router.router("navigate", targetUrl, { trigger: trigger, replace: false });
+            }
+            me._lastAction = action;
+        },
+
         /**
          * Transition to ReportManager view.
          *
@@ -11680,8 +12830,6 @@ $(function () {
         transitionToReportViewer: function (path, params) {
             var me = this;
 
-            // We need to create the report explorer here so as to get the UserSettings needed in the case where
-            // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
@@ -11699,12 +12847,12 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
+                    isAdmin: me.options.isAdmin,
                 });
 
                 var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-
+                    path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }
@@ -11712,9 +12860,41 @@ $(function () {
 
             me.element.css("background-color", "");
         },
+        /**
+         * Transition to Create Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @param {String} name - Name of the dashboard template
+         */
+        transitionToCreateDashboard: function (templateName) {
+            var me = this;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack
+                });
+
+                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+            }, timeout);
+
+            me.element.css("background-color", "");
+        },
         _init: function () {
             var me = this;
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+
+            if (!me.options.navigateTo) {
+                me._initNavigateTo();
+            }
         },
         /**
          * Get report explorer toolbar
@@ -11748,3 +12928,257 @@ $(function () {
         }
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
+/**
+ * @file Contains the print widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+    var templates = dashboards.templates;
+    var createDashboard = locData.createDashboard;
+
+    /**
+     * Widget used to select a new dashbard template
+     *
+     * @namespace $.forerunner.createDashboard
+     * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     * $("#createDashboardDialog").createDashboard({
+     *    $appContainer: me.options.$appContainer,
+     *    $reportViewer: $viewer,
+     /  });
+     */
+    $.widget(widgets.getFullname(widgets.createDashboard), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null,
+            model: null
+        },
+        _createOptions: function() {
+            var me = this;
+
+            me.$select = me.element.find(".fr-cdb-select-id")
+
+            for (item in templates) {
+                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+                me.$select.append($option);
+            }
+        },
+        _init: function() {
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-cdb-form fr-core-dialog-form'>" +
+                        "<div class='fr-core-center'>" +
+                            "<select class='fr-cdb-select-id'>" +
+                            "</select>" +
+                            "<div class='fr-core-dialog-submit-container'>" +
+                                "<div class='fr-core-center'>" +
+                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "</div>" +
+                            "</div>" +
+
+                        "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            me._createOptions();
+
+            me.$form = me.element.find(".fr-cdb-form");
+
+            me.element.find(".fr-cdb-cancel").on("click", function(e) {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-cdb-submit-id").on("click", function (e) {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        _submit: function () {
+            var me = this;
+
+            // Call navigateTo to bring up the create dashboard view
+            var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
+            var name = me.$select.val();
+            navigateTo("createDashboard", name);
+
+            me.closeDialog();
+        },
+        /**
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.createDashboard#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/Dashboard/js/DashboardBase.js
+/**
+ * @file Contains the dashboardBase widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * The dashboardBase widget is used as a base namespace for dashboardEditor and
+     * dashboardViewer
+     *
+     * @namespace $.forerunner.dashboardBase
+     * @prop {Object} options - The options for dashboardBase
+     * @prop {String} options.dashboardState - The dashboardState holds the complete
+     *                                         state of the dashboard editing and / or
+     *                                         viewing experience.
+     */
+    $.widget(widgets.getFullname(widgets.dashboardBase), {
+        options: {
+        },
+        _init: function () {
+            var me = this;
+            me.clearState();
+            me.element.html("");
+        },
+        clearState: function () {
+            var me = this;
+            me.dashboardDef = {
+                templateName: null,
+                template: null,
+                reports: {}
+            };
+        },
+        _destory: function () {
+        }
+    });  // $widget
+});  // function()
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardEditor.js
+/**
+ * @file Contains the reportViewer widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to create and edit dashboards
+     *
+     * @namespace $.forerunner.dashboardEditor
+     * @prop {Object} options - The options for dashboardEditor
+     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     */
+    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
+        options: {
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+        },
+        loadTemplate: function (templateName) {
+            var me = this;
+            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
+            me.dashboardDef.template = template;
+            me._renderTemplate();
+        },
+        _renderTemplate: function () {
+            var me = this;
+            me.element.html(me.dashboardDef.template);
+        },
+        _create: function () {
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+        },
+        _destroy: function () {
+        }
+    });  // $.widget
+});   // $(function
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
+/**
+ * @file Contains the dashboardViewer widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used to view dashboards
+     *
+     * @namespace $.forerunner.dashboardViewer
+     * @prop {Object} options - The options for dashboardEditor
+     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     */
+    $.widget(widgets.getFullname(widgets.dashboardViewer), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardViewer */, {
+        options: {
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+        },
+        _create: function () {
+            var me = this;
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+        },
+        _destroy: function () {
+        },
+    });  // $.widget
+});   // $(function
+
+
+

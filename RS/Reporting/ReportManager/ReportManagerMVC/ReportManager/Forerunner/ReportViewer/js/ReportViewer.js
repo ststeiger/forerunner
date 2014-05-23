@@ -69,6 +69,7 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
+            isAdmin: false,
         },
 
         _destroy: function () {
@@ -121,6 +122,9 @@ $(function () {
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
             
+            //Test admin
+            me.options.isAdmin = true;
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -326,11 +330,10 @@ $(function () {
         _ReRender: function () {
             var me = this;
 
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
-                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].isRendered = false;
-                    me._getPageContainer(i).html("");
-                }
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                $.each(me.pages, function (index, page) {
+                    page.needsLayout = true;
+                });
                 me._setPage(me.curPage);
             }
         },
@@ -1087,8 +1090,11 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        
                     }
                     else
                         me.lock = 0;
@@ -1855,7 +1861,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
             var me = this;
 
             if (flushCache === true)
@@ -1909,6 +1915,8 @@ $(function () {
                                 me._navToLink(bookmarkID);
                             if (flushCache !== true)
                                 me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -2008,7 +2016,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum]);
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
             }
 
             me.pages[pageNum].isRendered = true;
@@ -2267,6 +2275,59 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        showRDLExtDialog: function () {
+            var me = this;
+
+            var dlg = $(".fr-rdl-section").first();
+
+            if (dlg.length ===0) {
+                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append(dlg);
+                dlg.reportRDLExt({ reportViewer: me });
+            }
+            dlg.reportRDLExt("openDialog");
+            
+        },
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try{
+                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       value:RDL,
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       return true;
+                   },
+                   fail: function (data){
+                       return false;
+                   },
+                   async: false
+               });
+            
+
+        },
+
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -2296,6 +2357,10 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+            if (me.$RDLExtDialog) {
+                me.$RDLExtDialog.reportRDLExt("destroy");
+            }
+            
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx

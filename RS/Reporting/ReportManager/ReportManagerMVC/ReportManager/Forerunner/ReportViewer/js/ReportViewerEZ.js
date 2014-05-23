@@ -42,6 +42,7 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
+            isAdmin: false,
         },
         _render: function () {
             var me = this;
@@ -74,7 +75,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                isAdmin: me.options.isAdmin,
             });
 
             initializer.render();

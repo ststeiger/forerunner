@@ -8,7 +8,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
    
     //  The ReportIemContext simplifies the signature for all of the functions to pass context around
-    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
+    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation,ApplyBackgroundColor) {
         this.RS = RS;
         this.CurrObj = CurrObj;
         this.CurrObjIndex = CurrObjIndex;
@@ -16,6 +16,7 @@ $(function () {
         this.$HTMLParent = $HTMLParent;
         this.Style = Style;
         this.CurrLocation = CurrLocation;
+        this.ApplyBackgroundColor = ApplyBackgroundColor;
     }
     function layout() {
         this.ReportItems = {};
@@ -70,6 +71,9 @@ $(function () {
         _create: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
+            me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
+            me._maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -92,6 +96,11 @@ $(function () {
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            me._currentWidth = me.options.reportViewer.element.width();
+            if (me.Page.Replay === undefined)
+                me.Page.Replay = {};
+
+            
 
             me._createStyles(reportViewer);
             $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
@@ -356,6 +365,9 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
+            
+            if (Math.abs(me._currentWidth - me.options.reportViewer.element.width()) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                me._currentWidth = me.options.reportViewer.element.width();
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
@@ -372,7 +384,7 @@ $(function () {
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
-            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+            me.element.hide().show(0);
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
@@ -528,7 +540,7 @@ $(function () {
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
             //This fixed an IE bug for duplicate syyles
-            if (RIContext.CurrObjParent.Type !== "Tablix") {
+            if (RIContext.CurrObjParent.Type !== "Tablix" || RIContext.ApplyBackgroundColor) {
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
@@ -1072,8 +1084,9 @@ $(function () {
                 Style += "height:" + height + "mm;";
             
             //Row and column span
-            if (Obj.RowSpan !== undefined)
+            if (Obj.RowSpan !== undefined) {
                 $Cell.attr("rowspan", Obj.RowSpan);
+            }
             if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
                 
@@ -1121,7 +1134,7 @@ $(function () {
             
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
-            $Tablix.attr("Style", Style);
+            
             $Tablix.addClass("fr-render-tablix");
             $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
@@ -1129,10 +1142,85 @@ $(function () {
 
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
-                var colgroup = $("<colgroup/>");
-                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                var colgroup = $("<colgroup/>");               
+                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var cols;
+                //Setup the responsive columns def
+                respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                    var notdone = true;
+                    var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
+                    var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
+                    var maxPri = -1;
+                    var foundCol;
+                    
+                    if (tablixExt && tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                        for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
+                        }
+                    }
+                     
+                    while (notdone) {
+                        maxPri = -1;
+
+                        //If the author has supplied instructions for minimizing the tablix, determine columns here                            
+                        if (tablixExt && tablixExt.Columns) {
+
+                            //if not all columns are in the array, use the ones that are missing first
+                            if (respCols.ColumnCount > tablixExt.Columns.length) {
+                                for (cols = respCols.ColumnCount-1; cols >= 0; cols--) {
+                                    if (respCols.Columns[cols] === undefined) {
+                                        foundCol = cols;
+                                        respCols.Columns[foundCol] = { show: false };
+                                        break;
+                                    }
+                                }
+
+                            }
+                            else {
+                                for (cols = 0; cols < tablixExt.Columns.length; cols++) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                        nextColIndex = cols;
+                                        maxPri = tablixExt.Columns[cols].Pri;
+                                    }
+                                }
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
+                                respCols.Columns[foundCol] = { show: false };
+                            }
+                                                                                 
+                            respCols.ColumnCount--;
+                        
+                            }
+                        //Just remove from the right
+                        else {
+                            nextColIndex--;
+                            foundCol = nextColIndex;
+                            respCols.Columns[foundCol] = { show: false };
+
+                        tablixwidth -= tablixCols[foundCol].Width;
+
+                        //Check if we are done                        
+                        if (tablixwidth < viewerWidth || respCols.ColumnCount ===0) {
+                            notdone = false;
+                            //Show if more then half is visible
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * .9 || respCols.ColumnCount===0) {
+                                respCols.Columns[foundCol].show = true;
+                                respCols.ColumnCount++;
+                            }
+                        }
+                }
+               //create the colgroup from visible columns
+                for (cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    if (respCols.Columns[cols]=== undefined)
+                        respCols.Columns[cols] = { show: true };
+                    else if (respCols.Columns[cols].show === false)
+                        respCols.isResp = true;
+
                     colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                 }
+                $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
@@ -1193,16 +1281,27 @@ $(function () {
             var $Row = State.Row;
             var HasFixedCols = false;
             var HasFixedRows = false;
+            var CellHeight;
+            var CellWidth;
+            if (State.ExtRow === undefined && respCols.isResp) {
+                $ExtRow.hide();
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
+                if (respCols.isResp && $ExtRow)
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                    $FixedColHeader.append($Row.clone(true, true));
                 }
 
                 $Row = new $("<TR/>");
+                if (respCols.isResp) {
+                    $ExtRow = new $("<TR/>");
+                    $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtRow.append($ExtCell);
+                    $ExtRow.hide();
+                }
 
                 //Handle missing rows
                 for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
@@ -1231,20 +1330,143 @@ $(function () {
                     HasFixedCols = true;
             }
 
+            var $Drilldown;
+            CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
             if (Obj.Type === "BodyRow") {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {                  
-                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                    CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
+                    $Drilldown = undefined;
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
+                            $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
+                            $ExtRow.HasDrill = true;
+                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
+                            respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
+                            respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
+                            $ExtRow = null;
+                            $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell){
-                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
+                if (Obj.Cell) {
+                    if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
+                        var h = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
+                        if (respCols.Columns[Obj.ColumnIndex].Header ===undefined)
+                            respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");
+                        
+                        respCols.Columns[Obj.ColumnIndex].Header.append(h);                                                   
+                        respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
+                        $ExtRow = null;
+                    }
+                    else {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
+                            //add drill  - rowspan and of none means most detail RowHeader
+                            $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
+                            $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
+                            $ExtRow.HasDrill = true;
+                        }
+                        //This is a hack for now, colIndex 0 makes a big assumption - but a pretty safe one
+                        if (respCols.isResp && Obj.RowSpan !== undefined && Obj.ColumnIndex===0) {
+                            if (Obj.Type === "Corner")
+                                $Row.addClass("fr-resp-corner");
+                            else
+                                $Row.addClass("fr-resp-rowspan");
+                        }
+                        $Row.append(me._writeTablixCell(RIContext, Obj, Index, undefined, $Drilldown));
+                    }
                     State.CellCount += 1;
+                
                     }
             }
             LastObjType = Obj.Type;
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+        },
+
+        replayRespTablix: function (replay) {
+            var me = this;
+
+            if (replay) {
+                $.each(replay, function (i, obj) {
+                    var icon;
+                    var ExtRow;
+                    var cell;
+
+                    if (obj.Visible) {
+                        //find cell
+                        cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
+                        icon = cell.prev();
+                        ExtRow = icon.parent().parent().parent().next();
+
+                        me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+                    }
+                });
+            }
+
+        },
+        _addTablixRespDrill: function ($ExtRow,ColIndex,$Tablix,Cell) {
+            var me = this;
+
+            var $Drilldown = new $("<div/>");
+            $Drilldown.html("&nbsp");
+            $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respIcon");
+
+            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
+
+                me._TablixRespShow(this, e.data.ExtRow, e.data.ColIndex, e.data.UniqueName, e.data.$Tablix);
+                return;
+
+            });
+            $Drilldown.addClass("fr-core-cursorpointer");
+            return $Drilldown;
+        },
+
+        _TablixRespShow: function (icon,ExtRow,ColIndex,UniqueName,$Tablix) {
+            var me = this;
+            var show = !ExtRow.is(":visible");
+            var delta;
+
+            if (show) {
+                ExtRow.show();
+                delta = 1;
+                me.Page.Replay[UniqueName] = { Visible: true, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+            else {
+                delta = -1;
+                me.Page.Replay[UniqueName] = { Visible: false, ColIndex: ColIndex, UniqueName: UniqueName };
+            }
+
+
+            if (ColIndex > 0) {
+                $.each(ExtRow.prevAll(), function (r, tr) {
+
+                    //if the corrner stop
+                    if ($(tr).hasClass("fr-resp-corner"))
+                        return false;
+
+                    $.each($(tr).children("[rowspan]"), function (c, td) {
+                        if ($(td).height() > 0)
+                            $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + delta);
+                    });
+                    if ($(tr).hasClass("fr-resp-rowspan"))
+                        return false;
+                });
+            }
+
+            if (show) {
+                $(icon).addClass("fr-render-drilldown-collapse");
+                $(icon).removeClass("fr-render-drilldown-expand");
+            }
+            else {
+                ExtRow.hide();
+                $(icon).removeClass("fr-render-drilldown-collapse");
+                $(icon).addClass("fr-render-drilldown-expand");
+            }
+            me.layoutReport(true);
+            if ($Tablix)
+                $Tablix.hide().show(0);
+    
         },
         _batchSize: 3000,
         _tablixStream: {},

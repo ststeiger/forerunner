@@ -95,7 +95,7 @@ $(function () {
             me.Page = Page;
             me._tablixStream = {};
             me.RDLExt = RLDExt;
-            me._rectangles = [];
+            
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
                 me.Page.Replay = {};
@@ -110,6 +110,7 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
+            me._rectangles = [];
 
             reportDiv.html("");
 
@@ -386,10 +387,14 @@ $(function () {
 
         layoutReport: function(isLoaded){
             var me = this;
+            var renderWidth = me.options.reportViewer.element.width();
             
+            if (renderWidth === 0)
+                return true;
+
             //Need to re-render
-            if (Math.abs(me._currentWidth - me.options.reportViewer.element.width()) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
-                me._currentWidth = me.options.reportViewer.element.width();
+            if (Math.abs(me._currentWidth - renderWidth) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > renderWidth) {
+                me._currentWidth = renderWidth;
                 me._reRender();
             }
             
@@ -442,6 +447,7 @@ $(function () {
                 }
             }
             me.element.hide().show(0);
+            return false;
         },
         _getRectangleLayout: function (Measurements) {
             var l = new layout();
@@ -537,15 +543,21 @@ $(function () {
                         // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
                             //if my index above is the same as yours then move me down
-                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
+                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove) {
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
+                                curRI.TopDelta = 1;
+                            }
                             // else if your origional index above is my new index above then you move down
-                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index)
-                                layout.ReportItems[j].IndexAbove = curRI.Index;                        
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index) {
+                                layout.ReportItems[j].IndexAbove = curRI.Index;
+                                layout.ReportItems[j].TopDelta = 1;
+                            }
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width) {
                             curRI.IndexAbove = layout.ReportItems[j].Index;
+                            curRI.TopDelta = 1;
+                        }
                     }
                 }
                 

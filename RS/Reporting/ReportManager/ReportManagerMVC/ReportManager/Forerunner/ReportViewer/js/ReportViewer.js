@@ -124,6 +124,7 @@ $(function () {
             me.SaveThumbnail = false;
             me.RDLExtProperty = null;
             
+
             //Test admin
             me.options.isAdmin = true;
 
@@ -850,6 +851,7 @@ $(function () {
                 me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
+            me._reLayoutPage(me.curPage);
         },
         _handleOrientation: function () {
             var me = this;
@@ -1533,7 +1535,7 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            if (forerunner.device.isFirefox() || forerunner.device.isMobile()) {
+            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
                 window.open(url);
             }
             else {
@@ -1922,10 +1924,10 @@ $(function () {
 
             if (me.pages[newPageNum])
                 if (me._getPageContainer(newPageNum)) {
-                    if (!loadOnly) {
+                    if (!loadOnly) {                        
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
-                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            me.element.show(0); //scrollto does not work with the slide in functions:(                        
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
@@ -2054,8 +2056,8 @@ $(function () {
         _reLayoutPage: function(pageNum){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].$container.reportRender("layoutReport", true);
-                me.pages[pageNum].needsLayout = false;
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true);
+                //me.pages[pageNum].needsLayout = false;
             }
         },
         _renderPage: function (pageNum) {

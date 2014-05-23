@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1287,8 +1287,8 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function (container) {
-            if (container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
+        isSmall: function ($container) {
+            if ($container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
                 return true;
             else
                 return false;

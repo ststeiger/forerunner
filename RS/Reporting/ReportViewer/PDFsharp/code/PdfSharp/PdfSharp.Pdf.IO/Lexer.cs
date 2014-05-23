@@ -332,7 +332,9 @@ namespace PdfSharp.Pdf.IO
           return this.symbol = Symbol.R;
 
         case "stream":
-          return this.symbol = Symbol.BeginStream;
+            if (this.nextChar == 32 || this.nextChar == 13 || this.nextChar == '\n')
+                ScanNextChar();       
+            return this.symbol = Symbol.BeginStream;
 
         case "endstream":
           return this.symbol = Symbol.EndStream;

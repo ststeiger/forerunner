@@ -1620,7 +1620,7 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
-                if (Tablix.respCols.isResp) {
+                if (Tablix.respCols.isResp && Tablix.State.ExtRow) {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }

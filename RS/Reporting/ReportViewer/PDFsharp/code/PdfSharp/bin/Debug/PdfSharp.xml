@@ -21512,6 +21512,11 @@
             Closes this instance.
             </summary>
         </member>
+        <member name="M:PdfSharp.Pdf.PdfDocument.AddAutoPrint">
+            <summary>
+            Adds auto print to the document
+            </summary>
+        </member>
         <member name="M:PdfSharp.Pdf.PdfDocument.Save(System.String)">
             <summary>
             Saves the document to the specified path. If a file already exists, it will be overwritten.

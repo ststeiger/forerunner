@@ -703,6 +703,9 @@ $(function () {
         },
 
         _destroy: function () {
+            var me = this;
+            //Baotong update it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
@@ -767,6 +770,7 @@ $(function () {
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
+            $(window).on("resize", { me: me }, me._ReRenderCall);
             //load the report Page requested
             me.element.append(me.$reportContainer);
             //me._addLoadingIndicator();
@@ -966,6 +970,11 @@ $(function () {
                 });
                 me._setPage(me.curPage);
             }
+        },
+        //Wrapper function, used to resigter window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+            me._ReRender.call(me);
         },
         _removeCSS: function () {
             var me = this;
@@ -1422,7 +1431,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
@@ -2157,9 +2166,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {
@@ -3752,7 +3762,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.off(key);
+                    $toolEl.off(key, toolInfo.events[key]);
                 }
             }
         },
@@ -5254,7 +5264,9 @@ $(function () {
             this._on($thumbnail, {
                 click: function (event) {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
-                    if (forerunner.device.isSmall())
+                    //check $slider container instead, we can sure it's open
+                    //me.options.$reportviewer may hide so its width is 0
+                    if (forerunner.device.isSmall(me.$slider))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -5345,6 +5357,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
             $slider.addClass("fr-nav-container");
+            me.$slider = $slider;
 
             var $close = $("<DIV />");
             $close.addClass("fr-nav-close-container");
@@ -5377,11 +5390,52 @@ $(function () {
             var me = this;
             if (!flag) {
                 me.element.fadeOut("fast");
+                $(window).off("resize", me._fullScreenCheckCall);
             }
             else {
+                me._fullScreenCheck.call(me, 0);
                 me.element.fadeIn("fast");
                 me._ScrolltoPage();
+                $(window).on("resize", { me: me }, me._fullScreenCheckCall);
             }
+        },
+        //wrapper function used to register window resize event
+        _fullScreenCheckCall : function(event){
+            var me = event.data.me;
+            me._fullScreenCheck.call(me, 100);
+        },
+        resizeTimer: null,
+        //check screen size to decide navigation mode
+        _fullScreenCheck: function (delay) {
+            var me = this;
+            
+            if (me.resizeTimer) {
+                clearTimeout(me.resizeTimer);
+                me.resizeTimer = null;
+            }
+
+            me.resizeTimer = setTimeout(function () {
+                var $container = me.element.find(".fr-nav-container");
+                var $items = me.element.find(".fr-nav-item");
+                var $spacer = me.element.find(".fr-nav-li-spacer");
+                var $closeButton = me.element.find(".fr-nav-close-container");
+
+                if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                    $container.addClass("fr-nav-container-full");
+                    $items.addClass("fr-nav-item-full");
+                    $spacer.addClass("fr-nav-li-spacer-full");
+                    $closeButton.addClass("fr-nav-close-container-full");
+                }
+                else {
+                    $container.removeClass("fr-nav-container-full");
+                    $items.removeClass("fr-nav-item-full");
+                    $spacer.removeClass("fr-nav-li-spacer-full");
+                    $closeButton.removeClass("fr-nav-close-container-full");
+                }
+
+                me.resizeTimer = null;
+            }, delay);
+            
         },
         /**
          * Show page navigation
@@ -7513,6 +7567,14 @@ $(function () {
                 var cols;
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols.ColumnHeaders = {}; 
+
+                if (tablixExt && tablixExt.ColumnHeaders) {
+                    for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
+                        //Just creating index, can all object later if needed
+                        respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
+                    }
+                }
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
@@ -7656,7 +7718,10 @@ $(function () {
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
-                if (respCols.isResp && $ExtRow)
+                //Dont add the ext row if no data and hide the expand icon
+                if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
+                else
+                    $Row.find(".fr-render-respIcon").hide();
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                    $FixedColHeader.append($Row.clone(true, true));
@@ -7703,13 +7768,16 @@ $(function () {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {                  
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
+                            if (respCols.Columns[BRObj.ColumnIndex].Header)
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
@@ -7727,7 +7795,7 @@ $(function () {
                         $ExtRow = null;
                     }
                     else {
-                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow && $ExtRow.HasDrill !==true) {
                             //add drill  - rowspan and of none means most detail RowHeader
                             $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
                             $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
@@ -7750,6 +7818,16 @@ $(function () {
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
 
+        _isHeader: function(respCols,cell){
+            var me = this;
+
+            var cellDefName = (me._getSharedElements(cell.ReportItem.Elements.SharedElements)).Name ;
+            if (respCols.ColumnHeaders[cellDefName])
+                return true;
+            return false;
+
+
+        },
         replayRespTablix: function (replay) {
             var me = this;
 
@@ -9369,7 +9447,7 @@ $(function () {
                 appendTo: me.$params,
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.blur().attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { value: obj.item.value });
+                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {

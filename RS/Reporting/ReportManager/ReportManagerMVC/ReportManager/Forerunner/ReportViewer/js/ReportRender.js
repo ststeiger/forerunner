@@ -1148,6 +1148,14 @@ $(function () {
                 var cols;
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols.ColumnHeaders = {}; 
+
+                if (tablixExt && tablixExt.ColumnHeaders) {
+                    for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
+                        //Just creating index, can all object later if needed
+                        respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
+                    }
+                }
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
@@ -1289,7 +1297,10 @@ $(function () {
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
-                if (respCols.isResp && $ExtRow)
+                //Dont add the ext row if no data and hide the expand icon
+                if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
+                else
+                    $Row.find(".fr-render-respIcon").hide();
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                    $FixedColHeader.append($Row.clone(true, true));
@@ -1336,13 +1347,16 @@ $(function () {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {                  
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow.HasDrill !== true) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
+                            if (respCols.Columns[BRObj.ColumnIndex].Header)
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
@@ -1360,7 +1374,7 @@ $(function () {
                         $ExtRow = null;
                     }
                     else {
-                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow.HasDrill !==true) {
+                        if (respCols.isResp && Obj.Type === "RowHeader" && Obj.RowSpan === undefined && respCols.ColHeaderRow !== Obj.RowIndex && $ExtRow && $ExtRow.HasDrill !==true) {
                             //add drill  - rowspan and of none means most detail RowHeader
                             $Drilldown = me._addTablixRespDrill($ExtRow, Obj.ColumnIndex, $Tablix,Obj.Cell);
                             $ExtCell.attr("colspan", respCols.ColumnCount - Obj.ColumnIndex);
@@ -1383,6 +1397,16 @@ $(function () {
             return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
 
+        _isHeader: function(respCols,cell){
+            var me = this;
+
+            var cellDefName = (me._getSharedElements(cell.ReportItem.Elements.SharedElements)).Name ;
+            if (respCols.ColumnHeaders[cellDefName])
+                return true;
+            return false;
+
+
+        },
         replayRespTablix: function (replay) {
             var me = this;
 

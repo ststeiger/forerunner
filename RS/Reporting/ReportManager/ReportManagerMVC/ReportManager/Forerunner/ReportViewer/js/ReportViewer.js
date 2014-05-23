@@ -73,6 +73,9 @@ $(function () {
         },
 
         _destroy: function () {
+            var me = this;
+            //Baotong update it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
@@ -137,6 +140,7 @@ $(function () {
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
+            $(window).on("resize", { me: me }, me._ReRenderCall);
             //load the report Page requested
             me.element.append(me.$reportContainer);
             //me._addLoadingIndicator();
@@ -336,6 +340,11 @@ $(function () {
                 });
                 me._setPage(me.curPage);
             }
+        },
+        //Wrapper function, used to resigter window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+            me._ReRender.call(me);
         },
         _removeCSS: function () {
             var me = this;
@@ -792,7 +801,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
@@ -1527,9 +1536,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {

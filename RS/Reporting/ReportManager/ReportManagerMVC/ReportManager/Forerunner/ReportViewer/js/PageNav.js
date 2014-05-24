@@ -94,7 +94,9 @@ $(function () {
             this._on($thumbnail, {
                 click: function (event) {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
-                    if (forerunner.device.isSmall(me.options.$reportViewer))
+                    //check $slider container instead, we can sure it's open
+                    //me.options.$reportviewer may hide so its width is 0
+                    if (forerunner.device.isSmall(me.$slider))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -185,6 +187,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
             $slider.addClass("fr-nav-container");
+            me.$slider = $slider;
 
             var $close = $("<DIV />");
             $close.addClass("fr-nav-close-container");
@@ -217,11 +220,52 @@ $(function () {
             var me = this;
             if (!flag) {
                 me.element.fadeOut("fast");
+                $(window).off("resize", me._fullScreenCheckCall);
             }
             else {
+                me._fullScreenCheck.call(me, 0);
                 me.element.fadeIn("fast");
                 me._ScrolltoPage();
+                $(window).on("resize", { me: me }, me._fullScreenCheckCall);
             }
+        },
+        //wrapper function used to register window resize event
+        _fullScreenCheckCall : function(event){
+            var me = event.data.me;
+            me._fullScreenCheck.call(me, 100);
+        },
+        resizeTimer: null,
+        //check screen size to decide navigation mode
+        _fullScreenCheck: function (delay) {
+            var me = this;
+            
+            if (me.resizeTimer) {
+                clearTimeout(me.resizeTimer);
+                me.resizeTimer = null;
+            }
+
+            me.resizeTimer = setTimeout(function () {
+                var $container = me.element.find(".fr-nav-container");
+                var $items = me.element.find(".fr-nav-item");
+                var $spacer = me.element.find(".fr-nav-li-spacer");
+                var $closeButton = me.element.find(".fr-nav-close-container");
+
+                if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                    $container.addClass("fr-nav-container-full");
+                    $items.addClass("fr-nav-item-full");
+                    $spacer.addClass("fr-nav-li-spacer-full");
+                    $closeButton.addClass("fr-nav-close-container-full");
+                }
+                else {
+                    $container.removeClass("fr-nav-container-full");
+                    $items.removeClass("fr-nav-item-full");
+                    $spacer.removeClass("fr-nav-li-spacer-full");
+                    $closeButton.removeClass("fr-nav-close-container-full");
+                }
+
+                me.resizeTimer = null;
+            }, delay);
+            
         },
         /**
          * Show page navigation

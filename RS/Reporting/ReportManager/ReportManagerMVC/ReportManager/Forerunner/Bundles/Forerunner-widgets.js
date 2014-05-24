@@ -6805,7 +6805,12 @@ $(function () {
             var ReportItems = {};
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
+            var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);            
+            var RecExt = {};
+            if (me.RDLExt && me.RDLExt[sharedElements.Name])
+                RecExt = me.RDLExt[sharedElements.Name];
             
+
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
                 Style = "";
@@ -6861,6 +6866,13 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
+            if (RecExt.FixedSize === true) {                
+                if (RecExt.Height)
+                    Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.Height) + "mm;";
+                if (RecExt.Width)
+                    Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.Width) + "mm;";
+            }
+
             RIContext.$HTMLParent.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -6868,7 +6880,7 @@ $(function () {
             me._writeTooltip(RIContext);
 
             //Add Rec to Rec collection to layout later
-            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext });
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext, RecExt: RecExt });
 
             return RIContext.$HTMLParent;
         },
@@ -6916,9 +6928,12 @@ $(function () {
                     rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
                 }
 
-                
+                if (rec.RecExt.FixedSize === true) {
+                    rec.HTMLRec.removeClass("fr-render-rec");
+                }
                 if (RIContext.CurrLocation) {
-                    rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
+                    if (rec.RecExt.Width === undefined)
+                        rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
 
                     if (RIContext.CurrObj.ReportItems.length === 0)
                         rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
@@ -6929,7 +6944,8 @@ $(function () {
                                                 (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                                 parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                            1;
-                        rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
+                        if (rec.RecExt.Height === undefined)
+                            rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
                     }
 
                 }

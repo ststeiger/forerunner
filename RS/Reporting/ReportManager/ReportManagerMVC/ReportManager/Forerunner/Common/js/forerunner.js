@@ -1284,7 +1284,7 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
-
+             
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&

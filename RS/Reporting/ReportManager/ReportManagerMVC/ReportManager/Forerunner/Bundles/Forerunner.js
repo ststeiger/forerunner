@@ -1285,7 +1285,7 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
-
+             
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
@@ -1295,8 +1295,8 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function (container) {
-            if (container.height() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
+        isSmall: function ($container) {
+            if ($%container.height() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
                 return true;
             else
                 return false;

@@ -2585,7 +2585,7 @@ $(function () {
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
                         instance: me.options.rsInstance,
-                    },
+                    }, 
                     async: true,
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);

@@ -1080,7 +1080,7 @@ $(function () {
          *
          * @param {String} toggleID - Id of the item to toggle
          */
-        toggleItem: function (toggleID) {
+        toggleItem: function (toggleID,scrollID) {
             var me = this;
             if (me.lock === 1)
                 return;
@@ -1090,10 +1090,10 @@ $(function () {
             me._resetContextIfInvalid();
             me._prepareAction();
             
-            me._callToggle(toggleID);
+            me._callToggle(toggleID, scrollID);
         },
         
-        _callToggle : function(toggleID) {
+        _callToggle: function (toggleID, scrollID) {
             var me = this;
             me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
@@ -1111,7 +1111,7 @@ $(function () {
                         var replay = me.pages[me.curPage].Replay
 
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
                         
                     }
                     else
@@ -1916,7 +1916,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
             var me = this;
 
             if (flushCache === true)
@@ -1934,6 +1934,12 @@ $(function () {
                             me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
+                        if (scrollID) {
+                            el = me.element.find("div[name=\"" + scrollID + "\"]")
+                            if (el.length ===1)
+                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                        }
+
                     }
                     return;
                 }
@@ -1974,6 +1980,11 @@ $(function () {
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
                             $(window).scrollLeft(me.scrollLeft);
                             $(window).scrollTop(me.scrollTop);
+                            if (scrollID) {
+                                el = me.element.find("div[name=\"" + scrollID + "\"]")
+                                if (el.length === 1)
+                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                            }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }

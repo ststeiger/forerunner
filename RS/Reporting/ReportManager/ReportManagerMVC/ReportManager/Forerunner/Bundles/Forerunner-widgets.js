@@ -1710,7 +1710,7 @@ $(function () {
          *
          * @param {String} toggleID - Id of the item to toggle
          */
-        toggleItem: function (toggleID) {
+        toggleItem: function (toggleID,scrollID) {
             var me = this;
             if (me.lock === 1)
                 return;
@@ -1720,10 +1720,10 @@ $(function () {
             me._resetContextIfInvalid();
             me._prepareAction();
             
-            me._callToggle(toggleID);
+            me._callToggle(toggleID, scrollID);
         },
         
-        _callToggle : function(toggleID) {
+        _callToggle: function (toggleID, scrollID) {
             var me = this;
             me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
@@ -1741,7 +1741,7 @@ $(function () {
                         var replay = me.pages[me.curPage].Replay
 
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
                         
                     }
                     else
@@ -2546,7 +2546,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
             var me = this;
 
             if (flushCache === true)
@@ -2564,6 +2564,12 @@ $(function () {
                             me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
+                        if (scrollID) {
+                            el = me.element.find("div[name=\"" + scrollID + "\"]")
+                            if (el.length ===1)
+                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                        }
+
                     }
                     return;
                 }
@@ -2604,6 +2610,11 @@ $(function () {
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
                             $(window).scrollLeft(me.scrollLeft);
                             $(window).scrollTop(me.scrollTop);
+                            if (scrollID) {
+                                el = me.element.find("div[name=\"" + scrollID + "\"]")
+                                if (el.length === 1)
+                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                            }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }
@@ -7101,7 +7112,10 @@ $(function () {
                 else
                     $Drilldown.addClass("fr-render-drilldown-expand");
 
-                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
+                $Drilldown.on("click", { ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) {
+                    var name = $(this).parent().parent().attr("name");
+                    me.options.reportViewer.toggleItem(e.data.ToggleID,name);
+                });
                 $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
@@ -7938,14 +7952,19 @@ $(function () {
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
                     }
                     else {
-                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols, BRObj.Cell)) {
+
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderIndex === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderIndex = 0;
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderName === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderName = BRObj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
                         }
                         else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
-                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("name",respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                         }
                     }
@@ -7960,7 +7979,11 @@ $(function () {
                         if (respCols.Columns[Obj.ColumnIndex].Header ===undefined)
                             respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");
                         
-                        respCols.Columns[Obj.ColumnIndex].Header.append(h);                                                   
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderIndex === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderIndex = 0;
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderName === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderName = Obj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
+                        respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
                         $ExtRow = null;
                     }

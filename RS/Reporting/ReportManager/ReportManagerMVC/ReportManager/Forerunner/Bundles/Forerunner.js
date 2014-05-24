@@ -1296,7 +1296,7 @@ $(function () {
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function (container) {
-            if (container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
+            if (container.height() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
                 return true;
             else
                 return false;

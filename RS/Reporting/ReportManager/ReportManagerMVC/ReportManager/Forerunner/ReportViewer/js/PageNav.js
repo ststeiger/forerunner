@@ -117,7 +117,7 @@ $(function () {
                 me._maxNumPages = me._batchSize;
 
             me.listItems = new Array(me._maxNumPages);
-
+             
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }

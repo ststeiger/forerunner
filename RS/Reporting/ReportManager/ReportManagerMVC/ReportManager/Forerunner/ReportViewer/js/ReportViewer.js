@@ -1972,7 +1972,8 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-
+                            $(window).scrollLeft(me.scrollLeft);
+                            $(window).scrollTop(me.scrollTop);
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }

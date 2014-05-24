@@ -2602,7 +2602,8 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-
+                            $(window).scrollLeft(me.scrollLeft);
+                            $(window).scrollTop(me.scrollTop);
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }
@@ -5344,7 +5345,7 @@ $(function () {
                 me._maxNumPages = me._batchSize;
 
             me.listItems = new Array(me._maxNumPages);
-
+             
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }
@@ -7966,9 +7967,12 @@ $(function () {
                         //find cell
                         cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
                         icon = cell.prev();
+                        if (icon.hasClass("fr-render-respIcon") === false)
+                            icon = icon.prev();
                         ExtRow = icon.parent().parent().parent().next();
 
                         me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+
                     }
                 });
             }
@@ -7979,7 +7983,7 @@ $(function () {
 
             var $Drilldown = new $("<div/>");
             $Drilldown.html("&nbsp");
-            $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respTablix-expand");
             $Drilldown.addClass("fr-render-respIcon");
 
             $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
@@ -8025,13 +8029,13 @@ $(function () {
             }
 
             if (show) {
-                $(icon).addClass("fr-render-drilldown-collapse");
-                $(icon).removeClass("fr-render-drilldown-expand");
+                $(icon).addClass("fr-render-respTablix-collapse");
+                $(icon).removeClass("fr-render-respTablix-expand");
             }
             else {
                 ExtRow.hide();
-                $(icon).removeClass("fr-render-drilldown-collapse");
-                $(icon).addClass("fr-render-drilldown-expand");
+                $(icon).removeClass("fr-render-respTablix-collapse");
+                $(icon).addClass("fr-render-respTablix-expand");
             }
             me.layoutReport(true);
             if ($Tablix)

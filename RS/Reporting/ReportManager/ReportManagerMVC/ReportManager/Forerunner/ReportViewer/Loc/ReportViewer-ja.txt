@@ -49,7 +49,8 @@
     "print":"刷る",
     "dsCredential":"資格情報",
     "views":"閲覧",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"裏面",
@@ -82,7 +83,8 @@
     "unzoom":"ズーム解除",
     "search":"検索",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

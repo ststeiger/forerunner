@@ -49,7 +49,8 @@
     "print":"Skriv ut",
     "dsCredential":"Credential",
     "views":"Översikter",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"bakåt",
@@ -82,7 +83,8 @@
     "unzoom":"Zooma ut",
     "search":"Sökning",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

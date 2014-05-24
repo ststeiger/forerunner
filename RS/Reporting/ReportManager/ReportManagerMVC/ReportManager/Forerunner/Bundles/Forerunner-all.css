@@ -1349,3 +1349,47 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-2up2down #Report3 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
   .fr-2up2down #Report4 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
 
+.fr-dashboard-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
+  .fr-dashboard-toolbar input[type=number]::-webkit-inner-spin-button,
+  .fr-dashboard-toolbar input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .fr-dashboard-toolbar input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
+  .fr-dashboard-toolbar .fr-dashboard-toolbar-hidden { display: none; }
+
+.fr-dashboard-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; overflow-y: auto; }
+  .fr-dashboard-toolpane input[type=number]::-webkit-inner-spin-button,
+  .fr-dashboard-toolpane input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .fr-dashboard-toolpane input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
+  .fr-dashboard-toolpane .fr-toolbase-itemcontainer { border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; padding: 12px; vertical-align: top; color: white; display: block; }
+  .fr-dashboard-toolpane .fr-toolbase-item-text-container { margin: 5px; display: inline-block; }
+  .fr-dashboard-toolpane .fr-toolbase-item-text { height: 24px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #ffffff; }
+  .fr-dashboard-toolpane .fr-item-folders { display: block; }
+  .fr-dashboard-toolpane .fr-item-folders-group { display: block; }
+  .fr-dashboard-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
+  .fr-dashboard-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
+    .fr-dashboard-toolpane .fr-toolbase-hide-if-touch {  }
+    .fr-dashboard-toolpane .fr-toolbase-show-if-touch { display:none; }
+
+.fr-rp-section { display: none; }
+
+.fr-rp-form { margin-right: 16px; position: relative;}
+  .fr-rp-form .fr-rp-dropdown-container { position: relative; }
+  .fr-rp-form .fr-rp-text-input { display: block; height: 26px; width: 330px; margin: auto 0; padding: 0 22px 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+  .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 5px; }
+  .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
+  .fr-rp-form .fr-rp-popup-container { display: none; position:fixed; border: 1px solid #424242; background-color: white; }
+  .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 400px; }
+  .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+  .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
+  .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-rp-form { margin-right: 4px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-rp-form { margin-right: 4px; }
+}
+

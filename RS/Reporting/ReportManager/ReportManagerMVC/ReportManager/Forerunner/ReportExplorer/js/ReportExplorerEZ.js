@@ -289,7 +289,6 @@ $(function () {
             var layout = me.DefaultAppTemplate;
 
             me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
@@ -297,12 +296,14 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                    DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: layout.$container
+                    enableEdit: true
                 });
 
+                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("loadTemplate", templateName);
             }, timeout);
 

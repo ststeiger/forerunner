@@ -12642,7 +12642,6 @@ $(function () {
             var layout = me.DefaultAppTemplate;
 
             me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
@@ -12650,12 +12649,14 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                    DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: layout.$container
+                    enableEdit: true
                 });
 
+                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("loadTemplate", templateName);
             }, timeout);
 
@@ -18843,6 +18844,303 @@ $(function() {
 	// $.jstree.defaults.plugins.push("wholerow");
 
 });
+///#source 1 1 /Forerunner/Dashboard/js/DashboardEZ.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    /**
+    * Widget used to create and edit dashboards
+    *
+    * @namespace $.forerunner.dashboardEZ
+    * @prop {Object} options - The options
+    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
+    * @prop {Object} options.historyBack - Callback function used to go back in browsing history
+    * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
+    * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
+    *
+    * @example
+    * $("#dashboardEZId").dashboardEZ({
+    * });
+    */
+    $.widget(widgets.getFullname(widgets.dashboardEZ), {
+        options: {
+            DefaultAppTemplate: null,
+            navigateTo: null,
+            historyBack: null,
+            isFullScreen: true,
+            enableEdit: true
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+
+            if (me.options.DefaultAppTemplate === null) {
+                me.layout = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+            } else {
+                me.layout = me.options.DefaultAppTemplate;
+            }
+
+            forerunner.device.allowZoom(false);
+            me.layout.$mainsection.html(null);
+
+            var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.layout.$mainsection.append($dashboardContainer);
+
+            var $dashboardWidget = null;
+            if (me.options.enableEdit) {
+                $dashboardWidget = $dashboardContainer.dashboardEditor({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    $appContainer: me.layout.$container
+                });
+            } else {
+                $dashboardWidget = $dashboardContainer.dashboardViewer({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    $appContainer: me.layout.$container
+                });
+            }
+
+            var $toolbar = me.layout.$mainheadersection;
+            $toolbar.dashboardToolbar({
+                navigateTo: me.options.navigateTo,
+                $appContainer: me.layout.$container,
+                $dashboardEZ: me,
+                enableEdit: me.options.enableEdit
+            });
+
+            var $lefttoolbar = me.layout.$leftheader;
+            if ($lefttoolbar !== null) {
+                $lefttoolbar.dashboardLeftToolbar({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: me.layout.$container,
+                    $dashboardEZ: me,
+                    enableEdit: me.options.enableEdit
+                });
+            }
+
+            var $toolpane = me.layout.$leftpanecontent;
+            $toolpane.dashboardToolPane({
+                navigateTo: me.options.navigateTo,
+                $appContainer: me.layout.$container,
+                $dashboardEZ: me,
+                enableEdit: me.options.enableEdit
+            });
+
+            me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
+            me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+        },
+        /**
+         * Get dashboard viewer
+         *
+         * @function $.forerunner.dashboardEZ#getDashboardViewer
+         * 
+         * @return {Object} - dashboard viewer jQuery object
+         */
+        getDashboardViewer: function () {
+            var me = this;
+            return me.getDashboardEditor();
+        },
+        /**
+         * Get dashboard editor
+         *
+         * @function $.forerunner.dashboardEZ#getDashboardEditor
+         * 
+         * @return {Object} - dashboard editor jQuery object
+         */
+        getDashboardEditor: function () {
+            var me = this;
+
+            if (me.layout) {
+                var $dashboard = me.layout.$mainsection.find(".fr-dashboard-container");
+                if ($dashboard.length !== 0) {
+                    return $dashboard;
+                }
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer toolbar
+         *
+         * @function $.forerunner.dashboardEZ#getToolbar
+         * 
+         * @return {Object} - toolbar jQuery object
+         */
+        getToolbar: function () {
+            var me = this;
+            if (me.layout) {
+                return me.layout.$mainheadersection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer toolpane
+         *
+         * @function $.forerunner.dashboardEZ#getToolPane
+         * 
+         * @return {Object} - toolpane jQuery object
+         */
+        getToolPane: function () {
+            var me = this;
+            if (me.layout) {
+                return me.layout.$leftpanecontent;
+            }
+
+            return null;
+        },
+    });  // $.widget
+
+    // Left Toolbar
+    $.widget(widgets.getFullname(widgets.dashboardLeftToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-slide",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+            var dltb = forerunner.ssr.tools.dashboardLeftToolbar;
+
+            me.element.html("");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [dltb.btnDLTBMenu]);
+        },
+    }); //$.widget
+
+});  // function()
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardToolbar.js
+/**
+ * @file Contains the toolbar widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.toolbar = forerunner.ssr.tools.dashboardToolbar || {};
+
+$(function () {
+    // Useful namespaces
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+     * Toobar widget used by the dashboard
+     *
+     * @namespace $.forerunner.dashboardToolbar
+     * @prop {Object} options - The options
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
+     * @prop {Object} options.$appContainer - Container for the dashboardEditor widget
+     * @prop {Object} options.$dashboardEZ - dashboardEZ widget
+     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolbar)
+     * @example
+     * $("#dashboardToolbarId").dashboardToolbar({
+     *      navigateTo: me.options.navigateTo,
+     *      $appContainer: layout.$container,
+     *      $dashboardEZ: me.dashboardEZ,
+     *      enableEdit: me.options.enableEdit
+	 * });
+     *
+     * Note:
+     *  Toolbar can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
+     */
+    $.widget(widgets.getFullname(widgets.dashboardToolbar), $.forerunner.toolBase, /** @lends $.forerunner.toolbar */ {
+        options: {
+            navigateTo: null,
+            $appContainer: null,
+            $dashboardEZ: null,
+            enableEdit: true,
+            toolClass: "fr-dashboard-toolbar"
+        },
+        _init: function () {
+            var me = this;
+            me._super(); //Invokes the method of the same name from the parent widget
+
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
+           
+            me.addTools(1, true, [dtb.btnSave]);
+        },
+        _destroy: function () {
+        },
+        _create: function () {
+            var me = this;
+        },
+    });  // $.widget
+});  // function()
+
+///#source 1 1 /Forerunner/Dashboard/js/DashboardToolPane.js
+/**
+ * @file Contains the toolPane widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var dtp = forerunner.ssr.tools.dashboardToolpane;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+     * ToolPane widget used with the dashboard
+     *
+     * @namespace $.forerunner.dashboardToolPane
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
+     * @prop {Object} options.$appContainer - Container for the dashboardEditor widget
+     * @prop {Object} options.$dashboardEZ - dashboardEZ widget
+     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolbar)
+     * @example
+     * $("#dashboardToolPaneId").dashboardToolPane({
+	 * });
+     *
+     * Note:
+     *  ToolPane can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
+     */
+    $.widget(widgets.getFullname(widgets.dashboardToolPane), $.forerunner.toolBase, {
+        options: {
+            navigateTo: null,
+            $appContainer: null,
+            $dashboardEZ: null,
+            enableEdit: true,
+            toolClass: "fr-dashboard-toolpane"
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+
+            me.element.html("");
+            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolpane);
+            
+            me.addTools(1, false, [dtp.itemSave]);
+            
+            var $spacerdiv = new $("<div />");
+            $spacerdiv.attr("style", "height:65px");
+            $toolpane.append($spacerdiv);
+        },
+    });  // $.widget
+});  // function()
+
 ///#source 1 1 /Forerunner/Dashboard/js/DashboardBase.js
 /**
  * @file Contains the dashboardBase widget.

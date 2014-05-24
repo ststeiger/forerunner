@@ -49,7 +49,8 @@
     "print":"打印",
     "dsCredential":"數據源驗證",
     "views":"瀏覽",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -82,7 +83,8 @@
     "unzoom":"取消縮放",
     "search":"搜索",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"打印報表",

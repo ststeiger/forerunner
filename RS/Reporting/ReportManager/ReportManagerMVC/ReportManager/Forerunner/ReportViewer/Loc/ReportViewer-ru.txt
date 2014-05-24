@@ -49,7 +49,8 @@
     "print":"Напечатать",
     "dsCredential":"учетных",
     "views":"Просмотров",
-    "addToFavorites":"избранное"
+    "addToFavorites":"избранное",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -82,7 +83,8 @@
     "unzoom":"unzoom",
     "search":"поиск",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"Печать отчета",

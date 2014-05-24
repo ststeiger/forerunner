@@ -192,11 +192,16 @@
     <Content Include="Forerunner\Common\js\MessageBox.js" />
     <Content Include="Forerunner\Dashboard\css\ReportProperties.css" />
     <Content Include="Forerunner\Dashboard\css\Dashboard-all.css" />
+    <Content Include="Forerunner\Dashboard\css\DashboardToolbar.css" />
+    <Content Include="Forerunner\Dashboard\css\DashboardToolPane.css" />
     <Content Include="Forerunner\Dashboard\dashboards\2up2down-en.txt" />
+    <Content Include="Forerunner\Dashboard\js\DashboardEZ.js" />
     <Content Include="Forerunner\Dashboard\js\ReportProperties.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardBase.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardEditor.js" />
+    <Content Include="Forerunner\Dashboard\js\DashboardToolbar.js" />
+    <Content Include="Forerunner\Dashboard\js\DashboardToolPane.js" />
     <Content Include="Forerunner\Lib\jQuery\css\images\animated-overlay.gif" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_75_416ca3_40x100.png" />

@@ -49,7 +49,8 @@
     "print":"Imprimir",
     "dsCredential":"Credenciales",
     "views":"Vistas",
-    "addToFavorites":"Añadir a Favoritos"
+    "addToFavorites":"Añadir a Favoritos",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -83,7 +84,8 @@
     "unzoom":"unzoom",
     "search":"búsqueda",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

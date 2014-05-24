@@ -374,7 +374,71 @@ $(function () {
         }
     };
 
+  /**
+   * Defines all the tools used in the dashboard toolbar.
+   *
+   * @namespace
+   */
+    forerunner.ssr.tools.dashboardToolbar = {
+      /** @member */
+      btnMenu: {
+        toolType: toolTypes.button,
+        selectorClass: "fr-dashboard-toolbar-menu-button",
+        imageClass: "fr-icons24x24-menu",
+        tooltip: locData.toolbar.menu,
+        events: {
+          click: function (e) {
+            e.data.me._trigger(events.menuClick, null, {});
+          }
+        }
+      },
+      /** @member */
+      btnSave: {
+        toolType: toolTypes.button,
+        selectorClass: "fr-dashboard-toolbar-save-button",
+        imageClass: "fr-icons24x24-save-param",
+        tooltip: locData.toolbar.saveDashboard,
+        events: {
+          click: function (e) {
+            e.data.me._trigger(events.menuClick, null, {});
+          }
+        }
+      }
+    };
+
     /**
+     * Defines all the tools used in the dashboard toolpane.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.dashboardToolpane = {
+      /** @member */
+      itemMenu: {
+        toolType: toolTypes.button,
+        selectorClass: "fr-dashboard-toolbar-menu-button",
+        imageClass: "fr-icons24x24-menu",
+        tooltip: locData.toolbar.menu,
+        events: {
+          click: function (e) {
+            e.data.me._trigger(events.menuClick, null, {});
+          }
+        }
+      },
+      /** @member */
+      itemSave: {
+        toolType: toolTypes.button,
+        selectorClass: "fr-dashboard-toolbar-save-button",
+        imageClass: "fr-icons24x24-save-param",
+        tooltip: locData.toolbar.saveDashboard,
+        events: {
+          click: function (e) {
+            e.data.me._trigger(events.menuClick, null, {});
+          }
+        }
+      }
+    };
+
+  /**
      * Defines all the tools used in the toolpane.
      *
      * @namespace
@@ -810,6 +874,26 @@ $(function () {
         btnLTBMenu: {
             toolType: toolTypes.button,
             selectorClass: "fr-ltb-menu-button",
+            imageClass: "fr-icons24x24-menu",
+            tooltip: locData.toolbar.menu,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.menuClick, null, {});
+                }
+            }
+        }
+    };
+
+    /**
+     * Defines all the tools used in the dashboard left toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.dashboardLeftToolbar = {
+        /** @member */
+        btnDLTBMenu: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dltb-menu-button",
             imageClass: "fr-icons24x24-menu",
             tooltip: locData.toolbar.menu,
             events: {

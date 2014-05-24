@@ -212,6 +212,14 @@ $(function () {
             dashboardViewer: "dashboardViewer",
             /** @constant */
             reportProperties: "reportProperties",
+            /** @constant */
+            dashboardEZ: "dashboardEZ",
+            /** @constant */
+            dashboardLeftToolbar: "dashboardLeftToolbar",
+            /** @constant */
+            dashboardToolbar: "dashboardToolbar",
+            /** @constant */
+            dashboardToolPane: "dashboardToolPane",
 
             /** @constant */
             namespace: "forerunner",

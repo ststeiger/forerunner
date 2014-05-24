@@ -49,7 +49,8 @@
     "print":"Impressão",
     "dsCredential":"Credencial",
     "views":"Visualizações",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"Volta",
@@ -82,7 +83,8 @@
     "unzoom":"unzoom",
     "search":"pesquisa",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

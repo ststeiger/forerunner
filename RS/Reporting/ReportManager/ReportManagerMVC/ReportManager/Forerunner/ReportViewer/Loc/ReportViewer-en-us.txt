@@ -49,7 +49,8 @@
     "print":"Print",
     "dsCredential":"Credential",
     "views":"Views",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"Back",
@@ -82,7 +83,8 @@
     "unzoom":"unzoom",
     "search":"Search",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "print": {
     "title":"Print Report",

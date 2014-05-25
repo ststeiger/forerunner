@@ -982,14 +982,14 @@ $(function () {
             if (me.RDLExt)
                 ActionExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
             if (ActionExt && ActionExt.JavaScriptAction) {
-                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                //var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
                 $Control.addClass("fr-core-cursorpointer");
                 var newFunc;
                 try{
                     newFunc = new Function("e",ActionExt.JavaScriptAction);
                 }
                 catch(e){}
-                $Control.on("click", { reportViewer: me.options.reportViewer.element, value: val }, newFunc);
+                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control }, newFunc);
             }
 
         },
@@ -1000,8 +1000,7 @@ $(function () {
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);
-                    location.href = e.data.HyperLink;
-                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
+                    location.href = e.data.HyperLink;                    
                 });
 
             }

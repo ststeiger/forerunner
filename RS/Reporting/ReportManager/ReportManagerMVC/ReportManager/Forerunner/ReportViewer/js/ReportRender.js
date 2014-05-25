@@ -1252,7 +1252,7 @@ $(function () {
                 }
                 if (tablixExt && tablixExt.ColHeaderRow !== undefined)
                     respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
-                if (tablixExt.BackgroundColor !== undefined)
+                if (tablixExt && tablixExt.BackgroundColor !== undefined)
                     respCols.BackgroundColor = tablixExt.BackgroundColor;
 
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {

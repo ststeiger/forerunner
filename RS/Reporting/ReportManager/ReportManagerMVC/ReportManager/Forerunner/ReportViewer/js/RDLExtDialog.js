@@ -112,6 +112,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.reportViewer.options.$appContainer, me);
+            me.element.detach();
 
         }
     }); //$.widget

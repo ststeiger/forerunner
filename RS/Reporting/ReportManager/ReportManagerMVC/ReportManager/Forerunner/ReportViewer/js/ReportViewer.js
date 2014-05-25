@@ -1736,6 +1736,7 @@ $(function () {
                 me.paramLoaded = false;
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
+                me.RDLExtProperty = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -1746,7 +1747,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;
+            me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
         _reloadFromSessionStorage: function () {
@@ -2354,7 +2355,7 @@ $(function () {
         showRDLExtDialog: function () {
             var me = this;
 
-            var dlg = $(".fr-rdl-section").first();
+            var dlg = $(".fr-rdl-section",me.element).first();
 
             if (dlg.length ===0) {
                 dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -2373,8 +2374,11 @@ $(function () {
         saveRDLExt: function (RDL) {
             var me = this;
 
-            try{
-                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            try {
+                if (RDL.trim() !== "")
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                else
+                    me.RDLExtProperty = {};
             }
             catch (e) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                

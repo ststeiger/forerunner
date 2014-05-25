@@ -2366,6 +2366,7 @@ $(function () {
                 me.paramLoaded = false;
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
+                me.RDLExtProperty = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -2376,7 +2377,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;
+            me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
         _reloadFromSessionStorage: function () {
@@ -2984,7 +2985,7 @@ $(function () {
         showRDLExtDialog: function () {
             var me = this;
 
-            var dlg = $(".fr-rdl-section").first();
+            var dlg = $(".fr-rdl-section",me.element).first();
 
             if (dlg.length ===0) {
                 dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -3003,8 +3004,11 @@ $(function () {
         saveRDLExt: function (RDL) {
             var me = this;
 
-            try{
-                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            try {
+                if (RDL.trim() !== "")
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                else
+                    me.RDLExtProperty = {};
             }
             catch (e) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
@@ -6866,12 +6870,10 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
-            if (RecExt.FixedSize === true) {                
-                if (RecExt.Height)
-                    Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.Height) + "mm;";
-                if (RecExt.Width)
-                    Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.Width) + "mm;";
-            }
+            if (RecExt.FixedHeight)
+                Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
+            if (RecExt.FixedWidth)
+                Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
 
             RIContext.$HTMLParent.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
@@ -6928,11 +6930,11 @@ $(function () {
                     rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
                 }
 
-                if (rec.RecExt.FixedSize === true) {
+                if (rec.RecExt.FixedHeight || rec.RecExt.FixedWidth) {
                     rec.HTMLRec.removeClass("fr-render-rec");
                 }
                 if (RIContext.CurrLocation) {
-                    if (rec.RecExt.Width === undefined)
+                    if (rec.RecExt.FixedWidth === undefined)
                         rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
 
                     if (RIContext.CurrObj.ReportItems.length === 0)
@@ -6944,7 +6946,7 @@ $(function () {
                                                 (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                                 parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                            1;
-                        if (rec.RecExt.Height === undefined)
+                        if (rec.RecExt.FixedHeight === undefined)
                             rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
                     }
 
@@ -8756,7 +8758,11 @@ $(function () {
             var unit = convertFrom.match(/\D+$/);  // get the existing unit
             var value = convertFrom.match(/\d+/);  // get the numeric component
 
-            if (unit.length === 1) unit = unit[0];
+            if (unit && unit.length === 1)
+                unit = unit[0];
+            else
+                unit = "px";
+
             if (value.length === 1) value = value[0];
 
             switch (unit) {
@@ -11531,6 +11537,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.reportViewer.options.$appContainer, me);
+            me.element.detach();
 
         }
     }); //$.widget

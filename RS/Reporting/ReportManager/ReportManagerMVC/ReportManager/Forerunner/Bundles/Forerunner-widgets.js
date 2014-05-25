@@ -963,14 +963,15 @@ $(function () {
                 me.$loadingIndicator.hide();
             }
         },
-        _ReRender: function () {
+        _ReRender: function (force) {
             var me = this;
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     page.needsLayout = true;
-                });
-                me._reLayoutPage(me.curPage);                
+                });                
+                me._reLayoutPage(me.curPage, force);
+                
             }
         },
         //Wrapper function, used to resigter window resize event
@@ -2696,10 +2697,10 @@ $(function () {
             }
         },
 
-        _reLayoutPage: function(pageNum){
+        _reLayoutPage: function(pageNum,force){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true);
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());
                 //me.pages[pageNum].needsLayout = false;
             }
         },
@@ -3027,6 +3028,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
+                       me._ReRender(true);
                        return true;
                    },
                    fail: function (data){
@@ -6887,15 +6889,16 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        layoutReport: function(isLoaded){
+        layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
             var renderWidth = me.options.reportViewer.element.width();
-            
+            if (RDLExt)
+                me.RDLExt = RDLExt;
             if (renderWidth === 0)
                 return true;
 
             //Need to re-render
-            if (Math.abs(me._currentWidth - renderWidth) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > renderWidth) {
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on" ) {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }

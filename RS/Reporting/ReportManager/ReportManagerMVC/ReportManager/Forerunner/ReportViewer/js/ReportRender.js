@@ -395,15 +395,16 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        layoutReport: function(isLoaded){
+        layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
             var renderWidth = me.options.reportViewer.element.width();
-            
+            if (RDLExt)
+                me.RDLExt = RDLExt;
             if (renderWidth === 0)
                 return true;
 
             //Need to re-render
-            if (Math.abs(me._currentWidth - renderWidth) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > renderWidth) {
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on" ) {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }

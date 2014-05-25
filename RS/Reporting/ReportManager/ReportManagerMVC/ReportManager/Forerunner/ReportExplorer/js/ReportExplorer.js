@@ -69,6 +69,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -94,6 +95,7 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
+                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;

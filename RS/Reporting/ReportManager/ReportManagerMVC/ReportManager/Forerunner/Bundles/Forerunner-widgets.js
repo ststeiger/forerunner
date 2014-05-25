@@ -752,11 +752,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
-            me.RDLExtProperty = null;
-            
-
-            //Test admin
-            me.options.isAdmin = true;
+            me.RDLExtProperty = null;            
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -2700,8 +2696,7 @@ $(function () {
         _reLayoutPage: function(pageNum,force){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());
-                //me.pages[pageNum].needsLayout = false;
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
             }
         },
         _renderPage: function (pageNum) {
@@ -5844,6 +5839,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -5869,6 +5865,7 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
+                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;
@@ -6396,6 +6393,9 @@ $(function () {
                     "<div class='fr-us-setting-container'>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+
+                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                     "</div>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -6406,7 +6406,7 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");
+            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
@@ -6450,13 +6450,20 @@ $(function () {
         _getSettings: function () {
             var me = this;
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
+
+            me.$adminUI = me.element.find(".fr-us-admin-ui-id");
+            var adminUI = me.settings.adminUI;
+            me.$adminUI.prop("checked", adminUI);
+
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.adminUI = me.$adminUI.prop("checked");
 
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 
@@ -6472,9 +6479,7 @@ $(function () {
 
             me._getSettings();
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "inline-block");
-            //});
+
         },
         /**
          * Close user setting dialog
@@ -6485,9 +6490,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "");
-            //});
+
         }
     }); //$.widget
 });
@@ -13149,6 +13152,15 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
+            //Update isAdmin
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
+            if (settings && settings.adminUI === true )
+                me.options.isAdmin = true;
+            else
+                me.options.isAdmin = false;
+
             me.DefaultAppTemplate._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -13171,6 +13183,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }
+
             }, timeout);
 
             me.element.css("background-color", "");

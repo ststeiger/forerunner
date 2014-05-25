@@ -122,11 +122,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
-            me.RDLExtProperty = null;
-            
-
-            //Test admin
-            me.options.isAdmin = true;
+            me.RDLExtProperty = null;            
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -2070,8 +2066,7 @@ $(function () {
         _reLayoutPage: function(pageNum,force){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());
-                //me.pages[pageNum].needsLayout = false;
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
             }
         },
         _renderPage: function (pageNum) {

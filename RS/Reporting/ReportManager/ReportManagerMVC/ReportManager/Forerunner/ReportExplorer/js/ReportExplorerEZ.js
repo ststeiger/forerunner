@@ -252,6 +252,15 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
+            //Update isAdmin
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
+            if (settings && settings.adminUI === true )
+                me.options.isAdmin = true;
+            else
+                me.options.isAdmin = false;
+
             me.DefaultAppTemplate._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -274,6 +283,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     me.DefaultAppTemplate.$mainsection.fadeIn("fast");
                 }
+
             }, timeout);
 
             me.element.css("background-color", "");

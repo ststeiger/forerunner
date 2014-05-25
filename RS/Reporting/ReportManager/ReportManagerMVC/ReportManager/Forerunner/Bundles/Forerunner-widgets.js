@@ -7469,10 +7469,26 @@ $(function () {
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
+            var me = this;
             if (Elements.ActionInfo)
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
+
+            var ActionExt
+            if (me.RDLExt)
+                ActionExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
+            if (ActionExt && ActionExt.JavaScriptAction) {
+                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                $Control.addClass("fr-core-cursorpointer");
+                var newFunc;
+                try{
+                    newFunc = new Function("e",ActionExt.JavaScriptAction);
+                }
+                catch(e){}
+                $Control.on("click", { reportViewer: me.options.reportViewer.element, value: val }, newFunc);
+            }
+
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;

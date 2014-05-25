@@ -7732,6 +7732,8 @@ $(function () {
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
                 respCols.ColumnHeaders = {}; 
+                respCols.ColHeaderRow = 0;
+                respCols.BackgroundColor = "#F2F2F2";
 
                 if (tablixExt && tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
@@ -7739,10 +7741,10 @@ $(function () {
                         respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
                     }
                 }
-                if (respCols.ColHeaderRow === undefined)
-                    respCols.ColHeaderRow = 0;
-                if (respCols.BackgroundColor === undefined)
-                    respCols.BackgroundColor = "#F2F2F2";
+                if (tablixExt && tablixExt.ColHeaderRow !== undefined)
+                    respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
+                if (tablixExt.BackgroundColor !== undefined)
+                    respCols.BackgroundColor = tablixExt.BackgroundColor;
 
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;

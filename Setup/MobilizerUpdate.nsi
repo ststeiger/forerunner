@@ -2,14 +2,14 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Forerunner Mobilizerfor SQL Server Reporting Services"
-!define PRODUCT_VERSION "2.0 Update"
+!define PRODUCT_VERSION "3.0 Update"
 !define PRODUCT_PUBLISHER "Forerunner Software"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV2"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define COPYRIGHT "Copyright © Forerunner Software 2014"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
-!define VI_PRODUCT_NAME "Mobilizer 2.0 Update"
+!define VI_PRODUCT_NAME "Mobilizer 3.0 Update"
 !define COMPANY_NAME "Forerunner Software"
 !define /file BUILD_VERSION ..\build.txt
 
@@ -78,7 +78,7 @@ RequestExecutionLevel admin
 !endif
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-InstallDir "$PROGRAMFILES\Forerunner\MobilizerV2\" ; add '\' at the end to prevent MobilizerV* append to the end of user custom select path
+InstallDir "$PROGRAMFILES\Forerunner\MobilizerV3\" ; add '\' at the end to prevent MobilizerV* append to the end of user custom select path
 OutFile "ForerunnerMobilizerUpdate.exe"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -241,6 +241,7 @@ Section "ReportManager" SEC01
 
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
+  File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
 
 
 ;This must be the last line of the config tool will not work after install

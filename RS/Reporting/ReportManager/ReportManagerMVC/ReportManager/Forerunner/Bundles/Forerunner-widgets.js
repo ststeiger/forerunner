@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -4473,14 +4473,15 @@ $(function () {
 
                 if (!data.open) {
                     $spacer.hide();
-                    me.$pagesection.show();
+                    //me.$pagesection.show();
                     me.$container.removeClass("fr-layout-container-noscroll");
                     me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall($viewer))
-                        me.$pagesection.hide();
+                    //don't need to hide page section when navigation open in both full or non-full mode
+                    //if (forerunner.device.isSmall(me.options.$container))
+                    //    me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
                     me.$pagesection.addClass("fr-layout-pagesection-noscroll");
@@ -4640,7 +4641,7 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -4703,8 +4704,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
-
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
+            
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -5264,6 +5265,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {
         options: {
             $reportViewer: null,
+            $appContainer: null,
             rsInstance: null,
         },
         // Constructor
@@ -5336,7 +5338,8 @@ $(function () {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
                     //check $slider container instead, we can sure it's open
                     //me.options.$reportviewer may hide so its width is 0
-                    if (forerunner.device.isSmall(me.$slider))
+                    //if (forerunner.device.isSmall(me.$slider))
+                    if (forerunner.device.isSmall(me.options.$appContainer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -5490,7 +5493,9 @@ $(function () {
                 var $spacer = me.element.find(".fr-nav-li-spacer");
                 var $closeButton = me.element.find(".fr-nav-close-container");
 
-                if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //we should used visible area to indicate full screen mode
+                if (forerunner.device.isSmall(me.options.$appContainer)) {
                     $container.addClass("fr-nav-container-full");
                     $items.addClass("fr-nav-item-full");
                     $spacer.addClass("fr-nav-li-spacer-full");
@@ -12114,7 +12119,7 @@ $(function () {
 
             var $nav = me.options.$nav;
             if ($nav !== null) {
-                $nav.pageNav({ $reportViewer: $viewer, rsInstance: me.options.rsInstance });
+                $nav.pageNav({ $reportViewer: $viewer, $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
                 $viewer.reportViewer("option", "pageNavArea", $nav);
             }
             
@@ -13141,6 +13146,8 @@ $(function () {
                 me._createReportExplorer(path, view, true);
 
                 var $toolbar = layout.$mainheadersection;
+                //add this class to distinguish explorer toolbar and viewer toolbar
+                $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
                     $appContainer: layout.$container,
@@ -13187,10 +13194,10 @@ $(function () {
          */
         transitionToReportViewer: function (path, params) {
             var me = this;
-
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             //Update isAdmin
             if (!me.$reportExplorer)
@@ -13201,13 +13208,17 @@ $(function () {
             else
                 me.options.isAdmin = false;
 
-            me.DefaultAppTemplate._selectedItemPath = null;
+            //add this class to distinguish explorer toolbar and viewer toolbar
+            var $toolbar = layout.$mainheadersection;
+            $toolbar.addClass("fr-viewer-tb").removeClass("fr-explorer-tb");
+
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                    DefaultAppTemplate: me.DefaultAppTemplate,
+                layout.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -13217,11 +13228,11 @@ $(function () {
                     isAdmin: me.options.isAdmin,
                 });
 
-                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
-                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                    layout.$mainsection.fadeIn("fast");
                 }
 
             }, timeout);
@@ -13236,17 +13247,17 @@ $(function () {
          */
         transitionToCreateDashboard: function (templateName) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            me.DefaultAppTemplate._selectedItemPath = null;
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                var $dashboardEditor = layout.$mainviewport.dashboardEditor({
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack
                 });

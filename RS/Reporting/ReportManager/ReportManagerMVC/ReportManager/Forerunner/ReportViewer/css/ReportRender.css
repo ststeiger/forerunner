@@ -9,8 +9,11 @@
 .fr-render-error-details { cursor: pointer; color: blue; }
 
 .fr-render-drilldown-collapse { background-image: url('../../reportviewer/Images/Drilldown_Collapse.gif'); display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
-
 .fr-render-drilldown-expand { background-image: url('../../reportviewer/Images/Drilldown_Expand.gif');display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+
+.fr-render-respTablix-collapse { background-image: url('../../reportviewer/Images/Collapse.png'); display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+.fr-render-respTablix-expand { background-image: url('../../reportviewer/Images/Expand.png');display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+
 
 .fr-render-list-circle { list-style-type: circle; }
 .fr-render-list-square { list-style-type: square; }

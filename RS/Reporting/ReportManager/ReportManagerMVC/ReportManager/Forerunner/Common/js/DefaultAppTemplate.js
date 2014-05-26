@@ -412,14 +412,15 @@ $(function () {
 
                 if (!data.open) {
                     $spacer.hide();
-                    me.$pagesection.show();
+                    //me.$pagesection.show();
                     me.$container.removeClass("fr-layout-container-noscroll");
                     me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
-                        me.$pagesection.hide();
+                    //don't need to hide page section when navigation open in both full or non-full mode
+                    //if (forerunner.device.isSmall(me.options.$container))
+                    //    me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
                     me.$pagesection.addClass("fr-layout-pagesection-noscroll");
@@ -576,7 +577,7 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -639,8 +640,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
-
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
+            
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {

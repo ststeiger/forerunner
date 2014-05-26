@@ -754,9 +754,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
-            
-            //Test admin
-            me.options.isAdmin = true;
+            me.RDLExtProperty = null;            
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -961,14 +959,15 @@ $(function () {
                 me.$loadingIndicator.hide();
             }
         },
-        _ReRender: function () {
+        _ReRender: function (force) {
             var me = this;
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     page.needsLayout = true;
-                });
-                me._setPage(me.curPage);
+                });                
+                me._reLayoutPage(me.curPage, force);
+                
             }
         },
         //Wrapper function, used to resigter window resize event
@@ -1475,6 +1474,7 @@ $(function () {
                 me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
+            me._reLayoutPage(me.curPage);
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
@@ -1701,7 +1701,7 @@ $(function () {
          *
          * @param {String} toggleID - Id of the item to toggle
          */
-        toggleItem: function (toggleID) {
+        toggleItem: function (toggleID,scrollID) {
             var me = this;
             if (me.lock === 1)
                 return;
@@ -1711,10 +1711,10 @@ $(function () {
             me._resetContextIfInvalid();
             me._prepareAction();
             
-            me._callToggle(toggleID);
+            me._callToggle(toggleID, scrollID);
         },
         
-        _callToggle : function(toggleID) {
+        _callToggle: function (toggleID, scrollID) {
             var me = this;
             me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
@@ -1732,7 +1732,7 @@ $(function () {
                         var replay = me.pages[me.curPage].Replay
 
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false,undefined,undefined,undefined,replay);                        
+                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
                         
                     }
                     else
@@ -2155,7 +2155,21 @@ $(function () {
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+
+            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                window.open(url);
+            }
+            else {
+                var pif = me.element.find(".fr-print-iframe");
+                if (pif.length === 1) pif.detach();
+
+                var pif = $("<iframe/>");
+                pif.addClass("fr-print-iframe");
+                pif.attr("name", me.viewerID);
+                pif.attr("src", url);
+                pif.hide();
+                me.element.append(pif);
+            }
         },
         _setPrint: function (pageLayout) {
             var me = this;
@@ -2343,6 +2357,7 @@ $(function () {
                 me.paramLoaded = false;
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
+                me.RDLExtProperty = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -2353,7 +2368,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;
+            me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
         _reloadFromSessionStorage: function () {
@@ -2501,7 +2516,7 @@ $(function () {
                     fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache,respToggleReplay) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
             var me = this;
 
             if (flushCache === true)
@@ -2509,16 +2524,22 @@ $(function () {
 
             if (me.pages[newPageNum])
                 if (me._getPageContainer(newPageNum)) {
-                    if (!loadOnly) {
+                    if (!loadOnly) {                        
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
-                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            me.element.show(0); //scrollto does not work with the slide in functions:(                        
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
                             me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
+                        if (scrollID) {
+                            el = me.element.find("div[name=\"" + scrollID + "\"]")
+                            if (el.length ===1)
+                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                        }
+
                     }
                     return;
                 }
@@ -2540,7 +2561,7 @@ $(function () {
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
                         instance: me.options.rsInstance,
-                    },
+                    }, 
                     async: true,
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
@@ -2557,7 +2578,13 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-
+                            $(window).scrollLeft(me.scrollLeft);
+                            $(window).scrollTop(me.scrollTop);
+                            if (scrollID) {
+                                el = me.element.find("div[name=\"" + scrollID + "\"]")
+                                if (el.length === 1)
+                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                            }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }
@@ -2637,6 +2664,8 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+        _reLayoutPage: function(pageNum,force){
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -2918,7 +2947,7 @@ $(function () {
         showRDLExtDialog: function () {
             var me = this;
 
-            var dlg = $(".fr-rdl-section").first();
+            var dlg = $(".fr-rdl-section",me.element).first();
 
             if (dlg.length ===0) {
                 dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -2937,8 +2966,11 @@ $(function () {
         saveRDLExt: function (RDL) {
             var me = this;
 
-            try{
-                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            try {
+                if (RDL.trim() !== "")
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                else
+                    me.RDLExtProperty = {};
             }
             catch (e) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
@@ -2957,6 +2989,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
+                       me._ReRender(true);
                        return true;
                    },
                    fail: function (data){
@@ -4406,14 +4439,15 @@ $(function () {
 
                 if (!data.open) {
                     $spacer.hide();
-                    me.$pagesection.show();
+                    //me.$pagesection.show();
                     me.$container.removeClass("fr-layout-container-noscroll");
                     me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall())
-                        me.$pagesection.hide();
+                    //don't need to hide page section when navigation open in both full or non-full mode
+                    //if (forerunner.device.isSmall(me.options.$container))
+                    //    me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
                     me.$pagesection.addClass("fr-layout-pagesection-noscroll");
@@ -4570,7 +4604,7 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -4633,8 +4667,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
-
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
+            
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -5194,6 +5228,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {
         options: {
             $reportViewer: null,
+            $appContainer: null,
             rsInstance: null,
         },
         // Constructor
@@ -5266,7 +5301,8 @@ $(function () {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
                     //check $slider container instead, we can sure it's open
                     //me.options.$reportviewer may hide so its width is 0
-                    if (forerunner.device.isSmall(me.$slider))
+                    //if (forerunner.device.isSmall(me.$slider))
+                    if (forerunner.device.isSmall(me.options.$appContainer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -5289,7 +5325,7 @@ $(function () {
                 me._maxNumPages = me._batchSize;
 
             me.listItems = new Array(me._maxNumPages);
-
+             
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }
@@ -5420,7 +5456,9 @@ $(function () {
                 var $spacer = me.element.find(".fr-nav-li-spacer");
                 var $closeButton = me.element.find(".fr-nav-close-container");
 
-                if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //we should used visible area to indicate full screen mode
+                if (forerunner.device.isSmall(me.options.$appContainer)) {
                     $container.addClass("fr-nav-container-full");
                     $items.addClass("fr-nav-item-full");
                     $spacer.addClass("fr-nav-li-spacer-full");
@@ -5769,6 +5807,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -5794,6 +5833,7 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
+                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;
@@ -6321,6 +6361,9 @@ $(function () {
                     "<div class='fr-us-setting-container'>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+
+                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                     "</div>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -6331,7 +6374,7 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");
+            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
@@ -6375,13 +6418,20 @@ $(function () {
         _getSettings: function () {
             var me = this;
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
+
+            me.$adminUI = me.element.find(".fr-us-admin-ui-id");
+            var adminUI = me.settings.adminUI;
+            me.$adminUI.prop("checked", adminUI);
+
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.adminUI = me.$adminUI.prop("checked");
 
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 
@@ -6397,9 +6447,7 @@ $(function () {
 
             me._getSettings();
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "inline-block");
-            //});
+
         },
         /**
          * Close user setting dialog
@@ -6410,9 +6458,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "");
-            //});
+
         }
     }); //$.widget
 });
@@ -6515,11 +6561,13 @@ $(function () {
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
                 me.Page.Replay = {};
 
             
+            me._rectangles = [];
 
             me._createStyles(reportViewer);
             $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
@@ -6724,7 +6772,11 @@ $(function () {
             var me = this;
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
-            RecLayout = me._getRectangleLayout(Measurements);
+            var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);            
+            var RecExt = {};
+            if (me.RDLExt && me.RDLExt[sharedElements.Name])
+                RecExt = me.RDLExt[sharedElements.Name];
+            
 
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
@@ -6784,11 +6836,28 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
+            if (RecExt.FixedHeight)
+                Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
+            if (RecExt.FixedWidth)
+                Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
+
             
-            if (Math.abs(me._currentWidth - me.options.reportViewer.element.width()) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
-                me._currentWidth = me.options.reportViewer.element.width();
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext, RecExt: RecExt });
+        layoutReport: function(isLoaded,force,RDLExt){
+            var renderWidth = me.options.reportViewer.element.width();
+            if (RDLExt)
+                me.RDLExt = RDLExt;
+            if (renderWidth === 0)
+                return true;
+
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on" ) {
+                me._currentWidth = renderWidth;
+                if (rec.RecExt.FixedHeight || rec.RecExt.FixedWidth) {
+                    rec.HTMLRec.removeClass("fr-render-rec");
+                }
             if (RIContext.CurrLocation) {
-                Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
+                    if (rec.RecExt.FixedWidth === undefined)
+                        rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
                 if (RIContext.CurrObj.ReportItems.length === 0)
                     Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
                 else {
@@ -6798,13 +6867,14 @@ $(function () {
                                             (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                             parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                        1;
-                    Style += "height:" + me._roundToTwo(parentHeight) + "mm;";
+                        if (rec.RecExt.FixedHeight === undefined)
+                            rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
                 }
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
             me.element.hide().show(0);
-                me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+            return false;
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
             return RIContext.$HTMLParent;
@@ -6903,15 +6973,21 @@ $(function () {
                         // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
                             //if my index above is the same as yours then move me down
-                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
+                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove) {
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
+                                curRI.TopDelta = 1;
+                            }
                             // else if your origional index above is my new index above then you move down
-                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index)
-                                layout.ReportItems[j].IndexAbove = curRI.Index;                        
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index) {
+                                layout.ReportItems[j].IndexAbove = curRI.Index;
+                                layout.ReportItems[j].TopDelta = 1;
+                            }
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width) {
                             curRI.IndexAbove = layout.ReportItems[j].Index;
+                            curRI.TopDelta = 1;
+                        }
                     }
                 }
                 
@@ -6978,7 +7054,10 @@ $(function () {
                 else
                     $Drilldown.addClass("fr-render-drilldown-expand");
 
-                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
+                $Drilldown.on("click", { ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) {
+                    var name = $(this).parent().parent().attr("name");
+                    me.options.reportViewer.toggleItem(e.data.ToggleID,name);
+                });
                 $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
@@ -7308,10 +7387,26 @@ $(function () {
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
+            var me = this;
             if (Elements.ActionInfo)
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
+
+            var ActionExt
+            if (me.RDLExt)
+                ActionExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
+            if (ActionExt && ActionExt.JavaScriptAction) {
+                //var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                $Control.addClass("fr-core-cursorpointer");
+                var newFunc;
+                try{
+                    newFunc = new Function("e",ActionExt.JavaScriptAction);
+                }
+                catch(e){}
+                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control }, newFunc);
+            }
+
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
@@ -7320,8 +7415,7 @@ $(function () {
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);
-                    location.href = e.data.HyperLink;
-                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
+                    location.href = e.data.HyperLink;                    
                 });
 
             }
@@ -7568,6 +7662,8 @@ $(function () {
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnHeaders = {}; 
+                respCols.ColHeaderRow = 0;
+                respCols.BackgroundColor = "#F2F2F2";
 
                 if (tablixExt && tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
@@ -7575,6 +7671,10 @@ $(function () {
                         respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
                     }
                 }
+                if (tablixExt && tablixExt.ColHeaderRow !== undefined)
+                    respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
+                if (tablixExt && tablixExt.BackgroundColor !== undefined)
+                    respCols.BackgroundColor = tablixExt.BackgroundColor;
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
@@ -7772,12 +7872,17 @@ $(function () {
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
-                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols, BRObj.Cell)) {
+
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderIndex === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderIndex = 0;
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderName === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderName = BRObj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
-                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("name",respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
@@ -7790,7 +7895,11 @@ $(function () {
                         if (respCols.Columns[Obj.ColumnIndex].Header ===undefined)
                             respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");
                         
-                        respCols.Columns[Obj.ColumnIndex].Header.append(h);                                                   
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderIndex === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderIndex = 0;
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderName === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderName = Obj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
+                        respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
                         $ExtRow = null;
                     }
@@ -7841,9 +7950,12 @@ $(function () {
                         //find cell
                         cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
                         icon = cell.prev();
+                        if (icon.hasClass("fr-render-respIcon") === false)
+                            icon = icon.prev();
                         ExtRow = icon.parent().parent().parent().next();
 
                         me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+
                     }
                 });
             }
@@ -7854,7 +7966,7 @@ $(function () {
 
             var $Drilldown = new $("<div/>");
             $Drilldown.html("&nbsp");
-            $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respTablix-expand");
             $Drilldown.addClass("fr-render-respIcon");
 
             $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
@@ -7900,13 +8012,13 @@ $(function () {
             }
 
             if (show) {
-                $(icon).addClass("fr-render-drilldown-collapse");
-                $(icon).removeClass("fr-render-drilldown-expand");
+                $(icon).addClass("fr-render-respTablix-collapse");
+                $(icon).removeClass("fr-render-respTablix-expand");
             }
             else {
                 ExtRow.hide();
-                $(icon).removeClass("fr-render-drilldown-collapse");
-                $(icon).addClass("fr-render-drilldown-expand");
+                $(icon).removeClass("fr-render-respTablix-collapse");
+                $(icon).addClass("fr-render-respTablix-expand");
             }
             me.layoutReport(true);
             if ($Tablix)
@@ -7936,6 +8048,7 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
+                if (Tablix.respCols.isResp && Tablix.State.ExtRow) {
             }
         },
 
@@ -8531,7 +8644,11 @@ $(function () {
             var unit = convertFrom.match(/\D+$/);  // get the existing unit
             var value = convertFrom.match(/\d+/);  // get the numeric component
 
-            if (unit.length === 1) unit = unit[0];
+            if (unit && unit.length === 1)
+                unit = unit[0];
+            else
+                unit = "px";
+
             if (value.length === 1) value = value[0];
 
             switch (unit) {
@@ -11306,6 +11423,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.reportViewer.options.$appContainer, me);
+            me.element.detach();
 
         }
     }); //$.widget
@@ -11834,7 +11952,7 @@ $(function () {
 
             var $nav = me.options.$nav;
             if ($nav !== null) {
-                $nav.pageNav({ $reportViewer: $viewer, rsInstance: me.options.rsInstance });
+                $nav.pageNav({ $reportViewer: $viewer, $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
                 $viewer.reportViewer("option", "pageNavArea", $nav);
             }
             
@@ -12861,6 +12979,8 @@ $(function () {
                 me._createReportExplorer(path, view, true);
 
                 var $toolbar = layout.$mainheadersection;
+                //add this class to distinguish explorer toolbar and viewer toolbar
+                $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
                     $appContainer: layout.$container,
@@ -12907,18 +13027,31 @@ $(function () {
          */
         transitionToReportViewer: function (path, params) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+            //Update isAdmin
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
+            if (settings && settings.adminUI === true )
+                me.options.isAdmin = true;
+            else
+                me.options.isAdmin = false;
 
-            me.DefaultAppTemplate._selectedItemPath = null;
+            //add this class to distinguish explorer toolbar and viewer toolbar
+            var $toolbar = layout.$mainheadersection;
+            $toolbar.addClass("fr-viewer-tb").removeClass("fr-explorer-tb");
+
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                    DefaultAppTemplate: me.DefaultAppTemplate,
+                layout.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -12928,12 +13061,13 @@ $(function () {
                     isAdmin: me.options.isAdmin,
                 });
 
-                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
-                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                    layout.$mainsection.fadeIn("fast");
                 }
+
             }, timeout);
 
             me.element.css("background-color", "");
@@ -12946,17 +13080,17 @@ $(function () {
          */
         transitionToCreateDashboard: function (templateName) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            me.DefaultAppTemplate._selectedItemPath = null;
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                var $dashboardEditor = layout.$mainviewport.dashboardEditor({
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack
                 });

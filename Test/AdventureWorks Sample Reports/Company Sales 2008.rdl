@@ -322,7 +322,7 @@
                 </SortExpression>
               </SortExpressions>
               <TablixHeader>
-                <Size>1.15625in</Size>
+                <Size>1.30208in</Size>
                 <CellContents>
                   <Textbox Name="Category">
                     <CanGrow>true</CanGrow>
@@ -416,7 +416,7 @@
         <Top>1.02792in</Top>
         <Left>0.1425in</Left>
         <Height>0.75in</Height>
-        <Width>3.32292in</Width>
+        <Width>3.46875in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>

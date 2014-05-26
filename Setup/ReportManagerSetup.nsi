@@ -2,14 +2,14 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Forerunner Mobilizer for SQL Server Reporting Services"
-!define PRODUCT_VERSION "2.0"
+!define PRODUCT_VERSION "3.0"
 !define PRODUCT_PUBLISHER "Forerunner Software"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV2"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define COPYRIGHT "Copyright © Forerunner Software 2014"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
-!define VI_PRODUCT_NAME "Mobilizer 2.0"
+!define VI_PRODUCT_NAME "Mobilizer 3.0"
 !define COMPANY_NAME "Forerunner Software"
 !define /file BUILD_VERSION ..\build.txt
 
@@ -79,7 +79,7 @@ RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerMobilizerSetup.exe"
-InstallDir "$PROGRAMFILES\Forerunner\MobilizerV2"
+InstallDir "$PROGRAMFILES\Forerunner\MobilizerV3"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -120,6 +120,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\System.Net.Http.dll"
   File "${LOCALROOT}\bin\Forerunner.ReportManager.dll"
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
+  File "${LOCALROOT}\bin\PdfSharp.dll"
   File "${LOCALROOT}\bin\Newtonsoft.Json.dll"
   File "${LOCALROOT}\bin\Microsoft.Web.Infrastructure.dll"
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
@@ -315,6 +316,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
+  File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
   
 
 
@@ -759,6 +761,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\Newtonsoft.Json.dll"
   Delete "$INSTDIR\bin\Forerunner.ReportManager.dll"
   Delete "$INSTDIR\bin\Forerunner.Thumbnail.exe"
+  Delete "$INSTDIR\bin\PdfSharp.dll"
   Delete "$INSTDIR\bin\System.Net.Http.dll"
   Delete "$INSTDIR\bin\System.Net.Http.Formatting.dll"
   Delete "$INSTDIR\bin\System.Net.Http.WebRequest.dll"
@@ -784,6 +787,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
   Delete "$INSTDIR\InstallInstructions.rtf"
+  Delete "$INSTDIR\RDL Extension Documentation.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"

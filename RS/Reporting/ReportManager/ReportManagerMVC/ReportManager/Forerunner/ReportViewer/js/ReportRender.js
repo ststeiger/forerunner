@@ -96,10 +96,12 @@ $(function () {
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
                 me.Page.Replay = {};
 
+            me._rectangles = [];
             
 
             me._createStyles(reportViewer);
@@ -305,7 +307,11 @@ $(function () {
             var me = this;
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
-            RecLayout = me._getRectangleLayout(Measurements);
+            var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);            
+            var RecExt = {};
+            if (me.RDLExt && me.RDLExt[sharedElements.Name])
+                RecExt = me.RDLExt[sharedElements.Name];
+            
 
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
@@ -365,11 +371,27 @@ $(function () {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
-            
-            if (Math.abs(me._currentWidth - me.options.reportViewer.element.width()) > 30 && me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me.options.reportViewer.element.width()) {
-                me._currentWidth = me.options.reportViewer.element.width();
+            if (RecExt.FixedHeight)
+                Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
+            if (RecExt.FixedWidth)
+                Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
+
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext, RecExt: RecExt });
+        layoutReport: function(isLoaded,force,RDLExt){
+            var renderWidth = me.options.reportViewer.element.width();
+            if (RDLExt)
+                me.RDLExt = RDLExt;
+            if (renderWidth === 0)
+                return true;
+
+            if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on" ) {
+                me._currentWidth = renderWidth;
+                if (rec.RecExt.FixedHeight || rec.RecExt.FixedWidth) {
+                    rec.HTMLRec.removeClass("fr-render-rec");
+                }
             if (RIContext.CurrLocation) {
-                Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
+                    if (rec.RecExt.FixedWidth === undefined)
+                        rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
                 if (RIContext.CurrObj.ReportItems.length === 0)
                     Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
                 else {
@@ -379,13 +401,14 @@ $(function () {
                                             (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                             parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                        1;
-                    Style += "height:" + me._roundToTwo(parentHeight) + "mm;";
+                        if (rec.RecExt.FixedHeight === undefined)
+                            rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
                 }
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
             me.element.hide().show(0);
-                me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+            return false;
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
             return RIContext.$HTMLParent;
@@ -484,15 +507,21 @@ $(function () {
                         // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
                             //if my index above is the same as yours then move me down
-                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
+                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove) {
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
+                                curRI.TopDelta = 1;
+                            }
                             // else if your origional index above is my new index above then you move down
-                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index)
-                                layout.ReportItems[j].IndexAbove = curRI.Index;                        
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index) {
+                                layout.ReportItems[j].IndexAbove = curRI.Index;
+                                layout.ReportItems[j].TopDelta = 1;
+                            }
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width) {
                             curRI.IndexAbove = layout.ReportItems[j].Index;
+                            curRI.TopDelta = 1;
+                        }
                     }
                 }
                 
@@ -559,7 +588,10 @@ $(function () {
                 else
                     $Drilldown.addClass("fr-render-drilldown-expand");
 
-                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
+                $Drilldown.on("click", { ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) {
+                    var name = $(this).parent().parent().attr("name");
+                    me.options.reportViewer.toggleItem(e.data.ToggleID,name);
+                });
                 $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
@@ -889,10 +921,26 @@ $(function () {
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
+            var me = this;
             if (Elements.ActionInfo)
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
+
+            var ActionExt
+            if (me.RDLExt)
+                ActionExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
+            if (ActionExt && ActionExt.JavaScriptAction) {
+                //var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                $Control.addClass("fr-core-cursorpointer");
+                var newFunc;
+                try{
+                    newFunc = new Function("e",ActionExt.JavaScriptAction);
+                }
+                catch(e){}
+                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control }, newFunc);
+            }
+
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
@@ -901,8 +949,7 @@ $(function () {
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);
-                    location.href = e.data.HyperLink;
-                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
+                    location.href = e.data.HyperLink;                    
                 });
 
             }
@@ -1149,6 +1196,8 @@ $(function () {
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
                 respCols.ColumnHeaders = {}; 
+                respCols.ColHeaderRow = 0;
+                respCols.BackgroundColor = "#F2F2F2";
 
                 if (tablixExt && tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
@@ -1156,6 +1205,10 @@ $(function () {
                         respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
                     }
                 }
+                if (tablixExt && tablixExt.ColHeaderRow !== undefined)
+                    respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
+                if (tablixExt && tablixExt.BackgroundColor !== undefined)
+                    respCols.BackgroundColor = tablixExt.BackgroundColor;
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
@@ -1351,12 +1404,17 @@ $(function () {
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
-                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols,BRObj.Cell)) {
+                        if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols, BRObj.Cell)) {
+
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderIndex === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderIndex = 0;
+                            if (respCols.Columns[BRObj.ColumnIndex].HeaderName === undefined)
+                                respCols.Columns[BRObj.ColumnIndex].HeaderName = BRObj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
-                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true));
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("name",respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                 });
                 State.CellCount += Obj.Cells.length;
@@ -1369,7 +1427,11 @@ $(function () {
                         if (respCols.Columns[Obj.ColumnIndex].Header ===undefined)
                             respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");
                         
-                        respCols.Columns[Obj.ColumnIndex].Header.append(h);                                                   
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderIndex === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderIndex = 0;
+                        if (respCols.Columns[Obj.ColumnIndex].HeaderName === undefined)
+                            respCols.Columns[Obj.ColumnIndex].HeaderName = Obj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
+                        respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
                         $ExtRow = null;
                     }
@@ -1420,9 +1482,12 @@ $(function () {
                         //find cell
                         cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
                         icon = cell.prev();
+                        if (icon.hasClass("fr-render-respIcon") === false)
+                            icon = icon.prev();
                         ExtRow = icon.parent().parent().parent().next();
 
                         me._TablixRespShow(icon, ExtRow, obj.ColIndex, obj.UniqueName);
+
                     }
                 });
             }
@@ -1433,7 +1498,7 @@ $(function () {
 
             var $Drilldown = new $("<div/>");
             $Drilldown.html("&nbsp");
-            $Drilldown.addClass("fr-render-drilldown-expand");
+            $Drilldown.addClass("fr-render-respTablix-expand");
             $Drilldown.addClass("fr-render-respIcon");
 
             $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
@@ -1479,13 +1544,13 @@ $(function () {
             }
 
             if (show) {
-                $(icon).addClass("fr-render-drilldown-collapse");
-                $(icon).removeClass("fr-render-drilldown-expand");
+                $(icon).addClass("fr-render-respTablix-collapse");
+                $(icon).removeClass("fr-render-respTablix-expand");
             }
             else {
                 ExtRow.hide();
-                $(icon).removeClass("fr-render-drilldown-collapse");
-                $(icon).addClass("fr-render-drilldown-expand");
+                $(icon).removeClass("fr-render-respTablix-collapse");
+                $(icon).addClass("fr-render-respTablix-expand");
             }
             me.layoutReport(true);
             if ($Tablix)
@@ -1516,6 +1581,7 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
+                if (Tablix.respCols.isResp && Tablix.State.ExtRow) {
             }
         },
 
@@ -2111,7 +2177,11 @@ $(function () {
             var unit = convertFrom.match(/\D+$/);  // get the existing unit
             var value = convertFrom.match(/\d+/);  // get the numeric component
 
-            if (unit.length === 1) unit = unit[0];
+            if (unit && unit.length === 1)
+                unit = unit[0];
+            else
+                unit = "px";
+
             if (value.length === 1) value = value[0];
 
             switch (unit) {

@@ -607,7 +607,7 @@ table, td, tr {
 .fr-toolbase-persistent-active-state { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
 .fr-toolbase-hide-if-touch {  }
 .fr-toolbase-show-if-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
-.fr-toolbase-find-button { position: absolute; right: 4px; top: 10px; }
+.fr-toolbase-find-button { position: absolute; border:4px solid transparent; top: 6px; right:0px; }
 .fr-toolbase-find-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
 .fr-toolbase-find-textbox { width: 94px; padding:1px 20px 1px 4px; }
 /* Desktops and laptops ----------- */
@@ -1064,8 +1064,11 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-render-error-details { cursor: pointer; color: blue; }
 
 .fr-render-drilldown-collapse { background-image: url('../../reportviewer/Images/Drilldown_Collapse.gif'); display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
-
 .fr-render-drilldown-expand { background-image: url('../../reportviewer/Images/Drilldown_Expand.gif');display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+
+.fr-render-respTablix-collapse { background-image: url('../../reportviewer/Images/Collapse.png'); display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+.fr-render-respTablix-expand { background-image: url('../../reportviewer/Images/Expand.png');display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }
+
 
 .fr-render-list-circle { list-style-type: circle; }
 .fr-render-list-square { list-style-type: square; }

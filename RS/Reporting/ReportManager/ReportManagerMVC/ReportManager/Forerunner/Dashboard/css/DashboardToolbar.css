@@ -2,4 +2,7 @@
   .fr-dashboard-toolbar input[type=number]::-webkit-inner-spin-button,
   .fr-dashboard-toolbar input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   .fr-dashboard-toolbar input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
-  .fr-dashboard-toolbar .fr-dashboard-toolbar-hidden { display: none; }
+  .fr-dashboard-toolbar .fr-toolbar-hidden { display: none; }
+
+.fr-dashboard-button-home, .fr-dashboard-button-recent, .fr-dashboard-button-favorite, .fr-dashboard-button-logOff { float: right; }
+

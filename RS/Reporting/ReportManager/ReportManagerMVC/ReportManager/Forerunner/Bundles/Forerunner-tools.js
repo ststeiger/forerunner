@@ -386,12 +386,25 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-dashboard-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
+        sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
         tooltip: locData.toolbar.menu,
         events: {
           click: function (e) {
             e.data.me._trigger(events.menuClick, null, {});
           }
         }
+      },
+      /** @member */
+      btnBack: {
+          toolType: toolTypes.button,
+          selectorClass: "fr-dashboard-button-back",
+          imageClass: "fr-icons24x24-back",
+          tooltip: locData.toolbar.back,
+          events: {
+              click: function (e) {
+                  e.data.me.options.navigateTo("back", null);
+              }
+          }
       },
       /** @member */
       btnSave: {
@@ -404,6 +417,54 @@ $(function () {
             e.data.me._trigger(events.menuClick, null, {});
           }
         }
+      },
+      /** @member */
+      btnHome: {
+          toolType: toolTypes.button,
+          selectorClass: "fr-dashboard-button-home",
+          imageClass: "fr-icons24x24-home",
+          tooltip: locData.toolbar.home,
+          events: {
+              click: function (e) {
+                  e.data.me.options.navigateTo("home", null);
+              }
+          }
+      },
+      /** @member */
+      btnRecent: {
+          toolType: toolTypes.button,
+          selectorClass: "fr-dashboard-button-recent",
+          imageClass: "fr-icons24x24-recent",
+          tooltip: locData.toolbar.recent,
+          events: {
+              click: function (e) {
+                  e.data.me.options.navigateTo("recent", null);
+              }
+          }
+      },
+      /** @member */
+      btnFavorite: {
+          toolType: toolTypes.button,
+          selectorClass: "fr-dashboard-button-favorite",
+          imageClass: "fr-icons24x24-favorites",
+          tooltip: locData.toolbar.favorites,
+          events: {
+              click: function (e) {
+                  e.data.me.options.navigateTo("favorites", null);
+              }
+          }
+      },
+      /** @member */
+      btnLogOff: {
+          toolType: toolTypes.button,
+          selectorClass: "fr-dashboard-button-logOff",
+          imageClass: "fr-icons24x24-logout",
+          tooltip: locData.toolbar.logOff,
+          events: {
+              click: function (e) {
+                  window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+              }
+          }
       }
     };
 

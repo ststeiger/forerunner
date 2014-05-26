@@ -332,10 +332,10 @@ $(function () {
         },
         onWindowResize: function () {
             var me = this;
-            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
-            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
-            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
-            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
+            var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
+            var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
+            var largeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-large";
+            var veryLargeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-very-large";
 
             // Remove any previously added fr-toolbar-hidden classes
             me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");

@@ -49,13 +49,18 @@ $(function () {
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-           
-            me.addTools(1, true, [dtb.btnSave]);
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnBack, dtb.btnSave]);
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _destroy: function () {
         },
         _create: function () {
             var me = this;
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()

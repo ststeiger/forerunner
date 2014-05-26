@@ -300,6 +300,7 @@ $(function () {
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
+                    isReportManager: true,
                     enableEdit: true
                 });
 

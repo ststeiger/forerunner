@@ -6,6 +6,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var dtb = forerunner.ssr.tools.dashboardToolbar;
 
     /**
     * Widget used to create and edit dashboards
@@ -16,6 +17,7 @@ $(function () {
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
+    * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
     *
     * @example
@@ -28,6 +30,7 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
+            isReportManager: false,
             enableEdit: true
         },
         _init: function () {
@@ -68,6 +71,14 @@ $(function () {
                 $dashboardEZ: me,
                 enableEdit: me.options.enableEdit
             });
+            if (me.options.isReportManager) {
+                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(dtb.btnLogOff);
+                }
+                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+            }
+
 
             var $lefttoolbar = me.layout.$leftheader;
             if ($lefttoolbar !== null) {

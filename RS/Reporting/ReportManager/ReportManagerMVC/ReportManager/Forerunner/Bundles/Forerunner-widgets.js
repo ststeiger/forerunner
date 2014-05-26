@@ -3636,10 +3636,10 @@ $(function () {
         },
         onWindowResize: function () {
             var me = this;
-            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
-            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
-            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
-            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
+            var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
+            var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
+            var largeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-large";
+            var veryLargeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-very-large";
 
             // Remove any previously added fr-toolbar-hidden classes
             me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
@@ -12653,6 +12653,7 @@ $(function () {
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
+                    isReportManager: true,
                     enableEdit: true
                 });
 
@@ -18853,6 +18854,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var dtb = forerunner.ssr.tools.dashboardToolbar;
 
     /**
     * Widget used to create and edit dashboards
@@ -18863,6 +18865,7 @@ $(function () {
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
+    * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
     *
     * @example
@@ -18875,6 +18878,7 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
+            isReportManager: false,
             enableEdit: true
         },
         _init: function () {
@@ -18915,6 +18919,14 @@ $(function () {
                 $dashboardEZ: me,
                 enableEdit: me.options.enableEdit
             });
+            if (me.options.isReportManager) {
+                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(dtb.btnLogOff);
+                }
+                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+            }
+
 
             var $lefttoolbar = me.layout.$leftheader;
             if ($lefttoolbar !== null) {
@@ -19074,13 +19086,18 @@ $(function () {
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-           
-            me.addTools(1, true, [dtb.btnSave]);
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnBack, dtb.btnSave]);
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _destroy: function () {
         },
         _create: function () {
             var me = this;
+            $(window).resize(function () {
+                me.onWindowResize.call(me);
+            });
         },
     });  // $.widget
 });  // function()

@@ -6815,9 +6815,7 @@ $(function () {
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
             var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);            
-            var RecExt = {};
-            if (me.RDLExt && me.RDLExt[sharedElements.Name])
-                RecExt = me.RDLExt[sharedElements.Name];
+            var RecExt = me._getRDLExt(RIContext);
             
 
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
@@ -7105,12 +7103,28 @@ $(function () {
                     //break;
             }
         },
+
+        _getRDLExt: function (RIContext) {
+            var me = this;
+
+            var rdlExt = {};
+            if (me.RDLExt) {
+                rdlExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
+                if (!rdlExt)
+                    rdlExt = {};
+            }
+            return rdlExt;
+
+        },
         _writeRichText: function (RIContext) {
             var Style = RIContext.Style;
             var $TextObj = $("<div/>");
             var $Sort = null;
             var me = this;
 
+            //See if RDLExt
+            var textExt = me._getRDLExt(RIContext);
+                       
             Style += "";
             
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
@@ -7121,10 +7135,18 @@ $(function () {
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
+
+        
             
             RIContext.$HTMLParent.attr("Style", Style);
             RIContext.$HTMLParent.addClass("fr-r-rT");
+
+
             Style = "";
+            if (textExt.InputType) {
+                $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
+                Style += "height:auto;box-sizing:border-box;";
+            }
 
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
@@ -7193,7 +7215,11 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
                 if (val) {
-                    $TextObj.text(me._getNewLineFormatText(val));
+                    if (textExt.InputType)
+                        $TextObj.val(me._getNewLineFormatText(val));
+                    else
+                        $TextObj.text(me._getNewLineFormatText(val));
+
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
@@ -7475,10 +7501,9 @@ $(function () {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
 
-            var ActionExt
-            if (me.RDLExt)
-                ActionExt = me.RDLExt[me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name];
-            if (ActionExt && ActionExt.JavaScriptAction) {
+            var ActionExt = me._getRDLExt(RIContext);
+
+            if (ActionExt.JavaScriptAction) {
                 //var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
                 $Control.addClass("fr-core-cursorpointer");
                 var newFunc;

@@ -1025,7 +1025,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-toolbar-numPages-button { min-width: 10mm; max-width: 15mm; padding-left: 4px; color: white; line-height: 36px; }
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
 
-.fr-toolbar-find-button { position: absolute; right: 4px; top: 4px; }
+.fr-toolbar-find-button { position: absolute; border:4px solid transparent; right: 1px; top: 1px; }
 .fr-toolbar-search-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
 
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
@@ -1068,7 +1068,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-item-textbox-keyword { width: 94px; padding-left: 4px; padding-right: 20px; padding-top: 1px; padding-bottom: 1px;  }
 
-.fr-item-find { position: absolute; right: 4px; top: 4px; }
+.fr-item-find { position: absolute; border:4px solid transparent; right: 1px; top: 1px; }
 
 .fr-toolpane-icon16x16 { width: 16px; height: 16px; display: inline-block; margin-top: 10px; margin-right: 5px; }
 

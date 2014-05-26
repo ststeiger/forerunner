@@ -1,4 +1,4 @@
-﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -607,7 +607,7 @@ table, td, tr {
 .fr-toolbase-persistent-active-state { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
 .fr-toolbase-hide-if-touch {  }
 .fr-toolbase-show-if-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
-.fr-toolbase-find-button { position: absolute; right: 4px; top: 10px; }
+.fr-toolbase-find-button { position: absolute; border:4px solid transparent; top: 6px; right:0px; }
 .fr-toolbase-find-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
 .fr-toolbase-find-textbox { width: 94px; padding:1px 20px 1px 4px; }
 /* Desktops and laptops ----------- */

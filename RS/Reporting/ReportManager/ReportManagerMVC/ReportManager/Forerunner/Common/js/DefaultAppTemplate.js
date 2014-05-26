@@ -412,14 +412,15 @@ $(function () {
 
                 if (!data.open) {
                     $spacer.hide();
-                    me.$pagesection.show();
+                    //me.$pagesection.show();
                     me.$container.removeClass("fr-layout-container-noscroll");
                     me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
-                    if (forerunner.device.isSmall($viewer))
-                        me.$pagesection.hide();
+                    //don't need to hide page section when navigation open in both full or non-full mode
+                    //if (forerunner.device.isSmall(me.options.$container))
+                    //    me.$pagesection.hide();
 
                     me.$container.addClass("fr-layout-container-noscroll");
                     me.$pagesection.addClass("fr-layout-pagesection-noscroll");

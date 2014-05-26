@@ -24,6 +24,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {
         options: {
             $reportViewer: null,
+            $appContainer: null,
             rsInstance: null,
         },
         // Constructor
@@ -96,7 +97,8 @@ $(function () {
                     me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
                     //check $slider container instead, we can sure it's open
                     //me.options.$reportviewer may hide so its width is 0
-                    if (forerunner.device.isSmall(me.$slider))
+                    //if (forerunner.device.isSmall(me.$slider))
+                    if (forerunner.device.isSmall(me.options.$appContainer))
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
             });
@@ -250,7 +252,9 @@ $(function () {
                 var $spacer = me.element.find(".fr-nav-li-spacer");
                 var $closeButton = me.element.find(".fr-nav-close-container");
 
-                if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
+                //we should used visible area to indicate full screen mode
+                if (forerunner.device.isSmall(me.options.$appContainer)) {
                     $container.addClass("fr-nav-container-full");
                     $items.addClass("fr-nav-item-full");
                     $spacer.addClass("fr-nav-li-spacer-full");

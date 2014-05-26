@@ -580,7 +580,7 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -643,8 +643,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
-
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
+            
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {

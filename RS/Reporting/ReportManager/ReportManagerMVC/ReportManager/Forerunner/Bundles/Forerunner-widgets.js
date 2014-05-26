@@ -4641,7 +4641,7 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -4704,8 +4704,8 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
-
+            var isReportExplorerToolbar = me.$mainheadersection.hasClass("fr-explorer-tb");
+            
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
@@ -13121,6 +13121,8 @@ $(function () {
                 me._createReportExplorer(path, view, true);
 
                 var $toolbar = layout.$mainheadersection;
+                //add this class to distinguish explorer toolbar and viewer toolbar
+                $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
                     $appContainer: layout.$container,
@@ -13167,10 +13169,10 @@ $(function () {
          */
         transitionToReportViewer: function (path, params) {
             var me = this;
-
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             //Update isAdmin
             if (!me.$reportExplorer)
@@ -13181,13 +13183,17 @@ $(function () {
             else
                 me.options.isAdmin = false;
 
-            me.DefaultAppTemplate._selectedItemPath = null;
+            //add this class to distinguish explorer toolbar and viewer toolbar
+            var $toolbar = layout.$mainheadersection;
+            $toolbar.addClass("fr-viewer-tb").removeClass("fr-explorer-tb");
+
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                    DefaultAppTemplate: me.DefaultAppTemplate,
+                layout.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -13197,11 +13203,11 @@ $(function () {
                     isAdmin: me.options.isAdmin,
                 });
 
-                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
-                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                    layout.$mainsection.fadeIn("fast");
                 }
 
             }, timeout);
@@ -13216,17 +13222,17 @@ $(function () {
          */
         transitionToCreateDashboard: function (templateName) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            me.DefaultAppTemplate._selectedItemPath = null;
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEditor = me.DefaultAppTemplate.$mainviewport.dashboardEditor({
+                var $dashboardEditor = layout.$mainviewport.dashboardEditor({
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack
                 });

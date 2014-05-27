@@ -1933,7 +1933,7 @@ $(function () {
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                         if (scrollID) {
-                            el = me.element.find("div[name=\"" + scrollID + "\"]")
+                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
                             if (el.length ===1)
                                 $('html, body').animate({ scrollTop: el.offset().top }, 500);
                         }
@@ -1976,10 +1976,9 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-                            $(window).scrollLeft(me.scrollLeft);
-                            $(window).scrollTop(me.scrollTop);
+
                             if (scrollID) {
-                                el = me.element.find("div[name=\"" + scrollID + "\"]")
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
                                 if (el.length === 1)
                                     $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
                             }
@@ -2183,7 +2182,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("[name='" + elementID + "']")[0];
+            var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
                 var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };

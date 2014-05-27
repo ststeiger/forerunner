@@ -2563,7 +2563,7 @@ $(function () {
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                         if (scrollID) {
-                            el = me.element.find("div[name=\"" + scrollID + "\"]")
+                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
                             if (el.length ===1)
                                 $('html, body').animate({ scrollTop: el.offset().top }, 500);
                         }
@@ -2606,10 +2606,9 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-                            $(window).scrollLeft(me.scrollLeft);
-                            $(window).scrollTop(me.scrollTop);
+
                             if (scrollID) {
-                                el = me.element.find("div[name=\"" + scrollID + "\"]")
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
                                 if (el.length === 1)
                                     $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
                             }
@@ -2813,7 +2812,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("[name='" + elementID + "']")[0];
+            var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
                 var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
@@ -7178,7 +7177,7 @@ $(function () {
                     $Drilldown.addClass("fr-render-drilldown-expand");
 
                 $Drilldown.on("click", { ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) {
-                    var name = $(this).parent().parent().attr("name");
+                    var name = $(this).parent().parent().attr("data-uniqName");
                     me.options.reportViewer.toggleItem(e.data.ToggleID,name);
                 });
                 $Drilldown.addClass("fr-core-cursorpointer");
@@ -7234,10 +7233,13 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
                 if (val) {
-                    if (textExt.InputType)
-                        $TextObj.val(me._getNewLineFormatText(val));
+                    val = me._getNewLineFormatText(val);
+                    if (textExt.InputType) {
+                        $TextObj.attr("data-origVal", val);
+                        $TextObj.val(val);
+                    }
                     else
-                        $TextObj.text(me._getNewLineFormatText(val));
+                        $TextObj.text(val);
 
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
@@ -7324,7 +7326,8 @@ $(function () {
                     $ParagraphItem.addClass(me._getClassName("fr-n-", Obj.Paragraph));
                     $ParagraphItem.addClass(me._getClassName("fr-t-", Obj.Paragraph));
 
-                    $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
+                    me._writeUniqueName($ParagraphItem, Obj.Paragraph.NonSharedElements.UniqueName);
+                    //$ParagraphItem.attr("data-uniqName", Obj.Paragraph.NonSharedElements.UniqueName);
 
                     //Handle each TextRun
                     for (var i = 0; i < Obj.TextRunCount; i++) {
@@ -7350,7 +7353,8 @@ $(function () {
                             flag = false;
                         }
 
-                        $TextRun.attr("Name", Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
+                        me._writeUniqueName($TextRun, Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
+                        //$TextRun.attr("data-uniqName", Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
 
                         if (flag) {
                             var TextRunStyle = "";
@@ -7376,7 +7380,7 @@ $(function () {
         },
         _writeUniqueName: function($item,uniqueName){
             
-            $item.attr("u-name",uniqueName);
+            $item.attr("data-uniqName", uniqueName);
            
         },
         _getImageURL: function (RS, ImageName) {
@@ -7576,7 +7580,8 @@ $(function () {
             
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
-                $map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                me._writeUniqueName($map, "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                //$map.attr("data-uniqName", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $map.attr("id", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
                 for (var i = 0; i < actionImageMapAreas.Count; i++) {
@@ -8047,7 +8052,7 @@ $(function () {
                         }
                         else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
-                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("name",respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
+                                $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("data-uniqName", respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
                             $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
                         }
                     }
@@ -8115,7 +8120,7 @@ $(function () {
 
                     if (obj.Visible) {
                         //find cell
-                        cell = me.element.find("[u-name=\"" + obj.UniqueName + "\"]");
+                        cell = me.element.find("[data-uniqName=\"" + obj.UniqueName + "\"]");
                         icon = cell.prev();
                         if (icon.hasClass("fr-render-respIcon") === false)
                             icon = icon.prev();
@@ -8308,7 +8313,8 @@ $(function () {
                 bookmark = me._getSharedElements(CurrObj.SharedElements).Bookmark || CurrObj.NonSharedElements.Bookmark;
 
             if (bookmark) {
-                $node.attr("name", bookmark).attr("id", bookmark);
+                me._writeUniqueName($node, bookmark);
+                //$node.attr("id", bookmark);
                 RIContext.$HTMLParent.append($node);
             }   
         },

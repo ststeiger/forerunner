@@ -2384,7 +2384,7 @@ $(function () {
 
             return forerunner.ajax.ajax(
                {
-                   type: "GET",
+                   type: "POST",
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {

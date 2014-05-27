@@ -1087,6 +1087,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     color:red;
 }*/
 
+.fr-iframe-seamless{background-color: transparent;    border: 0px none transparent;    padding: 0px;    overflow: hidden;}
+
 .fr-render-find-highlight { background-color: Highlight; color: HighlightText; }
 .fr-render-bglayer { position: absolute; width: 100%; height: 100%; left: 0; top: 0; z-index: -1; }
 .fr-render-error-license { margin: 16px 8px; width: 100%; position: absolute; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }

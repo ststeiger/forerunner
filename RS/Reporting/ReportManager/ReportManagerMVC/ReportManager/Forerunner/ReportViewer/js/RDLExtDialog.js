@@ -87,7 +87,7 @@ $(function () {
         _saveSettings: function () {
             var me = this;
             
-            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())) {
+            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())===true) {
                 me.closeDialog();
             }
         },

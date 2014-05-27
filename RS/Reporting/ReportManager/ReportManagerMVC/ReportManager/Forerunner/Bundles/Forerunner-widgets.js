@@ -2607,6 +2607,8 @@ $(function () {
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
+                            //$(window).scrollLeft(me.scrollLeft);
+                            //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
                                 el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
                                 if (el.length === 1)
@@ -3012,7 +3014,7 @@ $(function () {
 
             return forerunner.ajax.ajax(
                {
-                   type: "GET",
+                   type: "POST",
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
@@ -6829,54 +6831,70 @@ $(function () {
                 if (RecExt.FormMethod) rec.attr("method", RecExt.FormMethod);
                 RIContext.$HTMLParent = rec;
             }
+            if (RecExt.IFrameSrc) {
+                rec = $("<iframe />");
+                rec.attr("src", RecExt.IFrameSrc);
+                //if (RecExt.IFrameSeamless === false) {
+                //    rec.attr("seamless", "seamless");
+                //}
+                if (RecExt.IFrameSeamless === true)
+                    rec.addClass("fr-iframe-seamless");
 
+                RIContext.$HTMLParent = rec;
+            }
+            else if(RecExt.CustomHTML){
+                rec = $("<div />");
+                rec.html(RecExt.CustomHTML);
+                RIContext.$HTMLParent = rec;
+            }            
+            else {
 
+                $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
 
-            $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-        
-                Style = "";
-                if (Obj.Type !== "Line") {
-                    //Style = "display:table;border-collapse:collapse;";
-                    if (Obj.Elements)
-                        Style += me._getFullBorderStyle(Obj.Elements.NonSharedElements.Style);
-                }
+                    Style = "";
+                    if (Obj.Type !== "Line") {
+                        //Style = "display:table;border-collapse:collapse;";
+                        if (Obj.Elements)
+                            Style += me._getFullBorderStyle(Obj.Elements.NonSharedElements.Style);
+                    }
 
-                $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
-                if (Obj.Type !== "Line" && Obj.Type !== "Tablix") {
-                    $RI.addClass("fr-render-rec");
-                    $RI.addClass(me._getClassName("fr-b-",Obj));                    
-                }
-                       
-                $LocDiv = new $("<Div/>");
-                $LocDiv.append($RI);
-                Style = "";
+                    $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
+                    if (Obj.Type !== "Line" && Obj.Type !== "Tablix") {
+                        $RI.addClass("fr-render-rec");
+                        $RI.addClass(me._getClassName("fr-b-", Obj));
+                    }
 
-                //RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                ReportItems[Index] = {};
-                ReportItems[Index].HTMLElement = $LocDiv;
-                ReportItems[Index].Type = Obj.Type;
+                    $LocDiv = new $("<Div/>");
+                    $LocDiv.append($RI);
+                    Style = "";
 
-                if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
-                    ReportItems[Index].BigTablix = true;
-                }
+                    //RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                    ReportItems[Index] = {};
+                    ReportItems[Index].HTMLElement = $LocDiv;
+                    ReportItems[Index].Type = Obj.Type;
 
-                //if (RecLayout.ReportItems[Index].IndexAbove === null)
-                //    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
+                    if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
+                        ReportItems[Index].BigTablix = true;
+                    }
 
-                Style += "position:absolute;";
+                    //if (RecLayout.ReportItems[Index].IndexAbove === null)
+                    //    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
 
-                if (Measurements[Index].zIndex)
-                    Style += "z-index:" + Measurements[Index].zIndex + ";";
+                    Style += "position:absolute;";
 
-                //Background color goes on container
-                 if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
-                    Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
-        
-                $LocDiv.attr("Style", Style);
-                $LocDiv.append($RI);
-                rec.append($LocDiv);
-            });
-           
+                    if (Measurements[Index].zIndex)
+                        Style += "z-index:" + Measurements[Index].zIndex + ";";
+
+                    //Background color goes on container
+                    if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
+                        Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
+
+                    $LocDiv.attr("Style", Style);
+                    $LocDiv.append($RI);
+                    rec.append($LocDiv);
+                });
+            }
+
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
@@ -11583,7 +11601,7 @@ $(function () {
         _saveSettings: function () {
             var me = this;
             
-            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())) {
+            if (me.options.reportViewer.saveRDLExt(me.$RLDExt.val())===true) {
                 me.closeDialog();
             }
         },

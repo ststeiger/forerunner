@@ -782,8 +782,8 @@ FROM            Customers INNER JOIN
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>CustomerDataSet</DataSetName>
-            <Top>0.73833in</Top>
-            <Left>0.26958in</Left>
+            <Top>1.29041in</Top>
+            <Left>2.43625in</Left>
             <Height>0.5in</Height>
             <Width>11.96875in</Width>
             <ZIndex>1</ZIndex>
@@ -825,11 +825,24 @@ FROM            Customers INNER JOIN
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Rectangle Name="CustRec">
+            <KeepTogether>true</KeepTogether>
+            <Top>1.20708in</Top>
+            <Left>0.06125in</Left>
+            <Height>2.45958in</Height>
+            <Width>2.14583in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Rectangle>
         </ReportItems>
-        <Height>2.08333in</Height>
+        <Height>3.66666in</Height>
         <Style />
       </Body>
-      <Width>12.70708in</Width>
+      <Width>14.405in</Width>
       <Page>
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>

@@ -115,14 +115,19 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
         }
-        [HttpGet]
+
+        public class SaveReprotPropertyPostBack{
+            public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
+            }
+
+        [HttpPost]
         [ActionName("SaveReportProperty")]
-        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
+        public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
             {
-                GetReportManager(instance).SetProperty(path, propertyName, value);
+                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
                 resp.StatusCode = HttpStatusCode.OK;
 
             }

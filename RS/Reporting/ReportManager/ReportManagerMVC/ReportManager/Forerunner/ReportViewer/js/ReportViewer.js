@@ -1976,8 +1976,10 @@ $(function () {
                                 me._cachePages(newPageNum);
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-                            $(window).scrollLeft(me.scrollLeft);
-                            $(window).scrollTop(me.scrollTop);
+                            
+                            //This code break the keyword find scroll, also we have this code in _setPage method, 
+                            //$(window).scrollLeft(me.scrollLeft);
+                            //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
                                 el = me.element.find("div[name=\"" + scrollID + "\"]")
                                 if (el.length === 1)

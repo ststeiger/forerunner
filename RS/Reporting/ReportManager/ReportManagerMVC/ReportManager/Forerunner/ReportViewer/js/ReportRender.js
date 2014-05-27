@@ -679,7 +679,15 @@ $(function () {
                 Style += "height:auto;box-sizing:border-box;";
                 if (textExt.InputRequired === true)
                     $TextObj.attr("required", true);
+
+                //Handle EasySubmit
+                if (textExt.EasySubmitURL && textExt.EasySubmitType) {
+                    $TextObj.on("click", { reportViewer: me.options.reportViewer.element, element: $TextObj, getInputs: me._getInputsInRow, easySubmit:me._submitRow, veryEasySubmit: me._easySubmit }, function (e) {
+                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitAllFields, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
+                    });
+                }
             }
+
 
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
@@ -1032,6 +1040,61 @@ $(function () {
 
             return RIContext.$HTMLParent;
         },
+
+        _getInputsInRow: function(element,includeAll){
+            var me = this;
+            var data = [];
+
+            var row = $(element).parent().parent().parent();
+            if (row.is("tr") === false) {
+                return data;
+            }
+            
+            
+            $.each(row.find("input"), function (index, input) {
+                var obj = {};
+                obj.name = $(input).attr("name");
+                obj.value = $(input).val();
+                obj.origionalValue = $(input).attr("data-origVal");
+                obj.type = $(input).attr("type");
+
+                if (includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
+                    data.push(obj);
+                }
+            });
+            
+            return data;
+        },
+
+        _submitRow: function(inputs,type,url,datatype, done,fail){
+            var me = this;
+            var data = {};
+        
+            for (var i = 0;i<inputs.length;i++){            
+                data[inputs[i].name] = inputs[i].value;
+            }
+
+            $.ajax({
+
+                type: type,
+                dataType: datatype,
+                url: url,
+                data: data,
+                async: true
+            }).done(done).fail(fail);
+
+        },
+
+        _easySubmit: function(e,type, url,AllFields,successText,failText){            
+            if (!successText) successText = "Saved";
+            if (!failText) failText = "Failed";
+            if (AllFields === undefined) AllFields = true;
+            var data = e.data.getInputs(e.data.element, AllFields);
+
+            e.data.easySubmit(data, type, url, 'text', function () { alert(successText); }, function () { alert(failText); });
+
+        },
+
         _writeActions: function (RIContext, Elements, $Control) {
             var me = this;
             if (Elements.ActionInfo)
@@ -1041,15 +1104,15 @@ $(function () {
 
             var ActionExt = me._getRDLExt(RIContext);
 
-            if (ActionExt.JavaScriptAction) {
-                //var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+            if (ActionExt.JavaScriptAction) {                
                 $Control.addClass("fr-core-cursorpointer");
                 var newFunc;
                 try{
                     newFunc = new Function("e",ActionExt.JavaScriptAction);
                 }
-                catch(e){}
-                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control }, newFunc);
+                catch (e) { }
+
+                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit:me._submitRow }, newFunc);
             }
 
         },

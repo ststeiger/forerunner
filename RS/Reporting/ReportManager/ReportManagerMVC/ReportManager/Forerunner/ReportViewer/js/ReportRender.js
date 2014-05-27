@@ -315,11 +315,21 @@ $(function () {
             var Style;
             var me = this;
             var ReportItems = {};
+            var rec = RIContext.$HTMLParent;
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
             var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);            
             var RecExt = me._getRDLExt(RIContext);
-            
+
+            if (RecExt.FormAction) {
+                rec = $("<form />");
+                rec.attr("action", RecExt.FormAction);
+                if (RecExt.FormName) rec.attr("name", RecExt.FormName);
+                if (RecExt.FormMethod) rec.attr("method", RecExt.FormMethod);
+                RIContext.$HTMLParent = rec;
+            }
+
+
 
             $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
         
@@ -363,34 +373,34 @@ $(function () {
         
                 $LocDiv.attr("Style", Style);
                 $LocDiv.append($RI);
-                RIContext.$HTMLParent.append($LocDiv);
+                rec.append($LocDiv);
             });
            
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
                 Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
-                RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
-                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+                rec.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                rec.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                rec.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
-
+             
             if (RecExt.FixedHeight)
                 Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
             if (RecExt.FixedWidth)
                 Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
 
-            RIContext.$HTMLParent.attr("Style", Style);
+            rec.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
-                me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                me._writeUniqueName(rec, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
 
             //Add Rec to Rec collection to layout later
-            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: RIContext.$HTMLParent, RIContext: RIContext, RecExt: RecExt });
+            me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: rec, RIContext: RIContext, RecExt: RecExt });
 
-            return RIContext.$HTMLParent;
+            return rec;
         },
 
         layoutReport: function(isLoaded,force,RDLExt){
@@ -447,12 +457,13 @@ $(function () {
                     if (RIContext.CurrObj.ReportItems.length === 0)
                         rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
                     else {
+
                         var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
-                                           parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
-                                           (parseFloat(RIContext.CurrLocation.Height) -
+                                            parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
+                                            (parseFloat(RIContext.CurrLocation.Height) -
                                                 (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                                 parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
-                                           1;
+                                            0; //changed from 1  may need to change back
                         if (rec.RecExt.FixedHeight === undefined)
                             rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
                     }
@@ -534,7 +545,7 @@ $(function () {
                         //&& (layout.ReportItems[i].Left < Obj.Width)
                         if ((Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && Index > i ) {
                             //Not below if there is another one lower
-                            if (curRI.IndexAbove === null || layout.ReportItems[curRI.IndexAbove].OrgBottom < layout.ReportItems[i].OrgBottom) {
+                            if (curRI.IndexAbove === null || layout.ReportItems[curRI.IndexAbove].OrgBottom <= layout.ReportItems[i].OrgBottom) { //chnaged to <=  to fix rec height issue, need to test more
                                 curRI.IndexAbove = i;
                                 curRI.TopDelta = 1;
                                 if (i === layout.LowestIndex)
@@ -548,7 +559,7 @@ $(function () {
                     }
                 }
 
-                if ( anyMove || (Index === Measurements.length - 1)) {
+                if (anyMove || (Index === Measurements.length - 1)) {
                     for (var j = 0; j < curRI.Index ; j++) {
                         // if I have the same index above and I did not move but you did more then I have to move down
                         if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
@@ -646,9 +657,12 @@ $(function () {
 
 
             Style = "";
+            //Special case for RDL extension inputType
             if (textExt.InputType) {
                 $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
                 Style += "height:auto;box-sizing:border-box;";
+                if (textExt.InputRequired === true)
+                    $TextObj.attr("required", true);
             }
 
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
@@ -860,7 +874,7 @@ $(function () {
         },
         _writeUniqueName: function($item,uniqueName){
             
-            $item.attr("name",uniqueName);
+            $item.attr("u-name",uniqueName);
            
         },
         _getImageURL: function (RS, ImageName) {
@@ -1273,9 +1287,7 @@ $(function () {
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
-                var tablixExt = null;
-                if (me.RDLExt)
-                    tablixExt = me.RDLExt[sharedElements.Name];
+                var tablixExt = me._getRDLExt(RIContext);;                
 
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
@@ -1284,15 +1296,15 @@ $(function () {
                 respCols.ColHeaderRow = 0;
                 respCols.BackgroundColor = "#F2F2F2";
 
-                if (tablixExt && tablixExt.ColumnHeaders) {
+                if (tablixExt.ColumnHeaders) {
                     for (var ch = 0; ch < tablixExt.ColumnHeaders.length; ch++) {
                         //Just creating index, can all object later if needed
                         respCols.ColumnHeaders[tablixExt.ColumnHeaders[ch]] = ch;
                     }
                 }
-                if (tablixExt && tablixExt.ColHeaderRow !== undefined)
+                if (tablixExt.ColHeaderRow !== undefined)
                     respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
-                if (tablixExt && tablixExt.BackgroundColor !== undefined)
+                if (tablixExt.BackgroundColor !== undefined)
                     respCols.BackgroundColor = tablixExt.BackgroundColor;
 
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
@@ -1302,7 +1314,7 @@ $(function () {
                     var maxPri = -1;
                     var foundCol;
                     
-                    if (tablixExt && tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                    if (tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
                         for (cols = 0; cols < tablixExt.Columns.length; cols++) {
                             respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
                         }
@@ -1313,7 +1325,7 @@ $(function () {
                         maxPri = -1;
 
                         //If the author has supplied instructions for minimizing the tablix, determine columns here                            
-                        if (tablixExt && tablixExt.Columns) {
+                        if (tablixExt.Columns) {
 
                             //if not all columns are in the array, use the ones that are missing first
                             if (respCols.ColumnCount > tablixExt.Columns.length) {
@@ -1601,7 +1613,7 @@ $(function () {
 
                     if (obj.Visible) {
                         //find cell
-                        cell = me.element.find("[name=\"" + obj.UniqueName + "\"]");
+                        cell = me.element.find("[u-name=\"" + obj.UniqueName + "\"]");
                         icon = cell.prev();
                         if (icon.hasClass("fr-render-respIcon") === false)
                             icon = icon.prev();
@@ -1825,7 +1837,7 @@ $(function () {
 
             $copiedElem = $obj.clone().css({ visibility: "hidden" });
             $copiedElem.find("img").remove();
-            
+
             $("body").append($copiedElem);
             height = $copiedElem.outerHeight() + "px";
             $copiedElem.remove();

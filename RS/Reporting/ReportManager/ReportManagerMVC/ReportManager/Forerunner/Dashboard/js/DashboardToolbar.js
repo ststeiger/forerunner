@@ -31,7 +31,7 @@ $(function () {
      *      $appContainer: layout.$container,
      *      $dashboardEZ: me.dashboardEZ,
      *      enableEdit: me.options.enableEdit
-	 * });
+  	 * });
      *
      * Note:
      *  Toolbar can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}

@@ -7,6 +7,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var dbtp = forerunner.ssr.tools.dashboardToolPane;
+    var tg = forerunner.ssr.tools.groups;
 
     /**
     * Widget used to create and edit dashboards
@@ -69,25 +71,13 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me,
+                $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
-            if (me.options.isReportManager) {
-                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
-                if (forerunner.ajax.isFormsAuth()) {
-                    listOfButtons.push(dtb.btnLogOff);
-                }
-                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-            }
-
 
             var $lefttoolbar = me.layout.$leftheader;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.dashboardLeftToolbar({
-                    navigateTo: me.options.navigateTo,
-                    $appContainer: me.layout.$container,
-                    $dashboardEZ: me,
-                    enableEdit: me.options.enableEdit
-                });
+                $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
             }
 
             var $toolpane = me.layout.$leftpanecontent;
@@ -95,8 +85,19 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me,
+                $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
+
+            
+            if (me.options.isReportManager) {
+                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(dtb.btnLogOff);
+                }
+                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                $toolpane.dashboardToolPane("addTools", 1, true, [dbtp.itemFolders, tg.dashboardItemFolderGroup, dbtp.itemBack]);
+            }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
@@ -162,26 +163,5 @@ $(function () {
             return null;
         },
     });  // $.widget
-
-    // Left Toolbar
-    $.widget(widgets.getFullname(widgets.dashboardLeftToolbar), $.forerunner.toolBase, {
-        options: {
-            $reportViewer: null,
-            $ReportViewerInitializer: null,
-            toolClass: "fr-toolbar-slide",
-            $appContainer: null
-        },
-        _init: function () {
-            var me = this;
-            me._super();
-            var dltb = forerunner.ssr.tools.dashboardLeftToolbar;
-
-            me.element.html("");
-            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
-            $(me.element).append($toolbar);
-
-            me.addTools(1, true, [dltb.btnDLTBMenu]);
-        },
-    }); //$.widget
 
 });  // function()

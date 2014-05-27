@@ -215,8 +215,6 @@ $(function () {
             /** @constant */
             dashboardEZ: "dashboardEZ",
             /** @constant */
-            dashboardLeftToolbar: "dashboardLeftToolbar",
-            /** @constant */
             dashboardToolbar: "dashboardToolbar",
             /** @constant */
             dashboardToolPane: "dashboardToolPane",
@@ -260,6 +258,8 @@ $(function () {
             leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
             /** widget + event, lowercase */
             reportExplorerToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.reportExplorerToolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            dashboardToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.dashboardToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",

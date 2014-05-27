@@ -29,12 +29,25 @@ $(function () {
             historyBack: null,
             $appContainer: null
         },
+        /**
+         * Loads the given template
+         * @function $.forerunner.dashboardEditor#loadTemplate
+         */
         loadTemplate: function (templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
             me.dashboardDef.template = template;
             me._renderTemplate();
         },
+        /**
+         * Save the dashboard
+         * @function $.forerunner.dashboardEditor#save
+         */
+        save: function () {
+            var me = this;
+            alert("dashboardEditor.save()");
+        },
+
         _renderTemplate: function () {
             var me = this;
             me.element.html(me.dashboardDef.template);

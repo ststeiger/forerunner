@@ -162,10 +162,11 @@ $(function () {
             });
 
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
-            $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
-            $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
-            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
-            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, true); });
+            $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
+            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.reportExplorerToolbar, true); });
+            $mainheadersection.on(events.dashboardToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.dashboardToolbar, true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
@@ -579,7 +580,6 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -588,11 +588,11 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                if (isReportExplorerToolbar) {
-                    me.$mainheadersection.reportExplorerToolbar("showAllTools");
-                }
-                else {
-                    me.$mainheadersection.toolbar("showAllTools");
+                for (key in me.$mainheadersection.data()) {
+                    var widget = me.$mainheadersection.data()[key];
+                    if (widget.widgetName) {
+                        me.$mainheadersection[widget.widgetName]("showAllTools");
+                    }
                 }
             }
             
@@ -629,7 +629,7 @@ $(function () {
             me.showTopDiv(true);
             me.$unzoomsection.show();
         },
-        showSlideoutPane: function (isLeftPane) {
+        showSlideoutPane: function (toolbarWidgetName, isLeftPane) {
             var me = this;
 
             me._allowZoom(false);
@@ -642,7 +642,6 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
 
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
@@ -655,11 +654,11 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                if (isReportExplorerToolbar) {
-                    me.$mainheadersection.reportExplorerToolbar("hideAllTools");
-                }
-                else {
-                    me.$mainheadersection.toolbar("hideAllTools");
+                for (key in me.$mainheadersection.data()) {
+                    var widget = me.$mainheadersection.data()[key];
+                    if (widget.widgetName) {
+                        me.$mainheadersection[widget.widgetName]("hideAllTools");
+                    }
                 }
 
                 me._allowZoom(false);
@@ -678,15 +677,6 @@ $(function () {
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
-            }
-        },
-        toggleSlideoutPane: function (isLeftPane) {
-            var me = this;
-            var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
-            if (slideoutPane.is(":visible")) {
-                this.hideSlideoutPane(isLeftPane);
-            } else {
-                this.showSlideoutPane(isLeftPane);
             }
         },
         setBackgroundLayout: function () {

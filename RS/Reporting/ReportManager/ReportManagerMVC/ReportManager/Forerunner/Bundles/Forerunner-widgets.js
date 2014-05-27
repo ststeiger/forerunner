@@ -4120,10 +4120,11 @@ $(function () {
             });
 
             var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
-            $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
-            $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
-            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
-            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, true); });
+            $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
+            $mainheadersection.on(events.reportExplorerToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.reportExplorerToolbar, true); });
+            $mainheadersection.on(events.dashboardToolbarMenuClick(), function (e, data) { me.showSlideoutPane(widgets.dashboardToolbar, true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(widgets.toolbar, false); });
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
@@ -4537,7 +4538,6 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
 
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
@@ -4546,11 +4546,11 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                if (isReportExplorerToolbar) {
-                    me.$mainheadersection.reportExplorerToolbar("showAllTools");
-                }
-                else {
-                    me.$mainheadersection.toolbar("showAllTools");
+                for (key in me.$mainheadersection.data()) {
+                    var widget = me.$mainheadersection.data()[key];
+                    if (widget.widgetName) {
+                        me.$mainheadersection[widget.widgetName]("showAllTools");
+                    }
                 }
             }
             
@@ -4587,7 +4587,7 @@ $(function () {
             me.showTopDiv(true);
             me.$unzoomsection.show();
         },
-        showSlideoutPane: function (isLeftPane) {
+        showSlideoutPane: function (toolbarWidgetName, isLeftPane) {
             var me = this;
 
             me._allowZoom(false);
@@ -4600,7 +4600,6 @@ $(function () {
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            var isReportExplorerToolbar = me.$mainheadersection.is(":" + widgets.namespace + "-" + widgets.reportExplorerToolbar);
 
             if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
@@ -4613,11 +4612,11 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                if (isReportExplorerToolbar) {
-                    me.$mainheadersection.reportExplorerToolbar("hideAllTools");
-                }
-                else {
-                    me.$mainheadersection.toolbar("hideAllTools");
+                for (key in me.$mainheadersection.data()) {
+                    var widget = me.$mainheadersection.data()[key];
+                    if (widget.widgetName) {
+                        me.$mainheadersection[widget.widgetName]("hideAllTools");
+                    }
                 }
 
                 me._allowZoom(false);
@@ -4636,15 +4635,6 @@ $(function () {
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
-            }
-        },
-        toggleSlideoutPane: function (isLeftPane) {
-            var me = this;
-            var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
-            if (slideoutPane.is(":visible")) {
-                this.hideSlideoutPane(isLeftPane);
-            } else {
-                this.showSlideoutPane(isLeftPane);
             }
         },
         setBackgroundLayout: function () {
@@ -18855,6 +18845,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var dbtp = forerunner.ssr.tools.dashboardToolPane;
+    var tg = forerunner.ssr.tools.groups;
 
     /**
     * Widget used to create and edit dashboards
@@ -18917,25 +18909,13 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me,
+                $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
-            if (me.options.isReportManager) {
-                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
-                if (forerunner.ajax.isFormsAuth()) {
-                    listOfButtons.push(dtb.btnLogOff);
-                }
-                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-            }
-
 
             var $lefttoolbar = me.layout.$leftheader;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.dashboardLeftToolbar({
-                    navigateTo: me.options.navigateTo,
-                    $appContainer: me.layout.$container,
-                    $dashboardEZ: me,
-                    enableEdit: me.options.enableEdit
-                });
+                $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
             }
 
             var $toolpane = me.layout.$leftpanecontent;
@@ -18943,8 +18923,19 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me,
+                $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
+
+            
+            if (me.options.isReportManager) {
+                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(dtb.btnLogOff);
+                }
+                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                $toolpane.dashboardToolPane("addTools", 1, true, [dbtp.itemFolders, tg.dashboardItemFolderGroup, dbtp.itemBack]);
+            }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
@@ -19011,27 +19002,6 @@ $(function () {
         },
     });  // $.widget
 
-    // Left Toolbar
-    $.widget(widgets.getFullname(widgets.dashboardLeftToolbar), $.forerunner.toolBase, {
-        options: {
-            $reportViewer: null,
-            $ReportViewerInitializer: null,
-            toolClass: "fr-toolbar-slide",
-            $appContainer: null
-        },
-        _init: function () {
-            var me = this;
-            me._super();
-            var dltb = forerunner.ssr.tools.dashboardLeftToolbar;
-
-            me.element.html("");
-            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
-            $(me.element).append($toolbar);
-
-            me.addTools(1, true, [dltb.btnDLTBMenu]);
-        },
-    }); //$.widget
-
 });  // function()
 
 ///#source 1 1 /Forerunner/Dashboard/js/DashboardToolbar.js
@@ -19068,7 +19038,7 @@ $(function () {
      *      $appContainer: layout.$container,
      *      $dashboardEZ: me.dashboardEZ,
      *      enableEdit: me.options.enableEdit
-	 * });
+  	 * });
      *
      * Note:
      *  Toolbar can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
@@ -19114,7 +19084,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var dtp = forerunner.ssr.tools.dashboardToolpane;
+    var dbtp = forerunner.ssr.tools.dashboardToolPane;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
@@ -19149,7 +19119,7 @@ $(function () {
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
             
-            me.addTools(1, false, [dtp.itemSave]);
+            me.addTools(1, true, [dbtp.itemSave]);
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
@@ -19240,12 +19210,25 @@ $(function () {
             historyBack: null,
             $appContainer: null
         },
+        /**
+         * Loads the given template
+         * @function $.forerunner.dashboardEditor#loadTemplate
+         */
         loadTemplate: function (templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
             me.dashboardDef.template = template;
             me._renderTemplate();
         },
+        /**
+         * Save the dashboard
+         * @function $.forerunner.dashboardEditor#save
+         */
+        save: function () {
+            var me = this;
+            alert("dashboardEditor.save()");
+        },
+
         _renderTemplate: function () {
             var me = this;
             me.element.html(me.dashboardDef.template);

@@ -259,6 +259,8 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\Collapse.png" />
+    <Content Include="Forerunner\ReportViewer\images\Expand.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTree32px.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTree40px.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTreeThrobber.gif" />

@@ -4,7 +4,7 @@
 !define PRODUCT_NAME "Forerunner Mobilizerfor SQL Server Reporting Services"
 !define PRODUCT_VERSION "3.0 Update"
 !define PRODUCT_PUBLISHER "Forerunner Software"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV2"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV3"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define COPYRIGHT "Copyright © Forerunner Software 2014"
@@ -175,6 +175,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTree32px.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTree40px.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTreeThrobber.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Expand.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Collapse.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
@@ -250,10 +252,10 @@ Section "ReportManager" SEC01
 SectionEnd
 
 Section -AdditionalIcons
-  CreateDirectory "$SMPROGRAMS\ForerunnerMobilizerV2"
-  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  CreateDirectory "$SMPROGRAMS\ForerunnerMobilizerV3"
+  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV3\Uninstall.lnk" "$INSTDIR\uninst.exe"
   SetOutPath "$INSTDIR\Config"
-  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk" "$INSTDIR\Config\MobilizerConfigTool.exe"
+  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV3\MobilizerConfigTool.lnk" "$INSTDIR\Config\MobilizerConfigTool.exe"
 SectionEnd
 
 Section -Post
@@ -600,6 +602,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTree32px.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTree40px.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTreeThrobber.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\Expand.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\Collapse.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportParameter.css"
@@ -612,6 +616,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ToolPane.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\DSCredential.css"
+  Delete "$INSTDIR\Forerunner\ReportViewer\css\RDLExtDialog.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\accent.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\bullet.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\Folder-icon.png"
@@ -691,6 +696,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\Newtonsoft.Json.dll"
   Delete "$INSTDIR\bin\Forerunner.ReportManager.dll"
   Delete "$INSTDIR\bin\Forerunner.Thumbnail.exe"
+  Delete "$INSTDIR\bin\PdfSharp.dll"
   Delete "$INSTDIR\bin\System.Net.Http.dll"
   Delete "$INSTDIR\bin\System.Net.Http.Formatting.dll"
   Delete "$INSTDIR\bin\System.Net.Http.WebRequest.dll"
@@ -716,10 +722,11 @@ Section Uninstall
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
   Delete "$INSTDIR\InstallInstructions.rtf"
+  Delete "$INSTDIR\RDL Extension Documentation.rtf"
 
-  Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
-  Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"
-  RMDir "$SMPROGRAMS\ForerunnerMobilizerV2"
+  Delete "$SMPROGRAMS\ForerunnerMobilizerV3\Uninstall.lnk"
+  Delete "$SMPROGRAMS\ForerunnerMobilizerV3\MobilizerConfigTool.lnk"
+  RMDir "$SMPROGRAMS\ForerunnerMobilizerV3"
   
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Views\Shared"
@@ -740,6 +747,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\ReportExplorer"
   RMDir "$INSTDIR\Forerunner\Dashboard\css"
   RMDir "$INSTDIR\Forerunner\Dashboard\dashboards"
+  RMDir "$INSTDIR\Forerunner\Dashboard"
   RMDir "$INSTDIR\Forerunner\Lib\Misc\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\css\images"

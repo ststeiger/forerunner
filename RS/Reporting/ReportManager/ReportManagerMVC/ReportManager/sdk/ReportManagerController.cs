@@ -104,9 +104,15 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        [HttpGet]
+
+        public class SaveReprotPropertyPostBack{
+            public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
+            }
+
+        [HttpPost]
         [ActionName("SaveReportProperty")]
-        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
+        public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
+                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {

@@ -7547,25 +7547,41 @@ $(function () {
         _getInputsInRow: function(element,includeAll){
             var me = this;
             var data = [];
+            var rows = 0;
 
             var row = $(element).parent().parent().parent();
             if (row.is("tr") === false) {
                 return data;
             }
             
-            
-            $.each(row.find("input"), function (index, input) {
-                var obj = {};
-                obj.name = $(input).attr("name");
-                obj.value = $(input).val();
-                obj.origionalValue = $(input).attr("data-origVal");
-                obj.type = $(input).attr("type");
+            //Maximum of 2 rows to find
+            while (rows < 2) {
 
-                if (includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
-                    data.push(obj);
+                $.each(row.find("input"), function (index, input) {
+                    var obj = {};
+                    obj.name = $(input).attr("name");
+                    obj.value = $(input).val();
+                    obj.origionalValue = $(input).attr("data-origVal");
+                    obj.type = $(input).attr("type");
+
+                    if (includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
+                        data.push(obj);
+                    }
+                });
+
+                //get another row
+                rows++;
+                if (row.hasClass("fr-render-row")) {
+                    row = row.next();
+                    if (row.hasClass("fr-render-respRow") === false) //Did not find second row end
+                        rows = 2;
                 }
-            });
-            
+                else if (row.hasClass("fr-render-respRow")) {
+                    row = row.prev();
+                    if (row.hasClass("fr-render-row") === false) //Did not find second row end
+                        rows = 2;
+                }
+            }
             return data;
         },
 
@@ -8044,16 +8060,19 @@ $(function () {
             var CellWidth;
 
             if (State.ExtRow === undefined && respCols.isResp) {
-                $ExtRow = new $("<TR/>");
+                $ExtRow = new $("<TR/>");                
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                $ExtRow.addClass("fr-render-respRow");
                 $ExtRow.append($ExtCell);
                 $ExtRow.hide();
             }
 
-            if (State.Row === undefined) {
-                $Row = new $("<TR/>");
-            }
-
+            if (State.Row === undefined) 
+                $Row = new $("<TR/>");               
+            
+            if ($Row.hasClass("fr-render-row") === false)
+                $Row.addClass("fr-render-row");
+            
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -8073,6 +8092,7 @@ $(function () {
                 if (respCols.isResp) {
                     $ExtRow = new $("<TR/>");
                     $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtRow.addClass("fr-render-respRow");
                     $ExtRow.append($ExtCell);
                     $ExtRow.hide();
                 }

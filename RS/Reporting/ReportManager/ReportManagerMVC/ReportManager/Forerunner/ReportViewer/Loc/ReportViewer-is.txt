@@ -50,7 +50,7 @@
     "dsCredential":"Persónuskilríki",
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL Eftirnafn"
   },
   "toolbar": {
     "back":"Til baka",
@@ -82,8 +82,8 @@
     "addToFavorites":"Bæta við uppáhöld",
     "unzoom":"unzoom",
     "search":"Leita",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Búa Mælaborð",
+    "editDashboard":"breyta Mælaborð"
   },
   "print": {
     "title":"Print Report",
@@ -188,14 +188,14 @@
     "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Búa Mælaborð",
+    "cancel":"hætta",
+    "submit":"leggja"
   },
   "RDLExt": {
-    "title":"RDL Extensions",
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "dialogTitle":"RDL Extension JSON"
+    "title":"RDL Eftirnafn",
+    "submit":"leggja",
+    "cancel":"hætta",
+    "dialogTitle":"RDL Eftirnafn JSON"
   }
 }

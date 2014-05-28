@@ -49,7 +49,8 @@
     "print":"打印",
     "dsCredential":"數據源驗證",
     "views":"瀏覽",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"返回",
@@ -81,6 +82,8 @@
     "addToFavorites":"添加到收藏",
     "unzoom":"取消縮放",
     "search":"搜索",
+    "createDashboard":"Create Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "print": {
     "title":"打印報表",
@@ -100,7 +103,8 @@
     "title":"自定義設置",
     "submit":"保存",
     "cancel":"取消",
-    "ResponsiveUI":"動態UI"
+    "ResponsiveUI":"動態UI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -182,5 +186,16 @@
   "explorerSearch": {
     "emptyError":"搜索條件不能為空",
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
+  },
+  "createDashboard": {
+    "title":"Create Dashboard",
+    "cancel":"Cancel",
+    "submit":"Submit"
   }
 }

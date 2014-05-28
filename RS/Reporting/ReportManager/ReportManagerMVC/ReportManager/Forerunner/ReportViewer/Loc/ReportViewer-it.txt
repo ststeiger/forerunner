@@ -82,8 +82,8 @@
     "addToFavorites":"Aggiungi ai Preferiti",
     "unzoom":"unzoom",
     "search":"ricerca",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Crea Dashboard",
+    "editDashboard":"Modifica Dashboard"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -104,7 +104,7 @@
     "submit":"Ok",
     "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive",
-    "AdminUI":"Admin UI"
+    "AdminUI":"interfaccia utente Admin"
   },
   "paramPane": {
     "nullField":"Zero",
@@ -188,14 +188,14 @@
     "notFound":"Nessun risultato corrispondono alla tua ricerca, affina la tua ricerca."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Crea Dashboard",
+    "cancel":"cancellare",
+    "submit":"presentare"
   },
   "RDLExt": {
-    "title":"RDL Extensions",
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "dialogTitle":"RDL Extension JSON"
+    "title":"RDL estensioni",
+    "submit":"presentare",
+    "cancel":"cancellare",
+    "dialogTitle":"RDL estensione JSON"
   }
 }

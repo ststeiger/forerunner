@@ -50,7 +50,7 @@
     "dsCredential":"Dintiúir",
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL Síneadh"
   },
   "toolbar": {
     "back":"ar ais",
@@ -82,8 +82,8 @@
     "addToFavorites":"Add to Favorites",
     "unzoom":"unzoom",
     "search":"Cuardaigh",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Cruthaigh Phainéil",
+    "editDashboard":"Painéal na Eagar"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -104,7 +104,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach",
-    "AdminUI":"Admin UI"
+    "AdminUI":"Chomhéadain Riarachán"
   },
   "paramPane": {
     "nullField":"Null",
@@ -188,14 +188,14 @@
     "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Cruthaigh Phainéil",
+    "cancel":"Cealaigh",
+    "submit":"Cuir"
   },
   "RDLExt": {
-    "title":"RDL Extensions",
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "dialogTitle":"RDL Extension JSON"
+    "title":"RDL Síneadh",
+    "submit":"Cuir",
+    "cancel":"Cealaigh",
+    "dialogTitle":"RDL Síneadh JSON"
   }
 }

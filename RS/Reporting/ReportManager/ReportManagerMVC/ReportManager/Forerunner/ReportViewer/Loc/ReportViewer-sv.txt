@@ -82,8 +82,8 @@
     "addToFavorites":"Lägg till i favoriter",
     "unzoom":"Zooma ut",
     "search":"Sökning",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Skapa Dashboard",
+    "editDashboard":"Redigera Instrumentbräda"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -188,14 +188,14 @@
     "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Skapa Dashboard",
+    "cancel":"Avbryt",
+    "submit":"inkomma"
   },
   "RDLExt": {
     "title":"RDL Extensions",
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "dialogTitle":"RDL Extension JSON"
+    "submit":"inkomma",
+    "cancel":"Avbryt",
+    "dialogTitle":"RDL Förlängnings JSON"
   }
 }

@@ -49,7 +49,8 @@
     "print":"Напечатать",
     "dsCredential":"учетных",
     "views":"Просмотров",
-    "addToFavorites":"избранное"
+    "addToFavorites":"избранное",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Назад",
@@ -102,7 +103,8 @@
     "title":"Настройки пользователя",
     "submit":"Оклахома",
     "cancel":"Oтменить",
-    "ResponsiveUI":"Отзывчивый интерфейс"
+    "ResponsiveUI":"Отзывчивый интерфейс",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Ноль",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

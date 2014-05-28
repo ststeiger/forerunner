@@ -49,7 +49,8 @@
     "print":"Drucken",
     "dsCredential":"Credential",
     "views":"Ansichten",
-    "addToFavorites":"Zu Favoriten"
+    "addToFavorites":"Zu Favoriten",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Zurück",
@@ -102,7 +103,8 @@
     "title":"Benutzereinstellungen",
     "submit":"Ok",
     "cancel":"Abbestellen",
-    "ResponsiveUI":"Responsive UI"
+    "ResponsiveUI":"Responsive UI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Null",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

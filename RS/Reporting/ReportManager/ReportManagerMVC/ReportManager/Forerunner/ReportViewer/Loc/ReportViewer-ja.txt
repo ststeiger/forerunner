@@ -49,7 +49,8 @@
     "print":"刷る",
     "dsCredential":"資格情報",
     "views":"閲覧",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"裏面",
@@ -102,7 +103,8 @@
     "title":"ユーザー設定",
     "submit":"オーケー",
     "cancel":"キャンセル",
-    "ResponsiveUI":"レスポンシブUI"
+    "ResponsiveUI":"レスポンシブUI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"ゼロ",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

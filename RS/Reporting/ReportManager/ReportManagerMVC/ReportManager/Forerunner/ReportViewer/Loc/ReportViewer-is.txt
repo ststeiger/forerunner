@@ -49,7 +49,8 @@
     "print":"Prenta",
     "dsCredential":"Persónuskilríki",
     "views":"Views",
-    "addToFavorites":"Bæta við uppáhöld"
+    "addToFavorites":"Bæta við uppáhöld",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Til baka",
@@ -102,7 +103,8 @@
     "title":"notandi Stillingar",
     "submit":"Ok",
     "cancel":"Hætta",
-    "ResponsiveUI":"móttækilegur HÍ"
+    "ResponsiveUI":"móttækilegur HÍ",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Zero",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

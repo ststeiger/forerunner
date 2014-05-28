@@ -49,7 +49,8 @@
     "print":"se tipări",
     "dsCredential":"Acreditare",
     "views":"Vizualizari",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -102,7 +103,8 @@
     "title":"Setari utilizator",
     "submit":"bine",
     "cancel":"Anula",
-    "ResponsiveUI":"UI receptiv"
+    "ResponsiveUI":"UI receptiv",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Null",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

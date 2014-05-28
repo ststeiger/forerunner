@@ -49,7 +49,8 @@
     "print":"Priontáil",
     "dsCredential":"Dintiúir",
     "views":"Radhairc",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"ar ais",
@@ -102,7 +103,8 @@
     "title":"Socruithe Úsáideoir",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"Chomhéadain sofhreagrach"
+    "ResponsiveUI":"Chomhéadain sofhreagrach",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Null",
@@ -189,5 +191,11 @@
     "title":"Create Dashboard",
     "cancel":"Cancel",
     "submit":"Submit"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

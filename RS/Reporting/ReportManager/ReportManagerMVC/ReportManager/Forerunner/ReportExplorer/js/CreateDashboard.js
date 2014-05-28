@@ -13,8 +13,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
-    var templates = dashboards.templates;
     var createDashboard = locData.createDashboard;
 
     /**
@@ -42,6 +40,8 @@ $(function () {
 
             me.$select = me.element.find(".fr-cdb-select-id")
 
+            var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+            var templates = dashboards.templates;
             for (item in templates) {
                 var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
                 me.$select.append($option);

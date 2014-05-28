@@ -1262,6 +1262,19 @@ $(function () {
             }
         },
         /** @member */
+        itemCreateDashboard: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-createdashboard",
+            imageClass: "fr-icons24x24-createdashboard",
+            text: locData.toolbar.createDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-createdashboard"]);
+                }
+            }
+        },
+        /** @member */
         itemLogOff: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-logOff",

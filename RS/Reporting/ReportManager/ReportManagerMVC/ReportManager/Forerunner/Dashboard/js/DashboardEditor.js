@@ -21,13 +21,17 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
+     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+     * @prop {Object} options.resourceName - Name of the dashboard resource
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
-            $appContainer: null
+            $appContainer: null,
+            parentFolder: null,
+            resourceName: null
         },
         /**
          * Loads the given template
@@ -43,11 +47,27 @@ $(function () {
          * Save the dashboard
          * @function $.forerunner.dashboardEditor#save
          */
-        save: function () {
-            var me = this;
-            alert("dashboardEditor.save()");
-        },
+        save: function (overwrite) {
+          var me = this;
 
+          var stringified = JSON.stringify(me.dashboardDef);
+          var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveDashboard" +
+                      "?resourceName=" + me.resourceName +
+                      "&parentFolder=" + me.parentFolder +
+                      "&overwrite=" + overwrite +
+                      "&definition=" + stringified;
+
+          forerunner.ajax.ajax({
+            url: url,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+            },
+            error: function (data) {
+              console.log(data);
+            }
+          });
+        },
         _renderTemplate: function () {
             var me = this;
             me.element.html(me.dashboardDef.template);

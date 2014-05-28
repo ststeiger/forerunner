@@ -5406,6 +5406,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
@@ -5486,6 +5487,8 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            me._updateBtnStates();
         },
 
         _destroy: function () {
@@ -5497,7 +5500,20 @@ $(function () {
             $(window).resize(function () {
                 me.onWindowResize.call(me);
             });
+
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates();
+            });
         },
+        _updateBtnStates: function () {
+            var me = this;
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            if (lastFetched.view === "catalog") {
+                me.enableTools([tb.btnCreateDashboard]);
+            } else {
+                me.disableTools([tb.btnCreateDashboard]);
+            }
+        }
     });  // $.widget
 });  // function()
 
@@ -5516,6 +5532,7 @@ forerunner.ssr.tools.reportExplorerToolpane = forerunner.ssr.tools.reportExplore
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var tp = forerunner.ssr.tools.reportExplorerToolpane;
     var tg = forerunner.ssr.tools.groups;
     var itemActiveClass = "fr-toolbase-persistent-active-state";
@@ -5584,9 +5601,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(5, true, [tp.itemLogOff]);
+                me.addTools(6, true, [tp.itemLogOff]);
             }
             me._initCallbacks();
 
@@ -5595,14 +5612,29 @@ $(function () {
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
+
+
+            me._updateBtnStates();
         },
 
         _destroy: function () {
         },
 
         _create: function () {
-            
+            var me = this;
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates();
+            });
         },
+        _updateBtnStates: function () {
+            var me = this;
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            if (lastFetched.view === "catalog") {
+                me.enableTools([tp.itemCreateDashboard]);
+            } else {
+                me.disableTools([tp.itemCreateDashboard]);
+            }
+        }
     });  // $.widget
 });  // function()
 
@@ -5617,6 +5649,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
@@ -5899,8 +5932,26 @@ $(function () {
             var iframeHeight = me.options.$appContainer.height() - 38;
             frame.style.height = iframeHeight + "px";
         },
-        _fetch: function (view,path) {
+        /**
+         * Returns the last fetch view and path
+         *
+         * @function $.forerunner.reportExplorer#getLastFetched
+         */
+        getLastFetched: function () {
             var me = this;
+            if (me.lastFetched) {
+                return me.lastFetched;
+            }
+
+            return null;
+        },
+        _fetch: function (view, path) {
+            var me = this;
+            me.lastFetched = {
+                view: view,
+                path: path
+            };
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -12709,8 +12760,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
-    var templates = dashboards.templates;
     var createDashboard = locData.createDashboard;
 
     /**
@@ -12738,6 +12787,8 @@ $(function () {
 
             me.$select = me.element.find(".fr-cdb-select-id")
 
+            var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+            var templates = dashboards.templates;
             for (item in templates) {
                 var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
                 me.$select.append($option);
@@ -19202,13 +19253,17 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
+     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+     * @prop {Object} options.resourceName - Name of the dashboard resource
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
-            $appContainer: null
+            $appContainer: null,
+            parentFolder: null,
+            resourceName: null
         },
         /**
          * Loads the given template
@@ -19224,11 +19279,27 @@ $(function () {
          * Save the dashboard
          * @function $.forerunner.dashboardEditor#save
          */
-        save: function () {
-            var me = this;
-            alert("dashboardEditor.save()");
-        },
+        save: function (overwrite) {
+          var me = this;
 
+          var stringified = JSON.stringify(me.dashboardDef);
+          var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveDashboard" +
+                      "?resourceName=" + me.resourceName +
+                      "&parentFolder=" + me.parentFolder +
+                      "&overwrite=" + overwrite +
+                      "&definition=" + stringified;
+
+          forerunner.ajax.ajax({
+            url: url,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+            },
+            error: function (data) {
+              console.log(data);
+            }
+          });
+        },
         _renderTemplate: function () {
             var me = this;
             me.element.html(me.dashboardDef.template);

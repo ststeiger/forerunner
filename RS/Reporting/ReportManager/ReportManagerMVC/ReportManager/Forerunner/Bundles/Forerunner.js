@@ -262,6 +262,11 @@ $(function () {
             dashboardToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.dashboardToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
+            beforeFetch: "beforefetch",
+            /** widget + event, lowercase */
+            reportExplorerBeforeFetch: function () { return (forerunner.ssr.constants.widgets.reportExplorer + this.beforeFetch).toLowerCase(); },
+
+            /** @constant */
             paramAreaClick: "paramareaclick",
             /** widget + event, lowercase */
             toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },

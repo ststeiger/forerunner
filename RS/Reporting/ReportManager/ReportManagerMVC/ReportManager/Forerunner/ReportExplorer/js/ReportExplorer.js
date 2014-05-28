@@ -8,6 +8,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
@@ -290,8 +291,26 @@ $(function () {
             var iframeHeight = me.options.$appContainer.height() - 38;
             frame.style.height = iframeHeight + "px";
         },
-        _fetch: function (view,path) {
+        /**
+         * Returns the last fetch view and path
+         *
+         * @function $.forerunner.reportExplorer#getLastFetched
+         */
+        getLastFetched: function () {
             var me = this;
+            if (me.lastFetched) {
+                return me.lastFetched;
+            }
+
+            return null;
+        },
+        _fetch: function (view, path) {
+            var me = this;
+            me.lastFetched = {
+                view: view,
+                path: path
+            };
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
 
             if (view === "resource") {
                 me._renderResource(path);

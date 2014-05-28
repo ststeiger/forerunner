@@ -12,6 +12,7 @@ forerunner.ssr.tools.reportExplorerToolpane = forerunner.ssr.tools.reportExplore
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var tp = forerunner.ssr.tools.reportExplorerToolpane;
     var tg = forerunner.ssr.tools.groups;
     var itemActiveClass = "fr-toolbase-persistent-active-state";
@@ -80,9 +81,9 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(5, true, [tp.itemLogOff]);
+                me.addTools(6, true, [tp.itemLogOff]);
             }
             me._initCallbacks();
 
@@ -91,13 +92,28 @@ $(function () {
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
+
+
+            me._updateBtnStates();
         },
 
         _destroy: function () {
         },
 
         _create: function () {
-            
+            var me = this;
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates();
+            });
         },
+        _updateBtnStates: function () {
+            var me = this;
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            if (lastFetched.view === "catalog") {
+                me.enableTools([tp.itemCreateDashboard]);
+            } else {
+                me.disableTools([tp.itemCreateDashboard]);
+            }
+        }
     });  // $.widget
 });  // function()

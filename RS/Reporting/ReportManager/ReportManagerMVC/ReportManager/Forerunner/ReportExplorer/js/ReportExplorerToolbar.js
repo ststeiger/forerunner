@@ -12,6 +12,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
@@ -92,6 +93,8 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            me._updateBtnStates();
         },
 
         _destroy: function () {
@@ -103,6 +106,19 @@ $(function () {
             $(window).resize(function () {
                 me.onWindowResize.call(me);
             });
+
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates();
+            });
         },
+        _updateBtnStates: function () {
+            var me = this;
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            if (lastFetched.view === "catalog") {
+                me.enableTools([tb.btnCreateDashboard]);
+            } else {
+                me.disableTools([tb.btnCreateDashboard]);
+            }
+        }
     });  // $.widget
 });  // function()

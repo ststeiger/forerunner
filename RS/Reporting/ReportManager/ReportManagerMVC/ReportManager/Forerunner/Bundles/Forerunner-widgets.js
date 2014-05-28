@@ -6957,6 +6957,11 @@ $(function () {
                         
                     }
 
+                    // If I grew I may be the new bottom
+                    if (RecLayout.ReportItems[Index].NewHeight > RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight && RecLayout.ReportItems[Index].IndexAbove === RecLayout.ReportItems[RecLayout.LowestIndex].IndexAbove) {
+                        RecLayout.LowestIndex = Index;
+                    }
+
                     if (RecLayout.ReportItems[Index].IndexAbove === null)
                         RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
                     else
@@ -6964,7 +6969,7 @@ $(function () {
                 
                     rec.ReportItems[Index].HTMLElement.css("top", me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm");
                     rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
-                }
+                }                
 
                 if (rec.RecExt.FixedHeight || rec.RecExt.FixedWidth) {
                     rec.HTMLRec.removeClass("fr-render-rec");
@@ -6983,8 +6988,9 @@ $(function () {
                                                 (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                                 parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                             0; //changed from 1  may need to change back
-                        if (rec.RecExt.FixedHeight === undefined)
+                        if (rec.RecExt.FixedHeight === undefined) {
                             rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
+                        }
                     }
 
                 }
@@ -7081,25 +7087,43 @@ $(function () {
                 if (anyMove || (Index === Measurements.length - 1)) {
                     for (var j = 0; j < curRI.Index ; j++) {
                         // if I have the same index above and I did not move but you did more then I have to move down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth) {
                             curRI.IndexAbove = j;
+
+                            //Fix Lowest Index
+                            if (layout.LowestIndex === j)
+                                layout.LowestIndex = curRI.Index;
+                        }
                         // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
                             //if my index above is the same as yours then move me down
                             if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove) {
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
                                 curRI.TopDelta = 1;
+
+                                //Fix Lowest Index
+                                if (layout.LowestIndex === layout.ReportItems[j].Index)
+                                    layout.LowestIndex = curRI.Index;
                             }
                             // else if your origional index above is my new index above then you move down
                             else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index) {
                                 layout.ReportItems[j].IndexAbove = curRI.Index;
                                 layout.ReportItems[j].TopDelta = 1;
+
+                                //Fix Lowest Index
+                                if (layout.LowestIndex === curRI.Index)
+                                    layout.LowestIndex = layout.ReportItems[j].Index;
                             }
                         }
                         // If we now overlap move me down
                         if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width) {
                             curRI.IndexAbove = layout.ReportItems[j].Index;
                             curRI.TopDelta = 1;
+
+                            //Fix Lowest Index
+                            if (layout.LowestIndex === layout.ReportItems[j].Index)
+                                layout.LowestIndex = curRI.Index;
+
                         }
                     }
                 }
@@ -8324,10 +8348,13 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
-                if (Tablix.respCols.isResp && Tablix.State.ExtRow) {
+                if (Tablix.respCols.isResp && Tablix.State.ExtRow && Tablix.State.ExtRow.children()[0].children.length > 0) {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
+                else
+                    Tablix.State.Row.find(".fr-render-respIcon").hide();
+
                 Tablix.BigTablixDone = true;
             }
         },

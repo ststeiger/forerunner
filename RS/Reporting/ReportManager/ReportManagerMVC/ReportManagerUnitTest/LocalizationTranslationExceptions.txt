@@ -25,7 +25,8 @@
     "print": ["ro"],
     "dsCredential":["de", "sv"],
 		"views":["is"],
-    "addToFavorites": ["ga"]
+    "addToFavorites": ["ga"],
+    "RDLExt":["fr","it","ro", "sv"]
   },
   "toolbar": {
     "exportMenu": ["ro", "sv"],
@@ -40,7 +41,9 @@
     "reportPage": ["fr", "is"],
     "zoom": ["ru"],
  		"dsCredential":["sv"],
-    "addToFavorites": ["ga"]
+    "addToFavorites": ["ga"],
+    "unzoom":["is", "ga", "de","es", "it","pt", "ro", "ru"],
+    "RDLExt":["it", "sv","ro"]
   },
   "print": {
     "title": ["is"],
@@ -50,7 +53,8 @@
   },
   "userSettings": {
     "submit": ["de", "es", "fr", "ga", "is", "it", "ja", "pt", "sv"],
-    "ResponsiveUI": ["de"]
+    "ResponsiveUI": ["de"],
+    "AdminUI":["is", "sv"]
   },
   "paramPane": {
     "nullField": [],
@@ -71,7 +75,7 @@
   "datepicker": {
     "prevText": ["is", "it"], 
     "weekHeader": ["de", "ga", "is", "it", "pt", "ro", "ru", "sv"],
-    "dateFormat": ["es", "ja", "pt", "ro", "ru", "sv"],
+    "dateFormat": ["es", "ja", "pt", "ro", "ru", "sv","fr","ga","it"],
     "monthNames": ["de", "is", "pt", "ro", "sv"],
     "monthNamesShort": ["de", "es", "fr", "is", "it", "pt", "ro", "sv"],
     "dayNames": ["pt"], 
@@ -90,7 +94,11 @@
 	  "username":["de", "it"],
    	"password":["it"],
   	"reset":["it"]
-
+    },
+  "RDLExt": {
+      "title":["ro", "sv", "it"],
+      "dialogTitle":["fr", "ro"]
+      
   }
 }
 

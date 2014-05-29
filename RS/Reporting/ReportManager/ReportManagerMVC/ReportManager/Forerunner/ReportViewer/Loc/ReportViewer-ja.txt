@@ -49,7 +49,8 @@
     "print":"刷る",
     "dsCredential":"資格情報",
     "views":"閲覧",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "RDLExt":"RDL拡張"
   },
   "toolbar": {
     "back":"裏面",
@@ -81,8 +82,8 @@
     "addToFavorites":"お気に入りに追加",
     "unzoom":"ズーム解除",
     "search":"検索",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"ダッシュボードの作成",
+    "editDashboard":"編集ダッシュボード"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -102,7 +103,8 @@
     "title":"ユーザー設定",
     "submit":"オーケー",
     "cancel":"キャンセル",
-    "ResponsiveUI":"レスポンシブUI"
+    "ResponsiveUI":"レスポンシブUI",
+    "AdminUI":"管理UI"
   },
   "paramPane": {
     "nullField":"ゼロ",
@@ -186,8 +188,14 @@
     "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"ダッシュボードの作成",
+    "cancel":"取り消す",
+    "submit":"提出する"
+  },
+  "RDLExt": {
+    "title":"RDL拡張",
+    "submit":"提出する",
+    "cancel":"取り消す",
+    "dialogTitle":"RDL拡張JSON形式"
   }
 }

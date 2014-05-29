@@ -49,7 +49,8 @@
     "print":"Impressão",
     "dsCredential":"Credencial",
     "views":"Visualizações",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "RDLExt":"RDL Extensão"
   },
   "toolbar": {
     "back":"Volta",
@@ -81,8 +82,8 @@
     "addToFavorites":"Adicionar aos favoritos",
     "unzoom":"unzoom",
     "search":"pesquisa",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"criar o Dashboard",
+    "editDashboard":"Editar o Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -102,7 +103,8 @@
     "title":"Configurações do Usuário",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"UI Responsive"
+    "ResponsiveUI":"UI Responsive",
+    "AdminUI":"UI Administrador"
   },
   "paramPane": {
     "nullField":"Nulo",
@@ -186,8 +188,14 @@
     "notFound":"Nenhum resultado correspondem aos seus critérios de busca, por favor refinar sua busca."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"criar o Dashboard",
+    "cancel":"cancelar",
+    "submit":"submeter"
+  },
+  "RDLExt": {
+    "title":"RDL Extensões",
+    "submit":"submeter",
+    "cancel":"cancelar",
+    "dialogTitle":"RDL extensão JSON"
   }
 }

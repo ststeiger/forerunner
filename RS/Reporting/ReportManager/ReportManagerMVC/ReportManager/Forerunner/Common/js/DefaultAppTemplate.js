@@ -170,8 +170,10 @@ $(function () {
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $(".fr-layout-leftpanecontent", me.$container).on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            var $leftPaneContent = $(".fr-layout-leftpanecontent", me.$container);
+            $leftPaneContent.on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $leftPaneContent.on(events.dashboardToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $leftPaneContent.on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 

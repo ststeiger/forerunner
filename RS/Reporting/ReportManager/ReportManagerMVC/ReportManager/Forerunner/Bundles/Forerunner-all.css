@@ -1387,6 +1387,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
   .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
 
+  .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
+  .fr-rp-form .fr-rp-error-position { display: inline; }
+  .fr-rp-form .fr-rp-error { border-width: thin; border-color: red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
@@ -1396,5 +1399,26 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-rp-form { margin-right: 4px; }
+}
+
+.fr-sad-section { display: none; }
+
+.fr-sad-form { margin-right: 16px; position: relative;}
+  .fr-sad-form .fr-sad-dropdown-container { position: relative; }
+  .fr-sad-form .fr-sad-dashboard-name { display: block; height: 26px; width: 200px; margin: auto 0; padding: 0 22px 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+  .fr-sad-form .fr-sad-label { height: 20px; display: inline-block; margin-right: 10px; }
+
+  .fr-sad-form .fr-sad-error-span { display: inline; font-size: 10pt; }
+  .fr-sad-form .fr-sad-error-position { display: inline; }
+  .fr-sad-form .fr-sad-error { border-width: thin; border-color: red; }
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-sad-form { margin-right: 4px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-sad-form { margin-right: 4px; }
 }
 

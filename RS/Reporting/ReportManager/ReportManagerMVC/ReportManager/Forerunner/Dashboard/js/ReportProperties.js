@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the print widget.
+ * @file Contains the reportProperties widget.
  *
  */
 
@@ -65,6 +65,8 @@ $(function () {
             } else {
                 me.$hideToolbar.prop("checked", false);
             }
+
+            me._resetValidateMessage();
         },
         _createJSData: function (path) {
             var me = this;
@@ -115,7 +117,7 @@ $(function () {
                         "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='required' />" +
+                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -134,6 +136,9 @@ $(function () {
                 "</div>");
 
             me.element.append($dialog);
+
+            me.$form = me.element.find(".fr-rp-form");
+            me._validateForm(me.$form);
 
             me.$dropdown = me.element.find(".fr-rp-dropdown-container");
             me.$dropdown.on("click", function (e) {
@@ -237,7 +242,7 @@ $(function () {
         /**
          * Open parameter set dialog
          *
-         * @function $.forerunner.createDashboard#openDialog
+         * @function $.forerunner.reportProperties#openDialog
          */
         openDialog: function () {
             var me = this;
@@ -253,21 +258,49 @@ $(function () {
         },
         _submit: function () {
             var me = this;
-            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
-            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
 
-            me._triggerClose(true);
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            if (me.$form.valid() === true) {
+                me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+
+                me._triggerClose(true);
+                forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            }
         },
         /**
          * Close parameter set dialog
          *
-         * @function $.forerunner.manageParamSets#closeDialog
+         * @function $.forerunner.reportProperties#closeDialog
          */
         closeDialog: function () {
             var me = this;
             me._triggerClose(false);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-rp-error-position");
+                    $(element).addClass("fr-rp-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-rp-error-position");
+                    $(element).removeClass("fr-rp-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
         },
     }); //$.widget
 });

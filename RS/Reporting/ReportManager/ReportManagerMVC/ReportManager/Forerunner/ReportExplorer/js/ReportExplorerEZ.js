@@ -296,12 +296,21 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                // TODO
+                // What about the case where the user navigates directly to the create dashboard URL
+                // We need to ass the parentFolder to the URL
+                var parentFolder = "/";
+                if (me.$reportExplorer) {
+                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
+                    parentFolder = lastFetched.path;
+                }
                 var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    enableEdit: true
+                    enableEdit: true,
+                    parentFolder: parentFolder
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -317,6 +326,17 @@ $(function () {
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
+        },
+        /**
+         * Get report explorer
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorer
+         * 
+         * @return {Object} - report explorer jQuery object
+         */
+        getReportExplorer: function () {
+            var me = this;
+            return me.$reportExplorer;
         },
         /**
          * Get report explorer toolbar

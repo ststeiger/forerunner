@@ -218,6 +218,8 @@ $(function () {
             dashboardToolbar: "dashboardToolbar",
             /** @constant */
             dashboardToolPane: "dashboardToolPane",
+            /** @constant */
+            saveAsDashboard: "saveAsDashboard",
 
             /** @constant */
             namespace: "forerunner",
@@ -243,6 +245,8 @@ $(function () {
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
             /** widget + event, lowercase */
             reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
+            /** widget + event, lowercase */
+            dashboardToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.dashboardToolPane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
             allowZoom: "allowZoom",
@@ -430,8 +434,10 @@ $(function () {
             /** @constant */
             close: "close",
             /** widget + event, lowercase */
-            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); }
-        },
+            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
+},
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *

@@ -202,5 +202,12 @@
     "submit":"Submit",
     "selectReport":"<select report>",
     "hideToolbar":"Hide Toolbar"
+  },
+  "saveAsDashboard": {
+    "title":"Save As",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "dashboardName":"Dashboard Name",
+    "namePlaceholder":"dashboard name"
   }
 }

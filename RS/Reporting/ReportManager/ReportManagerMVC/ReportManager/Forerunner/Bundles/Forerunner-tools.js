@@ -482,7 +482,8 @@ $(function () {
         text: locData.toolbar.saveDashboard,
         events: {
           click: function (e) {
-            e.data.me.options.$dashboardEditor.dashboardEditor("save");
+              e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-save-button"]);
+              e.data.me.options.$dashboardEditor.dashboardEditor("save");
           }
         }
       },
@@ -494,8 +495,8 @@ $(function () {
           text: locData.toolPane.back,
           events: {
               click: function (e) {
-                  e.data.me.options.navigateTo("back", null);
                   e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-back"]);
+                  e.data.me.options.navigateTo("back", null);
               }
           }
       },

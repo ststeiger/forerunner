@@ -22,7 +22,7 @@ $(function () {
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.resourceName - Name of the dashboard resource
+     * @prop {Object} options.dashboardName - Name of the dashboard resource
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
@@ -31,7 +31,7 @@ $(function () {
             historyBack: null,
             $appContainer: null,
             parentFolder: null,
-            resourceName: null
+            dashboardName: null
         },
         /**
          * Loads the given template
@@ -48,25 +48,71 @@ $(function () {
          * @function $.forerunner.dashboardEditor#save
          */
         save: function (overwrite) {
-          var me = this;
-
-          var stringified = JSON.stringify(me.dashboardDef);
-          var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveDashboard" +
-                      "?resourceName=" + me.resourceName +
-                      "&parentFolder=" + me.parentFolder +
-                      "&overwrite=" + overwrite +
-                      "&definition=" + stringified;
-
-          forerunner.ajax.ajax({
-            url: url,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-            },
-            error: function (data) {
-              console.log(data);
+            var me = this;
+            if (!me.options.dashboardName) {
+                // If we don't have the name, we need to do a save as
+                me.saveAs(overwrite);
+                return;
             }
-          });
+            // If we have the dashboard name we can just save
+            me._saveDashboard(overwrite);
+        },
+        /**
+         * Save the dashboard and prompt for a name
+         * @function $.forerunner.dashboardEditor#saveAs
+         */
+        saveAs: function (overwrite) {
+            var me = this;
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-sad-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-sad-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+                $dlg.on(events.saveAsDashboardClose(), function (e, data) {
+                    me._onSaveAsDashboardClose.apply(me, arguments);
+                });
+            }
+            $dlg.saveAsDashboard({
+                $appContainer: me.options.$appContainer,
+                overwrite: overwrite,
+                dashboardName: me.options.dashboardName
+            });
+            $dlg.saveAsDashboard("openDialog");
+        },
+        _onSaveAsDashboardClose: function (e, data) {
+            var me = this;
+            if (!data.isSubmit) {
+                // Wasn't a submit so just return
+                return;
+            }
+
+            // Save the dashboard to the server
+            me.options.resourceName = data.dashboardName;
+            me._saveDashboard(data.overwrite);
+        },
+        _saveDashboard: function (overwrite) {
+            var me = this;
+            if (overwrite === null || overwrite === undefined) {
+                overwrite = false;
+            }
+            var stringified = JSON.stringify(me.dashboardDef);
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource" +
+                        "?resourceName=" + me.options.resourceName +
+                        "&parentFolder=" + encodeURIComponent(me.options.parentFolder) +
+                        "&overwrite=" + overwrite +
+                        "&definition=" + stringified +
+                        "&mimetype='text/dashboard'";
+
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         },
         _renderTemplate: function () {
             var me = this;

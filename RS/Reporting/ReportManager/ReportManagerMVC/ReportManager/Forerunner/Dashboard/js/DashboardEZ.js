@@ -21,6 +21,8 @@ $(function () {
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
+    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+    * @prop {Object} options.resourceName - Name of the dashboard resource
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -33,7 +35,9 @@ $(function () {
             historyBack: null,
             isFullScreen: true,
             isReportManager: false,
-            enableEdit: true
+            enableEdit: true,
+            parentFolder: null,
+            resourceName: null
         },
         _init: function () {
             var me = this;
@@ -56,8 +60,10 @@ $(function () {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: me.layout.$container
-                });
+                    $appContainer: me.layout.$container,
+                    parentFolder: me.options.parentFolder,
+                    resourceName: me.options.resourceName
+            });
             } else {
                 $dashboardWidget = $dashboardContainer.dashboardViewer({
                     navigateTo: me.options.navigateTo,

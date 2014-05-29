@@ -201,5 +201,12 @@
   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
+  },
+  "saveAsDashboard": {
+    "title":"Save As",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "dashboardName":"Dashboard Name",
+    "namePlaceholder":"dashboard name"
   }
 }

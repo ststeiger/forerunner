@@ -217,6 +217,8 @@ $(function () {
             dashboardToolbar: "dashboardToolbar",
             /** @constant */
             dashboardToolPane: "dashboardToolPane",
+            /** @constant */
+            saveAsDashboard: "saveAsDashboard",
 
             /** @constant */
             namespace: "forerunner",
@@ -429,8 +431,10 @@ $(function () {
             /** @constant */
             close: "close",
             /** widget + event, lowercase */
-            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); }
-        },
+            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
+},
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *

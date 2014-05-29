@@ -11,6 +11,9 @@
   .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
   .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
 
+  .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
+  .fr-rp-form .fr-rp-error-position { display: inline; }
+  .fr-rp-form .fr-rp-error { border-width: thin; border-color: red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {

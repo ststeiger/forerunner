@@ -4128,8 +4128,10 @@ $(function () {
             $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
             $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $(".fr-layout-leftpanecontent", me.$container).on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            var $leftPaneContent = $(".fr-layout-leftpanecontent", me.$container);
+            $leftPaneContent.on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $leftPaneContent.on(events.dashboardToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $leftPaneContent.on(events.reportExplorerToolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
@@ -12690,12 +12692,21 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                // TODO
+                // What about the case where the user navigates directly to the create dashboard URL
+                // We need to ass the parentFolder to the URL
+                var parentFolder = "/";
+                if (me.$reportExplorer) {
+                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
+                    parentFolder = lastFetched.path;
+                }
                 var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    enableEdit: true
+                    enableEdit: true,
+                    parentFolder: parentFolder
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -12711,6 +12722,17 @@ $(function () {
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
+        },
+        /**
+         * Get report explorer
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorer
+         * 
+         * @return {Object} - report explorer jQuery object
+         */
+        getReportExplorer: function () {
+            var me = this;
+            return me.$reportExplorer;
         },
         /**
          * Get report explorer toolbar
@@ -18910,6 +18932,8 @@ $(function () {
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
+    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+    * @prop {Object} options.resourceName - Name of the dashboard resource
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -18922,7 +18946,9 @@ $(function () {
             historyBack: null,
             isFullScreen: true,
             isReportManager: false,
-            enableEdit: true
+            enableEdit: true,
+            parentFolder: null,
+            resourceName: null
         },
         _init: function () {
             var me = this;
@@ -18945,8 +18971,10 @@ $(function () {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: me.layout.$container
-                });
+                    $appContainer: me.layout.$container,
+                    parentFolder: me.options.parentFolder,
+                    resourceName: me.options.resourceName
+            });
             } else {
                 $dashboardWidget = $dashboardContainer.dashboardViewer({
                     navigateTo: me.options.navigateTo,
@@ -19254,7 +19282,7 @@ $(function () {
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.resourceName - Name of the dashboard resource
+     * @prop {Object} options.dashboardName - Name of the dashboard resource
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
@@ -19263,7 +19291,7 @@ $(function () {
             historyBack: null,
             $appContainer: null,
             parentFolder: null,
-            resourceName: null
+            dashboardName: null
         },
         /**
          * Loads the given template
@@ -19280,25 +19308,71 @@ $(function () {
          * @function $.forerunner.dashboardEditor#save
          */
         save: function (overwrite) {
-          var me = this;
-
-          var stringified = JSON.stringify(me.dashboardDef);
-          var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveDashboard" +
-                      "?resourceName=" + me.resourceName +
-                      "&parentFolder=" + me.parentFolder +
-                      "&overwrite=" + overwrite +
-                      "&definition=" + stringified;
-
-          forerunner.ajax.ajax({
-            url: url,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-            },
-            error: function (data) {
-              console.log(data);
+            var me = this;
+            if (!me.options.dashboardName) {
+                // If we don't have the name, we need to do a save as
+                me.saveAs(overwrite);
+                return;
             }
-          });
+            // If we have the dashboard name we can just save
+            me._saveDashboard(overwrite);
+        },
+        /**
+         * Save the dashboard and prompt for a name
+         * @function $.forerunner.dashboardEditor#saveAs
+         */
+        saveAs: function (overwrite) {
+            var me = this;
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-sad-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-sad-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+                $dlg.on(events.saveAsDashboardClose(), function (e, data) {
+                    me._onSaveAsDashboardClose.apply(me, arguments);
+                });
+            }
+            $dlg.saveAsDashboard({
+                $appContainer: me.options.$appContainer,
+                overwrite: overwrite,
+                dashboardName: me.options.dashboardName
+            });
+            $dlg.saveAsDashboard("openDialog");
+        },
+        _onSaveAsDashboardClose: function (e, data) {
+            var me = this;
+            if (!data.isSubmit) {
+                // Wasn't a submit so just return
+                return;
+            }
+
+            // Save the dashboard to the server
+            me.options.resourceName = data.dashboardName;
+            me._saveDashboard(data.overwrite);
+        },
+        _saveDashboard: function (overwrite) {
+            var me = this;
+            if (overwrite === null || overwrite === undefined) {
+                overwrite = false;
+            }
+            var stringified = JSON.stringify(me.dashboardDef);
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource" +
+                        "?resourceName=" + me.options.resourceName +
+                        "&parentFolder=" + encodeURIComponent(me.options.parentFolder) +
+                        "&overwrite=" + overwrite +
+                        "&definition=" + stringified +
+                        "&mimetype='text/dashboard'";
+
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
         },
         _renderTemplate: function () {
             var me = this;
@@ -19411,7 +19485,7 @@ $(function () {
 
 ///#source 1 1 /Forerunner/Dashboard/js/ReportProperties.js
 /**
- * @file Contains the print widget.
+ * @file Contains the reportProperties widget.
  *
  */
 
@@ -19477,6 +19551,8 @@ $(function () {
             } else {
                 me.$hideToolbar.prop("checked", false);
             }
+
+            me._resetValidateMessage();
         },
         _createJSData: function (path) {
             var me = this;
@@ -19527,7 +19603,7 @@ $(function () {
                         "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='required' />" +
+                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -19546,6 +19622,9 @@ $(function () {
                 "</div>");
 
             me.element.append($dialog);
+
+            me.$form = me.element.find(".fr-rp-form");
+            me._validateForm(me.$form);
 
             me.$dropdown = me.element.find(".fr-rp-dropdown-container");
             me.$dropdown.on("click", function (e) {
@@ -19649,7 +19728,7 @@ $(function () {
         /**
          * Open parameter set dialog
          *
-         * @function $.forerunner.createDashboard#openDialog
+         * @function $.forerunner.reportProperties#openDialog
          */
         openDialog: function () {
             var me = this;
@@ -19665,21 +19744,210 @@ $(function () {
         },
         _submit: function () {
             var me = this;
-            me.properties.hideToolbar = me.$hideToolbar.prop("checked");
-            me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
 
-            me._triggerClose(true);
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            if (me.$form.valid() === true) {
+                me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+
+                me._triggerClose(true);
+                forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            }
         },
         /**
          * Close parameter set dialog
          *
-         * @function $.forerunner.manageParamSets#closeDialog
+         * @function $.forerunner.reportProperties#closeDialog
          */
         closeDialog: function () {
             var me = this;
             me._triggerClose(false);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-rp-error-position");
+                    $(element).addClass("fr-rp-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-rp-error-position");
+                    $(element).removeClass("fr-rp-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
+        },
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/Dashboard/js/SaveAsDashboard.js
+/**
+ * @file Contains the save as dashboard widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var saveAsDashboard = locData.saveAsDashboard;
+
+    /**
+     * Widget used to get the dashboard name from the user
+     *
+     * @namespace $.forerunner.saveAsDashboard
+     * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {Object} options.$appContainer - Dashboard container
+     * @prop {bool} options.overwrite - Server overwrite resource flag
+     * @prop {Object} options.dashboardName - Name of the dashboard resource
+     *
+     * @example
+     * $("#saveAsDashboard").saveAsDashboard({
+     *      $appContainer: me.options.$appContainer,
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.saveAsDashboard), {
+        options: {
+            $appContainer: null,
+            overwrite: false,
+            dashboardName: null
+        },
+        _init: function () {
+            var me = this;
+
+            if (me.options.dashboardName) {
+                me.$dashboardName.val(me.options.dashboardName);
+            }
+
+            me._resetValidateMessage();
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-save-param", saveAsDashboard.title, "fr-sad-cancel", saveAsDashboard.cancel);
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-sad-form fr-core-dialog-form'>" +
+                        // Dashboard Name
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-sad-label'>" + saveAsDashboard.dashboardName + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<input class='fr-sad-dashboard-name' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Submit conatiner
+                        "<div class='fr-core-dialog-submit-container'>" +
+                            "<div class='fr-core-center'>" +
+                                "<input name='submit' type='button' class='fr-sad-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + saveAsDashboard.submit + "' />" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            me.$form = me.element.find(".fr-sad-form");
+            me._validateForm(me.$form);
+
+            me.$dashboardName = me.element.find(".fr-sad-dashboard-name");
+
+            // Hook the cancel and submit events
+            me.element.find(".fr-sad-cancel").on("click", function(e) {
+                me.closeDialog();
+            });
+            me.element.find(".fr-sad-submit-id").on("click", function (e) {
+                me._submit();
+            });
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        /**
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.saveAsDashboard#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        _triggerClose: function (isSubmit) {
+            var me = this;
+            var data = {
+                dashboardName: me.$dashboardName.val(),
+                isSubmit: isSubmit,
+                overwrite: me.options.overwrite
+            };
+            me._trigger(events.close, null, data);
+        },
+        _submit: function () {
+            var me = this;
+
+            if (me.$form.valid() === true) {
+                me._triggerClose(true);
+                forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            }
+        },
+        /**
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.saveAsDashboard#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            me._triggerClose(false);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-sad-error-position");
+                    $(element).addClass("fr-sad-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-sad-error-position");
+                    $(element).removeClass("fr-sad-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
         },
     }); //$.widget
 });

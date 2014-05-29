@@ -767,7 +767,7 @@ $(function () {
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
             //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", { me: me }, me._ReRenderCall);
+            $(window).on("resize", {me: me }, me._ReRenderCall);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -973,7 +973,12 @@ $(function () {
         //Wrapper function, used to resigter window resize event
         _ReRenderCall: function (event) {
             var me = event.data.me;
+            me.scrollLeft = $(window).scrollLeft();
+            me.scrollTop = $(window).scrollTop();
+
             me._ReRender.call(me);
+            $(window).scrollLeft(me.scrollLeft);
+            $(window).scrollTop(me.scrollTop);
         },
         _removeCSS: function () {
             var me = this;
@@ -2697,7 +2702,7 @@ $(function () {
         _reLayoutPage: function(pageNum,force){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
+                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());                
             }
         },
         _renderPage: function (pageNum) {

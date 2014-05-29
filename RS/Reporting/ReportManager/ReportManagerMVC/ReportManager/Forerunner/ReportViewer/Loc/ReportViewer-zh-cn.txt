@@ -50,7 +50,7 @@
     "dsCredential":"数据源验证",
     "views":"浏览",
     "addToFavorites":"添加到收藏",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL扩展"
   },
   "toolbar": {
     "back":"返回",
@@ -82,8 +82,8 @@
     "addToFavorites":"添加到收藏",
     "unzoom":"取消缩放",
     "search":"搜索",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"创建指示板",
+    "editDashboard":"编辑指示板"
   },
   "print": {
     "title":"打印报表",
@@ -104,7 +104,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"动态UI",
-    "AdminUI":"Admin UI"
+    "AdminUI":"管理员UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -188,14 +188,14 @@
     "notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"创建指示板",
+    "cancel":"取消",
+    "submit":"提交"
   },
   "RDLExt": {
-    "title":"RDL Extensions",
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "dialogTitle":"RDL Extension JSON"
+    "title":"RDL扩展",
+    "submit":"提交",
+    "cancel":"取消",
+    "dialogTitle":"RDL的JSON扩展"
   }
 }

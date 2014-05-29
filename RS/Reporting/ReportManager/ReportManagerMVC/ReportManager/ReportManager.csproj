@@ -371,7 +371,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
+    <Content Include="Forerunner\Dashboard\ReportViewer-en-us.txt" />
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
     <Content Include="Forerunner.snk" />

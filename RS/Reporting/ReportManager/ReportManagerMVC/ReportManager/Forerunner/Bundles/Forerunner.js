@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1012,7 +1012,7 @@ $(function () {
      *
      * @namespace
      */
-    forerunner.ajax = {
+    forerunner.ajax = { 
         loginUrl: null,
         isFormsAuth: function () {
             var url = this._getLoginUrl();

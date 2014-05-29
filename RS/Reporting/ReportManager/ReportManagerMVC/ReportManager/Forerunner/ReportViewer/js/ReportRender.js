@@ -704,7 +704,7 @@ $(function () {
             if (textExt.InputType) {
                 if (textExt.InputType === "textarea") {
                     $TextObj = $("<textarea name='" + textExt.InputName + "'/>");
-                    Style += "resize:none;"
+                    Style += "resize:none;" 
                 }
                 else
                     $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");

@@ -13,7 +13,9 @@
     "favoriteFailed":"失敗した",
     "docmapShowFailed":"失敗した",
     "prepareActionFailed":"失敗した",
-    "bookmarkNotFound":"レポートにブックマークを見つけることができません"
+    "bookmarkNotFound":"レポートにブックマークを見つけることができません",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",

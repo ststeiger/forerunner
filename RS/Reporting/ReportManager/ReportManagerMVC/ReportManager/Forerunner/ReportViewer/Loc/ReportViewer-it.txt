@@ -13,7 +13,9 @@
     "favoriteFailed":"Impossibile",
     "docmapShowFailed":"Impossibile",
     "prepareActionFailed":"Impossibile",
-    "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione"
+    "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",

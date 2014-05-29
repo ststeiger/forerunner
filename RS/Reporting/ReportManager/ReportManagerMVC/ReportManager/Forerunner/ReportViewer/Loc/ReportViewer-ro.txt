@@ -13,7 +13,9 @@
     "favoriteFailed":"A eșuat",
     "docmapShowFailed":"A eșuat",
     "prepareActionFailed":"A eșuat",
-    "bookmarkNotFound":"Nu pot găsi marcajul în raport"
+    "bookmarkNotFound":"Nu pot găsi marcajul în raport",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",

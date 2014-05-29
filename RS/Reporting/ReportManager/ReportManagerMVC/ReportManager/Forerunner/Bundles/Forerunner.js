@@ -247,6 +247,7 @@ $(function () {
             reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
             /** widget + event, lowercase */
             dashboardToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.dashboardToolPane.toLowerCase() + this.actionStarted; },
+            
 
             /** @constant */
             allowZoom: "allowZoom",

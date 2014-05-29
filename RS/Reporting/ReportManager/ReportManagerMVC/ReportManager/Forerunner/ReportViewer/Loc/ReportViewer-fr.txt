@@ -13,7 +13,9 @@
     "favoriteFailed":"Manqué",
     "docmapShowFailed":"Manqué",
     "prepareActionFailed":"Manqué",
-    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport"
+    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",

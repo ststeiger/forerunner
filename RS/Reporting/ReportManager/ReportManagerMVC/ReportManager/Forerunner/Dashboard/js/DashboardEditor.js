@@ -11,6 +11,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dashboardEditor = locData.dashboardEditor;
+    var toolbar = locData.toolbar;
+    var messages =locData.messages;
 
     /**
      * Widget used to create and edit dashboards
@@ -96,13 +98,28 @@ $(function () {
                 overwrite = false;
             }
             var stringified = JSON.stringify(me.dashboardDef);
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource" +
-                        "?resourceName=" + me.options.resourceName +
-                        "&parentFolder=" + encodeURIComponent(me.options.parentFolder) +
-                        "&overwrite=" + overwrite +
-                        "&definition=" + stringified +
-                        "&mimetype='text/dashboard'";
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource";
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    resourceName: me.options.resourceName,
+                    parentFolder: encodeURIComponent(me.options.parentFolder),
+                    overwrite: overwrite,
+                    definition: stringified,
+                    mimetype: "text/dashboard"
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
+                },
+                fail: function () {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
+                }
+            });
 
+            /*
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -113,6 +130,7 @@ $(function () {
                     console.log(data);
                 }
             });
+            */
         },
         _renderTemplate: function () {
             var me = this;

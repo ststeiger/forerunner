@@ -13,7 +13,9 @@
     "favoriteFailed":"Gescheiterte",
     "docmapShowFailed":"Gescheiterte",
     "prepareActionFailed":"Gescheiterte",
-    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht"
+    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",

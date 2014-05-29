@@ -13,7 +13,9 @@
     "favoriteFailed":"Fracassado",
     "docmapShowFailed":"Fracassado",
     "prepareActionFailed":"Fracassado",
-    "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório"
+    "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",

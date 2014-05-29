@@ -13,7 +13,9 @@
     "favoriteFailed":"Misslyckades",
     "docmapShowFailed":"Misslyckades",
     "prepareActionFailed":"Misslyckades",
-    "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
+    "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",

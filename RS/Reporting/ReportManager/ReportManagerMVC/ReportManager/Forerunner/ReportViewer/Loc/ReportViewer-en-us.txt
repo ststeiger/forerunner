@@ -13,7 +13,9 @@
     "favoriteFailed":"Failed",
     "docmapShowFailed":"Failed",
     "prepareActionFailed":"Failed",
-    "bookmarkNotFound":"Cannot find the bookmark in the report"
+    "bookmarkNotFound":"Cannot find the bookmark in the report",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",

@@ -13,7 +13,9 @@
     "favoriteFailed":"失敗",
     "docmapShowFailed":"失敗",
     "prepareActionFailed":"失敗",
-    "bookmarkNotFound":"在該報表中無法找到書籤"
+    "bookmarkNotFound":"在該報表中無法找到書籤",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"點擊查看更多訊息",

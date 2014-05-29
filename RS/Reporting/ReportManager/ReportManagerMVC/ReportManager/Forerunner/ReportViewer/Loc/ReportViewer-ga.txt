@@ -13,7 +13,9 @@
     "favoriteFailed":"Fracasado",
     "docmapShowFailed":"Fracasado",
     "prepareActionFailed":"Fracasado",
-    "bookmarkNotFound":"Non devolveu o marcador no informe"
+    "bookmarkNotFound":"Non devolveu o marcador no informe",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",

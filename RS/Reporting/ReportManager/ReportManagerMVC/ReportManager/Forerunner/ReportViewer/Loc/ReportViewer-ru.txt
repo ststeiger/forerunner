@@ -13,7 +13,9 @@
     "favoriteFailed":"Не удалось",
     "docmapShowFailed":"Не удалось",
     "prepareActionFailed":"Не удалось",
-    "bookmarkNotFound":"Не можете найти закладку в докладе"
+    "bookmarkNotFound":"Не можете найти закладку в докладе",
+    "saveDashboardFailed":"Save Dashboard Failed",
+    "saveDashboardSucceeded":"Save Dashboard Succeeded"
   },
   "errorTag": {
     "moreDetail":"Подробнее",

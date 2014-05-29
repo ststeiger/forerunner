@@ -1012,7 +1012,7 @@ $(function () {
      *
      * @namespace
      */
-    forerunner.ajax = { 
+    forerunner.ajax = {
         loginUrl: null,
         isFormsAuth: function () {
             var url = this._getLoginUrl();

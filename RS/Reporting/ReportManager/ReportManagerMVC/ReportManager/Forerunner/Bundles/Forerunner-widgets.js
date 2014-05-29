@@ -975,7 +975,7 @@ $(function () {
             var me = event.data.me;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
-
+             
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);

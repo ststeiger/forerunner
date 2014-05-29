@@ -126,7 +126,7 @@ namespace ReportManager.Controllers
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
-            {
+            { 
                 GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
                 resp.StatusCode = HttpStatusCode.OK;
 

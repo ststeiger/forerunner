@@ -7219,11 +7219,12 @@ $(function () {
                 Style += "height:auto;box-sizing:border-box;";
                 if (textExt.InputRequired === true)
                     $TextObj.attr("required", true);
-
+                if (textExt.InputSubmit)
+                    $TextObj.attr("data-submitType", textExt.InputSubmit);
                 //Handle EasySubmit
                 if (textExt.EasySubmitURL && textExt.EasySubmitType) {
                     $TextObj.on("click", { reportViewer: me.options.reportViewer.element, element: $TextObj, getInputs: me._getInputsInRow, easySubmit:me._submitRow, veryEasySubmit: me._easySubmit }, function (e) {
-                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitAllFields, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
+                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitDatatype, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
                     });
                 }
             }
@@ -7587,10 +7588,12 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        _getInputsInRow: function(element,includeAll){
+        _getInputsInRow: function(element,filter){
             var me = this;
             var data = [];
             var rows = 0;
+
+            if (filter === undefined) filter = "auto";
 
             var row = $(element).parent().parent().parent();
             if (row.is("tr") === false) {
@@ -7606,9 +7609,12 @@ $(function () {
                     obj.value = $(input).val();
                     obj.origionalValue = $(input).attr("data-origVal");
                     obj.type = $(input).attr("type");
-                    obj.allways = $(input).attr("data-allways");
+                    obj.submitType = $(input).attr("data-submitType");
 
-                    if (obj.allways || includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
+                    if (filter ==="all")
+                        data.push(obj);
+
+                    if (filter === "auto" && (obj.submitType ==="allways"  || (obj.submitType === "changed" && obj.value !== obj.origionalValue) )) {
                         data.push(obj);
                     }
                 });
@@ -7636,6 +7642,8 @@ $(function () {
             for (var i = 0;i<inputs.length;i++){            
                 data[inputs[i].name] = inputs[i].value;
             }
+            if (datatype === "json")
+                data = JSON.stringify(data);
 
             $.ajax({
 
@@ -7648,13 +7656,13 @@ $(function () {
 
         },
 
-        _easySubmit: function(e,type, url,AllFields,successText,failText){            
+        _easySubmit: function(e,type, url,datatype,successText,failText){            
             if (!successText) successText = "Saved";
             if (!failText) failText = "Failed";
-            if (AllFields === undefined) AllFields = true;
-            var data = e.data.getInputs(e.data.element, AllFields);
+            
+            var data = e.data.getInputs(e.data.element,"auto");
 
-            e.data.easySubmit(data, type, url, 'text', function () { alert(successText); }, function () { alert(failText); });
+            e.data.easySubmit(data, type, url, datatype, function () { alert(successText); }, function () { alert(failText); });
 
         },
 

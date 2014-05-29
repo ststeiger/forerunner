@@ -6851,7 +6851,10 @@ $(function () {
                 rec = $("<div />");
                 rec.html(RecExt.CustomHTML);
                 RIContext.$HTMLParent = rec;
-            }            
+            }
+            if(RecExt.ID)
+                rec.attr("id", RecExt.ID);
+
             else {
 
                 $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
@@ -7207,7 +7210,12 @@ $(function () {
             Style = "";
             //Special case for RDL extension inputType
             if (textExt.InputType) {
-                $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
+                if (textExt.InputType === "textarea") {
+                    $TextObj = $("<textarea name='" + textExt.InputName + "'/>");
+                    Style += "resize:none;"
+                }
+                else
+                    $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
                 Style += "height:auto;box-sizing:border-box;";
                 if (textExt.InputRequired === true)
                     $TextObj.attr("required", true);
@@ -7295,7 +7303,13 @@ $(function () {
                     }
                     else
                         $TextObj.text(val);
-
+                    if (textExt.ID)
+                        $TextObj.attr("id", textExt.ID);
+                    if (textExt.InputAllways ===true)
+                        $TextObj.attr("data-allways", true);
+                    if (textExt.InputReadOnly === true)
+                        $TextObj.attr("readonly", "readonly");
+                    
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
@@ -7586,14 +7600,15 @@ $(function () {
             //Maximum of 2 rows to find
             while (rows < 2) {
 
-                $.each(row.find("input"), function (index, input) {
+                $.each(row.find("input, textarea"), function (index, input) {
                     var obj = {};
                     obj.name = $(input).attr("name");
                     obj.value = $(input).val();
                     obj.origionalValue = $(input).attr("data-origVal");
                     obj.type = $(input).attr("type");
+                    obj.allways = $(input).attr("data-allways");
 
-                    if (includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
+                    if (obj.allways || includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
                         data.push(obj);
                     }
                 });
@@ -8155,7 +8170,7 @@ $(function () {
                     HasFixedCols = true;
             }
 
-            var $Drilldown;
+            var $Drilldown;            
             CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
             if (Obj.Type === "BodyRow") {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
@@ -8183,7 +8198,12 @@ $(function () {
                         else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
                                 $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("data-uniqName", respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
-                            $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
+                            var ric;
+                            ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
+                            ric.css("width", CellWidth+"mm");
+                            ric.css("height", CellHeight+"mm");
+                            $ExtCell.append(ric);
+
                         }
                     }
                 });

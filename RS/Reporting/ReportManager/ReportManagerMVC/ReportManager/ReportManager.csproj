@@ -281,6 +281,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
     <Content Include="Forerunner\ReportViewer\js\PageNav.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ga.txt" />

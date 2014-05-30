@@ -520,7 +520,7 @@ $(function () {
         * @param {String} Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
-            if (_endsWith(forerunnerFolderPath, "/") === -1) {
+            if (this._endsWith(forerunnerFolderPath, "/") === -1) {
                 this._forerunnerFolderPath = forerunnerFolderPath + "/";
             } else {
                 this._forerunnerFolderPath = forerunnerFolderPath;
@@ -541,7 +541,7 @@ $(function () {
         * @param {String} API Base.
         */
         setAPIBase: function (apiBase) {
-            if (_endsWith(apiBase, "/") === -1) {
+            if (this._endsWith(apiBase, "/") === -1) {
                 this._apiBase = apiBase + "/";
             } else {
                 this._apiBase = apiBase;

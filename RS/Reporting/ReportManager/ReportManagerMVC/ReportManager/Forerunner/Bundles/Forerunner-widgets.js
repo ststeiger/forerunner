@@ -7675,15 +7675,25 @@ $(function () {
 
             var ActionExt = me._getRDLExt(RIContext);
 
-            if (ActionExt.JavaScriptAction) {                
+            if (ActionExt.JavaScriptActions) {
                 $Control.addClass("fr-core-cursorpointer");
-                var newFunc;
-                try{
-                    newFunc = new Function("e",ActionExt.JavaScriptAction);
-                }
-                catch (e) { }
 
-                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit:me._submitRow }, newFunc);
+                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
+                    var action = ActionExt.JavaScriptActions[a];
+
+                    if (action.JavaFunc === undefined && action.Code !==undefined) {
+                        var newFunc;
+                        try {
+                            newFunc = new Function("e", action.Code);
+                        }
+                        catch (e) { }
+                        action.JavaFunc = newFunc
+                        if (action.On === undefined)
+                            action.On = "click";
+                    }
+
+                    $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+                }
             }
 
         },

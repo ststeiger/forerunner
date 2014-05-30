@@ -1631,7 +1631,10 @@ $(function () {
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
-                    me._loadPage(data.NewPage, false, null, null, true);
+                    var replay = me.pages[me.curPage].Replay
+
+                    me._loadPage(data.NewPage, false, null, null, true,replay);
+
                 },
                 function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );

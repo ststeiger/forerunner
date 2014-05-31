@@ -7477,6 +7477,7 @@ $(function () {
             var NewImage = $("<img/>"); //new Image();
             var me = this; 
 
+            
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style ;
             RIContext.$HTMLParent.addClass("fr-render-image");
@@ -7559,6 +7560,9 @@ $(function () {
 
             Style = imageStyle ? imageStyle : "display:block;";
             NewImage.attr("style", Style);
+
+            //Remove the blue border on ie 8,9,10
+            NewImage.css("border", "0").css("text-decoration", "none");
             switch (sizingType) {
                 case 0://AutoSize
                     break;

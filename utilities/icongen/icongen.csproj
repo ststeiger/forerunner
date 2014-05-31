@@ -91,6 +91,7 @@
     </Content>
     <Content Include="images\128x128icons\avi.png" />
     <Content Include="images\128x128icons\bmp.png" />
+    <Content Include="images\128x128icons\dashboard.png" />
     <Content Include="images\128x128icons\png.png" />
     <Content Include="images\128x128icons\xml.png" />
     <Content Include="images\128x128icons\css.png" />

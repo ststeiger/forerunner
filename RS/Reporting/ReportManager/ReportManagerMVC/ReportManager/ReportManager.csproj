@@ -240,7 +240,6 @@
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\Dashboard\css\dashboards.css" />
-    <Content Include="Forerunner\ReportExplorer\css\icons128x128.css" />
     <Content Include="Forerunner\ReportExplorer\css\CreateDashboard.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
@@ -250,7 +249,6 @@
     <Content Include="Forerunner\Dashboard\dashboards\dashboards-en.txt" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
-    <Content Include="Forerunner\ReportExplorer\images\icons128x128.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />

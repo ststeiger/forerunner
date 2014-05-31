@@ -566,6 +566,9 @@ $(function () {
                 case "text/css":
                     fileTypeClass = "fr-icons128x128-file-css";
                     break;
+                case "json/forerunner-dashboard":
+                    fileTypeClass = "fr-icons128x128-file-dashboard";
+                    break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";
                     break;

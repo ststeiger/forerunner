@@ -86,5 +86,9 @@
 .fr-icons128x128-file-unknown {
   background-position: -512px -384px;
 }
+
+.fr-icons128x128-file-dashboard {
+  background-position: 0 -512px;
+}
 /*** IconGen - end automatically generated, do not hand modify ***/
 

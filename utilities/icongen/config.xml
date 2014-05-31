@@ -70,5 +70,6 @@
     <sourcefile name="128x128icons\xml.png" classname="fr-icons128x128-file-xml"></sourcefile>
     <sourcefile name="128x128icons\png.png" classname="fr-icons128x128-file-png"></sourcefile>
     <sourcefile name="128x128icons\unknown.png" classname="fr-icons128x128-file-unknown"></sourcefile>
+    <sourcefile name="128x128icons\dashboard.png" classname="fr-icons128x128-file-dashboard"></sourcefile>
   </compositeimage>
 </iconfiles>

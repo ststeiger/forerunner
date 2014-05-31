@@ -2,11 +2,8 @@
 .fr-icons128x128 {
   width:128px;
   height:128px;
-  left:50%;
-  top:50%;
-  margin-left:-64px;
-  margin-top:-64px;
-  position:absolute;
+  margin:5px;
+  display:inline-block;
   background-image:url('../images/icons128x128.png');
 }
 
@@ -88,6 +85,10 @@
 
 .fr-icons128x128-file-unknown {
   background-position: -512px -384px;
+}
+
+.fr-icons128x128-file-dashboard {
+  background-position: 0 -512px;
 }
 /*** IconGen - end automatically generated, do not hand modify ***/
 

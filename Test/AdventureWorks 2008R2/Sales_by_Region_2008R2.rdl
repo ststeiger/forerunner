@@ -2562,7 +2562,7 @@ GTRAzczMzMyUV8Dx/tNozSg0QGlmHNlLllfAsmjfgaY0NECvJeSDnphXwLY9MDZjPzRAwsBz7+GaV8CF
                       </TablixCells>
                     </TablixRow>
                     <TablixRow>
-                      <Height>0.11458in</Height>
+                      <Height>0.25in</Height>
                       <TablixCells>
                         <TablixCell>
                           <CellContents>
@@ -2844,7 +2844,7 @@ GTRAzczMzMyUV8Dx/tNozSg0QGlmHNlLllfAsmjfgaY0NECvJeSDnphXwLY9MDZjPzRAwsBz7+GaV8CF
                 </TablixRowHierarchy>
                 <DataSetName>IndividualCustomerSales</DataSetName>
                 <Left>0.01389in</Left>
-                <Height>0.61458in</Height>
+                <Height>0.75in</Height>
                 <Width>3.09376in</Width>
                 <Style>
                   <Border>
@@ -2856,8 +2856,8 @@ GTRAzczMzMyUV8Dx/tNozSg0QGlmHNlLllfAsmjfgaY0NECvJeSDnphXwLY9MDZjPzRAwsBz7+GaV8CF
             <KeepTogether>true</KeepTogether>
             <Top>0.41666in</Top>
             <Left>7.19445in</Left>
-            <Height>0.61458in</Height>
-            <Width>3.10765in</Width>
+            <Height>0.75in</Height>
+            <Width>3.37849in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>

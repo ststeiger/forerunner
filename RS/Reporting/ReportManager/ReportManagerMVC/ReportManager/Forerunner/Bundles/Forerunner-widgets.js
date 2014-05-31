@@ -7309,8 +7309,6 @@ $(function () {
                         $TextObj.text(val);
                     if (textExt.ID)
                         $TextObj.attr("id", textExt.ID);
-                    if (textExt.InputAllways ===true)
-                        $TextObj.attr("data-allways", true);
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
                     
@@ -7621,7 +7619,7 @@ $(function () {
                     if (filter ==="all")
                         data.push(obj);
 
-                    if (filter === "auto" && (obj.submitType ==="allways"  || (obj.submitType === "changed" && obj.value !== obj.origionalValue) )) {
+                    if (filter === "auto" && (obj.submitType ==="always"  || (obj.submitType === "changed" && obj.value !== obj.origionalValue) )) {
                         data.push(obj);
                     }
                 });

@@ -22,6 +22,15 @@ using Forerunner.SSRS;
 
 namespace Forerunner.SSRS.Manager
 {
+    public class SetResource
+    {
+        public string resourceName { get; set; }
+        public string parentFolder { get; set; }
+        public string contents { get; set; }
+        public string mimetype { get; set; }
+        public string rsInstance { get; set; }
+    }
+
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
@@ -272,8 +281,61 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
             return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
-
         }
+        private string getReturnSuccess()
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
+        }
+        static byte[] GetBytes(string str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+
+        static string GetString(byte[] bytes)
+        {
+            char[] chars = new char[bytes.Length / sizeof(char)];
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            return new string(chars);
+        }
+        public String SetCatalogResource(SetResource setResource)
+        {
+            bool notFound = false;
+            rs.Credentials = GetCredentials();
+            try
+            {
+                var path = CombinePaths(HttpUtility.UrlDecode(setResource.parentFolder), setResource.resourceName);
+                path = GetPath(path);
+                rs.SetResourceContents(path, GetBytes(setResource.contents), setResource.mimetype);
+            }
+            catch (System.Web.Services.Protocols.SoapException e)
+            {
+                notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
+                if (!notFound)
+                {
+                    throw e;
+                }
+            }
+            if (notFound)
+            {
+                // If the resource does not exist yet we need to create it here
+                rs.CreateResource(setResource.resourceName,
+                                    HttpUtility.UrlDecode(setResource.parentFolder),
+                                    false,
+                                    GetBytes(setResource.contents),
+                                    setResource.mimetype,
+                                    null);
+            }
+
+            return getReturnSuccess();
+        }
+
         public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = false)
         {
             Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
@@ -440,12 +502,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -457,7 +514,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveUserParamaters(string path, string parameters)
+        public string SaveUserParameters(string path, string parameters)
         {
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
@@ -501,12 +558,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -543,12 +595,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -633,12 +680,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -768,6 +810,23 @@ namespace Forerunner.SSRS.Manager
             return SharePointHostName + path.Substring(39);            
 
         }
+        public string CombinePaths(string path1, string path2)
+        {
+            if (path1.Length == 0)
+            {
+                return path2;
+            }
+
+            if (path2.Length == 0)
+            {
+                return path1;
+            }
+
+            path1 = path1.TrimEnd('/', '\\');
+            path2 = path2.TrimStart('/', '\\');
+
+            return string.Format("{0}/{1}", path1, path2);
+        }
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;
@@ -885,12 +944,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {

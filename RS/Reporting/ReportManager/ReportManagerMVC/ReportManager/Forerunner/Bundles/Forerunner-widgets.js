@@ -12517,7 +12517,8 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
-            var path = args = keyword = name = data.args[0];
+            var path, args, keyword, name;
+            path = args = keyword = name = data.args[0];
 
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -12529,11 +12530,11 @@ $(function () {
                 me.transitionToReportViewer(path, params);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
-                var path = startParam > 0 ? args.substring(1, startParam) : args;
-                var params = startParam > 0 ? args.substring(startParam + 1) : null;
-                if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
-                if (params) params = JSON.stringify({ "ParamsList": params });
-                me.transitionToReportViewer(path, params);
+                var reportPath = startParam > 0 ? args.substring(1, startParam) : args;
+                var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
+                if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
+                if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
+                me.transitionToReportViewer(reportPath, RSURLParams);
             } else if (data.name === "transitionToOpenResource") {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
@@ -12693,8 +12694,8 @@ $(function () {
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
                 // TODO
-                // What about the case where the user navigates directly to the create dashboard URL
-                // We need to ass the parentFolder to the URL
+                // What about the case where the user navigates directly to the create dashboard URL.
+                // We need to pass the parentFolder to the URL
                 var parentFolder = "/";
                 if (me.$reportExplorer) {
                     var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
@@ -12706,7 +12707,8 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    parentFolder: parentFolder
+                    parentFolder: parentFolder,
+                    rsInstance: me.options.rsInstance
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -18927,13 +18929,14 @@ $(function () {
     * @namespace $.forerunner.dashboardEZ
     * @prop {Object} options - The options
     * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+    * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-    * @prop {Object} options.resourceName - Name of the dashboard resource
+    * @prop {String} options.rsInstance - Optional,Report service instance name
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -18948,7 +18951,8 @@ $(function () {
             isReportManager: false,
             enableEdit: true,
             parentFolder: null,
-            resourceName: null
+            dashboardName: null,
+            rsInstance: null
         },
         _init: function () {
             var me = this;
@@ -18969,17 +18973,20 @@ $(function () {
             var $dashboardWidget = null;
             if (me.options.enableEdit) {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
                     $appContainer: me.layout.$container,
                     parentFolder: me.options.parentFolder,
-                    resourceName: me.options.resourceName
-            });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
+                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: me.layout.$container
+                    rsInstance: me.options.rsInstance
+                });
+            } else {
+                $dashboardWidget = $dashboardContainer.dashboardViewer({
+                    $appContainer: me.layout.$container,
+                    dashboardName: me.options.dashboardName,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    rsInstance: me.options.rsInstance
                 });
             }
 
@@ -19279,21 +19286,23 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
-     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.dashboardName - Name of the dashboard resource
+     * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
+     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
+     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional,Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
+            $appContainer: null,
+            parentFolder: null,
+            dashboardName: null,
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
-            $appContainer: null,
-            parentFolder: null,
-            dashboardName: null
+            rsInstance: null
         },
         /**
          * Loads the given template
@@ -19325,7 +19334,6 @@ $(function () {
          */
         saveAs: function (overwrite) {
             var me = this;
-            var me = this;
             var $dlg = me.options.$appContainer.find(".fr-sad-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-sad-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -19349,7 +19357,7 @@ $(function () {
             }
 
             // Save the dashboard to the server
-            me.options.resourceName = data.dashboardName;
+            me.options.dashboardName = data.dashboardName;
             me._saveDashboard(data.overwrite);
         },
         _saveDashboard: function (overwrite) {
@@ -19358,39 +19366,28 @@ $(function () {
                 overwrite = false;
             }
             var stringified = JSON.stringify(me.dashboardDef);
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource";
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
             forerunner.ajax.ajax({
                 type: "POST",
                 url: url,
                 data: {
-                    resourceName: me.options.resourceName,
+                    resourceName: me.options.dashboardName,
                     parentFolder: encodeURIComponent(me.options.parentFolder),
-                    overwrite: overwrite,
-                    definition: stringified,
-                    mimetype: "text/dashboard"
+                    contents: stringified,
+                    mimetype: "json/forerunner-dashboard",
+                    rsInstance: me.options.rsInstance
                 },
                 dataType: "json",
                 async: false,
                 success: function (data) {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
                 },
-                fail: function () {
+                fail: function (jqXHR) {
+                    console.log("_saveDashboard() - " + jqXHR.statusText);
+                    console.log(jqXHR);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
                 }
             });
-
-            /*
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-            */
         },
         _renderTemplate: function () {
             var me = this;

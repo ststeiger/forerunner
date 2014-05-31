@@ -19,21 +19,23 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {String} options.reportManagerAPI - Path to the REST calls for the reportManager
-     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.dashboardName - Name of the dashboard resource
+     * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
+     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
+     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional,Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
+            $appContainer: null,
+            parentFolder: null,
+            dashboardName: null,
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             navigateTo: null,
             historyBack: null,
-            $appContainer: null,
-            parentFolder: null,
-            dashboardName: null
+            rsInstance: null
         },
         /**
          * Loads the given template
@@ -65,7 +67,6 @@ $(function () {
          */
         saveAs: function (overwrite) {
             var me = this;
-            var me = this;
             var $dlg = me.options.$appContainer.find(".fr-sad-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-sad-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -89,7 +90,7 @@ $(function () {
             }
 
             // Save the dashboard to the server
-            me.options.resourceName = data.dashboardName;
+            me.options.dashboardName = data.dashboardName;
             me._saveDashboard(data.overwrite);
         },
         _saveDashboard: function (overwrite) {
@@ -98,39 +99,28 @@ $(function () {
                 overwrite = false;
             }
             var stringified = JSON.stringify(me.dashboardDef);
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/CreateResource";
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
             forerunner.ajax.ajax({
                 type: "POST",
                 url: url,
                 data: {
-                    resourceName: me.options.resourceName,
+                    resourceName: me.options.dashboardName,
                     parentFolder: encodeURIComponent(me.options.parentFolder),
-                    overwrite: overwrite,
-                    definition: stringified,
-                    mimetype: "text/dashboard"
+                    contents: stringified,
+                    mimetype: "json/forerunner-dashboard",
+                    rsInstance: me.options.rsInstance
                 },
                 dataType: "json",
                 async: false,
                 success: function (data) {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
                 },
-                fail: function () {
+                fail: function (jqXHR) {
+                    console.log("_saveDashboard() - " + jqXHR.statusText);
+                    console.log(jqXHR);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
                 }
             });
-
-            /*
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-            */
         },
         _renderTemplate: function () {
             var me = this;

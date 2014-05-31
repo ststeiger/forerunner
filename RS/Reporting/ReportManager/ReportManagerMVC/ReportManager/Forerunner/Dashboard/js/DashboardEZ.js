@@ -16,13 +16,14 @@ $(function () {
     * @namespace $.forerunner.dashboardEZ
     * @prop {Object} options - The options
     * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
+    * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-    * @prop {Object} options.resourceName - Name of the dashboard resource
+    * @prop {String} options.rsInstance - Optional,Report service instance name
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -37,7 +38,8 @@ $(function () {
             isReportManager: false,
             enableEdit: true,
             parentFolder: null,
-            resourceName: null
+            dashboardName: null,
+            rsInstance: null
         },
         _init: function () {
             var me = this;
@@ -58,17 +60,20 @@ $(function () {
             var $dashboardWidget = null;
             if (me.options.enableEdit) {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
                     $appContainer: me.layout.$container,
                     parentFolder: me.options.parentFolder,
-                    resourceName: me.options.resourceName
-            });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
+                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    $appContainer: me.layout.$container
+                    rsInstance: me.options.rsInstance
+                });
+            } else {
+                $dashboardWidget = $dashboardContainer.dashboardViewer({
+                    $appContainer: me.layout.$container,
+                    dashboardName: me.options.dashboardName,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    rsInstance: me.options.rsInstance
                 });
             }
 

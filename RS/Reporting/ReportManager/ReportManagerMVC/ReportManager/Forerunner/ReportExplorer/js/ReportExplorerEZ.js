@@ -121,7 +121,8 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
-            var path = args = keyword = name = data.args[0];
+            var path, args, keyword, name;
+            path = args = keyword = name = data.args[0];
 
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -133,11 +134,11 @@ $(function () {
                 me.transitionToReportViewer(path, params);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
-                var path = startParam > 0 ? args.substring(1, startParam) : args;
-                var params = startParam > 0 ? args.substring(startParam + 1) : null;
-                if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
-                if (params) params = JSON.stringify({ "ParamsList": params });
-                me.transitionToReportViewer(path, params);
+                var reportPath = startParam > 0 ? args.substring(1, startParam) : args;
+                var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
+                if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
+                if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
+                me.transitionToReportViewer(reportPath, RSURLParams);
             } else if (data.name === "transitionToOpenResource") {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
@@ -297,8 +298,8 @@ $(function () {
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
                 // TODO
-                // What about the case where the user navigates directly to the create dashboard URL
-                // We need to ass the parentFolder to the URL
+                // What about the case where the user navigates directly to the create dashboard URL.
+                // We need to pass the parentFolder to the URL
                 var parentFolder = "/";
                 if (me.$reportExplorer) {
                     var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
@@ -310,7 +311,8 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    parentFolder: parentFolder
+                    parentFolder: parentFolder,
+                    rsInstance: me.options.rsInstance
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");

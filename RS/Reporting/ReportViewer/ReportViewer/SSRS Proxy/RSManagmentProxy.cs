@@ -82,6 +82,24 @@ namespace Forerunner.SSRS.Management
             else
                 return RSSPS.GetResourceContents(path, out mimetype);
         }
+        public void SetResourceContents(string Resource, byte[] Contents, string MimeType)
+        {
+            if (IsNative)
+                RSNative.SetResourceContents(Resource, Contents, MimeType);
+            else
+                RSSPS.SetResourceContents(Resource, Contents, MimeType);
+
+            return;
+        }
+        public void CreateResource(string Resource, string Parent, bool Overwrite, byte[] Contents, string MimeType, Property[] Properties)
+        {
+            if (IsNative)
+                RSNative.CreateResource(Resource, Parent, Overwrite, Contents, MimeType, Properties);
+            else
+                RSSPS.CreateResource(Resource, Parent, Overwrite, Contents, MimeType, Properties);
+
+            return;
+        }
         public Property[] GetProperties(string path, Property[] props)
         {
             if (IsNative)

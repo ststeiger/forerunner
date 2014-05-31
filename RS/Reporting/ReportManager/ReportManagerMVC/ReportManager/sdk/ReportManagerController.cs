@@ -157,6 +157,12 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(result,mimetype);
         }
 
+        [HttpPost]
+        public HttpResponseMessage SaveResource(SetResource setResource)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SetCatalogResource(setResource)), "text/JSON");
+        }
+
         [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
@@ -177,7 +183,7 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]

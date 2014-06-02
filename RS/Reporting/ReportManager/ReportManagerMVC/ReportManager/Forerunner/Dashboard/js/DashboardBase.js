@@ -60,7 +60,7 @@ $(function () {
                 // Create the reportViewerEZ
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
+                    historyBack: null,
                     isReportManager: false,
                     isFullScreen: false
                 });

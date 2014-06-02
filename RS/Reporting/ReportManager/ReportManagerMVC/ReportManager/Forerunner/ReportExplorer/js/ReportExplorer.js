@@ -114,15 +114,18 @@ $(function () {
             var $anchor = new $("<a />");
             //action
             var action;
-            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 action = "explore";
-            else if (catalogItem.Type === 3)
+            }
+            else if (catalogItem.Type === 3) {
                 action = "open";
                 if (catalogItem.MimeType === "json/forerunner-dashboard") {
                     action = "openDashboard";
                 }
-            else
+            }
+            else {
                 action = "browse";
+            }
 
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {

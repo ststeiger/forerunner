@@ -399,7 +399,7 @@ $(function () {
                     var root = this.root.replace(trailingSlash, '');
                     if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
                 } else {
-                    fragment = decodeURIComponent(this.getHash());
+                    fragment = this.getHash();
                 }
             }
             return fragment.replace(routeStripper, '');

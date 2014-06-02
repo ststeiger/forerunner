@@ -400,7 +400,7 @@ $(function () {
                     var root = this.root.replace(trailingSlash, '');
                     if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
                 } else {
-                    fragment = decodeURIComponent(this.getHash());
+                    fragment = this.getHash();
                 }
             }
             return fragment.replace(routeStripper, '');
@@ -1504,7 +1504,7 @@ $(function () {
                     type: "GET",
                     url: url,
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
@@ -1524,7 +1524,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -1645,7 +1645,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -2206,7 +2206,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: me.reportPath,
+                    ReportPath: encodeURIComponent(me.reportPath),
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -2280,7 +2280,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.getSessionID(),
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
@@ -2419,7 +2419,7 @@ $(function () {
                    dataType: "json",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
                    data: {
-                       path: me.reportPath,
+                       path: encodeURIComponent(me.reportPath),
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,
                    },
@@ -2548,7 +2548,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
                         ParameterList: paramList,
@@ -5757,15 +5757,18 @@ $(function () {
             var $anchor = new $("<a />");
             //action
             var action;
-            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 action = "explore";
-            else if (catalogItem.Type === 3)
+            }
+            else if (catalogItem.Type === 3) {
                 action = "open";
                 if (catalogItem.MimeType === "json/forerunner-dashboard") {
                     action = "openDashboard";
                 }
-            else
+            }
+            else {
                 action = "browse";
+            }
 
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
@@ -19323,7 +19326,7 @@ $(function () {
                 // Create the reportViewerEZ
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
+                    historyBack: null,
                     isReportManager: false,
                     isFullScreen: false
                 });

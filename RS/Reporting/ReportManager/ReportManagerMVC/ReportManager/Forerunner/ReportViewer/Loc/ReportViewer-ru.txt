@@ -54,6 +54,7 @@
     "dsCredential":"учетных",
     "views":"Просмотров",
     "addToFavorites":"избранное",
+    "RDLExt":"RDL Расширение",
     "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
@@ -86,8 +87,8 @@
     "addToFavorites":"Добавить в избранное",
     "unzoom":"unzoom",
     "search":"поиск",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "createDashboard":"Создание Dashboard",
+    "editDashboard":"Редактировать Dashboard",
     "saveDashboard":"Save Dashboard"
   },
   "print": {
@@ -108,7 +109,8 @@
     "title":"Настройки пользователя",
     "submit":"Оклахома",
     "cancel":"Oтменить",
-    "ResponsiveUI":"Отзывчивый интерфейс"
+    "ResponsiveUI":"Отзывчивый интерфейс",
+    "AdminUI":"UI Админ"
   },
   "paramPane": {
     "nullField":"Ноль",
@@ -192,10 +194,16 @@
     "notFound":"Никого не соответствуют вашим критериям поиска, расширенный поиск."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Создание Dashboard",
+    "cancel":"отменить",
+    "submit":"представлять"
   },
+  "RDLExt": {
+    "title":"RDL Расширения",
+    "submit":"представлять",
+    "cancel":"отменить",
+    "dialogTitle":"RDL расширение JSON"
+   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

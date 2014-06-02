@@ -43,7 +43,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
+            //sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -119,12 +119,24 @@ $(function () {
         btnReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-reportpage-textbox",
-            inputType: "number",
+            //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
-                        e.data.$reportViewer.reportViewer("navToPage", this.value);
+                        var toolInfo = e.data.me.allTools["fr-toolbar-reportpage-textbox"];
+                        var $input = e.data.me.element.find("." + toolInfo.selectorClass);
+
+                        if (isNaN($input.val())) {
+                            $input.addClass("fr-toolbase-input-invalid");
+                        }
+                        else if ($input.hasClass("fr-toolbase-input-invalid")) {
+                            $input.removeClass("fr-toolbase-input-invalid");
+                        }
+
+                        if (!$input.hasClass("fr-toolbase-input-invalid")) {
+                            e.data.$reportViewer.reportViewer("navToPage", this.value);
+                        }
                         return false;
                     }
                 },
@@ -132,6 +144,16 @@ $(function () {
                     e.target.select();
                 },
                 blur: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-toolbar-reportpage-textbox"];
+                    var $input = e.data.me.element.find("." + toolInfo.selectorClass);
+                    //verify if input value is number
+                    if (isNaN($input.val())) {
+                        $input.addClass("fr-toolbase-input-invalid");
+                    }
+                    else if ($input.hasClass("fr-toolbase-input-invalid")) {
+                        $input.removeClass("fr-toolbase-input-invalid");
+                    }
+
                     e.data.$reportViewer.reportViewer("onInputBlur");
                 },
                 focus: function (e) {
@@ -654,17 +676,43 @@ $(function () {
         itemReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
-            inputType: "number",
+            //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
-                        e.data.$reportViewer.reportViewer("navToPage", this.value);
-                        e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
+                        var toolInfo = e.data.me.allTools["fr-item-textbox-reportpage"];
+                        var $input = e.data.me.element.find("." + toolInfo.selectorClass);
+
+                        //verify if input value is number
+                        if (isNaN($input.val())) {
+                            $input.addClass("fr-toolbase-input-invalid");
+                        }
+                        else if ($input.hasClass("fr-toolbase-input-invalid")) {
+                            $input.removeClass("fr-toolbase-input-invalid");
+                        }
+                        
+                        if (!$input.hasClass("fr-toolbase-input-invalid")) {
+                            e.data.$reportViewer.reportViewer("navToPage", this.value);
+                            e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
+                        }
+                        
                         return false;
                     }
                 },
+                click: function (e) {
+                    e.target.select();
+                },
                 blur: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-item-textbox-reportpage"];
+                    var $input = e.data.me.element.find("." + toolInfo.selectorClass);
+                    //verify if input value is number
+                    if (isNaN($input.val())) {
+                        $input.addClass("fr-toolbase-input-invalid");
+                    }
+                    else if ($input.hasClass("fr-toolbase-input-invalid")) {
+                        $input.removeClass("fr-toolbase-input-invalid");
+                    }
                     e.data.$reportViewer.reportViewer("onInputBlur");
                 },
                 focus: function (e) {
@@ -968,6 +1016,19 @@ $(function () {
                 }
             }
         },
+        /** @member */
+        itemRDLExt: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-button-RDLExt",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolPane.RDLExt,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showRDLExtDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
+                }
+            }
+        }
     };
 
     /**
@@ -1414,7 +1475,7 @@ $(function () {
                     $accordionGroup.toggle();
                 }
             }
-        },
+        }
 
     };
 
@@ -1490,6 +1551,7 @@ $(function () {
                 }
             }
         }
+       
     };
 
     var tb = forerunner.ssr.tools.toolbar;

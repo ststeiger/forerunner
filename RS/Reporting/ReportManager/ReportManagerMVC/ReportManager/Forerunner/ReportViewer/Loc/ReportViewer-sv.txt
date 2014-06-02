@@ -54,6 +54,7 @@
     "dsCredential":"Credential",
     "views":"Översikter",
     "addToFavorites":"Lägg till i favoriter",
+    "RDLExt":"RDL Extension",
     "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
@@ -86,8 +87,8 @@
     "addToFavorites":"Lägg till i favoriter",
     "unzoom":"Zooma ut",
     "search":"Sökning",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "createDashboard":"Skapa Dashboard",
+    "editDashboard":"Redigera Instrumentbräda",
     "saveDashboard":"Save Dashboard"
   },
   "print": {
@@ -108,7 +109,8 @@
     "title":"Användarinställningar",
     "submit":"Ok",
     "cancel":"Avbryta",
-    "ResponsiveUI":"Lyhörd UI"
+    "ResponsiveUI":"Lyhörd UI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Noll",
@@ -192,10 +194,16 @@
     "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Skapa Dashboard",
+    "cancel":"Avbryt",
+    "submit":"inkomma"
   },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"inkomma",
+    "cancel":"Avbryt",
+    "dialogTitle":"RDL Förlängnings JSON"
+   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

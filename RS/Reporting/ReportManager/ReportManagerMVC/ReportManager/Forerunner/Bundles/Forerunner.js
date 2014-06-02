@@ -171,6 +171,8 @@ $(function () {
             /** @constant */
             reportPrint: "reportPrint",
             /** @constant */
+            reportRDLExt: "reportRDLExt",          
+            /** @constant */
             userSettings: "userSettings",
             /** @constant */
             messageBox: "messageBox",
@@ -545,7 +547,7 @@ $(function () {
         * @param {String} Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
-            if (_endsWith(forerunnerFolderPath, "/") === -1) {
+            if (this._endsWith(forerunnerFolderPath, "/") === -1) {
                 this._forerunnerFolderPath = forerunnerFolderPath + "/";
             } else {
                 this._forerunnerFolderPath = forerunnerFolderPath;
@@ -566,7 +568,7 @@ $(function () {
         * @param {String} API Base.
         */
         setAPIBase: function (apiBase) {
-            if (_endsWith(apiBase, "/") === -1) {
+            if (this._endsWith(apiBase, "/") === -1) {
                 this._apiBase = apiBase + "/";
             } else {
                 this._apiBase = apiBase;
@@ -627,6 +629,21 @@ $(function () {
      * @namespace
      */
     forerunner.helper = {
+
+        /**
+         * Returns a number array sorted in the given direction
+         *
+         * @member
+         * @param {array} array - Array to sort
+         * @param {boolean} asc - true for ascending false for decending
+         */
+        sortNumberArray: function (array, asc) {
+            if (asc)
+                array.sort(function (a, b) { return a - b; });
+            else
+                array.sort(function (a, b) { return b - a;});
+            return array;
+        },
         /**
          * Returns the number of elements or properties in an object
          *
@@ -1253,6 +1270,14 @@ $(function () {
             return ua.match(/(Chrome)/) !== null;
         },
 
+        /** @return {Boolean} Returns a boolean that indicates if it is a Mobile device */
+        isMobile: function(){
+            var me = this;
+
+            return (me.isiOS() || me.isAndroid() || me.isWindowsPhone());
+            
+        },
+
         _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
@@ -1287,7 +1312,7 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
-
+             
             return (
                 rect.top >= 0 &&
                 rect.left >= 0 &&
@@ -1297,24 +1322,15 @@ $(function () {
         },
                    
         /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
-        isSmall: function (container) {
-            if (container.width() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768))
+        isSmall: function ($container) {
+            if ($container.height() < forerunner.config.getCustomSettingsValue("FullScreenPageNavSize", 768)) {
                 return true;
-            else
-                return false;
-        },
-
-        /** @return {integer} represetning custom device size in settings, for example: 1 small (phone), 2 med (tablet), 3 large (desktop) */
-        formFactor: function (container) {
-            var width = container.width();
-            var settings = forerunner.config.getCustomSettingsValue("DeviceFormFactor", [800, 2048]);
-
-            for (var i = 0; i < settings.length; i++) {
-                if (width < settings[i])
-                    break;
             }
-            return i + 1;
+            else {
+                return false;
+            }
         },
+
     };
 
     /**
@@ -1372,7 +1388,8 @@ $(function () {
 
             me._removeEventsBinding();
             target.element.dialog("destroy");
-           
+            target.element.hide();
+
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },

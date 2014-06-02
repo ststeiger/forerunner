@@ -54,6 +54,7 @@
     "dsCredential":"數據源驗證",
     "views":"瀏覽",
     "addToFavorites":"添加到收藏",
+    "RDLExt":"RDL擴展",
     "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
@@ -86,8 +87,8 @@
     "addToFavorites":"添加到收藏",
     "unzoom":"取消縮放",
     "search":"搜索",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "createDashboard":"創建指示板",
+    "editDashboard":"編輯指示板",
     "saveDashboard":"Save Dashboard"
   },
   "print": {
@@ -108,7 +109,8 @@
     "title":"自定義設置",
     "submit":"保存",
     "cancel":"取消",
-    "ResponsiveUI":"動態UI"
+    "ResponsiveUI":"動態UI",
+    "AdminUI":"管理員UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -192,10 +194,16 @@
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"創建指示板",
+    "cancel":"取消",
+    "submit":"提交"
   },
+  "RDLExt": {
+    "title":"RDL擴展",
+    "submit":"提交",
+    "cancel":"取消",
+    "dialogTitle":"RDL的JSON擴展"
+   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

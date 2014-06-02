@@ -47,6 +47,7 @@ namespace Forerunner.SSRS.Manager
         string SharePointHostName = null;
         SqlConnection SQLConn;
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
+        static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
         private static bool isReportServerDB(SqlConnection conn)
         {
@@ -1118,7 +1119,7 @@ namespace Forerunner.SSRS.Manager
                 bool isException = false;
                 try
                 {
-                    if (retval == null)
+                    if (retval == null && QueueThumbnails)
                     {
 
                         sqlImpersonator = tryImpersonate(true);

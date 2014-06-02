@@ -14,6 +14,8 @@ using Forerunner.Security;
 using Forerunner.Logging;
 using ForerunnerLicense;
 using Forerunner.SSRS.Manager;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -891,7 +893,16 @@ namespace Forerunner.SSRS.Viewer
         //Support print by producing a PDF, allow user to change page layout
         public byte[] PrintExport(string ReportPath, string SessionID, string PrintPropertyString, out string MimeType, out string FileName)
         {
-            return RenderExtension(ReportPath, SessionID, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+            byte[] pdf = RenderExtension(ReportPath, SessionID, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+            PdfDocument doc = PdfReader.Open(new MemoryStream(pdf));
+
+            doc.AddAutoPrint();
+
+            MemoryStream memDoc = new MemoryStream();
+
+            doc.Save(memDoc);
+
+            return memDoc.ToArray();
         }
 
         public byte[] RenderExtension(string ReportPath, string SessionID, string ExportType, out string MimeType,out string FileName, string devInfo=null)

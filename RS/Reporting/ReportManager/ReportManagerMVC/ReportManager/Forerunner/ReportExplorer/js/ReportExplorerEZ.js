@@ -205,6 +205,8 @@ $(function () {
                 me._createReportExplorer(path, view, true);
 
                 var $toolbar = layout.$mainheadersection;
+                //add this class to distinguish explorer toolbar and viewer toolbar
+                $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
                     $appContainer: layout.$container,
@@ -251,33 +253,47 @@ $(function () {
          */
         transitionToReportViewer: function (path, params) {
             var me = this;
+            var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            me.DefaultAppTemplate.$mainsection.hide();
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+            //Update isAdmin
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
+            if (settings && settings.adminUI === true )
+                me.options.isAdmin = true;
+            else
+                me.options.isAdmin = false;
 
-            me.DefaultAppTemplate._selectedItemPath = null;
+            //add this class to distinguish explorer toolbar and viewer toolbar
+            var $toolbar = layout.$mainheadersection;
+            $toolbar.addClass("fr-viewer-tb").removeClass("fr-explorer-tb");
+
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                    DefaultAppTemplate: me.DefaultAppTemplate,
+                layout.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
+                    isAdmin: me.options.isAdmin,
                 });
 
-                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-
+                    path = String(path).replace(/%2f/g, "/");                    
                     $reportViewer.reportViewer("loadReport", path, 1, params);
-                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                    layout.$mainsection.fadeIn("fast");
                 }
+
             }, timeout);
 
             me.element.css("background-color", "");
@@ -324,11 +340,11 @@ $(function () {
         transitionToCreateDashboard: function (templateName) {
             var me = this;
             var layout = me.DefaultAppTemplate;
+            layout.$mainsection.html("");
+            layout.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            me.DefaultAppTemplate.$mainsection.html("");
-            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            me.DefaultAppTemplate._selectedItemPath = null;
+            layout._selectedItemPath = null;
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;

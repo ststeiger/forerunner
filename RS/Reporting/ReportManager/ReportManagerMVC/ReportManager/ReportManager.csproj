@@ -264,6 +264,7 @@
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
+    <Content Include="Forerunner\ReportViewer\css\RDLExtDialog.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -273,6 +274,8 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\Collapse.png" />
+    <Content Include="Forerunner\ReportViewer\images\Expand.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTree32px.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTree40px.png" />
     <Content Include="Forerunner\ReportViewer\images\JSTreeThrobber.gif" />
@@ -287,11 +290,13 @@
     <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\DSCredential.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
+    <Content Include="Forerunner\ReportViewer\js\RDLExtDialog.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
     <Content Include="Forerunner\ReportViewer\js\PageNav.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ga.txt" />
@@ -381,7 +386,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
+    <Content Include="Forerunner\Dashboard\ReportViewer-en-us.txt" />
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
     <Content Include="Forerunner.snk" />
@@ -400,7 +405,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="sdk\readme.docx" />
-    <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>

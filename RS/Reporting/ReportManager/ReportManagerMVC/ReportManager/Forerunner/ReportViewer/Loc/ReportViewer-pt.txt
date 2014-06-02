@@ -55,7 +55,8 @@
     "views":"Visualizações",
     "addToFavorites":"Adicionar aos favoritos",
     "RDLExt":"RDL Extensão",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Volta",

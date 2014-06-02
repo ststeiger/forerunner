@@ -52,6 +52,8 @@ $(function () {
             me.addTools(1, true, [dtb.btnMenu]);
             if (me.options.enableEdit) {
                 me.addTools(2, true, [dtb.btnSave]);
+            } else {
+                me.addTools(2, true, [dtb.btnEdit]);
             }
 
             //trigger window resize event to regulate toolbar buttons visibility

@@ -43,6 +43,12 @@ $(function () {
                 reports: {}
             };
         },
+        getParentFolder: function () {
+            return me.parentFolder;
+        },
+        getDashboardName: function () {
+            return me.dashboardName;
+        },
         getReportProperties: function (reportId) {
             var me = this;
             return me.dashboardDef.reports[reportId];
@@ -73,9 +79,27 @@ $(function () {
                 $item.hide();
             }
         },
+        _getName: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return path;
+            return path.slice(lastIndex + 1);
+        },
+        _getFolder: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return null;
+            return path.slice(0, lastIndex + 1);
+        },
         _loadResource: function (path) {
             var me = this;
             var status = false;
+
+            // Set the parent folder and dashboard name properties
+            me.dashboardName = me._getName(path);
+            me.parentFolder = me._getFolder(path);
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);

@@ -56,7 +56,8 @@
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Retour",

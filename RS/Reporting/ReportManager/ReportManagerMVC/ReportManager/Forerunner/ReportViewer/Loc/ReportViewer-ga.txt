@@ -55,7 +55,8 @@
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"ar ais",
@@ -203,7 +204,7 @@
     "submit":"Cuir",
     "cancel":"Cealaigh",
     "dialogTitle":"RDL Síneadh JSON"
-    },
+  },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

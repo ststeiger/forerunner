@@ -39,6 +39,7 @@
     <sourcefile name="24x24icons\Logout.png" classname="fr-icons24x24-logout"></sourcefile>
     <sourcefile name="24x24icons\UnZoom.png" classname="fr-icons24x24-unzoom"></sourcefile>
     <sourcefile name="24x24icons\CreateDashboard.png" classname="fr-icons24x24-createdashboard"></sourcefile>
+    <sourcefile name="24x24icons\EditDashboard.png" classname="fr-icons24x24-editdashboard"></sourcefile>
   </compositeimage>
   <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" styles="margin:5px; display:inline-block;">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>

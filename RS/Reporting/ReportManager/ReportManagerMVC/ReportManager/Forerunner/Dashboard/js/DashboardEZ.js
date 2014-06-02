@@ -38,6 +38,15 @@ $(function () {
             enableEdit: true,
             rsInstance: null
         },
+        /**
+         * Switch the UI from dashboard view to the dashboard editor
+         *
+         * @function $.forerunner.dashboardEZ#edit
+         */
+        edit: function () {
+            // TODO
+            alert("dashboardEZ edit()");
+        },
         _init: function () {
             var me = this;
             me._super();
@@ -77,7 +86,7 @@ $(function () {
             $toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -91,7 +100,7 @@ $(function () {
             $toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });

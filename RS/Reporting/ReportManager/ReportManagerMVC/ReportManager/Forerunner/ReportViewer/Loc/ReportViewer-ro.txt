@@ -55,7 +55,8 @@
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -203,7 +204,7 @@
     "submit":"executa",
     "cancel":"anula",
     "dialogTitle":"RDL Extension JSON"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

@@ -55,7 +55,8 @@
     "views":"瀏覽",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL擴展",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -203,7 +204,7 @@
     "title":"創建指示板",
     "cancel":"取消",
     "submit":"提交"
-   },
+  },
   "reportProperties": {
     "title":"Report Properties",
     "cancel":"Cancel",

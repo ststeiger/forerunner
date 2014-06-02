@@ -55,6 +55,7 @@
     "views":"Views",
     "addToFavorites":"Add to Favorites",
     "RDLExt": "RDL Extension",
+    "editDashboard":"Edit Dashboard",
     "saveDashboard": "Save Dashboard" 
  },
   "toolbar": {

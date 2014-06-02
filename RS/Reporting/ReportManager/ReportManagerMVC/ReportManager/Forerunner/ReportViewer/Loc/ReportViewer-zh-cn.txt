@@ -55,7 +55,8 @@
     "views":"浏览",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL扩展",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -203,7 +204,7 @@
     "submit":"提交",
     "cancel":"取消",
     "dialogTitle":"RDL的JSON扩展"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

@@ -55,7 +55,8 @@
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld",
     "RDLExt":"RDL Eftirnafn",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Til baka",
@@ -203,7 +204,7 @@
     "submit":"leggja",
     "cancel":"hætta",
     "dialogTitle":"RDL Eftirnafn JSON"
-    },
+  },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

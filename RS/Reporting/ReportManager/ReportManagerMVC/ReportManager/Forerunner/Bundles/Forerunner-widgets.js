@@ -19799,6 +19799,15 @@ $(function () {
             enableEdit: true,
             rsInstance: null
         },
+        /**
+         * Switch the UI from dashboard view to the dashboard editor
+         *
+         * @function $.forerunner.dashboardEZ#edit
+         */
+        edit: function () {
+            // TODO
+            alert("dashboardEZ edit()");
+        },
         _init: function () {
             var me = this;
             me._super();
@@ -19838,7 +19847,7 @@ $(function () {
             $toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -19852,7 +19861,7 @@ $(function () {
             $toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -19993,6 +20002,8 @@ $(function () {
             me.addTools(1, true, [dtb.btnMenu]);
             if (me.options.enableEdit) {
                 me.addTools(2, true, [dtb.btnSave]);
+            } else {
+                me.addTools(2, true, [dtb.btnEdit]);
             }
 
             //trigger window resize event to regulate toolbar buttons visibility
@@ -20058,6 +20069,8 @@ $(function () {
 
             if (me.options.enableEdit) {
                 me.addTools(1, true, [dbtp.itemSave]);
+            } else {
+                me.addTools(1, true, [dbtp.itemEdit]);
             }
             
             var $spacerdiv = new $("<div />");
@@ -20113,6 +20126,12 @@ $(function () {
                 reports: {}
             };
         },
+        getParentFolder: function () {
+            return me.parentFolder;
+        },
+        getDashboardName: function () {
+            return me.dashboardName;
+        },
         getReportProperties: function (reportId) {
             var me = this;
             return me.dashboardDef.reports[reportId];
@@ -20143,9 +20162,27 @@ $(function () {
                 $item.hide();
             }
         },
+        _getName: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return path;
+            return path.slice(lastIndex + 1);
+        },
+        _getFolder: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return null;
+            return path.slice(0, lastIndex + 1);
+        },
         _loadResource: function (path) {
             var me = this;
             var status = false;
+
+            // Set the parent folder and dashboard name properties
+            me.dashboardName = me._getName(path);
+            me.parentFolder = me._getFolder(path);
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);

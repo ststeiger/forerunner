@@ -46,6 +46,8 @@ $(function () {
 
             if (me.options.enableEdit) {
                 me.addTools(1, true, [dbtp.itemSave]);
+            } else {
+                me.addTools(1, true, [dbtp.itemEdit]);
             }
             
             var $spacerdiv = new $("<div />");

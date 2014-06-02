@@ -15,7 +15,9 @@
     "prepareActionFailed":"Theip ar",
     "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",

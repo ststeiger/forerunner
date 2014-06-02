@@ -160,7 +160,7 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage SaveResource(SetResource setResource)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SetCatalogResource(setResource)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
         }
 
         [HttpGet]

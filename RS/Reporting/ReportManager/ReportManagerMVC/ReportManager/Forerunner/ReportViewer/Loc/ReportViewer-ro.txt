@@ -15,7 +15,9 @@
     "prepareActionFailed":"A eșuat",
     "bookmarkNotFound":"Nu pot găsi marcajul în raport",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",

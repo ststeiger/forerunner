@@ -118,6 +118,9 @@ $(function () {
                 action = "explore";
             else if (catalogItem.Type === 3)
                 action = "open";
+                if (catalogItem.MimeType === "json/forerunner-dashboard") {
+                    action = "openDashboard";
+                }
             else
                 action = "browse";
 

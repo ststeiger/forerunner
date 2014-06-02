@@ -15,7 +15,9 @@
     "prepareActionFailed":"Misslyckades",
     "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",

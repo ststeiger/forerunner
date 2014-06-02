@@ -19,33 +19,27 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {Object} options.$appContainer - Dashboard container
-     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
-     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
-     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional,Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
-            $appContainer: null,
-            parentFolder: null,
-            dashboardName: null,
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
-            navigateTo: null,
-            historyBack: null,
-            rsInstance: null
         },
         /**
          * Loads the given template
          * @function $.forerunner.dashboardEditor#loadTemplate
          */
-        loadTemplate: function (templateName) {
+        loadTemplate: function (parentFolder, templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
             me.dashboardDef.template = template;
+            me.parentFolder = parentFolder;
             me._renderTemplate();
+        },
+        /**
+         * Loads the given dashboard definition and opens the dashboard for editing
+         * @function $.forerunner.dashboardEditor#loadTemplate
+         */
+        editDashboard: function (path) {
+            // TODO
         },
         /**
          * Save the dashboard
@@ -53,7 +47,7 @@ $(function () {
          */
         save: function (overwrite) {
             var me = this;
-            if (!me.options.dashboardName) {
+            if (!me.dashboardName) {
                 // If we don't have the name, we need to do a save as
                 me.saveAs(overwrite);
                 return;
@@ -78,7 +72,7 @@ $(function () {
             $dlg.saveAsDashboard({
                 $appContainer: me.options.$appContainer,
                 overwrite: overwrite,
-                dashboardName: me.options.dashboardName
+                dashboardName: me.dashboardName
             });
             $dlg.saveAsDashboard("openDialog");
         },
@@ -90,7 +84,7 @@ $(function () {
             }
 
             // Save the dashboard to the server
-            me.options.dashboardName = data.dashboardName;
+            me.dashboardName = data.dashboardName;
             me._saveDashboard(data.overwrite);
         },
         _saveDashboard: function (overwrite) {
@@ -104,8 +98,8 @@ $(function () {
                 type: "POST",
                 url: url,
                 data: {
-                    resourceName: me.options.dashboardName,
-                    parentFolder: encodeURIComponent(me.options.parentFolder),
+                    resourceName: me.dashboardName,
+                    parentFolder: encodeURIComponent(me.parentFolder),
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",
                     rsInstance: me.options.rsInstance
@@ -168,19 +162,8 @@ $(function () {
                 return;
             }
 
-            // Create the reportViewerEZ
-            var $item = me.element.find("#" + data.reportId);
-            $item.reportViewerEZ({
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                isReportManager: false,
-                isFullScreen: false
-            });
-
-            // Load the selected report
-            var catalogItem = me.dashboardDef.reports[data.reportId].catalogItem;
-            var $reportViewer = $item.reportViewerEZ("getReportViewer");
-            $reportViewer.reportViewer("loadReport", catalogItem.Path);
+            // Load the given report
+            me._loadReport(data.reportId);
         },
         _create: function () {
         },

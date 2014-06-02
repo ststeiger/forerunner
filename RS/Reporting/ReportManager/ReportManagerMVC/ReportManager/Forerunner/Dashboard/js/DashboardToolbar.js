@@ -49,7 +49,10 @@ $(function () {
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnBack, dtb.btnSave]);
+            me.addTools(1, true, [dtb.btnMenu]);
+            if (me.options.enableEdit) {
+                me.addTools(2, true, [dtb.btnSave]);
+            }
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();

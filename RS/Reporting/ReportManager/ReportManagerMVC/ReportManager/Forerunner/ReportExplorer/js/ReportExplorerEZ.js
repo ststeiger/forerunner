@@ -98,6 +98,7 @@ $(function () {
                     "browse/:path": "transitionToReportViewer",
                     "view/:args": "transitionToReportViewerWithRSURLAccess",
                     "open/:path": "transitionToOpenResource",
+                    "openDashboard/:path": "transitionToOpenDashboard",
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
@@ -149,6 +150,8 @@ $(function () {
                 me.transitionToReportManager(null, "recent");
             } else if (data.name === "transitionToCreateDashboard") {
                 me.transitionToCreateDashboard(name);
+            } else if (data.name == "transitionToOpenDashboard") {
+                me.transitionToOpenDashboard(path);
             }
         },
         _lastAction: null,
@@ -280,6 +283,39 @@ $(function () {
             me.element.css("background-color", "");
         },
         /**
+         * Transition to Open Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
+         * @param {String} name - Name of the dashboard template
+         */
+        transitionToOpenDashboard: function (path) {
+            var me = this;
+            var layout = me.DefaultAppTemplate;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                    DefaultAppTemplate: layout,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: true,
+                    enableEdit: false,
+                    rsInstance: me.options.rsInstance
+                });
+
+                var $dashboardViewer = $dashboardEZ.dashboardEZ("getDashboardViewer");
+                $dashboardViewer.dashboardViewer("loadDefinition", path);
+            }, timeout);
+
+            me.element.css("background-color", "");
+        },
+        /**
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
@@ -311,12 +347,11 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    parentFolder: parentFolder,
                     rsInstance: me.options.rsInstance
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
             }, timeout);
 
             me.element.css("background-color", "");

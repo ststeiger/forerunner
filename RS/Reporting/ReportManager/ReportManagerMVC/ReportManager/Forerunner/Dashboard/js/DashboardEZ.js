@@ -7,7 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
-    var dbtp = forerunner.ssr.tools.dashboardToolPane;
+    var dtp = forerunner.ssr.tools.dashboardToolPane;
     var tg = forerunner.ssr.tools.groups;
 
     /**
@@ -17,7 +17,6 @@ $(function () {
     * @prop {Object} options - The options
     * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-    * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
@@ -37,8 +36,6 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            parentFolder: null,
-            dashboardName: null,
             rsInstance: null
         },
         _init: function () {
@@ -62,7 +59,6 @@ $(function () {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
                     $appContainer: me.layout.$container,
                     parentFolder: me.options.parentFolder,
-                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     rsInstance: me.options.rsInstance
@@ -70,10 +66,10 @@ $(function () {
             } else {
                 $dashboardWidget = $dashboardContainer.dashboardViewer({
                     $appContainer: me.layout.$container,
-                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    enableEdit: false
                 });
             }
 
@@ -100,14 +96,18 @@ $(function () {
                 enableEdit: me.options.enableEdit
             });
 
-            
             if (me.options.isReportManager) {
                 var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
                 $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                $toolpane.dashboardToolPane("addTools", 1, true, [dbtp.itemFolders, tg.dashboardItemFolderGroup, dbtp.itemBack]);
+                $toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+            }
+
+            if (me.options.historyBack) {
+                $toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                $toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
             }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());

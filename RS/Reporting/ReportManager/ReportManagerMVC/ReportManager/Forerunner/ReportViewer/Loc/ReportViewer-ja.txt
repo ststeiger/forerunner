@@ -15,7 +15,9 @@
     "prepareActionFailed":"失敗した",
     "bookmarkNotFound":"レポートにブックマークを見つけることができません",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",

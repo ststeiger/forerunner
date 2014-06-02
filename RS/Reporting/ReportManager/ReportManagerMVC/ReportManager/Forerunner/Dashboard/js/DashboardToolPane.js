@@ -43,8 +43,10 @@ $(function () {
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
-            
-            me.addTools(1, true, [dbtp.itemSave]);
+
+            if (me.options.enableEdit) {
+                me.addTools(1, true, [dbtp.itemSave]);
+            }
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");

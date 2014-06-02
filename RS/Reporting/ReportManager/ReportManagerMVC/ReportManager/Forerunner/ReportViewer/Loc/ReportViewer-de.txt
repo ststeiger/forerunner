@@ -15,7 +15,9 @@
     "prepareActionFailed":"Gescheiterte",
     "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",

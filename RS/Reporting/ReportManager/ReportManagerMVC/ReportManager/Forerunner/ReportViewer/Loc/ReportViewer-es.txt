@@ -15,7 +15,9 @@
     "prepareActionFailed":"fracasado",
     "bookmarkNotFound":"¿No encuentra el marcador en el informe",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",

@@ -15,7 +15,9 @@
     "prepareActionFailed":"失敗",
     "bookmarkNotFound":"在該報表中無法找到書籤",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"點擊查看更多訊息",

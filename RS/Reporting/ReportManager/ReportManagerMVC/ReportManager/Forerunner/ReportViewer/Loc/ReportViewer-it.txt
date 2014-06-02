@@ -15,7 +15,9 @@
     "prepareActionFailed":"Impossibile",
     "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",

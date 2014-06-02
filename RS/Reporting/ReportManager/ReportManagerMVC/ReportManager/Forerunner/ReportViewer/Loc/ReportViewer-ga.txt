@@ -15,7 +15,9 @@
     "prepareActionFailed":"Fracasado",
     "bookmarkNotFound":"Non devolveu o marcador no informe",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",

@@ -5761,6 +5761,9 @@ $(function () {
                 action = "explore";
             else if (catalogItem.Type === 3)
                 action = "open";
+                if (catalogItem.MimeType === "json/forerunner-dashboard") {
+                    action = "openDashboard";
+                }
             else
                 action = "browse";
 
@@ -12497,6 +12500,7 @@ $(function () {
                     "browse/:path": "transitionToReportViewer",
                     "view/:args": "transitionToReportViewerWithRSURLAccess",
                     "open/:path": "transitionToOpenResource",
+                    "openDashboard/:path": "transitionToOpenDashboard",
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
@@ -12548,6 +12552,8 @@ $(function () {
                 me.transitionToReportManager(null, "recent");
             } else if (data.name === "transitionToCreateDashboard") {
                 me.transitionToCreateDashboard(name);
+            } else if (data.name == "transitionToOpenDashboard") {
+                me.transitionToOpenDashboard(path);
             }
         },
         _lastAction: null,
@@ -12679,6 +12685,39 @@ $(function () {
             me.element.css("background-color", "");
         },
         /**
+         * Transition to Open Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
+         * @param {String} name - Name of the dashboard template
+         */
+        transitionToOpenDashboard: function (path) {
+            var me = this;
+            var layout = me.DefaultAppTemplate;
+
+            me.DefaultAppTemplate.$mainsection.html("");
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
+            me.DefaultAppTemplate._selectedItemPath = null;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+            setTimeout(function () {
+                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                    DefaultAppTemplate: layout,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: true,
+                    enableEdit: false,
+                    rsInstance: me.options.rsInstance
+                });
+
+                var $dashboardViewer = $dashboardEZ.dashboardEZ("getDashboardViewer");
+                $dashboardViewer.dashboardViewer("loadDefinition", path);
+            }, timeout);
+
+            me.element.css("background-color", "");
+        },
+        /**
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
@@ -12710,12 +12749,11 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    parentFolder: parentFolder,
                     rsInstance: me.options.rsInstance
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", templateName);
+                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -18923,7 +18961,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
-    var dbtp = forerunner.ssr.tools.dashboardToolPane;
+    var dtp = forerunner.ssr.tools.dashboardToolPane;
     var tg = forerunner.ssr.tools.groups;
 
     /**
@@ -18933,7 +18971,6 @@ $(function () {
     * @prop {Object} options - The options
     * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-    * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
@@ -18953,8 +18990,6 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            parentFolder: null,
-            dashboardName: null,
             rsInstance: null
         },
         _init: function () {
@@ -18978,7 +19013,6 @@ $(function () {
                 $dashboardWidget = $dashboardContainer.dashboardEditor({
                     $appContainer: me.layout.$container,
                     parentFolder: me.options.parentFolder,
-                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     rsInstance: me.options.rsInstance
@@ -18986,10 +19020,10 @@ $(function () {
             } else {
                 $dashboardWidget = $dashboardContainer.dashboardViewer({
                     $appContainer: me.layout.$container,
-                    dashboardName: me.options.dashboardName,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    enableEdit: false
                 });
             }
 
@@ -19016,14 +19050,18 @@ $(function () {
                 enableEdit: me.options.enableEdit
             });
 
-            
             if (me.options.isReportManager) {
                 var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
                 $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                $toolpane.dashboardToolPane("addTools", 1, true, [dbtp.itemFolders, tg.dashboardItemFolderGroup, dbtp.itemBack]);
+                $toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+            }
+
+            if (me.options.historyBack) {
+                $toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                $toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
             }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
@@ -19145,7 +19183,10 @@ $(function () {
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnBack, dtb.btnSave]);
+            me.addTools(1, true, [dtb.btnMenu]);
+            if (me.options.enableEdit) {
+                me.addTools(2, true, [dtb.btnSave]);
+            }
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
@@ -19207,8 +19248,10 @@ $(function () {
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
-            
-            me.addTools(1, true, [dbtp.itemSave]);
+
+            if (me.options.enableEdit) {
+                me.addTools(1, true, [dbtp.itemSave]);
+            }
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
@@ -19236,12 +19279,19 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardBase
      * @prop {Object} options - The options for dashboardBase
-     * @prop {String} options.dashboardState - The dashboardState holds the complete
-     *                                         state of the dashboard editing and / or
-     *                                         viewing experience.
+     * @prop {Object} options.$appContainer - Dashboard container
+     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
+     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional,Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardBase), {
         options: {
+            $appContainer: null,
+            navigateTo: null,
+            historyBack: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
         },
         _init: function () {
             var me = this;
@@ -19263,6 +19313,56 @@ $(function () {
         setReportProperties: function (reportId, properties) {
             var me = this;
             me.dashboardDef.reports[reportId] = properties;
+        },
+        _loadReport: function (reportId) {
+            var me = this;
+            var $item = me.element.find("#" + reportId);
+
+            // If we have a report definition, load the report
+            if (me.dashboardDef.reports[reportId]) {
+                // Create the reportViewerEZ
+                $item.reportViewerEZ({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: false,
+                    isFullScreen: false
+                });
+
+                var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
+                var $reportViewer = $item.reportViewerEZ("getReportViewer");
+                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+            }
+            else {
+                $item.hide();
+            }
+        },
+        _loadResource: function (path) {
+            var me = this;
+            var status = false;
+
+            var url = me.options.reportManagerAPI + "/Resource";
+            url += "?path=" + encodeURIComponent(path);
+            url += "&instance=" + me.options.rsInstance;
+            if (me.options.rsInstance) {
+                url += "?instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                    me.dashboardDef = data
+                    status = true;
+                },
+                fail: function (jqXHR) {
+                    console.log("loadDefinition() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
+                }
+            });
+
+            return status;
         }
     });  // $widget
 });  // function()
@@ -19289,33 +19389,27 @@ $(function () {
      *
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {Object} options.$appContainer - Dashboard container
-     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
-     * @prop {Object} options.dashboardName - Optional, Name of the dashboard resource
-     * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
-     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional,Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
         options: {
-            $appContainer: null,
-            parentFolder: null,
-            dashboardName: null,
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
-            navigateTo: null,
-            historyBack: null,
-            rsInstance: null
         },
         /**
          * Loads the given template
          * @function $.forerunner.dashboardEditor#loadTemplate
          */
-        loadTemplate: function (templateName) {
+        loadTemplate: function (parentFolder, templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
             me.dashboardDef.template = template;
+            me.parentFolder = parentFolder;
             me._renderTemplate();
+        },
+        /**
+         * Loads the given dashboard definition and opens the dashboard for editing
+         * @function $.forerunner.dashboardEditor#loadTemplate
+         */
+        editDashboard: function (path) {
+            // TODO
         },
         /**
          * Save the dashboard
@@ -19323,7 +19417,7 @@ $(function () {
          */
         save: function (overwrite) {
             var me = this;
-            if (!me.options.dashboardName) {
+            if (!me.dashboardName) {
                 // If we don't have the name, we need to do a save as
                 me.saveAs(overwrite);
                 return;
@@ -19348,7 +19442,7 @@ $(function () {
             $dlg.saveAsDashboard({
                 $appContainer: me.options.$appContainer,
                 overwrite: overwrite,
-                dashboardName: me.options.dashboardName
+                dashboardName: me.dashboardName
             });
             $dlg.saveAsDashboard("openDialog");
         },
@@ -19360,7 +19454,7 @@ $(function () {
             }
 
             // Save the dashboard to the server
-            me.options.dashboardName = data.dashboardName;
+            me.dashboardName = data.dashboardName;
             me._saveDashboard(data.overwrite);
         },
         _saveDashboard: function (overwrite) {
@@ -19374,8 +19468,8 @@ $(function () {
                 type: "POST",
                 url: url,
                 data: {
-                    resourceName: me.options.dashboardName,
-                    parentFolder: encodeURIComponent(me.options.parentFolder),
+                    resourceName: me.dashboardName,
+                    parentFolder: encodeURIComponent(me.parentFolder),
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",
                     rsInstance: me.options.rsInstance
@@ -19438,19 +19532,8 @@ $(function () {
                 return;
             }
 
-            // Create the reportViewerEZ
-            var $item = me.element.find("#" + data.reportId);
-            $item.reportViewerEZ({
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                isReportManager: false,
-                isFullScreen: false
-            });
-
-            // Load the selected report
-            var catalogItem = me.dashboardDef.reports[data.reportId].catalogItem;
-            var $reportViewer = $item.reportViewerEZ("getReportViewer");
-            $reportViewer.reportViewer("loadReport", catalogItem.Path);
+            // Load the given report
+            me._loadReport(data.reportId);
         },
         _create: function () {
         },
@@ -19475,17 +19558,19 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboardEditor = locData.dashboardEditor;
+    var toolbar = locData.toolbar;
+    var messages = locData.messages;
 
     /**
      * Widget used to view dashboards
      *
      * @namespace $.forerunner.dashboardViewer
      * @prop {Object} options - The options for dashboardEditor
-     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
      */
     $.widget(widgets.getFullname(widgets.dashboardViewer), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardViewer */, {
         options: {
-            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
         },
         _create: function () {
             var me = this;
@@ -19493,6 +19578,24 @@ $(function () {
         _init: function () {
             var me = this;
             me._super();
+        },
+        loadDefinition: function (path) {
+            var me = this;
+
+            // Clear the html in case of an error
+            me.element.html("");
+
+            // Load the given report definition
+            var loaded = me._loadResource(path);
+            if (!loaded) {
+                return;
+            }
+
+            // Render the template and load the reports
+            me.element.html(me.dashboardDef.template);
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._loadReport(item.id);
+            });
         },
         _destroy: function () {
         },

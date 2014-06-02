@@ -15,7 +15,9 @@
     "prepareActionFailed":"Failed",
     "bookmarkNotFound":"Cannot find the bookmark in the report",
     "saveDashboardFailed": "Save Dashboard Failed",
-    "saveDashboardSucceeded": "Save Dashboard Succeeded"
+    "saveDashboardSucceeded": "Save Dashboard Succeeded",
+    "loadDashboardFailed": "Load Dashboard Failed",
+    "loadDashboard": "Load Dashboard"
   },
   "errorTag": {
     "moreDetail": "Click for more detail",

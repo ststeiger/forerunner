@@ -15,7 +15,9 @@
     "prepareActionFailed":"Не удалось",
     "bookmarkNotFound":"Не можете найти закладку в докладе",
     "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded"
+    "saveDashboardSucceeded":"Save Dashboard Succeeded",
+    "loadDashboardFailed":"Load Dashboard Failed",
+    "loadDashboard":"Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Подробнее",

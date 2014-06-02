@@ -13,7 +13,7 @@
     "favoriteFailed": "Failed",
     "docmapShowFailed": "Failed",
     "prepareActionFailed": "Failed",
-    "bookmarkNotFound": "Cannot find the bookmark in the report"
+    "bookmarkNotFound": "Cannot find the bookmark in the report",
     "saveDashboardFailed":"Save Dashboard Failed",
     "saveDashboardSucceeded":"Save Dashboard Succeeded",
     "loadDashboardFailed":"Load Dashboard Failed",
@@ -88,7 +88,7 @@
     "unzoom": "unzoom",
     "search": "Search",
     "createDashboard": "Create Dashboard",
-    "editDashboard": "Edit Dashboard"
+    "editDashboard": "Edit Dashboard",
     "saveDashboard":"Save Dashboard"
   },
   "print": {

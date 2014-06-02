@@ -87,7 +87,7 @@
     "unzoom":"unzoom",
     "search":"Suche",
     "createDashboard":"Dashboard erstellen",
-    "editDashboard":"Dashboard-Bearbeiten"
+    "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save Dashboard"
   },
   "print": {
@@ -202,8 +202,7 @@
     "submit":"einreichen",
     "cancel":"stornieren",
     "dialogTitle":"RDL JSON-Erweiterung"
-  }
-
+  },
  "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

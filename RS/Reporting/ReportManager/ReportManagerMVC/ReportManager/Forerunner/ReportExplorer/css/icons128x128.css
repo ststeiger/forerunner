@@ -2,9 +2,8 @@
 .fr-icons128x128 {
   width:128px;
   height:128px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons128x128.png');
+  left:50%; top:50%; margin-left:-64px; margin-top:-64px; position:absolute;
 }
 
 .fr-icons128x128-file-avi {

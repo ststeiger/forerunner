@@ -204,7 +204,7 @@
     "submit":"presentar",
     "cancel":"cancelar",
     "dialogTitle":"RDL extensión JSON"
-  }
+  },
   "dashboardEditor": {
     "propertiesBtn":"Properties"
   },

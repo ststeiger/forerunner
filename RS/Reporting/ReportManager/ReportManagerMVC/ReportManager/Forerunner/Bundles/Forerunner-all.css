@@ -149,9 +149,8 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-icons24x24 {
   width:24px;
   height:24px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons24x24.png');
+  margin:5px; display:inline-block;
 }
 
 .fr-icons24x24-menu {
@@ -308,9 +307,8 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-icons25x31 {
   width:25px;
   height:31px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons25x31.png');
+  margin:5px; display:inline-block;
 }
 
 .fr-icons25x31-exportCSV {

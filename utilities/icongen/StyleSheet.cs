@@ -11,11 +11,11 @@ namespace icongen
     {
         #region Public Functions
 
-        public StyleSheet(int width, int height, int margin, String relativeUrlPath, String compositeImageClassName, List<String> imageClassNames)
+        public StyleSheet(int width, int height, string styles, String relativeUrlPath, String compositeImageClassName, List<String> imageClassNames)
         {
             iconWidth = width;
             iconHeight = height;
-            iconMargin = margin;
+            iconStyles = styles;
             compositeIconClassName = compositeImageClassName;
             iconClassNames = imageClassNames;
             relativePath = relativeUrlPath;
@@ -35,10 +35,9 @@ namespace icongen
             writer.WriteLine("/*** IconGen - start automatically generated, do not hand modify ***/");
             writer.WriteLine(".{0} {{\n  width:{1}px;" +
                                     "\n  height:{2}px;" +
-                                    "\n  margin:{3}px;" +
-                                    "\n  display:inline-block;" +
-                                    "\n  background-image:url('{4}');\n}}",
-                compositeIconClassName, iconWidth, iconHeight, iconMargin, relativePath);
+                                    "\n  background-image:url('{3}');" +
+                                    "\n  {4}\n}}",
+                compositeIconClassName, iconWidth, iconHeight, relativePath, iconStyles);
 
             double sqrtCount = Math.Sqrt(iconClassNames.Count);
             if (Math.Floor(sqrtCount) != sqrtCount)
@@ -80,10 +79,10 @@ namespace icongen
         private List<String> iconClassNames;
         private String compositeIconClassName;
         private String relativePath;
+        private String iconStyles;
 
         private int iconWidth;
         private int iconHeight;
-        private int iconMargin;
 
         #endregion
     }

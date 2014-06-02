@@ -88,7 +88,7 @@
     "unzoom":"unzoom",
     "search":"Search",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
     "saveDashboard": "Save Dashboard" 
   },
   "print": {

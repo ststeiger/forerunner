@@ -20,7 +20,6 @@ namespace ReportManager
                   "~/Forerunner/Common/css/Forerunner-core.css",
                   "~/Forerunner/Common/css/icons24x24.css",
                   "~/Forerunner/Common/css/icons25x31.css",
-                  //"~/Forerunner/Common/css/icons128x128.css",
                   "~/Forerunner/Common/css/Login.css",
                   "~/Forerunner/Common/css/MessageBox.css",
                   "~/Forerunner/Common/css/ReportManager.css",

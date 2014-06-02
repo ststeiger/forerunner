@@ -308,7 +308,7 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
-            me.DefaultAppTemplate.$mainsection.html("");
+            layout.$mainsection.html("");
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
@@ -341,7 +341,6 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
             layout.$mainsection.html("");
-            layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             layout._selectedItemPath = null;

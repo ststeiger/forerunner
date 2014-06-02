@@ -2,9 +2,8 @@
 .fr-icons25x31 {
   width:25px;
   height:31px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons25x31.png');
+  margin:5px; display:inline-block;
 }
 
 .fr-icons25x31-exportCSV {

@@ -207,8 +207,6 @@ $(function () {
             /** @constant */
             createDashboard: "createDashboard",
             /** @constant */
-            dashboardBase: "dashboardBase",
-            /** @constant */
             dashboardEditor: "dashboardEditor",
             /** @constant */
             dashboardViewer: "dashboardViewer",

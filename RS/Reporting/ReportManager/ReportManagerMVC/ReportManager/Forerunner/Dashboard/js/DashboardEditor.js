@@ -20,7 +20,7 @@ $(function () {
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
      */
-    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
+    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**

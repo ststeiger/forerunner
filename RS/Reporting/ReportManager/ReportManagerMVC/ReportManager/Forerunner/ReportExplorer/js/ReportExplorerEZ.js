@@ -325,8 +325,8 @@ $(function () {
                     rsInstance: me.options.rsInstance
                 });
 
-                var $dashboardViewer = $dashboardEZ.dashboardEZ("getDashboardViewer");
-                $dashboardViewer.dashboardViewer("loadDefinition", path);
+                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
+                $dashboardEditor.dashboardEditor("loadDefinition", path);
             }, timeout);
 
             me.element.css("background-color", "");

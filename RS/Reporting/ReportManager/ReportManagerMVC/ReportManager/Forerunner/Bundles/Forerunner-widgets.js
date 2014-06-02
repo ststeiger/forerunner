@@ -13519,8 +13519,8 @@ $(function () {
                     rsInstance: me.options.rsInstance
                 });
 
-                var $dashboardViewer = $dashboardEZ.dashboardEZ("getDashboardViewer");
-                $dashboardViewer.dashboardViewer("loadDefinition", path);
+                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
+                $dashboardEditor.dashboardEditor("loadDefinition", path);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -19823,25 +19823,13 @@ $(function () {
 
             var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
             me.layout.$mainsection.append($dashboardContainer);
-
-            var $dashboardWidget = null;
-            if (me.options.enableEdit) {
-                $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    $appContainer: me.layout.$container,
-                    parentFolder: me.options.parentFolder,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
-                });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
-                    $appContainer: me.layout.$container,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance,
-                    enableEdit: false
-                });
-            }
+            $dashboardContainer.dashboardEditor({
+                $appContainer: me.layout.$container,
+                parentFolder: me.options.parentFolder,
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                rsInstance: me.options.rsInstance
+            });
 
             var $toolbar = me.layout.$mainheadersection;
             $toolbar.dashboardToolbar({
@@ -19882,17 +19870,6 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
-        },
-        /**
-         * Get dashboard viewer
-         *
-         * @function $.forerunner.dashboardEZ#getDashboardViewer
-         * 
-         * @return {Object} - dashboard viewer jQuery object
-         */
-        getDashboardViewer: function () {
-            var me = this;
-            return me.getDashboardEditor();
         },
         /**
          * Get dashboard editor
@@ -20080,9 +20057,9 @@ $(function () {
     });  // $.widget
 });  // function()
 
-///#source 1 1 /Forerunner/Dashboard/js/DashboardBase.js
+///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
 /**
- * @file Contains the dashboardBase widget.
+ * @file Contains the dashboardViewer widget.
  *
  */
 
@@ -20092,20 +20069,23 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboardEditor = locData.dashboardEditor;
+    var toolbar = locData.toolbar;
+    var messages = locData.messages;
 
     /**
-     * The dashboardBase widget is used as a base namespace for dashboardEditor and
-     * dashboardViewer
+     * Widget used to view dashboards
      *
-     * @namespace $.forerunner.dashboardBase
-     * @prop {Object} options - The options for dashboardBase
+     * @namespace $.forerunner.dashboardViewer
+     * @prop {Object} options - The options for dashboardViewer
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
      * @prop {String} options.rsInstance - Optional,Report service instance name
      */
-    $.widget(widgets.getFullname(widgets.dashboardBase), {
+    $.widget(widgets.getFullname(widgets.dashboardViewer), {
         options: {
             $appContainer: null,
             navigateTo: null,
@@ -20113,10 +20093,31 @@ $(function () {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             rsInstance: null
         },
+        _create: function () {
+            var me = this;
+        },
         _init: function () {
             var me = this;
             me._clearState();
             me.element.html("");
+        },
+        loadDefinition: function (path) {
+            var me = this;
+
+            // Clear the html in case of an error
+            me.element.html("");
+
+            // Load the given report definition
+            var loaded = me._loadResource(path);
+            if (!loaded) {
+                return;
+            }
+
+            // Render the template and load the reports
+            me.element.html(me.dashboardDef.template);
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._loadReport(item.id);
+            });
         },
         _clearState: function () {
             var me = this;
@@ -20207,9 +20208,13 @@ $(function () {
             });
 
             return status;
-        }
-    });  // $widget
-});  // function()
+        },
+        _destroy: function () {
+        },
+    });  // $.widget
+});   // $(function
+
+
 
 ///#source 1 1 /Forerunner/Dashboard/js/DashboardEditor.js
 /**
@@ -20234,7 +20239,7 @@ $(function () {
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
      */
-    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
+    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**
@@ -20389,64 +20394,6 @@ $(function () {
         }
     });  // $.widget
 });   // $(function
-
-///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
-/**
- * @file Contains the dashboardViewer widget.
- *
- */
-
-var forerunner = forerunner || {};
-forerunner.ssr = forerunner.ssr || {};
-
-$(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
-    var toolbar = locData.toolbar;
-    var messages = locData.messages;
-
-    /**
-     * Widget used to view dashboards
-     *
-     * @namespace $.forerunner.dashboardViewer
-     * @prop {Object} options - The options for dashboardEditor
-     */
-    $.widget(widgets.getFullname(widgets.dashboardViewer), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardViewer */, {
-        options: {
-        },
-        _create: function () {
-            var me = this;
-        },
-        _init: function () {
-            var me = this;
-            me._super();
-        },
-        loadDefinition: function (path) {
-            var me = this;
-
-            // Clear the html in case of an error
-            me.element.html("");
-
-            // Load the given report definition
-            var loaded = me._loadResource(path);
-            if (!loaded) {
-                return;
-            }
-
-            // Render the template and load the reports
-            me.element.html(me.dashboardDef.template);
-            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
-            });
-        },
-        _destroy: function () {
-        },
-    });  // $.widget
-});   // $(function
-
-
 
 ///#source 1 1 /Forerunner/Dashboard/js/ReportProperties.js
 /**

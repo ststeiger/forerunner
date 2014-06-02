@@ -62,25 +62,13 @@ $(function () {
 
             var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
             me.layout.$mainsection.append($dashboardContainer);
-
-            var $dashboardWidget = null;
-            if (me.options.enableEdit) {
-                $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    $appContainer: me.layout.$container,
-                    parentFolder: me.options.parentFolder,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
-                });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
-                    $appContainer: me.layout.$container,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance,
-                    enableEdit: false
-                });
-            }
+            $dashboardContainer.dashboardEditor({
+                $appContainer: me.layout.$container,
+                parentFolder: me.options.parentFolder,
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                rsInstance: me.options.rsInstance
+            });
 
             var $toolbar = me.layout.$mainheadersection;
             $toolbar.dashboardToolbar({
@@ -121,17 +109,6 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
-        },
-        /**
-         * Get dashboard viewer
-         *
-         * @function $.forerunner.dashboardEZ#getDashboardViewer
-         * 
-         * @return {Object} - dashboard viewer jQuery object
-         */
-        getDashboardViewer: function () {
-            var me = this;
-            return me.getDashboardEditor();
         },
         /**
          * Get dashboard editor

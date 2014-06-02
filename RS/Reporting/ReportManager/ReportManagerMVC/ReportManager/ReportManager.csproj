@@ -200,7 +200,6 @@
     <Content Include="Forerunner\Dashboard\js\DashboardEZ.js" />
     <Content Include="Forerunner\Dashboard\js\ReportProperties.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />
-    <Content Include="Forerunner\Dashboard\js\DashboardBase.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardEditor.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardToolbar.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardToolPane.js" />

@@ -54,7 +54,8 @@
     "dsCredential":"Credential",
     "views":"Ansichten",
     "addToFavorites":"Zu Favoriten",
-    "RDLExt":"RDL-Erweiterung"
+    "RDLExt":"RDL-Erweiterung",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"Zurück",
@@ -203,7 +204,7 @@
     "cancel":"stornieren",
     "dialogTitle":"RDL JSON-Erweiterung"
   },
- "dashboardEditor": {
+  "dashboardEditor": {
     "propertiesBtn":"Properties"
   },
   "reportProperties": {

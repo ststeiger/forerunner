@@ -214,6 +214,13 @@
   "dashboardEditor": {
     "propertiesBtn": "Properties"
   },
+    "reportProperties": {
+    "title":"Report Properties",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "selectReport":"<select report>",
+    "hideToolbar":"Hide Toolbar"
+  },
   "saveAsDashboard": {
     "title":"Save As",
     "cancel":"Cancel",

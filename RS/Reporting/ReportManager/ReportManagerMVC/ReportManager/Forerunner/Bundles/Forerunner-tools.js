@@ -1021,7 +1021,7 @@ $(function () {
         itemRDLExt: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-RDLExt",
-            imageClass: "fr-icons24x24-logout",
+            imageClass: "fr-icons24x24-rdlextension",
             text: locData.toolPane.RDLExt,
             events: {
                 click: function (e) {

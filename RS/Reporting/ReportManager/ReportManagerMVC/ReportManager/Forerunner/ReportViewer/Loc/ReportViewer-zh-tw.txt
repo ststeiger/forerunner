@@ -14,10 +14,10 @@
     "docmapShowFailed":"失敗",
     "prepareActionFailed":"失敗",
     "bookmarkNotFound":"在該報表中無法找到書籤",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"保存指示板失敗",
+    "saveDashboardSucceeded":"保存指示板成功",
+    "loadDashboardFailed":"加載指示板失敗",
+    "loadDashboard":"加載指示板"
   },
   "errorTag": {
     "moreDetail":"點擊查看更多訊息",
@@ -55,7 +55,7 @@
     "views":"瀏覽",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL擴展",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"保存指示板"
   },
   "toolbar": {
     "back":"返回",
@@ -89,7 +89,7 @@
     "search":"搜索",
     "createDashboard":"創建指示板",
     "editDashboard":"編輯指示板",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"保存指示板"
   },
   "print": {
     "title":"打印報表",
@@ -204,21 +204,21 @@
     "cancel":"取消",
     "submit":"提交"
    },
-  "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
-  },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"屬性"
+  },
+  "reportProperties": {
+    "title":"報表屬性",
+    "cancel":"取消",
+    "submit":"提交",
+    "selectReport":"<選擇報表>",
+    "hideToolbar":"隱藏工具欄"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"另存為",
+    "cancel":"取消",
+    "submit":"提交",
+    "dashboardName":"指示板名稱",
+    "namePlaceholder":"指示板名稱"
   }
 }

@@ -95,6 +95,13 @@
    	"password":["it"],
   	"reset":["it"]
     },
+  "reportProperties": {
+    "title":[],
+    "cancel":[],
+    "submit":[],
+    "selectReport":[],
+    "hideToolbar":["sv"]
+  },
   "RDLExt": {
       "title":["ro", "sv", "it"],
       "dialogTitle":["fr", "ro"]

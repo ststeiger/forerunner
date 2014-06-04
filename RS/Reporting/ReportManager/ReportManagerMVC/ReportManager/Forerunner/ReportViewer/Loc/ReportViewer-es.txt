@@ -14,10 +14,10 @@
     "docmapShowFailed":"fracasado",
     "prepareActionFailed":"fracasado",
     "bookmarkNotFound":"¿No encuentra el marcador en el informe",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Ahorra Dashboard Error",
+    "saveDashboardSucceeded":"Ahorra Dashboard Sucedido",
+    "loadDashboardFailed":"Dashboard No se pudo cargar",
+    "loadDashboard":"Dashboard de carga"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
@@ -55,7 +55,7 @@
     "views":"Vistas",
     "addToFavorites":"Añadir a Favoritos",
     "RDLExt":"RDL Extensión",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Ahorra Dashboard"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -90,7 +90,7 @@
     "search":"búsqueda",
     "createDashboard":"Crear Dashboard",
     "editDashboard":"Editar Dashboard",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Ahorra Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL extensión JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"propiedades"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Propiedades del informe",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "selectReport":"<seleccione Informe>",
+    "hideToolbar":"Ocultar barra de herramientas"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"guardar como",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "dashboardName":"Dashboard Nombre",
+    "namePlaceholder":"Dashboard Nombre"
   }
 }

@@ -14,10 +14,10 @@
     "docmapShowFailed":"失敗した",
     "prepareActionFailed":"失敗した",
     "bookmarkNotFound":"レポートにブックマークを見つけることができません",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"ダッシュボードの失敗を保存",
+    "saveDashboardSucceeded":"成功しましたダッシュボードを保存",
+    "loadDashboardFailed":"負荷ダッシュに失敗しました",
+    "loadDashboard":"ロード·ダッシュボード"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",
@@ -55,7 +55,7 @@
     "views":"閲覧",
     "addToFavorites":"お気に入りに追加",
     "RDLExt":"RDL拡張",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"ダッシュボードを保存"
   },
   "toolbar": {
     "back":"裏面",
@@ -89,7 +89,7 @@
     "search":"検索",
     "createDashboard":"ダッシュボードの作成",
     "editDashboard":"編集ダッシュボード",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"ダッシュボードを保存"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -201,24 +201,24 @@
   "RDLExt": {
     "title":"RDL拡張",
     "submit":"提出する",
-    "cancel":"取り消す",
+    "cancel":"キャンセル",
     "dialogTitle":"RDL拡張JSON形式"
    },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"プロパティ"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"レポートのプロパティ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "selectReport":"<[レポート]を選択>",
+    "hideToolbar":"ツールバーを隠す"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"新規保管",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "dashboardName":"ダッシュボードの名前",
+    "namePlaceholder":"ダッシュボードの名前"
   }
 }

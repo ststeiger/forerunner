@@ -105,6 +105,64 @@ if ($("#register")) {
     $("#register").attr("href", "../home/register?ref=" + GetRef());
 }
 
+$(document).ready(function () {
+    SetupSlider();
+    
+});
+
+function SetupSlider() {
+    var slideLeft;
+    var slideRight;
+
+    if ($("#SlideLeft").length === 1)
+
+        slideLeft = $("#SlideLeft").bxSlider({
+            mode: 'horizontal',
+            autoHover: true,
+            autoControls: false,
+            controls: false,
+            pager: false,
+            responsive:true
+        });
+
+    if ($("#SlideRight").length === 1)
+        slideRight = $("#SlideRight").bxSlider({
+            mode: 'horizontal',
+            autoHover: true,
+            autoControls: false,
+            controls: false,
+            pager: false,
+            responsive: true
+        });
+
+    if ($("#SliderForward").length === 1)
+        $("#SliderForward").click(function () {
+            slideLeft.goToNextSlide();
+            slideRight.goToNextSlide();
+            return false;
+        });
+    if ($("#SliderBack").length === 1)
+        $("#SliderBack").click(function () {
+            slideLeft.goToPrevSlide();
+            slideRight.goToPrevSlide();
+            return false;
+        });
+
+    if (slideLeft && slideRight){
+        slideLeft.parent().css("height", "");
+        window.setInterval(function () { NextSlide(slideRight, slideLeft); }, 12000);
+    }
+
+    //if ($("#Slide").length > 0)
+    //    $(window).on("resize", function () { $("#Slide").hide().show(1); });
+}
+
+function NextSlide(right,left) {
+    right.goToNextSlide();
+    left.goToNextSlide();
+
+    $(left).parent().css("height", "");
+}
 
 //var page = $(document).attr("title");
 //if ($("#"+page))

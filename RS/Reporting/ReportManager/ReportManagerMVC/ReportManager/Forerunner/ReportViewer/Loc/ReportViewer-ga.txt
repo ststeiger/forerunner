@@ -56,6 +56,7 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"ar ais",
@@ -203,7 +204,7 @@
     "submit":"Cuir",
     "cancel":"Cealaigh",
     "dialogTitle":"RDL Síneadh JSON"
-    },
+  },
   "dashboardEditor": {
     "propertiesBtn":"airíonna"
   },

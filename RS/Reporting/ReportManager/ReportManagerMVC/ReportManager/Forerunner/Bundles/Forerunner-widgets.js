@@ -13519,8 +13519,8 @@ $(function () {
                     rsInstance: me.options.rsInstance
                 });
 
-                var $dashboardViewer = $dashboardEZ.dashboardEZ("getDashboardViewer");
-                $dashboardViewer.dashboardViewer("loadDefinition", path);
+                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
+                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13683,7 +13683,7 @@ $(function () {
                             "</select>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                                 "</div>" +
                             "</div>" +
 
@@ -19799,6 +19799,15 @@ $(function () {
             enableEdit: true,
             rsInstance: null
         },
+        /**
+         * Switch the UI from dashboard view to the dashboard editor
+         *
+         * @function $.forerunner.dashboardEZ#edit
+         */
+        edit: function () {
+            // TODO
+            alert("dashboardEZ edit()");
+        },
         _init: function () {
             var me = this;
             me._super();
@@ -19814,31 +19823,19 @@ $(function () {
 
             var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
             me.layout.$mainsection.append($dashboardContainer);
-
-            var $dashboardWidget = null;
-            if (me.options.enableEdit) {
-                $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    $appContainer: me.layout.$container,
-                    parentFolder: me.options.parentFolder,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
-                });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
-                    $appContainer: me.layout.$container,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance,
-                    enableEdit: false
-                });
-            }
+            $dashboardContainer.dashboardEditor({
+                $appContainer: me.layout.$container,
+                parentFolder: me.options.parentFolder,
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                rsInstance: me.options.rsInstance
+            });
 
             var $toolbar = me.layout.$mainheadersection;
             $toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -19852,7 +19849,7 @@ $(function () {
             $toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -19873,17 +19870,6 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
-        },
-        /**
-         * Get dashboard viewer
-         *
-         * @function $.forerunner.dashboardEZ#getDashboardViewer
-         * 
-         * @return {Object} - dashboard viewer jQuery object
-         */
-        getDashboardViewer: function () {
-            var me = this;
-            return me.getDashboardEditor();
         },
         /**
          * Get dashboard editor
@@ -19993,6 +19979,8 @@ $(function () {
             me.addTools(1, true, [dtb.btnMenu]);
             if (me.options.enableEdit) {
                 me.addTools(2, true, [dtb.btnSave]);
+            } else {
+                me.addTools(2, true, [dtb.btnEdit]);
             }
 
             //trigger window resize event to regulate toolbar buttons visibility
@@ -20058,6 +20046,8 @@ $(function () {
 
             if (me.options.enableEdit) {
                 me.addTools(1, true, [dbtp.itemSave]);
+            } else {
+                me.addTools(1, true, [dbtp.itemEdit]);
             }
             
             var $spacerdiv = new $("<div />");
@@ -20067,9 +20057,9 @@ $(function () {
     });  // $.widget
 });  // function()
 
-///#source 1 1 /Forerunner/Dashboard/js/DashboardBase.js
+///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
 /**
- * @file Contains the dashboardBase widget.
+ * @file Contains the dashboardViewer widget.
  *
  */
 
@@ -20079,20 +20069,23 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var dashboardEditor = locData.dashboardEditor;
+    var toolbar = locData.toolbar;
+    var messages = locData.messages;
 
     /**
-     * The dashboardBase widget is used as a base namespace for dashboardEditor and
-     * dashboardViewer
+     * Widget used to view dashboards
      *
-     * @namespace $.forerunner.dashboardBase
-     * @prop {Object} options - The options for dashboardBase
+     * @namespace $.forerunner.dashboardViewer
+     * @prop {Object} options - The options for dashboardViewer
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
      * @prop {String} options.rsInstance - Optional,Report service instance name
      */
-    $.widget(widgets.getFullname(widgets.dashboardBase), {
+    $.widget(widgets.getFullname(widgets.dashboardViewer), {
         options: {
             $appContainer: null,
             navigateTo: null,
@@ -20100,10 +20093,31 @@ $(function () {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             rsInstance: null
         },
+        _create: function () {
+            var me = this;
+        },
         _init: function () {
             var me = this;
             me._clearState();
             me.element.html("");
+        },
+        loadDefinition: function (path, makeOpaque) {
+            var me = this;
+
+            // Clear the html in case of an error
+            me.element.html("");
+
+            // Load the given report definition
+            var loaded = me._loadResource(path);
+            if (!loaded) {
+                return;
+            }
+
+            // Render the template and load the reports
+            me.element.html(me.dashboardDef.template);
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._loadReport(item.id, makeOpaque);
+            });
         },
         _clearState: function () {
             var me = this;
@@ -20113,6 +20127,12 @@ $(function () {
                 reports: {}
             };
         },
+        getParentFolder: function () {
+            return me.parentFolder;
+        },
+        getDashboardName: function () {
+            return me.dashboardName;
+        },
         getReportProperties: function (reportId) {
             var me = this;
             return me.dashboardDef.reports[reportId];
@@ -20121,7 +20141,7 @@ $(function () {
             var me = this;
             me.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId) {
+        _loadReport: function (reportId, makeOpaque) {
             var me = this;
             var $item = me.element.find("#" + reportId);
 
@@ -20138,14 +20158,37 @@ $(function () {
                 var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
+
+                if (makeOpaque) {
+                    // Make the report area opaque
+                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
+                }
             }
             else {
                 $item.hide();
             }
         },
+        _getName: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return path;
+            return path.slice(lastIndex + 1);
+        },
+        _getFolder: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return null;
+            return path.slice(0, lastIndex + 1);
+        },
         _loadResource: function (path) {
             var me = this;
             var status = false;
+
+            // Set the parent folder and dashboard name properties
+            me.dashboardName = me._getName(path);
+            me.parentFolder = me._getFolder(path);
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);
@@ -20163,16 +20206,20 @@ $(function () {
                     status = true;
                 },
                 fail: function (jqXHR) {
-                    console.log("loadDefinition() - " + jqXHR.statusText);
+                    console.log("_loadResource() - " + jqXHR.statusText);
                     console.log(jqXHR);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
                 }
             });
 
             return status;
-        }
-    });  // $widget
-});  // function()
+        },
+        _destroy: function () {
+        },
+    });  // $.widget
+});   // $(function
+
+
 
 ///#source 1 1 /Forerunner/Dashboard/js/DashboardEditor.js
 /**
@@ -20197,7 +20244,7 @@ $(function () {
      * @namespace $.forerunner.dashboardEditor
      * @prop {Object} options - The options for dashboardEditor
      */
-    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardEditor */, {
+    $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**
@@ -20340,7 +20387,7 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId);
+            me._loadReport(data.reportId, true);
         },
         _create: function () {
         },
@@ -20352,64 +20399,6 @@ $(function () {
         }
     });  // $.widget
 });   // $(function
-
-///#source 1 1 /Forerunner/Dashboard/js/DashboardViewer.js
-/**
- * @file Contains the dashboardViewer widget.
- *
- */
-
-var forerunner = forerunner || {};
-forerunner.ssr = forerunner.ssr || {};
-
-$(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
-    var toolbar = locData.toolbar;
-    var messages = locData.messages;
-
-    /**
-     * Widget used to view dashboards
-     *
-     * @namespace $.forerunner.dashboardViewer
-     * @prop {Object} options - The options for dashboardEditor
-     */
-    $.widget(widgets.getFullname(widgets.dashboardViewer), $.forerunner.dashboardBase /** @lends $.forerunner.dashboardViewer */, {
-        options: {
-        },
-        _create: function () {
-            var me = this;
-        },
-        _init: function () {
-            var me = this;
-            me._super();
-        },
-        loadDefinition: function (path) {
-            var me = this;
-
-            // Clear the html in case of an error
-            me.element.html("");
-
-            // Load the given report definition
-            var loaded = me._loadResource(path);
-            if (!loaded) {
-                return;
-            }
-
-            // Render the template and load the reports
-            me.element.html(me.dashboardDef.template);
-            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
-            });
-        },
-        _destroy: function () {
-        },
-    });  // $.widget
-});   // $(function
-
-
 
 ///#source 1 1 /Forerunner/Dashboard/js/ReportProperties.js
 /**
@@ -20531,7 +20520,7 @@ $(function () {
                         "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -20782,7 +20771,7 @@ $(function () {
                                     "<label class='fr-sad-label'>" + saveAsDashboard.dashboardName + "</label>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<input class='fr-sad-dashboard-name' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
+                                    "<input class='fr-sad-dashboard-name' autofocus='autofocus' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +

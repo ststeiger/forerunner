@@ -56,6 +56,7 @@
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL扩展",
     "saveDashboard":"保存指示板"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -203,7 +204,7 @@
     "submit":"提交",
     "cancel":"取消",
     "dialogTitle":"RDL的JSON扩展"
-   },
+  },
  "reportProperties": {
     "title":"报表属性",
     "cancel":"取消",

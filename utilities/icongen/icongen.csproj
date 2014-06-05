@@ -113,7 +113,8 @@
     <Content Include="images\24x24icons\align_just_icon.png" />
     <Content Include="images\24x24icons\BackOff.png" />
     <Content Include="images\24x24icons\BackPageOff.png" />
-    <Content Include="images\24x24icons\CreateDashboard.png" />
+    <Content Include="images\24x24icons\DashboardEdit.png" />
+    <Content Include="images\24x24icons\Dashboard.png" />
     <Content Include="images\24x24icons\UnZoom.png" />
     <Content Include="images\24x24icons\CSV.png" />
     <Content Include="images\24x24icons\DataSourceCred.png" />

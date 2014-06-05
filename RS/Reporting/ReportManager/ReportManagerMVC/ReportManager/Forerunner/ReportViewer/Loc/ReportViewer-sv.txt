@@ -56,6 +56,7 @@
     "addToFavorites":"Lägg till i favoriter",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Spara Dashboard"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"bakåt",
@@ -203,7 +204,7 @@
     "submit":"inkomma",
     "cancel":"Avbryt",
     "dialogTitle":"RDL Förlängnings JSON"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"Egenskaper"
   },

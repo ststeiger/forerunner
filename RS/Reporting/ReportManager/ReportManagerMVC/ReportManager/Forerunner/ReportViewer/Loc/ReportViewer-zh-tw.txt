@@ -56,6 +56,7 @@
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL擴展",
     "saveDashboard":"保存指示板"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -203,7 +204,7 @@
     "title":"創建指示板",
     "cancel":"取消",
     "submit":"提交"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"屬性"
   },

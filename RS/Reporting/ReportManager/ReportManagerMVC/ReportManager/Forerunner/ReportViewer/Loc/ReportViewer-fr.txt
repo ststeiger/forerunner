@@ -57,6 +57,7 @@
     "addToFavorites":"Ajouter aux favoris",
     "RDLExt":"RDL Extension",
     "saveDashboard":"enregistrer du tableau de bord"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Retour",

@@ -55,6 +55,7 @@
     "views":"Views",
     "addToFavorites":"Add to Favorites",
     "RDLExt": "RDL Extension",
+    "editDashboard":"Edit Dashboard",
     "saveDashboard": "Save Dashboard" 
  },
   "toolbar": {
@@ -202,12 +203,12 @@
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
-    "submit":"Submit"
+    "submit":"Save"
   },
   "reportProperties": {
     "title":"Report Properties",
     "cancel":"Cancel",
-    "submit":"Submit",
+    "submit":"Ok",
     "selectReport": "<select report>",
     "hideToolbar": "Hide Toolbar"
   },
@@ -224,7 +225,7 @@
   "saveAsDashboard": {
     "title":"Save As",
     "cancel":"Cancel",
-    "submit":"Submit",
+    "submit":"Save",
     "dashboardName": "Dashboard Name",
     "namePlaceholder": "dashboard name"
   }

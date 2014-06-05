@@ -56,6 +56,7 @@
     "addToFavorites":"избранное",
     "RDLExt":"RDL Расширение",
     "saveDashboard":"Сохранить Dashboard"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -203,7 +204,7 @@
     "submit":"представлять",
     "cancel":"отменить",
     "dialogTitle":"RDL расширение JSON"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"свойства"
   },

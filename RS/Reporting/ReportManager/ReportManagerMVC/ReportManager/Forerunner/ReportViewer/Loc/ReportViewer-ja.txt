@@ -56,6 +56,7 @@
     "addToFavorites":"お気に入りに追加",
     "RDLExt":"RDL拡張",
     "saveDashboard":"ダッシュボードを保存"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"裏面",
@@ -203,7 +204,7 @@
     "submit":"提出する",
     "cancel":"キャンセル",
     "dialogTitle":"RDL拡張JSON形式"
-   },
+  },
   "dashboardEditor": {
     "propertiesBtn":"プロパティ"
   },

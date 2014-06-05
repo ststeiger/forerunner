@@ -38,6 +38,15 @@ $(function () {
             enableEdit: true,
             rsInstance: null
         },
+        /**
+         * Switch the UI from dashboard view to the dashboard editor
+         *
+         * @function $.forerunner.dashboardEZ#edit
+         */
+        edit: function () {
+            // TODO
+            alert("dashboardEZ edit()");
+        },
         _init: function () {
             var me = this;
             me._super();
@@ -53,31 +62,19 @@ $(function () {
 
             var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
             me.layout.$mainsection.append($dashboardContainer);
-
-            var $dashboardWidget = null;
-            if (me.options.enableEdit) {
-                $dashboardWidget = $dashboardContainer.dashboardEditor({
-                    $appContainer: me.layout.$container,
-                    parentFolder: me.options.parentFolder,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance
-                });
-            } else {
-                $dashboardWidget = $dashboardContainer.dashboardViewer({
-                    $appContainer: me.layout.$container,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    rsInstance: me.options.rsInstance,
-                    enableEdit: false
-                });
-            }
+            $dashboardContainer.dashboardEditor({
+                $appContainer: me.layout.$container,
+                parentFolder: me.options.parentFolder,
+                navigateTo: me.options.navigateTo,
+                historyBack: me.options.historyBack,
+                rsInstance: me.options.rsInstance
+            });
 
             var $toolbar = me.layout.$mainheadersection;
             $toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -91,7 +88,7 @@ $(function () {
             $toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
-                $dashboardEZ: me,
+                $dashboardEZ: me.element,
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
@@ -112,17 +109,6 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
-        },
-        /**
-         * Get dashboard viewer
-         *
-         * @function $.forerunner.dashboardEZ#getDashboardViewer
-         * 
-         * @return {Object} - dashboard viewer jQuery object
-         */
-        getDashboardViewer: function () {
-            var me = this;
-            return me.getDashboardEditor();
         },
         /**
          * Get dashboard editor

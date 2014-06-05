@@ -12425,11 +12425,11 @@ $(function () {
             var me = this;
             me.$btnFavorite = null;
             if (me.options.$toolbar !== null) {
-                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div");
+                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
             }
             me.$itemFavorite = null;
             if (me.options.$toolPane !== null) {
-                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
+                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
             }
             var url = me.options.ReportManagerAPI + "/isFavorite?path=" + path;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;

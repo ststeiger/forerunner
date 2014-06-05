@@ -14,10 +14,10 @@
     "docmapShowFailed":"Theip ar",
     "prepareActionFailed":"Theip ar",
     "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Vista Mælaborð mistókst",
+    "saveDashboardSucceeded":"Vista Mælaborð Eftirmaður",
+    "loadDashboardFailed":"Hlaða Mælaborð mistókst",
+    "loadDashboard":"hlaða Mælaborð"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",
@@ -55,7 +55,7 @@
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld",
     "RDLExt":"RDL Eftirnafn",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"vista Mælaborð"
   },
   "toolbar": {
     "back":"Til baka",
@@ -89,7 +89,7 @@
     "search":"Leita",
     "createDashboard":"Búa Mælaborð",
     "editDashboard":"breyta Mælaborð",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"vista Mælaborð"
   },
   "print": {
     "title":"Print Report",
@@ -205,20 +205,20 @@
     "dialogTitle":"RDL Eftirnafn JSON"
     },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"eiginleikar"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"skýrslu Properties",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "selectReport":"<Veldu skýrslu>",
+    "hideToolbar":"fela tækjastiku"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"vista sem",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "dashboardName":"Mælaborð Name",
+    "namePlaceholder":"Mælaborð Name"
   }
 }

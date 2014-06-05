@@ -14,10 +14,10 @@
     "docmapShowFailed":"Manqué",
     "prepareActionFailed":"Manqué",
     "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Enregistrer Dashboard Échec",
+    "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
+    "loadDashboardFailed":"Charge Dashboard Échec",
+    "loadDashboard":"charge Dashboard"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -56,7 +56,7 @@
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"enregistrer du tableau de bord"
   },
   "toolbar": {
     "back":"Retour",
@@ -90,7 +90,7 @@
     "search":"recherche",
     "createDashboard":"Créer Dashboard",
     "editDashboard":"Modifier Dashboard",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"enregistrer du tableau de bord"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL Extension JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"propriétés"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Propriétés du rapport",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "selectReport":"<sélectionnez rapport>",
+    "hideToolbar":"Masquer la barre d'outils"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"enregistrer en tant que",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "dashboardName":"Dashboard Nom",
+    "namePlaceholder":"Dashboard Nom"
   }
 }

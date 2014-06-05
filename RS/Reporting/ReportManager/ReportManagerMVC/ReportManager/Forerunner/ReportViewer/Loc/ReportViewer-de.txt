@@ -14,10 +14,10 @@
     "docmapShowFailed":"Gescheiterte",
     "prepareActionFailed":"Gescheiterte",
     "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Sparen Sie Dashboard-Fehler",
+    "saveDashboardSucceeded":"Sparen Sie Dashboard-Nachfolger",
+    "loadDashboardFailed":"Last-Dashboard fehlgeschlagen",
+    "loadDashboard":"Last-Dashboard"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
@@ -54,7 +54,8 @@
     "dsCredential":"Credential",
     "views":"Ansichten",
     "addToFavorites":"Zu Favoriten",
-    "RDLExt":"RDL-Erweiterung"
+    "RDLExt":"RDL-Erweiterung",
+    "saveDashboard":"Save-Dashboard"
   },
   "toolbar": {
     "back":"Zurück",
@@ -88,7 +89,7 @@
     "search":"Suche",
     "createDashboard":"Dashboard erstellen",
     "editDashboard":"Dashboard-Bearbeiten",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save-Dashboard"
   },
   "print": {
     "title":"Bericht drucken",
@@ -203,21 +204,21 @@
     "cancel":"stornieren",
     "dialogTitle":"RDL JSON-Erweiterung"
   },
- "dashboardEditor": {
-    "propertiesBtn":"Properties"
+  "dashboardEditor": {
+    "propertiesBtn":"Eigenschaften"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Berichtseigenschaften",
+    "cancel":"stornieren",
+    "submit":"einsenden",
+    "selectReport":"<wählen Bericht>",
+    "hideToolbar":"Symbolleiste ausblenden"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"speichern unter",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "dashboardName":"Dashboard-Namen",
+    "namePlaceholder":"Dashboard-Namen"
   }
 }

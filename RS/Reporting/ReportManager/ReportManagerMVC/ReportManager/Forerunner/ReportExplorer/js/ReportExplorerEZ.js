@@ -326,7 +326,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path);
+                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
             }, timeout);
 
             me.element.css("background-color", "");

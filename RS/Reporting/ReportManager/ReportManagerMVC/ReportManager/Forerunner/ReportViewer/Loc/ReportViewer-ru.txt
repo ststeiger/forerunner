@@ -211,14 +211,14 @@
   "reportProperties": {
     "title":"Report Properties",
     "cancel":"Cancel",
-    "submit":"Submit",
+    "submit":"Ok",
     "selectReport":"<select report>",
     "hideToolbar":"Hide Toolbar"
   },
   "saveAsDashboard": {
     "title":"Save As",
     "cancel":"Cancel",
-    "submit":"Submit",
+    "submit":"Save",
     "dashboardName":"Dashboard Name",
     "namePlaceholder":"dashboard name"
   }

@@ -13520,7 +13520,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path);
+                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13683,7 +13683,7 @@ $(function () {
                             "</select>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                                 "</div>" +
                             "</div>" +
 
@@ -20101,7 +20101,7 @@ $(function () {
             me._clearState();
             me.element.html("");
         },
-        loadDefinition: function (path) {
+        loadDefinition: function (path, makeOpaque) {
             var me = this;
 
             // Clear the html in case of an error
@@ -20116,7 +20116,7 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
+                me._loadReport(item.id, makeOpaque);
             });
         },
         _clearState: function () {
@@ -20141,7 +20141,7 @@ $(function () {
             var me = this;
             me.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId) {
+        _loadReport: function (reportId, makeOpaque) {
             var me = this;
             var $item = me.element.find("#" + reportId);
 
@@ -20158,6 +20158,11 @@ $(function () {
                 var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
+
+                if (makeOpaque) {
+                    // Make the report area opaque
+                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
+                }
             }
             else {
                 $item.hide();
@@ -20201,7 +20206,7 @@ $(function () {
                     status = true;
                 },
                 fail: function (jqXHR) {
-                    console.log("loadDefinition() - " + jqXHR.statusText);
+                    console.log("_loadResource() - " + jqXHR.statusText);
                     console.log(jqXHR);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
                 }
@@ -20382,7 +20387,7 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId);
+            me._loadReport(data.reportId, true);
         },
         _create: function () {
         },
@@ -20515,7 +20520,7 @@ $(function () {
                         "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -20766,7 +20771,7 @@ $(function () {
                                     "<label class='fr-sad-label'>" + saveAsDashboard.dashboardName + "</label>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<input class='fr-sad-dashboard-name' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
+                                    "<input class='fr-sad-dashboard-name' autofocus='autofocus' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +

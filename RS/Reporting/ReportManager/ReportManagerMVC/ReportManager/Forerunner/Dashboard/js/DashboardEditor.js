@@ -163,7 +163,7 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId);
+            me._loadReport(data.reportId, true);
         },
         _create: function () {
         },

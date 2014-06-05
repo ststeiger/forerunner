@@ -64,7 +64,7 @@ $(function () {
                             "</select>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                                 "</div>" +
                             "</div>" +
 

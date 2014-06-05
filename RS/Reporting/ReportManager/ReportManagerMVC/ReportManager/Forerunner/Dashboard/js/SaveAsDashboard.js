@@ -61,7 +61,7 @@ $(function () {
                                     "<label class='fr-sad-label'>" + saveAsDashboard.dashboardName + "</label>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<input class='fr-sad-dashboard-name' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
+                                    "<input class='fr-sad-dashboard-name' autofocus='autofocus' type='text' placeholder='" + saveAsDashboard.namePlaceholder + "' required='true'/><span class='fr-sad-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +

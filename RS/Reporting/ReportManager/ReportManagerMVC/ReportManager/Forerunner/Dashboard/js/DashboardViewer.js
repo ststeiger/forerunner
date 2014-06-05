@@ -41,7 +41,7 @@ $(function () {
             me._clearState();
             me.element.html("");
         },
-        loadDefinition: function (path) {
+        loadDefinition: function (path, makeOpaque) {
             var me = this;
 
             // Clear the html in case of an error
@@ -56,7 +56,7 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
+                me._loadReport(item.id, makeOpaque);
             });
         },
         _clearState: function () {
@@ -81,7 +81,7 @@ $(function () {
             var me = this;
             me.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId) {
+        _loadReport: function (reportId, makeOpaque) {
             var me = this;
             var $item = me.element.find("#" + reportId);
 
@@ -98,6 +98,11 @@ $(function () {
                 var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
+
+                if (makeOpaque) {
+                    // Make the report area opaque
+                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
+                }
             }
             else {
                 $item.hide();
@@ -141,7 +146,7 @@ $(function () {
                     status = true;
                 },
                 fail: function (jqXHR) {
-                    console.log("loadDefinition() - " + jqXHR.statusText);
+                    console.log("_loadResource() - " + jqXHR.statusText);
                     console.log(jqXHR);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
                 }

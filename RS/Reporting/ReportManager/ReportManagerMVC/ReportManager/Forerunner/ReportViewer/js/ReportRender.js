@@ -342,7 +342,11 @@ $(function () {
 
         layoutReport: function(isLoaded){
             var me = this;
+            var renderWidth = me.options.reportViewer.element.width();
             
+            if (renderWidth === 0)
+                return;
+
             for (var r = 0; r < me._rectangles.length; r++) {
                 var rec = me._rectangles[r];
                 var RecLayout = me._getRectangleLayout(rec.Measurements);

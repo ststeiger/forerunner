@@ -1962,8 +1962,13 @@ $(function () {
         _reLayoutPage: function(pageNum){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].$container.reportRender("layoutReport", true);
-                me.pages[pageNum].needsLayout = false;
+                try{
+                    me.pages[pageNum].$container.reportRender("layoutReport", true);
+                    me.pages[pageNum].needsLayout = false;
+                }
+                catch(e){
+
+                }
             }
         },
         _renderPage: function (pageNum) {

@@ -1963,8 +1963,13 @@ $(function () {
         _reLayoutPage: function(pageNum){
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].$container.reportRender("layoutReport", true);
-                me.pages[pageNum].needsLayout = false;
+                try{
+                    me.pages[pageNum].$container.reportRender("layoutReport", true);
+                    me.pages[pageNum].needsLayout = false;
+                }
+                catch(e){
+
+                }
             }
         },
         _renderPage: function (pageNum) {
@@ -5553,7 +5558,11 @@ $(function () {
 
         layoutReport: function(isLoaded){
             var me = this;
+            var renderWidth = me.options.reportViewer.element.width();
             
+            if (renderWidth === 0)
+                return;
+
             for (var r = 0; r < me._rectangles.length; r++) {
                 var rec = me._rectangles[r];
                 var RecLayout = me._getRectangleLayout(rec.Measurements);

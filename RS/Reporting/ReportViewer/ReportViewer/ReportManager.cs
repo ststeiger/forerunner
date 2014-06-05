@@ -37,7 +37,7 @@ namespace Forerunner.SSRS.Manager
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
-        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", false);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
         private static bool isReportServerDB(SqlConnection conn)

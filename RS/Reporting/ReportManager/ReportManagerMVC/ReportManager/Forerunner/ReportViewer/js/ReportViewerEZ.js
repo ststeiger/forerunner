@@ -124,7 +124,7 @@ $(function () {
             me._render();
             
             if (me.options.isFullScreen &&
-                (forerunner.device.isWindowsPhone() )) {
+                (forerunner.device.isWindowsPhone() || enableWPZoom === true)) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.

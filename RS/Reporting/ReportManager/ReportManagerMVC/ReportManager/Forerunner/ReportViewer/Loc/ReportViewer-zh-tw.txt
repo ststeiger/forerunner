@@ -49,7 +49,8 @@
     "print":"打印",
     "dsCredential":"數據源驗證",
     "views":"瀏覽",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "RDLExt":"RDL擴展"
   },
   "toolbar": {
     "back":"返回",
@@ -81,6 +82,8 @@
     "addToFavorites":"添加到收藏",
     "unzoom":"取消縮放",
     "search":"搜索",
+    "createDashboard":"創建指示板",
+    "editDashboard":"編輯指示板"
   },
   "print": {
     "title":"打印報表",
@@ -101,7 +104,8 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
-	"Email":"Email"
+	"Email":"Email",
+    "AdminUI":"管理員UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -183,5 +187,16 @@
   "explorerSearch": {
     "emptyError":"搜索條件不能為空",
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
+  },
+  "RDLExt": {
+    "title":"RDL擴展",
+    "submit":"提交",
+    "cancel":"取消",
+    "dialogTitle":"RDL的JSON擴展"
+  },
+  "createDashboard": {
+    "title":"創建指示板",
+    "cancel":"取消",
+    "submit":"提交"
   }
 }

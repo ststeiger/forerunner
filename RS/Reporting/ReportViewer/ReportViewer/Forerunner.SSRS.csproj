@@ -129,6 +129,10 @@
       <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
       <Name>Forerunner.Json</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PDFsharp\code\PdfSharp\PdfSharp.csproj">
+      <Project>{5384ce57-1f94-4d22-860d-2e9c1ac12ddf}</Project>
+      <Name>PdfSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\..\AssemblyMetadata.targets" />

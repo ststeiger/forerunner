@@ -109,38 +109,15 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
-        {
-            try
-            {             
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetProperty(path,propertyName)), "text/JSON");
+
+        public class SaveReprotPropertyPostBack{
+            public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
             }
-            catch (Exception e)
-            {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
-            }
-        }
-        [HttpGet]
+
+        [HttpPost]
         [ActionName("SaveReportProperty")]
-        public HttpResponseMessage SaveReportProperty(string value, string path, string propertyName, string instance = null)
-        {
-            HttpResponseMessage resp = this.Request.CreateResponse();
-            try
-            {
-                GetReportManager(instance).SetProperty(path, propertyName, value);
-                resp.StatusCode = HttpStatusCode.OK;
-
-            }
-            catch
-            {
-                resp.StatusCode = HttpStatusCode.BadRequest;
-            }
-            
-            return resp;
-            
-        }
-
-        [HttpGet]
+        public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
+                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {

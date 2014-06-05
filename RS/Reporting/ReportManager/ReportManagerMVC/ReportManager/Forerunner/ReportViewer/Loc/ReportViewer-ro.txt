@@ -49,7 +49,8 @@
     "print":"se tipări",
     "dsCredential":"Acreditare",
     "views":"Vizualizari",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -81,8 +82,8 @@
     "addToFavorites":"Adauga la Favorite",
     "unzoom":"unzoom",
     "search":"căutare",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"crea Tablou de bord",
+    "editDashboard":"Edit Tablou de bord"
   },
   "print": {
     "title":"imprima raportul",
@@ -103,7 +104,8 @@
     "submit":"bine",
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
-	"Email":"Email"
+	"Email":"Email",
+    "AdminUI":"UI admin"
   },
   "paramPane": {
     "nullField":"Null",
@@ -187,8 +189,14 @@
     "notFound":"Nu exista rezultate pentru criteriile de căutare, vă rugăm să rafinați căutarea."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"crea Tablou de bord",
+    "cancel":"anula",
+    "submit":"executa"
+  },
+  "RDLExt": {
+    "title":"RDL Extension",
+    "submit":"executa",
+    "cancel":"anula",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

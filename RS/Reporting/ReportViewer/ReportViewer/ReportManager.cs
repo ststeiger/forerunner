@@ -252,15 +252,6 @@ namespace Forerunner.SSRS.Manager
 
             return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
-        private void callSetProperties(string path, Property[] props)
-        {
-            // Please review this call stack.
-            // This call is already in the impersonated context
-            // No need to impersonate again.
-            rs.Credentials = GetCredentials();
-
-             rs.SetProperties(HttpUtility.UrlDecode(path), props);
-        }
 
         private string[] callGetPermissions(string path)
         {
@@ -689,34 +680,15 @@ namespace Forerunner.SSRS.Manager
         }
         private string GetItemID(string path)
         {            
-
-            return GetProperty(path,"ID");
-
-        }
-        public string GetProperty(string path,string propName)
-        {
             Property[] props = new Property[1];
             Property retrieveProp = new Property();
-            retrieveProp.Name = propName;
+            retrieveProp.Name = "ID";
             props[0] = retrieveProp;
 
             Property[] properties = callGetProperties(path, props);
 
-            if (properties.Length > 0)
-                return properties[0].Value;
-            else
-                return "";
-        }
-        public void SetProperty(string path, string propName,string value)
-        {
-            Property[] props = new Property[1];
-            Property retrieveProp = new Property();
-            retrieveProp.Name = propName;
-            retrieveProp.Value = value;
+            return properties[0].Value;
 
-            props[0] = retrieveProp;
-
-            callSetProperties(path, props);            
         }
         public string IsFavorite(string path)
         {

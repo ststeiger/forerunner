@@ -49,7 +49,8 @@
     "print":"Imprimir",
     "dsCredential":"Credenciales",
     "views":"Vistas",
-    "addToFavorites":"Añadir a Favoritos"
+    "addToFavorites":"Añadir a Favoritos",
+    "RDLExt":"RDL Extensión"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -82,8 +83,8 @@
     "addToFavorites":"Añadir a Favoritos",
     "unzoom":"unzoom",
     "search":"búsqueda",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Crear Dashboard",
+    "editDashboard":"Editar Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -104,7 +105,8 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive",
-	"Email":"Email"
+	"Email":"Email",
+    "AdminUI":"interfaz del administrador"
   },
   "paramPane": {
     "nullField":"cero",
@@ -188,8 +190,14 @@
     "notFound":"Ningún resultado coincide con su criterio de búsqueda, por favor, modifique su búsqueda."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"Crear Dashboard",
+    "cancel":"cancelar",
+    "submit":"presentar"
+  },
+  "RDLExt": {
+    "title":"RDL Extensión",
+    "submit":"presentar",
+    "cancel":"cancelar",
+    "dialogTitle":"RDL extensión JSON"
   }
 }

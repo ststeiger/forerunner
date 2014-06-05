@@ -50,7 +50,8 @@
     "print":"Imprimer",
     "dsCredential":"Lettres de créance",
     "views":"vues",
-    "addToFavorites":"Ajouter aux favoris"
+    "addToFavorites":"Ajouter aux favoris",
+    "RDLExt":"RDL Extension"
   },
   "toolbar": {
     "back":"Retour",
@@ -82,8 +83,8 @@
     "addToFavorites":"Ajouter aux favoris",
     "unzoom":"dézoomer",
     "search":"recherche",
-    "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "createDashboard":"Créer Dashboard",
+    "editDashboard":"Modifier Dashboard"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -104,7 +105,8 @@
     "submit":"Ok",
     "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive",
-	"Email":"Email"
+	"Email":"Email",
+    "AdminUI":"administrateur UI"
   },
   "paramPane": {
     "nullField":"Zéro",
@@ -188,8 +190,14 @@
     "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
   },
   "createDashboard": {
-    "title":"Create Dashboard",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"créer Dashboard",
+    "cancel":"annuler",
+    "submit":"soumettre"
+  },
+  "RDLExt": {
+    "title":"Extensions RDL",
+    "submit":"soumettre",
+    "cancel":"annuler",
+    "dialogTitle":"RDL Extension JSON"
   }
 }

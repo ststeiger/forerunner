@@ -55,6 +55,9 @@ $(function () {
                         "</tr></td><tr><td>" +
                         "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
                         "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
+                        "</tr></td><tr><td>" +
+                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                         "</td></tr></table>" +
                     "</div>" +
                     // Ok button
@@ -66,7 +69,7 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");
+            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
@@ -110,17 +113,21 @@ $(function () {
         _getSettings: function () {
             var me = this;
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
             me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
             me.$email.val(me.settings.email);
+            me.$adminUI = me.element.find(".fr-us-admin-ui-id");
+            var adminUI = me.settings.adminUI;
+            me.$adminUI.prop("checked", adminUI);
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
             me.settings.email = me.$email.val();
-
+            me.settings.adminUI = me.$adminUI.prop("checked");
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 
             me.closeDialog();
@@ -135,9 +142,7 @@ $(function () {
 
             me._getSettings();
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "inline-block");
-            //});
+
         },
         /**
          * Close user setting dialog
@@ -148,9 +153,7 @@ $(function () {
             var me = this;
 
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "");
-            //});
+
         }
     }); //$.widget
 });

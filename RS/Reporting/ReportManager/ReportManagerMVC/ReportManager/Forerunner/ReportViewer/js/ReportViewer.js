@@ -6,6 +6,9 @@
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
+// Enable the testing of windows phone style zooming on a pc
+enableWPZoom = true;
+
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -70,8 +73,9 @@ $(function () {
         },
 
         _destroy: function () {
-            //This needs to be changed to only remove the view function
-            $(window).off("resize");
+            var me = this;
+            //Baotong update it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
@@ -120,10 +124,7 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
-            me.RDLExtProperty = null;
-            
-            //Test admin
-            me.options.isAdmin = true;
+            me.RDLExtProperty = null;            
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -137,9 +138,7 @@ $(function () {
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
-            //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", function () { me._ReRender.call(me); });
-
+            $(window).on("resize", { me: me }, me._ReRenderCall);
             //load the report Page requested
             me.element.append(me.$reportContainer);
             //me._addLoadingIndicator();
@@ -330,15 +329,21 @@ $(function () {
                 me.$loadingIndicator.hide();
             }
         },
-        _ReRender: function () {
+        _ReRender: function (force) {
             var me = this;
 
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
-                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
-                    me.pages[i].needsLayout = true;
-                }
-                me._reLayoutPage(me.curPage);                
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                $.each(me.pages, function (index, page) {
+                    page.needsLayout = true;
+                });                
+                me._reLayoutPage(me.curPage, force);
+                
             }
+        },
+        //Wrapper function, used to resigter window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+            me._ReRender.call(me);
         },
         _removeCSS: function () {
             var me = this;
@@ -357,7 +362,6 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
-            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -380,9 +384,6 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
-
-            //relayout page if needed
-            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -454,12 +455,12 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone()) {
+            if (forerunner.device.isWindowsPhone() || enableWPZoom === true) {
                 me._allowZoomWindowsPhone(isEnabled);
                 return;
             }
 
-            if (isEnabled === true){
+            if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
             }
@@ -799,7 +800,7 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
@@ -843,11 +844,11 @@ $(function () {
                 me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
+            me._reLayoutPage(me.curPage);
         },
         _handleOrientation: function () {
-            var me = this;
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
+            if (forerunner.device.isSmall()) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -992,7 +993,7 @@ $(function () {
                     me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         
@@ -1029,8 +1030,7 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });           
-
+                });
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1071,7 +1071,7 @@ $(function () {
          *
          * @param {String} toggleID - Id of the item to toggle
          */
-        toggleItem: function (toggleID) {
+        toggleItem: function (toggleID,scrollID) {
             var me = this;
             if (me.lock === 1)
                 return;
@@ -1081,10 +1081,10 @@ $(function () {
             me._resetContextIfInvalid();
             me._prepareAction();
             
-            me._callToggle(toggleID);
+            me._callToggle(toggleID, scrollID);
         },
         
-        _callToggle : function(toggleID) {
+        _callToggle: function (toggleID, scrollID) {
             var me = this;
             me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
@@ -1099,13 +1099,16 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
+                        
                     }
                     else
                         me.lock = 0;
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
 
@@ -1164,7 +1167,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
 
@@ -1237,7 +1240,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         /**
@@ -1265,7 +1268,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
             );
         },
         /**
@@ -1403,7 +1406,7 @@ $(function () {
                             }
                         }
                     },
-                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 );
             }
         },
@@ -1539,7 +1542,21 @@ $(function () {
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+
+            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                window.open(url);
+            }
+            else {
+                var pif = me.element.find(".fr-print-iframe");
+                if (pif.length === 1) pif.detach();
+
+                var pif = $("<iframe/>");
+                pif.addClass("fr-print-iframe");
+                pif.attr("name", me.viewerID);
+                pif.attr("src", url);
+                pif.hide();
+                me.element.append(pif);
+            }
         },
         _setPrint: function (pageLayout) {
             var me = this;
@@ -1555,9 +1572,10 @@ $(function () {
         //Page Loading
         _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var pageNum = me.getCurPage();
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
             if (savedParams) {
-                me.refreshParameters(savedParams, true, pageNum);
+                me.refreshParameters(savedParams, true, 1);
             }
         },
         _getSavedParams : function(orderedList) {
@@ -1731,6 +1749,7 @@ $(function () {
                 me.paramLoaded = false;
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
+                me.RDLExtProperty = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -1741,7 +1760,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;
+            me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
         _reloadFromSessionStorage: function () {
@@ -1773,7 +1792,7 @@ $(function () {
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
                 return;
             }
 
@@ -1787,13 +1806,10 @@ $(function () {
             }
             
             me._resetViewer();
-            
+
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
-
-            //See if we have RDL extensions
-            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1803,27 +1819,8 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
             });
-        },
-        _getRDLExtProp: function () {
-            var me = this;
-
-            forerunner.ajax.ajax(
-               {
-                   type: "GET",
-                   dataType: "json",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       propertyName: "ForerunnerRDLExt",
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me.RDLExtProperty = data;
-                   },
-                   async: false
-               });
         },
         /**
          * Load current report with the given parameter list
@@ -1908,10 +1905,10 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
             var me = this;
 
             if (flushCache === true)
@@ -1919,16 +1916,22 @@ $(function () {
 
             if (me.pages[newPageNum])
                 if (me._getPageContainer(newPageNum)) {
-                    if (!loadOnly) {
+                    if (!loadOnly) {                        
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
-                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            me.element.show(0); //scrollto does not work with the slide in functions:(                        
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
                             me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
+                        if (scrollID) {
+                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                            if (el.length ===1)
+                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                        }
+
                     }
                     return;
                 }
@@ -1950,7 +1953,7 @@ $(function () {
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
                         instance: me.options.rsInstance,
-                    },
+                    }, 
                     async: true,
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
@@ -1965,12 +1968,21 @@ $(function () {
                                 me._navToLink(bookmarkID);
                             if (flushCache !== true)
                                 me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
+                            //$(window).scrollLeft(me.scrollLeft);
+                            //$(window).scrollTop(me.scrollTop);
+                            if (scrollID) {
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                                if (el.length === 1)
+                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                            }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
@@ -2045,14 +2057,8 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
-
-        _reLayoutPage: function(pageNum){
-            var me = this;
-            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
-                me.pages[pageNum].$container.reportRender("layoutReport", true);
-                me.pages[pageNum].needsLayout = false;
-            }
-        },
+        _reLayoutPage: function(pageNum,force){
+                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -2073,7 +2079,6 @@ $(function () {
                 }
 
                 me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
-                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;
@@ -2167,7 +2172,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("[name='" + elementID + "']")[0];
+            var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
                 var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
@@ -2335,7 +2340,7 @@ $(function () {
         showRDLExtDialog: function () {
             var me = this;
 
-            var dlg = $(".fr-rdl-section").first();
+            var dlg = $(".fr-rdl-section",me.element).first();
 
             if (dlg.length ===0) {
                 dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -2354,8 +2359,11 @@ $(function () {
         saveRDLExt: function (RDL) {
             var me = this;
 
-            try{
-                me.RDLExtProperty = jQuery.parseJSON(RDL);
+            try {
+                if (RDL.trim() !== "")
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                else
+                    me.RDLExtProperty = {};
             }
             catch (e) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
@@ -2364,7 +2372,7 @@ $(function () {
 
             return forerunner.ajax.ajax(
                {
-                   type: "GET",
+                   type: "POST",
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
@@ -2374,6 +2382,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
+                       me._ReRender(true);
                        return true;
                    },
                    fail: function (data){

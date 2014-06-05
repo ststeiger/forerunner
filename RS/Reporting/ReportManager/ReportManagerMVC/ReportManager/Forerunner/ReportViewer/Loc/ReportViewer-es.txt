@@ -13,7 +13,11 @@
     "favoriteFailed":"fracasado",
     "docmapShowFailed":"fracasado",
     "prepareActionFailed":"fracasado",
-    "bookmarkNotFound":"¿No encuentra el marcador en el informe"
+    "bookmarkNotFound":"¿No encuentra el marcador en el informe",
+    "saveDashboardFailed":"Ahorra Dashboard Error",
+    "saveDashboardSucceeded":"Ahorra Dashboard Sucedido",
+    "loadDashboardFailed":"Dashboard No se pudo cargar",
+    "loadDashboard":"Dashboard de carga"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
@@ -50,7 +54,9 @@
     "dsCredential":"Credenciales",
     "views":"Vistas",
     "addToFavorites":"Añadir a Favoritos",
-    "RDLExt":"RDL Extensión"
+    "RDLExt":"RDL Extensión",
+    "saveDashboard":"Ahorra Dashboard",
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -84,7 +90,8 @@
     "unzoom":"unzoom",
     "search":"búsqueda",
     "createDashboard":"Crear Dashboard",
-    "editDashboard":"Editar Dashboard"
+    "editDashboard":"Editar Dashboard",
+    "saveDashboard":"Ahorra Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -199,5 +206,22 @@
     "submit":"presentar",
     "cancel":"cancelar",
     "dialogTitle":"RDL extensión JSON"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"propiedades"
+  },
+  "reportProperties": {
+    "title":"Propiedades del informe",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "selectReport":"<seleccione Informe>",
+    "hideToolbar":"Ocultar barra de herramientas"
+  },
+  "saveAsDashboard": {
+    "title":"guardar como",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "dashboardName":"Dashboard Nombre",
+    "namePlaceholder":"Dashboard Nombre"
   }
 }

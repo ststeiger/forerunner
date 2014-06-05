@@ -13,7 +13,11 @@
     "favoriteFailed":"A eșuat",
     "docmapShowFailed":"A eșuat",
     "prepareActionFailed":"A eșuat",
-    "bookmarkNotFound":"Nu pot găsi marcajul în raport"
+    "bookmarkNotFound":"Nu pot găsi marcajul în raport",
+    "saveDashboardFailed":"Salvați Tabloul de bord a eșuat",
+    "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
+    "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
+    "loadDashboard":"încărcare Tablou de bord"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -50,7 +54,9 @@
     "dsCredential":"Acreditare",
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"Salvați Tablou de bord"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -83,7 +89,8 @@
     "unzoom":"unzoom",
     "search":"căutare",
     "createDashboard":"crea Tablou de bord",
-    "editDashboard":"Edit Tablou de bord"
+    "editDashboard":"Edit Tablou de bord",
+    "saveDashboard":"Salvați Tablou de bord"
   },
   "print": {
     "title":"imprima raportul",
@@ -198,5 +205,22 @@
     "submit":"executa",
     "cancel":"anula",
     "dialogTitle":"RDL Extension JSON"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"Proprietăți"
+  },
+  "reportProperties": {
+    "title":"Raport Properties",
+    "cancel":"anula",
+    "submit":"executa",
+    "selectReport":"<selectați raport>",
+    "hideToolbar":"Ascunde Toolbar"
+  },
+  "saveAsDashboard": {
+    "title":"Salvare ca",
+    "cancel":"anula",
+    "submit":"executa",
+    "dashboardName":"Nume tablou de bord",
+    "namePlaceholder":"Nume tablou de bord"
   }
 }

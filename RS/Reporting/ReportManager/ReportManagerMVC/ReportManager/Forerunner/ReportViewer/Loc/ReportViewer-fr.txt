@@ -13,7 +13,11 @@
     "favoriteFailed":"Manqué",
     "docmapShowFailed":"Manqué",
     "prepareActionFailed":"Manqué",
-    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport"
+    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport",
+    "saveDashboardFailed":"Enregistrer Dashboard Échec",
+    "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
+    "loadDashboardFailed":"Charge Dashboard Échec",
+    "loadDashboard":"charge Dashboard"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -51,7 +55,9 @@
     "dsCredential":"Lettres de créance",
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"enregistrer du tableau de bord"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Retour",
@@ -84,7 +90,8 @@
     "unzoom":"dézoomer",
     "search":"recherche",
     "createDashboard":"Créer Dashboard",
-    "editDashboard":"Modifier Dashboard"
+    "editDashboard":"Modifier Dashboard",
+    "saveDashboard":"enregistrer du tableau de bord"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -199,5 +206,22 @@
     "submit":"soumettre",
     "cancel":"annuler",
     "dialogTitle":"RDL Extension JSON"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"propriétés"
+  },
+  "reportProperties": {
+    "title":"Propriétés du rapport",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "selectReport":"<sélectionnez rapport>",
+    "hideToolbar":"Masquer la barre d'outils"
+  },
+  "saveAsDashboard": {
+    "title":"enregistrer en tant que",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "dashboardName":"Dashboard Nom",
+    "namePlaceholder":"Dashboard Nom"
   }
 }

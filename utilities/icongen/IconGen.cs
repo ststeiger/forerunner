@@ -67,9 +67,9 @@ namespace icongen
             {
                 int width = Convert.ToInt32(compositeImageNode.Attributes["width"].InnerText);
                 int height = Convert.ToInt32(compositeImageNode.Attributes["height"].InnerText);
-                int margin = Convert.ToInt32(compositeImageNode.Attributes["margin"].InnerText);
 
                 String compositeImageClassName = compositeImageNode.Attributes["classname"].InnerText;
+                String styles = compositeImageNode.Attributes["styles"].InnerText;
 
                 List<String> sourceFileList = new List<String>();
                 List<String> imageClassNames = new List<String>();
@@ -89,7 +89,7 @@ namespace icongen
 
                 // Create the StyleSheet class and write out the CSS file
                 String relativeUrlPath = compositeImageNode.Attributes["relativeurlpath"].InnerText + "/" + compositeImageNode.Attributes["name"].InnerText;
-                StyleSheet styleSheet = new StyleSheet(width, height, margin, relativeUrlPath, compositeImageClassName, imageClassNames);
+                StyleSheet styleSheet = new StyleSheet(width, height, styles, relativeUrlPath, compositeImageClassName, imageClassNames);
                 String cssFilename = Path.Combine(options.StyleSheetOutputFolder, compositeImageNode.Attributes["cssname"].InnerText);
                 styleSheet.Save(cssFilename);
 

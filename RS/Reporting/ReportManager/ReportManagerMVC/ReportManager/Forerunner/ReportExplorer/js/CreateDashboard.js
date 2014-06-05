@@ -13,8 +13,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
-    var templates = dashboards.templates;
     var createDashboard = locData.createDashboard;
 
     /**
@@ -42,6 +40,8 @@ $(function () {
 
             me.$select = me.element.find(".fr-cdb-select-id")
 
+            var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+            var templates = dashboards.templates;
             for (item in templates) {
                 var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
                 me.$select.append($option);
@@ -64,7 +64,7 @@ $(function () {
                             "</select>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                                 "</div>" +
                             "</div>" +
 

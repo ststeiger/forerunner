@@ -8,6 +8,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
@@ -115,12 +116,18 @@ $(function () {
             var $anchor = new $("<a />");
             //action
             var action;
-            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 action = "explore";
-            else if (catalogItem.Type === 3)
+            }
+            else if (catalogItem.Type === 3) {
                 action = "open";
-            else
+                if (catalogItem.MimeType === "json/forerunner-dashboard") {
+                    action = "openDashboard";
+                }
+            }
+            else {
                 action = "browse";
+            }
 
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
@@ -303,8 +310,26 @@ $(function () {
             var iframeHeight = me.options.$appContainer.height() - 38;
             frame.style.height = iframeHeight + "px";
         },
-        _fetch: function (view,path) {
+        /**
+         * Returns the last fetch view and path
+         *
+         * @function $.forerunner.reportExplorer#getLastFetched
+         */
+        getLastFetched: function () {
             var me = this;
+            if (me.lastFetched) {
+                return me.lastFetched;
+            }
+
+            return null;
+        },
+        _fetch: function (view, path) {
+            var me = this;
+            me.lastFetched = {
+                view: view,
+                path: path
+            };
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -559,6 +584,9 @@ $(function () {
                     break;
                 case "text/css":
                     fileTypeClass = "fr-icons128x128-file-css";
+                    break;
+                case "json/forerunner-dashboard":
+                    fileTypeClass = "fr-icons128x128-file-dashboard";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";

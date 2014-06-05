@@ -6,9 +6,6 @@
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
-// Enable the testing of windows phone style zooming on a pc
-enableWPZoom = true;
-
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -74,6 +71,7 @@ $(function () {
 
         _destroy: function () {
             var me = this;
+            //This needs to be changed to only remove the view function
             //Baotong update it on 22-05-2014
             $(window).off("resize", me._ReRenderCall);
         },
@@ -138,7 +136,9 @@ $(function () {
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
-            $(window).on("resize", { me: me }, me._ReRenderCall);
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", {me: me }, me._ReRenderCall);
+
             //load the report Page requested
             me.element.append(me.$reportContainer);
             //me._addLoadingIndicator();
@@ -343,7 +343,12 @@ $(function () {
         //Wrapper function, used to resigter window resize event
         _ReRenderCall: function (event) {
             var me = event.data.me;
+            me.scrollLeft = $(window).scrollLeft();
+            me.scrollTop = $(window).scrollTop();
+             
             me._ReRender.call(me);
+            $(window).scrollLeft(me.scrollLeft);
+            $(window).scrollTop(me.scrollTop);
         },
         _removeCSS: function () {
             var me = this;
@@ -362,6 +367,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
 
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
@@ -384,6 +390,9 @@ $(function () {
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
 
             if (!me.renderError) {
                 me.curPage = pageNum;
@@ -455,12 +464,12 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone() || enableWPZoom === true) {
+            if (forerunner.device.isWindowsPhone()) {
                 me._allowZoomWindowsPhone(isEnabled);
                 return;
             }
 
-            if (isEnabled === true) {
+            if (isEnabled === true){
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
             }
@@ -847,8 +856,9 @@ $(function () {
             me._reLayoutPage(me.curPage);
         },
         _handleOrientation: function () {
+            var me = this;
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
                 if (pageSection.is(":visible"))
                     pageSection.hide();
@@ -879,7 +889,7 @@ $(function () {
                     type: "GET",
                     url: url,
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
@@ -899,7 +909,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -991,9 +1001,12 @@ $(function () {
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
-                    me._loadPage(data.NewPage, false, null, null, true);
+                    var replay = me.pages[me.curPage].Replay
+
+                    me._loadPage(data.NewPage, false, null, null, true,replay);
+
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         
@@ -1020,7 +1033,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -1030,7 +1043,8 @@ $(function () {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -1108,7 +1122,7 @@ $(function () {
                     else
                         me.lock = 0;
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1167,7 +1181,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -1240,7 +1254,7 @@ $(function () {
                         }
                     }
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1268,7 +1282,7 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request) }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
@@ -1406,7 +1420,7 @@ $(function () {
                             }
                         }
                     },
-                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 );
             }
         },
@@ -1620,7 +1634,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: me.reportPath,
+                    ReportPath: encodeURIComponent(me.reportPath),
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -1694,7 +1708,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.getSessionID(),
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
@@ -1792,7 +1806,7 @@ $(function () {
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
                 return;
             }
 
@@ -1806,10 +1820,13 @@ $(function () {
             }
             
             me._resetViewer();
-
+            
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -1819,8 +1836,27 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
             });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: encodeURIComponent(me.reportPath),
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
@@ -1905,7 +1941,7 @@ $(function () {
                             me._updateTableHeaders(me);
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
@@ -1947,7 +1983,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
                         ParameterList: paramList,
@@ -1982,7 +2018,7 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request) }
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
@@ -2057,8 +2093,13 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
         _reLayoutPage: function(pageNum,force){
-                me.pages[pageNum].needsLayout =  me.pages[pageNum].$container.reportRender("layoutReport", true,force,me.getRDLExt());                
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());                
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
@@ -2079,6 +2120,7 @@ $(function () {
                 }
 
                 me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
+                me.pages[pageNum].needsLayout= true;
             }
 
             me.pages[pageNum].isRendered = true;

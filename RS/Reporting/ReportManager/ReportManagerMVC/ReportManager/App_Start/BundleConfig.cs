@@ -20,7 +20,6 @@ namespace ReportManager
                   "~/Forerunner/Common/css/Forerunner-core.css",
                   "~/Forerunner/Common/css/icons24x24.css",
                   "~/Forerunner/Common/css/icons25x31.css",
-                  //"~/Forerunner/Common/css/icons128x128.css",
                   "~/Forerunner/Common/css/Login.css",
                   "~/Forerunner/Common/css/MessageBox.css",
                   "~/Forerunner/Common/css/ReportManager.css",
@@ -32,6 +31,18 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/ManageSubscription.css",
                 "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
                 "~/Forerunner/ReportExplorer/css/icons128x128.css"
+                ));
+
+            bundles.Add(new StyleBundle("~/Forerunner/Dashboard/css/bundle").Include(
+                "~/Forerunner/Dashboard/css/dashboards.css",
+                "~/Forerunner/Dashboard/css/ReportProperties.css",
+                "~/Forerunner/Dashboard/css/SaveAsDashboard.css",
+                "~/Forerunner/Dashboard/css/DashboardToolbar.css",
+                "~/Forerunner/Dashboard/css/DashboardToolPane.css"
+                ));
+
+            bundles.Add(new StyleBundle("~/Forerunner/Lib/jsTree/themes/default/bundle").Include(
+                "~/Forerunner/Lib/jsTree/themes/default/style.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(

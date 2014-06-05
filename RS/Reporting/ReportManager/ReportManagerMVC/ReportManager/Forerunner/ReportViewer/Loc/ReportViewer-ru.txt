@@ -13,7 +13,11 @@
     "favoriteFailed":"Не удалось",
     "docmapShowFailed":"Не удалось",
     "prepareActionFailed":"Не удалось",
-    "bookmarkNotFound":"Не можете найти закладку в докладе"
+    "bookmarkNotFound":"Не можете найти закладку в докладе",
+    "saveDashboardFailed":"Сохранить Dashboard Failed",
+    "saveDashboardSucceeded":"Сохранить Dashboard удалось",
+    "loadDashboardFailed":"Нагрузка Dashboard удалось",
+    "loadDashboard":"Нагрузка Dashboard"
   },
   "errorTag": {
     "moreDetail":"Подробнее",
@@ -50,7 +54,9 @@
     "dsCredential":"учетных",
     "views":"Просмотров",
     "addToFavorites":"избранное",
-    "RDLExt":"RDL Расширение"
+    "RDLExt":"RDL Расширение",
+    "saveDashboard":"Сохранить Dashboard"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -83,7 +89,8 @@
     "unzoom":"unzoom",
     "search":"поиск",
     "createDashboard":"Создание Dashboard",
-    "editDashboard":"Редактировать Dashboard"
+    "editDashboard":"Редактировать Dashboard",
+    "saveDashboard":"Сохранить Dashboard"
   },
   "print": {
     "title":"Печать отчета",
@@ -198,5 +205,22 @@
     "submit":"представлять",
     "cancel":"отменить",
     "dialogTitle":"RDL расширение JSON"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"свойства"
+  },
+  "reportProperties": {
+    "title":"Свойства Сообщить",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "selectReport":"<выберите отчет>",
+    "hideToolbar":"Скрыть панель инструментов"
+  },
+  "saveAsDashboard": {
+    "title":"Сохранить как",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "dashboardName":"Панель Имя",
+    "namePlaceholder":"Панель Имя"
   }
 }

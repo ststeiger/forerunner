@@ -109,6 +109,17 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
+        {
+            try
+            {             
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetProperty(path,propertyName)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
 
         public class SaveReprotPropertyPostBack{
             public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
@@ -117,7 +128,24 @@ namespace ReportManager.Controllers
         [HttpPost]
         [ActionName("SaveReportProperty")]
         public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            { 
                 GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
+                resp.StatusCode = HttpStatusCode.OK;
+
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.BadRequest;
+            }
+            
+            return resp;
+            
+        }
+
+        [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {
@@ -144,6 +172,12 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(result,mimetype);
         }
 
+        [HttpPost]
+        public HttpResponseMessage SaveResource(SetResource setResource)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
+        }
+
         [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
@@ -164,7 +198,7 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]

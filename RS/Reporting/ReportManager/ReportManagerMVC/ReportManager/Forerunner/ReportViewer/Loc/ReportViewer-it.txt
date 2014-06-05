@@ -13,7 +13,11 @@
     "favoriteFailed":"Impossibile",
     "docmapShowFailed":"Impossibile",
     "prepareActionFailed":"Impossibile",
-    "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione"
+    "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione",
+    "saveDashboardFailed":"Salva Dashboard riuscita",
+    "saveDashboardSucceeded":"Salva Dashboard Riuscito",
+    "loadDashboardFailed":"Carico Dashboard riuscita",
+    "loadDashboard":"carico Dashboard"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",
@@ -50,7 +54,9 @@
     "dsCredential":"Credenziale",
     "views":"Visualizzazioni",
     "addToFavorites":"Aggiungi ai Preferiti",
-    "RDLExt":"RDL Extension"
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"Salva Dashboard"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"indietro",
@@ -83,7 +89,8 @@
     "unzoom":"unzoom",
     "search":"ricerca",
     "createDashboard":"Crea Dashboard",
-    "editDashboard":"Modifica Dashboard"
+    "editDashboard":"Modifica Dashboard",
+    "saveDashboard":"Salva Dashboard"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -198,5 +205,22 @@
     "submit":"presentare",
     "cancel":"cancellare",
     "dialogTitle":"RDL estensione JSON"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"proprietà"
+  },
+  "reportProperties": {
+    "title":"Proprietà report",
+    "cancel":"cancellare",
+    "submit":"presentare",
+    "selectReport":"<selezionare il rapporto>",
+    "hideToolbar":"Nascondi barra degli strumenti"
+  },
+  "saveAsDashboard": {
+    "title":"Salva con nome",
+    "cancel":"cancellare",
+    "submit":"presentare",
+    "dashboardName":"Dashboard Nome",
+    "namePlaceholder":"Dashboard Nome"
   }
 }

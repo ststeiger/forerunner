@@ -127,7 +127,7 @@ $(function () {
             }
 
             if (me._maxNumPages !== me.options.$reportViewer.reportViewer("getNumPages")) {
-                var $loadMore = new $("<LI />")
+                var $loadMore = new $("<LI />");
                 $loadMore.addClass("fr-nav-loadmore");
                 $loadMore.addClass("fr-nav-item");
                 $loadMore.addClass("fr-core-cursorpointer");

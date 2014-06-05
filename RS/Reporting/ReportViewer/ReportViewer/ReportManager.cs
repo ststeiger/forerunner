@@ -22,6 +22,15 @@ using Forerunner.SSRS;
 
 namespace Forerunner.SSRS.Manager
 {
+    public class SetResource
+    {
+        public string resourceName { get; set; }
+        public string parentFolder { get; set; }
+        public string contents { get; set; }
+        public string mimetype { get; set; }
+        public string rsInstance { get; set; }
+    }
+
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
@@ -38,6 +47,7 @@ namespace Forerunner.SSRS.Manager
         string SharePointHostName = null;
         SqlConnection SQLConn;
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
+        static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
         private static bool isReportServerDB(SqlConnection conn)
         {
@@ -252,6 +262,15 @@ namespace Forerunner.SSRS.Manager
 
             return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
+        private void callSetProperties(string path, Property[] props)
+        {
+            // Please review this call stack.
+            // This call is already in the impersonated context
+            // No need to impersonate again.
+            rs.Credentials = GetCredentials();
+
+             rs.SetProperties(HttpUtility.UrlDecode(path), props);
+        }
 
         private string[] callGetPermissions(string path)
         {
@@ -263,8 +282,39 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
             return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
-
         }
+        public String SaveCatalogResource(SetResource setResource)
+        {
+            bool notFound = false;
+            rs.Credentials = GetCredentials();
+            try
+            {
+                var path = CombinePaths(HttpUtility.UrlDecode(setResource.parentFolder), setResource.resourceName);
+                path = GetPath(path);
+                rs.SetResourceContents(path, Encoding.UTF8.GetBytes(setResource.contents), setResource.mimetype);
+            }
+            catch (System.Web.Services.Protocols.SoapException e)
+            {
+                notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
+                if (!notFound)
+                {
+                    throw e;
+                }
+            }
+            if (notFound)
+            {
+                // If the resource does not exist yet we need to create it here
+                rs.CreateResource(setResource.resourceName,
+                                    HttpUtility.UrlDecode(setResource.parentFolder),
+                                    false,
+                                    Encoding.UTF8.GetBytes(setResource.contents),
+                                    setResource.mimetype,
+                                    null);
+            }
+
+            return getReturnSuccess();
+        }
+
         public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = false)
         {
             Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
@@ -431,12 +481,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -448,7 +493,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveUserParamaters(string path, string parameters)
+        public string SaveUserParameters(string path, string parameters)
         {
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
@@ -492,12 +537,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -534,12 +574,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -624,12 +659,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -680,15 +710,34 @@ namespace Forerunner.SSRS.Manager
         }
         private string GetItemID(string path)
         {            
+
+            return GetProperty(path,"ID");
+
+        }
+        public string GetProperty(string path,string propName)
+        {
             Property[] props = new Property[1];
             Property retrieveProp = new Property();
-            retrieveProp.Name = "ID";
+            retrieveProp.Name = propName;
             props[0] = retrieveProp;
 
             Property[] properties = callGetProperties(path, props);
 
-            return properties[0].Value;
+            if (properties.Length > 0)
+                return properties[0].Value;
+            else
+                return "";
+        }
+        public void SetProperty(string path, string propName,string value)
+        {
+            Property[] props = new Property[1];
+            Property retrieveProp = new Property();
+            retrieveProp.Name = propName;
+            retrieveProp.Value = value;
 
+            props[0] = retrieveProp;
+
+            callSetProperties(path, props);            
         }
         public string IsFavorite(string path)
         {
@@ -739,6 +788,23 @@ namespace Forerunner.SSRS.Manager
 
             return SharePointHostName + path.Substring(39);            
 
+        }
+        public string CombinePaths(string path1, string path2)
+        {
+            if (path1.Length == 0)
+            {
+                return path2;
+            }
+
+            if (path2.Length == 0)
+            {
+                return path1;
+            }
+
+            path1 = path1.TrimEnd('/', '\\');
+            path2 = path2.TrimStart('/', '\\');
+
+            return string.Format("{0}/{1}", path1, path2);
         }
         public CatalogItem[] GetFavorites()
         {
@@ -857,12 +923,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -1070,7 +1131,7 @@ namespace Forerunner.SSRS.Manager
                 bool isException = false;
                 try
                 {
-                    if (retval == null)
+                    if (retval == null && QueueThumbnails)
                     {
 
                         sqlImpersonator = tryImpersonate(true);
@@ -1338,6 +1399,16 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
             return rs.ListSubscriptions(report, owner);
+        }
+
+        private string getReturnSuccess()
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
         }
 
         protected virtual void Dispose(bool disposing)

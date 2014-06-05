@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <iconfiles>
-  <compositeimage name="icons24x24.png" cssname="icons24x24.css" classname="fr-icons24x24" relativeurlpath="../images" width="24" height="24" margin="5">
+  <compositeimage name="icons24x24.png" cssname="icons24x24.css" classname="fr-icons24x24" relativeurlpath="../images" width="24" height="24" styles="margin:5px; display:inline-block;">
     <sourcefile name="24x24icons\align_just_icon.png" classname="fr-icons24x24-menu"></sourcefile>
     <sourcefile name="24x24icons\BackOff.png" classname="fr-icons24x24-back"></sourcefile>
     <sourcefile name="24x24icons\BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
@@ -38,9 +38,10 @@
     <sourcefile name="24x24icons\DataSourceCred.png" classname="fr-icons24x24-dataSourceCred"></sourcefile>
     <sourcefile name="24x24icons\Logout.png" classname="fr-icons24x24-logout"></sourcefile>
     <sourcefile name="24x24icons\UnZoom.png" classname="fr-icons24x24-unzoom"></sourcefile>
-    <sourcefile name="24x24icons\CreateDashboard.png" classname="fr-icons24x24-createdashboard"></sourcefile>
+    <sourcefile name="24x24icons\Dashboard.png" classname="fr-icons24x24-createdashboard"></sourcefile>
+    <sourcefile name="24x24icons\DashboardEdit.png" classname="fr-icons24x24-editdashboard"></sourcefile>
   </compositeimage>
-  <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
+  <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" styles="margin:5px; display:inline-block;">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>
     <sourcefile name="25x31icons\doc.png" classname="fr-icons25x31-exportWord"></sourcefile>
     <sourcefile name="25x31icons\mhtml.png" classname="fr-icons25x31-exportMHT"></sourcefile>
@@ -49,7 +50,7 @@
     <sourcefile name="25x31icons\xls.png" classname="fr-icons25x31-exportExcel"></sourcefile>
     <sourcefile name="25x31icons\xml.png" classname="fr-icons25x31-exportXML"></sourcefile>
   </compositeimage>
-  <compositeimage name="icons128x128.png" cssname="icons128x128.css" classname="fr-icons128x128" relativeurlpath="../images" width="128" height="128" margin="5">
+  <compositeimage name="icons128x128.png" cssname="icons128x128.css" classname="fr-icons128x128" relativeurlpath="../images" width="128" height="128" styles="left:50%; top:50%; margin-left:-64px; margin-top:-64px; position:absolute;">
     <sourcefile name="128x128icons\avi.png" classname="fr-icons128x128-file-avi"></sourcefile>
     <sourcefile name="128x128icons\bmp.png" classname="fr-icons128x128-file-bmp"></sourcefile>
     <sourcefile name="128x128icons\css.png" classname="fr-icons128x128-file-css"></sourcefile>
@@ -70,5 +71,6 @@
     <sourcefile name="128x128icons\xml.png" classname="fr-icons128x128-file-xml"></sourcefile>
     <sourcefile name="128x128icons\png.png" classname="fr-icons128x128-file-png"></sourcefile>
     <sourcefile name="128x128icons\unknown.png" classname="fr-icons128x128-file-unknown"></sourcefile>
+    <sourcefile name="128x128icons\dashboard.png" classname="fr-icons128x128-file-dashboard"></sourcefile>
   </compositeimage>
 </iconfiles>

@@ -410,6 +410,221 @@ $(function () {
     };
 
     /**
+     * Defines all the tools used in the dashboard toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.dashboardToolbar = {
+        /** @member */
+        btnMenu: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-toolbar-menu-button",
+            imageClass: "fr-icons24x24-menu",
+            sharedClass: "fr-toolbar-hidden-on-very-large",
+            tooltip: locData.toolbar.menu,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.menuClick, null, {});
+                }
+            }
+        },
+        /** @member */
+        btnBack: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-button-back",
+            imageClass: "fr-icons24x24-back",
+            tooltip: locData.toolbar.back,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("back", null);
+                }
+            }
+        },
+        /** @member */
+        btnSave: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-toolbar-save-button",
+            imageClass: "fr-icons24x24-save-param",
+            tooltip: locData.toolbar.saveDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$dashboardEditor.dashboardEditor("save");
+                }
+            }
+        },
+        /** @member */
+        btnEdit: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-toolbar-edit-button",
+            imageClass: "fr-icons24x24-editdashboard",
+            tooltip: locData.toolbar.editDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$dashboardEZ.dashboardEZ("edit");
+                }
+            }
+        },
+        /** @member */
+        btnHome: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-button-home",
+            imageClass: "fr-icons24x24-home",
+            tooltip: locData.toolbar.home,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
+        btnRecent: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-button-recent",
+            imageClass: "fr-icons24x24-recent",
+            tooltip: locData.toolbar.recent,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("recent", null);
+                }
+            }
+        },
+        /** @member */
+        btnFavorite: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-button-favorite",
+            imageClass: "fr-icons24x24-favorites",
+            tooltip: locData.toolbar.favorites,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("favorites", null);
+                }
+            }
+        },
+        /** @member */
+        btnLogOff: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-button-logOff",
+            imageClass: "fr-icons24x24-logout",
+            tooltip: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                }
+            }
+        }
+    };
+
+    /**
+     * Defines all the tools used in the dashboard toolpane.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.dashboardToolPane = {
+        /** @member */
+        itemSave: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-save-button",
+            imageClass: "fr-icons24x24-save-param",
+            text: locData.toolPane.saveDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-save-button"]);
+                    e.data.me.options.$dashboardEditor.dashboardEditor("save");
+                }
+            }
+        },
+        /** @member */
+        itemEdit: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-edit-button",
+            imageClass: "fr-icons24x24-editdashboard",
+            text: locData.toolPane.editDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-edit-button"]);
+                    e.data.me.options.$dashboardEZ.dashboardEZ("edit");
+                }
+            }
+        },
+        /** @member */
+        itemBack: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-back",
+            imageClass: "fr-icons24x24-reportback",
+            text: locData.toolPane.back,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-back"]);
+                    e.data.me.options.navigateTo("back", null);
+                }
+            }
+        },
+        /** @member */
+        itemHome: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-home",
+            sharedClass: "fr-toolbase-no-disable-id",
+            imageClass: "fr-icons24x24-homeBlue",
+            itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
+            toolStateClass: null,
+            text: locData.toolPane.home,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
+        itemRecent: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-recent",
+            imageClass: "fr-icons24x24-recentBlue",
+            itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
+            text: locData.toolbar.recent,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("recent", null);
+                }
+            }
+        },
+        /** @member */
+        itemFavorite: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-favorite",
+            imageClass: "fr-icons24x24-favoritesBlue",
+            itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
+            text: locData.toolPane.favorites,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo("favorites", null);
+                }
+            }
+        },
+        /** @member */
+        itemFolders: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboard-item-folders",
+            imageClass: "fr-icons24x24-folders",
+            text: locData.toolPane.views,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            events: {
+                click: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-dashboard-item-folders"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
+                }
+            }
+        }
+    };
+
+    /**
      * Defines all the tools used in the toolpane.
      *
      * @namespace
@@ -856,7 +1071,7 @@ $(function () {
         itemRDLExt: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-RDLExt",
-            imageClass: "fr-icons24x24-logout",
+            imageClass: "fr-icons24x24-rdlextension",
             text: locData.toolPane.RDLExt,
             events: {
                 click: function (e) {
@@ -992,8 +1207,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
-            //sharedClass: "fr-toolbar-hidden-on-very-large",
-            //sharedClass: "fr-toolbar-hidden-on-large fr-toolbar-hidden-on-very-large",
+            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1156,6 +1370,19 @@ $(function () {
                     e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-home"]);
+                }
+            }
+        },
+        /** @member */
+        itemCreateDashboard: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-createdashboard",
+            imageClass: "fr-icons24x24-createdashboard",
+            text: locData.toolbar.createDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-createdashboard"]);
                 }
             }
         },
@@ -1382,6 +1609,7 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var ret = forerunner.ssr.tools.reportExplorerToolbar;
     var rep = forerunner.ssr.tools.reportExplorerToolpane;
+    var dbtp = forerunner.ssr.tools.dashboardToolPane;
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolpane
@@ -1545,6 +1773,14 @@ $(function () {
             groupContainerClass: "fr-toolpane-dropdown-group-container",
             tools: [rep.itemFav, rep.itemRecent, rep.itemHome]
         },
+        /** @member */
+        dashboardItemFolderGroup: {
+            toolType: toolTypes.toolGroup,
+            visible: false,
+            selectorClass: "fr-dashboard-item-folders-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
+            tools: [dbtp.itemFavorite, dbtp.itemRecent, dbtp.itemHome]
+        },
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
@@ -1552,6 +1788,7 @@ $(function () {
     tp.itemExport.accordionGroup = tg.itemExportGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
     rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;
+    dbtp.itemFolders.accordionGroup = tg.dashboardItemFolderGroup;
 
     /** @member */
     tg.itemFindGroup = {

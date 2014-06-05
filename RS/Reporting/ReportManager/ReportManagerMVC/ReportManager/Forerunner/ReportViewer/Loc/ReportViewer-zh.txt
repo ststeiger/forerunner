@@ -13,7 +13,11 @@
     "favoriteFailed":"失败",
     "docmapShowFailed":"失败",
     "prepareActionFailed":"失败",
-    "bookmarkNotFound":"在该报表中无法找到书签"
+    "bookmarkNotFound":"在该报表中无法找到书签",
+    "saveDashboardFailed":"保存指示板失败",
+    "saveDashboardSucceeded":"保存指示板成功",
+    "loadDashboardFailed":"加载指示板失败",
+    "loadDashboard":"加载指示板"
   },
   "errorTag": {
     "moreDetail":"点击查看更多信息",
@@ -50,7 +54,9 @@
     "dsCredential":"数据源验证",
     "views":"浏览",
     "addToFavorites":"添加到收藏",
-    "RDLExt":"RDL扩展"
+    "RDLExt":"RDL扩展",
+    "saveDashboard":"保存指示板"
+    "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -83,7 +89,8 @@
     "unzoom":"取消缩放",
     "search":"搜索",
     "createDashboard":"创建指示板",
-    "editDashboard":"编辑指示板"
+    "editDashboard":"编辑指示板",
+    "saveDashboard":"保存指示板"
   },
   "print": {
     "title":"打印报表",
@@ -198,5 +205,22 @@
     "title":"创建指示板",
     "cancel":"取消",
     "submit":"提交"
+  },
+  "reportProperties": {
+    "title":"报表属性",
+    "cancel":"取消",
+    "submit":"提交",
+    "selectReport":"<选择报表>",
+    "hideToolbar":"隐藏工具栏"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"属性"
+  },
+  "saveAsDashboard": {
+    "title":"另存为",
+    "cancel":"取消",
+    "submit":"提交",
+    "dashboardName":"指示板名称",
+    "namePlaceholder":"指示板名称"
   }
 }

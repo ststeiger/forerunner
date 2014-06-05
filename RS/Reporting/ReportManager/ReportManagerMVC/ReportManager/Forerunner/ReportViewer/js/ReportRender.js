@@ -89,27 +89,36 @@ $(function () {
         *
         * @param {integer} Page - The page number of the report to render
         */
-        render: function (Page) {
+        render: function (Page, delayLayout, RLDExt) {
             var me = this;
-            var reportDiv = me.element;
-            var reportViewer = me.options.reportViewer;
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
+            me.RDLExt = RLDExt;
             
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
                 me.Page.Replay = {};
 
-            me._rectangles = [];
+            me._createStyles(me.options.reportViewer);
+            me._reRender();
             
+            if (delayLayout !== true)
+                me.layoutReport();
+        },
+        _reRender: function(){
+            var me = this;
+            var reportDiv = me.element;
+            var reportViewer = me.options.reportViewer;
+            me._rectangles = [];
 
-            me._createStyles(reportViewer);
+            reportDiv.html("");
+
             $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
-               me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+                me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
-            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
-                     
+            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);         
+
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -302,9 +311,10 @@ $(function () {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
             var Measurements;
-            var RecLayout;
+            //var RecLayout;
             var Style;
             var me = this;
+            var ReportItems = {};
             var rec = RIContext.$HTMLParent;
 
             Measurements = RIContext.CurrObj.Measurement.Measurements;
@@ -333,7 +343,10 @@ $(function () {
                 rec = $("<div />");
                 rec.html(RecExt.CustomHTML);
                 RIContext.$HTMLParent = rec;
-            }            
+            }
+            if(RecExt.ID)
+                rec.attr("id", RecExt.ID);
+
             else {
 
                 $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
@@ -359,18 +372,15 @@ $(function () {
                     ReportItems[Index] = {};
                     ReportItems[Index].HTMLElement = $LocDiv;
                     ReportItems[Index].Type = Obj.Type;
+
                     if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
                         ReportItems[Index].BigTablix = true;
-                    }
-                    else
-                        RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
                     }
 
                     //if (RecLayout.ReportItems[Index].IndexAbove === null)
                     //    RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
-                else
+
                     Style += "position:absolute;";
-                Style += "position:absolute;top:" + me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm;left:" + me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm;";
 
                     if (Measurements[Index].zIndex)
                         Style += "z-index:" + Measurements[Index].zIndex + ";";
@@ -401,46 +411,92 @@ $(function () {
                 Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
 
             rec.attr("Style", Style);
-            RIContext.$HTMLParent.attr("Style", Style);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(rec, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+            me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
+
+            //Add Rec to Rec collection to layout later
             me._rectangles.push({ ReportItems: ReportItems, Measurements: Measurements, HTMLRec: rec, RIContext: RIContext, RecExt: RecExt });
+
             return rec;
+        },
+
         layoutReport: function(isLoaded,force,RDLExt){
+            var me = this;
             var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
             if (renderWidth === 0)
                 return true;
 
+            //Need to re-render
             if ((Math.abs(me._currentWidth - renderWidth) > 30 || force) && me.options.responsive && me._defaultResponsizeTablix === "on" ) {
                 me._currentWidth = renderWidth;
+                me._reRender();
+            }
+            
+            for (var r = 0; r < me._rectangles.length; r++) {
+                var rec = me._rectangles[r];
+                var RecLayout = me._getRectangleLayout(rec.Measurements);
+                var Measurements = rec.Measurements;
+                var RIContext = rec.RIContext;
+
+                for (var Index = 0; Index < forerunner.helper.objectSize(RecLayout.ReportItems); Index++) {                   
+
+                    //Determin height and location
+                    if (rec.ReportItems[Index].Type === "Image" || rec.ReportItems[Index].Type === "Chart" || rec.ReportItems[Index].Type === "Gauge" || RecLayout.ReportItems[Index].Type === "Map" || rec.ReportItems[Index].Type === "Line")
+                        RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
+                    else {
+                        if (isLoaded)
+                            RecLayout.ReportItems[Index].NewHeight = me._convertToMM(rec.ReportItems[Index].HTMLElement.outerHeight() + "px");
+                        else if (rec.ReportItems[Index].BigTablix)
+                            RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
+                        else
+                            RecLayout.ReportItems[Index].NewHeight = me._getHeight(rec.ReportItems[Index].HTMLElement);
+                        
+                    }
+
+                    // If I grew I may be the new bottom
+                    if (RecLayout.ReportItems[Index].NewHeight > RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight && RecLayout.ReportItems[Index].IndexAbove === RecLayout.ReportItems[RecLayout.LowestIndex].IndexAbove) {
+                        RecLayout.LowestIndex = Index;
+                    }
+
+                    if (RecLayout.ReportItems[Index].IndexAbove === null)
+                        RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
+                    else
+                        RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
+                
+                    rec.ReportItems[Index].HTMLElement.css("top", me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm");
+                    rec.ReportItems[Index].HTMLElement.css("left", me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm");
+                }                
+
                 if (rec.RecExt.FixedHeight || rec.RecExt.FixedWidth) {
                     rec.HTMLRec.removeClass("fr-render-rec");
                 }
-            if (RIContext.CurrLocation) {
+                if (RIContext.CurrLocation) {
                     if (rec.RecExt.FixedWidth === undefined)
                         rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
-                if (RIContext.CurrObj.ReportItems.length === 0)
-                    Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
-                else {
 
-                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
+                    if (RIContext.CurrObj.ReportItems.length === 0)
+                        rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
+                    else {
+
+                        var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
                                             parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
                                             (parseFloat(RIContext.CurrLocation.Height) -
-                                            (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
-                                            parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
+                                                (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
+                                                parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                             0; //changed from 1  may need to change back
-                        if (rec.RecExt.FixedHeight === undefined)
+                        if (rec.RecExt.FixedHeight === undefined) {
                             rec.HTMLRec.css("height", me._roundToTwo(parentHeight) + "mm");
+                        }
+                    }
+
                 }
-        
             }
-            RIContext.$HTMLParent.attr("Style", Style);
             me.element.hide().show(0);
             return false;
-            me._writeBookMark(RIContext);
-            me._writeTooltip(RIContext);
-            return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
             var l = new layout();
@@ -531,25 +587,43 @@ $(function () {
                 if (anyMove || (Index === Measurements.length - 1)) {
                     for (var j = 0; j < curRI.Index ; j++) {
                         // if I have the same index above and I did not move but you did more then I have to move down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth) {
                             curRI.IndexAbove = j;
+
+                            //Fix Lowest Index
+                            if (layout.LowestIndex === j)
+                                layout.LowestIndex = curRI.Index;
+                        }
                         // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
                             //if my index above is the same as yours then move me down
                             if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove) {
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
                                 curRI.TopDelta = 1;
+
+                                //Fix Lowest Index
+                                if (layout.LowestIndex === layout.ReportItems[j].Index)
+                                    layout.LowestIndex = curRI.Index;
                             }
                             // else if your origional index above is my new index above then you move down
                             else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index) {
                                 layout.ReportItems[j].IndexAbove = curRI.Index;
                                 layout.ReportItems[j].TopDelta = 1;
+
+                                //Fix Lowest Index
+                                if (layout.LowestIndex === curRI.Index)
+                                    layout.LowestIndex = layout.ReportItems[j].Index;
                             }
                         }
                         // If we now overlap move me down
                         if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width) {
                             curRI.IndexAbove = layout.ReportItems[j].Index;
                             curRI.TopDelta = 1;
+
+                            //Fix Lowest Index
+                            if (layout.LowestIndex === layout.ReportItems[j].Index)
+                                layout.LowestIndex = curRI.Index;
+
                         }
                     }
                 }
@@ -628,15 +702,21 @@ $(function () {
             Style = "";
             //Special case for RDL extension inputType
             if (textExt.InputType) {
-                $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
+                if (textExt.InputType === "textarea") {
+                    $TextObj = $("<textarea name='" + textExt.InputName + "'/>");
+                    Style += "resize:none;" 
+                }
+                else
+                    $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
                 Style += "height:auto;box-sizing:border-box;";
                 if (textExt.InputRequired === true)
                     $TextObj.attr("required", true);
-
+                if (textExt.InputSubmit)
+                    $TextObj.attr("data-submitType", textExt.InputSubmit);
                 //Handle EasySubmit
                 if (textExt.EasySubmitURL && textExt.EasySubmitType) {
                     $TextObj.on("click", { reportViewer: me.options.reportViewer.element, element: $TextObj, getInputs: me._getInputsInRow, easySubmit:me._submitRow, veryEasySubmit: me._easySubmit }, function (e) {
-                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitAllFields, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
+                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitDatatype, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
                     });
                 }
             }
@@ -716,7 +796,11 @@ $(function () {
                     }
                     else
                         $TextObj.text(val);
-
+                    if (textExt.ID)
+                        $TextObj.attr("id", textExt.ID);
+                    if (textExt.InputReadOnly === true)
+                        $TextObj.attr("readonly", "readonly");
+                    
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
@@ -880,6 +964,7 @@ $(function () {
             var NewImage = $("<img/>"); //new Image();
             var me = this; 
 
+            
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style ;
             RIContext.$HTMLParent.addClass("fr-render-image");
@@ -962,6 +1047,9 @@ $(function () {
 
             Style = imageStyle ? imageStyle : "display:block;";
             NewImage.attr("style", Style);
+
+            //Remove the blue border on ie 8,9,10
+            NewImage.css("border", "0").css("text-decoration", "none");
             switch (sizingType) {
                 case 0://AutoSize
                     break;
@@ -994,10 +1082,12 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
-        _getInputsInRow: function(element,includeAll){
+        _getInputsInRow: function(element,filter){
             var me = this;
             var data = [];
             var rows = 0;
+
+            if (filter === undefined) filter = "auto";
 
             var row = $(element).parent().parent().parent();
             if (row.is("tr") === false) {
@@ -1007,14 +1097,18 @@ $(function () {
             //Maximum of 2 rows to find
             while (rows < 2) {
 
-                $.each(row.find("input"), function (index, input) {
+                $.each(row.find("input, textarea"), function (index, input) {
                     var obj = {};
                     obj.name = $(input).attr("name");
                     obj.value = $(input).val();
                     obj.origionalValue = $(input).attr("data-origVal");
                     obj.type = $(input).attr("type");
+                    obj.submitType = $(input).attr("data-submitType");
 
-                    if (includeAll || obj.value !== obj.origionalValue || obj.type === "button" || obj.type === "submit") {
+                    if (filter ==="all")
+                        data.push(obj);
+
+                    if (filter === "auto" && (obj.submitType ==="always"  || (obj.submitType === "changed" && obj.value !== obj.origionalValue) )) {
                         data.push(obj);
                     }
                 });
@@ -1042,6 +1136,8 @@ $(function () {
             for (var i = 0;i<inputs.length;i++){            
                 data[inputs[i].name] = inputs[i].value;
             }
+            if (datatype === "json")
+                data = JSON.stringify(data);
 
             $.ajax({
 
@@ -1054,13 +1150,13 @@ $(function () {
 
         },
 
-        _easySubmit: function(e,type, url,AllFields,successText,failText){            
+        _easySubmit: function(e,type, url,datatype,successText,failText){            
             if (!successText) successText = "Saved";
             if (!failText) failText = "Failed";
-            if (AllFields === undefined) AllFields = true;
-            var data = e.data.getInputs(e.data.element, AllFields);
+            
+            var data = e.data.getInputs(e.data.element,"auto");
 
-            e.data.easySubmit(data, type, url, 'text', function () { alert(successText); }, function () { alert(failText); });
+            e.data.easySubmit(data, type, url, datatype, function () { alert(successText); }, function () { alert(failText); });
 
         },
 
@@ -1073,15 +1169,25 @@ $(function () {
 
             var ActionExt = me._getRDLExt(RIContext);
 
-            if (ActionExt.JavaScriptAction) {                
+            if (ActionExt.JavaScriptActions) {
                 $Control.addClass("fr-core-cursorpointer");
-                var newFunc;
-                try{
-                    newFunc = new Function("e",ActionExt.JavaScriptAction);
-                }
-                catch (e) { }
 
-                $Control.on("click", { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit:me._submitRow }, newFunc);
+                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
+                    var action = ActionExt.JavaScriptActions[a];
+
+                    if (action.JavaFunc === undefined && action.Code !==undefined) {
+                        var newFunc;
+                        try {
+                            newFunc = new Function("e", action.Code);
+                        }
+                        catch (e) { }
+                        action.JavaFunc = newFunc
+                        if (action.On === undefined)
+                            action.On = "click";
+                    }
+
+                    $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+                }
             }
 
         },
@@ -1237,7 +1343,7 @@ $(function () {
                 }
             }
         },
-        _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex) {
+        _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex,$Drilldown) {
             var $Cell = new $("<TD/>");
             var Style = "";
             var width;
@@ -1300,6 +1406,10 @@ $(function () {
                 $Cell.addClass("fr-r-tC");
                 var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
                 RI.addClass("fr-r-tCI");
+                //Add Repsponsive table expand
+                if ($Drilldown)
+                    RI.prepend($Drilldown);
+
                 $Cell.append(RI);
             }
             else
@@ -1319,10 +1429,9 @@ $(function () {
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;
-            
+            var respCols = {isResp: false};
 
-            Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-            
+                      
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
             
@@ -1337,9 +1446,12 @@ $(function () {
                 var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
+                var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                 var tablixExt = me._getRDLExt(RIContext);;                
+
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
+                respCols.ColumnCount = RIContext.CurrObj.ColumnWidths.ColumnCount;
                 respCols.ColumnHeaders = {}; 
                 respCols.ColHeaderRow = 0;
                 respCols.BackgroundColor = "#F2F2F2";
@@ -1354,6 +1466,7 @@ $(function () {
                     respCols.ColHeaderRow = tablixExt.ColHeaderRow-1;
                 if (tablixExt.BackgroundColor !== undefined)
                     respCols.BackgroundColor = tablixExt.BackgroundColor;
+
                 if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
@@ -1367,6 +1480,7 @@ $(function () {
                         }
                     }
                      
+
                     while (notdone) {
                         maxPri = -1;
 
@@ -1404,6 +1518,8 @@ $(function () {
                             nextColIndex--;
                             foundCol = nextColIndex;
                             respCols.Columns[foundCol] = { show: false };
+                            respCols.ColumnCount--;
+                        }
 
                         tablixwidth -= tablixCols[foundCol].Width;
 
@@ -1416,6 +1532,7 @@ $(function () {
                                 respCols.ColumnCount++;
                             }
                         }
+                    }
                 }
                //create the colgroup from visible columns
                 for (cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
@@ -1424,8 +1541,14 @@ $(function () {
                     else if (respCols.Columns[cols].show === false)
                         respCols.isResp = true;
 
-                    colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                    if (respCols.Columns[cols].show) {
+                        colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                    }
                 }
+
+                //Set Tablix width if not responsive.
+                if (respCols.isResp ===false)
+                    Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
                 $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {                
@@ -1441,10 +1564,10 @@ $(function () {
                 
             }
 
-            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
+            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext, respCols: respCols };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
-            TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
+            TS.State = { "LastRowIndex": 0, "LastObjType": "", "StartIndex": 0, CellCount: 0 };
             TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
             me._writeTablixRowBatch(TS);
 
@@ -1480,19 +1603,26 @@ $(function () {
 
 
 
-        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State) {
+        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State,respCols) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
             var LastObjType = State.LastObjType;
             var $Row = State.Row;
             var HasFixedCols = false;
-            var HasFixedRows = false;
+            var HasFixedRows = false;           
+            var $ExtRow = State.ExtRow;
+            var $ExtCell = State.ExtCell;
             var CellHeight;
             var CellWidth;
+
             if (State.ExtRow === undefined && respCols.isResp) {
                 $ExtRow = new $("<TR/>");                
+                $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
                 $ExtRow.addClass("fr-render-respRow");
+                $ExtRow.append($ExtCell);
                 $ExtRow.hide();
+            }
+
             if (State.Row === undefined) 
                 $Row = new $("<TR/>");               
             
@@ -1505,8 +1635,10 @@ $(function () {
 
                 //Dont add the ext row if no data and hide the expand icon
                 if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
+                    $Tablix.append($ExtRow);
                 else
                     $Row.find(".fr-render-respIcon").hide();
+
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
                    $FixedColHeader.append($Row.clone(true, true));
@@ -1542,22 +1674,29 @@ $(function () {
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
+           
+            
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
             if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
                     HasFixedCols = true;
             }
 
-            var $Drilldown;
+            var $Drilldown;            
             CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
+                $.each(Obj.Cells, function (BRIndex, BRObj) {
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
+                    if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
+                            //If responsive table add the show hide image and hook up
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
+                        }
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex, $Drilldown));
+                    }
+                    else {
                         if (respCols.ColHeaderRow === Obj.RowIndex || me._isHeader(respCols, BRObj.Cell)) {
 
                             if (respCols.Columns[BRObj.ColumnIndex].HeaderIndex === undefined)
@@ -1567,9 +1706,18 @@ $(function () {
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
+                        }
+                        else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
                                 $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("data-uniqName", respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
-                            $ExtCell.append(me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth))));
+                            var ric;
+                            ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
+                            ric.css("width", CellWidth+"mm");
+                            ric.css("height", CellHeight+"mm");
+                            $ExtCell.append(ric);
+
+                        }
+                    }
                 });
                 State.CellCount += Obj.Cells.length;
             }
@@ -1607,10 +1755,10 @@ $(function () {
                     }
                     State.CellCount += 1;
                 
-                    }
+                }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, "ExtRow" : $ExtRow, "ExtCell" : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
 
         _isHeader: function(respCols,cell){
@@ -1711,16 +1859,18 @@ $(function () {
                 $Tablix.hide().show(0);
     
         },
-        _batchSize: 3000,
+        _batchSize: function () {
+            return forerunner.config.getCustomSettingsValue("BigTablixBatchSize", 3000);
+        },
         _tablixStream: {},
         _writeTablixRowBatch: function (Tablix) {
             var me = this;
             
             //me.options.reportViewer.showLoadingIndictator(me.options.reportViewer,true);
 
-            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
+            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize(); Index++) {
                 var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
-                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
+                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State, Tablix.respCols);
                 if (Tablix.State.HasFixedRows === true)
                     Tablix.HasFixedRows = true;
                 if (Tablix.State.HasFixedCols === true)
@@ -1735,7 +1885,14 @@ $(function () {
             }
             else {
                 Tablix.$Tablix.append(Tablix.State.Row);
-                if (Tablix.respCols.isResp && Tablix.State.ExtRow) {
+                if (Tablix.respCols.isResp && Tablix.State.ExtRow && Tablix.State.ExtRow.children()[0].children.length > 0) {
+                    Tablix.$Tablix.append(Tablix.State.ExtRow);
+                    Tablix.State.ExtRow.hide();
+                }
+                else
+                    Tablix.State.Row.find(".fr-render-respIcon").hide();
+
+                Tablix.BigTablixDone = true;
             }
         },
 
@@ -1751,6 +1908,11 @@ $(function () {
                 if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
                     me._tablixStream[name].EndRow.detach();
                     me._writeTablixRowBatch(me._tablixStream[name]);
+
+                    //If we are done re-size the report to the new size
+                    if (me._tablixStream[name].BigTablixDone) {
+                        me.layoutReport(true);
+                    }
                 }
 
             }

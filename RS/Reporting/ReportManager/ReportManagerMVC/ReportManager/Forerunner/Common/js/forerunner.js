@@ -208,11 +208,19 @@ $(function () {
             /** @constant */
             createDashboard: "createDashboard",
             /** @constant */
-            dashboardBase: "dashboardBase",
-            /** @constant */
             dashboardEditor: "dashboardEditor",
             /** @constant */
             dashboardViewer: "dashboardViewer",
+            /** @constant */
+            reportProperties: "reportProperties",
+            /** @constant */
+            dashboardEZ: "dashboardEZ",
+            /** @constant */
+            dashboardToolbar: "dashboardToolbar",
+            /** @constant */
+            dashboardToolPane: "dashboardToolPane",
+            /** @constant */
+            saveAsDashboard: "saveAsDashboard",
 
             /** @constant */
             namespace: "forerunner",
@@ -238,6 +246,9 @@ $(function () {
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
             /** widget + event, lowercase */
             reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
+            /** widget + event, lowercase */
+            dashboardToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.dashboardToolPane.toLowerCase() + this.actionStarted; },
+            
 
             /** @constant */
             allowZoom: "allowZoom",
@@ -253,6 +264,13 @@ $(function () {
             leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
             /** widget + event, lowercase */
             reportExplorerToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.reportExplorerToolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            dashboardToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.dashboardToolbar + this.menuClick).toLowerCase(); },
+
+            /** @constant */
+            beforeFetch: "beforefetch",
+            /** widget + event, lowercase */
+            reportExplorerBeforeFetch: function () { return (forerunner.ssr.constants.widgets.reportExplorer + this.beforeFetch).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
@@ -414,7 +432,14 @@ $(function () {
             routerRoute: function () { return (forerunner.ssr.constants.widgets.router + this.route).toLowerCase(); },
             /** widget + event, lowercase */
             historyRoute: function () { return (forerunner.ssr.constants.widgets.history + this.route).toLowerCase(); },
-        },
+
+            /** @constant */
+            close: "close",
+            /** widget + event, lowercase */
+            reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
+},
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *
@@ -521,7 +546,7 @@ $(function () {
         * @param {String} Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
-            if (_endsWith(forerunnerFolderPath, "/") === -1) {
+            if (this._endsWith(forerunnerFolderPath, "/") === -1) {
                 this._forerunnerFolderPath = forerunnerFolderPath + "/";
             } else {
                 this._forerunnerFolderPath = forerunnerFolderPath;
@@ -542,7 +567,7 @@ $(function () {
         * @param {String} API Base.
         */
         setAPIBase: function (apiBase) {
-            if (_endsWith(apiBase, "/") === -1) {
+            if (this._endsWith(apiBase, "/") === -1) {
                 this._apiBase = apiBase + "/";
             } else {
                 this._apiBase = apiBase;
@@ -554,7 +579,7 @@ $(function () {
         * @param {Object} Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
-            this._customSettings =settingObjectl            
+            this._customSettings = settingObject;
         },
 
         /**
@@ -591,7 +616,7 @@ $(function () {
         getCustomSettingsValue: function (setting, defaultval) {
             var settings = this.getCustomSettings();
             if (settings && settings[setting])
-                return settings[setting]
+                return settings[setting];
             else
                 return defaultval;
         },
@@ -1304,6 +1329,7 @@ $(function () {
                 return false;
             }
         },
+
     };
 
     /**
@@ -1538,10 +1564,10 @@ $(function () {
         // The multiple valued parameter simply are treated 
         getParametersFromUrl: function (url) {
             var params = [];
-            var start = url.indexOf('?') + 1;
-            var vars = url.substring(start).split('&');
+            var start = url.indexOf("?") + 1;
+            var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
-                var pair = vars[i].split('=');
+                var pair = vars[i].split("=");
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
                 var ssrsPram = key.substring(0, 3);

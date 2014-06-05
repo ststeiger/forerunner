@@ -13,7 +13,11 @@
     "favoriteFailed":"Failed",
     "docmapShowFailed":"Failed",
     "prepareActionFailed":"Failed",
-    "bookmarkNotFound":"Cannot find the bookmark in the report"
+    "bookmarkNotFound":"Cannot find the bookmark in the report",
+    "saveDashboardFailed": "Save Dashboard Failed",
+    "saveDashboardSucceeded": "Save Dashboard Succeeded",
+    "loadDashboardFailed": "Load Dashboard Failed",
+    "loadDashboard": "Load Dashboard"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",
@@ -50,8 +54,10 @@
     "dsCredential":"Credential",
     "views":"Views",
     "addToFavorites":"Add to Favorites",
-	"RDLExt": "RDL Extension"
-  },
+    "RDLExt": "RDL Extension",
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard": "Save Dashboard" 
+ },
   "toolbar": {
     "back":"Back",
     "docMap":"Document Map",
@@ -83,7 +89,8 @@
     "unzoom":"unzoom",
     "search":"Search",
     "createDashboard":"Create Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard": "Save Dashboard" 
   },
   "print": {
     "title":"Print Report",
@@ -197,6 +204,30 @@
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
-    "submit":"Submit"
+    "submit":"Save"
+  },
+  "reportProperties": {
+    "title":"Report Properties",
+    "cancel":"Cancel",
+    "submit":"Ok",
+    "selectReport": "<select report>",
+    "hideToolbar": "Hide Toolbar"
+  },
+  "dashboardEditor": {
+    "propertiesBtn": "Properties"
+  },
+    "reportProperties": {
+    "title":"Report Properties",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "selectReport":"<select report>",
+    "hideToolbar":"Hide Toolbar"
+  },
+  "saveAsDashboard": {
+    "title":"Save As",
+    "cancel":"Cancel",
+    "submit":"Save",
+    "dashboardName": "Dashboard Name",
+    "namePlaceholder": "dashboard name"
   }
 }

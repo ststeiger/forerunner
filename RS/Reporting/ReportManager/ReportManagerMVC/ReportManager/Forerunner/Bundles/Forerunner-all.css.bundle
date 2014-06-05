@@ -13,6 +13,7 @@
   <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
   <file>/Forerunner/ReportExplorer/css/CreateDashboard.css</file>
   <file>/Forerunner/ReportExplorer/css/ManageSubscription.css</file>
+  <file>/Forerunner/ReportExplorer/css/icons128x128.css</file>
   <file>/Forerunner/ReportViewer/css/ManageParamSets.css</file>
   <file>/Forerunner/ReportViewer/css/PageNav.css</file>
   <file>/Forerunner/ReportViewer/css/ReportDocumentMap.css</file>
@@ -25,4 +26,9 @@
   <file>/Forerunner/ReportViewer/css/Toolbar.css</file>
   <file>/Forerunner/ReportViewer/css/ToolPane.css</file>
   <file>/Forerunner/ReportViewer/css/DSCredential.css</file>
+  <file>/Forerunner/Dashboard/css/dashboards.css</file>
+  <file>/Forerunner/Dashboard/css/DashboardToolbar.css</file>
+  <file>/Forerunner/Dashboard/css/DashboardToolPane.css</file>
+  <file>/Forerunner/Dashboard/css/ReportProperties.css</file>
+  <file>/Forerunner/Dashboard/css/SaveAsDashboard.css</file>
 </bundle>

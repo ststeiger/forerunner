@@ -13,7 +13,11 @@
     "favoriteFailed":"Gescheiterte",
     "docmapShowFailed":"Gescheiterte",
     "prepareActionFailed":"Gescheiterte",
-    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht"
+    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht",
+    "saveDashboardFailed":"Sparen Sie Dashboard-Fehler",
+    "saveDashboardSucceeded":"Sparen Sie Dashboard-Nachfolger",
+    "loadDashboardFailed":"Last-Dashboard fehlgeschlagen",
+    "loadDashboard":"Last-Dashboard"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
@@ -50,7 +54,9 @@
     "dsCredential":"Credential",
     "views":"Ansichten",
     "addToFavorites":"Zu Favoriten",
-    "RDLExt":"RDL-Erweiterung"
+    "RDLExt":"RDL-Erweiterung",
+    "editDashboard":"Edit Dashboard",
+    "saveDashboard":"Save Dashboard"
   },
   "toolbar": {
     "back":"Zurück",
@@ -83,7 +89,8 @@
     "unzoom":"unzoom",
     "search":"Suche",
     "createDashboard":"Dashboard erstellen",
-    "editDashboard":"Dashboard-Bearbeiten"
+    "editDashboard":"Dashboard-Bearbeiten",
+    "saveDashboard":"Save-Dashboard"
   },
   "print": {
     "title":"Bericht drucken",
@@ -198,5 +205,22 @@
     "submit":"einreichen",
     "cancel":"stornieren",
     "dialogTitle":"RDL JSON-Erweiterung"
+  },
+  "dashboardEditor": {
+    "propertiesBtn":"Eigenschaften"
+  },
+  "reportProperties": {
+    "title":"Berichtseigenschaften",
+    "cancel":"stornieren",
+    "submit":"einsenden",
+    "selectReport":"<wählen Bericht>",
+    "hideToolbar":"Symbolleiste ausblenden"
+  },
+  "saveAsDashboard": {
+    "title":"speichern unter",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "dashboardName":"Dashboard-Namen",
+    "namePlaceholder":"Dashboard-Namen"
   }
 }

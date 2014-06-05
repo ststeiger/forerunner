@@ -14,10 +14,10 @@
     "docmapShowFailed":"Fracassado",
     "prepareActionFailed":"Fracassado",
     "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Salve Painel Falha",
+    "saveDashboardSucceeded":"Salve Painel Sucedido",
+    "loadDashboardFailed":"Carga Painel Falha",
+    "loadDashboard":"carga Painel"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
@@ -55,7 +55,7 @@
     "views":"Visualizações",
     "addToFavorites":"Adicionar aos favoritos",
     "RDLExt":"RDL Extensão",
-    "saveDashboard":"Save Dashboard",
+    "saveDashboard":"Salve o Dashboard"
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -90,7 +90,7 @@
     "search":"pesquisa",
     "createDashboard":"criar o Dashboard",
     "editDashboard":"Editar o Dashboard",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Salve o Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL extensão JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"Propriedades"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Ok",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Propriedades do Relatório",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "selectReport":"<selecione relatório>",
+    "hideToolbar":"Ocultar barra de ferramentas"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Save",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"salvar como",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "dashboardName":"Nome do Dashboard",
+    "namePlaceholder":"Nome do Dashboard"
   }
 }

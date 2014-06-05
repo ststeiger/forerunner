@@ -110,8 +110,8 @@
     "title":"User Settings",
     "submit":"Ok",
     "cancel":"Cancel",
-    "ResponsiveUI":"Responsive UI",
-    "AdminUI":"Admin UI"
+    "ResponsiveUI": "Responsive UI",
+    "AdminUI": "Admin UI"
   },
   "paramPane": {
     "nullField":"Null",

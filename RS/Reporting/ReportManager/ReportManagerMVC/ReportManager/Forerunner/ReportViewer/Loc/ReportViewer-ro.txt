@@ -14,10 +14,10 @@
     "docmapShowFailed":"A eșuat",
     "prepareActionFailed":"A eșuat",
     "bookmarkNotFound":"Nu pot găsi marcajul în raport",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Salvați Tabloul de bord a eșuat",
+    "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
+    "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
+    "loadDashboard":"încărcare Tablou de bord"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -55,7 +55,7 @@
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Save Dashboard",
+    "saveDashboard":"Salvați Tablou de bord"
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -90,7 +90,7 @@
     "search":"căutare",
     "createDashboard":"crea Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Salvați Tablou de bord"
   },
   "print": {
     "title":"imprima raportul",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL Extension JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"Proprietăți"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Ok",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Raport Properties",
+    "cancel":"anula",
+    "submit":"executa",
+    "selectReport":"<selectați raport>",
+    "hideToolbar":"Ascunde Toolbar"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Save",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"Salvare ca",
+    "cancel":"anula",
+    "submit":"executa",
+    "dashboardName":"Nume tablou de bord",
+    "namePlaceholder":"Nume tablou de bord"
   }
 }

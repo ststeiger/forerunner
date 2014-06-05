@@ -14,10 +14,10 @@
     "docmapShowFailed":"Misslyckades",
     "prepareActionFailed":"Misslyckades",
     "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Spara Dashboard misslyckades",
+    "saveDashboardSucceeded":"Spara Dashboard Lyckades",
+    "loadDashboardFailed":"Lastinstrumentpanels Misslyckades",
+    "loadDashboard":"Lastinstrumentbräda"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",
@@ -55,7 +55,7 @@
     "views":"Översikter",
     "addToFavorites":"Lägg till i favoriter",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Save Dashboard",
+    "saveDashboard":"Spara Dashboard"
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -90,7 +90,7 @@
     "search":"Sökning",
     "createDashboard":"Skapa Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Spara Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL Förlängnings JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"Egenskaper"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Ok",
-    "selectReport":"<select report>",
+    "title":"Rapportera Egenskaper",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "selectReport":"<väljer rapport>",
     "hideToolbar":"Hide Toolbar"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Save",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"Spara som",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "dashboardName":"Instrumentpanels Namn",
+    "namePlaceholder":"Instrumentpanels Namn"
   }
 }

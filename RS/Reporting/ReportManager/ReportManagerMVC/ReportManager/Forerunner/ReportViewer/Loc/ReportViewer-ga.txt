@@ -14,10 +14,10 @@
     "docmapShowFailed":"Fracasado",
     "prepareActionFailed":"Fracasado",
     "bookmarkNotFound":"Non devolveu o marcador no informe",
-    "saveDashboardFailed":"Save Dashboard Failed",
-    "saveDashboardSucceeded":"Save Dashboard Succeeded",
-    "loadDashboardFailed":"Load Dashboard Failed",
-    "loadDashboard":"Load Dashboard"
+    "saveDashboardFailed":"Sábháil Ar Phainéal Theip",
+    "saveDashboardSucceeded":"Sábháil Ar Phainéal Comharba",
+    "loadDashboardFailed":"Painéal na Luchtaigh Theip",
+    "loadDashboard":"Painéal na Luchtaigh"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",
@@ -55,7 +55,7 @@
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
-    "saveDashboard":"Save Dashboard",
+    "saveDashboard":"Sábháil Ar Phainéal"
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -90,7 +90,7 @@
     "search":"Cuardaigh",
     "createDashboard":"Cruthaigh Phainéil",
     "editDashboard":"Painéal na Eagar",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Sábháil Ar Phainéal"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -206,20 +206,20 @@
     "dialogTitle":"RDL Síneadh JSON"
   },
   "dashboardEditor": {
-    "propertiesBtn":"Properties"
+    "propertiesBtn":"airíonna"
   },
   "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Ok",
-    "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "title":"Airíonna Tuarascáil",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "selectReport":"<tuarascáil roghnú>",
+    "hideToolbar":"Folaigh Barra Uirlisí"
   },
   "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Save",
-    "dashboardName":"Dashboard Name",
-    "namePlaceholder":"dashboard name"
+    "title":"Sábháil Mar",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "dashboardName":"Ainm an Phainéil",
+    "namePlaceholder":"Ainm an Phainéil"
   }
 }

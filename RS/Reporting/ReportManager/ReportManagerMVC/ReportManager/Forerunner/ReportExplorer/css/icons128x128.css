@@ -1,5 +1,5 @@
 /*** IconGen - start automatically generated, do not hand modify ***/
-.fr-icons128x128 {
+/*.fr-icons128x128 {
   width:128px;
   height:128px;
   background-image:url('../images/icons128x128.png');
@@ -88,6 +88,101 @@
 
 .fr-icons128x128-file-dashboard {
   background-position: 0 -512px;
-}
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
 
+
+
+/*Resource file icons css code: Below is new style code which reference images separately*/
+.fr-icons128x128 {
+  width:128px;
+  height:128px;
+  left:50%; 
+  top:50%; 
+  margin-left:-64px; 
+  margin-top:-64px; 
+  position:absolute;
+}
+.fr-icons128x128-file-avi {
+    background-image:url(../images/ResourceIcons/avi.png);
+}
+
+.fr-icons128x128-file-bmp {
+  background-image:url(../images/ResourceIcons/bmp.png);
+}
+
+.fr-icons128x128-file-css {
+  background-image:url(../images/ResourceIcons/css.png);
+}
+
+.fr-icons128x128-file-doc {
+  background-image:url(../images/ResourceIcons/doc.png);
+}
+
+.fr-icons128x128-file-gif {
+  background-image:url(../images/ResourceIcons/gif.png);
+}
+
+.fr-icons128x128-file-html {
+  background-image:url(../images/ResourceIcons/html.png);
+}
+
+.fr-icons128x128-file-ini {
+  background-image:url(../images/ResourceIcons/ini.png);
+}
+
+.fr-icons128x128-file-jpeg {
+  background-image:url(../images/ResourceIcons/jpeg.png);
+}
+
+.fr-icons128x128-file-mp3 {
+  background-image:url(../images/ResourceIcons/mp3.png);
+}
+
+.fr-icons128x128-file-mpeg {
+  background-image:url(../images/ResourceIcons/mpeg.png);
+}
+
+.fr-icons128x128-file-pdf {
+  background-image:url(../images/ResourceIcons/pdf.png);
+}
+
+.fr-icons128x128-file-ppt {
+  background-image:url(../images/ResourceIcons/ppt.png);
+}
+
+.fr-icons128x128-file-rar {
+  background-image:url(../images/ResourceIcons/rar.png);
+}
+
+.fr-icons128x128-file-text {
+  background-image:url(../images/ResourceIcons/avi.png);
+}
+
+.fr-icons128x128-file-tiff {
+  background-image:url(../images/ResourceIcons/text.png);
+}
+
+.fr-icons128x128-file-xls {
+  background-image:url(../images/ResourceIcons/xls.png);
+}
+
+.fr-icons128x128-file-zip {
+  background-image:url(../images/ResourceIcons/zip.png);
+}
+
+.fr-icons128x128-file-xml {
+  background-image:url(../images/ResourceIcons/xml.png);
+}
+
+.fr-icons128x128-file-png {
+  background-image:url(../images/ResourceIcons/png.png);
+}
+
+.fr-icons128x128-file-unknown {
+  background-image:url(../images/ResourceIcons/unknown.png);
+}
+
+.fr-icons128x128-file-dashboard {
+  background-image:url(../images/ResourceIcons/dashboard.png);
+}

@@ -146,7 +146,7 @@ div.fr-layout-position-absolute { position: absolute; }
 }
 
 /*** IconGen - start automatically generated, do not hand modify ***/
-.fr-icons24x24 {
+/*.fr-icons24x24 {
   width:24px;
   height:24px;
   background-image:url('../images/icons24x24.png');
@@ -299,7 +299,7 @@ div.fr-layout-position-absolute { position: absolute; }
 
 .fr-icons24x24-createdashboard {
   background-position: -24px -120px;
-}
+}*/
 
 .fr-icons24x24-editdashboard {
   background-position: -48px -120px;
@@ -307,8 +307,177 @@ div.fr-layout-position-absolute { position: absolute; }
 /*** IconGen - end automatically generated, do not hand modify ***/
 
 
+
+/*Toolbar icons css code: Below is new style code which reference images separately*/ 
+.fr-icons24x24 {
+  width:24px;
+  height:24px;
+  margin:5px; 
+  display:inline-block;
+}
+.fr-icons24x24-menu {
+  background-image:url(../images/ToolbarIcons/align_just_icon.png);
+}
+
+.fr-icons24x24-back {
+  background-image:url(../images/ToolbarIcons/BackOff.png);
+}
+
+.fr-icons24x24-reportback {
+  background-image:url(../images/ToolbarIcons/BackOff.png);
+}
+
+.fr-icons24x24-nav {
+  background-image:url(../images/ToolbarIcons/PageNavOff.png);
+}
+
+.fr-icons24x24-home {
+  background-image:url(../images/ToolbarIcons/HomeOff.png);
+}
+
+.fr-icons24x24-homeBlue {
+  background-image:url(../images/ToolbarIcons/HomeBlue.png);
+}
+
+.fr-icons24x24-paramarea {
+  background-image:url(../images/ToolbarIcons/Parameters.png);
+}
+
+.fr-icons24x24-documentmap {
+  background-image:url(../images/ToolbarIcons/DocMapOff.png);
+}
+
+.fr-icons24x24-lastpage {
+  background-image:url(../images/ToolbarIcons/LastPageOff.png);
+}
+
+.fr-icons24x24-next {
+  background-image:url(../images/ToolbarIcons/ForwardPageOff.png);
+}
+
+.fr-icons24x24-prev {
+  background-image:url(../images/ToolbarIcons/BackPageOff.png);
+}
+
+.fr-icons24x24-refresh {
+  background-image:url(../images/ToolbarIcons/Refresh.png);
+}
+
+.fr-icons24x24-firstpage {
+  background-image:url(../images/ToolbarIcons/FirstPageOff.png);
+}
+
+.fr-icons24x24-export {
+  background-image:url(../images/ToolbarIcons/ExportOff.png);
+}
+
+.fr-icons24x24-exportCSV {
+  background-image:url(../images/ToolbarIcons/CSV.png);
+}
+
+.fr-icons24x24-exportExcel {
+  background-image:url(../images/ToolbarIcons/Excel.png);
+}
+
+.fr-icons24x24-exportMHT {
+  background-image:url(../images/ToolbarIcons/MHT.png);
+}
+
+.fr-icons24x24-exportPDF {
+  background-image:url(../images/ToolbarIcons/PDF.png);
+}
+
+.fr-icons24x24-exportTIFF {
+  background-image:url(../images/ToolbarIcons/tiff.png);
+}
+
+.fr-icons24x24-exportWord {
+  background-image:url(../images/ToolbarIcons/Word.png);
+}
+
+.fr-icons24x24-exportXML {
+  background-image:url(../images/ToolbarIcons/XML.png);
+}
+
+.fr-icons24x24-zoom {
+  background-image:url(../images/ToolbarIcons/ZoomOff.png);
+}
+
+.fr-icons24x24-printreport {
+  background-image:url(../images/ToolbarIcons/PrintOff.png);
+}
+
+.fr-icons24x24-favorites {
+  background-image:url(../images/ToolbarIcons/favorites.png);
+}
+
+.fr-icons24x24-favoritesBlue {
+  background-image:url(../images/ToolbarIcons/FavoritesBlue.png);
+}
+
+.fr-icons24x24-favorite-plus {
+  background-image:url(../images/ToolbarIcons/FavPlusOff.png);
+}
+
+.fr-icons24x24-favorite-minus {
+  background-image:url(../images/ToolbarIcons/FavMinusOff.png);
+}
+
+.fr-icons24x24-save-param {
+  background-image:url(../images/ToolbarIcons/SaveParameters.png);
+}
+
+.fr-icons24x24-recent {
+  background-image:url(../images/ToolbarIcons/recent.png);
+}
+
+.fr-icons24x24-recentBlue {
+  background-image:url(../images/ToolbarIcons/RecentBlue.png);
+}
+
+.fr-icons24x24-setup {
+  background-image:url(../images/ToolbarIcons/setup.png);
+}
+
+.fr-icons24x24-parameterSets {
+  background-image:url(../images/ToolbarIcons/ParameterSets.png);
+}
+
+.fr-icons24x24-folders {
+  background-image:url(../images/ToolbarIcons/Folders.png);
+}
+
+.fr-icons24x24-dataSourceCred {
+  background-image:url(../images/ToolbarIcons/DataSourceCred.png);
+}
+
+.fr-icons24x24-logout {
+  background-image:url(../images/ToolbarIcons/Logout.png);
+}
+
+.fr-icons24x24-unzoom {
+  background-image:url(../images/ToolbarIcons/UnZoom.png);
+}
+
+.fr-icons24x24-createdashboard {
+  background-image:url(../images/ToolbarIcons/CreateDashboard.png);
+}
+
+.fr-icons24x24-rdlextension {
+    background-image:url(../images/ToolbarIcons/SaveExtension.png);
+}
+
+.fr-icons24x24-dashboard {
+    background-image:url(../images/ToolbarIcons/Dashboard.png);
+}
+
+.fr-icons24x24-emailsubscription {
+    background-image:url(../images/ToolbarIcons/EmailSubscription.png);
+}
+
+
 /*** IconGen - start automatically generated, do not hand modify ***/
-.fr-icons25x31 {
+/*.fr-icons25x31 {
   width:25px;
   height:31px;
   background-image:url('../images/icons25x31.png');
@@ -341,8 +510,43 @@ div.fr-layout-position-absolute { position: absolute; }
 
 .fr-icons25x31-exportXML {
   background-position: 0 -62px;
-}
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
+
+/*Toolpane icons css code: Below is new style code which reference images separately*/ 
+.fr-icons25x31 {
+  width:25px;
+  height:31px;
+  margin:5px; 
+  display:inline-block;
+}
+.fr-icons25x31-exportCSV {
+  background-image:url(../images/ToolpaneIcons/csv.png);  
+}
+
+.fr-icons25x31-exportWord {
+  background-image:url(../images/ToolpaneIcons/doc.png);
+}
+
+.fr-icons25x31-exportMHT {
+  background-image:url(../images/ToolpaneIcons/mhtml.png);
+}
+
+.fr-icons25x31-exportPDF {
+  background-image:url(../images/ToolpaneIcons/pdf.png);
+}
+
+.fr-icons25x31-exportTIFF {
+  background-image:url(../images/ToolpaneIcons/tiff.png);
+}
+
+.fr-icons25x31-exportExcel {
+  background-image:url(../images/ToolpaneIcons/xls.png);
+}
+
+.fr-icons25x31-exportXML {
+  background-image:url(../images/ToolpaneIcons/xml.png);
+}
 
 
 body {
@@ -732,6 +936,194 @@ table, td, tr div {
 .fr-sub-edit-icon { float: left; }
 
 
+/*** IconGen - start automatically generated, do not hand modify ***/
+/*.fr-icons128x128 {
+  width:128px;
+  height:128px;
+  background-image:url('../images/icons128x128.png');
+  left:50%; top:50%; margin-left:-64px; margin-top:-64px; position:absolute;
+}
+
+.fr-icons128x128-file-avi {
+  background-position: 0 0;
+}
+
+.fr-icons128x128-file-bmp {
+  background-position: -128px 0;
+}
+
+.fr-icons128x128-file-css {
+  background-position: -256px 0;
+}
+
+.fr-icons128x128-file-doc {
+  background-position: -384px 0;
+}
+
+.fr-icons128x128-file-gif {
+  background-position: -512px 0;
+}
+
+.fr-icons128x128-file-html {
+  background-position: 0 -128px;
+}
+
+.fr-icons128x128-file-ini {
+  background-position: -128px -128px;
+}
+
+.fr-icons128x128-file-jpeg {
+  background-position: -256px -128px;
+}
+
+.fr-icons128x128-file-mp3 {
+  background-position: -384px -128px;
+}
+
+.fr-icons128x128-file-mpeg {
+  background-position: -512px -128px;
+}
+
+.fr-icons128x128-file-pdf {
+  background-position: 0 -256px;
+}
+
+.fr-icons128x128-file-ppt {
+  background-position: -128px -256px;
+}
+
+.fr-icons128x128-file-rar {
+  background-position: -256px -256px;
+}
+
+.fr-icons128x128-file-text {
+  background-position: -384px -256px;
+}
+
+.fr-icons128x128-file-tiff {
+  background-position: -512px -256px;
+}
+
+.fr-icons128x128-file-xls {
+  background-position: 0 -384px;
+}
+
+.fr-icons128x128-file-zip {
+  background-position: -128px -384px;
+}
+
+.fr-icons128x128-file-xml {
+  background-position: -256px -384px;
+}
+
+.fr-icons128x128-file-png {
+  background-position: -384px -384px;
+}
+
+.fr-icons128x128-file-unknown {
+  background-position: -512px -384px;
+}
+
+.fr-icons128x128-file-dashboard {
+  background-position: 0 -512px;
+}*/
+/*** IconGen - end automatically generated, do not hand modify ***/
+
+
+
+/*Resource file icons css code: Below is new style code which reference images separately*/
+.fr-icons128x128 {
+  width:128px;
+  height:128px;
+  left:50%; 
+  top:50%; 
+  margin-left:-64px; 
+  margin-top:-64px; 
+  position:absolute;
+}
+.fr-icons128x128-file-avi {
+    background-image:url(../images/ResourceIcons/avi.png);
+}
+
+.fr-icons128x128-file-bmp {
+  background-image:url(../images/ResourceIcons/bmp.png);
+}
+
+.fr-icons128x128-file-css {
+  background-image:url(../images/ResourceIcons/css.png);
+}
+
+.fr-icons128x128-file-doc {
+  background-image:url(../images/ResourceIcons/doc.png);
+}
+
+.fr-icons128x128-file-gif {
+  background-image:url(../images/ResourceIcons/gif.png);
+}
+
+.fr-icons128x128-file-html {
+  background-image:url(../images/ResourceIcons/html.png);
+}
+
+.fr-icons128x128-file-ini {
+  background-image:url(../images/ResourceIcons/ini.png);
+}
+
+.fr-icons128x128-file-jpeg {
+  background-image:url(../images/ResourceIcons/jpeg.png);
+}
+
+.fr-icons128x128-file-mp3 {
+  background-image:url(../images/ResourceIcons/mp3.png);
+}
+
+.fr-icons128x128-file-mpeg {
+  background-image:url(../images/ResourceIcons/mpeg.png);
+}
+
+.fr-icons128x128-file-pdf {
+  background-image:url(../images/ResourceIcons/pdf.png);
+}
+
+.fr-icons128x128-file-ppt {
+  background-image:url(../images/ResourceIcons/ppt.png);
+}
+
+.fr-icons128x128-file-rar {
+  background-image:url(../images/ResourceIcons/rar.png);
+}
+
+.fr-icons128x128-file-text {
+  background-image:url(../images/ResourceIcons/avi.png);
+}
+
+.fr-icons128x128-file-tiff {
+  background-image:url(../images/ResourceIcons/text.png);
+}
+
+.fr-icons128x128-file-xls {
+  background-image:url(../images/ResourceIcons/xls.png);
+}
+
+.fr-icons128x128-file-zip {
+  background-image:url(../images/ResourceIcons/zip.png);
+}
+
+.fr-icons128x128-file-xml {
+  background-image:url(../images/ResourceIcons/xml.png);
+}
+
+.fr-icons128x128-file-png {
+  background-image:url(../images/ResourceIcons/png.png);
+}
+
+.fr-icons128x128-file-unknown {
+  background-image:url(../images/ResourceIcons/unknown.png);
+}
+
+.fr-icons128x128-file-dashboard {
+  background-image:url(../images/ResourceIcons/dashboard.png);
+}
 .fr-mps-section { display: none; }
 
 .fr-mps-form { margin-right: 16px; }

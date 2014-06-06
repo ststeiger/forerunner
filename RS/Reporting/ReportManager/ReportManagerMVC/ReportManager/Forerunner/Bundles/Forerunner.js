@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -194,6 +194,8 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            emailSubscription: "emailSubscription",
             /** @constant */
             reportExplorerToolbar: "reportExplorerToolbar",
             /** @constant */

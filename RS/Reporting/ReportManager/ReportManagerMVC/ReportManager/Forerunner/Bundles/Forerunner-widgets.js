@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2157,6 +2157,23 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
+        showEmailSubscription : function () {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var paramList = null;
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
+                }
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("openDialog");
+            }
+        },
         /**
          * Print current reprot in PDF format
          *
@@ -2189,6 +2206,11 @@ $(function () {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
             me.$printDialog.reportPrint("setPrint", pageLayout);
+        },
+        _setEmailSubscriptionUI : function() {
+            var me = this;
+            if (!me.$emailSub)
+                me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
         },
        
         //Page Loading
@@ -3070,6 +3092,8 @@ $(function () {
             if (me.$printDialog)
                 me.$printDialog.reportPrint("destroy");
 
+            if (me.$emailSub)
+                me.$emailSub.emailSubscription("destroy");
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
@@ -4943,15 +4967,15 @@ $(function () {
             var listOfButtons;
 
             if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
             else
-                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
 
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
                 else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
             }
 
             return listOfButtons;
@@ -5169,16 +5193,16 @@ $(function () {
             var me = this;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
             }
 
             if (me.options.$reportViewer.reportViewer("option","isAdmin"))
@@ -6458,11 +6482,16 @@ $(function () {
                 // form
                 "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
+                        "<table><tr><td>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-
+                        "</tr></td><tr><td>" +
+                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
+                        "</tr></td><tr><td>" +
                         "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
                         "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                        "</td></tr></table>" +
                     "</div>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -6519,19 +6548,19 @@ $(function () {
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
 
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
-
+            me.$email.val(me.settings.email);
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
-
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
-
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 
             me.closeDialog();
@@ -12267,6 +12296,11 @@ $(function () {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
+
+        me.subscriptionModel = null;
+        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+            me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+        }
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -12341,7 +12375,7 @@ $(function () {
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
                 if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 13, true, [mi.itemLogOff]);
+                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
                 }
 
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
@@ -12385,6 +12419,20 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+            $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
+            if ($dlg.length === 0) {
+            //    $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+            //    me.options.$appContainer.append($dlg);
+            }
+            //$dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+
+            $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-emailsubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
             $dlg = me.options.$appContainer.find(".fr-dsc-section");
             if ($dlg.length === 0) {

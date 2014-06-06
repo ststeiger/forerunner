@@ -104,8 +104,9 @@ $(function () {
                 me._subscriptionData = {}
                 me._subscriptionData.SubscriptionID = null;
                 me._subscriptionData.Report = me.options.reportPath;
-                me._subscriptionData.ScheduleReference = {};
-                me._subscriptionData.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule.ScheduleReference = {};
+                me._subscriptionData.SubscriptionSchedule.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.EventType = "TimedSubscription";
                 me._subscriptionData.ExtensionSettings = {};
@@ -119,7 +120,9 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
                 me._subscriptionData.Description = me.$desc.val();
-                me._subscriptionData.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule.ScheduleReference = {};
+                me._subscriptionData.SubscriptionSchedule.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
                 for (var i = 0; i < me._subscriptionData.ExtensionSettings.length; i++) {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
@@ -161,10 +164,8 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name == "RenderFormat") {
-                    if (!me.$renderFormat) {
-                        me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
-                        me.$renderFormat.addClass(".fr-email-renderformat");
-                    }
+                    me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
+                    me.$renderFormat.addClass(".fr-email-renderformat");
                 }
             }
         },

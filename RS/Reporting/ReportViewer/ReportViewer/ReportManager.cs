@@ -1250,39 +1250,8 @@ namespace Forerunner.SSRS.Manager
 
         public Schedule[] ListSchedules(string siteName)
         {
-            Impersonator impersonator = null;
-            try
-            {
-                impersonator = tryImpersonate();
-                List<Schedule> retVal = new List<Schedule>();
-                string SQL = @"Select ScheduleID, Name From dbo.Schedule Where EventType = 'TimedSubscription'";
-                OpenSQLConn();
-                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
-                {
-                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
-                    {
-                        if (SQLReader.HasRows)
-                        {
-                            SQLReader.Read();
-                            Schedule item = new Schedule();
-                            item.ScheduleID = SQLReader.GetGuid(0).ToString();
-                            item.Name = SQLReader.GetString(1);
-                            retVal.Add(item);
-                        }
-                    }
-                }
-                return retVal.ToArray<Schedule>();
-            }
-            finally
-            {
-                if (impersonator != null)
-                {
-                    impersonator.Dispose();
-                }
-                CloseSQLConn();
-            }
-            //rs.Credentials = GetCredentials();
-            //return rs.ListSchedules(siteName);
+            rs.Credentials = GetCredentials();
+            return rs.ListSchedules(siteName);
         }
 
         public class ExtensionSettings

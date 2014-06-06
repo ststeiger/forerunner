@@ -10,12 +10,6 @@ namespace Forerunner
     {
         public SubscriptionSchedule() { }
         public ScheduleReference ScheduleReference { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public MinuteRecurrence MinuteRecurrence { get; set; }
-        public DailyRecurrence DailyRecurrence { get; set; }
-        public WeeklyRecurrence WeeklyRecurrence { get; set; }
-        public MonthlyRecurrence MonthlyRecurrence { get; set; }
-        public MonthlyDOWRecurrence MonthlyDOWRecurrence { get; set; }
+        public ScheduleDefinition ScheduleDefinition { get; set; }
     }
 }

@@ -41,11 +41,11 @@ $(function () {
             .fail(function (data) {
                 console.log("ListSubscriptions call failed.");
             });
-            return me.subscriptionList || jqxhr;
+            return [me.subscriptionList] || jqxhr;
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return me.schedules;
+            if (me.schedules) return [me.schedules];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -65,7 +65,7 @@ $(function () {
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return me.extensionList;
+            if (me.extensionList) return [me.extensionList];
             var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,

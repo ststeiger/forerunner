@@ -75,32 +75,7 @@ namespace Forerunner.Subscription
             }
             else
             {
-                retVal.StartTime = definition.StartDateTime;
-                if (definition.EndDateSpecified)
-                {
-                    retVal.EndTime = definition.EndDate;
-                }
-
-                if (definition.Item is DailyRecurrence)
-                {
-                    retVal.DailyRecurrence = definition.Item as DailyRecurrence;
-                }
-                else if (definition.Item is MinuteRecurrence)
-                {
-                    retVal.MinuteRecurrence = definition.Item as MinuteRecurrence;
-                }
-                else if (definition.Item is WeeklyRecurrence)
-                {
-                    retVal.WeeklyRecurrence = definition.Item as WeeklyRecurrence;
-                }
-                else if (definition.Item is MonthlyRecurrence)
-                {
-                    retVal.MonthlyRecurrence = definition.Item as MonthlyRecurrence;
-                }
-                else if (definition.Item is MonthlyDOWRecurrence)
-                {
-                    retVal.MonthlyDOWRecurrence = definition.Item as MonthlyDOWRecurrence;
-                }
+                retVal.ScheduleDefinition = definition;
             }
             return retVal;
         }

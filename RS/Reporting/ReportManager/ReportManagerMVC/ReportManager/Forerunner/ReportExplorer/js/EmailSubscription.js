@@ -147,13 +147,14 @@ $(function () {
             if (me.options.paramList) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
-                for (var param in paramListObj.ParamsList) {
-                    if (param.ismultiple) {
-                        for (var multivalueparam in param.value) {
-                            me._subscriptionData.Parameters.push({ "Name": param.name, "Value": multivalueparam });
+                for (var i = 0; i < paramListObj.ParamsList.length; i++) {
+                    var param = paramListObj.ParamsList[i];
+                    if (param.IsMultiple === "true") {
+                        for (var j = 0; j < param.Value.length; j++) {
+                            me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
                         }
                     } else {
-                        me._subscriptionData.Parameters.push({"Name": param.name, "Value": param.value});
+                        me._subscriptionData.Parameters.push({"Name": param.Parameter, "Value": param.Value});
                     }
                 }
             }

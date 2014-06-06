@@ -1334,12 +1334,7 @@ namespace Forerunner.SSRS.Manager
                 return MatchDataSerialization.GetMatchDataFromScheduleReference(subscriptionSchedule.ScheduleReference);
             }
 
-            ScheduleDefinition definition = new ScheduleDefinition();
-            definition.StartDateTime = subscriptionSchedule.StartTime;
-            definition.EndDateSpecified = (subscriptionSchedule.EndTime != null);
-            if (definition.EndDateSpecified)
-                definition.EndDate = subscriptionSchedule.EndTime;
-
+            ScheduleDefinition definition = subscriptionSchedule.ScheduleDefinition;
             XmlDocument xmlDoc = MatchDataSerialization.GetScheduleAsXml(definition);
             StringWriter stringWriter = new StringWriter();
             XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter);

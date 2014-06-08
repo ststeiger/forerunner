@@ -149,6 +149,8 @@ $(function () {
                         $loadMore.remove();
                     }
 
+                    me._fullScreenCheck();
+
                     var $container = $("ul.fr-nav-container", $(me.element));
                     $(".lazy", me.$list).lazyload({
                         $container: $container,

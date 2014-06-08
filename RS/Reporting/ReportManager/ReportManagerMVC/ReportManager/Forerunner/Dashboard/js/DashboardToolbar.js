@@ -44,17 +44,31 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolbar"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolbar#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                me.showTool(dtb.btnView.selectorClass);
+                me.hideTool(dtb.btnEdit.selectorClass);
+            } else {
+                me.hideTool(dtb.btnView.selectorClass);
+                me.showTool(dtb.btnEdit.selectorClass);
+            }
+        },
         _init: function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu]);
-            if (me.options.enableEdit) {
-                me.addTools(2, true, [dtb.btnSave]);
-            } else {
-                me.addTools(2, true, [dtb.btnEdit]);
-            }
+            me.removeAllTools();
+
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();

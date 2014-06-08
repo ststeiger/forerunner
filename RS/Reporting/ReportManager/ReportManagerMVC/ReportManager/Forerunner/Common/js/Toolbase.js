@@ -85,6 +85,16 @@ $(function () {
                 me.disableTools(tools);
             }
         },
+        /**
+         * Clears the allTools array. This function is useful when re-initializing a toolbar.
+         *
+         * @function $.forerunner.toolBase#removeAllTools
+         */
+        removeAllTools: function () {
+            var me = this;
+            me.allTools = me.allTools || {};
+            me.allTools.length = 0;
+        },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
             me.allTools = me.allTools || {};

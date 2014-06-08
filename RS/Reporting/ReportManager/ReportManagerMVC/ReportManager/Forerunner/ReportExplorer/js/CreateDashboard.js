@@ -129,6 +129,9 @@ $(function () {
                 return;
             }
 
+            var templateName = me.$select.val();
+            var dashboardName = me.$dashboardName.val();
+
             // Save the dashboard
             me.model = new ssr.DashboardModel({
                 $appContainer: me.options.$appContainer,
@@ -137,14 +140,13 @@ $(function () {
             });
 
             // Load the selected template into the dashboard definition
-            me.model.loadTemplate(me.$dashboardName.val());
+            me.model.loadTemplate(templateName);
 
             // Save the model and navigate to editDashboard
-            if (me.model.save(false, me.options.parentFolder, me.$dashboardName.val())) {
+            if (me.model.save(false, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var name = me.$select.val();
-                var path = me.options.parentFolder + name;
+                var path = me.options.parentFolder + dashboardName;
                 navigateTo("createDashboard", path);
 
                 me.closeDialog();

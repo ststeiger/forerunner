@@ -99,7 +99,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:name": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard"
                 }
             });
 
@@ -146,7 +146,7 @@ $(function () {
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
             } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(name);
+                me.transitionToCreateDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -321,7 +321,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path);
+                $dashboardEditor.dashboardEditor("loadDefinition", path, true);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -332,7 +332,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
          * @param {String} name - Name of the dashboard template
          */
-        transitionToCreateDashboard: function (templateName) {
+        transitionToCreateDashboard: function (path) {
             var me = this;
             var layout = me.DefaultAppTemplate;
             layout.$mainsection.html("");
@@ -343,14 +343,6 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                // TODO
-                // What about the case where the user navigates directly to the create dashboard URL.
-                // We need to pass the parentFolder to the URL
-                var parentFolder = "/";
-                if (me.$reportExplorer) {
-                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
-                    parentFolder = lastFetched.path;
-                }
                 var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
@@ -362,7 +354,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
+                $dashboardEditor.dashboardEditor("editDashboard", path);
             }, timeout);
 
             me.element.css("background-color", "");

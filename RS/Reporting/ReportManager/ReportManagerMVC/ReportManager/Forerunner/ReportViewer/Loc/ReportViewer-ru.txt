@@ -56,7 +56,8 @@
     "addToFavorites":"избранное",
     "RDLExt":"RDL Расширение",
     "saveDashboard":"Сохранить Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -90,7 +91,8 @@
     "search":"поиск",
     "createDashboard":"Создание Dashboard",
     "editDashboard":"Редактировать Dashboard",
-    "saveDashboard":"Сохранить Dashboard"
+    "saveDashboard":"Сохранить Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Печать отчета",

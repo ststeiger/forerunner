@@ -46,22 +46,24 @@ $(function () {
             me.model.clearState();
             me.element.html("");
         },
-        loadDefinition: function (path) {
+        loadDefinition: function (path, hideMissing) {
             var me = this;
 
             // Clear the html in case of an error
             me.element.html("");
 
-            // Load the given report definition
-            var loaded = me._loadResource(path);
-            if (!loaded) {
-                return;
+            if (path) {
+                // Load the given report definition
+                var loaded = me._loadResource(path);
+                if (!loaded) {
+                    return;
+                }
             }
 
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
+                me._loadReport(item.id, hideMissing);
             });
         },
         getParentFolder: function () {
@@ -78,9 +80,10 @@ $(function () {
             var me = this;
             me.model.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId) {
+        _loadReport: function (reportId, hideMissing) {
             var me = this;
             var $item = me.element.find("#" + reportId);
+            $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
             if (me.model.dashboardDef.reports[reportId]) {
@@ -95,9 +98,8 @@ $(function () {
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
-            }
-            else {
-                $item.hide();
+            } else if (hideMissing) {
+                $item.addClass("fr-dashboard-hide");
             }
         },
         _getName: function (path) {

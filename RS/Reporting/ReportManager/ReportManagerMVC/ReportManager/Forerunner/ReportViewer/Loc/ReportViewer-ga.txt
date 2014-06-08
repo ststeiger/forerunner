@@ -56,7 +56,8 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"ar ais",
@@ -90,7 +91,8 @@
     "search":"Cuardaigh",
     "createDashboard":"Cruthaigh Phainéil",
     "editDashboard":"Painéal na Eagar",
-    "saveDashboard":"Sábháil Ar Phainéal"
+    "saveDashboard":"Sábháil Ar Phainéal",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

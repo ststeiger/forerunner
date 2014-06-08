@@ -56,7 +56,8 @@
     "addToFavorites":"Añadir a Favoritos",
     "RDLExt":"RDL Extensión",
     "saveDashboard":"Ahorra Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -91,7 +92,8 @@
     "search":"búsqueda",
     "createDashboard":"Crear Dashboard",
     "editDashboard":"Editar Dashboard",
-    "saveDashboard":"Ahorra Dashboard"
+    "saveDashboard":"Ahorra Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

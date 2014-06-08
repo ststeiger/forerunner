@@ -56,7 +56,8 @@
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salvați Tablou de bord",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -90,7 +91,8 @@
     "search":"căutare",
     "createDashboard":"crea Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
-    "saveDashboard":"Salvați Tablou de bord"
+    "saveDashboard":"Salvați Tablou de bord",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"imprima raportul",

@@ -56,7 +56,8 @@
     "addToFavorites":"お気に入りに追加",
     "RDLExt":"RDL拡張",
     "saveDashboard":"ダッシュボードを保存",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"裏面",
@@ -90,7 +91,8 @@
     "search":"検索",
     "createDashboard":"ダッシュボードの作成",
     "editDashboard":"編集ダッシュボード",
-    "saveDashboard":"ダッシュボードを保存"
+    "saveDashboard":"ダッシュボードを保存",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

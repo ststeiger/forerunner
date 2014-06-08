@@ -56,7 +56,8 @@
     "addToFavorites":"Bæta við uppáhöld",
     "RDLExt":"RDL Eftirnafn",
     "saveDashboard":"vista Mælaborð",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Til baka",
@@ -90,7 +91,8 @@
     "search":"Leita",
     "createDashboard":"Búa Mælaborð",
     "editDashboard":"breyta Mælaborð",
-    "saveDashboard":"vista Mælaborð"
+    "saveDashboard":"vista Mælaborð",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Print Report",

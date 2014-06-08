@@ -29,8 +29,25 @@ $(function () {
          */
         editDashboard: function (path) {
             var me = this;
-            me.loadDefinition(path);
-            me._renderButtons();
+            me.loadDefinition(path, false);
+            me.showUI(true);
+        },
+        /**
+         * Show or hide the edit UI
+         * @function $.forerunner.dashboardEditor#showUI
+         */
+        showUI: function (show) {
+            var me = this;
+            if (show) {
+                me._renderButtons();
+            } else {
+                me._removeButtons();
+            }
+            me._makeOpaque(show);
+        },
+        getPath: function () {
+            var me = this;
+            return me.parentFolder + me.dashboardName;
         },
         _renderButtons: function () {
             var me = this;
@@ -51,10 +68,19 @@ $(function () {
                 var left = $item.width() / 2 - ($btn.width() / 2);
                 var top = $item.height() / 2 - ($btn.height() / 2);
                 $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
-
-                // Make the report area opaque
-                me.element.find(".fr-report-container").addClass("fr-core-mask");
             });
+        },
+        _removeButtons: function() {
+            var me = this;
+            me.element.find(".fr-dashboard-btn").remove();
+        },
+        _makeOpaque: function (addMask) {
+            var me = this;
+            if (addMask) {
+                me.element.find(".fr-report-container").addClass("fr-core-mask");
+            } else {
+                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+            }
         },
         /**
          * Save the dashboard
@@ -68,7 +94,7 @@ $(function () {
                 return;
             }
             // If we have the dashboard name we can just save
-            me._saveDashboard(overwrite);
+            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -100,7 +126,11 @@ $(function () {
 
             // Save the dashboard to the server
             me.dashboardName = data.dashboardName;
-            if (me.model.save(data.overwrite)) {
+            me._save(true);
+        },
+        _save: function (overwrite) {
+            var me = this;
+            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
             } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
@@ -132,7 +162,8 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId);
+            me._loadReport(data.reportId, true);
+            me._makeOpaque(true);
         },
         _create: function () {
             var me = this;

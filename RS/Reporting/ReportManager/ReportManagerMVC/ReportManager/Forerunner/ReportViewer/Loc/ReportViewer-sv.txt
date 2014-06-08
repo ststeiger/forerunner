@@ -56,7 +56,8 @@
     "addToFavorites":"Lägg till i favoriter",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Spara Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"bakåt",
@@ -90,7 +91,8 @@
     "search":"Sökning",
     "createDashboard":"Skapa Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
-    "saveDashboard":"Spara Dashboard"
+    "saveDashboard":"Spara Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

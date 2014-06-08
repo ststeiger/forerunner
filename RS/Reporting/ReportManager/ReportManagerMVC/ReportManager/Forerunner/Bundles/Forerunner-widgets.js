@@ -3501,6 +3501,16 @@ $(function () {
                 me.disableTools(tools);
             }
         },
+        /**
+         * Clears the allTools array. This function is useful when re-initializing a toolbar.
+         *
+         * @function $.forerunner.toolBase#removeAllTools
+         */
+        removeAllTools: function () {
+            var me = this;
+            me.allTools = me.allTools || {};
+            me.allTools.length = 0;
+        },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
             me.allTools = me.allTools || {};
@@ -4891,7 +4901,7 @@ $(function () {
         loadTemplate: function (templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
-            me.model.dashboardDef.template = template;
+            me.dashboardDef.template = template;
         },
 
     };
@@ -13398,7 +13408,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:name": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard"
                 }
             });
 
@@ -13445,7 +13455,7 @@ $(function () {
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
             } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(name);
+                me.transitionToCreateDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -13620,7 +13630,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path);
+                $dashboardEditor.dashboardEditor("loadDefinition", path, true);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13631,7 +13641,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
          * @param {String} name - Name of the dashboard template
          */
-        transitionToCreateDashboard: function (templateName) {
+        transitionToCreateDashboard: function (path) {
             var me = this;
             var layout = me.DefaultAppTemplate;
             layout.$mainsection.html("");
@@ -13642,14 +13652,6 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                // TODO
-                // What about the case where the user navigates directly to the create dashboard URL.
-                // We need to pass the parentFolder to the URL
-                var parentFolder = "/";
-                if (me.$reportExplorer) {
-                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
-                    parentFolder = lastFetched.path;
-                }
                 var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
@@ -13661,7 +13663,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
+                $dashboardEditor.dashboardEditor("editDashboard", path);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13849,6 +13851,9 @@ $(function () {
                 return;
             }
 
+            var templateName = me.$select.val();
+            var dashboardName = me.$dashboardName.val();
+
             // Save the dashboard
             me.model = new ssr.DashboardModel({
                 $appContainer: me.options.$appContainer,
@@ -13857,14 +13862,13 @@ $(function () {
             });
 
             // Load the selected template into the dashboard definition
-            me.model.loadTemplate(me.$dashboardName.val());
+            me.model.loadTemplate(templateName);
 
             // Save the model and navigate to editDashboard
-            if (me.model.save(false, me.options.parentFolder, me.$dashboardName.val())) {
+            if (me.model.save(false, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var name = me.$select.val();
-                var path = me.options.parentFolder + name;
+                var path = me.options.parentFolder + dashboardName;
                 navigateTo("createDashboard", path);
 
                 me.closeDialog();
@@ -19951,7 +19955,7 @@ $(function () {
     *
     * @namespace $.forerunner.dashboardEZ
     * @prop {Object} options - The options
-    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.
     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
@@ -19977,13 +19981,25 @@ $(function () {
             userSettings: null
         },
         /**
-         * Switch the UI from dashboard view to the dashboard editor
+         * Show the edit or view UI
          *
-         * @function $.forerunner.dashboardEZ#edit
+         * @function $.forerunner.dashboardEZ#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
          */
-        edit: function () {
-            // TODO
-            alert("dashboardEZ edit()");
+        enableEdit: function (enableEdit) {
+            var me = this;
+            me.options.enableEdit = enableEdit;
+
+            // Set the tools to the correct edit mode
+            me.$toolbar.dashboardToolbar("enableEdit", enableEdit);
+            me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
+
+            var $dashboardEditor = me.getDashboardEditor();
+            if (enableEdit) {
+                $dashboardEditor.dashboardEditor("editDashboard", null);
+            } else {
+                $dashboardEditor.dashboardEditor("loadDefinition", null, true);
+            }
         },
         _init: function () {
             var me = this;
@@ -19998,18 +20014,17 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
-            me.layout.$mainsection.append($dashboardContainer);
-            $dashboardContainer.dashboardEditor({
+            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.layout.$mainsection.append(me.$dashboardContainer);
+            me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
-                parentFolder: me.options.parentFolder,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 rsInstance: me.options.rsInstance
             });
 
-            var $toolbar = me.layout.$mainheadersection;
-            $toolbar.dashboardToolbar({
+            me.$toolbar = me.layout.$mainheadersection;
+            me.$toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -20022,8 +20037,8 @@ $(function () {
                 $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
             }
 
-            var $toolpane = me.layout.$leftpanecontent;
-            $toolpane.dashboardToolPane({
+            me.$toolpane = me.layout.$leftpanecontent;
+            me.$toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -20036,13 +20051,13 @@ $(function () {
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
-                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                $toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+                me.$toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                me.$toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
             }
 
             if (me.options.historyBack) {
-                $toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
-                $toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
+                me.$toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                me.$toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
             }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
@@ -20148,17 +20163,31 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolbar"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolbar#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                me.showTool(dtb.btnView.selectorClass);
+                me.hideTool(dtb.btnEdit.selectorClass);
+            } else {
+                me.hideTool(dtb.btnView.selectorClass);
+                me.showTool(dtb.btnEdit.selectorClass);
+            }
+        },
         _init: function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu]);
-            if (me.options.enableEdit) {
-                me.addTools(2, true, [dtb.btnSave]);
-            } else {
-                me.addTools(2, true, [dtb.btnEdit]);
-            }
+            me.removeAllTools();
+
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
@@ -20213,23 +20242,35 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolpane"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolPane#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                me.showTool(dbtp.itemView.selectorClass);
+                me.hideTool(dbtp.itemEdit.selectorClass);
+            } else {
+                me.hideTool(dbtp.itemView.selectorClass);
+                me.showTool(dbtp.itemEdit.selectorClass);
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
-            me.element.html("");
-            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
-            $(me.element).append($toolpane);
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            me.removeAllTools();
 
-            if (me.options.enableEdit) {
-                me.addTools(1, true, [dbtp.itemSave]);
-            } else {
-                me.addTools(1, true, [dbtp.itemEdit]);
-            }
+            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
-            $toolpane.append($spacerdiv);
+            me.element.append($spacerdiv);
         },
     });  // $.widget
 });  // function()
@@ -20283,22 +20324,24 @@ $(function () {
             me.model.clearState();
             me.element.html("");
         },
-        loadDefinition: function (path) {
+        loadDefinition: function (path, hideMissing) {
             var me = this;
 
             // Clear the html in case of an error
             me.element.html("");
 
-            // Load the given report definition
-            var loaded = me._loadResource(path);
-            if (!loaded) {
-                return;
+            if (path) {
+                // Load the given report definition
+                var loaded = me._loadResource(path);
+                if (!loaded) {
+                    return;
+                }
             }
 
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id);
+                me._loadReport(item.id, hideMissing);
             });
         },
         getParentFolder: function () {
@@ -20315,9 +20358,10 @@ $(function () {
             var me = this;
             me.model.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId) {
+        _loadReport: function (reportId, hideMissing) {
             var me = this;
             var $item = me.element.find("#" + reportId);
+            $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
             if (me.model.dashboardDef.reports[reportId]) {
@@ -20332,9 +20376,8 @@ $(function () {
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
-            }
-            else {
-                $item.hide();
+            } else if (hideMissing) {
+                $item.addClass("fr-dashboard-hide");
             }
         },
         _getName: function (path) {
@@ -20401,8 +20444,25 @@ $(function () {
          */
         editDashboard: function (path) {
             var me = this;
-            me.loadDefinition(path);
-            me._renderButtons();
+            me.loadDefinition(path, false);
+            me.showUI(true);
+        },
+        /**
+         * Show or hide the edit UI
+         * @function $.forerunner.dashboardEditor#showUI
+         */
+        showUI: function (show) {
+            var me = this;
+            if (show) {
+                me._renderButtons();
+            } else {
+                me._removeButtons();
+            }
+            me._makeOpaque(show);
+        },
+        getPath: function () {
+            var me = this;
+            return me.parentFolder + me.dashboardName;
         },
         _renderButtons: function () {
             var me = this;
@@ -20423,10 +20483,19 @@ $(function () {
                 var left = $item.width() / 2 - ($btn.width() / 2);
                 var top = $item.height() / 2 - ($btn.height() / 2);
                 $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
-
-                // Make the report area opaque
-                me.element.find(".fr-report-container").addClass("fr-core-mask");
             });
+        },
+        _removeButtons: function() {
+            var me = this;
+            me.element.find(".fr-dashboard-btn").remove();
+        },
+        _makeOpaque: function (addMask) {
+            var me = this;
+            if (addMask) {
+                me.element.find(".fr-report-container").addClass("fr-core-mask");
+            } else {
+                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+            }
         },
         /**
          * Save the dashboard
@@ -20440,7 +20509,7 @@ $(function () {
                 return;
             }
             // If we have the dashboard name we can just save
-            me._saveDashboard(overwrite);
+            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -20472,7 +20541,11 @@ $(function () {
 
             // Save the dashboard to the server
             me.dashboardName = data.dashboardName;
-            if (me.model.save(data.overwrite)) {
+            me._save(true);
+        },
+        _save: function (overwrite) {
+            var me = this;
+            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
             } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
@@ -20504,7 +20577,8 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId);
+            me._loadReport(data.reportId, true);
+            me._makeOpaque(true);
         },
         _create: function () {
             var me = this;

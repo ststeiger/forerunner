@@ -92,7 +92,7 @@ $(function () {
         loadTemplate: function (templateName) {
             var me = this;
             var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
-            me.model.dashboardDef.template = template;
+            me.dashboardDef.template = template;
         },
 
     };

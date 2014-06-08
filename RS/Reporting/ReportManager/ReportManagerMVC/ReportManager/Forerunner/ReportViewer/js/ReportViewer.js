@@ -35,6 +35,7 @@ $(function () {
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -65,8 +66,7 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null,
-            isAdmin: false,
+            rsInstance: null
         },
 
         _destroy: function () {

@@ -23,7 +23,7 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional,Report service instance name
+     * @prop {String} options.rsInstance - Optional, Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardViewer), {
         options: {
@@ -35,13 +35,18 @@ $(function () {
         },
         _create: function () {
             var me = this;
+            me.model = new forerunner.ssr.DashboardModel({
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
         },
         _init: function () {
             var me = this;
-            me._clearState();
+            me.model.clearState();
             me.element.html("");
         },
-        loadDefinition: function (path, makeOpaque) {
+        loadDefinition: function (path) {
             var me = this;
 
             // Clear the html in case of an error
@@ -54,18 +59,10 @@ $(function () {
             }
 
             // Render the template and load the reports
-            me.element.html(me.dashboardDef.template);
+            me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id, makeOpaque);
+                me._loadReport(item.id);
             });
-        },
-        _clearState: function () {
-            var me = this;
-            me.dashboardDef = {
-                templateName: null,
-                template: null,
-                reports: {}
-            };
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -75,18 +72,18 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
-            return me.dashboardDef.reports[reportId];
+            return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.dashboardDef.reports[reportId] = properties;
+            me.model.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId, makeOpaque) {
+        _loadReport: function (reportId) {
             var me = this;
             var $item = me.element.find("#" + reportId);
 
             // If we have a report definition, load the report
-            if (me.dashboardDef.reports[reportId]) {
+            if (me.model.dashboardDef.reports[reportId]) {
                 // Create the reportViewerEZ
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
@@ -95,14 +92,9 @@ $(function () {
                     isFullScreen: false
                 });
 
-                var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
+                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
-
-                if (makeOpaque) {
-                    // Make the report area opaque
-                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
-                }
             }
             else {
                 $item.hide();
@@ -130,29 +122,8 @@ $(function () {
             me.dashboardName = me._getName(path);
             me.parentFolder = me._getFolder(path);
 
-            var url = me.options.reportManagerAPI + "/Resource";
-            url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
-            if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
-            }
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                success: function (data) {
-                    me.dashboardDef = data
-                    status = true;
-                },
-                fail: function (jqXHR) {
-                    console.log("_loadResource() - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
-                }
-            });
-
-            return status;
+            // Fetch the model from the server
+            return me.model.fetch(path);
         },
         _destroy: function () {
         },

@@ -55,7 +55,7 @@
     "views":"Просмотров",
     "addToFavorites":"избранное",
     "RDLExt":"RDL Расширение",
-    "saveDashboard":"Сохранить Dashboard"
+    "saveDashboard":"Сохранить Dashboard",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"Создание Dashboard",
     "cancel":"отменить",
-    "submit":"представлять"
+    "submit":"представлять",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Расширения",

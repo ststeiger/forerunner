@@ -665,6 +665,7 @@ $(function () {
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -695,8 +696,7 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null,
-            isAdmin: false,
+            rsInstance: null
         },
 
         _destroy: function () {
@@ -3523,9 +3523,13 @@ $(function () {
             me._addChildTool($tool, tools[0], enabled);
             for (var i = 1; i < tools.length; i++) {
                 var toolInfo = tools[i];
-                $tool.after(me._getToolHtml(toolInfo));
-                $tool = $tool.next();
-                me._addChildTool($tool, toolInfo, enabled);
+                if (toolInfo) {
+                    $tool.after(me._getToolHtml(toolInfo));
+                    $tool = $tool.next();
+                    me._addChildTool($tool, toolInfo, enabled);
+                } else {
+                    throw new Error("Toolbase - addTools() Undefined tool, index: " + i + ", toolClass: " + me.options.toolClass);
+                }
             }
         },
         _addChildTool: function ($tool, toolInfo, enabled) {
@@ -3680,15 +3684,19 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.removeClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.addClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
-                    me._addEvents($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.enableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.removeClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.addClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
+                        me._addEvents($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.enableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - enableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },
@@ -3705,14 +3713,18 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.addClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.removeClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.disableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.addClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.removeClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.disableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - disableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },
@@ -4784,6 +4796,107 @@ $(function () {
     };
 });  // $(function ()
 
+///#source 1 1 /Forerunner/Common/js/DashboardModel.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+
+    ssr.DashboardModel = function (options) {
+        var me = this;
+        me.options = {
+            $appContainer: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
+        };
+
+        // Merge options with the default settings
+        if (options) {
+            $.extend(this.options, options);
+        }
+
+        me.clearState();
+    };
+
+    ssr.DashboardModel.prototype = {
+        clearState: function () {
+            var me = this;
+            me.dashboardDef = {
+                templateName: null,
+                template: null,
+                reports: {}
+            };
+        },
+        fetch: function (path) {
+            var me = this;
+            var status = false;
+
+            var url = me.options.reportManagerAPI + "/Resource";
+            url += "?path=" + encodeURIComponent(path);
+            url += "&instance=" + me.options.rsInstance;
+            if (me.options.rsInstance) {
+                url += "?instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                    me.dashboardDef = data
+                    status = true;
+                },
+                fail: function (jqXHR) {
+                    console.log("_loadResource() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
+                }
+            });
+            return status;
+        },
+        save: function (overwrite, parentFolder, dashboardName) {
+            var me = this;
+            var status = false;
+            if (overwrite === null || overwrite === undefined) {
+                overwrite = false;
+            }
+            var stringified = JSON.stringify(me.dashboardDef);
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    resourceName: dashboardName,
+                    parentFolder: encodeURIComponent(parentFolder),
+                    contents: stringified,
+                    mimetype: "json/forerunner-dashboard",
+                    rsInstance: me.options.rsInstance
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    status = true;
+                },
+                fail: function (jqXHR) {
+                    console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+            return status;
+        },
+        loadTemplate: function (templateName) {
+            var me = this;
+            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
+            me.model.dashboardDef.template = template;
+        },
+
+    };
+});
+
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
 /**
  * @file Contains the toolbar widget.
@@ -5181,8 +5294,11 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
-            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
+            var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
                 listOfItems = listOfItems.concat([tp.itemRDLExt]);
+            }
+
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -5644,7 +5760,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(8, true, [tb.btnLogOff]);
             }
@@ -5655,8 +5771,6 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
-
-            me._updateBtnStates();
         },
 
         _destroy: function () {
@@ -5668,19 +5782,6 @@ $(function () {
             $(window).resize(function () {
                 me.onWindowResize.call(me);
             });
-
-            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me._updateBtnStates();
-            });
-        },
-        _updateBtnStates: function () {
-            var me = this;
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-            if (lastFetched.view === "catalog") {
-                me.enableTools([tb.btnCreateDashboard]);
-            } else {
-                me.disableTools([tb.btnCreateDashboard]);
-            }
         }
     });  // $.widget
 });  // function()
@@ -5769,10 +5870,15 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+                me.addTools(5, true, [tp.itemLogOff]);
             }
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                me.addTools(3, true, [tp.itemCreateDashboard]);
+            }
+
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -5857,7 +5963,6 @@ $(function () {
             $appContainer: null,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin: false,
             onInputBlur: null,
             onInputFocus: null,
         },
@@ -5879,7 +5984,6 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -5905,7 +6009,6 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
-                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;
@@ -6213,7 +6316,8 @@ $(function () {
             me._fetch(me.options.view, me.options.path);
 
             me.userSettings = {
-                responsiveUI: false
+                responsiveUI: false,
+                adminUI: false
             };
             me.getUserSettings(true);
 
@@ -6240,7 +6344,10 @@ $(function () {
                 $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.createDashboard({
                     $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
+                    $reportExplorer: me.element,
+                    parentFolder: me.lastFetched.path,
+                    reportManagerAPI: me.options.reportManagerAPI,
+                    rsInstance: me.options.rsInstance
                 });
                 me.options.$appContainer.append($dlg);
                 me._createDashboardDialog = $dlg;
@@ -12253,8 +12360,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null,
-            isAdmin:false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -12291,8 +12397,7 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
+                rsInstance: me.options.rsInstance
             });
 
             // Create / render the toolbar
@@ -12676,8 +12781,7 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false,
-            isAdmin: false,
+            useReportManagerSettings: false
         },
         _render: function () {
             var me = this;
@@ -12710,8 +12814,7 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection,
-                isAdmin: me.options.isAdmin,
+                $unzoomtoolbar: layout.$unzoomsection
             });
 
             initializer.render();
@@ -13229,7 +13332,6 @@ $(function () {
 	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Optional,Report service instance name
-     * @prop {String} options.isAdmin - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
      */
@@ -13240,7 +13342,6 @@ $(function () {
             isFullScreen: true,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin:false,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -13269,7 +13370,6 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur
             });
@@ -13439,6 +13539,12 @@ $(function () {
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
+        _getUserSettings: function () {
+            var me = this;
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            return me.$reportExplorer.reportExplorer("getUserSettings");
+        },
         /**
          * Transition to ReportViewer view
          *
@@ -13451,15 +13557,6 @@ $(function () {
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            //Update isAdmin
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
-            if (settings && settings.adminUI === true )
-                me.options.isAdmin = true;
-            else
-                me.options.isAdmin = false;
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -13478,7 +13575,7 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    isAdmin: me.options.isAdmin,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -13516,11 +13613,12 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: false,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
+                $dashboardEditor.dashboardEditor("loadDefinition", path);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13556,7 +13654,8 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -13633,31 +13732,38 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
+    var ssr = forerunner.ssr;
 
     /**
-     * Widget used to select a new dashbard template
+     * Widget used to select a new dashboard template
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {String} options.$reportExplorer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.parentFolder - Folder that this resource should be created in
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
      *
      * @example
      * $("#createDashboardDialog").createDashboard({
-     *    $appContainer: me.options.$appContainer,
-     *    $reportViewer: $viewer,
-     /  });
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     parentFolder: me.lastFetched,
+     * });
      */
     $.widget(widgets.getFullname(widgets.createDashboard), {
         options: {
             $reportExplorer: null,
             $appContainer: null,
-            model: null
+            parentFolder: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
         },
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-select-id")
+            me.$select = me.element.find(".fr-cdb-template-name")
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
@@ -13678,15 +13784,33 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-cdb-form fr-core-dialog-form'>" +
-                        "<div class='fr-core-center'>" +
-                            "<select class='fr-cdb-select-id'>" +
-                            "</select>" +
-                            "<div class='fr-core-dialog-submit-container'>" +
-                                "<div class='fr-core-center'>" +
-                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
-                                "</div>" +
+                        // Dashboard Name
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardName + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    // Dashboard name
+                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' placeholder='" + createDashboard.namePlaceholder + "' required='true'/><span class='fr-cdb-error-span'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardTemplate + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    // Layout Template 
+                                    "<select class='fr-cdb-template-name fr-cdb-input'>" +
+                                    "</select>" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Submit button
+                        "<div class='fr-core-dialog-submit-container'>" +
+                            "<div class='fr-core-center'>" +
+                                "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                             "</div>" +
-
                         "</div>" +
                     "</form>" +
                 "</div>");
@@ -13696,6 +13820,9 @@ $(function () {
             me._createOptions();
 
             me.$form = me.element.find(".fr-cdb-form");
+            me._validateForm(me.$form);
+
+            me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -13716,12 +13843,33 @@ $(function () {
         _submit: function () {
             var me = this;
 
-            // Call navigateTo to bring up the create dashboard view
-            var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-            var name = me.$select.val();
-            navigateTo("createDashboard", name);
+            if (!me.$form.valid()) {
+                return;
+            }
 
-            me.closeDialog();
+            // Save the dashboard
+            me.model = new ssr.DashboardModel({
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
+
+            // Load the selected template into the dashboard definition
+            me.model.loadTemplate(me.$dashboardName.val());
+
+            // Save the model and navigate to editDashboard
+            if (me.model.save(false, me.options.parentFolder, me.$dashboardName.val())) {
+                // Call navigateTo to bring up the create dashboard view
+                var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
+                var name = me.$select.val();
+                var path = me.options.parentFolder + name;
+                navigateTo("createDashboard", path);
+
+                me.closeDialog();
+            }
+
+            // TODO
+            // Launch to confirm overwrite dialog
         },
         /**
          * Open parameter set dialog
@@ -13740,6 +13888,31 @@ $(function () {
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-cdb-error-position");
+                    $(element).addClass("fr-cdb-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-cdb-error-position");
+                    $(element).removeClass("fr-cdb-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
         },
     }); //$.widget
 });
@@ -19783,7 +19956,8 @@ $(function () {
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {String} options.rsInstance - Optional,Report service instance name
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.rsInstance - Optional, User specific options
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -19797,7 +19971,8 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            rsInstance: null
+            rsInstance: null,
+            userSettings: null
         },
         /**
          * Switch the UI from dashboard view to the dashboard editor
@@ -20083,7 +20258,7 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional,Report service instance name
+     * @prop {String} options.rsInstance - Optional, Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardViewer), {
         options: {
@@ -20095,13 +20270,18 @@ $(function () {
         },
         _create: function () {
             var me = this;
+            me.model = new forerunner.ssr.DashboardModel({
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
         },
         _init: function () {
             var me = this;
-            me._clearState();
+            me.model.clearState();
             me.element.html("");
         },
-        loadDefinition: function (path, makeOpaque) {
+        loadDefinition: function (path) {
             var me = this;
 
             // Clear the html in case of an error
@@ -20114,18 +20294,10 @@ $(function () {
             }
 
             // Render the template and load the reports
-            me.element.html(me.dashboardDef.template);
+            me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id, makeOpaque);
+                me._loadReport(item.id);
             });
-        },
-        _clearState: function () {
-            var me = this;
-            me.dashboardDef = {
-                templateName: null,
-                template: null,
-                reports: {}
-            };
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -20135,18 +20307,18 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
-            return me.dashboardDef.reports[reportId];
+            return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.dashboardDef.reports[reportId] = properties;
+            me.model.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId, makeOpaque) {
+        _loadReport: function (reportId) {
             var me = this;
             var $item = me.element.find("#" + reportId);
 
             // If we have a report definition, load the report
-            if (me.dashboardDef.reports[reportId]) {
+            if (me.model.dashboardDef.reports[reportId]) {
                 // Create the reportViewerEZ
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
@@ -20155,14 +20327,9 @@ $(function () {
                     isFullScreen: false
                 });
 
-                var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
+                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
-
-                if (makeOpaque) {
-                    // Make the report area opaque
-                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
-                }
             }
             else {
                 $item.hide();
@@ -20190,29 +20357,8 @@ $(function () {
             me.dashboardName = me._getName(path);
             me.parentFolder = me._getFolder(path);
 
-            var url = me.options.reportManagerAPI + "/Resource";
-            url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
-            if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
-            }
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                success: function (data) {
-                    me.dashboardDef = data
-                    status = true;
-                },
-                fail: function (jqXHR) {
-                    console.log("_loadResource() - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
-                }
-            });
-
-            return status;
+            // Fetch the model from the server
+            return me.model.fetch(path);
         },
         _destroy: function () {
         },
@@ -20248,22 +20394,37 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given template
-         * @function $.forerunner.dashboardEditor#loadTemplate
-         */
-        loadTemplate: function (parentFolder, templateName) {
-            var me = this;
-            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
-            me.dashboardDef.template = template;
-            me.parentFolder = parentFolder;
-            me._renderTemplate();
-        },
-        /**
          * Loads the given dashboard definition and opens the dashboard for editing
-         * @function $.forerunner.dashboardEditor#loadTemplate
+         * @function $.forerunner.dashboardEditor#editDashboard
          */
         editDashboard: function (path) {
-            // TODO
+            var me = this;
+            me.loadDefinition(path);
+            me._renderButtons();
+        },
+        _renderButtons: function () {
+            var me = this;
+            me.element.html(me.model.dashboardDef.template);
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+
+                // Create the button
+                var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+                $item.append($btn);
+
+                // Hook the onClick event
+                $btn.on("click", function (e) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+
+                // Position the button
+                var left = $item.width() / 2 - ($btn.width() / 2);
+                var top = $item.height() / 2 - ($btn.height() / 2);
+                $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
+
+                // Make the report area opaque
+                me.element.find(".fr-report-container").addClass("fr-core-mask");
+            });
         },
         /**
          * Save the dashboard
@@ -20309,57 +20470,11 @@ $(function () {
 
             // Save the dashboard to the server
             me.dashboardName = data.dashboardName;
-            me._saveDashboard(data.overwrite);
-        },
-        _saveDashboard: function (overwrite) {
-            var me = this;
-            if (overwrite === null || overwrite === undefined) {
-                overwrite = false;
+            if (me.model.save(data.overwrite)) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
+            } else {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
             }
-            var stringified = JSON.stringify(me.dashboardDef);
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
-            forerunner.ajax.ajax({
-                type: "POST",
-                url: url,
-                data: {
-                    resourceName: me.dashboardName,
-                    parentFolder: encodeURIComponent(me.parentFolder),
-                    contents: stringified,
-                    mimetype: "json/forerunner-dashboard",
-                    rsInstance: me.options.rsInstance
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
-                },
-                fail: function (jqXHR) {
-                    console.log("_saveDashboard() - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
-                }
-            });
-        },
-        _renderTemplate: function () {
-            var me = this;
-            me.element.html(me.dashboardDef.template);
-            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                var $item = $(item);
-
-                // Create the button
-                var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
-                $item.append($btn);
-
-                // Hook the onClick event
-                $btn.on("click", function (e) {
-                    me._onClickProperties.apply(me, arguments);
-                });
-
-                // Position the button
-                var left = $item.width() / 2 - ($btn.width() / 2);
-                var top = $item.height() / 2 - ($btn.height() / 2);
-                $btn.css({position: "absolute", left:left + "px", top: top + "px"});
-            });
         },
         _onClickProperties: function (e) {
             var me = this;
@@ -20387,9 +20502,11 @@ $(function () {
             }
 
             // Load the given report
-            me._loadReport(data.reportId, true);
+            me._loadReport(data.reportId);
         },
         _create: function () {
+            var me = this;
+            me._super();
         },
         _init: function () {
             var me = this;

@@ -81,10 +81,15 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+                me.addTools(5, true, [tp.itemLogOff]);
             }
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                me.addTools(3, true, [tp.itemCreateDashboard]);
+            }
+
             me._initCallbacks();
 
             // Hold onto the folder buttons for later

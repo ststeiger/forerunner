@@ -22,7 +22,8 @@ $(function () {
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {String} options.rsInstance - Optional,Report service instance name
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.rsInstance - Optional, User specific options
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -36,7 +37,8 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            rsInstance: null
+            rsInstance: null,
+            userSettings: null
         },
         /**
          * Switch the UI from dashboard view to the dashboard editor

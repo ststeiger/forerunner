@@ -55,7 +55,7 @@
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld",
     "RDLExt":"RDL Eftirnafn",
-    "saveDashboard":"vista Mælaborð"
+    "saveDashboard":"vista Mælaborð",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"Búa Mælaborð",
     "cancel":"hætta",
-    "submit":"leggja"
+    "submit":"leggja",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Eftirnafn",

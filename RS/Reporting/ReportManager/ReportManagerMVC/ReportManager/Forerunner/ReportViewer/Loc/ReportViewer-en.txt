@@ -203,7 +203,10 @@
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
-    "submit":"Save"
+    "submit":"Save",
+    "dashboardName": "Name",
+    "namePlaceholder": "dashboard name",
+    "dashboardTemplate": "Template"
   },
   "reportProperties": {
     "title":"Report Properties",
@@ -215,7 +218,7 @@
   "dashboardEditor": {
     "propertiesBtn": "Properties"
   },
-    "reportProperties": {
+  "reportProperties": {
     "title":"Report Properties",
     "cancel":"Cancel",
     "submit":"Submit",

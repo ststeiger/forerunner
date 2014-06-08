@@ -44,7 +44,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            //sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -408,7 +407,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1182,7 +1180,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1200,18 +1197,6 @@ $(function () {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
-        btnCreateDashboard: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-createdashboard",
-            imageClass: "fr-icons24x24-createdashboard",
-            tooltip: locData.toolbar.createDashboard,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
                 }
             }
         },

@@ -55,7 +55,7 @@
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Salvați Tablou de bord"
+    "saveDashboard":"Salvați Tablou de bord",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"crea Tablou de bord",
     "cancel":"anula",
-    "submit":"executa"
+    "submit":"executa",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Extension",

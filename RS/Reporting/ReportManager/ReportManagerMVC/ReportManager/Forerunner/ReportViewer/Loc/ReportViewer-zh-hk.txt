@@ -55,7 +55,7 @@
     "views":"瀏覽",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL擴展",
-    "saveDashboard":"保存指示板"
+    "saveDashboard":"保存指示板",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"創建指示板",
     "cancel":"取消",
-    "submit":"提交"
+    "submit":"提交",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL擴展",

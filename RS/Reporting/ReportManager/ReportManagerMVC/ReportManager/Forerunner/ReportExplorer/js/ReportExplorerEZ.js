@@ -35,7 +35,6 @@ $(function () {
 	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Optional,Report service instance name
-     * @prop {String} options.isAdmin - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
      */
@@ -46,7 +45,6 @@ $(function () {
             isFullScreen: true,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin:false,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -75,7 +73,6 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur
             });
@@ -245,6 +242,12 @@ $(function () {
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
+        _getUserSettings: function () {
+            var me = this;
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            return me.$reportExplorer.reportExplorer("getUserSettings");
+        },
         /**
          * Transition to ReportViewer view
          *
@@ -257,15 +260,6 @@ $(function () {
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            //Update isAdmin
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
-            if (settings && settings.adminUI === true )
-                me.options.isAdmin = true;
-            else
-                me.options.isAdmin = false;
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -284,7 +278,7 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    isAdmin: me.options.isAdmin,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -322,11 +316,12 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: false,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
+                $dashboardEditor.dashboardEditor("loadDefinition", path);
             }, timeout);
 
             me.element.css("background-color", "");
@@ -362,7 +357,8 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: true,
-                    rsInstance: me.options.rsInstance
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");

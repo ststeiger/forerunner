@@ -110,8 +110,8 @@
     "title":"User Settings",
     "submit":"Ok",
     "cancel":"Cancel",
-    "ResponsiveUI": "Responsive UI",
-    "AdminUI": "Admin UI"
+    "ResponsiveUI":"Responsive UI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Null",
@@ -203,7 +203,10 @@
   "createDashboard": {
     "title":"Create Dashboard",
     "cancel":"Cancel",
-    "submit":"Save"
+    "submit":"Save",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "dashboardEditor": {
     "propertiesBtn":"Properties"

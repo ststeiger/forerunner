@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"Dashboard erstellen",
     "cancel":"stornieren",
-    "submit":"einreichen"
+    "submit":"einreichen",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL-Erweiterungen",

@@ -55,7 +55,7 @@
     "views":"Visualizações",
     "addToFavorites":"Adicionar aos favoritos",
     "RDLExt":"RDL Extensão",
-    "saveDashboard":"Salve o Dashboard"
+    "saveDashboard":"Salve o Dashboard",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"criar o Dashboard",
     "cancel":"cancelar",
-    "submit":"submeter"
+    "submit":"submeter",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Extensões",

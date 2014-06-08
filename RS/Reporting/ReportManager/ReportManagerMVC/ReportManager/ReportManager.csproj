@@ -188,6 +188,7 @@
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\images\OpenDropDown.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
+    <Content Include="Forerunner\Common\js\DashboardModel.js" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\avi.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\bmp.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\css.png" />

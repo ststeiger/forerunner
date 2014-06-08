@@ -107,9 +107,13 @@ $(function () {
             me._addChildTool($tool, tools[0], enabled);
             for (var i = 1; i < tools.length; i++) {
                 var toolInfo = tools[i];
-                $tool.after(me._getToolHtml(toolInfo));
-                $tool = $tool.next();
-                me._addChildTool($tool, toolInfo, enabled);
+                if (toolInfo) {
+                    $tool.after(me._getToolHtml(toolInfo));
+                    $tool = $tool.next();
+                    me._addChildTool($tool, toolInfo, enabled);
+                } else {
+                    throw new Error("Toolbase - addTools() Undefined tool, index: " + i + ", toolClass: " + me.options.toolClass);
+                }
             }
         },
         _addChildTool: function ($tool, toolInfo, enabled) {
@@ -264,15 +268,19 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.removeClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.addClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
-                    me._addEvents($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.enableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.removeClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.addClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
+                        me._addEvents($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.enableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - enableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },
@@ -289,14 +297,18 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.addClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.removeClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.disableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.addClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.removeClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.disableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - disableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },

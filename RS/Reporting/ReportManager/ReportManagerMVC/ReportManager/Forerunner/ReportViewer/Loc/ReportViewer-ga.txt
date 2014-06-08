@@ -55,7 +55,7 @@
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
-    "saveDashboard":"Sábháil Ar Phainéal"
+    "saveDashboard":"Sábháil Ar Phainéal",
     "editDashboard":"Edit Dashboard"
   },
   "toolbar": {
@@ -197,7 +197,10 @@
   "createDashboard": {
     "title":"Cruthaigh Phainéil",
     "cancel":"Cealaigh",
-    "submit":"Cuir"
+    "submit":"Cuir",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Síneadh",

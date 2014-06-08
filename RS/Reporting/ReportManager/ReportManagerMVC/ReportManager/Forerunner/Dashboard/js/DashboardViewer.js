@@ -87,17 +87,19 @@ $(function () {
 
             // If we have a report definition, load the report
             if (me.model.dashboardDef.reports[reportId]) {
-                // Create the reportViewerEZ
-                $item.reportViewerEZ({
-                    navigateTo: me.options.navigateTo,
-                    historyBack: null,
-                    isReportManager: false,
-                    isFullScreen: false
-                });
+                var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+                setTimeout(function () {
+                    $item.reportViewerEZ({
+                        navigateTo: me.options.navigateTo,
+                        historyBack: null,
+                        isReportManager: false,
+                        isFullScreen: false
+                    });
 
-                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
-                var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                    var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                    var $reportViewer = $item.reportViewerEZ("getReportViewer");
+                    $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                }, timeout);
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }

@@ -14079,9 +14079,9 @@ $(function () {
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.attr("checked", "");
+                                me.$includeLink.prop('checked', true);
                             } else {
-                                me.$includeLink.removeAttr("checked");
+                                me.$includeLink.prop('checked', false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
@@ -14115,8 +14115,8 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.attr("checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
                 me._subscriptionData.Report = me.options.reportPath;
@@ -14137,10 +14137,10 @@ $(function () {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();

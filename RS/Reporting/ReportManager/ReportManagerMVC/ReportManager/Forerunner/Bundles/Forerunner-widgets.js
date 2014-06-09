@@ -5895,6 +5895,8 @@ $(function () {
      * @prop {Object} options - The options for toolpane
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @prop {Object} options.$reportExplorer - The report explorer wiget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @example
      * $("#reportExplorerToolpaneId").reportExplorerToolpane({
      *  navigateTo: navigateTo
@@ -5922,6 +5924,11 @@ $(function () {
                 $item.addClass(itemActiveClass);
             }
         },
+        /**
+         * Sets the search item keyword into the UI
+         *
+         * @function $.forerunner.reportExplorerToolpane#setSearchKeyword
+         */
         setSearchKeyword: function (keyword) {
             var me = this;
 
@@ -5936,23 +5943,26 @@ $(function () {
         _initCallbacks: function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
-
-            // Hook up the toolbar element events
-            me.enableTools([tp.itemBack, tp.itemFolders, tp.itemSetup, tg.explorerItemFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tp.itemLogOff]);
-            }
-
-            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
-            //    me.enableTools([tp.itemSearchFolder, tp.itemTags]);
-            //}
-
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-
             
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me._updateBtnStates.call(me);
+                me.updateBtnStates.call(me);
             });
+
+            var $userSettings = me.options.$appContainer.find(".fr-us-section");
+            $userSettings.on(events.userSettingsClose(), function (e, data) {
+                if (data.isSubmit) {
+                    me.updateBtnStates.call(me);
+                }
+            });
+        },
+        isAdmin: function () {
+            var me = this;
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                return true;
+            }
+            return false;
         },
         _init: function () {
             var me = this;
@@ -5961,33 +5971,16 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
 
-            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
-            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-
-                ////Not allow add tags on the root page
-                //if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
-                //    me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-                //    toolpaneItems.push(tp.itemTags);
-                //}
-
-                ////Only allow add tags and search folder in catalog view
-                //if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-                //    toolpaneItems.push(tp.itemSearchFolder);
-                //}
-
-                toolpaneItems.push(tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard);
-            }
-
-            toolpaneItems.push(tg.explorerItemFindGroup);
+            me.addTools(1, true, toolpaneItems);
+            me._initCallbacks();
 
             if (forerunner.ajax.isFormsAuth()) {
-                toolpaneItems.push(tp.itemLogOff);
+                me.enableTools([tp.itemLogOff]);
+            } else {
+                me.disableTools([tp.itemLogOff]);
             }
-
-            me.addTools(1, false, toolpaneItems);
-            me._initCallbacks();
 
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
@@ -5995,8 +5988,7 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
-
-            me._updateBtnStates();
+            me.updateBtnStates();
         },
 
         _destroy: function () {
@@ -6005,27 +5997,46 @@ $(function () {
         _create: function () {
             var me = this;
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me._updateBtnStates();
+                me.updateBtnStates();
             });
         },
-        _updateBtnStates: function () {
+        updateBtnStates: function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
 
-            if (lastFetched.view === "catalog") {
-                me.disableTools([tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard]);
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                me.showTool(tp.itemLogOff.selectorClass);
+            } else {
+                me.hideTool(tp.itemLogOff.selectorClass);
+            }
 
-                var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                if (permission && permission.hasPermission === true) {
-                    // If the last fetched folder is a catalog and the user has permission to create a
-                    // resource in this folder, enable the create dashboard button and create search folder button
-                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
-                }
+            if (!me.isAdmin()) {
+                me.hideTool(tp.itemSearchFolder.selectorClass);
+                me.hideTool(tp.itemCreateDashboard.selectorClass);
+                me.hideTool(tp.itemTags.selectorClass);
+            } else {
+                // If we are in admin mode we show the buttons
+                me.showTool(tp.itemSearchFolder.selectorClass);
+                me.showTool(tp.itemCreateDashboard.selectorClass);
+                me.showTool(tp.itemTags.selectorClass);
 
-                if (lastFetched.path !== "/") {
-                    var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                    if (addTagPermission && addTagPermission.hasPermission === true) {
-                        me.enableTools([tp.itemTags]);
+                // Then we start out disabled and enable if needed
+                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
+
+                if (lastFetched.view === "catalog") {
+                    var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                    if (permission && permission.hasPermission === true) {
+                        // If the last fetched folder is a catalog and the user has permission to create a
+                        // resource in this folder, enable the create dashboard button and create search folder button
+                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    }
+
+                    if (lastFetched.path !== "/") {
+                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                        if (addTagPermission && addTagPermission.hasPermission === true) {
+                            me.enableTools([tp.itemTags]);
+                        }
                     }
                 }
             }
@@ -6803,10 +6814,10 @@ $(function () {
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
                         "</tr></td><tr><td>" +
-                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
                         "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
                         "</tr></td><tr><td>" +
-                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<label class='fr-us-label fr-us-separator'>" + userSettings.AdminUI + "</label>" +
                         "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                         "</td></tr></table>" +
                     "</div>" +
@@ -6873,15 +6884,6 @@ $(function () {
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
         },
-        _saveSettings: function () {
-            var me = this;
-            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.email = me.$email.val();
-            me.settings.adminUI = me.$adminUI.prop("checked");
-            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
-
-            me.closeDialog();
-        },
         /**
          * Open user setting dialog
          *
@@ -6894,6 +6896,23 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
 
         },
+        _triggerClose: function (isSubmit) {
+            var me = this;
+            var data = {
+                isSubmit: isSubmit,
+                settings: me.settings
+            };
+            me._trigger(events.close, null, data);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _saveSettings: function () {
+            var me = this;
+            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.email = me.$email.val();
+            me.settings.adminUI = me.$adminUI.prop("checked");
+            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+            me._triggerClose(true);
+        },
         /**
          * Close user setting dialog
          *
@@ -6901,9 +6920,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-
+            me._triggerClose(false);
         }
     }); //$.widget
 });
@@ -21363,8 +21380,11 @@ $(function () {
             if (enableEdit) {
                 var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                 var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = forerunner.ajax.hasPermission(path, "Update Content");
-                if (permission && permission.hasPermission === true) {
+                var permission = { hasPermission: true };
+                if (path) {
+                    permission = forerunner.ajax.hasPermission(path, "Update Content");
+                }
+                if (!path || (permission && permission.hasPermission === true)) {
                     // If the user has update resource permission for this dashboard, we will
                     // enable the edit buttons
                     me.showTool(dtb.btnView.selectorClass);
@@ -21453,8 +21473,11 @@ $(function () {
             if (enableEdit) {
                 var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                 var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = forerunner.ajax.hasPermission(path, "Update Content");
-                if (permission && permission.hasPermission === true) {
+                var permission = { hasPermission: true };
+                if (path) {
+                    permission = forerunner.ajax.hasPermission(path, "Update Content");
+                }
+                if (!path || (permission && permission.hasPermission === true)) {
                     // If the user has update resource permission for this dashboard, we will
                     // enable the edit buttons
                     me.showTool(dbtp.itemView.selectorClass);
@@ -21754,7 +21777,7 @@ $(function () {
                 me._loadReport(data.reportId, true);
                 me._renderButtons();
                 me._makeOpaque(true);
-            });
+            }, timeout);
         },
         _showUI: function (show) {
             var me = this;

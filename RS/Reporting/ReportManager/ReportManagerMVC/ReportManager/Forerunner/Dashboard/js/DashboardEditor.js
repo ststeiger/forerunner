@@ -128,7 +128,7 @@ $(function () {
                 me._loadReport(data.reportId, true);
                 me._renderButtons();
                 me._makeOpaque(true);
-            });
+            }, timeout);
         },
         _showUI: function (show) {
             var me = this;

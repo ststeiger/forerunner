@@ -55,8 +55,11 @@ $(function () {
             if (enableEdit) {
                 var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                 var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = forerunner.ajax.hasPermission(path, "Update Content");
-                if (permission && permission.hasPermission === true) {
+                var permission = { hasPermission: true };
+                if (path) {
+                    permission = forerunner.ajax.hasPermission(path, "Update Content");
+                }
+                if (!path || (permission && permission.hasPermission === true)) {
                     // If the user has update resource permission for this dashboard, we will
                     // enable the edit buttons
                     me.showTool(dtb.btnView.selectorClass);

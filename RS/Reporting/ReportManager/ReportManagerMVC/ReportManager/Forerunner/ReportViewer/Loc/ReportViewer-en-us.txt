@@ -18,7 +18,7 @@
     "saveDashboardSucceeded":"Save Dashboard Succeeded",
     "loadDashboardFailed":"Load Dashboard Failed",
     "loadDashboard":"Load Dashboard",
-    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
+    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Click for more detail",

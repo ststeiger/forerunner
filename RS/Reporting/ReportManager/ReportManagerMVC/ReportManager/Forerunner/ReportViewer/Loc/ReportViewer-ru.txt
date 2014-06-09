@@ -57,7 +57,8 @@
     "addToFavorites":"избранное",
     "RDLExt":"RDL Расширение",
     "saveDashboard":"Сохранить Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "editDashboard":"Редактировать Dashboard",
+    "tags":"Метки",
     "viewDashboard":"View Dashboard"
   },
   "toolbar": {
@@ -93,6 +94,7 @@
     "createDashboard":"Создание Dashboard",
     "editDashboard":"Редактировать Dashboard",
     "saveDashboard":"Сохранить Dashboard",
+    "searchFolder":"Поиск Папка",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"представлять",
     "dashboardName":"Панель Имя",
     "namePlaceholder":"Панель Имя"
+  },
+  "tags": {
+    "title":"Метки",
+    "tags":"Метки",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "prompt":"разделяйте метки запятыми.",
+    "yourPosition":"Вы находитесь"
+  },
+  "searchFolder": {
+    "title":"Поиск Папка",
+    "name":"название ",
+    "tags":"Метки",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "prompt":"разделяйте метки запятыми.",
+    "homePage":"Главная",
+    "createTo":"Созданный под"
   }
 }

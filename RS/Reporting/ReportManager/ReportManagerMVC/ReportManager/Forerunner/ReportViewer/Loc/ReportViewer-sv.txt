@@ -57,7 +57,8 @@
     "addToFavorites":"Lägg till i favoriter",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Spara Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "editDashboard":"Redigera Instrumentbräda",
+    "tags":"Taggar",
     "viewDashboard":"View Dashboard"
   },
   "toolbar": {
@@ -93,6 +94,7 @@
     "createDashboard":"Skapa Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
     "saveDashboard":"Spara Dashboard",
+    "searchFolder":"sökmapp",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"inkomma",
     "dashboardName":"Instrumentpanels Namn",
     "namePlaceholder":"Instrumentpanels Namn"
+  },
+  "tags": {
+    "title":"Taggar",
+    "tags":"Taggar",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "prompt":"åtskilja taggar med kommatecken.",
+    "yourPosition":"Du är på"
+  },
+  "searchFolder": {
+    "title":"sökmapp",
+    "name":"Namn",
+    "tags":"Tags",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "prompt":"åtskilja taggar med kommatecken.",
+    "homePage":"Hemsida",
+    "createTo":"Tillverkad enligt"
   }
 }

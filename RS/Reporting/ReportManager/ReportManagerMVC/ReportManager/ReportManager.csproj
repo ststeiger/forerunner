@@ -188,8 +188,11 @@
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\images\OpenDropDown.png" />
+    <Content Include="Forerunner\ReportExplorer\css\ForerunnerTags.css" />
+    <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
     <Content Include="Forerunner\Common\js\DashboardModel.js" />
+    <Content Include="Forerunner\ReportExplorer\css\ManageSubscription.css" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\avi.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\bmp.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\css.png" />
@@ -329,9 +332,11 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
+    <Content Include="Forerunner\ReportExplorer\js\ForerunnerTags.js" />
     <Content Include="Forerunner\ReportExplorer\js\EmailSubscription.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerSearchFolder.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolpane.js" />

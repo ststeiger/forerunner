@@ -1035,6 +1035,19 @@ $(function () {
             }
         },
         /** @member */
+        itemManageSubscription: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-managesubscription",
+            imageClass: "fr-icons24x24-managesubscription",
+            text: "Manage Subscription",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("manageSubscription");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-managesubscription"]);
+                }
+            }
+        },
+        /** @member */
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
@@ -1100,6 +1113,19 @@ $(function () {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showRDLExtDialog");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
+                }
+            }
+        },
+        /** @member */
+        itemTags: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-tags",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolPane.tags,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showTags");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-tags"]);
                 }
             }
         }
@@ -1365,6 +1391,18 @@ $(function () {
                 }
             }
         },
+        /** @member */
+        btnSearchFolder: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-searchfolder",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            tooltip: locData.toolbar.searchFolder,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
+                }
+            }
+        },
     };
 
     forerunner.ssr.tools.reportExplorerToolpane = {
@@ -1536,8 +1574,33 @@ $(function () {
                     $accordionGroup.toggle();
                 }
             }
+        },
+        /** @member */
+        itemTags: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-tags",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolPane.tags,
+            events: {
+                click: function (e) {
+                    e.data.$reportExplorer.reportExplorer("showTags");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
+                }
+            }
+        },
+        /** @member */
+        itemSearchFolder: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-searchfolder",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolbar.searchFolder,
+            events: {
+                click: function (e) {
+                    e.data.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-searchfolder"]);
+                }
+            }
         }
-
     };
 
     /**

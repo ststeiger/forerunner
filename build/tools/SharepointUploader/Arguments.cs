@@ -137,16 +137,27 @@ namespace Forerunner.Tools.SharepointUploader
         /// <returns>the loaded cred or null.</returns>
         private static NetworkCredential LoadCredential(string path)
         {
-            XDocument doc = XDocument.Load(path);
-            XElement credElem = doc.Element(XName.Get("Credential"));
-            if (credElem == null)
+            try
             {
+                XDocument doc = XDocument.Load(path);
+                XElement credElem = doc.Element(XName.Get("Credential"));
+                if (credElem == null)
+                {
+                    return null;
+                }
+
+                string userName = credElem.Attribute(XName.Get("UserName")).Value;
+                string password = credElem.Attribute(XName.Get("Password")).Value;
+                return new NetworkCredential(userName, password);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(
+                    "Error loading credential from [{0}].",
+                    path);
+                Console.Error.WriteLine(ex.ToString());
                 return null;
             }
-
-            string userName = credElem.Attribute(XName.Get("UserName")).Value;
-            string password = credElem.Attribute(XName.Get("Password")).Value;
-            return new NetworkCredential(userName, password);
         }
     }
 }

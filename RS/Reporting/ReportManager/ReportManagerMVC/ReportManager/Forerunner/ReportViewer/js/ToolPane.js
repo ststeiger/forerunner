@@ -58,6 +58,15 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me.disableTools([tp.itemTags]);
+
+                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
+                if (addTagPermission && addTagPermission.hasPermission === true) {
+                    me.enableTools([tp.itemTags]);
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap]);
@@ -146,9 +155,9 @@ $(function () {
             var me = this;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
@@ -160,7 +169,7 @@ $(function () {
 
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemRDLExt]);
+                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
             }
 
             return listOfItems;

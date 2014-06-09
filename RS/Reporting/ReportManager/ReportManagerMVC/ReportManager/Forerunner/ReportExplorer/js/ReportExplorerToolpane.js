@@ -73,7 +73,16 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
+            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+            //    me.enableTools([tp.itemSearchFolder, tp.itemTags]);
+            //}
+
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+
+            
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates.call(me);
+            });
         },
         _init: function () {
             var me = this;
@@ -81,15 +90,33 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(5, true, [tp.itemLogOff]);
-            }
+
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
+
             var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                me.addTools(3, true, [tp.itemCreateDashboard]);
+
+                ////Not allow add tags on the root page
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
+                //    me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemTags);
+                //}
+
+                ////Only allow add tags and search folder in catalog view
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemSearchFolder);
+                //}
+
+                toolpaneItems.push(tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard);
             }
 
+            toolpaneItems.push(tg.explorerItemFindGroup);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
+
+            me.addTools(1, false, toolpaneItems);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -114,10 +141,23 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+
             if (lastFetched.view === "catalog") {
-                me.enableTools([tp.itemCreateDashboard]);
-            } else {
-                me.disableTools([tp.itemCreateDashboard]);
+                me.disableTools([tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard]);
+
+                var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                if (permission && permission.hasPermission === true) {
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button and create search folder button
+                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                }
+
+                if (lastFetched.path !== "/") {
+                    var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                    if (addTagPermission && addTagPermission.hasPermission === true) {
+                        me.enableTools([tp.itemTags]);
+                    }
+                }
             }
         }
     });  // $.widget

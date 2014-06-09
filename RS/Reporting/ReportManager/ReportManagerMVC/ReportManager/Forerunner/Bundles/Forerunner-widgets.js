@@ -2157,7 +2157,7 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
-        showEmailSubscription : function () {
+        showEmailSubscription : function (subscriptionID) {
             var me = this;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
@@ -2170,8 +2170,17 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 if (paramList)
                     me.$emailSub.emailSubscription("option", "paramList", paramList);
-                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        manageSubscription : function() {
+            var me = this;
+            me._setManageSubscriptionUI();
+            if (me.$manageSub) {
+                me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
+                me.$manageSub.manageSubscription("listSubscriptions", null);
+                me.$manageSub.manageSubscription("openDialog");
             }
         },
         /**
@@ -2211,6 +2220,11 @@ $(function () {
             var me = this;
             if (!me.$emailSub)
                 me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
+        },
+        _setManageSubscriptionUI: function () {
+            var me = this;
+            if (!me.$manageSub)
+                me.$manageSub = me.options.$appContainer.find(".fr-managesubscription-section");
         },
        
         //Page Loading
@@ -3074,6 +3088,16 @@ $(function () {
                 //console.log('remove settimeout');
             }
             me.autoRefreshID = null;
+        },
+        /**
+         * Show report tags dialog
+         *
+         * @function $.forerunner.reportViewer#showTags
+         */
+        showTags: function () {
+            var me = this;
+            me.$tagsDialog = me.options.$appContainer.find(".fr-tag-section");
+            me.$tagsDialog.forerunnerTags("openDialog", me.getReportPath());
         },
         /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
@@ -5229,6 +5253,15 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me.disableTools([tp.itemTags]);
+
+                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
+                if (addTagPermission && addTagPermission.hasPermission === true) {
+                    me.enableTools([tp.itemTags]);
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap]);
@@ -5317,9 +5350,9 @@ $(function () {
             var me = this;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
@@ -5331,7 +5364,7 @@ $(function () {
 
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemRDLExt]);
+                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
             }
 
             return listOfItems;
@@ -5797,10 +5830,21 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav];
+
+            //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
+            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+            //    if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+            //        toolbarList.push(tb.btnSearchFolder);
+            //    }
+            //}
+            
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(8, true, [tb.btnLogOff]);
+                toolbarList.push(tb.btnLogOff)
             }
+            toolbarList.push(tg.explorerFindGroup);
+
+            me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -5899,7 +5943,16 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
+            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+            //    me.enableTools([tp.itemSearchFolder, tp.itemTags]);
+            //}
+
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+
+            
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates.call(me);
+            });
         },
         _init: function () {
             var me = this;
@@ -5907,15 +5960,33 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(5, true, [tp.itemLogOff]);
-            }
+
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
+
             var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                me.addTools(3, true, [tp.itemCreateDashboard]);
+
+                ////Not allow add tags on the root page
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
+                //    me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemTags);
+                //}
+
+                ////Only allow add tags and search folder in catalog view
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemSearchFolder);
+                //}
+
+                toolpaneItems.push(tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard);
             }
 
+            toolpaneItems.push(tg.explorerItemFindGroup);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
+
+            me.addTools(1, false, toolpaneItems);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -5940,10 +6011,23 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+
             if (lastFetched.view === "catalog") {
-                me.enableTools([tp.itemCreateDashboard]);
-            } else {
-                me.disableTools([tp.itemCreateDashboard]);
+                me.disableTools([tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard]);
+
+                var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                if (permission && permission.hasPermission === true) {
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button and create search folder button
+                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                }
+
+                if (lastFetched.path !== "/") {
+                    var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                    if (addTagPermission && addTagPermission.hasPermission === true) {
+                        me.enableTools([tp.itemTags]);
+                    }
+                }
             }
         }
     });  // $.widget
@@ -6066,12 +6150,19 @@ $(function () {
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
-                action = "explore";
+                    action = "explore";
             }
             else if (catalogItem.Type === 3) {
-                action = "open";
-                if (catalogItem.MimeType === "json/forerunner-dashboard") {
-                    action = "openDashboard";
+                switch (catalogItem.MimeType) {
+                    case "json/forerunner-dashboard":
+                        action = "openDashboard";
+                        break;
+                    case "json/forerunner-searchfolder":
+                        action = "searchfolder";
+                        break;
+                    default:
+                        action = "open";
+                        break;
                 }
             }
             else {
@@ -6096,13 +6187,14 @@ $(function () {
 
             //Images
             
-            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 if (isSelected) {
                     outerImage.addClass("fr-explorer-folder-selected");
                 }
                 else {
                     outerImage.addClass("fr-explorer-folder");
                 }
+            }
             else if (catalogItem.Type === 3) {//resource files
                 outerImage.addClass("fr-icons128x128");
 
@@ -6110,8 +6202,8 @@ $(function () {
                 outerImage.addClass(fileTypeClass);
             }
             else {
-                
-                var innerImage = new $("<img />");                
+
+                var innerImage = new $("<img />");
                 $imageblock.append(innerImage);
                 var corner = new $("<div />");
                 $imageblock.append(corner);
@@ -6119,25 +6211,25 @@ $(function () {
                 corner.css("background-color", me.$UL.css("background-color"));
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
-                var imageSrc =  reportThumbnailPath;
+                var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
                 if (isSelected) {
                     outerImage.addClass("fr-report-item-outer-image-selected");
-                    EarImage.addClass("fr-explorer-item-ear-selcted");                   
+                    EarImage.addClass("fr-explorer-item-ear-selcted");
                 }
                 else {
-                    outerImage.addClass("fr-report-item-outer-image");                    
+                    outerImage.addClass("fr-report-item-outer-image");
                     EarImage.addClass("fr-report-item-ear-image");
                 }
-               
+
                 innerImage.attr("src", imageSrc);
                 innerImage.error(function () {
                     $(this).attr("src", me.options.forerunnerPath + "ReportExplorer/images/Report-icon.png");
                 });
-                
+
                 innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.
             }
             if (isSelected)
@@ -6278,7 +6370,7 @@ $(function () {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -6288,6 +6380,11 @@ $(function () {
             if (view === "search") {
                 me._searchItems(path);
                 return;
+            }
+
+            me.parentPath = null;
+            if (view === "searchfolder") {
+                me.parentPath = me._getParentPath(me.options.path);
             }
 
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -6360,14 +6457,36 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element
                 });
                 me.options.$appContainer.append($dlg);
-                me._userSettingsDialog = $dlg;
             }
+            me._userSettingsDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-sf-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.reportExplorerSearchFolder({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._searchFolderDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-tag-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-tag-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerTags({
+                    $appContainer: me.options.$appContainer,
+                    rsInstance: me.options.rsInstance
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._forerunnerTagsDialog = $dlg;
         },
         /**
          * Show the create dashboard modal dialog.
@@ -6400,18 +6519,70 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function () {
+        showExplorerSearchFolderDialog: function () {
             var me = this;
-            if (me.options.view === "catalog") {
-                me.priorExplorerPath = me.options.path;
+            me._searchFolderDialog.reportExplorerSearchFolder("openDialog");
+        },
+        showTags: function () {
+            var me = this;
+            me._forerunnerTagsDialog.forerunnerTags("openDialog", me.options.path);
+        },
+        createSearchFolder: function (searchFolder) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/SaveResource";
+
+            forerunner.ajax.ajax({
+                url: url,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                data: {
+                    resourceName: searchFolder.searchFolderName,
+                    parentFolder: me.parentPath || me.options.path,
+                    contents: JSON.stringify(searchFolder.content),
+                    mimetype: "json/forerunner-searchfolder",
+                    instance: me.options.rsInstance
+                },
+                success: function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveDashboardSucceeded, toolbar.saveDashboard);
+                },
+                error: function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+        getSearchFolderContent: function () {
+            var me = this;
+            if (me.options.view !== "searchfolder") {
+                return null;
             }
 
+            var url = me.options.reportManagerAPI + "/Resource";
+            var content = null;
+
+            forerunner.ajax.ajax({
+                url: url,
+                async: false,
+                type: "GET",
+                dataType: "text",
+                data: {
+                    path: me.options.path,
+                    instance: me.options.rsInstance
+                },
+                success: function (data) {
+                    content = data;
+                },
+                error: function (data) { }
+            });
+
+            return content;
         },
         _searchItems: function (keyword) {
             var me = this;
 
             if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                 return;
             }
             
@@ -6461,7 +6632,7 @@ $(function () {
         /**
         * Function execute when input element blur
         *
-        * @function $.forerunner.reportViewer#onInputBlur
+        * @function $.forerunner.reportExplorer#onInputBlur
         */
         onInputBlur: function () {
             var me = this;
@@ -6471,12 +6642,35 @@ $(function () {
         /**
          * Function execute when input element focus
          *
-         * @function $.forerunner.reportViewer#onInputFocus
+         * @function $.forerunner.reportExplorer#onInputFocus
          */
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
                 me.options.onInputFocus();
+        },
+        /**
+         * Get current explorer path
+         *
+         * @function $.forerunner.reportExplorer#getCurrentPath
+         */
+        getCurrentPath: function () {
+            var me = this;
+            return decodeURIComponent(me.options.path);
+        },
+        /**
+         * Get current explorer view
+         *
+         * @function $.forerunner.reportExplorer#getCurrentView
+         */
+        getCurrentView: function () {
+            var me = this;
+            return me.options.view;
+        },
+        _getParentPath: function (path) {
+            var index = path.lastIndexOf("/");
+            var parentPath = path.substring(0, index);
+            return parentPath;
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;
@@ -6540,6 +6734,9 @@ $(function () {
                     break;
                 case "json/forerunner-dashboard":
                     fileTypeClass = "fr-icons128x128-file-dashboard";
+                    break;
+                case "json/forerunner-searchfolder":
+                    fileTypeClass = "fr-icons128x128-file-zip";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";
@@ -6709,6 +6906,312 @@ $(function () {
 
         }
     }); //$.widget
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/ForerunnerTags.js
+/**
+ * @file Contains the forerunnerTags widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.forerunnerTags), {
+        options: {
+            $appContainer: null,
+            rsInstance: null,
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.tags.title, "fr-tag-cancel", locData.tags.cancel);
+            var $container = new $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<div class='fr-tag-form-container'>" +
+                        "<form class='fr-tag-form'>" +
+                            "<table class='fr-tag-table'>" +
+                                "<tr>" +
+                                    "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
+                                    "<td><input type='text' class='fr-tag-text' /></td>" +
+                                "</tr>" +
+                                "<tr class='fr-tag-prompt'>" +
+                                    "<td></td>" +
+                                    "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
+                                "<tr>" +
+                            "</table>" +
+                        "</form>" +
+                    "</div>" +
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='reset' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
+                        "</div>" +
+                        "<div class='fr-tag-location' />" +
+                    "</div>" +
+                "</div>");
+
+            me.element.append($container);
+
+            me.$tags = me.element.find(".fr-tag-text")
+
+            me.element.find(".fr-tag-submit-id").on("click", function () {
+                me._saveTags();
+            });
+
+            me.element.find(".fr-tag-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveTags();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },    
+        openDialog: function (path) {
+            var me = this;
+            me._getTags(path);
+           
+            var text = path.substring(path.lastIndexOf("/") + 1);
+            text = locData.tags.yourPosition + ": " + text;
+            me.element.find(".fr-tag-location").text(text);
+
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _getTags: function (path) {
+            var me = this;
+
+            if (me.path !== path) {
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    dataType: "JSON",
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/GetReportTags",
+                    async: false,
+                    data: {
+                        path: path,
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+                        if (data.Tags !== "NotFound") {
+                            me.tags = data.Tags.join(",");
+                        }
+                        else {
+                            me.tags = null;
+                        }
+                    },
+                    fail: function (data) {
+                        console.log('get tags failed')
+                    },
+                });
+                me.path = path;
+            }
+
+            if (me.tags) {
+                me.tags = me.tags.replace(/"/g, '');
+                me.$tags.val(me.tags);
+            }
+        },
+        _saveTags: function () {
+            var me = this;
+
+            var tags = me.$tags.val(),
+                tagList;
+
+            if (tags.trim() !== "" && tags !== me.tags) {
+                tagList = tags.split(",");
+                for (var i = 0; i < tagList.length; i++) {
+                    tagList[i] = '"' + tagList[i].trim() + '"';
+                }
+                tags = tagList.join(",");
+                me.tags = tags;
+
+                forerunner.ajax.ajax(
+                {
+                    type: "POST",
+                    dataType: "text",
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportTags/",
+                    data: {
+                        reportTags: tags,
+                        path: me.path,
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+                        return true;
+                    },
+                    fail: function (data) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    },
+                    async: false
+                });
+            }
+
+            me.closeDialog();
+        }
+    });
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js
+/**
+ * @file Contains the reportExplorerSearchFolder widget.
+ *
+ */
+
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.reportExplorerSearchFolder), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);            
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var $container = new $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                   "<div class='fr-sf-form-container'>" +
+                        "<form class='fr-sf-form'>" +
+                            "<table class='fr-sf-table'>" +
+                                "<tr>" +
+                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
+                                    "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
+                                "</tr>" +
+                                "<tr>" +
+                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
+                                    "<td><input type='text' class='fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "</tr>" +
+                                "<tr class='fr-sf-prompt'>" +
+                                    "<td></td>" +
+                                    "<td><label class='fr-sf-label-prompt'>" + locData.searchFolder.prompt + "</label></td>" +
+                                "<tr>" +
+                            "</table>" +
+                        "</form>" +
+                    "</div>" +
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='submit' type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                        "</div>" +
+                        "<div class='fr-sf-location' />" +
+                    "</div>" +
+                "</div>");
+
+            me.element.append($container);
+
+            me.$form = $container.find(".fr-sf-form");
+            me.$form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.parent("td"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-sf-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-sf-error");
+                }
+            });
+
+            me.element.find(".fr-sf-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-sf-submit-id").on("click", function (e) {
+                me._createSearchFolder();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._createSearchFolder();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        _createSearchFolder: function () {
+            var me = this;
+
+            if (me.$form.valid()) {
+                var name = me.element.find(".fr-sf-foldername").val().trim();
+                var tags = me.element.find(".fr-sf-foldertags").val().trim();
+                var tagsList = tags.split(",");
+
+                for (var i = 0; i < tagsList.length; i++) {
+                    tagsList[i] = '"' + tagsList[i].trim() + '"';
+                }
+
+                var searchfolder = { searchFolderName: name, content: { name: name, tags: tagsList.join(",") } };
+
+                me.options.$reportExplorer.reportExplorer("createSearchFolder", searchfolder);
+                me.closeDialog();
+            }
+        },
+        openDialog: function () {
+            var me = this;
+            var content = me.options.$reportExplorer.reportExplorer("getSearchFolderContent");
+            if (content) {
+                content = JSON.parse(content);//replace(/"/g, '')
+                me.element.find(".fr-sf-foldername").val(content.name)
+                me.element.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
+            }
+            else {
+                me.element.find(".fr-sf-foldername").val("")
+                me.element.find(".fr-sf-foldertags").val("");
+            }
+
+            var path = me.options.$reportExplorer.reportExplorer("getCurrentPath");
+            var location;
+            if (path === "/") {
+                location = locData.searchFolder.homePage;
+            }
+            else {
+                location = path.substring(path.lastIndexOf("/") + 1);
+            }
+            location = locData.searchFolder.createTo + ": " + location;
+            me.element.find(".fr-sf-location").text(location);
+
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+    });   
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportRender.js
 // Assign or create the single globally scoped variable
@@ -12531,19 +13034,15 @@ $(function () {
             }
 
             var $dlg;
-            $dlg = me.options.$appContainer.find(".fr-print-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
             $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
             if ($dlg.length === 0) {
-            //    $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-            //    me.options.$appContainer.append($dlg);
+                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
             }
-            //$dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+            $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
             $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
             if ($dlg.length === 0) {
@@ -12552,27 +13051,34 @@ $(function () {
             }
             $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
-            $dlg = me.options.$appContainer.find(".fr-dsc-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dsc-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
+            $dlg = me._findSection("fr-tag-section");
+            $dlg.forerunnerTags({ $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
+
             if (me.parameterModel) {
-                $dlg = me.options.$appContainer.find(".fr-mps-section");
-                if ($dlg.length === 0) {
-                    $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                    $dlg.manageParamSets({
-                        $appContainer: me.options.$appContainer,
-                        $reportViewer: $viewer,
-                        $reportViewerInitializer: me,
-                        model: me.parameterModel
-                    });
-                    me.options.$appContainer.append($dlg);
-                }
+                $dlg = me._findSection("fr-mps-section");
+                $dlg.manageParamSets({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: $viewer,
+                    $reportViewerInitializer: me,
+                    model: me.parameterModel
+                });
                 me._manageParamSetsDialog = $dlg;
             }
+        },
+        _findSection: function (sectionClass) {
+            var me = this;
+
+            var $dlg = me.options.$appContainer.find("." + sectionClass);
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.addClass(sectionClass);
+                me.options.$appContainer.append($dlg);
+            }
+
+            return $dlg;
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
@@ -13432,7 +13938,7 @@ $(function () {
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
                 onInputFocus: layout.onInputFocus,
-                onInputBlur: layout.onInputBlur
+                onInputBlur: layout.onInputBlur,
             });
         },
 
@@ -13457,7 +13963,8 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:path": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard",
+                    "searchfolder/:path": "transitionToSearchFolder"
                 }
             });
 
@@ -13503,6 +14010,8 @@ $(function () {
                 me.transitionToReportManager(null, "favorites");
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToSearchFolder") {
+                me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToCreateDashboard") {
                 me.transitionToCreateDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
@@ -13549,6 +14058,7 @@ $(function () {
                 layout.$mainsection.html("");
                 layout.$mainsection.hide();
             }
+            
             layout.cleanUp();
             forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs(layout.$container);
@@ -13641,7 +14151,7 @@ $(function () {
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");                    
+                    path = String(path).replace(/%2f/g, "/");
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
@@ -14030,6 +14540,7 @@ $(function () {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
                     me.$desc.val(subscriptionInfo.Description);
+                    me._subscriptionData = subscriptionInfo;
 
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
@@ -14040,7 +14551,7 @@ $(function () {
                             me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$comment.val(extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
@@ -14051,9 +14562,9 @@ $(function () {
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.attr("checked", "");
+                                me.$includeLink.prop('checked', true);
                             } else {
-                                me.$includeLink.removeAttr("checked");
+                                me.$includeLink.prop('checked', false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
@@ -14087,10 +14598,11 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.attr("checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
+                me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.SubscriptionSchedule = {}
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
@@ -14108,10 +14620,10 @@ $(function () {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();
@@ -14230,11 +14742,12 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
+            me._subscriptionData = null;
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', "Email", "fr-email-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', "Email", "fr-email-cancel", "Cancel");
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -14305,6 +14818,296 @@ $(function () {
             me.element.html("");
             this._destroy();
         }
+    });  // $.widget(
+});  // $(function ()
+
+///#source 1 1 /Forerunner/ReportExplorer/js/ManageSubscription.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports objects
+forerunner.ajax = forerunner.ajax || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.constants = forerunner.ssr.constants || {};
+forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+    var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.manageSubscription), {
+        options: {
+            reportPath: null,
+            $appContainer: null,
+            $reportViewer: null,
+            subscriptionModel: null
+        },
+        _subscriptionModel: null,
+        _createDiv : function(listOfClasses) {
+            return forerunner.helper.createDiv(listOfClasses);
+        },
+        _showDeletionFailure : function() {
+            console.log("Deletion failed");
+        },
+        _createListItem: function (subInfo) {
+            var me = this;
+            var $listItem = new $("<DIV />");
+            $listItem.addClass("fr-sub-listitem");
+            var $deleteIcon = me._createDiv(["ui-icon-circle-close", "ui-icon"]);
+            var $editIcon = me._createDiv(["ui-icon-pencil", "ui-icon"]);
+            $listItem.append($deleteIcon);
+            $deleteIcon.addClass("fr-sub-delete-icon");
+            $deleteIcon.on("click", function () {
+                me.options.subscriptionModel.subscriptionModel("deleteSubscription",
+                    subInfo.SubscriptionID,
+                    function () { me._renderList(); }, function () { me._showDeletionFailure(); });
+            });
+            $editIcon.addClass("fr-sub-edit-icon");
+            $editIcon.on("click", function () {
+                me._editSubscription(subInfo.SubscriptionID);
+            });
+            $listItem.append($editIcon);
+            $listItem.append(subInfo.Description);
+            return $listItem;
+        },
+        _editSubscription: function (subscriptionID) {
+            var me = this;
+            me.options.$reportViewer.reportViewer("showEmailSubscription", subscriptionID);
+        },
+        _renderList: function () {
+            var me = this;
+            me.$listcontainer.html("");
+            var $list = new $("<UL />");
+            $list.addClass("fr-sub-list");
+            $.when(me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath)).done(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var subInfo = data[i];
+                    var $li = new $("<LI />");
+                    var $listItem = me._createListItem(subInfo);
+                    $li.append($listItem);
+                    $list.append($li);
+                }
+                me.$listcontainer.append($list);
+            }).fail(
+                function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.loadSubscriptionListFailed);
+                }
+            );
+        },
+
+        listSubscriptions: function () {
+            var me = this;
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+            me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', "Manage Subscription", "fr-managesubscription-cancel", "Cancel");
+            me.$container.append(headerHtml);
+            // Make these async calls and cache the results before they are needed.
+            me.options.subscriptionModel.subscriptionModel("getSchedules");
+            me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
+            me.element.append(me.$container);
+            me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
+            me.$container.append(me.$listcontainer);
+            me.$theForm = me._createDiv(["fr-sub-form"]);
+            me.$container.append(me.$theForm);
+            me._renderList();
+
+            me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        destroy: function () {
+            var me = this;
+            me.element.html("");
+            this._destroy();
+        }
+    });  // $.widget(
+});  // $(function ()
+
+///#source 1 1 /Forerunner/ReportExplorer/js/SubscriptionModel.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports objects
+forerunner.ajax = forerunner.ajax || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.constants = forerunner.ssr.constants || {};
+forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+    var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.subscriptionModel), {
+        options: {
+            rsInstance: null
+        },
+        subscriptionList: null,
+        extensionList: null,
+        extensionParameter: null,
+        extensionSettings: {},
+        schedules: null,
+        _create: function () {
+        },
+        getSubscriptionList: function (reportPath) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
+            var jqxhr = forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
+            .done(function (data) {
+                console.log("ListSubscriptions succeeded.");
+            })
+            .fail(function (data) {
+                console.log("ListSubscriptions call failed.");
+            });
+            return jqxhr;
+        },
+        getSchedules: function () {
+            var me = this;
+            if (me.schedules) return [me.schedules];
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
+            var jqxhr = forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
+            .done(
+                function (data) {
+                    me.schedules = data;
+                })
+            .fail(
+                function () {
+                    console.log("ListSchedules call failed.");
+                });
+            return me.schedules || jqxhr;
+        },
+        getDeliveryExtensions: function () {
+            var me = this;
+            if (me.extensionList) return [me.extensionList];
+            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            return forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
+            .done(
+                function (data) {
+                    me.extensionList = data; 
+                })
+            .fail(function () {
+                console.log("ListDeliveryExtensions call failed.");
+            });
+        },
+        _extensionSettingsCount: 0,
+        _extensionSettingsJQXHR : {},
+        getExtensionSettings: function (extensionName) {
+            if (extensionName == "NULL") return;
+            var me = this;
+            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            return forerunner.ajax.ajax({
+                    url: url,
+                    dataType: "json",
+                    async: true
+                })
+                .done(
+                    function (settings) {
+                        me.extensionSettings[extensionName] = settings;
+                    })
+                .fail(
+                    function () {
+                        console.log("GetExtensionSettings call failed.");
+                    })
+                .always(
+                    function () {
+                        me._extensionSettingsCount++;
+                    });
+        },
+        getSubscription: function (subscriptionID) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            var retval;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    retval = data;
+                },
+                error: function (data) {
+                    console.log("getSubscription failed: " + data.status);
+                }
+            });
+            return retval;
+        },
+        createSubscription: function (subscriptionInfo, success, error) {
+            return this._saveSubscription("CreateSubscription", subscriptionInfo, success, error);
+        },
+        updateSubscription: function (subscriptionInfo, success, error) {
+            return this._saveSubscription("UpdateSubscription", subscriptionInfo, success, error);
+        },
+        deleteSubscription: function (subscriptionID, success, error) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data, textStatus, jqXHR) {
+                    if (success && typeof (success) === "function") {
+                        success(data);
+                    }
+                },
+                error: function (data, textStatus, jqXHR) {
+                    if (error && typeof (error) === "function") {
+                        error();
+                    }
+                }
+            });
+        },
+        _saveSubscription: function (verb, subscriptionInfo, success, error) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/" + verb;
+            subscriptionInfo.Instance = me.options.rsInstance;
+            forerunner.ajax.post(
+                url,
+                subscriptionInfo,
+                function (data, textStatus, jqXHR) {
+                    if (success && typeof (success) === "function") {
+                        success(data);
+                    }
+                },
+                function (data, textStatus, jqXHR) {
+                    if (error && typeof (error) === "function") {
+                        error();
+                    }
+                });
+        },
     });  // $.widget(
 });  // $(function ()
 
@@ -20558,14 +21361,23 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
             if (enableEdit) {
-                me.showTool(dtb.btnView.selectorClass);
-                me.enableTools([dtb.btnSave]);
-                me.hideTool(dtb.btnEdit.selectorClass);
-            } else {
-                me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
-                me.showTool(dtb.btnEdit.selectorClass);
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dtb.btnView.selectorClass);
+                    me.enableTools([dtb.btnSave]);
+                    me.hideTool(dtb.btnEdit.selectorClass);
+                    return;
+                }
             }
+
+            // Disable the edit buttons
+            me.hideTool(dtb.btnView.selectorClass);
+            me.disableTools([dtb.btnSave]);
+            me.showTool(dtb.btnEdit.selectorClass);
         },
         _init: function () {
             var me = this;
@@ -20639,14 +21451,23 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
             if (enableEdit) {
-                me.showTool(dbtp.itemView.selectorClass);
-                me.enableTools([dbtp.itemSave]);
-                me.hideTool(dbtp.itemEdit.selectorClass);
-            } else {
-                me.hideTool(dbtp.itemView.selectorClass);
-                me.disableTools([dbtp.itemSave]);
-                me.showTool(dbtp.itemEdit.selectorClass);
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dbtp.itemView.selectorClass);
+                    me.enableTools([dbtp.itemSave]);
+                    me.hideTool(dbtp.itemEdit.selectorClass);
+                    return;
+                }
             }
+
+            // Disable the edit buttons
+            me.hideTool(dbtp.itemView.selectorClass);
+            me.disableTools([dbtp.itemSave]);
+            me.showTool(dbtp.itemEdit.selectorClass);
         },
         _init: function () {
             var me = this;

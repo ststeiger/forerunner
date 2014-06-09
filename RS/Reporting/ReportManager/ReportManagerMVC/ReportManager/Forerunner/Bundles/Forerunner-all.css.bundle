@@ -14,6 +14,8 @@
   <file>/Forerunner/ReportExplorer/css/CreateDashboard.css</file>
   <file>/Forerunner/ReportExplorer/css/ManageSubscription.css</file>
   <file>/Forerunner/ReportExplorer/css/icons128x128.css</file>
+  <file>/Forerunner/ReportExplorer/css/ForerunnerTags.css</file>
+  <file>/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css</file>
   <file>/Forerunner/ReportViewer/css/ManageParamSets.css</file>
   <file>/Forerunner/ReportViewer/css/PageNav.css</file>
   <file>/Forerunner/ReportViewer/css/ReportDocumentMap.css</file>

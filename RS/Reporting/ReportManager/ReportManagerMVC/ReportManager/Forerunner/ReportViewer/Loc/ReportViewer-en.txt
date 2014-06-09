@@ -58,7 +58,8 @@
     "RDLExt": "RDL Extension",
     "editDashboard":"Edit Dashboard",
     "saveDashboard": "Save Dashboard",
-    "viewDashboard": "View Dashboard"
+    "viewDashboard": "View Dashboard",
+	"tags":"Tags"
  },
   "toolbar": {
     "back":"Back",
@@ -92,7 +93,8 @@
     "search":"Search",
     "createDashboard":"Create Dashboard",
     "editDashboard":"Edit Dashboard",
-    "saveDashboard": "Save Dashboard", 
+    "saveDashboard": "Save Dashboard",
+    "searchFolder":"Search Folder",
     "viewDashboard": "View Dashboard"
   },
   "print": {
@@ -236,5 +238,23 @@
     "submit":"Save",
     "dashboardName": "Dashboard Name",
     "namePlaceholder": "dashboard name"
+  },
+  "tags": {
+    "title":"Tags",
+    "tags":"Tags",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "prompt":"Separate tags with commas.",
+	"yourPosition":"You are at"
+  },
+  "searchFolder":{
+	"title":"Search Folder",
+	"name":"Name",
+	"tags":"Tags",
+	"cancel":"Cancel",
+	"submit":"Submit",
+	"prompt":"Separate tags with commas.",
+	"homePage":"Home Page",
+	"createTo":"Created under"
   }
 }

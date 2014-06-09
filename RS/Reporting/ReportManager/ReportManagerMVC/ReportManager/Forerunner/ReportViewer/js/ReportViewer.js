@@ -1527,7 +1527,7 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
-        showEmailSubscription : function () {
+        showEmailSubscription : function (subscriptionID) {
             var me = this;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
@@ -1540,8 +1540,17 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 if (paramList)
                     me.$emailSub.emailSubscription("option", "paramList", paramList);
-                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        manageSubscription : function() {
+            var me = this;
+            me._setManageSubscriptionUI();
+            if (me.$manageSub) {
+                me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
+                me.$manageSub.manageSubscription("listSubscriptions", null);
+                me.$manageSub.manageSubscription("openDialog");
             }
         },
         /**
@@ -1581,6 +1590,11 @@ $(function () {
             var me = this;
             if (!me.$emailSub)
                 me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
+        },
+        _setManageSubscriptionUI: function () {
+            var me = this;
+            if (!me.$manageSub)
+                me.$manageSub = me.options.$appContainer.find(".fr-managesubscription-section");
         },
        
         //Page Loading
@@ -2444,6 +2458,16 @@ $(function () {
                 //console.log('remove settimeout');
             }
             me.autoRefreshID = null;
+        },
+        /**
+         * Show report tags dialog
+         *
+         * @function $.forerunner.reportViewer#showTags
+         */
+        showTags: function () {
+            var me = this;
+            me.$tagsDialog = me.options.$appContainer.find(".fr-tag-section");
+            me.$tagsDialog.forerunnerTags("openDialog", me.getReportPath());
         },
         /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.

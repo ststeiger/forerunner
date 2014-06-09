@@ -96,7 +96,6 @@ namespace Forerunner.Subscription
             overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             overrides.Add(typeof(DaysOfWeekSelector), attrs);
             overrides.Add(typeof(MonthsOfYearSelector), attrs);
-            overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             return overrides;
         }
 

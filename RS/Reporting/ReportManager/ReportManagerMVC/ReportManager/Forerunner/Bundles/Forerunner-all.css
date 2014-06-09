@@ -475,6 +475,10 @@ div.fr-layout-position-absolute { position: absolute; }
     background-image:url(../images/ToolbarIcons/EmailSubscription.png);
 }
 
+.fr-icons24x24-managesubscription {
+    background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
+}
+
 
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons25x31 {
@@ -938,6 +942,7 @@ table, td, tr div {
     .fr-cdb-form { margin-right: 4px; }
 }
 
+.fr-sub-form {min-width: 200px; min-height: 300px;}
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:0px;}
 .fr-sub-listitem {display: inline-block; border-bottom: 1px solid #000000; width: 100%;}
 .fr-sub-delete-icon { float: left; }
@@ -1113,11 +1118,11 @@ table, td, tr div {
 }
 
 .fr-icons128x128-file-text {
-  background-image:url(../images/ResourceIcons/avi.png);
+  background-image:url(../images/ResourceIcons/text.png);
 }
 
 .fr-icons128x128-file-tiff {
-  background-image:url(../images/ResourceIcons/text.png);
+  background-image:url(../images/ResourceIcons/tiff.png);
 }
 
 .fr-icons128x128-file-xls {
@@ -1142,6 +1147,88 @@ table, td, tr div {
 
 .fr-icons128x128-file-dashboard {
   background-image:url(../images/ResourceIcons/dashboard.png);
+}
+.fr-tag-section { 
+    display: none;
+}
+.fr-tag-section .fr-core-dialog-submit-container {
+    margin-bottom: 4px;
+}
+.fr-tag-button {
+    margin: 0 4px;
+    min-width: 200px;
+}
+.fr-tag-form-container {
+    margin:8px 8px 0px 8px;
+}
+.fr-tag-label {
+    margin-right:6px;
+}
+.fr-tag-text {
+    width:240px;
+    margin-right:4px;
+    border: 1px solid lightblue;
+}
+.fr-tag-table td {
+    padding:2px;
+}
+.fr-tag-prompt td {
+    padding:0px 2px;
+}
+.fr-tag-label-prompt {
+    font-style:italic;
+    font-size:12px;
+    display:block;
+    margin-top:2px;
+}
+.fr-tag-location {
+    font-size:12px;
+    margin: 16px 4px 0 4px;
+}
+.fr-sf-section { 
+    display: none;
+}
+.fr-sf-section .fr-core-dialog-submit-container {
+    margin-bottom: 4px;
+}
+.fr-sf-button {
+    margin: 0 4px;
+    min-width:200px;
+}
+.fr-sf-container {
+    margin:4px;
+}
+.fr-sf-table td {
+    padding:2px;
+}
+.fr-sf-prompt td {
+    padding:0px 2px;
+}
+.fr-sf-form-container {
+    margin:8px 8px 0px 8px;
+}
+.fr-sf-label {
+    margin-right:6px;
+    display:inline-block;
+}
+.fr-sf-label-prompt {
+    font-size:12px;
+    display:block;
+    margin-top:2px;
+    font-style:italic;
+}
+.fr-sf-text {
+    width:240px;
+    margin-right:4px;
+    border: 1px solid lightblue;
+}
+.fr-sf-form-container .fr-sf-error { 
+    border-width: thin; 
+    border-color: red;
+}
+.fr-sf-location {
+    font-size:12px;
+    margin: 16px 4px 0 4px;
 }
 .fr-mps-section { display: none; }
 

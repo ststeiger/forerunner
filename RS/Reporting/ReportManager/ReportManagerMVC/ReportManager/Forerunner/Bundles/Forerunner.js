@@ -222,6 +222,10 @@ $(function () {
             dashboardToolPane: "dashboardToolPane",
             /** @constant */
             saveAsDashboard: "saveAsDashboard",
+            /** @constant */
+            forerunnerTags: "forerunnerTags",
+            /** @constant */
+            reportExplorerSearchFolder: "reportExplorerSearchFolder",
 
             /** @constant */
             namespace: "forerunner",
@@ -249,13 +253,13 @@ $(function () {
             reportExplorerToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.reportExplorerToolpane.toLowerCase() + this.actionStarted; },
             /** widget + event, lowercase */
             dashboardToolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.dashboardToolPane.toLowerCase() + this.actionStarted; },
-            
+
 
             /** @constant */
             allowZoom: "allowZoom",
             /** widget + event, lowercase */
             reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
-            
+
 
             /** @constant */
             menuClick: "menuclick",
@@ -290,7 +294,7 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerChangePage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changePage).toLowerCase(); },
 
-  
+
             /** @constant */
             drillThrough: "drillThrough",
             /** widget + event, lowercase */
@@ -339,7 +343,7 @@ $(function () {
             /** @constant */
             navToPosition: "navToPosition",
             /** widget + event, lowercase */
-            reportViewerNavToPosition: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.navToPosition).toLowerCase();},
+            reportViewerNavToPosition: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.navToPosition).toLowerCase(); },
 
             /** @constant */
             loadCascadingParam: "loadcascadingparam",
@@ -439,8 +443,8 @@ $(function () {
             /** widget + event, lowercase */
             reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
-            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
-},
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); },
+    },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *
@@ -1183,6 +1187,32 @@ $(function () {
                 if (fail)
                     fail(jqXHR, textStatus, errorThrown,this);
             });
+        },
+        /**
+        * Returns json data indicating is the user has the requested permission for the given path
+        *
+        * @param {String} path - fully qualified path to the resource
+        * @param {String} permission - Requested permission
+        */
+        hasPermission: function (path, permission) {
+            var permissionData = null;
+
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
+                "?path=" + encodeURIComponent(path) +
+                "&permission=" + permission;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    permissionData = data;
+                },
+                fail: function (jqXHR) {
+                    console.log("hasPermission() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+            return permissionData;
         }
     };
     /**

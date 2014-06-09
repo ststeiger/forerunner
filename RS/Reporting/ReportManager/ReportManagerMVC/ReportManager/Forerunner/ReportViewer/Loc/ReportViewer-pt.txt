@@ -57,7 +57,8 @@
     "addToFavorites":"Adicionar aos favoritos",
     "RDLExt":"RDL Extensão",
     "saveDashboard":"Salve o Dashboard",
-    "editDashboard":"Edit Dashboard",
+    "editDashboard":"Editar o Dashboard",
+    "tags":"Marcações",
     "viewDashboard":"View Dashboard"
   },
   "toolbar": {
@@ -93,6 +94,7 @@
     "createDashboard":"criar o Dashboard",
     "editDashboard":"Editar o Dashboard",
     "saveDashboard":"Salve o Dashboard",
+    "searchFolder":"pasta de Pesquisa",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"submeter",
     "dashboardName":"Nome do Dashboard",
     "namePlaceholder":"Nome do Dashboard"
+  },
+  "tags": {
+    "title":"Marcações",
+    "tags":"Marcações",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "prompt":"Separe tags com vírgulas.",
+    "yourPosition":"Você está em"
+  },
+  "searchFolder": {
+    "title":"pasta de Pesquisa",
+    "name":"Nome",
+    "tags":"Marcações",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "prompt":"Separe tags com vírgulas.",
+    "homePage":"Home page",
+    "createTo":"Criado em"
   }
 }

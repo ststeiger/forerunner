@@ -163,13 +163,20 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("HasPermission")]
+        public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetCatalogPermission(path, permission)), "text/JSON");
+        }
+
+        [HttpGet]
         [ActionName("Resource")]
         public HttpResponseMessage Resource(string path, string instance = null)
         {
             byte[] result = null;
             string mimetype = null;
             result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
-            return GetResponseFromBytes(result,mimetype);
+            return GetResponseFromBytes(result, mimetype);
         }
 
         [HttpPost]
@@ -244,8 +251,8 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage DeleteSubscription(string subscriptionID, string instance = null)
         {
-            GetReportManager(instance).DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+            string retVal = GetReportManager(instance).DeleteSubscription(subscriptionID);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(retVal), "text/JSON");
         }
 
         [HttpGet]
@@ -284,6 +291,41 @@ namespace ReportManager.Controllers
                 retVal.Add(value);
             }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(retVal)), "text/JSON"); 
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetReportTags(string path, string instance = null)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+        public class ReportTagsPostBack
+        {
+            public string reportTags { get; set; }
+            public string path { get; set; }
+            public string instance { get; set; }
+        }
+        [HttpPost]
+        public HttpResponseMessage SaveReportTags(ReportTagsPostBack postValue)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            {
+                GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
+                resp.StatusCode = HttpStatusCode.OK;
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.BadRequest;
+            }
+
+            return resp;
         }
 
         private string ToString<T>(T value)

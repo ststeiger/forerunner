@@ -57,7 +57,8 @@
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salvați Tablou de bord",
-    "editDashboard":"Edit Dashboard",
+    "editDashboard":"Edit Tablou de bord",
+    "tags":"Tag-uri",
     "viewDashboard":"View Dashboard"
   },
   "toolbar": {
@@ -93,6 +94,7 @@
     "createDashboard":"crea Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
     "saveDashboard":"Salvați Tablou de bord",
+    "searchFolder":"Folder de căutare",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"executa",
     "dashboardName":"Nume tablou de bord",
     "namePlaceholder":"Nume tablou de bord"
+  },
+  "tags": {
+    "title":"Tag-uri",
+    "tags":"Tag-uri",
+    "cancel":"Anula",
+    "submit":"Executa",
+    "prompt":"Tag-uri separate prin virgula.",
+    "yourPosition":"Esti la"
+  },
+  "searchFolder": {
+    "title":"Folder de căutare",
+    "name":"Nume",
+    "tags":"Tag-uri",
+    "cancel":"Anula",
+    "submit":"Executa",
+    "prompt":"Tag-uri separate prin virgula.",
+    "homePage":"pagina principală",
+    "createTo":"creat sub"
   }
 }

@@ -47,7 +47,7 @@ namespace Forerunner.SSRS.Manager
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
-        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", false);
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
         private static bool isReportServerDB(SqlConnection conn)
@@ -179,6 +179,8 @@ namespace Forerunner.SSRS.Manager
                 return this.GetRecentReports();
             else if (view == "catalog")
                 return this.ListChildren(HttpUtility.UrlDecode(path), false);
+            else if (view == "searchfolder")
+                return this.GetSearchFolderItems(path);
             else
                 return null;
         }
@@ -362,11 +364,12 @@ namespace Forerunner.SSRS.Manager
                     if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
                     {
                         CatalogItem[] folder = callListChildren(ci.Path, false);
+
                         foreach (CatalogItem fci in folder)
                         {
                             if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
                             {
-                                if (!ci.Hidden || showHidden) 
+                                if (!ci.Hidden || showHidden)
                                 {
                                     list.Add(ci);
                                     break;
@@ -438,6 +441,10 @@ namespace Forerunner.SSRS.Manager
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerSubscriptions')
                             BEGIN	                            	                            
                                 CREATE TABLE dbo.ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
+                            END
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerItemTags')
+                            BEGIN	                            	                            
+                                CREATE TABLE ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL, PRIMARY KEY (ItemID))
                             END
 
                            /*  Version update Code */
@@ -1149,6 +1156,16 @@ namespace Forerunner.SSRS.Manager
 
             return hasPermission;
         }
+        public string GetCatalogPermission(string path, string permission)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("hasPermission");
+            bool hasPermission = HasPermission(path, permission);
+            w.WriteBoolean(hasPermission);
+            w.WriteEndObject();
+            return w.ToString();
+        }
 
         public byte[] GetCatalogImage(string path)
         {
@@ -1398,7 +1415,12 @@ namespace Forerunner.SSRS.Manager
             subscriptionSchedule.MatchData = matchData;
             SubscriptionExtensionSettings extensionSettings = new SubscriptionExtensionSettings();
             extensionSettings.Extension = settings.Extension;
-            extensionSettings.ParameterValues = (ParameterValue[])settings.ParameterValues;
+            List<ParameterValue> newList = new List<ParameterValue>();
+            foreach (ParameterValueOrFieldReference value in settings.ParameterValues)
+            {
+                newList.Add((ParameterValue) value);
+            }
+            extensionSettings.ParameterValues = newList.ToArray<ParameterValue>();
             SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, subscriptionSchedule, parameters);
             return retVal;
         }
@@ -1409,7 +1431,7 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
-                string SQL = @"Select ScheduleID Where SubscriptionID = @SubscriptionID";
+                string SQL = @"Select ScheduleID From ForerunnerSubscriptions Where SubscriptionID = @SubscriptionID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1418,7 +1440,7 @@ namespace Forerunner.SSRS.Manager
                     {
                         while (SQLReader.Read())
                         {
-                            return SQLReader.GetString(0);
+                            return SQLReader.GetGuid(0).ToString();
                         }
                     }
                 }
@@ -1464,11 +1486,12 @@ namespace Forerunner.SSRS.Manager
             SaveMobilizerSubscription(info.Report, info.SubscriptionID, scheduleID);
         }
 
-        public void DeleteSubscription(string subscriptionID)
+        public string DeleteSubscription(string subscriptionID)
         {
             rs.Credentials = GetCredentials();
             rs.DeleteSubscription(subscriptionID);
             DeleteMoblizerSubscription(subscriptionID);
+            return getReturnSuccess();
         }
 
         private void DeleteMoblizerSubscription(string subscriptionID)
@@ -1509,7 +1532,7 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
-                string SQL = @"Select SubscriptionID Where ItemID = @ItemID";
+                string SQL = @"Select SubscriptionID From ForerunnerSubscriptions Where ItemID = @ItemID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1519,7 +1542,7 @@ namespace Forerunner.SSRS.Manager
                     {
                         while (SQLReader.Read())
                         {
-                            string subscriptionID = SQLReader.GetString(0);
+                            string subscriptionID = SQLReader.GetGuid(0).ToString();
                             subscriptionInfos.Add(subscriptionID);
                         }
                     }
@@ -1553,6 +1576,159 @@ namespace Forerunner.SSRS.Manager
             w.WriteString("Success");
             w.WriteEndObject();
             return w.ToString();
+        }
+
+        public string GetReportTags(string path)
+        {
+            string IID = GetItemID(path);
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string tags = string.Empty;
+                string SQL = @"SELECT Tags FROM ForerunnerItemTags WHERE ItemID = @ItemID";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            tags = SQLReader.GetString(0);
+                        }
+                    }
+                }
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Tags");
+                if (tags == "")
+                {
+                    w.WriteString("NotFound");
+                }
+                else
+                {
+                    w.WriteStartArray();
+                    foreach (string str in tags.Split(','))
+                    {
+                        w.WriteString(str);
+                    }
+                    w.WriteEndArray();
+                }
+                w.WriteEndObject();
+                tags = w.ToString();
+                //Need to try catch and return error
+                return tags;
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
+        }
+        public void SaveReportTags(string tags, string path)
+        {
+            string IID = GetItemID(path);
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerItemTags WHERE ItemID = @ItemID)
+                                  INSERT ForerunnerItemTags (ItemID, Tags) SELECT @ItemID, @Tags
+                               ELSE
+                                  UPDATE ForerunnerItemTags SET Tags = @Tags WHERE ItemID = @ItemID";
+
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.Parameters.AddWithValue("@Tags", tags);
+                    SQLComm.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
+        }
+
+        public CatalogItem[] GetSearchFolderItems(string path)
+        {
+            //string tags = GetProperty(path, "ForerunnerTags");
+            string mimeType;
+            string content = Encoding.UTF8.GetString(GetCatalogResource(path, out mimeType));
+            string tags = JsonUtility.GetSearchFolderTags(content);
+
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                List<CatalogItem> list = new List<CatalogItem>();
+                CatalogItem item;
+                string[] tagsList = tags.Split(',');
+
+                StringBuilder SQL = new StringBuilder();
+                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+
+                for (int i = 1; i < tagsList.Length; i++)
+                {
+                    SQL.Append(" or Tags LIKE '%' + @tag" + (i + 1).ToString() + " + '%'");
+                }
+
+                SQL.Append(") e ON C.ItemID=e.ItemID");
+
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL.ToString(), SQLConn))
+                {
+                    for (int i = 1; i <= tagsList.Length; i++)
+                    {
+                        SQLComm.Parameters.AddWithValue("@tag" + i, tagsList[i - 1]);
+                    }
+
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            string itemPath = GetPath(SQLReader.GetString(0));
+                            int itemType = SQLReader.GetInt32(3);
+                            string permission = itemType == 1 ? "Read Properties" : "Execute and View";
+                            //Check if user have access to this path, for folder add it by default
+
+                            if (HasPermission(itemPath, permission))
+                            {
+                                item = new CatalogItem();
+                                item.Path = itemPath;
+                                item.Name = SQLReader.GetString(1);
+                                item.ModifiedDate = SQLReader.GetDateTime(2);
+                                item.ModifiedDateSpecified = true;
+                                item.Type = (ItemTypeEnum)itemType;
+                                item.ID = SQLReader.GetGuid(4).ToString();
+                                list.Add(item);
+                            }
+                        }
+                    }
+
+                }
+                return list.ToArray();
+            }
+            finally
+            {
+                CloseSQLConn();
+
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+            }
         }
 
         protected virtual void Dispose(bool disposing)

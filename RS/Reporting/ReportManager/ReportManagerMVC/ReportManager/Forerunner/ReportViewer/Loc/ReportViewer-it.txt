@@ -57,8 +57,9 @@
     "addToFavorites":"Aggiungi ai Preferiti",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salva Dashboard",
-    "editDashboard":"Edit Dashboard",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"View Dashboard",
+    "editDashboard":"Modifica Dashboard",
+    "tags":"tag"
   },
   "toolbar": {
     "back":"indietro",
@@ -93,7 +94,8 @@
     "createDashboard":"Crea Dashboard",
     "editDashboard":"Modifica Dashboard",
     "saveDashboard":"Salva Dashboard",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"View Dashboard",
+    "searchFolder":"Folder ricerca"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -229,5 +231,23 @@
     "submit":"presentare",
     "dashboardName":"Dashboard Nome",
     "namePlaceholder":"Dashboard Nome"
+  },
+  "tags": {
+    "title":"tag",
+    "tags":"tag",
+    "cancel":"cancellare",
+    "submit":"presentare",
+    "prompt":"Separa i tags con virgole.",
+    "yourPosition":"Ti trovi in"
+  },
+  "searchFolder": {
+    "title":"Folder ricerca",
+    "name":"nome",
+    "tags":"tag",
+    "cancel":"cancellare",
+    "submit":"presentare",
+    "prompt":"Separa i tags con virgole.",
+    "homePage":"Home page",
+    "createTo":"creato sotto"
   }
 }

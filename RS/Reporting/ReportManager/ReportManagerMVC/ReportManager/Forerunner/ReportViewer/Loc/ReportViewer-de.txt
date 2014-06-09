@@ -56,8 +56,9 @@
     "views":"Ansichten",
     "addToFavorites":"Zu Favoriten",
     "RDLExt":"RDL-Erweiterung",
-    "editDashboard":"Edit Dashboard",
+    "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save Dashboard",
+    "tags":"Schlagworte",
     "viewDashboard":"View Dashboard"
   },
   "toolbar": {
@@ -93,6 +94,7 @@
     "createDashboard":"Dashboard erstellen",
     "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save-Dashboard",
+    "searchFolder":"Suchordner",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"einreichen",
     "dashboardName":"Dashboard-Namen",
     "namePlaceholder":"Dashboard-Namen"
+  },
+  "tags": {
+    "title":"Schlagworte",
+    "tags":"Schlagworte",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "prompt":"Tags mit Kommas.",
+    "yourPosition":"Sie sind auf"
+  },
+  "searchFolder": {
+    "title":"Suchordner",
+    "name":"Name",
+    "tags":"Schlagworte",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "prompt":"Tags mit Kommas.",
+    "homePage":"Startseite",
+    "createTo":"erstellt unter"
   }
 }

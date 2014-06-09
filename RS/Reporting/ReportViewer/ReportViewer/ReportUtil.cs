@@ -658,5 +658,16 @@ namespace Forerunner
                 return list.ToArray();
             }
         }
+
+        public static string GetSearchFolderTags(string searchFolderContent)
+        {
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(searchFolderContent)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+                //JsonString tags = jsonObj["tags"] as JsonString;
+                return jsonObj["tags"].ToString();
+            }
+        }
     }
 }

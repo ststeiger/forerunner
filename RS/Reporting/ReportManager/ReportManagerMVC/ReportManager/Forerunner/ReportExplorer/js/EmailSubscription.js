@@ -60,6 +60,7 @@ $(function () {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
                     me.$desc.val(subscriptionInfo.Description);
+                    me._subscriptionData = subscriptionInfo;
 
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
@@ -70,7 +71,7 @@ $(function () {
                             me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$comment.val(extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
@@ -81,9 +82,9 @@ $(function () {
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.attr("checked", "");
+                                me.$includeLink.prop('checked', true);
                             } else {
-                                me.$includeLink.removeAttr("checked");
+                                me.$includeLink.prop('checked', false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
@@ -117,10 +118,11 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.attr("checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
+                me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.SubscriptionSchedule = {}
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
@@ -138,10 +140,10 @@ $(function () {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.attr("checked") ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.is(':checked') ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();
@@ -260,11 +262,12 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
+            me._subscriptionData = null;
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', "Email", "fr-email-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', "Email", "fr-email-cancel", "Cancel");
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");

@@ -21,13 +21,11 @@ $(function () {
         extensionList: null,
         extensionParameter: null,
         extensionSettings: {},
-        subscriptionCache: {},
         schedules: null,
         _create: function () {
         },
         getSubscriptionList: function (reportPath) {
             var me = this;
-            if (me.subscriptionList) return me.subscriptionList;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -36,12 +34,11 @@ $(function () {
             })
             .done(function (data) {
                 console.log("ListSubscriptions succeeded.");
-                me.subscriptionList = data;
             })
             .fail(function (data) {
                 console.log("ListSubscriptions call failed.");
             });
-            return [me.subscriptionList] || jqxhr;
+            return jqxhr;
         },
         getSchedules: function () {
             var me = this;
@@ -54,7 +51,6 @@ $(function () {
             })
             .done(
                 function (data) {
-                    console.log('here');
                     me.schedules = data;
                 })
             .fail(
@@ -106,7 +102,6 @@ $(function () {
         },
         getSubscription: function (subscriptionID) {
             var me = this;
-            if (me.subscriptionCache[subscriptionID]) return me.subscriptionCache[subscriptionID];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
             var retval;
             forerunner.ajax.ajax({
@@ -120,7 +115,6 @@ $(function () {
                     console.log("getSubscription failed: " + data.status);
                 }
             });
-            me.subscriptionCache[subscriptionID] = retval;
             return retval;
         },
         createSubscription: function (subscriptionInfo, success, error) {
@@ -137,7 +131,6 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data, textStatus, jqXHR) {
-                    me.subscriptionCache[data] = subscriptionInfo;
                     if (success && typeof (success) === "function") {
                         success(data);
                     }
@@ -157,7 +150,6 @@ $(function () {
                 url,
                 subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    me.subscriptionCache[data] = subscriptionInfo;
                     if (success && typeof (success) === "function") {
                         success(data);
                     }

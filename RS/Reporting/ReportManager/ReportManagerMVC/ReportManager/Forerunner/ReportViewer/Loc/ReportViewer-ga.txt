@@ -57,8 +57,9 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
-    "editDashboard":"Edit Dashboard",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"View Dashboard",
+    "editDashboard":"Painéal na Eagar",
+    "tags":"Clibeanna"
   },
   "toolbar": {
     "back":"ar ais",
@@ -93,6 +94,7 @@
     "createDashboard":"Cruthaigh Phainéil",
     "editDashboard":"Painéal na Eagar",
     "saveDashboard":"Sábháil Ar Phainéal",
+    "searchFolder":"Cuardaigh Fillteán",
     "viewDashboard":"View Dashboard"
   },
   "print": {
@@ -229,5 +231,23 @@
     "submit":"Cuir",
     "dashboardName":"Ainm an Phainéil",
     "namePlaceholder":"Ainm an Phainéil"
+  },
+  "tags": {
+    "title":"Clibeanna",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "yourPosition":"Tá tú ag"
+  },
+  "searchFolder": {
+    "title":"Cuardaigh Fillteán",
+    "name":"Ainm",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "homePage":"leathanach baile",
+    "createTo":"cruthaithe faoi"
   }
 }

@@ -29,6 +29,7 @@ namespace Forerunner.SSRS.Manager
         public string contents { get; set; }
         public string mimetype { get; set; }
         public string rsInstance { get; set; }
+        public bool overwrite { get; set; }
     }
 
     /// <summary>
@@ -287,8 +288,34 @@ namespace Forerunner.SSRS.Manager
         {
             bool notFound = false;
             rs.Credentials = GetCredentials();
+
+            if (!setResource.overwrite)
+            {
+                try
+                {
+                    // If we were not told to overwrite then try and create the resource here
+                    rs.CreateResource(setResource.resourceName,
+                                        HttpUtility.UrlDecode(setResource.parentFolder),
+                                        setResource.overwrite,
+                                        Encoding.UTF8.GetBytes(setResource.contents),
+                                        setResource.mimetype,
+                                        null);
+                    return getReturnSuccess();
+                }
+                catch (System.Web.Services.Protocols.SoapException e)
+                {
+                    notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
+                    if (!notFound)
+                    {
+                        throw e;
+                    }
+                }
+                throw new Exception("Resource already exists:" + setResource.resourceName);
+            }
+
             try
             {
+                // If we were told to overwrite, replace the contents here. We assume the resource exists 
                 var path = CombinePaths(HttpUtility.UrlDecode(setResource.parentFolder), setResource.resourceName);
                 path = GetPath(path);
                 rs.SetResourceContents(path, Encoding.UTF8.GetBytes(setResource.contents), setResource.mimetype);
@@ -306,7 +333,7 @@ namespace Forerunner.SSRS.Manager
                 // If the resource does not exist yet we need to create it here
                 rs.CreateResource(setResource.resourceName,
                                     HttpUtility.UrlDecode(setResource.parentFolder),
-                                    false,
+                                    setResource.overwrite,
                                     Encoding.UTF8.GetBytes(setResource.contents),
                                     setResource.mimetype,
                                     null);

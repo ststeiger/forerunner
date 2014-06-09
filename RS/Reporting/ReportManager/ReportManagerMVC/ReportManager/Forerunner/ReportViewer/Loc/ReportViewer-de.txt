@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Sparen Sie Dashboard-Fehler",
     "saveDashboardSucceeded":"Sparen Sie Dashboard-Nachfolger",
     "loadDashboardFailed":"Last-Dashboard fehlgeschlagen",
-    "loadDashboard":"Last-Dashboard"
+    "loadDashboard":"Last-Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
@@ -202,7 +203,8 @@
     "submit":"einreichen",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL-Erweiterungen",

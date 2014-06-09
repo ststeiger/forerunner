@@ -17,7 +17,8 @@
     "saveDashboardFailed":"保存指示板失败",
     "saveDashboardSucceeded":"保存指示板成功",
     "loadDashboardFailed":"加载指示板失败",
-    "loadDashboard":"加载指示板"
+    "loadDashboard":"加载指示板",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"点击查看更多信息",
@@ -202,7 +203,8 @@
     "submit":"提交",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL扩展",

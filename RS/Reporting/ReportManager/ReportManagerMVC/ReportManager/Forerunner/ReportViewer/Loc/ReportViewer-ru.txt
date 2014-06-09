@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Сохранить Dashboard Failed",
     "saveDashboardSucceeded":"Сохранить Dashboard удалось",
     "loadDashboardFailed":"Нагрузка Dashboard удалось",
-    "loadDashboard":"Нагрузка Dashboard"
+    "loadDashboard":"Нагрузка Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Подробнее",
@@ -202,7 +203,8 @@
     "submit":"представлять",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Расширения",

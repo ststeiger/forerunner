@@ -4882,6 +4882,7 @@ $(function () {
                 data: {
                     resourceName: dashboardName,
                     parentFolder: encodeURIComponent(parentFolder),
+                    overwrite: overwrite,
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",
                     rsInstance: me.options.rsInstance
@@ -13796,6 +13797,14 @@ $(function () {
                                     "</select>" +
                                 "</td>" +
                             "</tr>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-cdb-label'>" + createDashboard.overwrite + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<input class='fr-cdb-overwrite-id fr-cdb-overwrite-checkbox' type='checkbox'/>" +
+                                "</td>" +
+                            "</tr>" +
                         "</table>" +
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
@@ -13814,6 +13823,7 @@ $(function () {
             me._validateForm(me.$form);
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
+            me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -13852,7 +13862,8 @@ $(function () {
             me.model.loadTemplate(templateName);
 
             // Save the model and navigate to editDashboard
-            if (me.model.save(false, me.options.parentFolder, dashboardName)) {
+            var overwrite = me.$overwrite.prop("checked");
+            if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
                 var path = me.options.parentFolder + dashboardName;
@@ -13861,8 +13872,7 @@ $(function () {
                 me.closeDialog();
             }
 
-            // TODO
-            // Launch to confirm overwrite dialog
+            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
         },
         /**
          * Open parameter set dialog

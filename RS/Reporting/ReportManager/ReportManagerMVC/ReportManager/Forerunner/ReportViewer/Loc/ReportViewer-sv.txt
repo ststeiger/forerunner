@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Spara Dashboard misslyckades",
     "saveDashboardSucceeded":"Spara Dashboard Lyckades",
     "loadDashboardFailed":"Lastinstrumentpanels Misslyckades",
-    "loadDashboard":"Lastinstrumentbräda"
+    "loadDashboard":"Lastinstrumentbräda",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",
@@ -202,7 +203,8 @@
     "submit":"inkomma",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensions",

@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Ahorra Dashboard Error",
     "saveDashboardSucceeded":"Ahorra Dashboard Sucedido",
     "loadDashboardFailed":"Dashboard No se pudo cargar",
-    "loadDashboard":"Dashboard de carga"
+    "loadDashboard":"Dashboard de carga",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
@@ -203,7 +204,8 @@
     "submit":"presentar",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensión",

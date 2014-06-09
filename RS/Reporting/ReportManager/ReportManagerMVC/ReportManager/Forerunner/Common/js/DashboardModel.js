@@ -73,6 +73,7 @@ $(function () {
                 data: {
                     resourceName: dashboardName,
                     parentFolder: encodeURIComponent(parentFolder),
+                    overwrite: overwrite,
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",
                     rsInstance: me.options.rsInstance

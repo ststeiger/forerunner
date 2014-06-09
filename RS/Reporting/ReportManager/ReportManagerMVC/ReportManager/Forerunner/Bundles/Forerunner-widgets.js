@@ -5938,9 +5938,10 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([tp.itemBack, tp.itemFolders, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.enableTools([tp.itemLogOff]);
+            } else {
+                me.disableTools([tp.itemLogOff]);
             }
 
             //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
@@ -5986,7 +5987,7 @@ $(function () {
                 toolpaneItems.push(tp.itemLogOff);
             }
 
-            me.addTools(1, false, toolpaneItems);
+            me.addTools(1, true, toolpaneItems);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -5994,7 +5995,6 @@ $(function () {
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
-
 
             me._updateBtnStates();
         },

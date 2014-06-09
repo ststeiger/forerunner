@@ -114,6 +114,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
+	"Email":"Email",
     "AdminUI":"管理員UI"
   },
   "paramPane": {

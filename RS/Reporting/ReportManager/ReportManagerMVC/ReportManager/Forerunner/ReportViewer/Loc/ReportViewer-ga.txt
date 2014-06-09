@@ -114,6 +114,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach",
+	"Email":"Email",
     "AdminUI":"Chomhéadain Riarachán"
   },
   "paramPane": {

@@ -56,9 +56,14 @@ namespace Forerunner.Subscription
             return reference.ScheduleID;
         }
 
+        static public string GetMatchDataFromScheduleDefinition(ScheduleDefinition definition)
+        {
+            return GetScheduleAsXml(definition).OuterXml;
+        }
+
         static public ScheduleReference GetScheduleFromMatchData(string matchData)
         {
-            ScheduleReference retVal = new ScheduleReference();
+            ScheduleReference reference = new ScheduleReference();
             ScheduleDefinition definition = null;
             try
             {
@@ -69,13 +74,13 @@ namespace Forerunner.Subscription
             }
             if (definition == null)
             {
-                retVal.ScheduleID = matchData;
+                reference.ScheduleID = matchData;
             }
             else
             {
-                retVal.Definition = definition;
+                reference.Definition = definition;
             }
-            return retVal;
+            return reference;
         }
 
         static private XmlAttributeOverrides GetScheduleOverrides()
@@ -84,12 +89,14 @@ namespace Forerunner.Subscription
             XmlAttributes attrs = new XmlAttributes();
             attrs.Xmlns = false;
             overrides.Add(typeof(ScheduleDefinition), attrs);
+            overrides.Add(typeof(DailyRecurrence), attrs);
             overrides.Add(typeof(MinuteRecurrence), attrs);
             overrides.Add(typeof(WeeklyRecurrence), attrs);
             overrides.Add(typeof(MonthlyRecurrence), attrs);
             overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             overrides.Add(typeof(DaysOfWeekSelector), attrs);
             overrides.Add(typeof(MonthsOfYearSelector), attrs);
+            overrides.Add(typeof(MonthlyDOWRecurrence), attrs);
             return overrides;
         }
 

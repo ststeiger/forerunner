@@ -114,6 +114,7 @@
     "submit":"Оклахома",
     "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс",
+	"Email":"Email",
     "AdminUI":"UI Админ"
   },
   "paramPane": {

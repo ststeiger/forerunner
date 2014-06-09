@@ -114,6 +114,7 @@
     "submit":"Ok",
     "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI",
+	"Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {

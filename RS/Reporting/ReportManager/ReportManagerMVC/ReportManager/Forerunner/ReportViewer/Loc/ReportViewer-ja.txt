@@ -114,6 +114,7 @@
     "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI",
+	"Email":"Email",
     "AdminUI":"管理UI"
   },
   "paramPane": {

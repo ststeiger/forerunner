@@ -114,6 +114,7 @@
     "submit":"bine",
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
+	"Email":"Email",
     "AdminUI":"UI admin"
   },
   "paramPane": {

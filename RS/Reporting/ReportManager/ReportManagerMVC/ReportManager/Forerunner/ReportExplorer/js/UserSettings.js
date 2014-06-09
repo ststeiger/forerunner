@@ -49,11 +49,16 @@ $(function () {
                 // form
                 "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
+                        "<table><tr><td>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-
+                        "</tr></td><tr><td>" +
+                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
+                        "</tr></td><tr><td>" +
                         "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
                         "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                        "</td></tr></table>" +
                     "</div>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -110,19 +115,19 @@ $(function () {
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
 
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
-
+            me.$email.val(me.settings.email);
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
-
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
-
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
 
             me.closeDialog();

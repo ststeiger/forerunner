@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -194,6 +194,8 @@ $(function () {
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
+            /** @constant */
+            emailSubscription: "emailSubscription",
             /** @constant */
             reportExplorerToolbar: "reportExplorerToolbar",
             /** @constant */
@@ -605,6 +607,31 @@ $(function () {
             }
 
             return this._customSettings;
+        },
+        /**
+         * Get list of mobilizer shared schedule, which everybody can read, unlike the RS shared schedule.
+         *
+         * 
+         */
+        getMobilizerSharedSchedule: function () {
+            if (!this._forerunnerSharedSchedule) {
+                $.ajax({
+                    url: forerunner.config.forerunnerFolder() + "../Custom/MobilizerSharedSchedule.txt",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        forerunner.config._forerunnerSharedSchedule = data.SharedSubscriptions;
+                    },
+                    fail: function () {
+                        console.log("Load mobilizer custom settings failed");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Load mobilizer custom settings .  " + textStatus);
+                    },
+                });
+            }
+
+            return this._forerunnerSharedSchedule;
         },
         /**
        * Get user custom settings

@@ -435,6 +435,10 @@ namespace Forerunner.SSRS.Manager
                             BEGIN	                            	                            
                                 CREATE TABLE dbo.ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
                             END
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerSubscriptions')
+                            BEGIN	                            	                            
+                                CREATE TABLE ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
+                            END
 
                            /*  Version update Code */
                            IF @DBVersionPrev = '1.1'
@@ -1119,6 +1123,18 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public bool CanCreateSubscription(string path)
+        {
+            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
+            {
+                if (permission.IndexOf("Create Subscription", StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;
@@ -1269,39 +1285,95 @@ namespace Forerunner.SSRS.Manager
             return rs.ListSchedules(siteName);
         }
 
-
-        public class SubscriptionInfo
+        public class ExtensionSettings
         {
-            public SubscriptionInfo(string subscriptionID, string report, ExtensionSettings extensionSettings, string description, string eventType, ScheduleReference scheduleReferene, ParameterValue[] parameters)
+
+            private string extensionField;
+
+            private ParameterValue[] parameterValues;
+
+            /// <remarks/>
+            public string Extension
             {
-                SubscriptionID = subscriptionID;
-                Report = report;
-                ExtensionSettings = extensionSettings;
-                Description = description;
-                EventType = eventType;
-                ScheduleReference = scheduleReferene;
-                Parameters = parameters;
+                get
+                {
+                    return this.extensionField;
+                }
+                set
+                {
+                    this.extensionField = value;
+                }
             }
-            public string SubscriptionID { get; set; }
-            public string Report { get; set; }
-            public ExtensionSettings ExtensionSettings { get; set; }
-            public string Description { get; set; }
-            public string EventType { get; set; }
-            public ScheduleReference ScheduleReference { get; set; }
-            public ParameterValue[] Parameters { get; set; }
+
+            /// <remarks/>
+            [System.Xml.Serialization.XmlArrayItemAttribute(typeof(ParameterValue))]
+            public ParameterValue[] ParameterValues
+            {
+                get
+                {
+                    return this.parameterValues;
+                }
+                set
+                {
+                    this.parameterValues = value;
+                }
+            }
         }
+        
 
         public string CreateSubscription(SubscriptionInfo info)
         {
             rs.Credentials = GetCredentials();
-            string MatchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            return rs.CreateSubscription(info.Report, info.ExtensionSettings, info.Description, info.EventType, MatchData, info.Parameters);
+
+            string scheduleID = info.SubscriptionSchedule.ScheduleID;
+            if (info.SubscriptionSchedule.IsMobilizerSchedule)
+                info.SubscriptionSchedule.ScheduleID = null;
+            string MatchData = info.SubscriptionSchedule.ScheduleID != null ? info.SubscriptionSchedule.ScheduleID : info.SubscriptionSchedule.MatchData;
+            Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
+            settings.Extension = info.ExtensionSettings.Extension;
+            settings.ParameterValues = info.ExtensionSettings.ParameterValues;
+            string subscriptionID =  rs.CreateSubscription(info.Report, settings, info.Description, info.EventType, MatchData, info.Parameters);
+            SaveMobilizerSubscription(info.Report, subscriptionID, scheduleID);
+            return subscriptionID;
+        }
+
+        private void SaveMobilizerSubscription(string path, string subscriptionID, string scheduleID)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                string IID = GetItemID(path);
+                impersonator = tryImpersonate();
+                string SQL = @" 
+                            IF NOT EXISTS (SELECT * FROM ForerunnerSubscriptions WHERE SubscriptionID = @SubscriptionID)
+	                            INSERT ForerunnerSubscriptions (SubscriptionID, ScheduleID, ItemID) Values (@SubscriptionID, @ScheduleID, @ItemID)
+                            ELSE
+                                UPDATE ForerunnerSubscriptions SET ScheduleID = @ScheduleID WHERE SubscriptionID = @SubscriptionID
+                            ";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
+                    SQLComm.Parameters.AddWithValue("@ScheduleID", scheduleID);
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
         }
 
         public SubscriptionInfo GetSubscription(string subscriptionID)
         {
             rs.Credentials = GetCredentials();
-            ExtensionSettings extensionSettings;
+            Forerunner.SSRS.Management.ExtensionSettings settings;
             string description;
             ActiveState activeState;
             string status;
@@ -1309,7 +1381,7 @@ namespace Forerunner.SSRS.Manager
             string matchData;
             ParameterValue[] parameters;
             rs.GetSubscriptionProperties(subscriptionID,
-                out extensionSettings,
+                out settings,
                 out description,
                 out activeState,
                 out status,
@@ -1317,27 +1389,160 @@ namespace Forerunner.SSRS.Manager
                 out matchData,
                 out parameters);
             ScheduleReference scheduleReference = MatchDataSerialization.GetScheduleFromMatchData(matchData);
-            SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, scheduleReference, parameters);
+            SubscriptionSchedule subscriptionSchedule = new SubscriptionSchedule();
+            subscriptionSchedule.ScheduleID = scheduleReference.ScheduleID;
+            if (subscriptionSchedule.ScheduleID == null)
+            {
+                subscriptionSchedule.ScheduleID = GetForerunnerScheduleID(subscriptionID);
+            }
+            subscriptionSchedule.MatchData = matchData;
+            SubscriptionExtensionSettings extensionSettings = new SubscriptionExtensionSettings();
+            extensionSettings.Extension = settings.Extension;
+            extensionSettings.ParameterValues = (ParameterValue[])settings.ParameterValues;
+            SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, subscriptionSchedule, parameters);
             return retVal;
         }
 
+        private string GetForerunnerScheduleID(string subscriptionID)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @"Select ScheduleID Where SubscriptionID = @SubscriptionID";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            return SQLReader.GetString(0);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
+
+            return null;
+        }
+
+        private string GetMatchData(SubscriptionSchedule subscriptionSchedule)
+        {
+            return subscriptionSchedule.ScheduleID != null ? subscriptionSchedule.ScheduleID : subscriptionSchedule.MatchData;
+        }
+
+        private string GetMatchData(ScheduleDefinition definition)
+        {
+            XmlDocument xmlDoc = MatchDataSerialization.GetScheduleAsXml(definition);
+            StringWriter stringWriter = new StringWriter();
+            XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter);
+
+            xmlDoc.WriteTo(xmlTextWriter);
+
+            return stringWriter.ToString();
+        }
         public void SetSubscription(SubscriptionInfo info)
         {
             rs.Credentials = GetCredentials();
-            string matchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            rs.SetSubscriptionProperties(info.SubscriptionID, info.ExtensionSettings, info.Description, info.EventType, matchData , info.Parameters);
+            string scheduleID = info.SubscriptionSchedule.ScheduleID;
+            if (info.SubscriptionSchedule.IsMobilizerSchedule)
+                info.SubscriptionSchedule.ScheduleID = null;
+            string matchData = info.SubscriptionSchedule.ScheduleID != null ? info.SubscriptionSchedule.ScheduleID : info.SubscriptionSchedule.MatchData;
+            Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
+            settings.Extension = info.ExtensionSettings.Extension;
+            settings.ParameterValues = info.ExtensionSettings.ParameterValues;
+            rs.SetSubscriptionProperties(info.SubscriptionID, settings, info.Description, info.EventType, matchData , info.Parameters);
+            SaveMobilizerSubscription(info.Report, info.SubscriptionID, scheduleID);
         }
 
         public void DeleteSubscription(string subscriptionID)
         {
             rs.Credentials = GetCredentials();
             rs.DeleteSubscription(subscriptionID);
+            DeleteMoblizerSubscription(subscriptionID);
+        }
+
+        private void DeleteMoblizerSubscription(string subscriptionID)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" Delete From ForerunnerSubscriptions WHERE SubscriptionID = @SubscriptionID";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
+                    SQLComm.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
         }
 
         public Management.Subscription[] ListSubscriptions(string report, string owner)
         {
             rs.Credentials = GetCredentials();
-            return rs.ListSubscriptions(report, owner);
+            Management.Subscription[] rsList = rs.ListSubscriptions(report, owner);
+            List<Management.Subscription> retVal = new List<Management.Subscription>();
+            // Filter it out to only Forerunner managed subscription
+            HashSet<string> subscriptionInfos = new HashSet<string>(); 
+            string IID = GetItemID(report);
+
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @"Select SubscriptionID Where ItemID = @ItemID";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            string subscriptionID = SQLReader.GetString(0);
+                            subscriptionInfos.Add(subscriptionID);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
+
+            foreach (Management.Subscription sub in rsList)
+            {
+                if (subscriptionInfos.Contains(sub.SubscriptionID))
+                {
+                    retVal.Add(sub);
+                }
+            }
+
+            return retVal.ToArray<Management.Subscription>();
         }
 
         private string getReturnSuccess()

@@ -152,6 +152,7 @@
     <Content Include="Custom\MobilizerSettings_Examples.txt" />
     <Content Include="Custom\Explorer.css" />
     <Content Include="Custom\MobilizerSettings.txt" />
+    <Content Include="Custom\MobilizerSharedSchedule.txt" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css">
       <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
     </Content>
@@ -328,6 +329,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
+    <Content Include="Forerunner\ReportExplorer\js\EmailSubscription.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />

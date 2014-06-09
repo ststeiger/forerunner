@@ -114,6 +114,7 @@
     "submit":"Ok",
     "cancel":"Hætta",
     "ResponsiveUI":"móttækilegur HÍ",
+	"Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {

@@ -115,6 +115,7 @@
     "submit":"Ok",
     "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive",
+	"Email":"Email",
     "AdminUI":"administrateur UI"
   },
   "paramPane": {

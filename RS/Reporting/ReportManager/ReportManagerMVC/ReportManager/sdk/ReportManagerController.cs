@@ -22,6 +22,11 @@ namespace ReportManager.Controllers
         public string Instance { get; set; }
     }
 
+    public class SubscriptionInfoPostBack : Forerunner.SSRS.Manager.SubscriptionInfo
+    {
+        public string Instance { get; set; }
+    }
+
     [ExceptionLog]
     [Authorize]
     public class ReportManagerController : ApiController
@@ -208,23 +213,31 @@ namespace ReportManager.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage CreateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
+        public HttpResponseMessage CreateSubscription(SubscriptionInfoPostBack info)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).CreateSubscription(info)), "text/JSON");
+            info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info)), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage CanCreateSubscription(String reportPath, String instance = null)
+        {
+            reportPath = System.Web.HttpUtility.UrlDecode(reportPath);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).CanCreateSubscription(reportPath) ? "True" : "False"), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage GetSubscription(string subscriptionID, string instance = null)
         {
-            Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
+            Forerunner.SSRS.Manager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
         }
 
         [HttpPost]
-        public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
+        public HttpResponseMessage UpdateSubscription(SubscriptionInfoPostBack info)
         {
            
-            GetReportManager(instance).SetSubscription(info);
+            GetReportManager(info.Instance).SetSubscription(info);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
         }
 
@@ -261,7 +274,16 @@ namespace ReportManager.Controllers
         public HttpResponseMessage ListSchedules(string instance = null)
         {
             Schedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
+            List<SubscriptionSchedule> retVal = new List<SubscriptionSchedule>();
+            foreach (Schedule schedule in schedules)
+            {
+                SubscriptionSchedule value = new SubscriptionSchedule();
+                value.ScheduleID = schedule.ScheduleID;
+                value.Name = schedule.Name;
+                value.MatchData = Forerunner.Subscription.MatchDataSerialization.GetMatchDataFromScheduleDefinition(schedule.Definition);
+                retVal.Add(value);
+            }
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(retVal)), "text/JSON"); 
         }
 
         private string ToString<T>(T value)

@@ -322,6 +322,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
@@ -355,6 +356,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("editDashboard", path);
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");

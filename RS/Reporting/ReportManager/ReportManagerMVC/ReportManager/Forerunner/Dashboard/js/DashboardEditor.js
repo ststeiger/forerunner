@@ -29,8 +29,12 @@ $(function () {
          */
         editDashboard: function (path) {
             var me = this;
-            me.loadDefinition(path, false);
-            me.showUI(true);
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+
+            setTimeout(function () {
+                me.loadDefinition(path, false);
+                me.showUI(true);
+            }, timeout);
         },
         /**
          * Show or hide the edit UI
@@ -51,7 +55,6 @@ $(function () {
         },
         _renderButtons: function () {
             var me = this;
-            me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                 var $item = $(item);
 

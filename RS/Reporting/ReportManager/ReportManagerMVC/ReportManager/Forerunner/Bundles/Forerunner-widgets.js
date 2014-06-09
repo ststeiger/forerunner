@@ -13631,6 +13631,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
@@ -13664,6 +13665,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("editDashboard", path);
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
@@ -20365,19 +20367,16 @@ $(function () {
 
             // If we have a report definition, load the report
             if (me.model.dashboardDef.reports[reportId]) {
-                var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
-                setTimeout(function () {
-                    $item.reportViewerEZ({
-                        navigateTo: me.options.navigateTo,
-                        historyBack: null,
-                        isReportManager: false,
-                        isFullScreen: false
-                    });
+                $item.reportViewerEZ({
+                    navigateTo: me.options.navigateTo,
+                    historyBack: null,
+                    isReportManager: false,
+                    isFullScreen: false
+                });
 
-                    var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
-                    var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                    $reportViewer.reportViewer("loadReport", catalogItem.Path);
-                }, timeout);
+                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                var $reportViewer = $item.reportViewerEZ("getReportViewer");
+                $reportViewer.reportViewer("loadReport", catalogItem.Path);
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }
@@ -20446,8 +20445,12 @@ $(function () {
          */
         editDashboard: function (path) {
             var me = this;
-            me.loadDefinition(path, false);
-            me.showUI(true);
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+
+            setTimeout(function () {
+                me.loadDefinition(path, false);
+                me.showUI(true);
+            }, timeout);
         },
         /**
          * Show or hide the edit UI
@@ -20468,7 +20471,6 @@ $(function () {
         },
         _renderButtons: function () {
             var me = this;
-            me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                 var $item = $(item);
 

@@ -437,7 +437,7 @@ namespace Forerunner.SSRS.Manager
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerSubscriptions')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
+                                CREATE TABLE dbo.ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
                             END
 
                            /*  Version update Code */

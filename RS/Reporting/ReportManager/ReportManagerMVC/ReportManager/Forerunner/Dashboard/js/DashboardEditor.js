@@ -13,6 +13,7 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
 
     /**
      * Widget used to create and edit dashboards
@@ -29,7 +30,6 @@ $(function () {
          */
         editDashboard: function (path) {
             var me = this;
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
 
             setTimeout(function () {
                 me.loadDefinition(path, false);
@@ -164,9 +164,11 @@ $(function () {
                 return;
             }
 
-            // Load the given report
-            me._loadReport(data.reportId, true);
-            me._makeOpaque(true);
+            setTimeout(function () {
+                // Load the given report
+                me._loadReport(data.reportId, true);
+                me._makeOpaque(true);
+            });
         },
         _create: function () {
             var me = this;

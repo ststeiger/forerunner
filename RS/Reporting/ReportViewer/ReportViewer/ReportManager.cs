@@ -1371,7 +1371,12 @@ namespace Forerunner.SSRS.Manager
             subscriptionSchedule.MatchData = matchData;
             SubscriptionExtensionSettings extensionSettings = new SubscriptionExtensionSettings();
             extensionSettings.Extension = settings.Extension;
-            extensionSettings.ParameterValues = (ParameterValue[])settings.ParameterValues;
+            List<ParameterValue> newList = new List<ParameterValue>();
+            foreach (ParameterValueOrFieldReference value in settings.ParameterValues)
+            {
+                newList.Add((ParameterValue) value);
+            }
+            extensionSettings.ParameterValues = newList.ToArray<ParameterValue>();
             SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, subscriptionSchedule, parameters);
             return retVal;
         }
@@ -1382,7 +1387,7 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
-                string SQL = @"Select ScheduleID Where SubscriptionID = @SubscriptionID";
+                string SQL = @"Select ScheduleID From ForerunnerSubscriptions Where SubscriptionID = @SubscriptionID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1391,7 +1396,7 @@ namespace Forerunner.SSRS.Manager
                     {
                         while (SQLReader.Read())
                         {
-                            return SQLReader.GetString(0);
+                            return SQLReader.GetGuid(0).ToString();
                         }
                     }
                 }
@@ -1437,11 +1442,12 @@ namespace Forerunner.SSRS.Manager
             SaveMobilizerSubscription(info.Report, info.SubscriptionID, scheduleID);
         }
 
-        public void DeleteSubscription(string subscriptionID)
+        public string DeleteSubscription(string subscriptionID)
         {
             rs.Credentials = GetCredentials();
             rs.DeleteSubscription(subscriptionID);
             DeleteMoblizerSubscription(subscriptionID);
+            return getReturnSuccess();
         }
 
         private void DeleteMoblizerSubscription(string subscriptionID)
@@ -1482,7 +1488,7 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
-                string SQL = @"Select SubscriptionID Where ItemID = @ItemID";
+                string SQL = @"Select SubscriptionID From ForerunnerSubscriptions Where ItemID = @ItemID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1492,7 +1498,7 @@ namespace Forerunner.SSRS.Manager
                     {
                         while (SQLReader.Read())
                         {
-                            string subscriptionID = SQLReader.GetString(0);
+                            string subscriptionID = SQLReader.GetGuid(0).ToString();
                             subscriptionInfos.Add(subscriptionID);
                         }
                     }

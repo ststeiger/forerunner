@@ -2157,7 +2157,7 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
-        showEmailSubscription : function () {
+        showEmailSubscription : function (subscriptionID) {
             var me = this;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
@@ -2170,8 +2170,17 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 if (paramList)
                     me.$emailSub.emailSubscription("option", "paramList", paramList);
-                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        manageSubscription : function() {
+            var me = this;
+            me._setManageSubscriptionUI();
+            if (me.$manageSub) {
+                me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
+                me.$manageSub.manageSubscription("listSubscriptions", null);
+                me.$manageSub.manageSubscription("openDialog");
             }
         },
         /**
@@ -2211,6 +2220,11 @@ $(function () {
             var me = this;
             if (!me.$emailSub)
                 me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
+        },
+        _setManageSubscriptionUI: function () {
+            var me = this;
+            if (!me.$manageSub)
+                me.$manageSub = me.options.$appContainer.find(".fr-managesubscription-section");
         },
        
         //Page Loading
@@ -5316,9 +5330,9 @@ $(function () {
             var me = this;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
@@ -12539,10 +12553,10 @@ $(function () {
 
             $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
             if ($dlg.length === 0) {
-            //    $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-            //    me.options.$appContainer.append($dlg);
+                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
             }
-            //$dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+            $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
             $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
             if ($dlg.length === 0) {
@@ -14020,6 +14034,7 @@ $(function () {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
                     me.$desc.val(subscriptionInfo.Description);
+                    me._subscriptionData = subscriptionInfo;
 
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
@@ -14030,7 +14045,7 @@ $(function () {
                             me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$comment.val(extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
@@ -14081,6 +14096,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
+                me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.SubscriptionSchedule = {}
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
@@ -14220,11 +14236,12 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
+            me._subscriptionData = null;
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', "Email", "fr-email-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', "Email", "fr-email-cancel", "Cancel");
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -14289,6 +14306,130 @@ $(function () {
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
+        },
+        destroy: function () {
+            var me = this;
+            me.element.html("");
+            this._destroy();
+        }
+    });  // $.widget(
+});  // $(function ()
+
+///#source 1 1 /Forerunner/ReportExplorer/js/ManageSubscription.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports objects
+forerunner.ajax = forerunner.ajax || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.constants = forerunner.ssr.constants || {};
+forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+    var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.manageSubscription), {
+        options: {
+            reportPath: null,
+            $appContainer: null,
+            $reportViewer: null,
+            subscriptionModel: null
+        },
+        _subscriptionModel: null,
+        _createDiv : function(listOfClasses) {
+            return forerunner.helper.createDiv(listOfClasses);
+        },
+        _showDeletionFailure : function() {
+            console.log("Deletion failed");
+        },
+        _createListItem: function (subInfo) {
+            var me = this;
+            var $listItem = new $("<DIV />");
+            $listItem.addClass("fr-sub-listitem");
+            var $deleteIcon = me._createDiv(["ui-icon-circle-close", "ui-icon"]);
+            var $editIcon = me._createDiv(["ui-icon-pencil", "ui-icon"]);
+            $listItem.append($deleteIcon);
+            $deleteIcon.addClass("fr-sub-delete-icon");
+            $deleteIcon.on("click", function () {
+                me.options.subscriptionModel.subscriptionModel("deleteSubscription",
+                    subInfo.SubscriptionID,
+                    function () { me._renderList(); }, function () { me._showDeletionFailure(); });
+            });
+            $editIcon.addClass("fr-sub-edit-icon");
+            $editIcon.on("click", function () {
+                me._editSubscription(subInfo.SubscriptionID);
+            });
+            $listItem.append($editIcon);
+            $listItem.append(subInfo.Description);
+            return $listItem;
+        },
+        _editSubscription: function (subscriptionID) {
+            var me = this;
+            me.options.$reportViewer.reportViewer("showEmailSubscription", subscriptionID);
+        },
+        _renderList: function () {
+            var me = this;
+            me.$listcontainer.html("");
+            var $list = new $("<UL />");
+            $list.addClass("fr-sub-list");
+            $.when(me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath)).done(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var subInfo = data[i];
+                    var $li = new $("<LI />");
+                    var $listItem = me._createListItem(subInfo);
+                    $li.append($listItem);
+                    $list.append($li);
+                }
+                me.$listcontainer.append($list);
+            }).fail(
+                function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.loadSubscriptionListFailed);
+                }
+            );
+        },
+
+        listSubscriptions: function () {
+            var me = this;
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+            me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', "Manage Subscription", "fr-managesubscription-cancel", "Cancel");
+            me.$container.append(headerHtml);
+            // Make these async calls and cache the results before they are needed.
+            me.options.subscriptionModel.subscriptionModel("getSchedules");
+            me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
+            me.element.append(me.$container);
+            me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
+            me.$container.append(me.$listcontainer);
+            me.$theForm = me._createDiv(["fr-sub-form"]);
+            me.$container.append(me.$theForm);
+            me._renderList();
+
+            me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         destroy: function () {
             var me = this;

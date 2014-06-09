@@ -205,6 +205,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\tiff.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xls.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xml.png"
+  File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\animated-overlay.gif"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png"

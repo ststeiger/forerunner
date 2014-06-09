@@ -1036,6 +1036,19 @@ $(function () {
             }
         },
         /** @member */
+        itemManageSubscription: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-managesubscription",
+            imageClass: "fr-icons24x24-managesubscription",
+            text: "Manage Subscription",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("manageSubscription");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-managesubscription"]);
+                }
+            }
+        },
+        /** @member */
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",

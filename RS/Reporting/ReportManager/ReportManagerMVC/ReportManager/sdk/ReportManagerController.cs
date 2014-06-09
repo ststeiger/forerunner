@@ -244,8 +244,8 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage DeleteSubscription(string subscriptionID, string instance = null)
         {
-            GetReportManager(instance).DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+            string retVal = GetReportManager(instance).DeleteSubscription(subscriptionID);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(retVal), "text/JSON");
         }
 
         [HttpGet]

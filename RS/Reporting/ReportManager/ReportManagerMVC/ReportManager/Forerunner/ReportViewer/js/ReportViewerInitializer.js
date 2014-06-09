@@ -172,10 +172,10 @@ $(function () {
 
             $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
             if ($dlg.length === 0) {
-            //    $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-            //    me.options.$appContainer.append($dlg);
+                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
             }
-            //$dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+            $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
             $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
             if ($dlg.length === 0) {

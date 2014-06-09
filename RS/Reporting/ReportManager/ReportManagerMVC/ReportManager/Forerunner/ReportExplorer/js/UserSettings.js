@@ -53,10 +53,10 @@ $(function () {
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
                         "</tr></td><tr><td>" +
-                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
                         "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
                         "</tr></td><tr><td>" +
-                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<label class='fr-us-label fr-us-separator'>" + userSettings.AdminUI + "</label>" +
                         "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                         "</td></tr></table>" +
                     "</div>" +
@@ -123,15 +123,6 @@ $(function () {
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
         },
-        _saveSettings: function () {
-            var me = this;
-            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.email = me.$email.val();
-            me.settings.adminUI = me.$adminUI.prop("checked");
-            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
-
-            me.closeDialog();
-        },
         /**
          * Open user setting dialog
          *
@@ -144,6 +135,23 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
 
         },
+        _triggerClose: function (isSubmit) {
+            var me = this;
+            var data = {
+                isSubmit: isSubmit,
+                settings: me.settings
+            };
+            me._trigger(events.close, null, data);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _saveSettings: function () {
+            var me = this;
+            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+            me.settings.email = me.$email.val();
+            me.settings.adminUI = me.$adminUI.prop("checked");
+            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+            me._triggerClose(true);
+        },
         /**
          * Close user setting dialog
          *
@@ -151,9 +159,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-
+            me._triggerClose(false);
         }
     }); //$.widget
 });

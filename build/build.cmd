@@ -41,19 +41,19 @@ set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 echo Cleaning Build Files... >> %BUILD_LOG%
 echo Cleaning Setup Build Files... >> %BUILD_LOG%
-rmdir /s /q %~dp0..\Setup\Build >> %BUILD_LOG%
+rmdir /s /q %~dp0..\Setup\Build >> %BUILD_LOG% 2>&1
 echo Running git clean >> %BUILD_LOG%
-git clean -f -x >> %BUILD_LOG%
+git clean -f -x >> %BUILD_LOG% 2>&1
 echo Resetting Local Changes... >> %BUILD_LOG%
-git reset --hard >> %BUILD_LOG%
+git reset --hard >> %BUILD_LOG% 2>&1
 echo Syncing Files From Remote... >> %BUILD_LOG%
-git pull %GITHUBSSH% >> %BUILD_LOG%
+git pull %GITHUBSSH% >> %BUILD_LOG% 2>&1
 if ERRORLEVEL 1 (
 	goto :InitError
 )
 
 echo %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%> %~dp0\..\build.txt
-git commit %~dp0\..\build.txt -n -m "Official Build" >> %BUILD_LOG%
+git commit %~dp0\..\build.txt -n -m "Official Build" >> %BUILD_LOG% 2>&1
 if ERRORLEVEL 1 (
 	goto :InitError
 )
@@ -62,7 +62,7 @@ echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
 echo %PROJECT_NAME% Code Analysis Warnings... >> %BUILD_RELEASE%\codeanalysis.wrn
 echo %PROJECT_NAME% Code Analysis Errors... >> %BUILD_RELEASE%\codeanalysis.err
 
-git push %GITHUBSSH% >> %BUILD_LOG%
+git push %GITHUBSSH% >> %BUILD_LOG% 2>&1
 if ERRORLEVEL 1 (
 	goto :Error
 )
@@ -98,10 +98,10 @@ if ERRORLEVEL 1 (
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
-%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
+%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip 
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
-%ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip
-%UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
+%ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip >> %BUILD_LOG% 2>&1
+%UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%" >> %BUILD_LOG% 2>&1
 set MailSubject="BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
 call %~dp0\buildpassed.htm.template.cmd %BUILD_RELEASE%\buildpassed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"
 call %~dp0\SendMail.cmd %MailSubject% -File %BUILD_RELEASE%\buildpassed.htm -BodyAsHtml -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
@@ -117,8 +117,8 @@ exit /b 1
 echo The Build Failed. >> %BUILD_LOG%
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
-%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
-%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
+%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip >> %BUILD_LOG% 2>&1
+%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%" >> %BUILD_LOG% 2>&1
 set MailSubject="BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
 call %~dp0\buildfailed.htm.template.cmd %BUILD_RELEASE%\buildfailed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"
 call %~dp0\SendMail.cmd %MailSubject% -File %BUILD_RELEASE%\buildfailed.htm -BodyAsHtml -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"

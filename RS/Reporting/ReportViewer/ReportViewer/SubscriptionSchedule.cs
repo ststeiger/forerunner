@@ -8,8 +8,10 @@ namespace Forerunner
 {
     public class SubscriptionSchedule
     {
-        public SubscriptionSchedule() { }
-        public ScheduleReference ScheduleReference { get; set; }
-        public ScheduleDefinition ScheduleDefinition { get; set; }
+        public SubscriptionSchedule() { IsMobilizerSchedule = false; }
+        public string Name { get; set; }
+        public string ScheduleID { get; set; }
+        public string MatchData { get; set; }
+        public bool IsMobilizerSchedule { get; set; }
     }
 }

@@ -274,7 +274,16 @@ namespace ReportManager.Controllers
         public HttpResponseMessage ListSchedules(string instance = null)
         {
             Schedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
+            List<SubscriptionSchedule> retVal = new List<SubscriptionSchedule>();
+            foreach (Schedule schedule in schedules)
+            {
+                SubscriptionSchedule value = new SubscriptionSchedule();
+                value.ScheduleID = schedule.ScheduleID;
+                value.Name = schedule.Name;
+                value.MatchData = Forerunner.Subscription.MatchDataSerialization.GetMatchDataFromScheduleDefinition(schedule.Definition);
+                retVal.Add(value);
+            }
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(retVal)), "text/JSON"); 
         }
 
         private string ToString<T>(T value)

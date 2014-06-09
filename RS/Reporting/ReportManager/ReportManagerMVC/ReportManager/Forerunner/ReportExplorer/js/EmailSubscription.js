@@ -91,7 +91,7 @@ $(function () {
                         }
                     }
                     
-                    me.$sharedSchedule.val(subscriptionInfo.ScheduleReference.ScheduleID);
+                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     if (me.options.userSettings)
                         me.$to.attr("value", me.options.userSettings.email );
@@ -105,8 +105,10 @@ $(function () {
                 me._subscriptionData.SubscriptionID = null;
                 me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.SubscriptionSchedule = {}
-                me._subscriptionData.SubscriptionSchedule.ScheduleReference = {};
-                me._subscriptionData.SubscriptionSchedule.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
+                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
+                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.EventType = "TimedSubscription";
                 me._subscriptionData.ExtensionSettings = {};
@@ -121,8 +123,10 @@ $(function () {
             } else {
                 me._subscriptionData.Description = me.$desc.val();
                 me._subscriptionData.SubscriptionSchedule = {}
-                me._subscriptionData.SubscriptionSchedule.ScheduleReference = {};
-                me._subscriptionData.SubscriptionSchedule.ScheduleReference.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
+                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
+                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
                 for (var i = 0; i < me._subscriptionData.ExtensionSettings.length; i++) {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
@@ -181,6 +185,13 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                 me._sharedSchedule[data[i].ScheduleID] = data[i];
+            }
+            data = forerunner.config.getMobilizerSharedSchedule();
+            if (data) {
+                for (var i = 0; i < data.length; i++) {
+                    validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
+                    me._sharedSchedule[data[i].ScheduleID] = data[i];
+                }
             }
             me.$sharedSchedule = me._createDropDownWithLabel("Schedule:", validValues);
             me.$sharedSchedule.addClass("fr-email-schedule");

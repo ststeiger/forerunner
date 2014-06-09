@@ -56,9 +56,13 @@ namespace Forerunner.Subscription
             return reference.ScheduleID;
         }
 
-        static public SubscriptionSchedule GetScheduleFromMatchData(string matchData)
+        static public string GetMatchDataFromScheduleDefinition(ScheduleDefinition definition)
         {
-            SubscriptionSchedule retVal = new SubscriptionSchedule();
+            return GetScheduleAsXml(definition).OuterXml;
+        }
+
+        static public ScheduleReference GetScheduleFromMatchData(string matchData)
+        {
             ScheduleReference reference = new ScheduleReference();
             ScheduleDefinition definition = null;
             try
@@ -71,13 +75,12 @@ namespace Forerunner.Subscription
             if (definition == null)
             {
                 reference.ScheduleID = matchData;
-                retVal.ScheduleReference = reference;
             }
             else
             {
-                retVal.ScheduleDefinition = definition;
+                reference.Definition = definition;
             }
-            return retVal;
+            return reference;
         }
 
         static private XmlAttributeOverrides GetScheduleOverrides()

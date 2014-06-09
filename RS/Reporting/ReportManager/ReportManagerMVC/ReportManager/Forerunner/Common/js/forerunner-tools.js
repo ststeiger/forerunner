@@ -385,7 +385,7 @@ $(function () {
         btnEmailSubscription: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-email-button",
-            imageClass: "fr-icons24x24-printreport",
+            imageClass: "fr-icons24x24-emailsubscription",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: "Email",
             events: {
@@ -1002,7 +1002,7 @@ $(function () {
         itemEmailSubscription: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-emailsubscription",
-            imageClass: "fr-icons24x24-printreport",
+            imageClass: "fr-icons24x24-emailsubscription",
             text: "Email",
             events: {
                 click: function (e) {

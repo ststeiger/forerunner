@@ -6012,9 +6012,10 @@ $(function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
 
-            if (lastFetched.view === "catalog") {
-                me.disableTools([tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard]);
+            // Start out disabled and enable if needed
+            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
+            if (lastFetched.view === "catalog") {
                 var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
                 if (permission && permission.hasPermission === true) {
                     // If the last fetched folder is a catalog and the user has permission to create a

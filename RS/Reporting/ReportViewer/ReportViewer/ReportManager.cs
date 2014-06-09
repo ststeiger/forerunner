@@ -354,7 +354,7 @@ namespace Forerunner.SSRS.Manager
             foreach (CatalogItem ci in items)
             {
                 added = false;
-                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || showAll) && (!ci.Hidden || showHidden))
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
                 {
                     list.Add(ci);
                     added = true;
@@ -367,7 +367,7 @@ namespace Forerunner.SSRS.Manager
 
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
                             {
                                 if (!ci.Hidden || showHidden)
                                 {

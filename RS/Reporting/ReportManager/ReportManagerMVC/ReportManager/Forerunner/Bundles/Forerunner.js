@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -493,7 +493,7 @@ $(function () {
             csv: "CSV",
             pdf: "PDF",
             mhtml: "MHTML",
-            excel: "EXCELOPENXML",
+            excel: "EXCELOPENXML",            
             tiff: "IMAGE",
             word: "WORDOPENXML"
         },

@@ -428,7 +428,7 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                 {
-                    if (execInfo.NumPages < int.Parse(PageNum))
+                    if (execInfo.NumPages != 0 && execInfo.NumPages < int.Parse(PageNum))
                         throw new Exception("No such page");
                     else
                         LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
@@ -920,38 +920,31 @@ namespace Forerunner.SSRS.Viewer
             rs.Credentials = GetCredentials();
             FileName = "";
             rs.ExecutionHeaderValue = execHeader;
-            try
+         
+            if (NewSession != "")
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+            else
+                execInfo = rs.LoadReport(ReportPath, historyID);
+
+            NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+            //if (rs.GetExecutionInfo().Parameters.Length != 0)
+            //{
+            //    if (ParametersList != null)
+            //    {
+            //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
+            //    }
+            //}
+
+            if (devInfo == null)
             {
-                if (NewSession != "")
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                else
-                    execInfo = rs.LoadReport(ReportPath, historyID);
-
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-                //if (rs.GetExecutionInfo().Parameters.Length != 0)
-                //{
-                //    if (ParametersList != null)
-                //    {
-                //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-                //    }
-                //}
-
-                if (devInfo == null)
-                {
-                    devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
-                }
-                result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
-                FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
-                return result;
+                devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
             }
-            catch (Exception e)
-            {
-                MimeType = string.Empty;
-                ExceptionLogGenerator.LogException(e);
-                Console.WriteLine(e.Message);
-                return null;
-            }
+            result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
+            FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
+            return result;
+       
+      
         }
 
         protected virtual void Dispose(bool disposing)

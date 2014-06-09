@@ -29,7 +29,9 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
                 "~/Forerunner/ReportExplorer/css/UserSettings.css",
                 "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
-                "~/Forerunner/ReportExplorer/css/icons128x128.css"
+                "~/Forerunner/ReportExplorer/css/icons128x128.css",
+                "~/Forerunner/ReportExplorer/css/ForerunnerTags.css",
+                "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Dashboard/css/bundle").Include(

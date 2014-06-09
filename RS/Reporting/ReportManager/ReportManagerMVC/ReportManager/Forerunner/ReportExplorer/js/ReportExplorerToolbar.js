@@ -82,10 +82,21 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav];
+
+            //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
+            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+            //    if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+            //        toolbarList.push(tb.btnSearchFolder);
+            //    }
+            //}
+            
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(8, true, [tb.btnLogOff]);
+                toolbarList.push(tb.btnLogOff)
             }
+            toolbarList.push(tg.explorerFindGroup);
+
+            me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later

@@ -1054,6 +1054,19 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
                 }
             }
+        },
+        /** @member */
+        itemTags: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-tags",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolPane.tags,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showTags");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-tags"]);
+                }
+            }
         }
     };
 
@@ -1182,7 +1195,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
+            //sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1327,6 +1340,18 @@ $(function () {
 
                     e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
+                }
+            }
+        },
+        /** @member */
+        btnSearchFolder: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-searchfolder",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            tooltip: locData.toolbar.searchFolder,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
                 }
             }
         },
@@ -1501,8 +1526,33 @@ $(function () {
                     $accordionGroup.toggle();
                 }
             }
+        },
+        /** @member */
+        itemTags: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-tags",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolPane.tags,
+            events: {
+                click: function (e) {
+                    e.data.$reportExplorer.reportExplorer("showTags");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
+                }
+            }
+        },
+        /** @member */
+        itemSearchFolder: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-searchfolder",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            text: locData.toolbar.searchFolder,
+            events: {
+                click: function (e) {
+                    e.data.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-searchfolder"]);
+                }
+            }
         }
-
     };
 
     /**

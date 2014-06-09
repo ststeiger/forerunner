@@ -77,7 +77,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 isAdmin: me.options.isAdmin,
                 onInputFocus: layout.onInputFocus,
-                onInputBlur: layout.onInputBlur
+                onInputBlur: layout.onInputBlur,
             });
         },
 
@@ -102,7 +102,8 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:name": "transitionToCreateDashboard"
+                    "createDashboard/:name": "transitionToCreateDashboard",
+                    "searchfolder/:path": "transitionToSearchFolder"
                 }
             });
 
@@ -148,6 +149,8 @@ $(function () {
                 me.transitionToReportManager(null, "favorites");
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+            } else if (data.name === "transitionToSearchFolder") {
+                me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToCreateDashboard") {
                 me.transitionToCreateDashboard(name);
             } else if (data.name == "transitionToOpenDashboard") {
@@ -194,6 +197,7 @@ $(function () {
                 layout.$mainsection.html("");
                 layout.$mainsection.hide();
             }
+            
             layout.cleanUp();
             forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs(layout.$container);
@@ -289,7 +293,7 @@ $(function () {
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");                    
+                    path = String(path).replace(/%2f/g, "/");
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }

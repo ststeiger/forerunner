@@ -56,7 +56,8 @@
     "addToFavorites":"Añadir a Favoritos",
     "RDLExt":"RDL Extensión",
     "saveDashboard":"Ahorra Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Editar Dashboard",
+    "tags":"Etiquetas"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -91,7 +92,8 @@
     "search":"búsqueda",
     "createDashboard":"Crear Dashboard",
     "editDashboard":"Editar Dashboard",
-    "saveDashboard":"Ahorra Dashboard"
+    "saveDashboard":"Ahorra Dashboard",
+    "searchFolder":"carpeta de búsqueda"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -222,5 +224,23 @@
     "submit":"presentar",
     "dashboardName":"Dashboard Nombre",
     "namePlaceholder":"Dashboard Nombre"
+  },
+  "tags": {
+    "title":"Etiquetas",
+    "tags":"Etiquetas",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "prompt":"Separa las etiquetas con comas.",
+    "yourPosition":"Usted está en"
+  },
+  "searchFolder": {
+    "title":"carpeta de búsqueda",
+    "name":"nombre",
+    "tags":"Etiquetas",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "prompt":"Separa las etiquetas con comas.",
+    "homePage":"página de Inicio",
+    "createTo":"Creado bajo"
   }
 }

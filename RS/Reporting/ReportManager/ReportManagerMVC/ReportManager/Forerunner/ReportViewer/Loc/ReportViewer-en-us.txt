@@ -56,7 +56,8 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Save Dashboard",
-    "editDashboard":"Edit Dashboard"
+    "editDashboard":"Edit Dashboard",
+    "tags":"Tags"
   },
   "toolbar": {
     "back":"Back",
@@ -90,7 +91,8 @@
     "search":"Search",
     "createDashboard":"Create Dashboard",
     "editDashboard":"Edit Dashboard",
-    "saveDashboard":"Save Dashboard"
+    "saveDashboard":"Save Dashboard",
+    "searchFolder":"Search Folder"
   },
   "print": {
     "title":"Print Report",
@@ -110,8 +112,8 @@
     "title":"User Settings",
     "submit":"Ok",
     "cancel":"Cancel",
-    "ResponsiveUI": "Responsive UI",
-    "AdminUI": "Admin UI"
+    "ResponsiveUI":"Responsive UI",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Null",
@@ -221,5 +223,23 @@
     "submit":"Save",
     "dashboardName":"Dashboard Name",
     "namePlaceholder":"dashboard name"
+  },
+  "tags": {
+    "title":"Tags",
+    "tags":"Tags",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "prompt":"Separate tags with commas.",
+    "yourPosition":"Your Position"
+  },
+  "searchFolder": {
+    "title":"Search Folder",
+    "name":"Name",
+    "tags":"Tags",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "prompt":"Separate tags with commas.",
+    "homePage":"Home Page",
+    "createTo":"Created under"
   }
 }

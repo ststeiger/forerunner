@@ -1,0 +1,37 @@
+﻿.fr-tag-section { 
+    display: none;
+}
+.fr-tag-section .fr-core-dialog-submit-container {
+    margin-bottom: 4px;
+}
+.fr-tag-button {
+    margin: 0 4px;
+    min-width: 200px;
+}
+.fr-tag-form-container {
+    margin:8px 8px 0px 8px;
+}
+.fr-tag-label {
+    margin-right:6px;
+}
+.fr-tag-text {
+    width:240px;
+    margin-right:4px;
+    border: 1px solid lightblue;
+}
+.fr-tag-table td {
+    padding:2px;
+}
+.fr-tag-prompt td {
+    padding:0px 2px;
+}
+.fr-tag-label-prompt {
+    font-style:italic;
+    font-size:12px;
+    display:block;
+    margin-top:2px;
+}
+.fr-tag-location {
+    font-size:12px;
+    margin: 16px 4px 0 4px;
+}

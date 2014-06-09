@@ -56,8 +56,9 @@
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"enregistrer du tableau de bord"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"enregistrer du tableau de bord",
+    "editDashboard":"Modifier Dashboard",
+    "tags":"Mots clés"
   },
   "toolbar": {
     "back":"Retour",
@@ -91,7 +92,8 @@
     "search":"recherche",
     "createDashboard":"Créer Dashboard",
     "editDashboard":"Modifier Dashboard",
-    "saveDashboard":"enregistrer du tableau de bord"
+    "saveDashboard":"enregistrer du tableau de bord",
+    "searchFolder":"dossier de recherche"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -222,5 +224,23 @@
     "submit":"soumettre",
     "dashboardName":"Dashboard Nom",
     "namePlaceholder":"Dashboard Nom"
+  },
+  "tags": {
+    "title":"Mots clés",
+    "tags":"Mots clés",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "prompt":"Séparez les tags par des virgules.",
+    "yourPosition":"Vous êtes à"
+  },
+  "searchFolder": {
+    "title":"dossier de recherche",
+    "name":"nom",
+    "tags":"Mots clés",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "prompt":"Séparez les tags par des virgules.",
+    "homePage":"Page d'accueil",
+    "createTo":"créé en vertu de"
   }
 }

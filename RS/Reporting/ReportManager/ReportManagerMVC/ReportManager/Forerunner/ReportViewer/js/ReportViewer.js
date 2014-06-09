@@ -2424,6 +2424,16 @@ $(function () {
             me.autoRefreshID = null;
         },
         /**
+         * Show report tags dialog
+         *
+         * @function $.forerunner.reportViewer#showTags
+         */
+        showTags: function () {
+            var me = this;
+            me.$tagsDialog = me.options.$appContainer.find(".fr-tag-section");
+            me.$tagsDialog.forerunnerTags("openDialog", me.getReportPath());
+        },
+        /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
          *
          * @function $.forerunner.dsCredential#destroy

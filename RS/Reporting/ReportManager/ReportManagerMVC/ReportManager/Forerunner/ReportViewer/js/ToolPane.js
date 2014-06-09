@@ -158,8 +158,8 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
-            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
-                listOfItems = listOfItems.concat([tp.itemRDLExt]);
+            if (me.options.$reportViewer.reportViewer("option", "isAdmin"))
+                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {

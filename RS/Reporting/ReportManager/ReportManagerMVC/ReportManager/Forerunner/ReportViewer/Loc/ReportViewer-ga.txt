@@ -55,8 +55,9 @@
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
-    "saveDashboard":"Sábháil Ar Phainéal"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"Sábháil Ar Phainéal",
+    "editDashboard":"Painéal na Eagar",
+    "tags":"Clibeanna"
   },
   "toolbar": {
     "back":"ar ais",
@@ -90,7 +91,8 @@
     "search":"Cuardaigh",
     "createDashboard":"Cruthaigh Phainéil",
     "editDashboard":"Painéal na Eagar",
-    "saveDashboard":"Sábháil Ar Phainéal"
+    "saveDashboard":"Sábháil Ar Phainéal",
+    "searchFolder":"Cuardaigh Fillteán"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -221,5 +223,23 @@
     "submit":"Cuir",
     "dashboardName":"Ainm an Phainéil",
     "namePlaceholder":"Ainm an Phainéil"
+  },
+  "tags": {
+    "title":"Clibeanna",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "yourPosition":"Tá tú ag"
+  },
+  "searchFolder": {
+    "title":"Cuardaigh Fillteán",
+    "name":"Ainm",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "homePage":"leathanach baile",
+    "createTo":"cruthaithe faoi"
   }
 }

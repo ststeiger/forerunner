@@ -55,8 +55,9 @@
     "views":"浏览",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL扩展",
-    "saveDashboard":"保存指示板"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"保存指示板",
+    "editDashboard":"编辑指示板",
+    "tags":"标签"
   },
   "toolbar": {
     "back":"返回",
@@ -90,7 +91,8 @@
     "search":"搜索",
     "createDashboard":"创建指示板",
     "editDashboard":"编辑指示板",
-    "saveDashboard":"保存指示板"
+    "saveDashboard":"保存指示板",
+    "searchFolder":"搜索文件夹"
   },
   "print": {
     "title":"打印报表",
@@ -221,5 +223,23 @@
     "submit":"提交",
     "dashboardName":"指示板名称",
     "namePlaceholder":"指示板名称"
+  },
+  "tags": {
+    "title":"标签",
+    "tags":"标签",
+    "cancel":"取消",
+    "submit":"提交",
+    "prompt":"使用逗号分隔标签.",
+    "yourPosition":"您当前在"
+  },
+  "searchFolder": {
+    "title":"搜索文件夹",
+    "name":"名称",
+    "tags":"标签",
+    "cancel":"取消",
+    "submit":"提交",
+    "prompt":"使用逗号分隔标签.",
+    "homePage":"主页",
+    "createTo":"创建到"
   }
 }

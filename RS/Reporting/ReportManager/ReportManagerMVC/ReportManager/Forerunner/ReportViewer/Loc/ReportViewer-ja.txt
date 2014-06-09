@@ -55,8 +55,9 @@
     "views":"閲覧",
     "addToFavorites":"お気に入りに追加",
     "RDLExt":"RDL拡張",
-    "saveDashboard":"ダッシュボードを保存"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"ダッシュボードを保存",
+    "editDashboard":"編集ダッシュボード",
+    "tags":"タグ"
   },
   "toolbar": {
     "back":"裏面",
@@ -90,7 +91,8 @@
     "search":"検索",
     "createDashboard":"ダッシュボードの作成",
     "editDashboard":"編集ダッシュボード",
-    "saveDashboard":"ダッシュボードを保存"
+    "saveDashboard":"ダッシュボードを保存",
+    "searchFolder":"検索フォルダ"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -221,5 +223,23 @@
     "submit":"提出する",
     "dashboardName":"ダッシュボードの名前",
     "namePlaceholder":"ダッシュボードの名前"
+  },
+  "tags": {
+    "title":"タグ",
+    "tags":"タグ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "prompt":"複数のタグはコンマで区切って.",
+    "yourPosition":"あなたがである"
+  },
+  "searchFolder": {
+    "title":"検索フォルダ",
+    "name":"名前",
+    "tags":"タグ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "prompt":"複数のタグはコンマで区切って.",
+    "homePage":"ホームページ",
+    "createTo":"下に作成"
   }
 }

@@ -160,34 +160,37 @@ $(function () {
             }
 
             var $dlg;
-            $dlg = me.options.$appContainer.find(".fr-print-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-dsc-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dsc-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
+            $dlg = me._findSection("fr-tag-section");
+            $dlg.forerunnerTags({ $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
+
             if (me.parameterModel) {
-                $dlg = me.options.$appContainer.find(".fr-mps-section");
-                if ($dlg.length === 0) {
-                    $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                    $dlg.manageParamSets({
-                        $appContainer: me.options.$appContainer,
-                        $reportViewer: $viewer,
-                        $reportViewerInitializer: me,
-                        model: me.parameterModel
-                    });
-                    me.options.$appContainer.append($dlg);
-                }
+                $dlg = me._findSection("fr-mps-section");
+                $dlg.manageParamSets({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: $viewer,
+                    $reportViewerInitializer: me,
+                    model: me.parameterModel
+                });
                 me._manageParamSetsDialog = $dlg;
             }
+        },
+        _findSection: function (sectionClass) {
+            var me = this;
+
+            var $dlg = me.options.$appContainer.find("." + sectionClass);
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.addClass(sectionClass);
+                me.options.$appContainer.append($dlg);
+            }
+
+            return $dlg;
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;

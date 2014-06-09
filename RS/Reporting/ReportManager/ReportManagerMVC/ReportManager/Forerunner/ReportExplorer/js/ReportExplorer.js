@@ -117,12 +117,19 @@ $(function () {
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
-                action = "explore";
+                    action = "explore";
             }
             else if (catalogItem.Type === 3) {
-                action = "open";
-                if (catalogItem.MimeType === "json/forerunner-dashboard") {
-                    action = "openDashboard";
+                switch (catalogItem.MimeType) {
+                    case "json/forerunner-dashboard":
+                        action = "openDashboard";
+                        break;
+                    case "json/forerunner-searchfolder":
+                        action = "searchfolder";
+                        break;
+                    default:
+                        action = "open";
+                        break;
                 }
             }
             else {
@@ -147,13 +154,14 @@ $(function () {
 
             //Images
             
-            if (catalogItem.Type === 1 || catalogItem.Type === 7)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 if (isSelected) {
                     outerImage.addClass("fr-explorer-folder-selected");
                 }
                 else {
                     outerImage.addClass("fr-explorer-folder");
                 }
+            }
             else if (catalogItem.Type === 3) {//resource files
                 outerImage.addClass("fr-icons128x128");
 
@@ -161,8 +169,8 @@ $(function () {
                 outerImage.addClass(fileTypeClass);
             }
             else {
-                
-                var innerImage = new $("<img />");                
+
+                var innerImage = new $("<img />");
                 $imageblock.append(innerImage);
                 var corner = new $("<div />");
                 $imageblock.append(corner);
@@ -170,25 +178,25 @@ $(function () {
                 corner.css("background-color", me.$UL.css("background-color"));
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
-                var imageSrc =  reportThumbnailPath;
+                var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
                 if (isSelected) {
                     outerImage.addClass("fr-report-item-outer-image-selected");
-                    EarImage.addClass("fr-explorer-item-ear-selcted");                   
+                    EarImage.addClass("fr-explorer-item-ear-selcted");
                 }
                 else {
-                    outerImage.addClass("fr-report-item-outer-image");                    
+                    outerImage.addClass("fr-report-item-outer-image");
                     EarImage.addClass("fr-report-item-ear-image");
                 }
-               
+
                 innerImage.attr("src", imageSrc);
                 innerImage.error(function () {
                     $(this).attr("src", me.options.forerunnerPath + "ReportExplorer/images/Report-icon.png");
                 });
-                
+
                 innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.
             }
             if (isSelected)
@@ -341,6 +349,11 @@ $(function () {
                 return;
             }
 
+            me.parentPath = null;
+            if (view === "searchfolder") {
+                me.parentPath = me._getParentPath(me.options.path);
+            }
+
             var url = me.options.reportManagerAPI + "/GetItems";
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
@@ -410,14 +423,36 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element
                 });
                 me.options.$appContainer.append($dlg);
-                me._userSettingsDialog = $dlg;
             }
+            me._userSettingsDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-sf-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.reportExplorerSearchFolder({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._searchFolderDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-tag-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-tag-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerTags({
+                    $appContainer: me.options.$appContainer,
+                    rsInstance: me.options.rsInstance
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._forerunnerTagsDialog = $dlg;
         },
         /**
          * Show the create dashboard modal dialog.
@@ -447,18 +482,70 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
-        savedPath: function () {
+        showExplorerSearchFolderDialog: function () {
             var me = this;
-            if (me.options.view === "catalog") {
-                me.priorExplorerPath = me.options.path;
+            me._searchFolderDialog.reportExplorerSearchFolder("openDialog");
+        },
+        showTags: function () {
+            var me = this;
+            me._forerunnerTagsDialog.forerunnerTags("openDialog", me.options.path);
+        },
+        createSearchFolder: function (searchFolder) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/SaveResource";
+
+            forerunner.ajax.ajax({
+                url: url,
+                async: false,
+                type: "POST",
+                dataType: "text",
+                data: {
+                    resourceName: searchFolder.searchFolderName,
+                    parentFolder: me.parentPath || me.options.path,
+                    contents: JSON.stringify(searchFolder.content),
+                    mimetype: "json/forerunner-searchfolder",
+                    instance: me.options.rsInstance
+                },
+                success: function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveDashboardSucceeded, toolbar.saveDashboard);
+                },
+                error: function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+        getSearchFolderContent: function () {
+            var me = this;
+            if (me.options.view !== "searchfolder") {
+                return null;
             }
 
+            var url = me.options.reportManagerAPI + "/Resource";
+            var content = null;
+
+            forerunner.ajax.ajax({
+                url: url,
+                async: false,
+                type: "GET",
+                dataType: "text",
+                data: {
+                    path: me.options.path,
+                    instance: me.options.rsInstance
+                },
+                success: function (data) {
+                    content = data;
+                },
+                error: function (data) { }
+            });
+
+            return content;
         },
         _searchItems: function (keyword) {
             var me = this;
 
             if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, "Please input valid keyword", "Prompt");
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
                 return;
             }
             
@@ -508,7 +595,7 @@ $(function () {
         /**
         * Function execute when input element blur
         *
-        * @function $.forerunner.reportViewer#onInputBlur
+        * @function $.forerunner.reportExplorer#onInputBlur
         */
         onInputBlur: function () {
             var me = this;
@@ -518,12 +605,35 @@ $(function () {
         /**
          * Function execute when input element focus
          *
-         * @function $.forerunner.reportViewer#onInputFocus
+         * @function $.forerunner.reportExplorer#onInputFocus
          */
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
                 me.options.onInputFocus();
+        },
+        /**
+         * Get current explorer path
+         *
+         * @function $.forerunner.reportExplorer#getCurrentPath
+         */
+        getCurrentPath: function () {
+            var me = this;
+            return decodeURIComponent(me.options.path);
+        },
+        /**
+         * Get current explorer view
+         *
+         * @function $.forerunner.reportExplorer#getCurrentView
+         */
+        getCurrentView: function () {
+            var me = this;
+            return me.options.view;
+        },
+        _getParentPath: function (path) {
+            var index = path.lastIndexOf("/");
+            var parentPath = path.substring(0, index);
+            return parentPath;
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;
@@ -587,6 +697,9 @@ $(function () {
                     break;
                 case "json/forerunner-dashboard":
                     fileTypeClass = "fr-icons128x128-file-dashboard";
+                    break;
+                case "json/forerunner-searchfolder":
+                    fileTypeClass = "fr-icons128x128-file-zip";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";

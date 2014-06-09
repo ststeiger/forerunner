@@ -73,6 +73,10 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
+            if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+                me.enableTools([tp.itemSearchFolder, tp.itemTags]);
+            }
+
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
         },
         _init: function () {
@@ -81,10 +85,29 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup];
+
+            //Add admin feature buttons detect
+            if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+                //Not allow add tags on the root page
+                if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
+                me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                    toolpaneItems.push(tp.itemTags);
+                }
+
+                //Only allow add tags and search folder in catalog view
+                if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                    toolpaneItems.push(tp.itemSearchFolder);
+                }
             }
+            toolpaneItems.push(tg.explorerItemFindGroup);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push([tp.itemLogOff]);
+            }
+
+            me.addTools(1, true, toolpaneItems);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later

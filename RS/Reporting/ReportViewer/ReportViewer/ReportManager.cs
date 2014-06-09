@@ -240,7 +240,7 @@ namespace Forerunner.SSRS.Manager
             CatalogItem[] items = callListChildren(path, isRecursive);
             foreach (CatalogItem ci in items)
             {
-                if (ci.Type == ItemTypeEnum.Report && !ci.Hidden)
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.LinkedReport) && !ci.Hidden)
                 {
                     list.Add(ci);
                 }
@@ -251,7 +251,7 @@ namespace Forerunner.SSRS.Manager
                         CatalogItem[] folder = callListChildren(ci.Path, false);
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.LinkedReport)
                             {
                                 if (!ci.Hidden)
                                 {

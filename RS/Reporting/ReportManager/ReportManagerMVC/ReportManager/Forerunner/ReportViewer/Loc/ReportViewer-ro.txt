@@ -55,8 +55,9 @@
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Salvați Tablou de bord"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"Salvați Tablou de bord",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -90,7 +91,8 @@
     "search":"căutare",
     "createDashboard":"crea Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
-    "saveDashboard":"Salvați Tablou de bord"
+    "saveDashboard":"Salvați Tablou de bord",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"imprima raportul",
@@ -198,7 +200,10 @@
   "createDashboard": {
     "title":"crea Tablou de bord",
     "cancel":"anula",
-    "submit":"executa"
+    "submit":"executa",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Extension",

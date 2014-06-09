@@ -34,8 +34,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null,
-            isAdmin:false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -77,8 +76,7 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
+                rsInstance: me.options.rsInstance
             });
 
             // Create / render the toolbar

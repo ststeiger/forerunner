@@ -55,8 +55,9 @@
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld",
     "RDLExt":"RDL Eftirnafn",
-    "saveDashboard":"vista Mælaborð"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"vista Mælaborð",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Til baka",
@@ -90,7 +91,8 @@
     "search":"Leita",
     "createDashboard":"Búa Mælaborð",
     "editDashboard":"breyta Mælaborð",
-    "saveDashboard":"vista Mælaborð"
+    "saveDashboard":"vista Mælaborð",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Print Report",
@@ -198,7 +200,10 @@
   "createDashboard": {
     "title":"Búa Mælaborð",
     "cancel":"hætta",
-    "submit":"leggja"
+    "submit":"leggja",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Eftirnafn",

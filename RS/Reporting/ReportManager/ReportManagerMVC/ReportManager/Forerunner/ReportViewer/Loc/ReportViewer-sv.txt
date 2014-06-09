@@ -55,8 +55,9 @@
     "views":"Översikter",
     "addToFavorites":"Lägg till i favoriter",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"Spara Dashboard"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"Spara Dashboard",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"bakåt",
@@ -90,7 +91,8 @@
     "search":"Sökning",
     "createDashboard":"Skapa Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
-    "saveDashboard":"Spara Dashboard"
+    "saveDashboard":"Spara Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -198,7 +200,10 @@
   "createDashboard": {
     "title":"Skapa Dashboard",
     "cancel":"Avbryt",
-    "submit":"inkomma"
+    "submit":"inkomma",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Extensions",

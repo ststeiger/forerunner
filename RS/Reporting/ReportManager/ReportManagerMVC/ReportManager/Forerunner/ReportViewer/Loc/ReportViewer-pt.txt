@@ -55,8 +55,9 @@
     "views":"Visualizações",
     "addToFavorites":"Adicionar aos favoritos",
     "RDLExt":"RDL Extensão",
-    "saveDashboard":"Salve o Dashboard"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"Salve o Dashboard",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Volta",
@@ -90,7 +91,8 @@
     "search":"pesquisa",
     "createDashboard":"criar o Dashboard",
     "editDashboard":"Editar o Dashboard",
-    "saveDashboard":"Salve o Dashboard"
+    "saveDashboard":"Salve o Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -198,7 +200,10 @@
   "createDashboard": {
     "title":"criar o Dashboard",
     "cancel":"cancelar",
-    "submit":"submeter"
+    "submit":"submeter",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL Extensões",

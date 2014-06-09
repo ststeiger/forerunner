@@ -56,8 +56,9 @@
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
     "RDLExt":"RDL Extension",
-    "saveDashboard":"enregistrer du tableau de bord"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"enregistrer du tableau de bord",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Retour",
@@ -91,7 +92,8 @@
     "search":"recherche",
     "createDashboard":"Créer Dashboard",
     "editDashboard":"Modifier Dashboard",
-    "saveDashboard":"enregistrer du tableau de bord"
+    "saveDashboard":"enregistrer du tableau de bord",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -199,7 +201,10 @@
   "createDashboard": {
     "title":"créer Dashboard",
     "cancel":"annuler",
-    "submit":"soumettre"
+    "submit":"soumettre",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"Extensions RDL",

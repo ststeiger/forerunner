@@ -55,8 +55,9 @@
     "views":"瀏覽",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL擴展",
-    "saveDashboard":"保存指示板"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"保存指示板",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -90,7 +91,8 @@
     "search":"搜索",
     "createDashboard":"創建指示板",
     "editDashboard":"編輯指示板",
-    "saveDashboard":"保存指示板"
+    "saveDashboard":"保存指示板",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"打印報表",
@@ -204,7 +206,10 @@
   "createDashboard": {
     "title":"創建指示板",
     "cancel":"取消",
-    "submit":"提交"
+    "submit":"提交",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "dashboardEditor": {
     "propertiesBtn":"屬性"

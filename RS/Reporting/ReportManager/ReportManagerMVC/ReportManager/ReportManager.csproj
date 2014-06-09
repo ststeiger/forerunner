@@ -188,6 +188,8 @@
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\images\OpenDropDown.png" />
+    <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
+    <Content Include="Forerunner\Common\js\DashboardModel.js" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\avi.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\bmp.png" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\css.png" />
@@ -212,7 +214,6 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\align_just_icon.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\BackOff.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\BackPageOff.png" />
-    <Content Include="Forerunner\Common\images\ToolbarIcons\CreateDashboard.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\CSV.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Dashboard.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DataSourceCred.png" />

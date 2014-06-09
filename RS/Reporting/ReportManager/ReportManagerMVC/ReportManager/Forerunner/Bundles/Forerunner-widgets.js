@@ -665,6 +665,7 @@ $(function () {
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -695,8 +696,7 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null,
-            isAdmin: false,
+            rsInstance: null
         },
 
         _destroy: function () {
@@ -3525,6 +3525,16 @@ $(function () {
                 me.disableTools(tools);
             }
         },
+        /**
+         * Clears the allTools array. This function is useful when re-initializing a toolbar.
+         *
+         * @function $.forerunner.toolBase#removeAllTools
+         */
+        removeAllTools: function () {
+            var me = this;
+            me.allTools = me.allTools || {};
+            me.allTools.length = 0;
+        },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
             me.allTools = me.allTools || {};
@@ -3547,9 +3557,13 @@ $(function () {
             me._addChildTool($tool, tools[0], enabled);
             for (var i = 1; i < tools.length; i++) {
                 var toolInfo = tools[i];
-                $tool.after(me._getToolHtml(toolInfo));
-                $tool = $tool.next();
-                me._addChildTool($tool, toolInfo, enabled);
+                if (toolInfo) {
+                    $tool.after(me._getToolHtml(toolInfo));
+                    $tool = $tool.next();
+                    me._addChildTool($tool, toolInfo, enabled);
+                } else {
+                    throw new Error("Toolbase - addTools() Undefined tool, index: " + i + ", toolClass: " + me.options.toolClass);
+                }
             }
         },
         _addChildTool: function ($tool, toolInfo, enabled) {
@@ -3704,15 +3718,19 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.removeClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.addClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
-                    me._addEvents($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.enableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.removeClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.addClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
+                        me._addEvents($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.enableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - enableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },
@@ -3729,14 +3747,18 @@ $(function () {
             }
 
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = me.element.find("." + toolInfo.selectorClass);
-                $toolEl.addClass("fr-toolbase-disabled");
-                if (toolInfo.events) {
-                    $toolEl.removeClass("fr-core-cursorpointer");
-                    me._removeEvent($toolEl, toolInfo);
-                }
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me.disableTools(toolInfo.tools);
+                if (toolInfo) {
+                    var $toolEl = me.element.find("." + toolInfo.selectorClass);
+                    $toolEl.addClass("fr-toolbase-disabled");
+                    if (toolInfo.events) {
+                        $toolEl.removeClass("fr-core-cursorpointer");
+                        me._removeEvent($toolEl, toolInfo);
+                    }
+                    if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                        me.disableTools(toolInfo.tools);
+                    }
+                } else {
+                    throw new Error("Toolbase - disableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
             });
         },
@@ -4808,6 +4830,107 @@ $(function () {
     };
 });  // $(function ()
 
+///#source 1 1 /Forerunner/Common/js/DashboardModel.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+
+    ssr.DashboardModel = function (options) {
+        var me = this;
+        me.options = {
+            $appContainer: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
+        };
+
+        // Merge options with the default settings
+        if (options) {
+            $.extend(this.options, options);
+        }
+
+        me.clearState();
+    };
+
+    ssr.DashboardModel.prototype = {
+        clearState: function () {
+            var me = this;
+            me.dashboardDef = {
+                templateName: null,
+                template: null,
+                reports: {}
+            };
+        },
+        fetch: function (path) {
+            var me = this;
+            var status = false;
+
+            var url = me.options.reportManagerAPI + "/Resource";
+            url += "?path=" + encodeURIComponent(path);
+            url += "&instance=" + me.options.rsInstance;
+            if (me.options.rsInstance) {
+                url += "?instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                    me.dashboardDef = data
+                    status = true;
+                },
+                fail: function (jqXHR) {
+                    console.log("_loadResource() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
+                }
+            });
+            return status;
+        },
+        save: function (overwrite, parentFolder, dashboardName) {
+            var me = this;
+            var status = false;
+            if (overwrite === null || overwrite === undefined) {
+                overwrite = false;
+            }
+            var stringified = JSON.stringify(me.dashboardDef);
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    resourceName: dashboardName,
+                    parentFolder: encodeURIComponent(parentFolder),
+                    contents: stringified,
+                    mimetype: "json/forerunner-dashboard",
+                    rsInstance: me.options.rsInstance
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    status = true;
+                },
+                fail: function (jqXHR) {
+                    console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+            return status;
+        },
+        loadTemplate: function (templateName) {
+            var me = this;
+            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
+            me.dashboardDef.template = template;
+        },
+
+    };
+});
+
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
 /**
  * @file Contains the toolbar widget.
@@ -5205,8 +5328,11 @@ $(function () {
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
             }
 
-            if (me.options.$reportViewer.reportViewer("option","isAdmin"))
+            var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
                 listOfItems = listOfItems.concat([tp.itemRDLExt]);
+            }
+
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -5415,6 +5541,8 @@ $(function () {
 
                         $loadMore.remove();
                     }
+
+                    me._fullScreenCheck();
 
                     var $container = $("ul.fr-nav-container", $(me.element));
                     $(".lazy", me.$list).lazyload({
@@ -5668,7 +5796,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
                 me.addTools(8, true, [tb.btnLogOff]);
             }
@@ -5679,8 +5807,6 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
-
-            me._updateBtnStates();
         },
 
         _destroy: function () {
@@ -5692,19 +5818,6 @@ $(function () {
             $(window).resize(function () {
                 me.onWindowResize.call(me);
             });
-
-            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me._updateBtnStates();
-            });
-        },
-        _updateBtnStates: function () {
-            var me = this;
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-            if (lastFetched.view === "catalog") {
-                me.enableTools([tb.btnCreateDashboard]);
-            } else {
-                me.disableTools([tb.btnCreateDashboard]);
-            }
         }
     });  // $.widget
 });  // function()
@@ -5793,10 +5906,15 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup]);
+            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(6, true, [tp.itemLogOff]);
+                me.addTools(5, true, [tp.itemLogOff]);
             }
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                me.addTools(3, true, [tp.itemCreateDashboard]);
+            }
+
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -5881,7 +5999,6 @@ $(function () {
             $appContainer: null,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin: false,
             onInputBlur: null,
             onInputFocus: null,
         },
@@ -5903,7 +6020,6 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -5929,7 +6045,6 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
-                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;
@@ -6237,7 +6352,8 @@ $(function () {
             me._fetch(me.options.view, me.options.path);
 
             me.userSettings = {
-                responsiveUI: false
+                responsiveUI: false,
+                adminUI: false
             };
             me.getUserSettings(true);
 
@@ -6264,7 +6380,10 @@ $(function () {
                 $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.createDashboard({
                     $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
+                    $reportExplorer: me.element,
+                    parentFolder: me.lastFetched.path,
+                    reportManagerAPI: me.options.reportManagerAPI,
+                    rsInstance: me.options.rsInstance
                 });
                 me.options.$appContainer.append($dlg);
                 me._createDashboardDialog = $dlg;
@@ -6590,347 +6709,6 @@ $(function () {
         }
     }); //$.widget
 });
-///#source 1 1 /Forerunner/ReportExplorer/js/EmailSubscription.js
-// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
-
-// Forerunner SQL Server Reports objects
-forerunner.ajax = forerunner.ajax || {};
-forerunner.ssr = forerunner.ssr || {};
-forerunner.ssr.constants = forerunner.ssr.constants || {};
-forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
-
-$(function () {
-    var ssr = forerunner.ssr;
-    var events = ssr.constants.events;
-    var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-
-    $.widget(widgets.getFullname(widgets.emailSubscription), {
-        options: {
-            reportPath: null,
-            $appContainer: null,
-            subscriptionModel: null,
-            paramList: null
-        },
-        _extensionSettings: null,
-        _createDropDownForValidValues : function(validValues) {
-            return forerunner.helper.createDropDownForValidValues(validValues);
-        },
-        _createRadioButtonsForValidValues : function(validValues, index) {
-            return forerunner.helper.createRadioButtonsForValidValues(validValues, index);
-        },
-        _createDiv: function (listOfClasses) {
-            var $div = new $("<div />");
-            for (var i = 0; i < listOfClasses.length; i++) {
-                $div.addClass(listOfClasses[i]);
-            }
-            return $div;
-        },
-        _createDropDownWithLabel: function (label, validValues) {
-            var me = this;
-            me.$colOfLastRow.append("<BR/>");
-            var id = forerunner.helper.guidGen();
-            var $label = new $("<LABEL />");
-            $label.attr("for", id);
-            $label.append(label);
-            $retVal = me._createDropDownForValidValues(validValues);
-            $retVal.attr("id", id);
-            me.$colOfLastRow.append($label);
-            me.$colOfLastRow.append($retVal);
-            return $retVal;
-        },
-        _subscriptionData : null,
-        _setSubscriptionOrSetDefaults : function() {
-            var me = this;
-            var subscriptionID = me._subscriptionID;
-
-            $.when(me._initExtensionOptions(), me._initProcessingOptions()).done(function (data1, data2) {
-                me._extensionSettings = data1;
-                me._initRenderFormat(data1[0]);
-                me._initSharedSchedule(data2[0]);
-                if (subscriptionID) {
-                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
-
-                    me.$desc.val(subscriptionInfo.Description);
-
-                    var extensionSettings = subscriptionInfo.ExtensionSettings;
-                    for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
-                        if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.attr("value", extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeReport.attr("checked", "");
-                            } else {
-                                me.$includeReport.removeAttr("checked");
-                            }
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.attr("checked", "");
-                            } else {
-                                me.$includeLink.removeAttr("checked");
-                            }
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
-                            me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                    }
-                    
-                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
-                } else {
-                    if (me.options.userSettings)
-                        me.$to.attr("value", me.options.userSettings.email );
-                }
-            }); 
-        },
-        _getSubscriptionInfo: function() {
-            var me = this;
-            if (!me._subscriptionData) {
-                me._subscriptionData = {}
-                me._subscriptionData.SubscriptionID = null;
-                me._subscriptionData.Report = me.options.reportPath;
-                me._subscriptionData.SubscriptionSchedule = {}
-                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
-                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
-                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
-                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
-                me._subscriptionData.Description = me.$desc.val();
-                me._subscriptionData.EventType = "TimedSubscription";
-                me._subscriptionData.ExtensionSettings = {};
-                me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
-                me._subscriptionData.ExtensionSettings.ParameterValues = [];
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.attr("checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
-            } else {
-                me._subscriptionData.Description = me.$desc.val();
-                me._subscriptionData.SubscriptionSchedule = {}
-                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
-                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
-                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
-                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
-                for (var i = 0; i < me._subscriptionData.ExtensionSettings.length; i++) {
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
-                    }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
-                    }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.attr("checked") ? "True" : "False";
-                    }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.attr("checked") ? "True" : "False";
-                    }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();
-                    }
-                }
-            }
-            if (me.options.paramList) {
-                me._subscriptionData.Parameters = [];
-                var paramListObj = JSON.parse(me.options.paramList);
-                for (var i = 0; i < paramListObj.ParamsList.length; i++) {
-                    var param = paramListObj.ParamsList[i];
-                    if (param.IsMultiple === "true") {
-                        for (var j = 0; j < param.Value.length; j++) {
-                            me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
-                        }
-                    } else {
-                        me._subscriptionData.Parameters.push({"Name": param.Parameter, "Value": param.Value});
-                    }
-                }
-            }
-            return me._subscriptionData;
-        },
-        _initRenderFormat : function (data) {
-            var me = this;
-            for (var i = 0; i < data.length; i++) {
-                var setting = data[i];
-                if (setting.Name == "RenderFormat") {
-                    me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
-                    me.$renderFormat.addClass(".fr-email-renderformat");
-                }
-            }
-        },
-        _initExtensionOptions: function () {
-            var me = this;
-            return me.options.subscriptionModel.subscriptionModel("getExtensionSettings", "Report Server Email");
-        },
-        _sharedSchedule: {},
-        _initSharedSchedule:function(data) {
-            var me = this;
-            var validValues = [];
-            for (var i = 0; i < data.length; i++) {
-                validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
-                me._sharedSchedule[data[i].ScheduleID] = data[i];
-            }
-            data = forerunner.config.getMobilizerSharedSchedule();
-            if (data) {
-                for (var i = 0; i < data.length; i++) {
-                    validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
-                    me._sharedSchedule[data[i].ScheduleID] = data[i];
-                }
-            }
-            me.$sharedSchedule = me._createDropDownWithLabel("Schedule:", validValues);
-            me.$sharedSchedule.addClass("fr-email-schedule");
-        },
-        _initProcessingOptions: function () {
-            var me = this;
-            return me.options.subscriptionModel.subscriptionModel("getSchedules");
-        },
-        _initSections : function () {
-            var me = this;
-            me._setSubscriptionOrSetDefaults();
-        },
-        _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
-            var me = this;
-            $input = new $("<INPUT />");
-            $input.attr("type", type);
-            if (placeholder)
-                $input.attr("placeholder", placeholder);
-            for (var i = 0; i < listOfClasses.length; i++) {
-                $input.addClass(listOfClasses[i]);
-            }
-            return $input;
-        },
-        _createTextAreaWithPlaceHolder: function (listOfClasses, placeholder) {
-            var me = this;
-            $input = new $("<TEXTAREA />");
-            if (placeholder)
-                $input.attr("placeholder", placeholder);
-            for (var i = 0; i < listOfClasses.length; i++) {
-                $input.addClass(listOfClasses[i]);
-            }
-            return $input;
-        },
-        _createTableRow: function ($div) {
-            var me = this;
-            $row = new $("<TR/>");
-            $col = new $("<TD/>");
-            $row.append($col)
-            if ($div)
-                $col.append($div);
-            return $row;
-        },
-        _createCheckBox: function ($div, label) {
-            var me = this;
-            var $cb = new $("<INPUT />");
-            var id = forerunner.helper.guidGen();
-            $cb.attr("type", "checkbox");
-            $cb.attr("id", id);
-            var $label = new $("<LABEL />");
-            $label.attr("for", id);
-            $label.append(label);
-            $div.append($cb);
-            $div.append($label);
-            return $cb;
-        },
-        _createToggleInput: function ($container, label) {
-            var me = this;
-            $div = forerunner.helper.createDiv(["fr-email-include"]);
-            $cb = me._createCheckBox($div, label);
-            $container.append($div);
-            return $cb;
-        },
-        _init : function () {
-        },
-        _subscriptionID : null,
-        loadSubscription: function (subscripitonID) {
-            var me = this;
-            me._subscriptionID = subscripitonID;
-            me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
-            me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', "Email", "fr-email-cancel", "Cancel");
-
-            me.$theForm = new $("<FORM />");
-            me.$theForm.addClass("fr-email-form");
-            me.$theForm.addClass("fr-core-dialog-form");
-            me.$outerContainer.append(headerHtml);
-            me.$outerContainer.append(me.$theForm);
-            me.$theTable = new $("<TABLE />");
-            me.$theTable.addClass("fr-email-table");
-            me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "Description");
-            me.$theTable.append(me._createTableRow(me.$desc));
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "To");
-            me.$theTable.append(me._createTableRow(me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "Subject")
-            me.$theTable.append(me._createTableRow(me.$subject));
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment")
-            me.$theTable.append(me._createTableRow(me.$comment));
-            me.$lastRow = me._createTableRow();
-            me.$colOfLastRow = me.$lastRow.children(":first");
-            me.$theTable.append(me.$lastRow);
-            me.$includeLink = me._createToggleInput(me.$colOfLastRow, "[Include Link]");
-            me.$includeReport = me._createToggleInput(me.$colOfLastRow, "[Include Report]");
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], "submit", null)
-            me.$submitButton.val("Save");
-            me.$theForm.append(me.$submitButton)
-            me._initSections();
-            me.element.append(me.$outerContainer);
-
-            me.element.find(".fr-email-submit-id").on("click", function (e) {
-                me._submit();
-            });
-
-            me.element.find(".fr-email-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
-
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit();
-            });
-
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
-            });
-        },
-
-        _submit : function () {
-            var me = this;
-            var subscriptionInfo = me._getSubscriptionInfo();
-            if (me._subscriptionID) {
-                me.options.subscriptionModel.subscriptionModel("updateSubscription", subscriptionInfo)
-            } else {
-                me.options.subscriptionModel.subscriptionModel("createSubscription", subscriptionInfo)
-            }
-            me.closeDialog();
-        },
-        
-        openDialog: function () {
-            var me = this;
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-        },
-        
-        closeDialog: function () {
-            var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
-        },
-        destroy: function () {
-            var me = this;
-            me.element.html("");
-            this._destroy();
-        }
-    });  // $.widget(
-});  // $(function ()
-
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportRender.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
@@ -12623,8 +12401,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null,
-            isAdmin:false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -12666,8 +12443,7 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
+                rsInstance: me.options.rsInstance
             });
 
             // Create / render the toolbar
@@ -13065,8 +12841,7 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false,
-            isAdmin: false,
+            useReportManagerSettings: false
         },
         _render: function () {
             var me = this;
@@ -13099,8 +12874,7 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection,
-                isAdmin: me.options.isAdmin,
+                $unzoomtoolbar: layout.$unzoomsection
             });
 
             initializer.render();
@@ -13618,7 +13392,6 @@ $(function () {
 	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Optional,Report service instance name
-     * @prop {String} options.isAdmin - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
      */
@@ -13629,7 +13402,6 @@ $(function () {
             isFullScreen: true,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin:false,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -13658,7 +13430,6 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur
             });
@@ -13685,7 +13456,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:name": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard"
                 }
             });
 
@@ -13732,7 +13503,7 @@ $(function () {
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
             } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(name);
+                me.transitionToCreateDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -13828,6 +13599,12 @@ $(function () {
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
+        _getUserSettings: function () {
+            var me = this;
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            return me.$reportExplorer.reportExplorer("getUserSettings");
+        },
         /**
          * Transition to ReportViewer view
          *
@@ -13840,15 +13617,6 @@ $(function () {
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            //Update isAdmin
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
-            if (settings && settings.adminUI === true )
-                me.options.isAdmin = true;
-            else
-                me.options.isAdmin = false;
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -13867,7 +13635,7 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    isAdmin: me.options.isAdmin,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -13881,13 +13649,7 @@ $(function () {
 
             me.element.css("background-color", "");
         },
-        /**
-         * Transition to Open Dashboard view
-         *
-         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
-         * @param {String} name - Name of the dashboard template
-         */
-        transitionToOpenDashboard: function (path) {
+        _transitionToDashboard: function (path, enableEdit) {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
@@ -13904,55 +13666,42 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    enableEdit: false,
-                    rsInstance: me.options.rsInstance
+                    enableEdit: enableEdit,
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
+                if (enableEdit) {
+                    $dashboardEditor.dashboardEditor("editDashboard", path);
+                } else {
+                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                }
+
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
         },
         /**
+         * Transition to Open Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
+         * @param {String} path - Fully qualified path to the dashboard
+         */
+        transitionToOpenDashboard: function (path) {
+            var me = this;
+            me._transitionToDashboard(path, false);
+        },
+        /**
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
-         * @param {String} name - Name of the dashboard template
+         * @param {String} path - Fully qualified path to the dashboard
          */
-        transitionToCreateDashboard: function (templateName) {
+        transitionToCreateDashboard: function (path) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-            layout.$mainsection.html("");
-            forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            layout._selectedItemPath = null;
-            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
-            //To resolved bug 909, 845, 811 on iOS
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
-            setTimeout(function () {
-                // TODO
-                // What about the case where the user navigates directly to the create dashboard URL.
-                // We need to pass the parentFolder to the URL
-                var parentFolder = "/";
-                if (me.$reportExplorer) {
-                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
-                    parentFolder = lastFetched.path;
-                }
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
-                    DefaultAppTemplate: layout,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    isReportManager: true,
-                    enableEdit: true,
-                    rsInstance: me.options.rsInstance
-                });
-
-                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
-            }, timeout);
-
-            me.element.css("background-color", "");
+            me._transitionToDashboard(path, true);
         },
         _init: function () {
             var me = this;
@@ -14022,31 +13771,38 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
+    var ssr = forerunner.ssr;
 
     /**
-     * Widget used to select a new dashbard template
+     * Widget used to select a new dashboard template
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {String} options.$reportExplorer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.parentFolder - Folder that this resource should be created in
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
      *
      * @example
      * $("#createDashboardDialog").createDashboard({
-     *    $appContainer: me.options.$appContainer,
-     *    $reportViewer: $viewer,
-     /  });
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     parentFolder: me.lastFetched,
+     * });
      */
     $.widget(widgets.getFullname(widgets.createDashboard), {
         options: {
             $reportExplorer: null,
             $appContainer: null,
-            model: null
+            parentFolder: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
         },
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-select-id")
+            me.$select = me.element.find(".fr-cdb-template-name")
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
@@ -14067,15 +13823,33 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-cdb-form fr-core-dialog-form'>" +
-                        "<div class='fr-core-center'>" +
-                            "<select class='fr-cdb-select-id'>" +
-                            "</select>" +
-                            "<div class='fr-core-dialog-submit-container'>" +
-                                "<div class='fr-core-center'>" +
-                                    "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
-                                "</div>" +
+                        // Dashboard Name
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardName + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    // Dashboard name
+                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' placeholder='" + createDashboard.namePlaceholder + "' required='true'/><span class='fr-cdb-error-span'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardTemplate + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    // Layout Template 
+                                    "<select class='fr-cdb-template-name fr-cdb-input'>" +
+                                    "</select>" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Submit button
+                        "<div class='fr-core-dialog-submit-container'>" +
+                            "<div class='fr-core-center'>" +
+                                "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                             "</div>" +
-
                         "</div>" +
                     "</form>" +
                 "</div>");
@@ -14085,6 +13859,9 @@ $(function () {
             me._createOptions();
 
             me.$form = me.element.find(".fr-cdb-form");
+            me._validateForm(me.$form);
+
+            me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -14105,12 +13882,35 @@ $(function () {
         _submit: function () {
             var me = this;
 
-            // Call navigateTo to bring up the create dashboard view
-            var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-            var name = me.$select.val();
-            navigateTo("createDashboard", name);
+            if (!me.$form.valid()) {
+                return;
+            }
 
-            me.closeDialog();
+            var templateName = me.$select.val();
+            var dashboardName = me.$dashboardName.val();
+
+            // Save the dashboard
+            me.model = new ssr.DashboardModel({
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
+
+            // Load the selected template into the dashboard definition
+            me.model.loadTemplate(templateName);
+
+            // Save the model and navigate to editDashboard
+            if (me.model.save(false, me.options.parentFolder, dashboardName)) {
+                // Call navigateTo to bring up the create dashboard view
+                var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
+                var path = me.options.parentFolder + dashboardName;
+                navigateTo("createDashboard", path);
+
+                me.closeDialog();
+            }
+
+            // TODO
+            // Launch to confirm overwrite dialog
         },
         /**
          * Open parameter set dialog
@@ -14130,8 +13930,374 @@ $(function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-cdb-error-position");
+                    $(element).addClass("fr-cdb-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-cdb-error-position");
+                    $(element).removeClass("fr-cdb-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
+        },
     }); //$.widget
 });
+///#source 1 1 /Forerunner/ReportExplorer/js/EmailSubscription.js
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports objects
+forerunner.ajax = forerunner.ajax || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.constants = forerunner.ssr.constants || {};
+forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+    var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.emailSubscription), {
+        options: {
+            reportPath: null,
+            $appContainer: null,
+            subscriptionModel: null,
+            paramList: null
+        },
+        _extensionSettings: null,
+        _createDropDownForValidValues : function(validValues) {
+            return forerunner.helper.createDropDownForValidValues(validValues);
+        },
+        _createRadioButtonsForValidValues : function(validValues, index) {
+            return forerunner.helper.createRadioButtonsForValidValues(validValues, index);
+        },
+        _createDiv: function (listOfClasses) {
+            var $div = new $("<div />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $div.addClass(listOfClasses[i]);
+            }
+            return $div;
+        },
+        _createDropDownWithLabel: function (label, validValues) {
+            var me = this;
+            me.$colOfLastRow.append("<BR/>");
+            var id = forerunner.helper.guidGen();
+            var $label = new $("<LABEL />");
+            $label.attr("for", id);
+            $label.append(label);
+            $retVal = me._createDropDownForValidValues(validValues);
+            $retVal.attr("id", id);
+            me.$colOfLastRow.append($label);
+            me.$colOfLastRow.append($retVal);
+            return $retVal;
+        },
+        _subscriptionData : null,
+        _setSubscriptionOrSetDefaults : function() {
+            var me = this;
+            var subscriptionID = me._subscriptionID;
+
+            $.when(me._initExtensionOptions(), me._initProcessingOptions()).done(function (data1, data2) {
+                me._extensionSettings = data1;
+                me._initRenderFormat(data1[0]);
+                me._initSharedSchedule(data2[0]);
+                if (subscriptionID) {
+                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+
+                    me.$desc.val(subscriptionInfo.Description);
+
+                    var extensionSettings = subscriptionInfo.ExtensionSettings;
+                    for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
+                        if (extensionSettings.ParameterValues[i].Name === "TO") {
+                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "Subject") {
+                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "Comment") {
+                            me.$comment.attr("value", extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
+                            if (extensionSettings.ParameterValues[i].Value === "True") {
+                                me.$includeReport.attr("checked", "");
+                            } else {
+                                me.$includeReport.removeAttr("checked");
+                            }
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
+                            if (extensionSettings.ParameterValues[i].Value === "True") {
+                                me.$includeLink.attr("checked", "");
+                            } else {
+                                me.$includeLink.removeAttr("checked");
+                            }
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
+                            me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
+                        }
+                    }
+                    
+                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                } else {
+                    if (me.options.userSettings)
+                        me.$to.attr("value", me.options.userSettings.email );
+                }
+            }); 
+        },
+        _getSubscriptionInfo: function() {
+            var me = this;
+            if (!me._subscriptionData) {
+                me._subscriptionData = {}
+                me._subscriptionData.SubscriptionID = null;
+                me._subscriptionData.Report = me.options.reportPath;
+                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
+                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
+                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
+                me._subscriptionData.Description = me.$desc.val();
+                me._subscriptionData.EventType = "TimedSubscription";
+                me._subscriptionData.ExtensionSettings = {};
+                me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
+                me._subscriptionData.ExtensionSettings.ParameterValues = [];
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.attr("checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value":  me.$includeReport.attr("checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
+            } else {
+                me._subscriptionData.Description = me.$desc.val();
+                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
+                me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
+                if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
+                    me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
+                for (var i = 0; i < me._subscriptionData.ExtensionSettings.length; i++) {
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.attr("checked") ? "True" : "False";
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.attr("checked") ? "True" : "False";
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();
+                    }
+                }
+            }
+            if (me.options.paramList) {
+                me._subscriptionData.Parameters = [];
+                var paramListObj = JSON.parse(me.options.paramList);
+                for (var i = 0; i < paramListObj.ParamsList.length; i++) {
+                    var param = paramListObj.ParamsList[i];
+                    if (param.IsMultiple === "true") {
+                        for (var j = 0; j < param.Value.length; j++) {
+                            me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
+                        }
+                    } else {
+                        me._subscriptionData.Parameters.push({"Name": param.Parameter, "Value": param.Value});
+                    }
+                }
+            }
+            return me._subscriptionData;
+        },
+        _initRenderFormat : function (data) {
+            var me = this;
+            for (var i = 0; i < data.length; i++) {
+                var setting = data[i];
+                if (setting.Name == "RenderFormat") {
+                    me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
+                    me.$renderFormat.addClass(".fr-email-renderformat");
+                }
+            }
+        },
+        _initExtensionOptions: function () {
+            var me = this;
+            return me.options.subscriptionModel.subscriptionModel("getExtensionSettings", "Report Server Email");
+        },
+        _sharedSchedule: {},
+        _initSharedSchedule:function(data) {
+            var me = this;
+            var validValues = [];
+            for (var i = 0; i < data.length; i++) {
+                validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
+                me._sharedSchedule[data[i].ScheduleID] = data[i];
+            }
+            data = forerunner.config.getMobilizerSharedSchedule();
+            if (data) {
+                for (var i = 0; i < data.length; i++) {
+                    validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
+                    me._sharedSchedule[data[i].ScheduleID] = data[i];
+                }
+            }
+            me.$sharedSchedule = me._createDropDownWithLabel("Schedule:", validValues);
+            me.$sharedSchedule.addClass("fr-email-schedule");
+        },
+        _initProcessingOptions: function () {
+            var me = this;
+            return me.options.subscriptionModel.subscriptionModel("getSchedules");
+        },
+        _initSections : function () {
+            var me = this;
+            me._setSubscriptionOrSetDefaults();
+        },
+        _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
+            var me = this;
+            $input = new $("<INPUT />");
+            $input.attr("type", type);
+            if (placeholder)
+                $input.attr("placeholder", placeholder);
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $input.addClass(listOfClasses[i]);
+            }
+            return $input;
+        },
+        _createTextAreaWithPlaceHolder: function (listOfClasses, placeholder) {
+            var me = this;
+            $input = new $("<TEXTAREA />");
+            if (placeholder)
+                $input.attr("placeholder", placeholder);
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $input.addClass(listOfClasses[i]);
+            }
+            return $input;
+        },
+        _createTableRow: function ($div) {
+            var me = this;
+            $row = new $("<TR/>");
+            $col = new $("<TD/>");
+            $row.append($col)
+            if ($div)
+                $col.append($div);
+            return $row;
+        },
+        _createCheckBox: function ($div, label) {
+            var me = this;
+            var $cb = new $("<INPUT />");
+            var id = forerunner.helper.guidGen();
+            $cb.attr("type", "checkbox");
+            $cb.attr("id", id);
+            var $label = new $("<LABEL />");
+            $label.attr("for", id);
+            $label.append(label);
+            $div.append($cb);
+            $div.append($label);
+            return $cb;
+        },
+        _createToggleInput: function ($container, label) {
+            var me = this;
+            $div = forerunner.helper.createDiv(["fr-email-include"]);
+            $cb = me._createCheckBox($div, label);
+            $container.append($div);
+            return $cb;
+        },
+        _init : function () {
+        },
+        _subscriptionID : null,
+        loadSubscription: function (subscripitonID) {
+            var me = this;
+            me._subscriptionID = subscripitonID;
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+            me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', "Email", "fr-email-cancel", "Cancel");
+
+            me.$theForm = new $("<FORM />");
+            me.$theForm.addClass("fr-email-form");
+            me.$theForm.addClass("fr-core-dialog-form");
+            me.$outerContainer.append(headerHtml);
+            me.$outerContainer.append(me.$theForm);
+            me.$theTable = new $("<TABLE />");
+            me.$theTable.addClass("fr-email-table");
+            me.$theForm.append(me.$theTable);
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "Description");
+            me.$theTable.append(me._createTableRow(me.$desc));
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "To");
+            me.$theTable.append(me._createTableRow(me.$to));
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "Subject")
+            me.$theTable.append(me._createTableRow(me.$subject));
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment")
+            me.$theTable.append(me._createTableRow(me.$comment));
+            me.$lastRow = me._createTableRow();
+            me.$colOfLastRow = me.$lastRow.children(":first");
+            me.$theTable.append(me.$lastRow);
+            me.$includeLink = me._createToggleInput(me.$colOfLastRow, "[Include Link]");
+            me.$includeReport = me._createToggleInput(me.$colOfLastRow, "[Include Report]");
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], "submit", null)
+            me.$submitButton.val("Save");
+            me.$theForm.append(me.$submitButton)
+            me._initSections();
+            me.element.append(me.$outerContainer);
+
+            me.element.find(".fr-email-submit-id").on("click", function (e) {
+                me._submit();
+            });
+
+            me.element.find(".fr-email-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+
+        _submit : function () {
+            var me = this;
+            var subscriptionInfo = me._getSubscriptionInfo();
+            if (me._subscriptionID) {
+                me.options.subscriptionModel.subscriptionModel("updateSubscription", subscriptionInfo)
+            } else {
+                me.options.subscriptionModel.subscriptionModel("createSubscription", subscriptionInfo)
+            }
+            me.closeDialog();
+        },
+        
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
+        },
+        destroy: function () {
+            var me = this;
+            me.element.html("");
+            this._destroy();
+        }
+    });  // $.widget(
+});  // $(function ()
+
 ///#source 1 1 /Forerunner/Lib/jsTree/jstree.js
 $(function() {
 	"use strict";
@@ -20165,14 +20331,15 @@ $(function () {
     *
     * @namespace $.forerunner.dashboardEZ
     * @prop {Object} options - The options
-    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.
     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {String} options.rsInstance - Optional,Report service instance name
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.rsInstance - Optional, User specific options
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -20186,16 +20353,29 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            rsInstance: null
+            rsInstance: null,
+            userSettings: null
         },
         /**
-         * Switch the UI from dashboard view to the dashboard editor
+         * Show the edit or view UI
          *
-         * @function $.forerunner.dashboardEZ#edit
+         * @function $.forerunner.dashboardEZ#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
          */
-        edit: function () {
-            // TODO
-            alert("dashboardEZ edit()");
+        enableEdit: function (enableEdit) {
+            var me = this;
+            me.options.enableEdit = enableEdit;
+
+            // Set the tools to the correct edit mode
+            me.$toolbar.dashboardToolbar("enableEdit", enableEdit);
+            me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
+
+            var $dashboardEditor = me.getDashboardEditor();
+            if (enableEdit) {
+                $dashboardEditor.dashboardEditor("editDashboard", null);
+            } else {
+                $dashboardEditor.dashboardEditor("loadDefinition", null, true);
+            }
         },
         _init: function () {
             var me = this;
@@ -20210,18 +20390,17 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
-            me.layout.$mainsection.append($dashboardContainer);
-            $dashboardContainer.dashboardEditor({
+            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.layout.$mainsection.append(me.$dashboardContainer);
+            me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
-                parentFolder: me.options.parentFolder,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 rsInstance: me.options.rsInstance
             });
 
-            var $toolbar = me.layout.$mainheadersection;
-            $toolbar.dashboardToolbar({
+            me.$toolbar = me.layout.$mainheadersection;
+            me.$toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -20234,8 +20413,8 @@ $(function () {
                 $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
             }
 
-            var $toolpane = me.layout.$leftpanecontent;
-            $toolpane.dashboardToolPane({
+            me.$toolpane = me.layout.$leftpanecontent;
+            me.$toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -20248,13 +20427,13 @@ $(function () {
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
-                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                $toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+                me.$toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                me.$toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
             }
 
             if (me.options.historyBack) {
-                $toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
-                $toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
+                me.$toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                me.$toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
             }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
@@ -20360,17 +20539,33 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolbar"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolbar#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                me.showTool(dtb.btnView.selectorClass);
+                me.enableTools([dtb.btnSave]);
+                me.hideTool(dtb.btnEdit.selectorClass);
+            } else {
+                me.hideTool(dtb.btnView.selectorClass);
+                me.disableTools([dtb.btnSave]);
+                me.showTool(dtb.btnEdit.selectorClass);
+            }
+        },
         _init: function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu]);
-            if (me.options.enableEdit) {
-                me.addTools(2, true, [dtb.btnSave]);
-            } else {
-                me.addTools(2, true, [dtb.btnEdit]);
-            }
+            me.removeAllTools();
+
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
@@ -20425,23 +20620,37 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolpane"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolPane#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                me.showTool(dbtp.itemView.selectorClass);
+                me.enableTools([dbtp.itemSave]);
+                me.hideTool(dbtp.itemEdit.selectorClass);
+            } else {
+                me.hideTool(dbtp.itemView.selectorClass);
+                me.disableTools([dbtp.itemSave]);
+                me.showTool(dbtp.itemEdit.selectorClass);
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
-            me.element.html("");
-            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
-            $(me.element).append($toolpane);
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            me.removeAllTools();
 
-            if (me.options.enableEdit) {
-                me.addTools(1, true, [dbtp.itemSave]);
-            } else {
-                me.addTools(1, true, [dbtp.itemEdit]);
-            }
+            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
-            $toolpane.append($spacerdiv);
+            me.element.append($spacerdiv);
         },
     });  // $.widget
 });  // function()
@@ -20472,7 +20681,7 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional,Report service instance name
+     * @prop {String} options.rsInstance - Optional, Report service instance name
      */
     $.widget(widgets.getFullname(widgets.dashboardViewer), {
         options: {
@@ -20484,37 +20693,36 @@ $(function () {
         },
         _create: function () {
             var me = this;
+            me.model = new forerunner.ssr.DashboardModel({
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
         },
         _init: function () {
             var me = this;
-            me._clearState();
+            me.model.clearState();
             me.element.html("");
         },
-        loadDefinition: function (path, makeOpaque) {
+        loadDefinition: function (path, hideMissing) {
             var me = this;
 
             // Clear the html in case of an error
             me.element.html("");
 
-            // Load the given report definition
-            var loaded = me._loadResource(path);
-            if (!loaded) {
-                return;
+            if (path) {
+                // Load the given report definition
+                var loaded = me._loadResource(path);
+                if (!loaded) {
+                    return;
+                }
             }
 
             // Render the template and load the reports
-            me.element.html(me.dashboardDef.template);
+            me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._loadReport(item.id, makeOpaque);
+                me._loadReport(item.id, hideMissing);
             });
-        },
-        _clearState: function () {
-            var me = this;
-            me.dashboardDef = {
-                templateName: null,
-                template: null,
-                reports: {}
-            };
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -20524,19 +20732,20 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
-            return me.dashboardDef.reports[reportId];
+            return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.dashboardDef.reports[reportId] = properties;
+            me.model.dashboardDef.reports[reportId] = properties;
         },
-        _loadReport: function (reportId, makeOpaque) {
+        _loadReport: function (reportId, hideMissing) {
             var me = this;
             var $item = me.element.find("#" + reportId);
+            $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
-            if (me.dashboardDef.reports[reportId]) {
-                // Create the reportViewerEZ
+            if (me.model.dashboardDef.reports[reportId]) {
+                $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
@@ -20544,17 +20753,11 @@ $(function () {
                     isFullScreen: false
                 });
 
-                var catalogItem = me.dashboardDef.reports[reportId].catalogItem;
+                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path);
-
-                if (makeOpaque) {
-                    // Make the report area opaque
-                    $reportViewer.find(".fr-report-container").addClass("fr-core-mask");
-                }
-            }
-            else {
-                $item.hide();
+            } else if (hideMissing) {
+                $item.addClass("fr-dashboard-hide");
             }
         },
         _getName: function (path) {
@@ -20579,29 +20782,8 @@ $(function () {
             me.dashboardName = me._getName(path);
             me.parentFolder = me._getFolder(path);
 
-            var url = me.options.reportManagerAPI + "/Resource";
-            url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
-            if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
-            }
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                success: function (data) {
-                    me.dashboardDef = data
-                    status = true;
-                },
-                fail: function (jqXHR) {
-                    console.log("_loadResource() - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.loadDashboardFailed, messages.loadDashboard);
-                }
-            });
-
-            return status;
+            // Fetch the model from the server
+            return me.model.fetch(path);
         },
         _destroy: function () {
         },
@@ -20626,6 +20808,7 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
 
     /**
      * Widget used to create and edit dashboards
@@ -20637,22 +20820,24 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given template
-         * @function $.forerunner.dashboardEditor#loadTemplate
-         */
-        loadTemplate: function (parentFolder, templateName) {
-            var me = this;
-            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
-            me.dashboardDef.template = template;
-            me.parentFolder = parentFolder;
-            me._renderTemplate();
-        },
-        /**
          * Loads the given dashboard definition and opens the dashboard for editing
-         * @function $.forerunner.dashboardEditor#loadTemplate
+         * @function $.forerunner.dashboardEditor#editDashboard
          */
         editDashboard: function (path) {
-            // TODO
+            var me = this;
+
+            setTimeout(function () {
+                me.loadDefinition(path, false);
+                me._showUI(true);
+            }, timeout);
+        },
+        /**
+         * Returns the fully qualified dashboard path
+         * @function $.forerunner.dashboardEditor#getPath
+         */
+        getPath: function () {
+            var me = this;
+            return me.parentFolder + me.dashboardName;
         },
         /**
          * Save the dashboard
@@ -20666,7 +20851,7 @@ $(function () {
                 return;
             }
             // If we have the dashboard name we can just save
-            me._saveDashboard(overwrite);
+            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -20698,57 +20883,15 @@ $(function () {
 
             // Save the dashboard to the server
             me.dashboardName = data.dashboardName;
-            me._saveDashboard(data.overwrite);
+            me._save(true);
         },
-        _saveDashboard: function (overwrite) {
+        _save: function (overwrite) {
             var me = this;
-            if (overwrite === null || overwrite === undefined) {
-                overwrite = false;
+            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
+            } else {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
             }
-            var stringified = JSON.stringify(me.dashboardDef);
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/SaveResource";
-            forerunner.ajax.ajax({
-                type: "POST",
-                url: url,
-                data: {
-                    resourceName: me.dashboardName,
-                    parentFolder: encodeURIComponent(me.parentFolder),
-                    contents: stringified,
-                    mimetype: "json/forerunner-dashboard",
-                    rsInstance: me.options.rsInstance
-                },
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
-                },
-                fail: function (jqXHR) {
-                    console.log("_saveDashboard() - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
-                }
-            });
-        },
-        _renderTemplate: function () {
-            var me = this;
-            me.element.html(me.dashboardDef.template);
-            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                var $item = $(item);
-
-                // Create the button
-                var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
-                $item.append($btn);
-
-                // Hook the onClick event
-                $btn.on("click", function (e) {
-                    me._onClickProperties.apply(me, arguments);
-                });
-
-                // Position the button
-                var left = $item.width() / 2 - ($btn.width() / 2);
-                var top = $item.height() / 2 - ($btn.height() / 2);
-                $btn.css({position: "absolute", left:left + "px", top: top + "px"});
-            });
         },
         _onClickProperties: function (e) {
             var me = this;
@@ -20775,10 +20918,62 @@ $(function () {
                 return;
             }
 
-            // Load the given report
-            me._loadReport(data.reportId, true);
+            setTimeout(function () {
+                // Load the given report
+                me._loadReport(data.reportId, true);
+                me._renderButtons();
+                me._makeOpaque(true);
+            });
+        },
+        _showUI: function (show) {
+            var me = this;
+            if (show) {
+                me._renderButtons();
+            } else {
+                me._removeButtons();
+            }
+            me._makeOpaque(show);
+        },
+        _renderButtons: function () {
+            var me = this;
+            me._removeButtons();
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._renderButton(item);
+            });
+        },
+        _renderButton: function (item) {
+            var me = this;
+            var $item = $(item);
+
+            // Create the button
+            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            $item.append($btn);
+
+            // Hook the onClick event
+            $btn.on("click", function (e) {
+                me._onClickProperties.apply(me, arguments);
+            });
+
+            // Position the button
+            var left = $item.width() / 2 - ($btn.width() / 2);
+            var top = $item.height() / 2 - ($btn.height() / 2);
+            $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
+        },
+        _removeButtons: function () {
+            var me = this;
+            me.element.find(".fr-dashboard-btn").remove();
+        },
+        _makeOpaque: function (addMask) {
+            var me = this;
+            if (addMask) {
+                me.element.find(".fr-report-container").addClass("fr-core-mask");
+            } else {
+                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+            }
         },
         _create: function () {
+            var me = this;
+            me._super();
         },
         _init: function () {
             var me = this;

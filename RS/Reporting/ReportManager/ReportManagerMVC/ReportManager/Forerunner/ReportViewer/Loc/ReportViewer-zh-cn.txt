@@ -55,8 +55,9 @@
     "views":"浏览",
     "addToFavorites":"添加到收藏",
     "RDLExt":"RDL扩展",
-    "saveDashboard":"保存指示板"
-    "editDashboard":"Edit Dashboard"
+    "saveDashboard":"保存指示板",
+    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -90,7 +91,8 @@
     "search":"搜索",
     "createDashboard":"创建指示板",
     "editDashboard":"编辑指示板",
-    "saveDashboard":"保存指示板"
+    "saveDashboard":"保存指示板",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"打印报表",
@@ -198,7 +200,10 @@
   "createDashboard": {
     "title":"创建指示板",
     "cancel":"取消",
-    "submit":"提交"
+    "submit":"提交",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template"
   },
   "RDLExt": {
     "title":"RDL扩展",
@@ -206,7 +211,7 @@
     "cancel":"取消",
     "dialogTitle":"RDL的JSON扩展"
   },
- "reportProperties": {
+  "reportProperties": {
     "title":"报表属性",
     "cancel":"取消",
     "submit":"提交",

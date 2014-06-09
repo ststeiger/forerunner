@@ -6,20 +6,19 @@ html,body {
   padding: 0px;
   margin: 0px;
   border: 0px;
-
-
+  height:100%;
 }
 
 * {
   /*padding: 0px;*/
   margin: 0px;
-  border: 0px;
+  /*border: 0px;*/
   z-index: 0;
 }
 
-table, td, tr {
+table, td, tr div {
     padding: 0px;
     margin: 0px;
     border: 0px;
-    z-index: 0;
+    z-index: 0;   
 }

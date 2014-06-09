@@ -1,0 +1,10 @@
+﻿<table class="fr-sidebyside">
+    <tr>
+        <td>
+            <div id="Report1" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+        <td>
+            <div id="Report2" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+    </tr>
+</table>

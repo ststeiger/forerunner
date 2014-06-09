@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using ForerunnerLicense;
 
+
 namespace ReportMannagerConfigTool
 {
     public partial class frmMain : Form
     {
-        private ConfigToolHelper configTool;
         private WinFormHelper winform;
 
         public frmMain()
@@ -16,11 +16,11 @@ namespace ReportMannagerConfigTool
             try
             {
                 InitializeComponent();
-                configTool = new ConfigToolHelper();
                 winform = new WinFormHelper();
 
                 LoadWebConfig();
                 SetReportManagerFolderPath();
+                LoadWebServerConfig();
                 rtbCurLicense.Text = ClientLicense.GetLicenseString();
             }
             catch(Exception ex)
@@ -36,7 +36,7 @@ namespace ReportMannagerConfigTool
             #region Detect IIS or UWS is installed.
             if (rdoIIS.Checked)
             {
-                if (!configTool.isIISInstalled())
+                if (!ConfigToolHelper.isIISInstalled())
                 {
                     winform.showWarning(StaticMessages.iisNotInstall);
                     return;
@@ -45,7 +45,7 @@ namespace ReportMannagerConfigTool
 
             if (rdoUWS.Checked)
             {
-                if (!configTool.isUWSInstalled())
+                if (!ConfigToolHelper.isUWSInstalled())
                 {
                     winform.showWarning(StaticMessages.uwsNotInstall);
                     return;
@@ -74,7 +74,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 string bindingAddress = string.Empty;
-                string ip = configTool.GetLocIP();
+                string ip = ConfigToolHelper.GetLocIP();
                 string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
@@ -109,6 +109,8 @@ namespace ReportMannagerConfigTool
                     bindingAddress = string.Format("http://{0}:{1}", "*", port);
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
+                SaveWebServerConfig();
+                ConfigToolHelper.SetLogFilesFolderPermission(rdoIIS.Checked);
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
@@ -122,23 +124,55 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
+            Process.Start("http://localhost:" + (rdoIIS.Checked ? "80" : txtPort.Text.Trim()) + "/" + txtSiteName.Text.Trim());
+        }
+
+        private void SaveWebServerConfig()
+        {
+            WebServerConfig.ServerType = rdoIIS.Checked ? "IIS" : "UWS";
+            WebServerConfig.SiteName = winform.getTextBoxValue(txtSiteName);
+            WebServerConfig.Port = winform.getTextBoxValue(txtPort);
+        }
+
+        private void LoadWebServerConfig() 
+        {
+            if (!String.Empty.Equals(WebServerConfig.ServerType))
+            {
+                if ("IIS".Equals(WebServerConfig.ServerType))
+                    rdoIIS.Checked = true;
+                else
+                    rdoUWS.Checked = true;
+            }
+            winform.setTextBoxValue(txtSiteName, WebServerConfig.SiteName);
+            winform.setTextBoxValue(txtPort, WebServerConfig.Port);
         }
         #endregion
 
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            var existConfig = ReportManagerConfig.GetForerunnerWebConfig();
+            var savedConfig = ReportManagerConfig.GetForerunnerWebConfig();
 
-            winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
-            winform.setTextBoxValue(txtServerName , existConfig["DataSource"]);
-            winform.setTextBoxValue(txtDBName, existConfig["Database"]);
-            winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
-            winform.setTextBoxValue(txtUser, existConfig["User"]);
-            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
-            winform.setSelectRdoValue(gbDBLoginInfo, existConfig["DBAccountType"]);
-            winform.setSelectRdoValue(gbAuthType, existConfig["AuthType"]);
+            winform.setTextBoxValue(txtWSUrl, savedConfig["WSUrl"]);
+            winform.setTextBoxValue(txtServerName , savedConfig["DataSource"]);
+            winform.setTextBoxValue(txtDBName, savedConfig["Database"]);
+            winform.setTextBoxValue(txtDomain, savedConfig["UserDomain"]);
+            winform.setTextBoxValue(txtUser, savedConfig["User"]);
+            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(savedConfig["Password"]));
+
+            if (savedConfig["SQLIntegrated"].ToLower() == "true")
+                rdoDomain.Checked = true;
+            else
+                rdoSQL.Checked = true;
+
+            if (savedConfig["IsNative"].ToLower() == "false")
+                chkSharepoint.Checked = true;
+            else
+                chkSharepoint.Checked = false;
+
+            winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
+            winform.setTextBoxValue(txtDefaultUserDomain, savedConfig["DefaultUserDomain"]);
+            winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
         }
 
         private void SetReportManagerFolderPath()
@@ -148,37 +182,57 @@ namespace ReportMannagerConfigTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = winform.getTextBoxValue(txtServerName);
             builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
-            if (rdoDomain.Checked)
-            {
-                builder.UserID = winform.getTextBoxValue(txtDomain) + "\\" + winform.getTextBoxValue(txtUser);
-            }
-            else
+            if (!rdoDomain.Checked)
             {
                 builder.UserID = winform.getTextBoxValue(txtUser);
+                builder.Password = winform.getTextBoxValue(txtPWD);
+            }
+            else
+            {
+                builder.IntegratedSecurity = true;
             }
 
-            builder.Password = winform.getTextBoxValue(txtPWD);
-
             Cursor.Current = Cursors.Default;
+            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
+            string result;
 
-            string result = configTool.tryConnectDB(builder.ConnectionString);
-            if (result.Equals("True"))
-                winform.showMessage(StaticMessages.connectDBSuccess);
+            //Test database connection
+            if (rdoDomain.Checked)
+                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
             else
-                MessageBox.Show(result);
+                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+                errorMessage.AppendLine();
+            }
+
+            //Test web service url connection
+            result = ConfigToolHelper.tryWebServiceUrl(chkSharepoint.Checked, winform.getTextBoxValue(txtWSUrl));
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+            }
+
+            if (errorMessage.Length != 0)
+            {
+                winform.showWarning(errorMessage.ToString());
+                return;
+            }
+            winform.showMessage(StaticMessages.connectDBSuccess);
         }
 
         private void btnApply_Click(object sender, EventArgs e)
         {
-            
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbSSRS) || !winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
             try
             {
@@ -186,7 +240,8 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    winform.getSelectRdoValue(gbDBLoginInfo));
+                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName),
+                    winform.getTextBoxValue(txtDefaultUserDomain));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -205,6 +260,8 @@ namespace ReportMannagerConfigTool
             else
                 txtDomain.Enabled = true;
         }
+
+        
         #endregion
 
         #region SSRS Extension
@@ -215,6 +272,7 @@ namespace ReportMannagerConfigTool
                 txtReportServer.Text = folderSSRS.SelectedPath;
         }
 
+        //Remove forerunner ssrs extension
         private void btnRemoveEx_Click(object sender, EventArgs e)
         {
             string targetPath = winform.getTextBoxValue(txtReportServer);
@@ -229,7 +287,10 @@ namespace ReportMannagerConfigTool
                 DialogResult dialogResult = MessageBox.Show(StaticMessages.removeExtension, StaticMessages.removeCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
+                    ConfigToolHelper.StartReportServer(false, targetPath);
                     RenderExtensionConfig.removeRenderExtension(targetPath);
+                    ConfigToolHelper.StartReportServer(true, targetPath);
+                    winform.showMessage(StaticMessages.removeDone);
                 }
             }
             else
@@ -239,9 +300,11 @@ namespace ReportMannagerConfigTool
             }
         }
 
+        //Add forerunner ssrs extension
         private void btnAddEx_Click(object sender, EventArgs e)
         {            
             string targetPath = winform.getTextBoxValue(txtReportServer);
+
             if (targetPath.Equals(string.Empty))
             {
                 winform.showWarning(StaticMessages.reportServerPathEmpty);
@@ -250,8 +313,11 @@ namespace ReportMannagerConfigTool
 
             if (RenderExtensionConfig.VerifyReportServerPath(targetPath))
             {
+                ConfigToolHelper.StartReportServer(false, targetPath);
                 RenderExtensionConfig.addRenderExtension(targetPath);
                 RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
+                ConfigToolHelper.StartReportServer(true, targetPath);
+                winform.showMessage(StaticMessages.updateDone);
             }
             else
             {
@@ -281,10 +347,18 @@ namespace ReportMannagerConfigTool
                 }
                 return;
             }
-            Cursor.Current = Cursors.WaitCursor;
+
+            //load Licese agreement
+            frmEULA frm = new frmEULA();
+            DialogResult result = frm.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            Cursor.Current = Cursors.WaitCursor;   
             try
             {
-                rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
+                rtbCurLicense.Text = ClientLicense.ActivateFromKey(txtNewKey.Text);
                 ValidateLicense();
             }
             catch (Exception ex)
@@ -296,12 +370,14 @@ namespace ReportMannagerConfigTool
                 }
             }
             Cursor.Current = Cursors.Default;
+            
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)
         {
-            frmManualActivation frm = new frmManualActivation();
-            DialogResult result = frm.ShowDialog();
+            frmActivation frm = new frmActivation();
+            frm.ShowDialog();
+            rtbCurLicense.Text = ClientLicense.GetLicenseString();
         }
 
         private void btnProductInfo_Click(object sender, EventArgs e)
@@ -407,5 +483,78 @@ namespace ReportMannagerConfigTool
            
         }
 
+        private void chkSharepoint_CheckedChanged(object sender, EventArgs e)
+        {
+              lblSharepoint.Enabled = chkSharepoint.Checked;
+              txtSharePointHostName.Enabled = chkSharepoint.Checked;
+            
+        }
+
+        private void lblWSUrl_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSplit_Click(object sender, EventArgs e)
+        {
+            //DialogResult dr;
+            int cores=0;
+            string input;
+            LicenseData License = ClientLicense.GetLicense();
+            if (License == null)
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "LicenseKey Required", "Forerunner Software Mobilizer");
+                }
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                using (new CenterWinDialog(this))
+                {
+                    using (new CenterWinDialog(this))
+                    {
+                        input = Microsoft.VisualBasic.Interaction.InputBox("Please enter the number of cores to keep on this machine", "Forerunner Software Mobilizer", ClientLicense.ThisMachine.numberOfCores.ToString());
+                    }
+
+                    int.TryParse(input,out cores);
+                    //dr = InputBox.Show("Are you sure you wish to split this License, this process is irreversible?", "Forerunner Software Mobilizer", MessageBoxButtons.YesNo,MessageBoxIcon.Question,MessageBoxOptions.DefaultDesktopOnly,);
+                }
+                if (cores != 0)
+                {
+                    string newLic = ClientLicense.Split(cores);
+                    txtNewKey.Text = newLic;
+                    MessageBox.Show("Your new Licenses key is " + newLic + ", we will now activate it on this machine.", "Forerunner Software Mobilizer", MessageBoxButtons.OK);
+                    rtbCurLicense.Text = ClientLicense.ActivateFromKey(newLic);
+                    ValidateLicense();
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
+            Cursor.Current = Cursors.Default;
+        }
+
+        private void tabActivation_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

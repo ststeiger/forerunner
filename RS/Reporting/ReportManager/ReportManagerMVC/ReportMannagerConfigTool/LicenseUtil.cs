@@ -7,7 +7,9 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using System.Net;
+using System.Globalization;
 using System.Management;
+using Forerunner.Logging;
 
 namespace ForerunnerLicense
 {
@@ -24,7 +26,11 @@ namespace ForerunnerLicense
             NotActivated,
             InvalidKey,
             LicenseValidationError,
-            InsufficientCoreLicenses
+            InsufficientCoreLicenses,
+            IncorrectVersion,
+            SSRSLicenseError,
+            InitializationFailure,
+            Other
         };
         #endregion constants
 
@@ -49,93 +55,109 @@ namespace ForerunnerLicense
         private static string signPackage = @"<Signed><Signature>{0}</Signature><Value>{1}</Value></Signed>";
         public static string pubkey = @"<RSAKeyValue><Modulus>oqauZZXXShzB2xxb2643zxDbWyFjcW1uihkGt/dNhrwRbdRm1f43v4+8y7GMwhigVuYaVBVcwGdeDBePoKsqsQ71IE+sarxpmVibPKLfhsMF9Yvj8o6uy5BsUhViK76kpswIhjj32XXtYTIuBhlxtv1Oo0w4yDgIMXExJiSp9+1AW6hvUiL7CCJAPuuPIqd9ZCD/KPOOZecj2qxpIEOgTU9/kSO2QOJA4Soup/DPj/brWYsFtHzKP2RRzZzPFbKn7uy9TR+ws+sGpvnGIT7dCyN3K0S5Lm6c8u6Fg1ePrBg8jyhpgK7raUhkn7TKnuauU+vQdz8zFx5ZawTvZORxJQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
-        internal static string Sign(string data,string key)
+        internal static string Sign(string data, string key)
         {
             byte[] signedBytes;
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            rsa.PersistKeyInCsp = false;
-            rsa.FromXmlString(key);
-            
-            byte[] originalData = Encoding.UTF8.GetBytes(data);
-            signedBytes = rsa.SignData(originalData, CryptoConfig.MapNameToOID("SHA512"));
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+            {
+                rsa.PersistKeyInCsp = false;
+                rsa.FromXmlString(key);
 
-            return string.Format(signPackage, Convert.ToBase64String(signedBytes), Convert.ToBase64String(originalData));
+                byte[] originalData = Encoding.UTF8.GetBytes(data);
+                signedBytes = rsa.SignData(originalData, CryptoConfig.MapNameToOID("SHA512"));
 
+                return string.Format(signPackage, Convert.ToBase64String(signedBytes), Convert.ToBase64String(originalData));
+            }
         }
 
         internal static string Verify(string data, string key)
         {
             return Verify(XmlReader.Create(new StringReader(data)), key);
         }
+
         internal static string Verify(XmlReader XMLReq, string key)
         {
+            Logger.Trace(LogType.Info, "LicenseUtil.Verify");
             byte[] signedBytes = null;
             byte[] dataBytes = null;
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            rsa.PersistKeyInCsp = false;
-            rsa.FromXmlString(key);
-
-
-            XMLReq.Read();
-            if (XMLReq.Name != "Signed")
-                LicenseException.Throw(LicenseException.FailReason.InvalidKey, "License is Not Signed");
-            XMLReq.Read();
-
-            while (!XMLReq.EOF)
+            System.Security.Cryptography.RSACryptoServiceProvider.UseMachineKeyStore = true;
+            using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
-
-                switch (XMLReq.Name)
+                Logger.Trace(LogType.Info, "LicenseUtil.Verify Decrypt");
+                lock (rsa)
                 {
-                    case "Signature":
-                        signedBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
-                        break;
-                    case "Value":
-                        dataBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
-                        break;
+                    rsa.PersistKeyInCsp = false;
+                    rsa.FromXmlString(key);
+
+                    XMLReq.Read();
+                    if (XMLReq.Name != "Signed")
+                        LicenseException.Throw(LicenseException.FailReason.InvalidKey, "License is Not Signed");
+                    XMLReq.Read();
+
+                    while (!XMLReq.EOF)
+                    {
+
+                        switch (XMLReq.Name)
+                        {
+                            case "Signature":
+                                signedBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
+                                break;
+                            case "Value":
+                                dataBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
+                                break;
+                        }
+                        if (XMLReq.Name == "Signed")
+                            break;
+
+                    }
+
+                    if (rsa.VerifyData(dataBytes, CryptoConfig.MapNameToOID("SHA512"), signedBytes))
+                    {
+                        Logger.Trace(LogType.Info, "LicenseUtil.Verify Ends");
+                        return Encoding.UTF8.GetString(dataBytes);
+                    }
+                    else
+                    {
+                        Logger.Trace(LogType.Error, "LicenseUtil.Verify Invalid License Signature");
+                        LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Signature");
+                        return null;
+                    }
                 }
-                if (XMLReq.Name == "Signed")
-                    break;
-
             }
-
-            if (rsa.VerifyData(dataBytes, CryptoConfig.MapNameToOID("SHA512"), signedBytes))
-                return Encoding.UTF8.GetString(dataBytes);
-            else
-            {
-                LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Signature");
-                return null;
-            }
-
-
         }
         internal static string Encrypt(string data, string key)
         {
-            AesCryptoServiceProvider TDES = new AesCryptoServiceProvider();
-
-            string aeskey = RSAEncryptUsingKey(TDES.Key, key);
-            string IV = RSAEncryptUsingKey(TDES.IV, key);
-            byte[] bytes = Encoding.UTF8.GetBytes(data);
-            string value;
-
-            using (AesManaged aesAlg = new AesManaged())
+            Logger.Trace(LogType.Info, "LicenseUtil.Encrypt invoked");
+            using (AesCryptoServiceProvider TDES = new AesCryptoServiceProvider())
             {
-                aesAlg.Key = TDES.Key;
-                aesAlg.IV = TDES.IV;
 
-                // Create the streams used for encryption. 
-                using (MemoryStream msEncrypt = new MemoryStream())
+                string aeskey = RSAEncryptUsingKey(TDES.Key, key);
+                string IV = RSAEncryptUsingKey(TDES.IV, key);
+                byte[] bytes = Encoding.UTF8.GetBytes(data);
+                string value;
+
+                using (AesManaged aesAlg = new AesManaged())
                 {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        csEncrypt.Write(bytes, 0, bytes.Length);
-                    }
-                    byte[] EncryptedBytes = msEncrypt.ToArray();
-                    value = Convert.ToBase64String(EncryptedBytes);
-                }
-            }
+                    aesAlg.Key = TDES.Key;
+                    aesAlg.IV = TDES.IV;
 
-            return string.Format(encryptPackage, aeskey, IV, value);
+                    // Create the streams used for encryption. 
+                    using (MemoryStream msEncrypt = new MemoryStream())
+                    {
+                        using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
+                        {
+                            csEncrypt.Write(bytes, 0, bytes.Length);
+                        }
+                        byte[] EncryptedBytes = msEncrypt.ToArray();
+                        value = Convert.ToBase64String(EncryptedBytes);
+                    }
+                }
+
+                Logger.Trace(LogType.Info, "LicenseUtil.Encrypt ends");
+                return string.Format(encryptPackage, aeskey, IV, value);
+            }
         }
+
         internal static string Decrypt(string data,string key)
         {
                return Decrypt(XmlReader.Create(new StringReader(data)),key);
@@ -143,6 +165,7 @@ namespace ForerunnerLicense
 
         internal static string Decrypt(XmlReader XMLReq, string key)
         {
+            Logger.Trace(LogType.Info, "LicenseUtil.Decrypt invoked");
             byte[] aeskey = null;
             byte[] IV = null;
             byte[] bytes = null;
@@ -150,7 +173,7 @@ namespace ForerunnerLicense
          
             XMLReq.Read();
             if (XMLReq.Name != "Encrypt")
-                throw new Exception("Invalid Data");
+                LicenseException.Throw(LicenseException.FailReason.Other, "Invalid data");
             XMLReq.Read();
 
             while (!XMLReq.EOF)
@@ -191,47 +214,59 @@ namespace ForerunnerLicense
                 }
             }
 
+            Logger.Trace(LogType.Info, "LicenseUtil.Decrypt ends");
             return value;
         }
         internal static string RSADecryptUsingKey(byte[] data,string key)
         {
+            Logger.Trace(LogType.Info, "LicenseUtil.RSADecryptUsingKey invoked");
             try
             {
+                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+                {
+                    rsa.FromXmlString(key);
 
-                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                rsa.FromXmlString(key);        
-
-                byte[] decryptedBytes = rsa.Decrypt(data, true);
-                return Convert.ToBase64String(decryptedBytes);
+                    byte[] decryptedBytes = rsa.Decrypt(data, true);
+                    Logger.Trace(LogType.Info, "LicenseUtil.RSADecryptUsingKey ends");
+                    return Convert.ToBase64String(decryptedBytes);
+                }
             }
-            catch
+            catch(Exception e)
             {
+                Logger.Trace(LogType.Error, "LicenseUtil.RSADecryptUsingKey errored");
+                ExceptionLogGenerator.LogException(e);
                 return null;
             }
         }
+
         internal static string RSADecryptUsingKey(string dataEncryptedBase64, string key)
         {
-            return RSADecryptUsingKey(Convert.FromBase64String(dataEncryptedBase64), key);
-            
+            return RSADecryptUsingKey(Convert.FromBase64String(dataEncryptedBase64), key);    
         }
+        
         internal static string RSAEncryptUsingKey(string DataToEncrypt, string key)
         {
             return RSAEncryptUsingKey(Convert.FromBase64String(DataToEncrypt), key);
         }
+
         internal static string RSAEncryptUsingKey(byte[] data, string key)
         {
-            
+            Logger.Trace(LogType.Info, "LicenseUtil.RSAEncryptUsingKey invoked");
             try
             {
-                
-                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-                rsa.FromXmlString(key);                
-                byte[] EncryptedBytes = rsa.Encrypt(data, true);
+                using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
+                {
+                    rsa.FromXmlString(key);
+                    byte[] EncryptedBytes = rsa.Encrypt(data, true);
 
-                return Convert.ToBase64String(EncryptedBytes);
+                    Logger.Trace(LogType.Info, "LicenseUtil.RSAEncryptUsingKey ended");
+                    return Convert.ToBase64String(EncryptedBytes);
+                }
             }
-            catch
+            catch(Exception e)
             {
+                Logger.Trace(LogType.Error, "LicenseUtil.RSAEncryptUsingKey errored");
+                ExceptionLogGenerator.LogException(e);
                 return null;
             }
         }
@@ -260,10 +295,14 @@ namespace ForerunnerLicense
         }
         internal void LoadLicenseData(string License)
         {
+            Logger.Trace(LogType.Info, "LicenseData.LoadLicenseData invoked");
             XmlReader XMLReq = XmlReader.Create(new StringReader(License));
             XMLReq.Read();
             if (XMLReq.Name != "License")
-                throw new Exception("Invalid License Data");
+            {
+                Logger.Trace(LogType.Error, "LicenseData.LoadLicenseData Invalid license data");
+                LicenseException.Throw(LicenseException.FailReason.Other, "Invalid License Data");
+            }
             XMLReq.Read();
 
             while (!XMLReq.EOF)
@@ -286,10 +325,10 @@ namespace ForerunnerLicense
                         RequireValidation = XMLReq.ReadElementContentAsInt();
                         break;
                     case "ActivationDate":
-                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString());
+                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString(), CultureInfo.CreateSpecificCulture("en-us"));
                         break;
                     case "LastActivationDate":
-                        LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString());
+                        LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString(), CultureInfo.CreateSpecificCulture("en-us"));
                         break;
                     case "IsSubscription":
                         IsSubscription = XMLReq.ReadElementContentAsInt();
@@ -306,8 +345,8 @@ namespace ForerunnerLicense
                     XMLReq.Read();
                     break;
                 }
-
             }
+            Logger.Trace(LogType.Info, "LicenseData.LoadLicenseData ends");
         }
     }
 
@@ -325,12 +364,21 @@ namespace ForerunnerLicense
 
         internal MachineId()
         {
-            motherBoardId = GetBaseBoardId();
-            hostName = GetHostName();
-            biosId = GetBIOSId();
-            macId = GetMacId();
-            machineKey = Guid.NewGuid().ToString();
-            numberOfCores = GetNumberOfCores();
+            try
+            {
+                motherBoardId = GetBaseBoardId();
+                hostName = GetHostName();
+                biosId = GetBIOSId();
+                macId = GetMacId();
+                machineKey = Guid.NewGuid().ToString();
+                numberOfCores = GetNumberOfCores();
+            }
+            catch(Exception e)
+            {
+                Logger.Trace(LogType.Error, "MachineId c'tor failed");
+                ExceptionLogGenerator.LogException(e);
+                throw e;
+            }
         }
         internal MachineId(string MachineData)
         {
@@ -346,9 +394,9 @@ namespace ForerunnerLicense
         internal void Load(XmlReader XMLReq)
         {
             //Load from XML
-                         
-           if (XMLReq.Name != "MachineData")
-                throw new Exception("Not a Machine Data");
+            Logger.Trace(LogType.Info, "MachineId.Load invoked");
+            if (XMLReq.Name != "MachineData")
+                LicenseException.Throw(LicenseException.FailReason.Other, "Not a Machine Data");
             XMLReq.Read();
             while (!XMLReq.EOF)
             {
@@ -378,9 +426,8 @@ namespace ForerunnerLicense
                     XMLReq.Read();
                     break;
                 }
-
-
             }
+            Logger.Trace(LogType.Info, "MachineId.Load ends");
         }
         internal static MachineId CreateCurrentMachineId()
         {
@@ -418,11 +465,13 @@ namespace ForerunnerLicense
         }
         private static int GetNumberOfCores()
         {
+            Logger.Trace(LogType.Info, "MachineId.GetNumberOfCores invoked");
             int coreCount = 0;
             foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
             {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
             }
+            Logger.Trace(LogType.Info, "MachineId.GetNumberOfCores ends");
             return coreCount;
         }
         private static String GetHostName()
@@ -449,57 +498,39 @@ namespace ForerunnerLicense
         {
             return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
         }
-        private static string identifier(string wmiClass, string wmiProperty)
+        
+        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue = null)
         {
-            System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-            String name = identity.Name;
-
-            string result = "";
-            ManagementClass mc = new ManagementClass(wmiClass);
-            ManagementObjectCollection moc = mc.GetInstances();
-            foreach (System.Management.ManagementObject mo in moc)
-            {
-                // First one only
-                if (result == "")
-                {
-                    try
-                    {
-                        if (mo[wmiProperty] != null)
-                        {
-                            result = mo[wmiProperty].ToString();
-                            break;
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-            return result;
-        }
-        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
-        {
+            Logger.Trace(LogType.Info, "MachineId.identifier called. wmiClass: " + wmiClass + ", wmiProperty: " + wmiProperty);
+            
             string result = "";
             System.Management.ManagementClass mc = new System.Management.ManagementClass(wmiClass);
             System.Management.ManagementObjectCollection moc = mc.GetInstances();
             foreach (System.Management.ManagementObject mo in moc)
             {
-                if (mo[wmiMustBeTrue].ToString() == "True")
+                if (wmiMustBeTrue == null || mo[wmiMustBeTrue].ToString() == "True")
                 {
                     //Only get the first one
                     if (result == "")
                     {
                         try
                         {
-                            result = mo[wmiProperty].ToString();
-                            break;
+                            if (mo[wmiProperty] != null)
+                            {
+                                result = mo[wmiProperty].ToString();
+                                break;
+                            }
                         }
-                        catch
+                        catch(Exception e)
                         {
+                            Logger.Trace(LogType.Error, "MachineId.identifier error");
+                            ExceptionLogGenerator.LogException(e);
+                            throw e;
                         }
                     }
                 }
             }
+            Logger.Trace(LogType.Info, "MachineId.identifier ends. wmiClass: " + wmiClass + ", wmiProperty: " + wmiProperty + ", result: " + result);
             return result;
         }
     }

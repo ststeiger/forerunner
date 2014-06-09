@@ -24,6 +24,9 @@ namespace ForerunnerRegister
             public string CompanyName = "";
             public string ID = "";
             public string LicenseID = "";
+            public string PhoneNumber = "";
+            public string zip = "";  //This is bot check, if there is a zip it is a bot
+            public string referrer = "";
 
             public RegistrationData(Stream XMLData)
             {
@@ -39,11 +42,17 @@ namespace ForerunnerRegister
                 XML += "<FirstName>" + FirstName + "</FirstName>";
                 XML += "<LastName>" + LastName + "</LastName>";
                 XML += "<CompanyName>" + CompanyName + "</CompanyName>";
+                XML += "<PhoneNumber>" + PhoneNumber + "</PhoneNumber>";
                 XML += "<LicenseID>" + LicenseID + "</LicenseID>";
                 XML += "</Registration>";
 
                 return XML;
             }
+            public RegistrationData()
+            {
+                this.ID = Guid.NewGuid().ToString();
+            }
+            
             public void SetID(string ID)
             {
                 this.ID = ID;
@@ -76,6 +85,15 @@ namespace ForerunnerRegister
                         case "companyname":
                             CompanyName = HttpUtility.UrlDecode(parts[++i]);
                             break;
+                        case "phonenumber":
+                            PhoneNumber = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "zipcode":
+                            zip = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "referrer":
+                            referrer = HttpUtility.UrlDecode(parts[++i]);
+                            break;
                     }
                 }
             }
@@ -107,6 +125,15 @@ namespace ForerunnerRegister
                         case "CompanyName":
                             CompanyName = XMLData.ReadElementContentAsString();
                             break;
+                        case "PhoneNumber":
+                            PhoneNumber = XMLData.ReadElementContentAsString();
+                            break;
+                        case "ZipCode":
+                            zip = XMLData.ReadElementContentAsString();
+                            break;
+                        case "referrer":
+                            referrer = XMLData.ReadElementContentAsString();
+                            break;
                         case "LicenseID":
                             LicenseID = XMLData.ReadElementContentAsString();
                             break;
@@ -126,6 +153,8 @@ namespace ForerunnerRegister
         private static string MailBody = ConfigurationManager.AppSettings["RegMailBody"];
         private static string RegMailFromAccount = ConfigurationManager.AppSettings["RegMailFromAccount"];
 
+        private static string SalesMailBody = ConfigurationManager.AppSettings["SalesNotifyMailBody"];
+
         private byte[] SetupFile = null;
   
         public string RegisterDownload(String Value)
@@ -137,76 +166,89 @@ namespace ForerunnerRegister
         {
             return RegisterDownload(new RegistrationData(XMLValue));
         }
-        private string RegisterDownload(RegistrationData RegData)
+        internal string RegisterDownload(RegistrationData RegData)
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
-            SqlDataReader SQLReader;
-            Guid ID = Guid.NewGuid();
-            RegData.LicenseID = ForerunnerDB.NewLicenseID();
+            SqlCommand SQLComm;
 
-            string SQL = @" 
+            //Check for bot
+            if (RegData.zip.Trim() != "")
+            {
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT BotReg (email,CreateDate) SELECT @Email,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                return "";
+            }
+
+            if (RegData.Email.Trim() != "")
+            {
+
+                SqlDataReader SQLReader;
+                Guid ID = Guid.NewGuid();
+                RegData.LicenseID = ForerunnerDB.NewLicenseID();
+
+                string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
-                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID
+                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber,Referrer) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber,@Referrer
                             ELSE
-                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1, LicenseID =  @LicenseID WHERE Email = @Email
+                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1 WHERE Email = @Email
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@ID", ID);
-            SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
-            SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
-            SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
-            SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
-            SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
-            
+                SQLConn.Open();
+                SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", ID);
+                SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
+                SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
+                SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
+                SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
+                SQLComm.Parameters.AddWithValue("@PhoneNumber", RegData.PhoneNumber);
+                SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
+                SQLComm.Parameters.AddWithValue("@Referrer", RegData.referrer);
 
-            SQLReader = SQLComm.ExecuteReader();
-            string DownloadID = null;
-            while (SQLReader.Read())
-            {
-                DownloadID = SQLReader.GetGuid(0).ToString();
-                RegData.LicenseID = SQLReader.GetString(1);
+
+                SQLReader = SQLComm.ExecuteReader();
+                string DownloadID = null;
+                while (SQLReader.Read())
+                {
+                    DownloadID = SQLReader.GetGuid(0).ToString();
+                    RegData.LicenseID = SQLReader.GetString(1);
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+
+                RegData.SetID(DownloadID);
+                new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100, RegData.LicenseID);
+                SaveEmailTask(RegData);
+                return DownloadID;
             }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            RegData.SetID(DownloadID);
-            new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100, RegData.LicenseID);
-            SaveEmailTask(RegData);
-            return DownloadID;
+            return "";
 
         }
 
-        public bool ValidateDownload(string ID)
+        public void SavePageView(string UserID, string Page, string referer, string IP)
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
-            SqlDataReader SQLReader;
+            SqlCommand SQLComm;
 
-            string SQL = @" UPDATE TrialRegistration SET DownloadAttempts = DownloadAttempts+1 WHERE DownloadID = @ID
-                            SELECT DownloadAttempts,MaxDownloadAttempts FROM TrialRegistration WHERE DownloadID = @ID
-                           ";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@ID", new Guid(ID));
-
-            SQLReader = SQLComm.ExecuteReader();
-            int DownloadAttempts = -1;
-            int MaxDownloadAttempts = -1;
-            while (SQLReader.Read())
-            {
-                DownloadAttempts = SQLReader.GetInt32(0);
-                MaxDownloadAttempts = SQLReader.GetInt32(1);
+            try
+            {            
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT WebSiteTraffic (UserID ,IP, Referer, WSPage, VisitTime)  SELECT @ID,@IP,@Referer, @Page,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", UserID);
+                SQLComm.Parameters.AddWithValue("@IP", IP);
+                SQLComm.Parameters.AddWithValue("@Referer", referer);
+                SQLComm.Parameters.AddWithValue("@Page", Page);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
             }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            if (DownloadAttempts == -1 || DownloadAttempts > MaxDownloadAttempts)
-                return false;
-            else
-                return true;
+            catch (Exception e)
+            {
+                SQLConn.Close();
+            }
 
         }
 
@@ -216,7 +258,13 @@ namespace ForerunnerRegister
                 Domain = "localhost";
 #endif
             RegistrationData RegData = new RegistrationData(XMLReg);
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
+            string NewMailBody;
+            
+            
+            NewMailBody = String.Format(SalesMailBody, RegData.Email,RegData.PhoneNumber,RegData.FirstName,RegData.LastName,RegData.CompanyName,RegData.referrer);
+            tw.SendMail(RegMailFromAccount, "Sales@forerunnersw.com", "New Trial Registration", NewMailBody);
+
+            NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

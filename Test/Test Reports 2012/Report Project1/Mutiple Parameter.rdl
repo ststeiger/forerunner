@@ -243,8 +243,6 @@
             </FilterValues>
           </Filter>
         </Filters>
-        <Top>0.16542in</Top>
-        <Left>0.13417in</Left>
         <Height>0.5in</Height>
         <Width>4.95834in</Width>
         <Style>
@@ -257,7 +255,7 @@
     <Height>2in</Height>
     <Style />
   </Body>
-  <Width>6.5in</Width>
+  <Width>9.41791in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -281,12 +279,9 @@
           <QueryParameter Name="@CategoryID">
             <Value>=Parameters!CategoryID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ProductName">
-            <Value>=Parameters!ProductName.Value</Value>
-          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT  CategoryID, ProductName, UnitPrice FROM Products 
-WHERE CategoryID=@CategoryID or ProductName like @ProductName
+WHERE CategoryID=@CategoryID 
 ORDER BY CategoryID </CommandText>
       </Query>
       <Fields>
@@ -308,11 +303,6 @@ ORDER BY CategoryID </CommandText>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>CategoryID</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -334,23 +324,41 @@ ORDER BY CategoryID </CommandText>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>ProductName</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <AllowBlank>true</AllowBlank>
       <Prompt>ProductName</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>ProductName</ValueField>
+          <LabelField>ProductName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="IsCheap">
       <DataType>Boolean</DataType>
+      <Nullable>true</Nullable>
       <Prompt>Is Cheap</Prompt>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
       <Prompt>ProductionDate</Prompt>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
       <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
       <Prompt>IntegerTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="FloatTest">
       <DataType>Float</DataType>
+      <Nullable>true</Nullable>
       <Prompt>FloatTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="MultipleValues">
@@ -374,6 +382,10 @@ ORDER BY CategoryID </CommandText>
           <ParameterValue>
             <Value>4</Value>
             <Label>Test4</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>selected</Value>
+            <Label>&lt;ALL SERVICES&gt;</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>

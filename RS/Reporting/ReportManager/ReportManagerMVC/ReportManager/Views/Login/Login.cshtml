@@ -10,7 +10,8 @@
 }
 
 <section id="loginForm">
-@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl})) {
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
     <div class="loginForm">
@@ -37,15 +38,39 @@
 </section>
 
 @section scripts {
-  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
   <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.min.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/Placeholders.min.js"></script>
   <script type="text/javascript">
       $(document).ready(function () {
-          var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
+          var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + 'ReportViewer/loc/ReportViewer');
           $('#username').attr('placeholder', locData.placeholders.Username);
-          $('#password').attr('placeholder', locData.placeholders.Password);
+          if (forerunner.device.isMSIE8())
+              $('#password').attr('placeholder', '').attr("data-placeholder-value", '').val('');
+          else
+              $('#password').attr('placeholder', locData.placeholders.Password);
           $('#login').attr('value', locData.placeholders.Login);
+
+          $form = $("form");
+          // Fix up the ReturnUrl
+          var urlParts = document.URL.split("ReturnUrl=");
+          if (urlParts.length > 1) {
+              var returnUrl = urlParts[1];
+              urlParts = returnUrl.split("#");
+              returnUrl = urlParts[0];
+              var hashTag = null;
+              if (urlParts.length > 1) {
+                  hashTag = urlParts[1];
+                  hashTag = hashTag.replace("//", "/%2f");
+                  hashTag = hashTag.replace("&", "%26");
+              }
+              var action = $form.attr("action");
+              urlParts = action.split("ReturnUrl=");
+              action = urlParts[0] + "ReturnUrl=" + returnUrl;
+              if (hashTag)
+                  action += "&HashTag=" + hashTag;
+              $form.attr("action", action);
+          }
       });
   </script>
 }

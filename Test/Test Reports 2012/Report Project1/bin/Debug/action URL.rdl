@@ -273,9 +273,8 @@
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
         <Top>0.86333in</Top>
-        <Left>0.23833in</Left>
         <Height>3.51042in</Height>
-        <Width>6.15625in</Width>
+        <Width>8.85543in</Width>
         <Style>
           <Border>
             <Color>LightGrey</Color>
@@ -300,8 +299,13 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.37375in</Top>
-        <Left>0.23833in</Left>
+        <ActionInfo>
+          <Actions>
+            <Action>
+              <Hyperlink>http://msn.com</Hyperlink>
+            </Action>
+          </Actions>
+        </ActionInfo>
         <Height>0.25in</Height>
         <Width>5.80208in</Width>
         <ZIndex>1</ZIndex>
@@ -351,13 +355,6 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
-                  <ActionInfo>
-                    <Actions>
-                      <Action>
-                        <Hyperlink>http://www.msn.com</Hyperlink>
-                      </Action>
-                    </Actions>
-                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />
@@ -546,7 +543,7 @@
             </Style>
           </ChartArea>
         </ChartAreas>
-        <Palette>BrightPastel</Palette>
+        <Palette>Fire</Palette>
         <ChartBorderSkin>
           <Style>
             <BackgroundColor>Gray</BackgroundColor>
@@ -564,25 +561,83 @@
         </ChartNoDataMessage>
         <rd:DesignerMode>Sparkline</rd:DesignerMode>
         <DataSetName>DataSet1</DataSetName>
-        <Top>4.68625in</Top>
-        <Left>0.23833in</Left>
+        <Top>5.19667in</Top>
         <Height>2.11458in</Height>
-        <Width>6.47917in</Width>
+        <Width>8.85543in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
             <Color>LightGrey</Color>
             <Style>Solid</Style>
           </Border>
-          <BackgroundColor>White</BackgroundColor>
+          <BackgroundColor>LightGrey</BackgroundColor>
           <BackgroundGradientType>None</BackgroundGradientType>
         </Style>
       </Chart>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Now</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>0.405in</Top>
+        <Left>0.29042in</Left>
+        <Height>0.25in</Height>
+        <Width>1.89583in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox3">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>感谢您使用Forerunner公司的Mobilizer软件，您的授权许可出现了一些问题。</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox3</rd:DefaultName>
+        <Left>2.10292in</Left>
+        <Height>0.25in</Height>
+        <Width>5.15625in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>11.13417in</Height>
+    <Height>8.93625in</Height>
     <Style />
   </Body>
-  <Width>6.89584in</Width>
+  <Width>8.85543in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -590,7 +645,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>0</AutoRefresh>
+  <AutoRefresh>5</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

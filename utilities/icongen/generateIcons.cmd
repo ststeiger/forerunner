@@ -17,8 +17,13 @@ set configPath=%basePath%config.xml
 set outPath=%basePath%output
 set cssPath=%basePath%output
 
-set copyCSSPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\css
-set copyImagesPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\images
+:: Some files will go into common
+set commonCSSPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\css
+set commonImagesPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\images
+
+:: Other to report exploer
+set explorerCSSPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\ReportExplorer\css
+set explorerImagesPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\ReportExplorer\images
 
 :: run icongen and test the result
 %icongenExe% -o %outPath% -s %cssPath% -i %inputPath% -c %configPath%
@@ -26,10 +31,18 @@ if errorlevel 0 goto docopies
 exit /b 2
 
 :docopies
-echo Copying css files
-copy %outPath%\*.css %copyCSSPath%\
+echo Copying common css files
+copy %outPath%\icons24x24.css %commonCSSPath%\
+copy %outPath%\icons25x31.css %commonCSSPath%\
+
+echo Copying Report Explorer css files
+copy %outPath%\icons128x128.css %explorerCSSPath%\
 echo.
 
-echo Copying composite png files
-copy %outPath%\*.png %copyImagesPath%\
+echo Copying common composite png files
+copy %outPath%\icons24x24.png %commonImagesPath%\
+copy %outPath%\icons25x31.png %commonImagesPath%\
+
+echo Copying Report Explorer composite png files
+copy %outPath%\icons128x128.png %explorerImagesPath%\
 echo.

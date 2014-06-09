@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "ReportViewerEZ Sample";
+    Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section scripts {
+<script>
+  $(document).ready(function () {
+    // Create the reportViewerEZ widget and hold onto a reference
+    var $reportViewerEZ = $('body').reportViewerEZ({
+      DefaultAppTemplate: null,
+      navigateTo: null,
+      historyBack: null,
+      isReportManager: false,
+      isFullScreen: true
+    });
+
+    // Get the reportViewer widget from reportViewerEZ and load the report
+    var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+    $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+  });
+</script>
+}
+
+

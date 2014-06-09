@@ -1,5 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Demo";
+    ViewBag.Title = "Forerunner Software Mobilizer Demo";
+    ViewBag.Description = "Please watch the video and check out our demo server with your favorite browser or mobile device.  Mobilizer supports all Browsers and devices with a responcive HTML expereince.";
 }
 
 <div class="ForerunnerPort" style="">
@@ -11,14 +12,17 @@
             <tbody>
                 <tr>
                     <td class="ForerunnerTD ForerunnerTD50" style="">
-                        <div>
-                            <img  class="ForerunnerImage "  src="~/Content/img/product_demo.png" alt="Forerunner Mobilizer Product" />
+                         <div id="video" style="padding-right:15px;display:none;">
+                            <iframe width="100%" height="360" src="//www.youtube.com/embed/ffglPLTa6d4?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>                                                        
+                        </div>
+                        <div id="image" style="cursor:pointer;"> 
+                            <img  class="ForerunnerImage " style=""  src="~/Content/img/product_demo-play.png" alt="Forerunner Mobilizer Product" />
                         </div>
                     </td>
                     <td class="ForerunnerTD ForerunnerTD50" style="">
                         <div class="ForerunnerPageSubTitle" style="">
-                            <span>Please check out our demo server with your favorite browser or mobile device.</span>
-                            <p>The demo server is updated with regularity, if for any reason it is not accessible just check back in a couple of minutes we are probably just updating it. To access the server login as TestAccount with TestPWD! as the password. You can also compare the experience with the SQL Server 2012 Report Manager with the same user and password. If you register for the trial we will send you updates when new content is available. Thank you for your interest in Forerunner Mobilizer!</p>
+                            <span>Please watch the video and check out our demo server with your favorite browser or mobile device.</span>
+                            <p>The demo server is updated often, if for any reason it is not accessible just check back in a couple of minutes we are probably just updating it. To access the server login as TestAccount with TestPWD! as the password. You can also compare the experience with the SQL Server 2012 Report Manager with the same user and password. If you register for the trial we will send you updates when new content is available. Thank you for your interest in Forerunner Mobilizer!</p>
                         </div>
                     </td>
                 </tr>
@@ -30,19 +34,28 @@
 
 
 <div class="ForerunnerPort ForerunnerBottomBanner" style="">
-    <div class="Center" style="padding-top: 30px; padding-bottom: 30px;">
-        <div class="ForerunnerPageContent">
+    <div class="Center " style="padding-top: 30px; padding-bottom: 30px;">
+        <div class="ForerunnerPageContent" style="padding-left:10px;padding-right:10px;">
             <p>To Access the server login as <b>TestAccount</b> with <b>TestPWD!</b> as the password.</p>
             <table class="" style="width: 100%;">
                 <tbody>
                     <tr>
                         <td class="ForerunnerTD ForerunnerTD50" style="padding-bottom:10px;">
-                            <a class="DownloadButton Rounded Center" href="http://demo.forerunnersw.com/Mobilizer"><strong>Try out Mobilizer!</strong></a>
+                            <div id="demo" class ="DownloadButton Rounded Center DownloadButtonSize"><a  href="http://demo.forerunnersw.com/Mobilizer"><strong>Try out Mobilizer!</strong></a></div>
                         </td>
                         <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <a class="DownloadButton  Rounded Center" href="http://demo.forerunnersw.com/Reports"><strong>Compare to SQL 2012</strong></a>
+                            <div class="DownloadButton  Rounded Center DownloadButtonSize"><a  href="http://demo.forerunnersw.com/Reports"><strong>Compare to SQL 2012</strong></a></div>
                         </td>
                     </tr>
+                    <tr>
+                        <td class="ForerunnerTD ForerunnerTD50" style="padding-bottom:10px;">
+                            <div class="DownloadButton Rounded Center DownloadButtonSize"><a  href="http://demo.forerunnersw.com/Mobilizer-SPS"><strong>SharePoint Mobilizer!</strong></a></div>
+                        </td>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="DownloadButton  Rounded Center DownloadButtonSize"><a  href="http://demo.forerunnersw.com:88"><strong>Compare to SharePoint 2013</strong></a></div>
+                        </td>
+                    </tr>
+
                 </tbody>
             </table>
         </div>

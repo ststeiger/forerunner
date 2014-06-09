@@ -1,251 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <Description>Detail of an individual Adventure Works order. This report can be accessed as a drillthrough report from the Employee Sales Summary and Territory Sales drilldown report. This report illustrates the use of a free form layout, a table, parameters, a subreport that shows multiple store contacts, and expressions.</Description>
-  <DataSources>
-    <DataSource Name="AdventureWorks2008">
-      <DataSourceReference>AdventureWorks2008</DataSourceReference>
-      <rd:DataSourceID>9d4e7b1f-0315-4083-8ff3-aa70c1fb2920</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="SalesOrder">
-      <Fields>
-        <Field Name="BusinessEntityID">
-          <DataField>BusinessEntityID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderNumber">
-          <DataField>SalesOrderNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="OrderDate">
-          <DataField>OrderDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="SalesPersonID">
-          <DataField>SalesPersonID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderID">
-          <DataField>SalesOrderID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="TotalDue">
-          <DataField>TotalDue</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="BillToAddressID">
-          <DataField>BillToAddressID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="PurchaseOrderNumber">
-          <DataField>PurchaseOrderNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipMethod">
-          <DataField>ShipMethod</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipToAddressID">
-          <DataField>ShipToAddressID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="BillAddress1">
-          <DataField>BillAddress1</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipMethodID">
-          <DataField>ShipMethodID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="BillAddress2">
-          <DataField>BillAddress2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BillCity">
-          <DataField>BillCity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BillPostalCode">
-          <DataField>BillPostalCode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BillStateProvince">
-          <DataField>BillStateProvince</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BillCountryRegion">
-          <DataField>BillCountryRegion</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipAddress1">
-          <DataField>ShipAddress1</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipAddress2">
-          <DataField>ShipAddress2</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipCity">
-          <DataField>ShipCity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipPostalCode">
-          <DataField>ShipPostalCode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipStateProvince">
-          <DataField>ShipStateProvince</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipCountryRegion">
-          <DataField>ShipCountryRegion</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="JobTitle">
-          <DataField>JobTitle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SalesPerson">
-          <DataField>SalesPerson</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SalesTerritory">
-          <DataField>SalesTerritory</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="PhoneNumber">
-          <DataField>PhoneNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>--DECLARE @SalesOrderID int
---SET @SalesOrderID = 69528
-
-SELECT SOH.SalesOrderNumber,
-        S.BusinessEntityID, S.Name, 
-        SOH.SalesOrderID, SOH.SalesPersonID, SOH.TotalDue
-		, SOH.OrderDate, SOH.PurchaseOrderNumber
-        ,SOH.BillToAddressID, SOH.ShipToAddressID, SOH.ShipMethodID
-         ,SM.Name AS ShipMethod
-		   ,BA.AddressLine1 AS BillAddress1, BA.AddressLine2 AS BillAddress2, BA.City AS BillCity, 
-            BA.PostalCode AS BillPostalCode, BSP.Name AS BillStateProvince, BCR.Name AS BillCountryRegion, 
-            SA.AddressLine1 AS ShipAddress1, SA.AddressLine2 AS ShipAddress2, SA.City AS ShipCity, SA.PostalCode AS ShipPostalCode, 
-            SSP.Name AS ShipStateProvince, SCR.Name AS ShipCountryRegion
-            ,e.JobTitle, per.[FirstName] + N' ' + per.[LastName] AS [SalesPerson], 
-	ph.PhoneNumber,
-	st.Name as SalesTerritory 
-       FROM [Sales].[SalesOrderHeader] SOH 
-		INNER JOIN Sales.Customer C ON SOH.CustomerID = C.CustomerID
-        INNER JOIN Sales.Store S ON C.StoreID = S.BusinessEntityID
-        INNER JOIN Person.Address SA ON SA.AddressID = SOH.ShipToAddressID -- Shipping address
-		INNER JOIN Person.StateProvince SSP ON SA.StateProvinceID = SSP.StateProvinceID 
-		INNER JOIN Person.CountryRegion SCR ON SSP.CountryRegionCode = SCR.CountryRegionCode 
-		-- Join on sales order headers that have a shipping address
-				INNER JOIN Person.Address BA ON SOH.BillToAddressID = BA.AddressID -- Billing Address
-				INNER JOIN Person.StateProvince BSP ON BA.StateProvinceID = BSP.StateProvinceID 
-				INNER JOIN Person.CountryRegion BCR ON BSP.CountryRegionCode = BCR.CountryRegionCode 
-        INNER JOIN Purchasing.ShipMethod SM ON SOH.ShipMethodID = SM.ShipMethodID 
-		INNER JOIN [Sales].[SalesPerson] sp ON sp.[BusinessEntityID] = SOH.[SalesPersonID]	
-        LEFT OUTER JOIN [Sales].[SalesTerritory] st ON sp.[TerritoryID] = st.[TerritoryID] 
-		INNER JOIN [HumanResources].[Employee] e ON SOH.[SalesPersonID] = e.[BusinessEntityID] 
-		INNER JOIN [Person].[Person] per ON per.[BusinessEntityID] = sp.[BusinessEntityID]
-		INNER JOIN Person.PersonPhone ph ON per.[BusinessEntityID] = ph.[BusinessEntityID]
-		WHERE (SOH.SalesOrderID = (@SalesOrderID))</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@SalesOrderID">
-            <Value>=Parameters!SalesOrderID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <Timeout>30</Timeout>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="SalesOrderDetail">
-      <Fields>
-        <Field Name="SalesOrderDetailID">
-          <DataField>SalesOrderDetailID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="OrderQty">
-          <DataField>OrderQty</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="UnitPrice">
-          <DataField>UnitPrice</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="UnitPriceDiscount">
-          <DataField>UnitPriceDiscount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="LineTotal">
-          <DataField>LineTotal</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="CarrierTrackingNumber">
-          <DataField>CarrierTrackingNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderID">
-          <DataField>SalesOrderID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProductNumber">
-          <DataField>ProductNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT      SOD.SalesOrderDetailID, SOD.OrderQty, SOD.UnitPrice, 
-            CASE WHEN SOD.UnitPriceDiscount IS NULL THEN 0 ELSE SOD.UnitPriceDiscount END AS UnitPriceDiscount, 
-            SOD.LineTotal, SOD.CarrierTrackingNumber, SOD.SalesOrderID, P.Name, P.ProductNumber
-FROM        Sales.SalesOrderDetail SOD INNER JOIN
-            Production.Product P ON SOD.ProductID = P.ProductID INNER JOIN
-            Sales.SalesOrderHeader SOH ON SOD.SalesOrderID = SOH.SalesOrderID
-WHERE       (SOH.SalesOrderID = (@SalesOrderID)) -- e.g. 43666
-ORDER BY    SOD.SalesOrderDetailID</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@SalesOrderID">
-            <Value>=Parameters!SalesOrderID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <Timeout>30</Timeout>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="SalesOrders">
-      <Fields>
-        <Field Name="SalesOrderNumber">
-          <DataField>SalesOrderNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderID">
-          <DataField>SalesOrderID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT SOH.SalesOrderID, SOH.SalesOrderNumber
-FROM [Sales].[SalesOrderHeader] SOH
-   INNER JOIN Sales.Customer C ON SOH.CustomerID = C.CustomerID
-   INNER JOIN Sales.Store S ON C.StoreID = S.BusinessEntityID</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Tablix Name="OrderDetail">
@@ -1936,34 +1690,6 @@ FROM [Sales].[SalesOrderHeader] SOH
     <Height>5.00708in</Height>
     <Style />
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="SalesOrderID">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>50750</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Sales Order</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>SalesOrders</DataSetName>
-          <ValueField>SalesOrderID</ValueField>
-          <LabelField>SalesOrderNumber</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ShowDescription">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>False</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Description?</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-  </ReportParameters>
   <Width>8.00044in</Width>
   <Page>
     <PageHeader>
@@ -2068,6 +1794,282 @@ FROM [Sales].[SalesOrderHeader] SOH
     <BottomMargin>0.25in</BottomMargin>
     <Style />
   </Page>
+  <Description>Detail of an individual Adventure Works order. This report can be accessed as a drillthrough report from the Employee Sales Summary and Territory Sales drilldown report. This report illustrates the use of a free form layout, a table, parameters, a subreport that shows multiple store contacts, and expressions.</Description>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="AdventureWorks2008">
+      <DataSourceReference>AdventureWorks2008</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>9d4e7b1f-0315-4083-8ff3-aa70c1fb2920</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="SalesOrder">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@SalesOrderID">
+            <Value>=Parameters!SalesOrderID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @SalesOrderID int
+--SET @SalesOrderID = 69528
+
+SELECT SOH.SalesOrderNumber,
+        S.BusinessEntityID, S.Name, 
+        SOH.SalesOrderID, SOH.SalesPersonID, SOH.TotalDue
+		, SOH.OrderDate, SOH.PurchaseOrderNumber
+        ,SOH.BillToAddressID, SOH.ShipToAddressID, SOH.ShipMethodID
+         ,SM.Name AS ShipMethod
+		   ,BA.AddressLine1 AS BillAddress1, BA.AddressLine2 AS BillAddress2, BA.City AS BillCity, 
+            BA.PostalCode AS BillPostalCode, BSP.Name AS BillStateProvince, BCR.Name AS BillCountryRegion, 
+            SA.AddressLine1 AS ShipAddress1, SA.AddressLine2 AS ShipAddress2, SA.City AS ShipCity, SA.PostalCode AS ShipPostalCode, 
+            SSP.Name AS ShipStateProvince, SCR.Name AS ShipCountryRegion
+            ,e.JobTitle, per.[FirstName] + N' ' + per.[LastName] AS [SalesPerson], 
+	ph.PhoneNumber,
+	st.Name as SalesTerritory 
+       FROM [Sales].[SalesOrderHeader] SOH 
+		INNER JOIN Sales.Customer C ON SOH.CustomerID = C.CustomerID
+        INNER JOIN Sales.Store S ON C.StoreID = S.BusinessEntityID
+        INNER JOIN Person.Address SA ON SA.AddressID = SOH.ShipToAddressID -- Shipping address
+		INNER JOIN Person.StateProvince SSP ON SA.StateProvinceID = SSP.StateProvinceID 
+		INNER JOIN Person.CountryRegion SCR ON SSP.CountryRegionCode = SCR.CountryRegionCode 
+		-- Join on sales order headers that have a shipping address
+				INNER JOIN Person.Address BA ON SOH.BillToAddressID = BA.AddressID -- Billing Address
+				INNER JOIN Person.StateProvince BSP ON BA.StateProvinceID = BSP.StateProvinceID 
+				INNER JOIN Person.CountryRegion BCR ON BSP.CountryRegionCode = BCR.CountryRegionCode 
+        INNER JOIN Purchasing.ShipMethod SM ON SOH.ShipMethodID = SM.ShipMethodID 
+		INNER JOIN [Sales].[SalesPerson] sp ON sp.[BusinessEntityID] = SOH.[SalesPersonID]	
+        LEFT OUTER JOIN [Sales].[SalesTerritory] st ON sp.[TerritoryID] = st.[TerritoryID] 
+		INNER JOIN [HumanResources].[Employee] e ON SOH.[SalesPersonID] = e.[BusinessEntityID] 
+		INNER JOIN [Person].[Person] per ON per.[BusinessEntityID] = sp.[BusinessEntityID]
+		INNER JOIN Person.PersonPhone ph ON per.[BusinessEntityID] = ph.[BusinessEntityID]
+		WHERE (SOH.SalesOrderID = (@SalesOrderID))</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="BusinessEntityID">
+          <DataField>BusinessEntityID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderNumber">
+          <DataField>SalesOrderNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OrderDate">
+          <DataField>OrderDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="SalesPersonID">
+          <DataField>SalesPersonID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderID">
+          <DataField>SalesOrderID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="TotalDue">
+          <DataField>TotalDue</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="BillToAddressID">
+          <DataField>BillToAddressID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PurchaseOrderNumber">
+          <DataField>PurchaseOrderNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipMethod">
+          <DataField>ShipMethod</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipToAddressID">
+          <DataField>ShipToAddressID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="BillAddress1">
+          <DataField>BillAddress1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipMethodID">
+          <DataField>ShipMethodID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="BillAddress2">
+          <DataField>BillAddress2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BillCity">
+          <DataField>BillCity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BillPostalCode">
+          <DataField>BillPostalCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BillStateProvince">
+          <DataField>BillStateProvince</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BillCountryRegion">
+          <DataField>BillCountryRegion</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipAddress1">
+          <DataField>ShipAddress1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipAddress2">
+          <DataField>ShipAddress2</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipCity">
+          <DataField>ShipCity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipPostalCode">
+          <DataField>ShipPostalCode</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipStateProvince">
+          <DataField>ShipStateProvince</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShipCountryRegion">
+          <DataField>ShipCountryRegion</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="JobTitle">
+          <DataField>JobTitle</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SalesPerson">
+          <DataField>SalesPerson</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SalesTerritory">
+          <DataField>SalesTerritory</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PhoneNumber">
+          <DataField>PhoneNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="SalesOrderDetail">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@SalesOrderID">
+            <Value>=Parameters!SalesOrderID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT      SOD.SalesOrderDetailID, SOD.OrderQty, SOD.UnitPrice, 
+            CASE WHEN SOD.UnitPriceDiscount IS NULL THEN 0 ELSE SOD.UnitPriceDiscount END AS UnitPriceDiscount, 
+            SOD.LineTotal, SOD.CarrierTrackingNumber, SOD.SalesOrderID, P.Name, P.ProductNumber
+FROM        Sales.SalesOrderDetail SOD INNER JOIN
+            Production.Product P ON SOD.ProductID = P.ProductID INNER JOIN
+            Sales.SalesOrderHeader SOH ON SOD.SalesOrderID = SOH.SalesOrderID
+WHERE       (SOH.SalesOrderID = (@SalesOrderID)) -- e.g. 43666
+ORDER BY    SOD.SalesOrderDetailID</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="SalesOrderDetailID">
+          <DataField>SalesOrderDetailID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="OrderQty">
+          <DataField>OrderQty</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="UnitPriceDiscount">
+          <DataField>UnitPriceDiscount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="LineTotal">
+          <DataField>LineTotal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CarrierTrackingNumber">
+          <DataField>CarrierTrackingNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderID">
+          <DataField>SalesOrderID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProductNumber">
+          <DataField>ProductNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="SalesOrders">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <CommandText>SELECT SOH.SalesOrderID, SOH.SalesOrderNumber
+FROM [Sales].[SalesOrderHeader] SOH
+   INNER JOIN Sales.Customer C ON SOH.CustomerID = C.CustomerID
+   INNER JOIN Sales.Store S ON C.StoreID = S.BusinessEntityID</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="SalesOrderNumber">
+          <DataField>SalesOrderNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderID">
+          <DataField>SalesOrderID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="SalesOrderID">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>50750</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Sales Order</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>SalesOrders</DataSetName>
+          <ValueField>SalesOrderID</ValueField>
+          <LabelField>SalesOrderNumber</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ShowDescription">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>False</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Description?</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
   <EmbeddedImages>
     <EmbeddedImage Name="logofull">
       <MIMEType>image/jpeg</MIMEType>
@@ -2085,6 +2087,6 @@ i/bvtuyV5PO8ry87jnGNx/nUPjT4ceH/ABxAp1GBo7xBiK8gwsqjrgnGGGex9TjFddRQB84al+zbq8cj
     </EmbeddedImage>
   </EmbeddedImages>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportID>70650568-7dd4-4ef4-aeaa-67502de11b4f</rd:ReportID>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>70650568-7dd4-4ef4-aeaa-67502de11b4f</rd:ReportID>
 </Report>

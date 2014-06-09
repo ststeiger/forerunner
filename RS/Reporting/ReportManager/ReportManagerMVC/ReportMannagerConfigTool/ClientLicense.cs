@@ -10,6 +10,8 @@ using System.Xml;
 using ForerunnerLicense;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Forerunner.Logging;
+using System.Threading;
 
 namespace ForerunnerLicense
 {
@@ -21,41 +23,73 @@ namespace ForerunnerLicense
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";       
         private const String ProductKey = "Mobilizer";
-        private const String VersionKey = "Version1";
+        private const String VersionKey = "Version2";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
+        private static string url = "https://forerunnersw.com/register/api/License";
+        //private static string url = "http://localhost:13149/api/License";
 
-        internal static LicenseData License = null;
+
+        private static LicenseData license = null;
+        internal static LicenseData GetLicense()
+        {
+            if (license == null)
+            {
+                Init(false);
+            }
+            return license;
+        }
         internal static string requestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData></LicenseRequest>";
         internal static string MergerequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey><MergeKey>{2}</MergeKey></LicenseRequest>";
+        internal static string SplitRequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData><NumberOfCores>{4}</NumberOfCores></LicenseRequest>";
+
         static RegistryKey MobV1Key = null;
         static int IsMachineSame = -1;
-        static DateTime LastServerValidation;
-        static DateTime LastServerValidationTry;
-        static DateTime LastInit;
-        static int LastStatus=-1;
-        internal static MachineId ThisMachine = new MachineId();
+        internal static DateTime LastServerValidation;
+        internal static DateTime LastServerValidationTry;
+        internal static DateTime LastInit;
+        static int LastStatus = -1;
+        internal static MachineId ThisMachine = null;
+        internal static int MachineIdRetryCount = 0;
+        internal static Object MachineIdLock = new Object();
         static ClientLicense()
         {
-            Init(false);
-             
+            Logger.Trace(LogType.Info, "ClientLicense Type Initializer invoked.");
         }
+
         private static void Init(bool forceCheck)
         {
-            TimeSpan ts = DateTime.Now - LastInit;
-            if (ts.TotalMinutes > 1)
+            lock (MachineIdLock)
             {
-                LastInit = DateTime.Now;
-                Load(forceCheck);
-                MachineCheck(forceCheck);
+                if (ThisMachine == null && MachineIdRetryCount < 100)
+                {
+                    try
+                    {
+                        ThisMachine = new MachineId();
+                    }
+                    catch (Exception /*e*/)
+                    {
+                        MachineIdRetryCount++;
+                        ThisMachine = null;
+                    }
+                }
+                Logger.Trace(LogType.Info, "ClientLicense.Init invoked.  ForceChecked: " + forceCheck);
+                TimeSpan ts = DateTime.Now - LastInit;
+                if (ts.TotalMinutes > 1)
+                {
+                    LastInit = DateTime.Now;
+                    Load(forceCheck);
+                    MachineCheck(forceCheck);
+                }
+                Logger.Trace(LogType.Info, "ClientLicense.Init ends.");
             }
-
         }
-         private static void MachineCheck(bool forceCheck)
+        private static void MachineCheck(bool forceCheck)
         {
             if (IsMachineSame == -1 || forceCheck)
             {
-                if (License != null)
+                LicenseData License = GetLicense();
+                if (License != null && ThisMachine != null)
                 {
                     if (License.MachineData.IsSame(ThisMachine))
                         IsMachineSame = 1;
@@ -64,25 +98,40 @@ namespace ForerunnerLicense
                 }
             }
         }
-         private static void Load(bool forceCheck )
+        private static void Load(bool forceCheck )
         {
-            if (License != null && !forceCheck)
+            Logger.Trace(LogType.Info, "ClientLicense.Load invoked.  ForceChecked: " + forceCheck);
+               
+            if (license != null && !forceCheck)
                 return;
-
+            
             if (MobV1Key == null)
             {
+                Logger.Trace(LogType.Info, "ClientLicense.Load  Getting MobV1Key.");
                 RegistryKey forerunnerswKey ;
                 RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software);
-          
-                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);
-                if (wow6432NodeKey == null)
-                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                RegistryKey wow6432NodeKey = null;
+                bool Is64Bit;
+               
+                //See if 32 or 64 bit process
+                if (IntPtr.Size == 8)
+                    Is64Bit = true;
                 else
+                    Is64Bit = false;
+
+                //If 64 get the 3264 node
+                if (Is64Bit)
+                {
+                    wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);    
                     forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey);
+                }
+                else
+                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                    
 
                 if (forerunnerswKey == null)
                 {
-                    if (wow6432NodeKey == null)
+                    if (!Is64Bit)
                     {
                         softwareKey = Registry.LocalMachine.OpenSubKey(software, true);
                         forerunnerswKey = softwareKey.CreateSubKey(forerunnerKey);
@@ -97,6 +146,7 @@ namespace ForerunnerLicense
                 MobV1Key = forerunnerswKey.OpenSubKey(VersionKey,true);
                 if (MobV1Key == null)
                 {
+                    Logger.Trace(LogType.Info, "ClientLicense.Load Creating the key.");
                     //Handle the beta case where forerunner key exists
                     if (wow6432NodeKey == null)
                         forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey,true);
@@ -109,31 +159,49 @@ namespace ForerunnerLicense
                     rs.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), RegistryRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
                     MobV1Key.SetAccessControl(rs);
                 }
+
+                Logger.Trace(LogType.Info, "ClientLicense.Load MobV1Key is " + MobV1Key.Name);
             }
 
             var value = MobV1Key.GetValue(LicenseDataKey);
             if (value != null)
             {
+                Logger.Trace(LogType.Info, "ClientLicense.Load Verifying Key");
                 string temp = MobV1Key.GetValue(LicenseDataKey).ToString();
                 if (temp != LicenseString)
                 {
                     LicenseString = temp;
-                    License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
+                    Logger.Trace(LogType.Info, "ClientLicense.Load Calling LicenceUtil.Verify " + LicenseString);
+                    license = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 }
             }
-            else if (forceCheck)
+            else 
             {
-                License = null;
-                LicenseString = null;
-            }
-
-            value = MobV1Key.GetValue(LicenseTimestampKey);
-            if (value != null && !forceCheck)
-            {
-                LastServerValidation = DateTime.Parse(LicenseUtil.Verify( MobV1Key.GetValue(LicenseTimestampKey).ToString(), LicenseUtil.pubkey));
+                Logger.Trace(LogType.Info, "ClientLicense.Load Failed to load License Data from reg");
+                if (forceCheck)
+                {
+                    license = null;
+                    LicenseString = null;
+                }
             }
             
 
+            value = MobV1Key.GetValue(LicenseTimestampKey);
+            if (value != null && (!forceCheck || LastServerValidation == DateTime.MinValue) )
+            {
+                Logger.Trace(LogType.Info, "ClientLicense get Last Server Validation time");
+                try
+                {
+                    LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(MobV1Key.GetValue(LicenseTimestampKey).ToString(), LicenseUtil.pubkey)), DateTimeKind.Utc);
+                }
+                catch
+                {
+                    Logger.Trace(LogType.Info, "ClientLicense failed to load or parse LastServerValidation");
+                    MobV1Key.DeleteValue(LicenseTimestampKey);
+                }
+            }
+
+            Logger.Trace(LogType.Info, "ClientLicense.Load ends.");
         }
 
         private static void DeleteLicense()
@@ -143,7 +211,7 @@ namespace ForerunnerLicense
                 MobV1Key.DeleteValue(LicenseDataKey,false);
                 MobV1Key.DeleteValue(LicenseTimestampKey, false);                
             }
-            License = null;
+            license = null;
             LicenseString = null;
         }
 
@@ -153,6 +221,7 @@ namespace ForerunnerLicense
         }
         public static string GetLicenseString()
         {
+            LicenseData License = GetLicense();
             if (License != null)
                 return "License Key:\t\t" + License.LicenseKey + "\r\n" + "SKU:\t\t\t" + License.SKU + "\r\n" + "Number of Cores:\t" + License.Quantity.ToString() + "\r\n" + "Activation Date:\t\t" + License.FirstActivationDate.ToString();
             else
@@ -163,8 +232,9 @@ namespace ForerunnerLicense
         {
             ServerResponse resp;
 
+            LicenseData License = GetLicense();
             if (License == null)
-                throw new Exception("License Required");
+                LicenseException.Throw(LicenseException.FailReason.Other, "License Required");
             string LicenseKey = License.LicenseKey;
 
             string request = string.Format(MergerequestString, "Merge",LicenseKey, MergeKey);
@@ -172,153 +242,242 @@ namespace ForerunnerLicense
             if (resp.StatusCode == 0)
             {
                 DeActivate();
-                return Activate(LicenseKey);
+                return ActivateFromKey(LicenseKey);
             }
             else
-                throw new Exception(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
             
         }
-        public static string Activate(string LicenceKey)
+        public static string Split(int NumCores)
         {
-            MachineId mid;
             ServerResponse resp;
 
+            LicenseData License = GetLicense();
+            if (License == null)
+                LicenseException.Throw(LicenseException.FailReason.Other, "You may only split an activated license");
+            string LicenseKey = License.LicenseKey;
+
+            string request = string.Format(SplitRequestString, "Split", License.LicenseKey, License.MachineData.Serialize(false), LicenseString, NumCores);
+            resp = Post(request);
+            if (resp.StatusCode == 0)
+            {
+                DeActivate();
+                return resp.Response;
+            }
+            else
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
+
+        }
+        public static string GetActivateString(string LicenceKey)
+        {
+            MachineId mid;
+            
+            LicenseData License = GetLicense();
             if (License == null)
                 mid = new MachineId();
             else
                 mid = License.MachineData;
 
-            string request = string.Format(requestString, "Activate", LicenceKey, mid.Serialize(false), LicenseString);
-            resp = Post(request);
+            return string.Format(requestString, "Activate", LicenceKey, mid.Serialize(false), LicenseString);
+        }
+        public static string ActivateFromKey(string LicenceKey)
+        {
+            return ActivateFromResponce(Post(GetActivateString(LicenceKey)));
+        }
+
+        public static string ActivateFromResponce(ServerResponse resp)
+        {
+
             if (resp.StatusCode == 0)
             {
                 LicenseString = resp.Response;
-                License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
+                license = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 SaveLicense();
                 MachineCheck(true);
                 return GetLicenseString();
             }
             else
-                throw new Exception(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
         }
 
         public static void DeActivate()
-        {            
+        {
+            LicenseData License = GetLicense();
             if (License == null)
-                throw new Exception("No license to De-Activate");
+                LicenseException.Throw(LicenseException.FailReason.Other, "No license to De-Activate");
 
             string request = string.Format(requestString, "DeActivate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
             ServerResponse resp;
             resp = Post(request);
             if (resp.StatusCode == 0)
             {
-                DeleteLicense();               
+                DeleteLicense();
             }
             else
-                throw new Exception(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+            }
            
         }
 
-        public static void Validate()
+        public static void CheckLicense()
         {
-            ServerResponse resp = new ServerResponse();
             Init(true);
 
+            LicenseData License = GetLicense();
             if (License == null)
                 LicenseException.Throw(LicenseException.FailReason.NotActivated, "No License Detected");
 
             //Check Machine Key
-            if (IsMachineSame != 1)
+            if (IsMachineSame != 1 && ThisMachine != null)
                 LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
-            
-            if (ThisMachine.numberOfCores > License.Quantity)
+
+            if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
                 LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
+            //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
+            if (License.SKU.Substring(0, 5) == "Mob10")
+                LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
+        }
+
+        public static void Validate(bool forceValidate = false)
+        {
+            CheckLicense();
+            LicenseData License = GetLicense();
             if (License.RequireValidation == 1)
-            {                
+            {
                 TimeSpan LastTry = DateTime.Now - LastServerValidationTry;
-                
-                TimeSpan LastSucess = DateTime.Now - LastServerValidation;
-                if (LastSucess.TotalDays > 1)
+
+                TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
+                if (LastSucess.TotalDays > 1 || forceValidate)
                 {
-                    resp.StatusCode = LastStatus;
-                    if (LastTry.TotalMinutes > 5)
+                    
+                    if (LastTry.TotalMinutes > 5 || forceValidate)
                     {
                         try
                         {
-                            LastServerValidationTry = DateTime.Now;
-                            string request = string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
-                            resp = Post(request);
-                            LastStatus = resp.StatusCode;
+                            Thread t = new Thread(new ThreadStart(ValidateInner));
+                            t.Start();
+                            t.Join();
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            //This is a network error give us 14 days to fix
-                            if (LastSucess.TotalDays > 14)
-                                LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
-                            return;
+                            throw e;
                         }
                     }
+                }
+            }
+            
 
-                    if (resp.StatusCode != 0)
-                    {
-                        if (resp.StatusCode == 200)
-                            LicenseException.Throw(LicenseException.FailReason.Expired, "Subscritpion Expired");
-                        else if (resp.StatusCode == 105)
-                            LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Key");
-                        //This is a server error handle like network error give us 14 days to fix
-                        else
-                        {
-                            if (LastSucess.TotalDays > 14)
-                                LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
-                        }
+        }
 
-                    }
-                    else
-                    {
-                        LastServerValidation = DateTime.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey));
-                        MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
-                    }
+        public static string GetValidateKey()
+        {
+            LicenseData License = GetLicense();
+            return string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
+        }
+
+        private static void ValidateInner()
+        {
+            ServerResponse resp = new ServerResponse();
+            resp.StatusCode = LastStatus;
+            TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
+            
+            try
+            {
+                LastServerValidationTry = DateTime.Now;
+                string request = GetValidateKey();
+                resp = Post(request);
+                LastStatus = resp.StatusCode;
+            }
+            catch
+            {
+                Logger.Trace(LogType.Info, "Could not communicate with license Service " + url);
+                //This is a network error give us 14 days to fix
+                if (LastSucess.TotalDays > 14)
+                    LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
+                return;
+            }
+            ValidatefromResponce(resp);
+                    
+        }
+
+        public static void ValidatefromResponce(ServerResponse resp, bool LicenseCheck = false)
+        {
+            if (LicenseCheck)
+                CheckLicense();
+
+            TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
+
+            if (resp.StatusCode != 0)
+            {
+                if (resp.StatusCode == 200)
+                    LicenseException.Throw(LicenseException.FailReason.Expired, "Subscritpion Expired");
+                else if (resp.StatusCode == 105)
+                    LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Key");
+                //This is a server error handle like network error give us 14 days to fix
+                else
+                {
+                    if (LastSucess.TotalDays > 14)
+                        LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
                 }
 
             }
-           
+            else
+            {
+                // This needs to be thread safe.
+                lock (MachineIdLock)
+                {
+                    LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)), DateTimeKind.Utc);
+                    MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
+                }
+            }
+        
 
 
         }
 
         public static ServerResponse Post(string Value)
         {
-            string url = "https://forerunnersw.com/register/api/License";
-#if (DEBUG)
-            url = "http://localhost:13149/api/License";
-#endif
+           
             WebRequest request = WebRequest.Create (url);
             request.Method = "POST";
 
             // Create POST data and convert it to a byte array.            
             byte[] byteArray = Encoding.UTF8.GetBytes (Value);
             
-            request.ContentType = "tesx/xml";            
+            request.ContentType = "text/xml";            
             request.ContentLength = byteArray.Length;
             request.Timeout = 100000;
-            
-            Stream dataStream = request.GetRequestStream ();            
-            dataStream.Write (byteArray, 0, byteArray.Length);          
-            dataStream.Close ();
-            
-            WebResponse response = request.GetResponse ();
-            dataStream = response.GetResponseStream ();
-            StreamReader reader = new StreamReader (dataStream);
-            string responseFromServer = reader.ReadToEnd ();
 
-            reader.Close ();
-            dataStream.Close ();
-            response.Close ();
+            string responseFromServer = "";
+            using (Stream dataStream = request.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream dataStream2 = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(dataStream2);
+                        responseFromServer = reader.ReadToEnd();
+                    }
+                }
+            }
             return ProcessResponse(responseFromServer);
 
         }
-        private static ServerResponse ProcessResponse(string response)
+        public static ServerResponse ProcessResponse(string response)
         {
 
             XmlReader XMLReq = XmlReader.Create(new StringReader(response));
@@ -326,7 +485,7 @@ namespace ForerunnerLicense
 
             XMLReq.Read();
             if (XMLReq.Name != "LicenseResponse")
-                throw new Exception("Invalid Response from server");
+                LicenseException.Throw(LicenseException.FailReason.Other, "Invalid Response from server");
             XMLReq.Read();
 
 

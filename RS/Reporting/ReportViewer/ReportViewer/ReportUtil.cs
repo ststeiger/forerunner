@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -8,6 +9,12 @@ using System.IO;
 using Jayrock.Json;
 using Forerunner.SSRS.Execution;
 using ForerunnerLicense;
+using System.Configuration;
+using Forerunner.SSRS.Viewer;
+using Forerunner.SSRS.Manager;
+using Forerunner.Config;
+using Forerunner.Logging;
+using Native = Forerunner.SSRS.Management.Native;
 
 namespace Forerunner
 {
@@ -44,7 +51,108 @@ namespace Forerunner
 
 
     }
- 
+
+    public static class ForerunnerUtil
+    {
+        static private bool IgnoreSSLErrors = ForerunnerUtil.GetAppSetting("Forerunner.IgnoreSSLErrors", false);
+        static private bool CheckSSL = false;
+
+        static public void CheckSSLConfig()
+        {
+            if (!CheckSSL)
+            {
+                CheckSSL = true;
+                if (IgnoreSSLErrors)
+                    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            }
+        }
+
+        static public bool GetAppSetting(string key, bool defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
+        }
+
+        static public int GetAppSetting(string key, int defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : int.Parse(value);
+        }
+
+        static public ReportViewer GetReportViewerInstance(string instance, string url, int ReportServerTimeout, WebConfigSection webConfigSection)
+        {
+            ConfigElement configElement = null;
+            if (webConfigSection != null && instance != null)
+            {
+                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
+                if (configElementCollection != null)
+                {
+                    configElement = configElementCollection.GetElementByKey(instance);
+                }
+            }
+            //Put application security here
+            if (configElement == null)
+                return new ReportViewer(url, ReportServerTimeout);
+            else
+                return new ReportViewer(configElement.ReportServerWSUrl, configElement.ReportServerTimeout);
+        }
+
+        private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
+        {
+            Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+            if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
+            {
+                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+            }
+            else
+            {
+                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
+            }
+        }
+
+        public static ReportManager GetReportManagerInstance(string instance, string url, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName, string ReportServerDataSource, string ReportServerDB, string ReportServerDBUser, string ReportServerDBPWD, string ReportServerDBDomain, bool useIntegratedSecurity, WebConfigSection webConfigSection)
+        {
+            Forerunner.Config.ConfigElement configElement = null;
+            if (webConfigSection != null && instance != null)
+            {
+                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
+                if (configElementCollection != null)
+                {
+                    configElement = configElementCollection.GetElementByKey(instance);
+                }
+            }
+            //Put application security here
+
+            if (configElement == null)
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(url, null, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
+            }
+            else
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, configElement.ReportServerDBUser, configElement.ReportServerDBDomain == null ? "" : configElement.ReportServerDBDomain, configElement.ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(configElement.ReportServerWSUrl, null, configElement.ReportServerDataSource, configElement.ReportServerDB, DBCred, configElement.UseIntegratedSecurityForSQL, configElement.IsNative, DefaultUserDomain, configElement.SharePointHost);
+            }
+        }
+
+        public static void validateConfig(string ReportServerDataSource, string ReportServerDB, string ReportServerDBUser,string ReportServerDBPWD, string ReportServerDBDomain, bool useIntegratedSecurity, WebConfigSection webConfigSection)
+        {
+            if (ReportServerDataSource != null)
+            {
+                Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");
+                ForerunnerUtil.validateReportServerDB(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity);
+            }
+
+            if (webConfigSection != null)
+            {
+                foreach (Forerunner.Config.ConfigElement configElement in webConfigSection.InstanceCollection)
+                {
+                    Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the Forerunner section.  Instance: " + configElement.Instance);
+                    ForerunnerUtil.validateReportServerDB(configElement.ReportServerDataSource, configElement.ReportServerDB, configElement.ReportServerDBUser, configElement.ReportServerDBPWD, configElement.ReportServerDBDomain, configElement.UseIntegratedSecurityForSQL);
+                }
+            }
+        }
+    }
 
     public static class JsonUtility
     {
@@ -59,35 +167,38 @@ namespace Forerunner
 
                 JsonArray parameterArray = jsonObj["ParamsList"] as JsonArray;
 
-                foreach (JsonObject obj in parameterArray)
+                if (parameterArray != null)
                 {
-                    if (obj["IsMultiple"].ToString().ToLower() == "true")
+                    foreach (JsonObject obj in parameterArray)
                     {
-                        if (obj["Value"] == null)
+                        if (obj["IsMultiple"].ToString().ToLower() == "true")
                         {
-                            ParameterValue pv = new ParameterValue();
-                            pv.Name = obj["Parameter"].ToString();
-                            pv.Value = GetDefaultValue(obj["Type"].ToString());
-                            list.Add(pv);
-                        } 
-                        else 
-                        {
-                            JsonArray multipleValues = obj["Value"] as JsonArray;
-                            foreach (String value in multipleValues)
+                            if (obj["Value"] == null)
                             {
                                 ParameterValue pv = new ParameterValue();
                                 pv.Name = obj["Parameter"].ToString();
-                                pv.Value = value;
+                                pv.Value = GetDefaultValue(obj["Type"].ToString());
                                 list.Add(pv);
                             }
+                            else
+                            {
+                                JsonArray multipleValues = obj["Value"] as JsonArray;
+                                foreach (String value in multipleValues)
+                                {
+                                    ParameterValue pv = new ParameterValue();
+                                    pv.Name = obj["Parameter"].ToString();
+                                    pv.Value = value;
+                                    list.Add(pv);
+                                }
+                            }
                         }
-                    }
-                    else
-                    {
-                        ParameterValue pv = new ParameterValue();
-                        pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
-                        list.Add(pv);
+                        else
+                        {
+                            ParameterValue pv = new ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
+                            pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
+                            list.Add(pv);
+                        }
                     }
                 }
 
@@ -148,69 +259,81 @@ namespace Forerunner
 
         public static string WriteExceptionJSON(Exception e, String userName = null)
         {
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("Exception");
-            w.WriteStartObject();
-
-            if(e is LicenseException)
+            try
             {
-                w.WriteMember("Type");
-                w.WriteString("LicenseException");
-                w.WriteMember("Reason");
-                w.WriteString(e.Data[LicenseException.failKey].ToString());
-                w.WriteMember("Message");
-                w.WriteString(e.Message);
-            }
-            else
-            {
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Exception");
+                w.WriteStartObject();
 
-                w.WriteMember("Type");
-                if (e.Message.Contains("ForerunnerLicense.LicenseException"))
-                    w.WriteString("LicenseException");
-                else
-                    w.WriteString(e.GetType().ToString());
-                w.WriteMember("TargetSite");
-                w.WriteString(e.TargetSite.ToString());
-                w.WriteMember("Source");
-                w.WriteString(e.Source);
-                w.WriteMember("Message");
-
-                string[] split = { "--->" };
-                string[] Messages = e.Message.Split(split,StringSplitOptions.None);
-                string message = "";
-                string lastMess = "";
-                string curMess = "";
-                foreach (string mes in Messages)
+                if (e is LicenseException)
                 {
-                    int start = mes.IndexOf(":") + 1;
-                    int end = mes.IndexOf("  at", start ) - 1;
+                    w.WriteMember("Type");
+                    w.WriteString("LicenseException");
+                    w.WriteMember("Reason");
+                    w.WriteString(e.Data[LicenseException.failKey].ToString());
+                    w.WriteMember("Message");
+                    w.WriteString(e.Message);
+                }
+                else
+                {
 
-                    if (start <= 0)
-                        curMess = mes;
-                    else if (start > 0 && end > 0)
-                        curMess = mes.Substring(start, end - start);
+                    w.WriteMember("Type");
+                    if (e.Message.Contains("ForerunnerLicense.LicenseException"))
+                        w.WriteString("LicenseException");
                     else
-                        curMess = mes.Substring(start);
-                    
-                    if (curMess != lastMess)
-                        message += curMess;
-                    lastMess = curMess;
-                }               
-                w.WriteString(message);
-                w.WriteMember("DetailMessage");
-                w.WriteString(e.Message);
+                        w.WriteString(e.GetType().ToString());
 
-                w.WriteMember("StackTrace");
-                w.WriteString(e.StackTrace);
+                    w.WriteMember("TargetSite");
+                    if (e.TargetSite != null)
+                        w.WriteString(e.TargetSite.ToString());
+                    else
+                        w.WriteString("unknown");
+                    w.WriteMember("Source");
+                    w.WriteString(e.Source);
+                    w.WriteMember("Message");
 
-                w.WriteMember("UserName");
-                w.WriteString(userName != null ? userName : "null");
+                    string[] split = { "--->" };
+                    string[] Messages = e.Message.Split(split, StringSplitOptions.None);
+                    string message = "";
+                    string lastMess = "";
+                    string curMess = "";
+                    foreach (string mes in Messages)
+                    {
+                        int start = mes.IndexOf(":") + 1;
+                        int end = mes.IndexOf("  at", start) - 1;
+
+                        if (start <= 0)
+                            curMess = mes;
+                        else if (start > 0 && end > 0)
+                            curMess = mes.Substring(start, end - start);
+                        else
+                            curMess = mes.Substring(start);
+
+                        curMess = curMess.Trim(new char[] { ' ', '\n' });
+                        if (curMess != lastMess)
+                            message += curMess;
+                        lastMess = curMess;
+                    }
+                    w.WriteString(message);
+                    w.WriteMember("DetailMessage");
+                    w.WriteString(e.Message);
+
+                    w.WriteMember("StackTrace");
+                    w.WriteString(e.StackTrace);
+
+                    w.WriteMember("UserName");
+                    w.WriteString(userName != null ? userName : "null");
+                }
+                w.WriteEndObject();
+                w.WriteEndObject();
+
+                return w.ToString();
             }
-            w.WriteEndObject();
-            w.WriteEndObject();
-
-            return w.ToString();
+            catch
+            {
+                return "";
+            }
         }
 
         public static string ConvertParamemterToJSON(ReportParameter [] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
@@ -245,7 +368,7 @@ namespace Forerunner
                         Object obj = proInfo.GetValue(parameter, null);
 
                         if (obj == null)
-                            w.WriteString("");
+                            w.WriteNull();
                         else if (obj.GetType().ToString().Contains("Boolean"))
                             w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
@@ -262,7 +385,10 @@ namespace Forerunner
                     w.WriteStartArray();
                     foreach (string item in parameter.DefaultValues)
                     {
-                        w.WriteString(item);
+                        if (item == null)
+                            w.WriteNull();
+                        else
+                            w.WriteString(item);
                     }
                     w.WriteEndArray();
                 }
@@ -290,8 +416,11 @@ namespace Forerunner
                     foreach (ValidValue item in parameter.ValidValues)
                     {
                         w.WriteStartObject();
+                        //change key from 'Key' to 'label' to adapt jquery.ui auto complete
+                        //change it back to Key/Value to keep same format with v1
                         w.WriteMember("Key");
                         w.WriteString(item.Label);
+                        //change key from 'Value' to 'value' to adapt jquery.ui auto complete
                         w.WriteMember("Value");
                         w.WriteString(item.Value);
                         w.WriteEndObject();
@@ -438,6 +567,59 @@ namespace Forerunner
             return mime;
         }
 
+        internal static DataSourceCredentials[] GetDataSourceCredentialsFromString(string credentials)
+        {
+            List<DataSourceCredentials> list = new List<DataSourceCredentials>();
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(credentials)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+
+                JsonArray credArray = jsonObj["CredentialList"] as JsonArray;
+
+                foreach (JsonObject obj in credArray)
+                {
+                    DataSourceCredentials credential = new DataSourceCredentials();
+                    credential.DataSourceName = obj["DataSourceID"].ToString();
+                    credential.UserName = obj["Username"].ToString();
+                    credential.Password = obj["Password"].ToString();
+
+                    list.Add(credential);
+                }
+            }
+            return list.ToArray();
+        }
+        internal static string GetDataSourceCredentialJSON(DataSourcePrompt[] prompts, string reportPath, string sessionID, string numPages = "1")
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("ReportPath");
+            w.WriteString(reportPath);
+            w.WriteMember("SessionID");
+            w.WriteString(sessionID);
+            w.WriteMember("NumPages");
+            w.WriteNumber(numPages);
+            w.WriteMember("CredentialsRequired");
+            w.WriteBoolean(true);
+            w.WriteMember("CredentialsList");
+            w.WriteStartArray();
+            foreach (DataSourcePrompt prompt in prompts)
+            {
+                w.WriteStartObject();
+                w.WriteMember("DataSourceID");
+                w.WriteString(prompt.DataSourceID);
+                w.WriteMember("Name");
+                w.WriteString(prompt.Name);
+                w.WriteMember("Prompt");
+                w.WriteString(prompt.Prompt);
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
+
         public static string ConvertListToJSON(List<string> listOfStrings)
         {
             JsonWriter w = new JsonTextWriter();
@@ -445,6 +627,36 @@ namespace Forerunner
             w.WriteStringArray(listOfStrings);
 
             return w.ToString();
+        }
+
+        public static Native.SearchCondition[] getNativeSearchCondition(string searchCriteria)
+        {
+            List<Native.SearchCondition> list = new List<Native.SearchCondition>();
+
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(searchCriteria)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+
+                JsonArray criteriaArray = jsonObj["SearchCriteria"] as JsonArray;
+
+                if (criteriaArray != null)
+                {
+                    foreach (JsonObject obj in criteriaArray)
+                    {
+                        Native.SearchCondition condition = new Native.SearchCondition();
+                        //Default to search as contains
+                        condition.Condition = Native.ConditionEnum.Contains;
+                        condition.ConditionSpecified = true;
+                        condition.Name = obj["Key"].ToString();
+                        condition.Value = obj["Value"].ToString();
+
+                        list.Add(condition);
+                    }
+                }
+
+                return list.ToArray();
+            }
         }
     }
 }

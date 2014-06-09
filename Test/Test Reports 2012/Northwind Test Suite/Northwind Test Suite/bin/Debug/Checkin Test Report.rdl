@@ -6,10 +6,10 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1.32292in</Width>
+              <Width>1.24875in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>0.31375in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.33333in</Width>
@@ -296,7 +296,9 @@
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>price</rd:DefaultName>
@@ -312,6 +314,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -526,9 +529,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
-        <Top>0.36in</Top>
+        <Top>0.53417in</Top>
+        <Left>0.37375in</Left>
         <Height>0.85in</Height>
-        <Width>3.65625in</Width>
+        <Width>2.89583in</Width>
         <Style />
       </Tablix>
       <Textbox Name="textbox1">
@@ -565,8 +569,8 @@
         <Source>Embedded</Source>
         <Value>Koala</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.37389in</Top>
-        <Left>3.65625in</Left>
+        <Top>0.38375in</Top>
+        <Left>4.58333in</Left>
         <Height>0.82625in</Height>
         <Width>1.09375in</Width>
         <ZIndex>2</ZIndex>

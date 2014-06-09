@@ -1,0 +1,5 @@
+drop table ForerunnerCatalog
+drop table ForerunnerDBVersion
+drop table ForerunnerFavorites
+drop table ForerunnerUserItemProperties
+drop table ForerunnerUserSettings

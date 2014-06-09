@@ -1,266 +1,43 @@
-﻿.fr-layout-printsection {
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  right: 0px;
-  position: absolute;
-  z-index: 5;
-  display: none;
-}
+﻿.fr-print-section { display: none; }
 
-.fr-print-page {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 5;
-  width: 100%;
-}
+.fr-print-form { }
 
-.fr-print-innerPage {
-  width: 318px;
-  height: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #ffffff;
-}
+.fr-print-options-label { width: 100%; margin: 0 11px 16px 0; display: block; }
 
-.fr-print-layout {
-  position: relative;
-  margin-top: 100px;
-  font-family:sans-serif;
-  background-color: #ffffff;
-  border: 1px solid #035378;
-  box-shadow: 0px 0px 15px #696969;
-  -webkit-appearance: none;
-}
+.fr-print-margins-label { width: 100%; margin: 12px 0 16px 0; display: block; }
 
-.fr-print-header {
-  width: 318px;
-  height: 45px;
-  position: relative;
-  font-size: 15pt;
-  font-weight: bold;
-  color: #ffffff;
-  display: inline-block;
-  display: -webkit-box;
+.fr-print-settings-pair-widget { vertical-align: top; display: inline-block; }
 
-  background: #537eb4; /* Old browsers */
-  background: -moz-linear-gradient(top,  #537eb4 0%, #3c5d9c 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#537eb4), color-stop(100%,#3c5d9c)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #537eb4 0%,#3c5d9c 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */
-}
+.fr-print-form .fr-print-settings { display: inline-table; vertical-align: top; padding: 0; margin: 0 16px 0 0; }
 
-.fr-print-print-icon-container {
-  height: 100%;
-  margin: 0 17px 0 11px;
-  vertical-align: top;
-  display: inline-block;
-}
+.fr-print-settings td { padding-bottom: 10px; vertical-align: top; }
 
-.fr-print-align-middle {
-  vertical-align: middle;
-}
+.fr-print-orientation-container { display: inline-block; margin-right: 11px; }
 
-.fr-print-title-container {
-  height: 100%;
-  vertical-align: top;
-  display: inline-block;
-}
+.fr-print-landscape { width: 44px; height: 31px; display: inline-block; }
 
-.fr-print-title {
-  height: 45px;
-  vertical-align: middle;
-  display: table-cell;
-}
+.fr-print-landscape-icon { background-image: url(../images/print_landscape.png); }
 
-.fr-print-cancel-container {
-  margin-top: 12px;
-  display: inline-block;
-  position: absolute;
-  top: 0;
-  right: 22px;
-}
+.fr-print-landscape-icon-active { background-image: url(../images/print_landscape_1.png); }
 
-.fr-print-cancel {
-  font-family:sans-serif;
-  font-size: 13pt;
-  color: #ffffff;
-  background-color: transparent;
-  border: none;
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
-  float: right;
-  cursor: pointer;
-}
+.fr-print-portrait { width: 31px; height: 37px; margin-right: 14px; display: inline-block; }
 
-.fr-print-form {
-  margin: 16px 0 25px 16px;
-  font-size: 13pt;
-  font-weight: bold;
-  color: #172949;
-  display: inline-block;
-  display: -webkit-inline-box;
-}
+.fr-print-portrait-icon { background-image: url(../images/print_portrait.png); }
 
-.fr-print-options-label {
-  width: 100%;
-  margin-bottom: 16px;
-  display: inline-block;
-}
+.fr-print-portrait-icon-active { background-image: url(../images/print_portrait_1.png); }
 
-.fr-print-margins-label {
-  width: 100%;
-  margin: 12px 0 16px 0;
-  display: inline-block;
-}
+.fr-print-setting { margin-bottom: 10px; }
 
-.fr-print-settings-pair-container {
-  width: 147px;
-  display: inline-block;
-  vertical-align: top;
-}
+.fr-print-label { height: 20px; margin: 0 5px 0px 0; display: inline-block; }
 
-.fr-print-orientation-container {
-  width: 100px;
-  display: inline-block;
-  margin-left: 16px;
-}
+.fr-print-text { width: 50px; height: 20px; font-size: 13pt; font-weight: bold; color: #666666; text-align: right; padding: 0 6px 0 0; border: 1px solid #c6d1e1; }
 
-.fr-print-landscape {
-  width: 44px;
-  height: 31px;
-  display: inline-block;
-}
+.fr-print-error-span { margin: 2px 0 0 4px; text-align: right; font-size: 10pt; }
 
-.fr-print-landscape-icon {
-  background-image: url(../images/print_landscape.png);
-}
+.fr-print-error-position { display: inline-block; }
 
-.fr-print-landscape-icon-active {
-  background-image: url(../images/print_landscape_1.png);
-}
-
-.fr-print-portrait {
-  width: 31px;
-  height: 37px;
-  margin-right: 14px;
-  display: inline-block;
-}
-
-.fr-print-portrait-icon {
-  background-image: url(../images/print_portrait.png);
-}
-
-.fr-print-portrait-icon-active {
-  background-image: url(../images/print_portrait_1.png);
-}
-
-.fr-print-setting {
-  margin-bottom: 10px;
-}
-
-.fr-print-label{
-  width: 60px;
-  height: 20px;
-  vertical-align: middle;
-  display: inline-block;
-  overflow: hidden;
-}
-
-.fr-print-text {
-  width: 50px;
-  height: 20px;
-  font-size: 13pt;
-  font-weight: bold;
-  color: #666666;
-  text-align:right;
-  padding: 0 6px 0 0;
-  border:1px solid #c6d1e1;
-}
-
-.fr-print-error-span {
-  width: 118px;
-  margin: 2px 0 0 0;
-  text-align: right;
-  font-size: 10pt;
-
-}
-
-.fr-print-error-position {
-  display: inline-block;
-}
-
-.fr-print-error {
-  border-width: thin;
-  border-color: red;
-}
+.fr-print-error { border-width: thin; border-color: red; }
 
 
-.fr-print-unit-label {
-  width: 20px;
-  font-size: 10pt;
-  color: #999999;
-  margin-left: 4px;
-}
-
-.fr-print-submit-container {
-  width: 100%;
-  display: inline-block;
-  margin: 25px 0 0 0;
-}
-
-.fr-print-submit-inner {
-  width: 100%;
-  display: inline-block;
-  text-align: center;
-}
-
-.fr-print-submit {
-  width: 200px;
-  height: 38px;
-  padding: 0 0;
-  display: inline-block;
-  border: 1px solid #546681;
-  cursor: pointer;
-  font-size: 13pt;
-  font-family: sans-serif;
-  color: #ffffff;
-
-  background: #5e96cf; /* Old browsers */
-  background: -moz-linear-gradient(top,  #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #5e96cf 0%,#4e70b0 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */
-}
-
-/* (E.g., for phones, landscape) */
-@media only screen and (max-height : 340px) {
-  .fr-print-form {
-    margin: 4px 0 25px 16px;
-  }
-  .fr-print-submit-container {
-    margin: 4px 0 0 0;
-  }
-}
-
-/* (E.g., for phones, potrait) */
-@media only screen and (max-width : 479px) {
-  .fr-print-form {
-    margin: 4px 0 25px 4px;
-  }
-  .fr-print-submit-container {
-    margin: 4px 0 0 0;
-  }
-}
-
-
+.fr-print-unit-label { width: 20px; font-size: 10pt; color: #999999; margin-left: 4px; }
 

@@ -17,7 +17,7 @@ $(function () {
      * Widget used to manage user settings
      *
      * @namespace $.forerunner.userSettings
-     * @prop {object} options - The options for userSettings
+     * @prop {Object} options - The options for userSettings
      * @prop {Object} options.$reportExplorer - The report explorer widget
      * @example
      * $("#userSettingsId").userSettings({
@@ -29,92 +29,131 @@ $(function () {
             $reportExplorer: null,
         },
         _create: function () {
-            
         },
         _init: function () {
             var me = this;
-            var locData = me.options.locData.userSettings;
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var userSettings = locData.userSettings;
             var unit = locData.unit;
 
-            me.element.html("");
+            var buildVersion = me._getBuildVersion();
 
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
-            "<div class='fr-us-page'>" +
-                // Header
-                "<div class='fr-us-innerPage fr-us-layout'>" +
-                    "<div class='fr-us-header'>" +
-                        "<div class='fr-us-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-title-container'>" +
-                            "<div class='fr-us-title'>" +
-                                locData.title +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-cancel-container'>" +
-                            "<input type='button' class='fr-us-cancel' value='" + locData.cancel + "'/>" +
-                        "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
+                // form
+                "<form class='fr-us-form fr-core-dialog-form'>" +
+                    "<div class='fr-us-setting-container'>" +
+                        "<table><tr><td>" +
+                        "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                        "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                        "</tr></td><tr><td>" +
+                        "<label class='fr-us-label'>" + userSettings.Email + "</label>" +
+                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
+                        "</tr></td><tr><td>" +
+                        "</br><label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                        "</td></tr></table>" +
                     "</div>" +
-                    // form
-                    "<form class='fr-us-form'>" +
-                        "<div class='fr-us-setting-container'>" +
-                            "<label class='fr-us-label'>" + locData.ResponsiveUI + "</label>" +
-                            "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-                        "</div>" +
-                        "<div class='fr-us-submit-container'>" +
-                            "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit' value='" + locData.submit + "'/>" +
-                        "</div>" +
-                    "</form>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
+                    "</div>" +
+                "</form>" +
+                "<div class='fr-buildversion-container'>" +
+                    buildVersion +
                 "</div>" +
-            "</div>");
+            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
-            me.element.find(".fr-us-submit").on("click", function (e) {
+            me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
-                me.closeDialog();
             });
 
             me.element.find(".fr-us-cancel").on("click", function (e) {
                 me.closeDialog();
             });
 
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        _getBuildVersion: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerFolder() + "version.txt";
+            var buildVersion = null;
+            $.ajax({
+                url: url,
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    buildVersion = data;
+                },
+                fail: function (data) {
+                    console.log(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+            });
+
+            return buildVersion;
         },
         _getSettings: function () {
             var me = this;
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
+            me.$email.val(me.settings.email);
+            me.$adminUI = me.element.find(".fr-us-admin-ui-id");
+            var adminUI = me.settings.adminUI;
+            me.$adminUI.prop("checked", adminUI);
         },
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-
+            me.settings.email = me.$email.val();
+            me.settings.adminUI = me.$adminUI.prop("checked");
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+
+            me.closeDialog();
         },
         /**
+         * Open user setting dialog
+         *
          * @function $.forerunner.userSettings#openDialog
          */
         openDialog: function () {
             var me = this;
 
             me._getSettings();
-            forerunner.dialog.showModalDialog(me.element, function () {
-                me.element.show();
-            });
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
         },
         /**
-         * @function $.forerunner.userSettings#clodeDialog
+         * Close user setting dialog
+         *
+         * @function $.forerunner.userSettings#closeDialog
          */
         closeDialog: function () {
             var me = this;
 
-            forerunner.dialog.closeModalDialog(me.element, function () {
-                me.element.hide();
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+
         }
     }); //$.widget
 });

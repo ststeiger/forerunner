@@ -1,74 +1,143 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Modernize SSRS -  Modern, Mobile & Cross Platform UI";
+    ViewBag.Description = "Forerunner Mobilizer unlocks and extends the power of Microsoft’s SQL Server by allowing users access to core business intelligence more quickly and across all devices and browsers.  Mobilizer support modern development using HTML5 with a fast responsive experince.";
 }
 
+@section head
+{
+<meta name="google-site-verification" content="5ES0kpDlIv7EPiX99ZRnrrq6yxAj83C8Sk0MVxqHVQQ" />
+}
 
-<div class="ForerunnerPort MobilizerBanner " style="">
-    <div class="ForerunnerPage Center" style="">
-        <!--<div class="ForerunnerPageTitle" style="">Mobilizer Demo</div>
-        <div class="ForerunnerPageSubTitle" style="">Forerunner Software wants to hear from you!</div>    
-        <div class="ForerunnerPageContent">If you have any questions about product, technology, direction or just want to chat please reach out to us. We want to hear from you. We have Email support and will be adding Phone and Forum soon. We are committed to your success and will respond promptly to your questions.</div-->
-        <table class="" style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td class="ForerunnerTD ForerunnerTD50 MobilizerBannerImage" style="">
-                        <div>
-                            <img class="ForerunnerLogo Center" style="max-width:400px;" src="~/Content/img/box.png" alt="Forerunner Mobilizer" />
-                        </div>
-                    </td>
-                    <td class="ForerunnerTD ForerunnerTD50" style="">
-                        <div style="">
-                            <div class="MobilizerBannerHeader">Mobilize</div>
-                            <div class="MobilizerBannerSubHeader">the power of Microsoft’s SQL Server Reporting Services anywhere.</div>
-                            <div class="MobilizerBannerContent">
-                                <p>
-                                    Forerunner Mobilizer unlocks and extends the power of Microsoft’s SQL Server by allowing users access to core business intelligence across all devices and browsers.
-                                </p>
-                                <p>
-                                    Forerunner is an easy to use out of the box solution that leverages your existing investments; eliminating the need for additional development or user training.
-                                </p>
-                            </div>
-                            <a class="DownloadButton Rounded" style="margin-bottom:35px;" href="../home/register"><strong>DOWNLOAD TRIAL NOW!</strong></a>
-                           
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="ForerunnerPort " style="">
+    <div class="ForerunnerPage Center" style="margin-bottom: 35px;">
+        <div id="Slide" class="SliderFullContainer Center" style="display: table; margin-top: 15px; margin-bottom: 15px;">
+            <div class="ForerunnerTD ForerunnerTD50" style="">
+                <div id="SlideLeft" class="SliderContainer" style="text-align: right;">
+                    <div>
+                        <div class="SliderFrame SliderContainer" style="background-color: #c1d84a;">
+                            <img class="SliderIMG" src="~/Content/img/forerunnersw_logo.png" style="float: left;" />
 
+                            <div class="SliderContent" style="clear: both; padding-top: 15px; ">Forerunner Mobilizer unlocks and extends the power of Microsoft's SQL Server by allowing users access to core business intelligence more quickly and across all devices and browsers.<br /><br />
+                                Forerunner is an easy to use out of the box solution that leverages your existing investments; eliminating the need for additional development or user training.
+                                <br /><br />
+                                <b>Download Mobilizer for free today!</b></div>
+                            <div class="DownloadButton Rounded DownloadButtonSize Center"><a href="~/home/register"><strong>DOWNLOAD TRIAL NOW!</strong></a></div>
+                        </div>
+                    </div>
+                     <div>
+                        <img class="SliderIMG" src="~/content/homeslider/Intel.jpg" />
+                    </div>
+                    <div>
+                        <div class="SliderFrame SliderContainer" style="background-color: #092A39; color:white;  ">
+
+                            <div class="SliderHeader" style=""><b>Leverage the power of Microsoft's SQLServer Reporting </b></div>
+                            <br />
+                            <div class="SliderContent" style="">Forerunner Software provides mobile business intelligence and access to SQL Server Reporting Services from any device and any browser for real time strategic planning and decision making.</div>
+                            <br />
+                            <div class="SliderContent" style="">Enable your mobile workforce to gain business insights through information analysis using applications optimized for mobile devices.</div>
+
+                            <div class="DownloadButton Rounded DownloadButtonSize Center"><a href="~/home/register"><strong>DOWNLOAD TRIAL NOW!</strong></a></div>
+                        </div>
+                    </div>
+                    <div>
+                        <img class="SliderIMG" src="~/content/homeslider/Developer.jpg" />
+                    </div>
+                </div>
+            </div>
+            <div class="ForerunnerTD ForerunnerTD50" style="">
+                <div id="SlideRight" class="SliderContainer" style=" text-align: left;">
+                    <div>
+                        <img class="SliderIMG" src="~/content/homeslider/DemoFree.jpg" />
+                    </div>
+                     <div>
+                        <div class="SliderFrame SliderContainer" style="background-color: #6dcff6; color:black;  ">                            
+                            <div class="SliderHeader" style="">THE IMPACT OF MOBILIZER WITHIN <span style="color:#595959;">INTEL</span> </div>
+                            <br />
+                            <div class="SliderContent" style="">To support the demand of business users Intel executives chose Forerunner Software's unique Mobilizer to support their internal browser agnostic and BYOD policy. "With so many people in an organization you can't possibly lock everyone down to IE." states Intel's Applications Developer Rob Harrison. "People are going to download Chrome, they're going to download Firefox, they are going to get what they want. It makes sense, right? There's no reason why we shouldn't support these things."</div>
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <img class="SliderIMG" src="~/content/homeslider/LeveragePower.jpg" />
+                    </div>
+                     <div>
+                        <div class="SliderFrame SliderContainer" style="background-color: #6dcff6; color:black;  ">                            
+                            <div class="SliderContent" style="">Forerunner Mobilizer was designed by developers with developers in mind. It's got everything you need. All of the Controls, APIs, CSS and events we used to build Mobilizer are documented and available for you to build your own custom experience or incorporate into your applications. <br /><br />With full support the MVC and HTML5 building your own app is a breeze.</div>
+                            <br />
+                            <div class="SliderHeader" style="">Check out our developer resources on the <a class="SliderHeader" href="~/home/developers"><u>developers page</u></a>.</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="SliderFullContainer Center" style="display:table;">
+            
+            <div style="display:table-cell;text-align:right;padding-right:10px;cursor:pointer;"><img id="SliderBack" style="width:25px;" src="~/slider/images/prev.png" /></div>
+            <div style="display:table-cell;padding-left:10px;cursor:pointer;"><img id="SliderForward" style="display:table-cell;width:25px;" src="~/slider/images/next.png"/></div>
+
+        </div>
     </div>
 </div>
 
 
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
-        <!--<div class="ForerunnerPageTitle" style="">Mobilizer Demo</div>
-        <div class="ForerunnerPageSubTitle" style="">Forerunner Software wants to hear from you!</div>    
-        <div class="ForerunnerPageContent">If you have any questions about product, technology, direction or just want to chat please reach out to us. We want to hear from you. We have Email support and will be adding Phone and Forum soon. We are committed to your success and will respond promptly to your questions.</div-->
-        <table class="" style="width: 100%; margin-top: 65px;margin-bottom:65px;">
-            <tbody>
-                <tr>
-                    <td class="ForerunnerTD ForerunnerTD50" style="padding-right:15px;">
-                        <div>
-                            <img class="ForerunnerImage " src="~/Content/img/mobilizer_home.png" alt="Forerunner Mobilizer Product" />
-                        </div>
-                    </td>
-                    <td class="ForerunnerTD ForerunnerTD50" style="">
-                        <div class="MobilizerDetailHeader" style="">Optimized Responsive Application</div>
-                        <div class="MobilizerDetailContent" style="">Forerunner Mobilizer is designed to get you up and running in minutes enabling users to access thier data dynamically across all browsers and mobile devices.</div>
-                        <div class="MobilizerDetailHeader" style="">Security & Information Protection</div>
-                        <div class="MobilizerDetailContent" style="">Forerunner Mobilizer integrates with your company’s existing security policies.  You control who has access using industry standard methods.</div>
-                        <div class="MobilizerDetailHeader" style="">No Training Required.  Business Intelligence Anywhere</div>
-                        <div class="MobilizerDetailContent" style="">Unleashing corporate mobility is a growing trend and concern.  Companies with a mobile platform for reporting and analytics can make critical business decisions faster.</div>
-                        <div class="MobilizerDetailHeader" style="">Deploy Solutions</div>
-                        <div class="MobilizerDetailContent" style="">Forerunner Mobilizer takes advantage of IT and developer’s skills and investments in Microsoft’s SQL Server development platform. Forerunner Mobilizer reduces development costs and improve end user efficiency.</div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="Center" style="display: table; width: 100%; margin-top: 25px; margin-bottom: 25px;">
+            <div class="ForerunnerTD ForerunnerTD50 ForerunnerTDLeft" style="">
+                <div class="MobilizerDetailHeader Center">See it in Action, Watch the Video</div>
+                <div id="video" style="padding-right: 15px; display: none;">
+                    <iframe width="100%" height="360" src="//www.youtube.com/embed/ffglPLTa6d4?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div id="image" style="cursor: pointer;">
+                    <img class="ForerunnerImage " src="~/Content/img/mobilizer_home-play.png" alt="Forerunner Mobilizer Product" />
+                </div>
+            </div>
 
+            <div class="ForerunnerTD ForerunnerTD50 ForerunnerTDLeft" style="background-color:#F2F2F2">                
+                <form class="HomePageRegister Center" name="reg" style="margin-bottom: 25px;" action="https://forerunnersw.com/register/api/Download" method="post">
+                    <div class="Center" style="margin-bottom: 20px;margin-top:25px;   font-size:16pt;">Register to unlock your FREE Trial</div>
+                    <div class="Center" style="margin-bottom: 20px;">You can be up and running in minutes</div>
+                    <input class="DownloadFormInputSmall" type="text" required="required" name="firstname" placeholder="First Name">
+                    <input class="DownloadFormInputSmall" type="text" required="required" name="lastname" placeholder="Last Name"><br />
+                    <input id="email" class="DownloadFormInputSmall" style="width: 292px;" type="text" required="required" name="email" placeholder="Email"><br />
+                    <input class="DownloadFormInputSmall" type="text" name="companyname" placeholder="Company Name">
+                    <input class="DownloadFormInputSmall" type="text" name="phonenumber" placeholder="Phone Number"><br /><br />
+                    <input id="zip" class="DownloadFormInputSmall" type="text" name="zipcode">
+                    <input id="referer" class="DownloadFormInputSmall" type="text" name="referrer">
+                    <input class="DownloadButton Center DownloadButtonSize" style="" type="submit" value="Submit">
+                    <br />
+                </form>
+            </div>
+        </div>
+        <div class="Center" style="display: table; width: 100%; margin-top: 65px; margin-bottom: 65px;">
+            
+                <div class="ForerunnerTD" style="padding:10px;">
+                    <img class="Center" style="width:250px;height:175px;" src="~/content/img/responsive.jpg" />
+                    <div class="MobilizerDetailHeader " style="text-align:center;padding-bottom:15px;">Optimized Responsive Application</div>
+                    <div class="MobilizerDetailContent " style="">Forerunner Mobilizer is designed to get you up and running in minutes enabling users to access thier data faster and more easily across all browsers and mobile devices. <br /><br /> The improved, end user focused, Report Manager will help you be more productive.</div>
+                </div>
+                <div class="ForerunnerTD" style="padding:10px;">
+                    <img class="Center" style="width:250px;height:175px;" src="~/content/img/CostEffective.jpg" />
+                    <div class="MobilizerDetailHeader " style="text-align:center;padding-bottom:15px;">Cost Effective Mobile BI</div>
+                    <div class="MobilizerDetailContent " style="">Forerunner Mobilizer has no per user charges.  You will be amazed at how cost effectivly you can transform your business with mobile BI.</div>
+                </div>
+                <div class="ForerunnerTD" style="padding:10px;">
+                    <img class="Center" style="width:250px;height:175px;" src="~/content/img/NoTraining.jpg" />
+                    <div class="MobilizerDetailHeader " style="text-align:center;padding-bottom:15px;">No Training Required</div>
+                    <div class="MobilizerDetailContent " style="">Mobilier is fast and easy to enable everyone in your company to get thier information anywhere. <br /><br />With the easy to use out of the box solution that leverages your existing investments and eliminates the need to additional development or end user training.</div>
+                </div>
+                <div class="ForerunnerTD" style="padding:10px;">
+                    <img class="Center" style="width:250px;height:175px;" src="~/content/img/Compete.jpg" />
+                    <div class="MobilizerDetailHeader " style="text-align:center;padding-bottom:15px;">Compeditive advantage</div>
+                    <div class="MobilizerDetailContent " style="">Unleash corporate mobility in your company and see the difference. <br /><br />Companies with a mobile BI solution make critical business decisions faster and more well informed.</div>
+                </div>
+            
+        </div>
     </div>
+
 </div>
+
 
 
 

@@ -57,6 +57,8 @@ Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegiste
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/ValidateLicense/bin/*
+RS/Reporting/ReportManager/ReportManagerMVC/ValidateLicense/obj/*
 RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Debug/*
 RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Release/*
 RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/*
@@ -79,6 +81,9 @@ utilities/SetupUtil/SetupUtil/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/bin/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/obj/*
+RS/Reporting/ReportManager/ReportManagerMVC/LogFiles/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release/ReportManagerConfigTool.exe.config
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/ReportManagerConfigTool.exe.config
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/ReportManagerConfigTool.vshost.exe.config
@@ -89,9 +94,6 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/R
 utilities/SetupUtil/SetupUtil/bin/Debug/*
 utilities/SetupUtil/SetupUtil/bin/Release/*
 utilities/SetupUtil/SetupUtil/SetupUtil.csproj.user
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
 LicenseService/Worker/bin/Release/Microsoft.WindowsAzure.Diagnostics.xml
 LicenseService/Worker/bin/Release/Microsoft.WindowsAzure.Storage.xml
 LicenseService/Worker/bin/Release/System.Spatial.xml
@@ -599,3 +601,42 @@ utilities/icongen/preBetaImages/Thumbs.db
 ForerunnerSW/ForerunnerSW/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
 ForerunnerSW/ForerunnerSW/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 ForerunnerSW/ForerunnerSW/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/*
+build/tools/Zipper/bin/Debug/*
+build/tools/SharepointUploader/bin/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Mobilizer.log
+ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db
+ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db
+utilities/icongen/images/24x24icons/Thumbs.db
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/action URL.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Report Project1/bin/Debug/action URL.rdl
+Test/Test Reports 2012/Report Project1/bin/Debug/action URL.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Report Project1/bin/Debug/action URL.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/action URL.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Northwind.rds
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Simple Table with groups and drill down with bookmark.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Simple Table with groups and drill down with bookmark.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Mutiple Parameter.rdl
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/obj/Debug/*
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/obj/Release/*
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/*
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/bin/GettingStarted.dll
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/*
+ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/aspnet-GettingStarted-20140131174105.mdf
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/aspnet-GettingStarted-20140131174105_log.ldf
+Setup/Resource/~$bilizer License.rtf
+Setup/Resource/~$L Extension Documentation.rtf

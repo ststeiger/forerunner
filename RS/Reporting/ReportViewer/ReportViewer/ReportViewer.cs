@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -6,12 +7,15 @@ using Forerunner.SSRS.Execution;
 using Jayrock.Json;
 using System.Diagnostics;
 using Forerunner.SSRS.JSONRender;
-using Forerunner.Thumbnail;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
 using Forerunner.Security;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
+using ForerunnerLicense;
+using Forerunner.SSRS.Manager;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -31,19 +35,24 @@ namespace Forerunner.SSRS.Viewer
         private String ReportServerURL;
         private Credentials Credentials = new Credentials();
         private ReportExecutionService rs = new ReportExecutionService();
-        private bool ServerRendering = false;
-        private bool checkedServerRendering = false;
+        static private bool ServerRendering = false;
+        static private bool MHTMLRendering = false;
+        static private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
+        private int RSTimeOut = 100000;
+        static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
 
-        public ReportViewer(String ReportServerURL, Credentials Credentials)
+        public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
         {
             this.ReportServerURL = ReportServerURL;
-            SetRSURL();
+            RSTimeOut = TimeOut;
+            SetRSURL();            
             GetServerRendering();
         }
         private void SetRSURL()
         {
             rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
+            rs.Timeout = RSTimeOut;
         }
 
         internal void SetImpersonator(CurrentUserImpersonator impersonator)
@@ -51,15 +60,16 @@ namespace Forerunner.SSRS.Viewer
             this.impersonator = impersonator;
         }
 
-        public ReportViewer(String ReportServerURL)
+        public ReportViewer(String ReportServerURL, int TimeOut = 100000)
         {
             this.ReportServerURL = ReportServerURL;
-            SetRSURL();
+            RSTimeOut = TimeOut;
+            SetRSURL();            
         }
 
         private ICredentials credentials = null;
 
-        internal void SetCredentials(ICredentials credentials)
+        public void SetCredentials(ICredentials credentials)
         {
             this.credentials = credentials;
         }
@@ -85,24 +95,30 @@ namespace Forerunner.SSRS.Viewer
         {
             if (checkedServerRendering)
             {
-                return this.ServerRendering;
+                return ReportViewer.ServerRendering;
             }
+            return forceGetServerRendering();
+        }
+
+        internal bool forceGetServerRendering()
+        {
             if (rs.Credentials == null)
                 rs.Credentials = GetCredentials();
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
-                {
-                    this.ServerRendering = true;
-                    break;
-                }
+                    ReportViewer.ServerRendering = true;
+                if (Ex.Name == "MHTML")
+                    ReportViewer.MHTMLRendering = true;
+                
             }
 #if DEBUG 
-            this.ServerRendering = false;
+            ReportViewer.ServerRendering = false;
+            //this.MHTMLRendering = false;
 #endif
-            checkedServerRendering = true;
+            ReportViewer.checkedServerRendering = true;
 
-            return this.ServerRendering;
+            return ReportViewer.ServerRendering;
         }
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
@@ -122,7 +138,22 @@ namespace Forerunner.SSRS.Viewer
 
                 rs.ExecutionHeaderValue = execHeader;
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                result = rs.RenderStream("RPL", ImageID, "", out encoding, out mimeType);
+
+                string format;
+                GetServerRendering();
+                if (ReportViewer.ServerRendering)
+                    format = "ForerunnerJSON";
+                else
+                    format = "RPL";
+                string devInfo = "";
+                //devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+                //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
+                //End Device Info
+                //devInfo += @"</DeviceInfo>";
+
+
+                result = rs.RenderStream(format, ImageID,devInfo, out encoding, out mimeType);
+  
                 if (mimeType == null)
                     mimeType = JsonUtility.GetMimeTypeFromBytes(result);
                 return result;
@@ -194,7 +225,57 @@ namespace Forerunner.SSRS.Viewer
             return w.ToString();
         }
 
-        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
+        private Stream GetUTF8Bytes(StringWriter result)
+        {
+            MemoryStream mem = new MemoryStream();
+            int bufsiz = 1024 * 1000;
+            char[] c = new char[bufsiz];
+            StringBuilder sb;
+            byte[] b;
+            sb = result.GetStringBuilder();
+
+            int len = sb.Length;
+            int offset = 0;
+
+            while (len >= 0)
+            {
+                if (len >= bufsiz)
+                {
+                    sb.CopyTo(offset, c, 0, bufsiz);
+                    b = Encoding.UTF8.GetBytes(c, 0, bufsiz);
+                    mem.Write(b, 0, b.Length);
+                    len -= bufsiz;
+                    offset += bufsiz;
+                }
+                else
+                {
+                    sb.CopyTo(offset, c, 0, len);
+                    b = Encoding.UTF8.GetBytes(c, 0, len);
+                    mem.Write(b, 0, b.Length);
+                    break;
+                }
+
+            }
+            return mem;
+
+
+        }
+
+        private Stream GetUTF8Bytes(byte[] result, string preString, string postString)
+        {
+            MemoryStream mem = new MemoryStream(result.Length + 512);
+            
+    
+            mem.Write(Encoding.UTF8.GetBytes(preString), 0, Encoding.UTF8.GetByteCount(preString));
+            mem.Write(result, 0, result.Length);
+            mem.Write(Encoding.UTF8.GetBytes(postString), 0, Encoding.UTF8.GetByteCount(postString));
+            return mem;
+
+
+        }
+
+
+        public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
         {
             byte[] result = null;
             string format;
@@ -204,55 +285,108 @@ namespace Forerunner.SSRS.Viewer
             string extension;
             Warning[] warnings = null;
             string[] streamIDs = null;
-            string NewSession;
+            string NewSession = "DebugPlaceholderSession";
             ReportJSONWriter rw;
-
-            rs.Credentials = GetCredentials();
-            GetServerRendering();
-            if (this.ServerRendering)
-                format = "ForerunnerJSON";
-            else
-                format = "RPL";
-
-            if (SessionID == null)
-                NewSession = "";
-            else
-                NewSession = SessionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
-
-            rs.ExecutionHeaderValue = execHeader;
+            int numPages = 1;
+            bool hasDocMap = false;
+            StringWriter JSON = new StringWriter();
 
             try
             {
-                if (NewSession != "")
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                else
-                    execInfo = rs.LoadReport(reportPath, historyID);
 
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-                if (rs.GetExecutionInfo().Parameters.Length != 0 && parametersList != null)
+                //This is for debug from customer log files
+                if (IsDebug == "JSON")
                 {
-                    rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    
+                    int bufsiz = 1024*1024;
+                    byte[] fb = new byte[bufsiz];
+                    int len = 0;
+                    int rs = 0;
+                    MemoryStream ms = new MemoryStream();
+                    FileStream fs = File.Open(ConfigurationManager.AppSettings["Forerunner.JSONFile"], FileMode.Open);
+                    while (len < fs.Length)
+                    {
+                        rs = fs.Read(fb, 0, bufsiz);
+                        ms.Write(fb, 0, rs);
+                        len += rs;
+                    }
+                    fs.Close();
+                    
+                    return ms;
                 }
+                else if (IsDebug == "RPL")
+                    result = Convert.FromBase64String(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.RPLFile"]));
+                else
+                {
 
-                result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
-                execInfo = rs.GetExecutionInfo();
+                    rs.Credentials = GetCredentials();
+                    GetServerRendering();
+
+                    //Use local to get RPL for debug, will through an error
+                    if (ReportViewer.ServerRendering && (IsDebug != "WRPL"))
+                        format = "ForerunnerJSON";
+                    else
+                        format = "RPL";
+
+                    if (SessionID == null)
+                        NewSession = "";
+                    else
+                        NewSession = SessionID;
+
+                    //Device Info
+                    string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
+                    //Page number   
+                    devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+                    //End Device Info
+                    devInfo += @"</DeviceInfo>";
+
+                    rs.ExecutionHeaderValue = execHeader;
+                    if (NewSession != "")
+                    {
+                        rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                        execInfo = rs.GetExecutionInfo();
+                    }
+                    else
+                    {
+                        execInfo = rs.LoadReport(reportPath, historyID);
+                    }
+
+                    NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                    if (execInfo.CredentialsRequired)
+                    {
+                        if (credentials != null)
+                        {
+                            execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                        }
+                        else
+                        {
+                            JSON.Write(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum));
+                            return GetUTF8Bytes(JSON);
+                        }
+                    }
+
+                    if (execInfo.Parameters.Length != 0 && parametersList != null)
+                    {
+                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    }
+
+                    result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);                    
+                    execInfo = rs.GetExecutionInfo();
+                    numPages = execInfo.NumPages;
+                    hasDocMap = execInfo.HasDocumentMap;
+
+                }
                 if (result.Length != 0)
                 {
-                    rw = new ReportJSONWriter(new MemoryStream(result));
-                    JsonWriter w = new JsonTextWriter();
-                    JsonReader r;
+                    //Write the RPL and throw
+                    if (IsDebug == "WRPL")
+                         ExceptionLogGenerator.LogExceptionWithRPL("Debug", new MemoryStream(result)); 
 
+                    JsonWriter w = new JsonTextWriter();
+  
                     //Read Report Object
                     w.WriteStartObject();
                     w.WriteMember("SessionID");
@@ -262,30 +396,56 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportPath");
                     w.WriteString(reportPath);
                     w.WriteMember("HasDocMap");
-                    w.WriteBoolean(execInfo.HasDocumentMap);
+                    w.WriteBoolean(hasDocMap);
                     w.WriteMember("ReportContainer");
-                    if (this.ServerRendering)
-                        r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
-                    else
-                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
-                    w.WriteFromReader(r);
-                    w.WriteEndObject();
 
-                    Debug.WriteLine(w.ToString());
-                    return w.ToString();
+                    MemoryStream ms;
+                    if (ReportViewer.ServerRendering && IsDebug != "RPL")
+                    {
+                        ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
+                    }
+                    else
+                    {
+                        rw = new ReportJSONWriter(new MemoryStream(result));
+                        JSON = new StringWriter(rw.RPLToJSON(numPages).GetStringBuilder());
+                        JSON.GetStringBuilder().Insert(0, w.ToString());
+                        JSON.Write("}");
+                        ms = GetUTF8Bytes(JSON) as MemoryStream;
+                    }
+
+                    
+                    
+                    // If debug write JSON flag
+                    if (IsDebug == "WJSON")
+                    {
+                        //File.WriteAllText("c:\\test\\BigReport.txt",JSON, Encoding.UTF8);
+                        string error = string.Format("[Time: {0}]\r\n[Type: {1}]\r\n[Message: {2}]\r\n[StackTrace:\r\n{3}]\r\n[JSON: {4}]",
+                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", Encoding.UTF8.GetString(ms.ToArray()));
+                        Logger.Trace(LogType.Error, "Debug:\r\n{0}", new object[] { error });                        
+                    }
+                    return ms;
 
                 }
                 else
-                    return "";
-
+                {
+                    if (execInfo.NumPages < int.Parse(PageNum))
+                        throw new Exception("No such page");
+                    else
+                        LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
+                }
+                //this should never be called
+                return GetUTF8Bytes(JSON);
             }
+
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
-                return JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name);
+                JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
+                return GetUTF8Bytes(JSON);
             }
+
         }
         public string GetDocMapJson(string SessionID)
         {
@@ -306,7 +466,7 @@ namespace Forerunner.SSRS.Viewer
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
-        public string GetParameterJson(string ReportPath, string SessionID, string paramList)
+        public string GetParameterJson(string ReportPath, string SessionID, string paramList, string credentials)
         {
             string historyID = null;
             string NewSession;
@@ -314,24 +474,41 @@ namespace Forerunner.SSRS.Viewer
             // BUGBUG:: This can be made more optimized if we can use an existing session id.
             // Need to add the plumbing there. - added by baotong - 2013-10-14
 
-            ExecutionHeader execHeader = new ExecutionHeader();
-            rs.ExecutionHeaderValue = execHeader;
+
             try
             {
                 rs.Credentials = GetCredentials();
                 ParameterValue[] values = paramList == null ? null : JsonUtility.GetParameterValue(paramList);
 
                 if (SessionID != "" && SessionID != null)
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    execInfo = rs.GetExecutionInfo();
+                }
                 else
                     execInfo = rs.LoadReport(ReportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                if (execInfo.CredentialsRequired)
+                {
+                    if (credentials != null)
+                    {
+                        execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                    }
+                    else
+                    {
+                        return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, ReportPath, NewSession);
+                    }
+                }
+
                 if (paramList != null)
                     execInfo = rs.SetExecutionParameters(values, null);
 
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                if (execInfo.Parameters.Length != 0)
                 {
                     ReportParameter[] reportParameter = execInfo.Parameters;
                     return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
@@ -350,7 +527,7 @@ namespace Forerunner.SSRS.Viewer
         /// <summary>
         /// Sort data by special column field and sort direction
         /// </summary>
-        public string SortReport(string SessionID, string SortItem, string Direction)
+        public string SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort)
         {
             try
             {
@@ -374,7 +551,7 @@ namespace Forerunner.SSRS.Viewer
                         SortDirection = SortDirectionEnum.None;
                         break;
                 }
-                int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                int newPage = rs.Sort(SortItem, SortDirection, ClearExistingSort, out ReportItem, out NumPages);
                 JsonWriter w = new JsonTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");
@@ -476,10 +653,19 @@ namespace Forerunner.SSRS.Viewer
                 w.WriteStartObject();
                 w.WriteMember("SessionID");
                 w.WriteString(execInfo.ExecutionID);
+                w.WriteMember("CredentialsRequired");
+                w.WriteBoolean(execInfo.CredentialsRequired);
                 w.WriteMember("ParametersRequired");
                 w.WriteBoolean(execInfo.Parameters.Length != 0 ? true : false);
                 w.WriteMember("ReportPath");
                 w.WriteString(execInfo.ReportPath);
+
+                if (execInfo.CredentialsRequired)
+                {
+                    w.WriteMember("Credentials");
+                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, execInfo.ReportPath, execInfo.ExecutionID, execInfo.NumPages.ToString())));
+                    w.WriteFromReader(r);
+                }
 
                 if (execInfo.Parameters.Length != 0)
                 {
@@ -487,6 +673,7 @@ namespace Forerunner.SSRS.Viewer
                     JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
                     w.WriteFromReader(r);
                 }
+
                 w.WriteEndObject();
                 return w.ToString();
 
@@ -565,21 +752,50 @@ namespace Forerunner.SSRS.Viewer
                 retval = "";
             else
             {
-                int delim1 = src.IndexOf(":");
                 int delim = src.IndexOf(";");
 
-                img = GetImageInternal(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+                //img = GetImageInternal(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+                img = GetImageInternal(src.Substring(0, delim), src.Substring(delim + 1), out mimeType);
                 retval = "data:" + mimeType + ";base64, " + Convert.ToBase64String(img);
             }
             return retval;
 
         }
 
+        public byte[] GetMHTfromHTML(byte[] HTML)
+        {
+            string sHTML = Encoding.UTF8.GetString(HTML);
+            StringBuilder MHT = new StringBuilder(1024*1000);
+            int LastIndex = 0;
+            int NewIndex = 0;
+            int EndQuote = 0;
+
+            while (NewIndex >= 0)
+            {
+                NewIndex = sHTML.IndexOf("SRC=\"",LastIndex);
+                if (NewIndex >=0)
+                {
+                    NewIndex +=5;
+                    EndQuote = sHTML.IndexOf("\"",NewIndex);
+                    MHT.Append(sHTML.Substring(LastIndex, NewIndex - LastIndex));
+                    MHT.Append(getImageHandeler(sHTML.Substring(NewIndex, EndQuote-NewIndex)));
+                    MHT.Append("\"");
+                    LastIndex = EndQuote + 1;
+                    //Dont get too big
+                    if (MHT.Length > 1024 * 20000)
+                        break;
+                }
+               
+            }
+            MHT.Append(sHTML.Substring(LastIndex));
+            return Encoding.UTF8.GetBytes(MHT.ToString());
+        }
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;
             MemoryStream ms = new MemoryStream();
-            string format = "HTML4.0";
+            string format = "MHTML";
             string historyID = null;
             string encoding;
             string mimeType;
@@ -599,6 +815,7 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
+            CurrentUserImpersonator newImpersonator = null;
             try
             {
                 GetServerRendering();
@@ -615,48 +832,80 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                if (this.ServerRendering)
+                if (ReportViewer.ServerRendering)
                     format = "ForerunnerThumbnail";
-                else
+                if (!ReportViewer.MHTMLRendering)
                 {
+                   // Support for Express and Web that do not support MHTML                
+                    format = "HTML4.0";
+
                     devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
                     devInfo += @"<ReplacementRoot></ReplacementRoot>";
                     devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>";
                 }
                 devInfo += @"</DeviceInfo>";
 
-                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                if (!this.ServerRendering)
+                if (!ReportViewer.ServerRendering)
                 {
-                    // Cache the current httpcontext credential for other threads to use
-                    SetCredentials(GetCredentials());
-                    if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+                    string fileName = Path.GetTempPath() + Path.GetRandomFileName();
+                    if (!ReportViewer.MHTMLRendering)
                     {
-                        impersonator = impersonator == null ? new CurrentUserImpersonator() : impersonator;
+                        result = GetMHTfromHTML(result);
+                        fileName += ".htm";
                     }
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator == null ? new CurrentUserImpersonator(): impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    result = ms.ToArray();
-                }
+                    else
+                        fileName += ".mht";
+                    System.IO.File.WriteAllBytes(fileName, result);
 
+                    //Call external app to get image
+                    System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
+                    start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
+                    start.FileName = @"Forerunner.Thumbnail.exe";
+                    start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    start.Arguments = fileName;
+                    Process p = System.Diagnostics.Process.Start(start);
+                    p.WaitForExit();
+
+                    result = System.IO.File.ReadAllBytes(fileName + ".jpg");
+                    File.Delete(fileName + ".jpg");
+                }
+                
                 return result;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
-                return null;
+                throw e;                
+            }
+            finally
+            {
+                if (newImpersonator != null)
+                {
+                    newImpersonator.Dispose();
+                }
             }
         }
 
         //Support print by producing a PDF, allow user to change page layout
-        public byte[] PrintExport(string ReportPath, string SessionID, string ParametersList, string PrintPropertyString, out string MimeType, out string FileName)
+        public byte[] PrintExport(string ReportPath, string SessionID, string PrintPropertyString, out string MimeType, out string FileName)
         {
-            return RenderExtension(ReportPath, SessionID, ParametersList, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+            byte[] pdf = RenderExtension(ReportPath, SessionID, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+            PdfDocument doc = PdfReader.Open(new MemoryStream(pdf));
+
+            doc.AddAutoPrint();
+
+            MemoryStream memDoc = new MemoryStream();
+
+            doc.Save(memDoc);
+
+            return memDoc.ToArray();
         }
 
-        public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName, string devInfo=null)
+        public byte[] RenderExtension(string ReportPath, string SessionID, string ExportType, out string MimeType,out string FileName, string devInfo=null)
         {
             string historyID = null;
             string encoding;
@@ -680,13 +929,13 @@ namespace Forerunner.SSRS.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
-                {
-                    if (ParametersList != null)
-                    {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-                    }
-                }
+                //if (rs.GetExecutionInfo().Parameters.Length != 0)
+                //{
+                //    if (ParametersList != null)
+                //    {
+                //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
+                //    }
+                //}
 
                 if (devInfo == null)
                 {

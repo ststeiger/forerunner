@@ -3,24 +3,20 @@
 <head>
     <base href=".."/>
     <title></title>
-    <link href="/Forerunner/Common/css/reportmanager.css" rel="stylesheet"/>
-    <link href="/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
-    <link href="/Forerunner/Lib/jQuery/css/jquery-ui.min.css" rel="stylesheet"/>
-    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.core.min.css" rel="stylesheet"/>
-    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+    <link href="Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
+    <link href="Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
 </head>
 <body>
-  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
-  <script type="text/javascript" src="Scripts/util/underscore.js"></script>
-  <script type="text/javascript" src="Scripts/util/backbone.js"></script>
-  <script type="text/javascript" src="Scripts/util/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
   <script type="text/javascript" src="Forerunner/Lib/Misc/js/json2.js"></script>
   <script type="text/javascript" src="Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
   <script type="text/javascript" src="Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
   <script type="text/javascript" src="Forerunner/Bundles/forerunner.js"></script>
   <script type="text/javascript" src="Forerunner/Bundles/forerunner-tools.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewer.js"></script>
+  <script type="text/javascript" src="Forerunner/ReportExplorer/js/ParameterModel.js"></script>
   <script type="text/javascript" src="Forerunner/Common/js/Toolbase.js"></script>
+  <script type="text/javascript" src="Forerunner/Common/js/MessageBox.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/Toolbar.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ToolPane.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/PageNav.js"></script>
@@ -28,34 +24,46 @@
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportParameter.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportDocumentMap.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportPrint.js"></script>
+  <script type="text/javascript" src="Forerunner/ReportViewer/js/ManageParamSets.js"></script>
+  <script type="text/javascript" src="Forerunner/ReportViewer/js/DSCredential.js"></script>
   <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
   <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
-  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script>
-  <script type="text/javascript" src="Forerunner/ReportViewer/js/DefaultAppTemplate.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js"></script>
+  <script type="text/javascript" src="Forerunner/Common/js/DefaultAppTemplate.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerInitializer.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
   <script>
       $(document).ready(function () {
-          $('#pane1').reportViewerEZ({
-              path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+          $('#Report1').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByCountry',
               isFullScreen: false
           });
-          $('#pane2').reportViewerEZ({
-              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+          $('#Report2').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByYear',
+              isFullScreen: false
+          });
+          $('#Report3').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByEmployee',
               isFullScreen: false
           });
       });
-  </script>
-    <h1>This is a bunch of HTML</h1>
-    <table>
-        <tr>
-            <td>
-                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-            <td>
-                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-        </tr>
-     </table>
+</script>
+
+<h1>This is a Dashboard sample showing 3 reports on a page</h1>
+<table>
+    <tr>
+        <td>
+            <div id="Report1" style="min-width:300px;min-height:300px;" />
+        </td>
+        <td>
+            <div id="Report2" style="min-width:300px;min-height:300px;"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="Report3" />
+        </td>
+    </tr>
+</table>
 </body>
 </html>

@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--
+    Approach:
+      NoZomm_3 will try to set the @-ms-viewport tag using a change in the media query.
+
+    Result:
+      Success. The Windows Phone 8 CAN dynamically change the user-zoom setting in response to
+      a media query change. In this case I used orientation.
+    -->
+<head>
+  <title>NoZoom_3</title>
+  <style>
+    @media screen and (orientation:portrait) {@-ms-viewport {width:device-width; user-zoom:fixed;}}
+    @media screen and (orientation:landscape) {@-ms-viewport {width:device-width; user-zoom:zoom;}}
+  </style>
+</head>
+<body>
+  <script type="text/javascript" src="../../Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../../Forerunner/Bundles/forerunner.js"></script>
+
+  <script type="text/javascript">
+  </script>
+
+  <input type="button" onclick="toggleZoom()" value="Toggle"/><br />
+  No Zoom Page 3
+</body>
+</html>

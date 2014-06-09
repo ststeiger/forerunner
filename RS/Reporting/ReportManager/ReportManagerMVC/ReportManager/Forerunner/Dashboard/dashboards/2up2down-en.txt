@@ -1,0 +1,18 @@
+﻿<table class="fr-2up2down">
+    <tr>
+        <td>
+            <div id="Report1" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+        <td>
+            <div id="Report2" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="Report3" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+        <td>
+            <div id="Report4" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        </td>
+    </tr>
+</table>

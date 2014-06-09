@@ -306,6 +306,7 @@
         <Height>0.25in</Height>
         <Width>3.48958in</Width>
         <ZIndex>1</ZIndex>
+        <ToolTip>=Globals!ExecutionTime</ToolTip>
         <Style>
           <Border>
             <Style>None</Style>

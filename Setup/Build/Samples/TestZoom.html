@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0" name="viewport">
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript">
+        function toggleZoom(flag) {
+            if (flag === true) {
+                alert("zoom on");
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
+            } else {
+                alert("zoom off");
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0' />");
+            }
+        };</script>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p<p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+    <p>My Big Text!!!</p>
+    <p>Hello!</p>
+
+    <button onclick="toggleZoom(true);">Tap me</button>
+    <button onclick="toggleZoom(false);">Tap me 2</button>
+</body>
+</html>

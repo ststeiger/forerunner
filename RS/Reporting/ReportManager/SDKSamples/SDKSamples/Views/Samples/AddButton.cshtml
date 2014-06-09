@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Add Button Sample";
+    Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section styles {
+<style>
+.my-icon24x24 { 
+    width:24px;
+    height:24px;
+    margin:5px;
+    display:inline-block;
+    background-image:url('../content/images/MyHome.png');
+}
+.my-icon24x24-home { 
+    background-position: 0 0;
+}
+</style>
+}
+
+@section scripts {
+<script>
+    // Create variables to hold references to the widgets
+    var $reportViewerEZ = null;
+    var $reportViewer = null;
+    var $toolbar = null;
+
+    $(document).ready(function () {
+      // When the document is ready we can create the reportViewerEZ. Note that
+      // reportViewerEZ will create a number of child widgets. The children can
+      // be obtained by calls on reportViewerEZ, see below...
+      $reportViewerEZ = $('body').reportViewerEZ({
+          DefaultAppTemplate: null,
+          navigateTo: null,
+          historyBack: null,
+          isReportManager: false,
+          isFullScreen: true
+      });
+
+      // Get the reportViewer and toolbar widgets
+      $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+      $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
+
+      // Load the new report
+      $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+
+      // Create a new button for home. It will be visible on the page as a yellow colored home icon
+      var myBtn = {
+          toolType: "button",
+          selectorClass: "myNewHome",
+          sharedClass: "fr-toolbase-no-disable-id",
+          imageClass: "my-icon24x24-home",
+          iconClass: "my-icon24x24",
+          tooltip: "foo dee doo",
+          events: {
+              click: function (e) {
+                  alert('myButton');
+              }
+          }
+      };
+
+      // Finally add the button
+      $toolbar.toolbar("addTools", 3, true, [myBtn]);
+    });
+</script>
+}

@@ -1,0 +1,111 @@
+﻿@{
+  ViewBag.Title = "Parameters Sample - How to Get and Set";
+  Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section styles {
+  <style>
+    /* This is a happy face icon used in the btnGetParameters below */
+    .my-icon24x24 { 
+        width:24px;
+        height:24px;
+        margin:5px;
+        display:inline-block;
+        background-image:url('../content/images/GetParameters.png');
+    }
+    /* You can set up a consolodated image and have all your icons in one file */
+    .my-icon24x24-get-parameters { 
+        background-position: 0 0;
+    }
+  </style>
+}
+
+@section scripts {
+  @* The Parameter Model widget is contained in this file and is therefore
+     needed for this sample *@
+  <script type="text/javascript" src="~/Scripts/ParameterModel.js"></script>
+
+  <script>
+    // forerunner is the top level global object
+    var forerunner = forerunner || {};
+
+    $(document).ready(function () {
+      var events = forerunner.ssr.constants.events;
+      var toolTypes = forerunner.ssr.constants.toolTypes;
+      var $parameterModel = $({}).parameterModel({});
+
+      // Get a reference to the default parameter list
+      var defaultParamsList = $parameterModel.parameterModel("getCurrentParameterList");
+
+      // Create a reportViewerEZ widget to view the report
+      var $reportViewerEZ = $('body').reportViewerEZ({
+          DefaultAppTemplate: null,
+          navigateTo: null,
+          historyBack: null,
+          isReportManager: false,
+          isFullScreen: true,
+      });
+
+      // In order to load a parameterized report with parameter values, use the 
+      // "savedParameters" parameter of the "loadReport" call. Do not try and call
+      // "refreshParameters" because there is the possibility of a race condition.
+      // The reportViewer widget will try and load a saved or default parameter
+      // set asynchronously but if you use the "savedParameters" parameter this 
+      // problem will not happen.
+      //
+      // After the report is loaded you can use the call to "refreshParameters".
+      // See below.
+      var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+      $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
+
+      // Define a select type button that will contain the named paramter sets
+      var btnSelectSet = {
+        toolType: toolTypes.select,
+        selectorClass: "my-select-set",
+        tooltip: "My Paramter Sets",
+        model: function () {
+          return $parameterModel;
+        },
+        modelChange: "parametermodelchanged",
+        events: {
+            change: function (e) {
+                var $select = $('body').reportViewerEZ("getRightToolbar").find("select");
+                var id = $select.val();
+                var parameterList = $parameterModel.parameterModel("getParameterList", id);
+
+                $reportViewer = $('body').reportViewerEZ("getReportViewer");
+                $reportViewer.reportViewer("refreshParameters", parameterList, true, -1);
+            }
+        }
+      }
+
+      // Define a button to demontrate how to get the parameter list and display the
+      // list in an alert dialog
+      var btnGetParameters = {
+        toolType: "button",
+        selectorClass: "my-get-parameters",
+        imageClass: "my-icon24x24-get-parameters",
+        iconClass: "my-icon24x24",
+        tooltip: "My Get Parameters",
+        events: {
+            click: function (e) {
+                var $parameterPane = $('body').reportViewerEZ("getReportParameter");
+                var paramList = $parameterPane.reportParameter("getParamsList");
+                var data = JSON.parse(paramList);
+                alert(paramList);
+            }
+        }
+      }
+
+      // Add the two new buttons to the right toolbar. The right toolbar is positioned above
+      // the reportParameter widget and is visible when the reportParameter widget is visible
+      var $rightToolbar = $reportViewerEZ.reportViewerEZ("getRightToolbar");
+      $rightToolbar.rightToolbar("addTools", 2, true, [btnSelectSet, btnGetParameters]);
+
+      // Load the parameter model. This will cause the model "changed" event to be triggered
+      // which is how the <select> button gets the options set
+      $parameterModel.parameterModel("load");
+
+    });  // $(document).ready()
+  </script>
+}

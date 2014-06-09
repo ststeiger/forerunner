@@ -12,6 +12,7 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
+            "view/:args": "transitionToReportViewerWithRSURLAccess",
             "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
@@ -41,10 +42,10 @@ var ApplicationRouter = Backbone.Router.extend({
         _transitionToReportManager: function (path, view) {
             forerunner.device.allowZoom(false);
             $("body").reportExplorerEZ("transitionToReportManager", path, view);
-            $("html").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");
         },
 
+        _lastAction : null,
         navigateTo: function (action, path) {
             if (path !== null) path = String(path).replace(/%2f/g, "/");
             if (action === "home") {
@@ -58,23 +59,33 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 var encodedPath = String(path).replace(/\//g, "%2f");
                 var targetUrl = "#" + action + "/" + encodedPath;
-                g_App.router.navigate(targetUrl, { trigger: !forerunner.device.isFirefox(), replace: false });
+                // Do not trigger for Firefox when we are changing the anchor
+                var trigger = !forerunner.device.isFirefox() || this._lastAction === action || !this._lastAction;
+                g_App.router.navigate(targetUrl, { trigger: trigger, replace: false });
             }
+            this._lastAction = action;
         },
 
         transitionToReportViewer: function (path) {
-            $("body").reportExplorerEZ("transitionToReportViewer", path);
+            var parts = path.split("?");
+            path = parts[0];
+            var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
             $("html").removeClass("fr-Explorer-background");
-
-            var events = forerunner.ssr.constants.events;
-            $(".fr-layout-reportviewer").on(events.reportViewerShowDocMap(), function (e, data) {
-                $("html").addClass("fr-docmap-background");
-            });
-            $(".fr-layout-reportviewer").on(events.reportViewerHideDocMap(), function (e, data) {
-                $("html").removeClass("fr-docmap-background");
-            });
         },
-       
+
+        transitionToReportViewerWithRSURLAccess: function (args) {
+            var startParam = args.indexOf("&");
+            var path = startParam > 0 ? args.substring(1, startParam) : args;
+            
+            var params = startParam > 0 ? args.substring(startParam + 1) : null;
+            if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
+            $("html").removeClass("fr-Explorer-background");
+        },
+
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();
         },
@@ -84,9 +95,27 @@ var ApplicationRouter = Backbone.Router.extend({
         },
     
         initialize: function () {
+
+             var explorerSettings;
+             $.ajax({
+                url: forerunner.config.forerunnerFolder() + "../Custom/ExplorerSettings.txt",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    explorerSettings = data;
+                },
+                fail: function () {
+                    console.log("Load explorer settings failed");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Load explorer settings failed.  " + textStatus);
+                },
+            });
+   
             this.explorer = $("body").reportExplorerEZ({
                 navigateTo: this.navigateTo,
-                historyBack: this.historyBack
+                historyBack: this.historyBack,
+                explorerSettings: explorerSettings,
             });
         }
     });

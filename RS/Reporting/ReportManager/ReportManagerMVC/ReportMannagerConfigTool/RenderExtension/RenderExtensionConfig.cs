@@ -13,7 +13,8 @@ namespace ReportMannagerConfigTool
         
         private static string forerunnerJSONDLL = ConfigurationManager.AppSettings["forerunnerJSONDLL"];
         private static string forerunnerRenderExtensionDLL = ConfigurationManager.AppSettings["forerunnerRenderExtensionDLL"];
-
+        private static string forerunnerRenderThumbnailEXE = ConfigurationManager.AppSettings["forerunnerRenderThumbnailEXE"];
+        
         private static string rplRendering = ConfigurationManager.AppSettings["rplRendering"];
         private static string htmlRendering = ConfigurationManager.AppSettings["htmlRendering"];
         private static string forerunnerJSON = ConfigurationManager.AppSettings["forerunnerJSON"];
@@ -35,15 +36,12 @@ namespace ReportMannagerConfigTool
         {
             get
             {
-                return ConfigurationManager.AppSettings["ReportManagerFolderPath"];
+                return ConfigToolHelper.GetAppConfig("ReportManagerFolderPath");
             }
 
             set 
             {
-                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings["ReportManagerFolderPath"].Value = value;
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");   
+                ConfigToolHelper.SetAppConfig("ReportManagerFolderPath", value);
             }
         }
 
@@ -94,8 +92,6 @@ namespace ReportMannagerConfigTool
                 winform.showWarning(StaticMessages.updateRSPolicyError);
                 return;
             }
-
-            winform.showMessage(StaticMessages.updateDone);
         }
 
         public static void removeRenderExtension(string targetPath)
@@ -121,8 +117,6 @@ namespace ReportMannagerConfigTool
                 winform.showWarning(StaticMessages.removeRSPolicyError);
                 return;
             }
-
-            winform.showMessage(StaticMessages.removeDone);
         }
 
         /// <summary>
@@ -140,6 +134,10 @@ namespace ReportMannagerConfigTool
                 if (File.Exists(forerunnerRenderExtensionDLL))
                 {
                     File.Copy(forerunnerRenderExtensionDLL, targetPath + "/Forerunner.RenderingExtensions.dll",true);
+                }
+                if (File.Exists(forerunnerRenderThumbnailEXE))
+                {
+                    File.Copy(forerunnerRenderThumbnailEXE, targetPath + "/Forerunner.Thumbnail.exe", true);
                 }
             }
             catch
@@ -165,6 +163,10 @@ namespace ReportMannagerConfigTool
                 if (File.Exists(targetPath + "/Forerunner.RenderingExtensions.dll"))
                 {
                     File.Delete(targetPath + "/Forerunner.RenderingExtensions.dll");
+                }
+                if (File.Exists(targetPath + "/Forerunner.Thumbnail.exe"))
+                {
+                    File.Delete(targetPath + "/Forerunner.Thumbnail.exe");
                 }
             }
             catch
@@ -209,7 +211,7 @@ namespace ReportMannagerConfigTool
                     root.Add(getHTMLRendering(ns));
                 }
 
-                doc.Save(path + reportServerWebConfig);
+                doc.Save(path + reportServerWebConfig);                
             }
             catch {
 

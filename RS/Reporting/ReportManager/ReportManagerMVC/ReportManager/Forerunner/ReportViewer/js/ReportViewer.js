@@ -19,59 +19,76 @@ $(function () {
     }
 
     // The page object holds the data for each page
-    function reportPage($container, reportObj) {
+    function reportPage(reportObj) {
         this.reportObj = reportObj;
-        this.$container = $container;
         this.isRendered = false;
     }
 
     /**
-     * The main toobar used for the reportViewer
+     * Widget used to view a report
      *
      * @namespace $.forerunner.reportViewer
-     * @prop {object} options - The options for reportViewer
+     * @prop {Object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
-     * @prop {String} options.reportPath - Path to the specific report
-     * @prop {String} options.pageNum - Starting page number
-     * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
-     * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
-     * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
-     * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
+     * @prop {Number} options.toolbarHeight - Height of the toolbar.
+     * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
+     * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
+     * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Object} options.userSettings - User settings used for user specific options
+     * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
+     * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
+     * @prop {Object} options.$appContainer - Report container
+     * @prop {Object} options.parameterModel - Parameter model
+     * @prop {Object} options.savePosition - Saved report page scroll position 
+     * @prop {String} options.viewerID - Current report viewer id.
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
-     * $("#reportViewerId").reportViewer({
-     *  reportPath: "/Northwind Test Reports/bar chart"
-	 * });
+     * $("#reportViewerId").reportViewer();
+     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
-            reportPath: null,
-            pageNum: 1,
+            //reportPath: null,
+            //pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-            printArea: null,
-            userSettings: null
+            userSettings: null,
+            //savedParameters: null,
+            onInputBlur: null,
+            onInputFocus: null,
+            $appContainer: null,
+            parameterModel: null,
+            savePosition: null,
+            viewerID: null,
+            rsInstance: null
         },
 
         _destroy: function () {
+            var me = this;
+            //This needs to be changed to only remove the view function
+            //Baotong update it on 22-05-2014
+            $(window).off("resize", me._ReRenderCall);
         },
 
         // Constructor
         _create: function () {
             var me = this;
-
-            setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
+            setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
+            me.reportPath = "";
+            me.pageNum = 0;
+            me.savedParameters = null;
             me.sessionID = "";
             me.numPages = 0;
             me.lock = 0;
@@ -97,91 +114,136 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
-            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
-  
+            me.autoRefreshID = null;
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            me.renderTime = new Date().getTime();
+            me.paramDefs = null;
+            me.credentialDefs = null;
+            me.datasourceCredentials = null;
+            me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
+            me.SaveThumbnail = false;
+            me.RDLExtProperty = null;            
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
-            } else {
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
+            } else {                
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
-            //Log in screen if needed
+            //setup orientation change
+            if (!forerunner.device.isMSIE8())
+                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
+            //$(window).resize(function () { me._ReRender.call(me); });
+            $(window).on("resize", {me: me }, me._ReRenderCall);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me._addLoadingIndicator();
-            //me._loadParameters(me.options.pageNum);
+            //me._addLoadingIndicator();
             me.hideDocMap();
+
+            if (me.options.parameterModel) {
+                me.options.parameterModel.on(events.parameterModelSetChanged(), function (e, args) {
+                    me._onModelSetChanged.call(me, e, args);
+                });
+            }
         },
         /**
+         * Get current user settings
+         *
          * @function $.forerunner.reportViewer#getUserSettings
-         * @return {Object} Current user settings
+         * @return {Object} - Current user settings
          */
         getUserSettings: function () {
             return this.options.userSettings;
         },
         /**
+         * Get current page number
+         *
          * @function $.forerunner.reportViewer#getCurPage
-         * @return {int} Current page number
+         * @return {Integer} - Current page number
          */
         getCurPage: function () {
             var me = this;
             return me.curPage;
         },
         /**
+         * Get current number of pages
+         *
          * @function $.forerunner.reportViewer#getNumPages
-         * @return {int} Current number of pages
+         * @return {Integer} - Current number of pages
          */
         getNumPages: function () {
             var me = this;
             return me.numPages;
         },
         /**
+         * Get report viewer API path
+         *
          * @function $.forerunner.reportViewer#getReportViewerAPI
-         * @return {String} Path to the report viewer API
+         * @return {String} - Path to the report viewer API
          */
         getReportViewerAPI: function () {
             var me = this;
             return me.options.reportViewerAPI;
         },
         /**
+         * Get current report path
+         *
          * @function $.forerunner.reportViewer#getReportPath
-         * @return {String} Path to current report path
+         * @return {String} - Path to current report path
          */
         getReportPath: function () {
             var me = this;
-            return me.options.reportPath;
+            return me.reportPath;
         },
         /**
+         * Get current report session ID
+         *
          * @function $.forerunner.reportViewer#getSessionID
-         * @return {String} Session ID
+         * @return {String} - Session ID
          */
         getSessionID: function () {
             var me = this;
             return me.sessionID;
         },
         /**
+         * Get current report contain document map or not
+         *
          * @function $.forerunner.reportViewer#getHasDocMap
-         * @return {bool} true if there is a document map
+         * @return {Boolean} - true if there is a document map
          */
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
         },
         /**
-         * @function $.forerunner.reportViewer#triggerEvent
-         * @Triggers an event
+         * Get datasource credentials' data
+         *
+         * @function $.forerunner.reportViewer#getDataSourceCredential
+         * @return {Object} datasource credential if saved datasource credential exist; return null if not
          */
-        triggerEvent: function (eventName) {
+        getDataSourceCredential: function () {
             var me = this;
-            return me._trigger(eventName);
+            return me.datasourceCredentials ? me.datasourceCredentials : null;
+        },
+        /**
+         * Trigger an report viewer event
+         *
+         * @function $.forerunner.reportViewer#triggerEvent
+         *
+         * @paran {String} eventName - event name
+         */
+        triggerEvent: function (eventName,eventData) {
+            var me = this;
+            return me._trigger(eventName,null,eventData);
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
-           
+          
             if (!$colHeader)
                 return;
 
@@ -190,50 +252,62 @@ $(function () {
             if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $tablix.width())) {
                 //$colHeader.css("top", $tablix.offset.top);
                 $colHeader.css("left", Math.min(scrollLeft - offset.left, $tablix.width() - $colHeader.width()) + "px");
-                $colHeader.fadeIn("fast");
+                $colHeader.css("visibility", "visible");
             }
             else {
-                $colHeader.hide();
-
+                $colHeader.css("visibility", "hidden");                
             }
         },
         _setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
+         
             var me = this;
             if (!$rowHeader)
                 return;
 
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();            
-            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
-                $rowHeader.fadeIn("fast");
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
+                $rowHeader.css("visibility", "visible");
             }
             else {
-                $rowHeader.hide();
+                $rowHeader.css("visibility", "hidden");
             }
+            
         },
         _addLoadingIndicator: function () {
             var me = this;
             if (me.loadLock === 0) {
                 me.loadLock = 1;
-                setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+                setTimeout(function () { me.showLoadingIndictator(); }, 500);
             }
         },
         /**
          * Shows the loading Indicator
          *
          * @function $.forerunner.reportViewer#showLoadingIndictator
+         *
+         * @param {Boolean} force - Force show loading indicator if it's true
          */
-        showLoadingIndictator: function (me) {
-            if (me.loadLock === 1) {
+        showLoadingIndictator: function (force) {
+            var me = this;
+            if (me.loadLock === 1 || force===true) {
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
-                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                if (force === true) {
+                    me.$loadingIndicator.css("top",$(window).scrollTop() + 100 + "px")
+                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
+                else {
+                    me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                        .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
 
-                me.$reportContainer.css({ opacity: 0.5 });
+                me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
         },
@@ -241,12 +315,51 @@ $(function () {
          * Removes the loading Indicator
          *
          * @function $.forerunner.reportViewer#removeLoadingIndicator
+         *
+         * @param {Boolean} force - Force remove loading indicator if it's true
          */
-        removeLoadingIndicator: function () {
+        removeLoadingIndicator: function (force) {
             var me = this;
-            me.loadLock = 0;
-            me.$reportContainer.css({ opacity: 1 });
-            me.$loadingIndicator.hide();
+            if (me.loadLock === 1 || force === true) {
+                me.loadLock = 0;
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
+
+                me.$reportContainer.removeClass("fr-report-container-translucent");
+                me.$loadingIndicator.hide();
+            }
+        },
+        _ReRender: function (force) {
+            var me = this;
+
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                $.each(me.pages, function (index, page) {
+                    page.needsLayout = true;
+                });                
+                me._reLayoutPage(me.curPage, force);
+                
+            }
+        },
+        //Wrapper function, used to resigter window resize event
+        _ReRenderCall: function (event) {
+            var me = event.data.me;
+            me.scrollLeft = $(window).scrollLeft();
+            me.scrollTop = $(window).scrollTop();
+             
+            me._ReRender.call(me);
+            $(window).scrollLeft(me.scrollLeft);
+            $(window).scrollTop(me.scrollTop);
+        },
+        _removeCSS: function () {
+            var me = this;
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
@@ -254,6 +367,8 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+            
+
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
                 if (errorpage)
@@ -261,18 +376,28 @@ $(function () {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                 me._touchNav();
                 me._removeDocMap();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me.pages[pageNum].$container);
+                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
+               
             }
-                       
-            me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
 
+            me._removeCSS();
+
+            if (!$.isEmptyObject(me.pages[pageNum].CSS))
+                me.pages[pageNum].CSS.appendTo("head");
+
+            //relayout page if needed
+            me._reLayoutPage(pageNum);
+
+            if (!me.renderError) {
+                me.curPage = pageNum;
+                me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+            }
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
             me.removeLoadingIndicator();
@@ -282,8 +407,9 @@ $(function () {
                 me._setPageCallback();
                 me._setPageCallback = null;
             }
+            
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
+            me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -300,9 +426,48 @@ $(function () {
                 };
             }
         },
+        // Windows Phones need to be reloaded in order to change their viewport settings
+        // so what we will do in this case is to set our state into the sessionStorage
+        // and reload the page. Then in the loadPage function we will check if this is
+        // a reload page case so as to set the zoom
+        _allowZoomWindowsPhone: function (isEnabled) {
+            var me = this;
+
+            // Save a copy of the page into the action history
+            me.backupCurPage(true);
+
+            // Make the action history ready to stringify (I.e., remove any unneeded object references)
+            $.each(me.actionHistory, function (index, actionItem) {
+                $.each(actionItem.reportPages, function (index, reportPage) {
+                    reportPage.$container = null;
+                    reportPage.CSS = null;
+                    reportPage.isRendered = false;
+                });
+            });
+
+            // Save the action history into the session storage
+            sessionStorage.forerunner_zoomReload_actionHistory = JSON.stringify({ actionHistory: me.actionHistory });
+
+            // Save the reuested zoom state
+            sessionStorage.forerunner_zoomReload_userZoom = JSON.stringify({ userZoom: isEnabled ? "zoom" : "fixed" });
+
+            // Now reload the page from the saved state
+            window.location.reload();
+        },
+        /**
+         * Set zoom enable or disable
+         *
+         * @function $.forerunner.reportViewer#allowZoom
+         *
+         * @param {Boolean} isEnabled - True to enable zoom, False to disable
+         */
         allowZoom: function (isEnabled) {
             var me = this;
 
+            if (forerunner.device.isWindowsPhone()) {
+                me._allowZoomWindowsPhone(isEnabled);
+                return;
+            }
 
             if (isEnabled === true){
                 forerunner.device.allowZoom(true);
@@ -315,8 +480,35 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
+        /**
+         * Function execute when input element blur
+         *
+         * @function $.forerunner.reportViewer#onInputBlur
+         */
+        onInputBlur: function () {
+            var me = this;
+            if (me.options.onInputBlur)
+                me.options.onInputBlur();
+        },
+        /**
+         * Function execute when input element focus
+         *
+         * @function $.forerunner.reportViewer#onInputFocus
+         */
+        onInputFocus: function () {
+            var me = this;
+            if (me.options.onInputFocus)
+                me.options.onInputFocus();
+        },
 
         _allowSwipe: true,
+        /**
+         * Set swipe enable or disable
+         *
+         * @function $.forerunner.reportViewer#allowSwipe
+         *
+         * @param {Boolean} isEnabled - True to enable swipe, False to disable
+         */
         allowSwipe: function(isEnabled){
             var me = this;
             me._allowSwipe = isEnabled;
@@ -328,6 +520,8 @@ $(function () {
             }
         },
         _touchNav: function () {
+            if (!forerunner.device.isTouch())
+                return;
             // Touch Events
             var me = this;
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
@@ -336,12 +530,11 @@ $(function () {
                     switch (ev.type) {
                         // Hide the header on touch
                         case "touch":
-                            me._hideTableHeaders();                            
+                            me._hideTableHeaders();
                             break;
 
                             // Show the header on release only if this is not scrolling.
-                            // If it is scrolling, we will let scrollstop handle that.
-                   
+                            // If it is scrolling, we will let scrollstop handle that.                   
                         case "release":
                             var swipeNav = false;                            
                             if (ev.gesture.touches.length > 1) {                                
@@ -370,11 +563,13 @@ $(function () {
             );
         },
         /**
-         * Refreshes the current report
+         * Refreshes current report
          *
          * @function $.forerunner.reportViewer#refreshReport
+         *
+         * @param {Integer} curPage - Current page number
          */
-        refreshReport: function () {
+        refreshReport: function (curPage) {
             // Remove all cached data on the report and re-run
             var me = this;
             var paramList = null;
@@ -382,7 +577,12 @@ $(function () {
             if (me.lock === 1)
                 return;
 
+            if (curPage === undefined)
+                curPage = 1;
+
             me.sessionID = "";
+            me.renderTime = new Date().getTime();
+
             me.lock = 1;
             me._revertUnsubmittedParameters();
 
@@ -390,13 +590,14 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList,true);            
+            me._loadPage(curPage, false, null, paramList,true);
         },
         /**
          * Navigates to the given page
          *
          * @function $.forerunner.reportViewer#navToPage
-         * @param {int} newPageNum - Page number to navigate to
+         *
+         * @param {Ingeter} newPageNum - Page number to navigate to
          */
         navToPage: function (newPageNum) {
             var me = this;
@@ -406,7 +607,7 @@ $(function () {
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
-            if (newPageNum > me.numPages) {
+            if (newPageNum > me.numPages && me.numPages !==0 ) {
                 newPageNum = 1;
             }
             if (newPageNum < 1) {
@@ -420,27 +621,15 @@ $(function () {
                 }
             }
         },
-        _mask: function () {
-            var me = this;
-            var $mask = me.element.find(".fr-mask");
-
-            if ($mask.length === 0) {
-                $mask = $("<div class='fr-mask'></div>");
-                $mask.height(me.element.height());
-                me.element.append($mask);
-            }
-            return me.element;
-        },
-        _unmask: function () {
-            var me = this;
-            me.element.find(".fr-mask").remove();
-            return;
-        },
         _hideDocMap: function() {
             var me = this;
             var docMap = me.options.docMapArea;
+
+            me.savedTop = 0;
+            me.savedLeft = 0;
+
             docMap.hide();
-            me._unmask();
+            me.element.unmask();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
@@ -455,6 +644,7 @@ $(function () {
                     url: me.options.reportViewerAPI + "/DocMapJSON/",
                     data: {
                         SessionID: me.sessionID,
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -462,17 +652,25 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
-            me.savedLeft = $(window).scrollLeft();
             me.savedTop = $(window).scrollTop();
-            me._mask().show();
+            me.savedLeft = $(window).scrollLeft();
+
+            me.element.mask();
             docMap.slideUpShow();
-            setTimeout(function () { window.scrollTo(0, 0); }, 500);
-            
             me._trigger(events.showDocMap);
+
+            //if doc map opened from toolpane, DefaultAppTemplate will pass savePosition here.
+            setTimeout(function () {
+                if (me.options.savePosition) {
+                    me.savedTop = me.options.savePosition.top;
+                    me.savedLeft = me.options.savePosition.left;
+                    me.options.savePosition = null;
+                }
+            }, 100);
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report
@@ -517,17 +715,17 @@ $(function () {
                 return;
             }
             me._showDocMap();
-            
-            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
-
         },
         _cachePages: function (initPage) {
             var me = this;
              
+            initPage = parseInt(initPage, 10);
+            
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
-            if (high > me.numPages) high = me.numPages;
+            if (high > me.numPages && me.numPages !== 0 )
+                high = me.numPages;
 
             for (var i = low; i <= high; i++) {
                 if (!me.pages[i])
@@ -536,11 +734,22 @@ $(function () {
             }
 
         },
+
         /**
-         * Either:
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
+         * Returns the number of actions in history for the back event
+         *
+         * @function $.forerunner.reportViewer#actionHistoryDepth
+         *
+         * @return {Integer} - Action history length
+         */
+        actionHistoryDepth:function(){
+            return this.actionHistory.length;
+        },
+        /**
+         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
          *
          * @function $.forerunner.reportViewer#back
+         *
          * @fires reportviewerdrillback
          * @fires reportviewerback
          * @see forerunner.ssr.constants.events
@@ -549,77 +758,114 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
-                me.options.reportPath = action.ReportPath;
+                me._clearReportViewerForDrill();
+
+                me.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-                
-                me._trigger(events.drillBack);
-                me._removeParameters();
+                me.curPage = action.CurrentPage;
+               
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
-                if (action.FlushCache) {
-                    me.flushCache();
+                me.renderTime = action.renderTime;
+                me.renderError = action.renderError;
+                               
+
+                if (action.credentialDefs !== null) {
+                    me.credentialDefs = action.credentialDefs;
+                    me.datasourceCredentials = action.savedCredential;
+
+                    if (!me.$credentialDialog)
+                        me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
+
+                    me.$credentialDialog.dsCredential("resetSavedCredential", me.credentialDefs.CredentialsList, me.datasourceCredentials);
                 }
 
-                me._loadParameters(action.CurrentPage, action.savedParams);
+                //Trigger Change Report, disables buttons.  Differnt than pop
+                me._trigger(events.changeReport, null, { path: me.reportPath, credentialRequired: me.credentialDefs ? true : false });
+
+                //This means we changed reports
+                if (action.FlushCache) {
+                    me._removeParameters();
+                    me.flushCache();
+                    me.pages = action.reportPages;
+                    me.paramDefs = action.paramDefs;
+
+                    me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
+
+                    if (action.paramDefs) {
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
+                        me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
+                        me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                        if (me.$numOfVisibleParameters > 0) {
+                            me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
+                        }
+                        me.paramLoaded = true;
+                        me.$paramarea = me.options.paramArea;
+                    }
+
+                    // Restore the parameterModel state from the action history
+                    if (me.options.parameterModel && action.parameterModel)
+                        me.options.parameterModel.parameterModel("setModel", action.parameterModel);
+                }
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
+                me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
-                me._trigger(events.back, null, { path: me.options.reportPath });
+                me.flushCache();
+                me._resetViewer(false);
+                me._trigger(events.back, null, { path: me.reportPath });
             }
         },
         /**
-         * Shows the Page =igation pane
+         * Shows the page navigation pane
          *
          * @function $.forerunner.reportViewer#showNav
+         *
+         * @fires reportviewershowNav
+         * @see forerunner.ssr.constants.events
          */
         showNav: function () {
             var me = this;
             me._resetContextIfInvalid();
-            if (me.pageNavOpen) {
+            if (me.pageNavOpen) {//close nav
                 me.pageNavOpen = false;
-                document.body.parentNode.style.overflow = "scroll";
                 if (window.removeEventListener) {
                     window.removeEventListener("orientationchange", me._handleOrientation, false);
                 }
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me._unmask();
+                me.element.unmask(function() { me.showNav.call(me);});
             }
-            else {
+            else {//open nav
                 me.pageNavOpen = true;
-                document.body.parentNode.style.overflow = "hidden";
                 if (window.addEventListener) {
                     window.addEventListener("orientationchange", me._handleOrientation, false);
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me._mask().show();
+                me.element.mask(function() { me.showNav.call(me);});
             }
 
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
+            me._reLayoutPage(me.curPage);
         },
         _handleOrientation: function () {
-            //if (window.orientation === undefined)
-            //    return;
-            //var orientation = window.orientation;
-
+            var me = this;
             var pageSection = $(".fr-layout-pagesection");
-            if (forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall(me.element)) {//big screen, height>=768
                 //portrait
-                //if (orientation === 0 || orientation === 180) {
-                if (pageSection.is(":visible")) pageSection.hide();
-                //}
+                if (pageSection.is(":visible"))
+                    pageSection.hide();
             }
             else {//small screen, height<768
-                //if (orientation === -90 || orientation === 90) {
-                if (pageSection.is(":hidden")) pageSection.show();
-                    
-                //}
+                if (pageSection.is(":hidden"))
+                    pageSection.show();
             }
         },
 
@@ -634,33 +880,57 @@ $(function () {
             if (me.options.pageNavArea)
                 me.options.pageNavArea.pageNav("reset");
         },
+        _saveThumbnail: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveThumbnail";
+            if (me.getCurPage() === 1 && !me.SaveThumbnail) {
+                me.SaveThumbnail = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        ReportPath: encodeURIComponent(me.reportPath),
+                        SessionID: me.sessionID,
+                        Instance: me.options.rsInstance,
+                    },
+                    async: true,
+                    success: function (data) {
+                        //console.log("Saved");
+                    }
+
+                });
+            }
+        },
         _prepareAction: function () {
             var me = this;
 
             if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/GetReportJSON/",
+                    type: "POST",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
-                        ParameterList: ""
+                        ParameterList: "",
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
-        _updateSortState: function (id, direction) {
+        _updateSortState: function (id, direction, clear) {
             var me = this;
-            me.reportStates.sortStates.clear();
-            me.reportStates.sortStates.add(id, direction);
+            if (clear !== false)
+                me.reportStates.sortStates = [];
+            me.reportStates.sortStates.push({ id: id, direction: direction });
         },
-        _getSortResult: function (id, direction) {
+        _getSortResult: function (id, direction, clear) {
             var me = this;
             return forerunner.ajax.ajax({
                 dataType: "json",
@@ -668,7 +938,9 @@ $(function () {
                 data: {
                     SessionID: me.sessionID,
                     SortItem: id,
-                    Direction: direction
+                    Direction: direction,
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -677,21 +949,23 @@ $(function () {
         _replaySortStates: function () {
             var me = this;
             // Must synchronously replay one-by-one
-            var keys = me.reportStates.sortStates.keys();
-            for (var i = 0; i < keys.length; i++) {
-                var value = me.reportStates.sortStates.get(keys[i]);
-                me._getSortResult(keys[i], value);
+            var list = me.reportStates.sortStates;
+            for (var i = 0; i < list.length; i++) {
+                // Only clear it for the first item
+                me._getSortResult(list[i].id, list[i].direction, i === 0);
             }
         },
         /**
          * Sorts the current report
          *
          * @function $.forerunner.reportViewer#sort
-         * @param {String} direction - sort direction
-         * @param {String} id - Session ID
-         * @see forerunner.ssr.constants
+         *
+         * @param {String} direction - Sort direction
+         * @param {String} id - Sort item id
+         * @param {Boolean} clear - Clear existing sort flag
+         * @see forerunner.ssr.constants.sortDirection
          */
-        sort: function (direction, id) {
+        sort: function (direction, id, clear) {
             //Go the other dirction from current
             var me = this;
             var newDir;
@@ -707,30 +981,41 @@ $(function () {
             else
                 newDir = sortDirection.asc;
 
-            me._callSort(id, newDir);
+            me._callSort(id, newDir, clear);
         },
 
-        _callSort: function (id, newDir) {
+        _callSort: function (id, newDir, clear) {
             var me = this;
             me._updateSortState(id, newDir);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
                 {
                     SessionID: me.sessionID,
                     SortItem: id,
-                    Direction: newDir
+                    Direction: newDir,
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
                     me.scrollTop = $(window).scrollTop();
 
                     me.numPages = data.NumPages;
-                    me._loadPage(data.NewPage, false, null, null, true);
+                    me.renderTime = new Date().getTime();
+                    var replay = me.pages[me.curPage].Replay
+
+                    me._loadPage(data.NewPage, false, null, null, true,replay);
+
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         
         _isReportContextValid: true,
+        /**
+         * Set isReportContextValid to false
+         *
+         * @function $.forerunner.reportViewer#invalidateReportContext
+         */
         invalidateReportContext : function() {
             this._isReportContextValid = false;
         },
@@ -744,19 +1029,22 @@ $(function () {
             }
             forerunner.ajax.ajax(
                 {
+                    type: "POST",
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        instance: me.options.rsInstance,
                     },
                     success: function (data) {
                         me._isReportContextValid = true;
                     },
                     async: false
-                });
+                });           
+
         },
         _updateToggleState: function (toggleID) {
             var me = this;
@@ -775,7 +1063,8 @@ $(function () {
                 data: {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -790,12 +1079,13 @@ $(function () {
             }
         },
         /**
-         * Sorts the current report
+         * Toggle specify item of the report
          *
          * @function $.forerunner.reportViewer#toggleItem
+         *
          * @param {String} toggleID - Id of the item to toggle
          */
-        toggleItem: function (toggleID) {
+        toggleItem: function (toggleID,scrollID) {
             var me = this;
             if (me.lock === 1)
                 return;
@@ -805,31 +1095,34 @@ $(function () {
             me._resetContextIfInvalid();
             me._prepareAction();
             
-            me._callToggle(toggleID);
+            me._callToggle(toggleID, scrollID);
         },
-
         
-        _callToggle : function(toggleID) {
+        _callToggle: function (toggleID, scrollID) {
             var me = this;
             me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.Result === true) {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
+                        var replay = me.pages[me.curPage].Replay
+
                         me.pages[me.curPage] = null;
-                        me._loadPage(me.curPage, false);
+                        me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
+                        
                     }
+                    else
+                        me.lock = 0;
                 },
-                function () {
-                    console.log("error"); me.removeLoadingIndicator();
-                }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -857,6 +1150,7 @@ $(function () {
          * Navigate to the given bookmark
          *
          * @function $.forerunner.reportViewer#navigateBookmark
+         *
          * @param {String} bookmarkID - Id of the bookmark
          */
         navigateBookmark: function (bookmarkID) {
@@ -870,23 +1164,24 @@ $(function () {
                 {
                     NavType: navigateType.bookmark,
                     SessionID: me.sessionID,
-                    UniqueID: bookmarkID
+                    UniqueID: bookmarkID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.NewPage === me.curPage) {
                         me._navToLink(bookmarkID);
                         me.lock = 0;
                     } else {
-                        me.backupCurPage();
                         if (data.NewPage !== undefined && data.NewPage > 0) {
+                            me.backupCurPage();
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
-                            // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
+                            me._showMessageBox(me.locData.messages.bookmarkNotFound);
+                            me.lock = 0;
                         }
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
 
@@ -894,11 +1189,12 @@ $(function () {
          * Determines if the current report being viewed is the result of a drillthough action
          *
          * @function $.forerunner.reportViewer#isDrillThoughReport
+         *
+         * @return {Boolean} - True if current report is the result of a drillthough action, false else
          */
-        isDrillThoughReport: function()
-        {
+        isDrillThoughReport: function () {
             var me = this;
-            if (me.origionalReportPath === me.options.reportPath)
+            if (me.origionalReportPath === me.reportPath)
                 return true;
             else
                 return false;
@@ -907,6 +1203,7 @@ $(function () {
          * Navigate to the given drill through item
          *
          * @function $.forerunner.reportViewer#navigateDrillthrough
+         *
          * @param {String} drillthroughID - Id of the item
          */
         navigateDrillthrough: function (drillthroughID) {
@@ -921,21 +1218,32 @@ $(function () {
                 {
                     NavType: navigateType.drillThrough,
                     SessionID: me.sessionID,
-                    UniqueID: drillthroughID
+                    UniqueID: drillthroughID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(true);
                     if (data.Exception) {
                         me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
                         me.removeLoadingIndicator();
+                        me.lock = 0;
                     }
                     else {
+                        me.renderError = false;
                         me.sessionID = data.SessionID;
                         if (me.origionalReportPath === "")
-                            me.origionalReportPath = me.options.reportPath;
-                        me.options.reportPath = data.ReportPath;
+                            me.origionalReportPath = me.reportPath;
+                        me.reportPath = data.ReportPath;
+                        if (me.options.parameterModel)
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
+
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
-                        if (data.ParametersRequired) {
+                        if (data.CredentialsRequired) {
+                            me.$reportAreaContainer.find(".Page").detach();
+                            me._setScrollLocation(0, 0);
+                            me._writeDSCredential(data.Credentials);
+                        }
+                        else if (data.ParametersRequired) {
                             me.$reportAreaContainer.find(".Page").detach();
                             me._setScrollLocation(0, 0);
                             me._showParameters(1, data.Parameters);
@@ -946,13 +1254,14 @@ $(function () {
                         }
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
          * Navigate to the Document Map
          *
          * @function $.forerunner.reportViewer#navigateDocumentMap
+         *
          * @param {String} docMapID - Id of the document map
          */
         navigateDocumentMap: function (docMapID) {
@@ -965,33 +1274,41 @@ $(function () {
                 {
                     NavType: navigateType.docMap,
                     SessionID: me.sessionID,
-                    UniqueID: docMapID
+                    UniqueID: docMapID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(false,true);
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
             );
         },
         /**
-         * Push the current page onto the action history stack
+         * Push the current page into the action history stack
          *
          * @function $.forerunner.reportViewer#backupCurPage
+         *
+         * @param {Boolean} flushCache - Specify flushCache status
+         * @param {Boolean} useSavedLocation - Whether used saved location
          */
         backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
 
-            var top = $(window).scrollTop();
-            var left = $(window).scrollLeft();
-            var savedParams;
+            var top, left, savedParams;
+            var parameterModel = null;
 
             if (flushCache !== true)
                 flushCache = false;
+
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;
+            }
+            else {
+                top = $(window).scrollTop();
+                left = $(window).scrollLeft();
             }
 
             if (me.paramLoaded) {
@@ -1000,10 +1317,27 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            if (me.options.parameterModel)
+                parameterModel = me.options.parameterModel.parameterModel("getModel");
+
             me.actionHistory.push({
-                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
+                ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
+                reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
+                parameterModel: parameterModel
             });
+
+            me._clearReportViewerForDrill();
+            me._trigger(events.actionHistoryPush, null, { path: me.reportPath });
+        },
+        _clearReportViewerForDrill: function () {
+            //clean current report's property that not all reports have
+            //when drill to another report or drill back
+            var me = this;
+
+            me.datasourceCredentials = null;
+            me.credentialDefs = null;
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1011,12 +1345,14 @@ $(function () {
             me.scrollTop = top;
         },
         /**
-         * Find the given keyword. Find will always find the first occurance
+         * Find the given keyword. Find will always find the first matched
          *
          * @function $.forerunner.reportViewer#find
+         *
          * @param {String} keyword - Keyword to find
-         * @param {int} startPage - Starting page of the search range
-         * @param {int} endPage - Ending page of the search range
+         * @param {Integer} startPage - Starting page of the search range
+         * @param {Integer} endPage - Ending page of the search range
+         * @param {Boolean} findInNewPage - Find in new page not current
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
@@ -1028,6 +1364,8 @@ $(function () {
                 me.findKeyword = keyword;
             }
 
+            me._trigger(events.find);
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }
@@ -1036,15 +1374,15 @@ $(function () {
                     startPage = me.getCurPage();
 
                 if (endPage === undefined)
-                    endPage = me.getNumPages();
+                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     return;
                 }
 
-                //mark up find start page
+                //markup find start page
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
@@ -1053,87 +1391,77 @@ $(function () {
                         SessionID: me.sessionID,
                         StartPage: startPage,
                         EndPage: endPage,
-                        FindValue: keyword
+                        FindValue: keyword,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.NewPage !== 0) {//keyword exist
                             me.finding = true;
                             if (data.NewPage !== me.getCurPage()) {
-                                me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
+                                me._addSetPageCallback(function () { me._setFindHighlight(keyword); });
                                 me.pages[data.NewPage] = null;
                                 me._loadPage(data.NewPage, false);
                             } else {
-                                me.setFindHighlight(keyword);
+                                me._setFindHighlight(keyword);
                             }
                         }
                         else {//keyword not exist
                             if (me.findStartPage !== 1) {
-                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findEndPage = me.findStartPage - 1;
+                                me.find(keyword, 1, me.findEndPage, true);
                                 me.findStartPage = 1;
                             }
                             else {
                                 if (me.finding === true)
-                                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                                 else
-                                    forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
+                                    me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
                                 me.resetFind();
                             }
                         }
                     },
-                    function () { console.log("error"); me.removeLoadingIndicator(); }
+                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
                 );
             }
         },
-        /**
-         * Find the next occurance of the given keyword
-         *
-         * @function $.forerunner.reportViewer#findNext
-         * @param {String} keyword - Keyword to find
-         */
         _findNext: function (keyword) {
             var me = this;
+
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($nextWord.offset().top - 150);
-                $(window).scrollLeft($nextWord.offset().left - 250);
+                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
-                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it;
 
                 if (me.getCurPage() + 1 <= endPage){
-                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                    me.find(keyword, me.getCurPage() + 1, endPage, true);
                 }
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
-                        me.find(keyword, 1, me.findStartPage - 1, true);
+                        me.find(keyword, 1, me.findEndPage, true);
                     }
                 }
                 else {
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }
-        },
-        /**
-         * Highlights the first matched keyword
-         *
-         * @function $.forerunner.reportViewer#setFindHighlight
-         * @param {String} keyword - Keyword to highlight
-         */
-        setFindHighlight: function (keyword) {
+        },       
+        _setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
             me._highLightWord(me.$reportContainer, keyword);
@@ -1142,9 +1470,23 @@ $(function () {
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($item.offset().top - 150);
-                $(window).scrollLeft($item.offset().left - 250);
-                //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);
+                me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+            }
+        },
+        _findDone: function (me) {
+            me._trigger(events.findDone);
+        },
+        _showMessageBox: function (message, preFunc, afterFunc) {
+            var me = this;
+
+            if (typeof preFunc === "function") {
+                preFunc(me);
+            }
+
+            forerunner.dialog.showMessageBox(me.options.$appContainer, message);
+
+            if (typeof afterFunc === "function") {
+                afterFunc(me);
             }
         },
         /**
@@ -1163,56 +1505,121 @@ $(function () {
          * Export the report in the given format
          *
          * @function $.forerunner.reportViewer#exportReport
+         *
          * @param {String} exportType - Export format
          * @see forerunner.ssr.constants
          */
         exportReport: function (exportType) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },       
         /**
-         * show print modal dialog, close it if opened
+         * Show print dialog, close it if opened
          *
          * @function $.forerunner.reportViewer#showPrint
          */
         showPrint: function () {
             var me = this;
-            var printArea = me.options.printArea;
-
-            printArea.reportPrint("togglePrintPane");
+            if (me.$printDialog) {
+                me.$printDialog.reportPrint("openDialog");
+            }
+        },
+        showEmailSubscription : function () {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var paramList = null;
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
+                }
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                me.$emailSub.emailSubscription("loadSubscription", null);
+                me.$emailSub.emailSubscription("openDialog");
+            }
         },
         /**
-        * print current reprot in custom PDF format
-        *
-        * @function $.forerunner.reportViewer#printReport         
-        * @param {function} printPropertyList - custom print page layout option
-        */
+         * Print current reprot in PDF format
+         *
+         * @function $.forerunner.reportViewer#printReport
+         *
+         * @param {String} printPropertyList - Page layout option
+         */
         printReport: function (printPropertyList) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
-            window.open(url);
-        },
-        _setPrint:function(pageLayout){
-            var me = this;
-            var printArea = me.options.printArea;
+            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            printArea.reportPrint({ $reportViewer: this });
-            printArea.reportPrint("setPrint", pageLayout);
+            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                window.open(url);
+            }
+            else {
+                var pif = me.element.find(".fr-print-iframe");
+                if (pif.length === 1) pif.detach();
+
+                var pif = $("<iframe/>");
+                pif.addClass("fr-print-iframe");
+                pif.attr("name", me.viewerID);
+                pif.attr("src", url);
+                pif.hide();
+                me.element.append(pif);
+            }
+        },
+        _setPrint: function (pageLayout) {
+            var me = this;
+            me.$printDialog = me.options.$appContainer.find(".fr-print-section");
+            me.$printDialog.reportPrint("setPrint", pageLayout);
+        },
+        _setEmailSubscriptionUI : function() {
+            var me = this;
+            if (!me.$emailSub)
+                me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
         },
        
         //Page Loading
-        _loadParameters: function (pageNum, savedParamFromHistory) {
+        _onModelSetChanged: function (e, savedParams) {
             var me = this;
-            var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
-            
+            //since we load a new page we should change page number to 1
+            //var pageNum = me.getCurPage();
+            if (savedParams) {
+                me.refreshParameters(savedParams, true, 1);
+            }
+        },
+        _getSavedParams : function(orderedList) {
+            for(var i = 0; i < orderedList.length; i++) {
+                    if (orderedList[i]) return orderedList[i];
+                }
+            return null;
+        },
+        _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
+            var me = this;
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
+
+            if (submitForm === undefined)
+                submitForm = true;
+
             if (savedParams) {
                 if (me.options.paramArea) {
-                    me.options.paramArea.reportParameter({ $reportViewer: this });
-                    me.refreshParameters(savedParams, true, pageNum);
+                    me.options.paramArea.reportParameter({
+                        $reportViewer: this,
+                        $appContainer: me.options.$appContainer
+                    });
+                    
+                    if (submitForm === false) {
+                        me._loadPage(pageNum, false, null, null, false);
+                        me.options.paramArea.reportParameter("setsubmittedParamsList", savedParams);
+                    }
+                    else
+                        me.refreshParameters(savedParams, submitForm, pageNum, false);
+                        
                 }
             } else {
                 me._loadDefaultParameters(pageNum);
@@ -1223,38 +1630,53 @@ $(function () {
         },
         _loadDefaultParameters: function (pageNum) {
             var me = this;
-            forerunner.ajax.getJSON(
-                    me.options.reportViewerAPI + "/ParameterJSON/",
-                    {
-                        ReportPath: me.options.reportPath,
-                        SessionID: me.getSessionID()
-                    },
-                    function (data) {
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: me.options.reportViewerAPI + "/ParameterJSON/",
+                data: {
+                    ReportPath: encodeURIComponent(me.reportPath),
+                    SessionID: me.getSessionID(),
+                    ParameterList: null,
+                    DSCredentials: me.getDataSourceCredential(),
+                    instance: me.options.rsInstance,
+                },
+                dataType: "json",
+                async: false,
+                done: function (data) {
+                    if (data.Exception) {
+                        me._renderPageError(me.$reportContainer, data);
+                        me.removeLoadingIndicator();
+                    } else {
                         if (data.SessionID)
                             me.sessionID = data.SessionID;
                         me._addLoadingIndicator();
                         me._showParameters(pageNum, data);
-                    },
-                    function (data) {
-                        console.log("error");
-                        me.removeLoadingIndicator();
-                    });
+                    }
+                },
+                fail: function (jqXHR, textStatus, errorThrown, request) {
+                    me._writeError(jqXHR, textStatus, errorThrown, request);                                        
+                }
+            });
         },
+
         _showParameters: function (pageNum, data) {
             var me = this;
             
             if (data.Type === "Parameters") {
                 me._removeParameters();
+                me.$reportContainer.find(".Page").detach();
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    me.paramDefs = data;
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath});
+                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
 
                     me.paramLoaded = true;
+                    me.$paramarea = me.options.paramArea;
                 }
             }
             else if (data.Exception) {
@@ -1269,35 +1691,55 @@ $(function () {
          * Refresh the parameter using the given list
          *
          * @function $.forerunner.reportViewer#refreshParameters
-         * @param {string} The JSON string for the list of parameters.
-         * @param {boolean} Submit form if the parameters are satisfied.
-         * @param {int} The page to load.  Specify -1 to load the current page.
-         * @param {boolean} Whether to trigger show parameter area event if there are visible parameters.
+         *
+         * @param {String} Parameter list.
+         * @param {Boolean} Submit form if the parameters are satisfied.
+         * @param {Integer} The page to load.  Specify -1 to load the current page.
+         * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
+         * @param {Boolean} Indicate it's a cascading refresh or whole refresh
          */
-        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
+        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
             if (pageNum === -1) {
                 pageNum = me.getCurPage();
             }
             if (paramList) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&SessionID=" + me.getSessionID() + "&paramList=" + paramList,
+                    type: "POST",
+                    url: me.options.reportViewerAPI + "/ParameterJSON",
+                    data : {
+                        ReportPath: encodeURIComponent(me.reportPath),
+                        SessionID: me.getSessionID(),
+                        ParameterList: paramList,
+                        DSCredentials: me.getDataSourceCredential(),
+                        instance: me.options.rsInstance,
+                    },
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-
-                        if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum, renderParamArea);
-                            me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                            if (me.$numOfVisibleParameters > 0) { 
-                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-                            }
-                            me.paramLoaded = true;
+                        if (data.Exception) {
+                            me._renderPageError(me.$reportContainer, data);
+                            me.removeLoadingIndicator();
+                        } else {
+                            if (data.SessionID)
+                                me.sessionID = data.SessionID;
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading);
                         }
                     }
                 });
+            }
+        },
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading) {
+            var me = this;
+            if (paramData) {
+                me.paramDefs = paramData;
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading);
+                me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                if (me.$numOfVisibleParameters > 0) {
+                    me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
+                }
+                me.paramLoaded = true;
+                me.$paramarea = me.options.paramArea;
             }
         },
         _removeParameters: function () {
@@ -1317,8 +1759,12 @@ $(function () {
             //me.sessionID = "";
             me.numPages = 0;
             me.floatingHeaders = [];
-            if (!isSameReport)
+            if (!isSameReport) {
                 me.paramLoaded = false;
+                me._removeAutoRefreshTimeout();
+                me.SaveThumbnail = false;
+                me.RDLExtProperty = null;
+            }
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1328,57 +1774,200 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;
-            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
+            me.renderError = false;            
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+        },
+        _reloadFromSessionStorage: function () {
+            var me = this;
+            if (sessionStorage.forerunner_zoomReload_actionHistory) {
+                var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
+                delete sessionStorage.forerunner_zoomReload_actionHistory;
+                var zoomReloadData = JSON.parse(zoomReloadStringData);
+                if (zoomReloadData.actionHistory) {
+                    me.actionHistory = zoomReloadData.actionHistory;
+                    me.back();
+                    return true;
+                }
+            }
+            return false;
         },
         /**
          * Load the given report
          *
          * @function $.forerunner.reportViewer#loadReport
+         *
          * @param {String} reportPath - Path to the specific report
-         * @param {int} pageNum - starting page number
+         * @param {Integer} pageNum - Starting page number
+         * @param {Object} savedParameters - Saved parameters
          */
-        loadReport: function (reportPath, pageNum) {
+        loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
 
-            me._resetViewer();            
-            me.options.reportPath = reportPath;
-            me.options.pageNum = pageNum;
-            me._loadParameters(pageNum);            
+            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
+
+            if (me._reloadFromSessionStorage()) {
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                return;
+            }
+
+            if (me.reportPath && me.reportPath !== reportPath) {
+                //Do some clean work if it's a new report
+                me.backupCurPage(true);
+                me.sessionID = "";
+                me.flushCache();
+                me.hideDocMap();
+                me.element.unmask();
+            }
             
+            me._resetViewer();
+            
+            me.reportPath = reportPath ? reportPath : "/";
+            me.pageNum = pageNum ? pageNum : 1;
+            me.savedParameters = savedParameters ? savedParameters : null;
+
+            //See if we have RDL extensions
+            me._getRDLExtProp();
+
+            if (me.options.jsonPath) {
+                me._renderJson();
+            } else {
+                me._loadParameters(me.pageNum);
+            }
+
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+            });
+        },
+        _getRDLExtProp: function () {
+            var me = this;
+
+            forerunner.ajax.ajax(
+               {
+                   type: "GET",
+                   dataType: "json",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                   data: {
+                       path: encodeURIComponent(me.reportPath),
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me.RDLExtProperty = data;
+                   },
+                   async: false
+               });
         },
         /**
          * Load current report with the given parameter list
          *
          * @function $.forerunner.reportViewer#loadReportWithNewParameters
-         * @param {Object} paramList - Paramter list object
-         * @param {int} pageNum - The page to load
+         *
+         * @param {Object} paramList - Parameter list object
+         * @param {Integer} pageNum - The page to load
          */
         loadReportWithNewParameters: function (paramList, pageNum) {
             var me = this;
            
             me._resetViewer(true);
+            me.renderTime = new Date().getTime();
             if (!pageNum) {
                 pageNum = 1;
             }
             me._loadPage(pageNum, false, null, paramList, true);
         },
-        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        /**
+        * Load current report with the given datasource credential list
+        *
+        * @function $.forerunner.reportViewer#loadReportWithCustomDSCredential
+        *
+        * @param {Object} credentialList - datasource credential list object
+        */
+        loadReportWithCustomDSCredential: function (credentialList) {
+            var me = this;
+
+            if (me.getDataSourceCredential()) {
+                //reset current credential before next load
+                me._resetDSCredential();
+            }
+            me.datasourceCredentials = credentialList;
+
+            if (me.paramLoaded) {
+                var paramList = me.options.paramArea.reportParameter("getParamsList");
+                me._loadPage(1, false, null, paramList, true);
+            }
+            else {
+                me.loadReport(me.getReportPath(), 1);
+            }
+        },
+        _resetDSCredential: function () {
+            var me = this;
+            me.flushCache();
+            
+            me.sessionID = null;
+
+            var errorpage = me.$reportContainer.find(".Page");
+            if (errorpage)
+                errorpage.detach();
+
+            me._trigger(events.resetCredential, null, { paramLoaded: me.paramLoaded });
+        },
+        _renderJson : function () {
+            var me = this;
+            var newPageNum = 1;
+            var loadOnly = false;
+
+            if (!me.element.is(":visible") && !loadOnly)
+                me.element.show(); //scrollto does not work with the slide in functions:(
+
+            me._addLoadingIndicator();
+            me.togglePageNum = newPageNum;
+            forerunner.ajax.ajax(
+                {
+                    type: "GET",
+                    dataType: "json",
+                    url: me.options.jsonPath,
+                    async: false,
+                    done: function (data) {
+                        me._writePage(data, newPageNum, loadOnly);
+                        if (!loadOnly) {
+                            if (data.ReportContainer) {
+                                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                            }
+
+                            if (!me.element.is(":visible"))
+                                me.element.show();  //scrollto does not work with the slide in functions:(                            
+
+                            me._updateTableHeaders(me);
+                        }
+                    },
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                });
+        },
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache, respToggleReplay, scrollID) {
             var me = this;
 
             if (flushCache === true)
                 me.flushCache();
 
             if (me.pages[newPageNum])
-                if (me.pages[newPageNum].$container) {
-                    if (!loadOnly) {
+                if (me._getPageContainer(newPageNum)) {
+                    if (!loadOnly) {                        
                         me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
-                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            me.element.show(0); //scrollto does not work with the slide in functions:(                        
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
+                        if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
+                            me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
+                        if (scrollID) {
+                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                            if (el.length ===1)
+                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                        }
+
                     }
                     return;
                 }
@@ -1388,48 +1977,99 @@ $(function () {
                 me._addLoadingIndicator();
             }
             me.togglePageNum = newPageNum;            
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/ReportJSON/",
+            forerunner.ajax.ajax(
                 {
-                    ReportPath: me.options.reportPath,
-                    SessionID: me.sessionID,
-                    PageNumber: newPageNum,
-                    ParameterList: paramList
-                },
-                function (data) {
-                    me._writePage(data, newPageNum, loadOnly);
-                    if (data.ReportContainer) {
-                        me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
-                    }
+                    type: "POST",
+                    dataType: "json",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    data: {
+                        ReportPath: encodeURIComponent(me.reportPath),
+                        SessionID: me.sessionID,
+                        PageNumber: newPageNum,
+                        ParameterList: paramList,
+                        DSCredentials: me.getDataSourceCredential(),
+                        instance: me.options.rsInstance,
+                    }, 
+                    async: true,
+                    done: function (data) {
+                        me._writePage(data, newPageNum, loadOnly);
+                        if (!loadOnly) {
+                            if (data.ReportContainer) {
+                                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                            }
 
-                    if (!me.element.is(":visible") && !loadOnly)
-                        me.element.show();  //scrollto does not work with the slide in functions:(
-                    if (bookmarkID)
-                        me._navToLink(bookmarkID);
-                    if (!loadOnly && flushCache !== true)
-                        me._cachePages(newPageNum);
-                },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
-            );
+                            if (!me.element.is(":visible"))
+                                me.element.show();  //scrollto does not work with the slide in functions:(                            
+                            if (bookmarkID)
+                                me._navToLink(bookmarkID);
+                            if (flushCache !== true)
+                                me._cachePages(newPageNum);
+                            if (respToggleReplay)
+                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
+
+                            //$(window).scrollLeft(me.scrollLeft);
+                            //$(window).scrollTop(me.scrollTop);
+                            if (scrollID) {
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                                if (el.length === 1)
+                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                            }
+                            me._updateTableHeaders(me);
+                            me._saveThumbnail();
+                        }
+                    },
+                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                });
         },
-        
+        _writeError: function (jqXHR, textStatus, errorThrown,request) {
+            var me = this;
+
+            var data = { Exception: 
+                {
+                    DetailMessage: errorThrown,
+                    Type: "Error",
+                    TargetSite: request.url,
+                    Source: "" ,
+                    Message: textStatus,
+                    StackTrace: JSON.stringify(request)
+                }                        
+            };
+
+            me._renderPageError(me.$reportContainer, data);
+        },
+        _getPageContainer: function(pageNum) {
+            var me = this;
+            if (!me.pages[pageNum].$container) {
+                me.pages[pageNum].$container = $("<div class='Page'/>");
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
+            }
+
+            return me.pages[pageNum].$container;
+        },
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
-            var $report = $("<Div/>");
-            $report.addClass("Page");
-
             //Error, need to handle this better
             if (!data) return;
-
-            var responsiveUI = false;
-            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
-                responsiveUI = true;
+            
+            if (data.CredentialsRequired) {
+                me._writeDSCredential(data);
+                return;
             }
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
-            if (!me.pages[newPageNum])
-                me.pages[newPageNum] = new reportPage($report, data);
+            if (!loadOnly && data.ReportContainer && data.ReportContainer.Report.AutoRefresh) {
+                me._addSetPageCallback(function () {
+                    me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
+                });
+            }
+
+            if (!me.pages[newPageNum]) {
+                me.pages[newPageNum] = new reportPage(data);
+            }
             else {
-                me.pages[newPageNum].$container = $report;
                 me.pages[newPageNum].reportObj = data;
             }
 
@@ -1453,29 +2093,78 @@ $(function () {
                 me._setPage(newPageNum);
             }
         },
+
+        _reLayoutPage: function(pageNum,force){
+            var me = this;
+            if (me.pages[pageNum] && me.pages[pageNum].needsLayout) {
+                me.pages[pageNum].needsLayout = me.pages[pageNum].$container.reportRender("layoutReport", true, force, me.getRDLExt());                
+            }
+        },
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {
-                me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
+            if (me.pages[pageNum].reportObj.Exception) {
+                me._renderPageError(me._getPageContainer(pageNum), me.pages[pageNum].reportObj);
             }
-            else
-                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+            else {
+                me.renderError = false;
+                me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
+
+                //Render responsive if set
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
+                me.pages[pageNum].needsLayout= true;
+            }
 
             me.pages[pageNum].isRendered = true;
         },
         _renderPageError: function ($container, errorData) {
             var me = this;
+            var pageNum = me.getCurPage();
 
             me.renderError = true;
+            if (me.pages[pageNum])
+                me.pages[pageNum].isRendered = false;
+
             $container.reportRender({ reportViewer: me });
             $container.reportRender("writeError", errorData);
+            me.removeLoadingIndicator();
+            me._trigger(events.renderError, null, errorData);
         },
-                
+        _writeDSCredential: function (data) {
+            var me = this;
+            me.flushCache();
+            me._resetViewer(false);
+            me.datasourceCredentials = null;
+            me.credentialDefs = data;
+
+            me.sessionID = data.SessionID;
+            me.numPages = data.NumPages;
+            me.curPage = 1;
+
+            me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
+            me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
+
+            me._trigger(events.showCredential);
+            me.removeLoadingIndicator();
+        },
+        /**
+         * Show datasource dialog, close if opened
+         *
+         * @function $.forerunner.reportViewer#showDSCredential
+         */
+        showDSCredential: function () {
+            var me = this;
+            me.$credentialDialog.dsCredential("openDialog");
+        },
         _sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
@@ -1493,7 +2182,8 @@ $(function () {
             if (sessionID && sessionID !== "")
                 forerunner.ajax.getJSON(me.options.reportViewerAPI + "/PingSession",
                     {
-                        PingSessionID: sessionID
+                        PingSessionID: sessionID,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.Status === "Fail") {
@@ -1508,7 +2198,6 @@ $(function () {
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
-
             $.each(me.floatingHeaders, function (index, obj) {
                 me._setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
                 me._setColHeaderOffset(obj.$tablix, obj.$colHeader);
@@ -1518,16 +2207,22 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                if (obj.$rowHeader) obj.$rowHeader.hide();
-                if (obj.$colHeader) obj.$colHeader.hide();
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("[name='" + elementID + "']")[0];
+            var navTo = me.element.find("[data-uniqName='" + elementID + "']")[0];
             if (navTo !== undefined) {
-                $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+                //Should account for floating headers and toolbar height need to be a calculation
+                var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
+                
+                //$(window).scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);
+                //me.options.$appContainer.scrollTop(bookmarkPosition.top).scrollLeft(bookmarkPosition.left);
+            
+                me._trigger(events.navToPosition, null, bookmarkPosition);
             }
         },
         _stopDefaultEvent: function (e) {
@@ -1642,8 +2337,150 @@ $(function () {
                 var text = document.createTextNode($(this).text());
                 $(this).replaceWith($(text));
             });
-        }
+        },
+        _setAutoRefresh: function (period) {
+            var me = this;
+            
+            //me.autoRefreshID will be set to undefined when report viewer destory.
+            if (me.autoRefreshID !== undefined) {
+                //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
+                if (me.autoRefreshID !== null) {
+                    me._removeAutoRefreshTimeout();
+                    
+                }
+                me.autoRefreshID = setTimeout(function () {
+                    if (me.lock === 1) {
+                        //if report viewer is lock then set it again.
+                        me._setAutoRefresh(period);
+                        return;
+                    }
+                    else {
+                        //restore privious scroll position
+                        var containerTop = me.options.$appContainer.scrollTop();
+                        var containerLeft = me.options.$appContainer.scrollLeft();
+                        var windowTop = $(window).scrollTop();
+                        var windowLeft = $(window).scrollLeft();
+                        
+                        me._addSetPageCallback(function () {
+                            me.options.$appContainer.scrollTop(containerTop).scrollLeft(containerLeft);
+                            $(window).scrollTop(windowTop).scrollLeft(windowLeft);
+                        });
+
+                        //close all opened dialog before report start refresh
+                        forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
+
+                        me.refreshReport(me.getCurPage());
+                        //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
+                    }
+
+                    me.autoRefreshID = null;
+                }, period * 1000);
+
+                //console.log('add settimeout, period: ' + period + "s");
+            }
+        },
+        showRDLExtDialog: function () {
+            var me = this;
+
+            var dlg = $(".fr-rdl-section",me.element).first();
+
+            if (dlg.length ===0) {
+                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append(dlg);
+                dlg.reportRDLExt({ reportViewer: me });
+            }
+            dlg.reportRDLExt("openDialog");
+            
+        },
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try {
+                if (RDL.trim() !== "")
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                else
+                    me.RDLExtProperty = {};
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "POST",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       value:RDL,
+                       path: me.reportPath,
+                       propertyName: "ForerunnerRDLExt",
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me._ReRender(true);
+                       return true;
+                   },
+                   fail: function (data){
+                       return false;
+                   },
+                   async: false
+               });
+            
+
+        },
+
+        _removeAutoRefreshTimeout: function () {
+            var me = this;
+
+            if (me.autoRefreshID !== null) {
+                clearTimeout(me.autoRefreshID);
+                //console.log('remove settimeout');
+            }
+            me.autoRefreshID = null;
+        },
+        /**
+         * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.dsCredential#destroy
+         */
+        destroy: function () {
+            var me = this;
+
+            me._removeAutoRefreshTimeout();
+            me.autoRefreshID = undefined;
+
+            if (me.$credentialDialog)
+                me.$credentialDialog.dsCredential("destroy");
+
+            if (me.$printDialog)
+                me.$printDialog.reportPrint("destroy");
+
+            if (me.$emailSub)
+                me.$emailSub.emailSubscription("destroy");
+            if (me.$paramarea) {
+                me.$paramarea.reportParameter("destroy");
+            }
+            if (me.$RDLExtDialog) {
+                me.$RDLExtDialog.reportRDLExt("destroy");
+            }
+            
+            //console.log('report viewer destory is invoked')
+
+            //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
+            // if using jQuery UI 1.8.x
+            //$.Widget.prototype.destroy.call(this);
+            // if using jQuery UI 1.9.x
+            this._destroy();
+        },
     });  // $.widget
+
 });   // $(function
 
 

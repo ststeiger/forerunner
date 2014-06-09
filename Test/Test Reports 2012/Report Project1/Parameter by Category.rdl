@@ -529,6 +529,7 @@ FROM            Categories</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ProductName</rd:DefaultName>
+                          <ToolTip>=Fields!CategoryName.Value</ToolTip>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -552,6 +553,7 @@ FROM            Categories</CommandText>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ProductSales.Value</Value>
+                                  <ToolTip>=Parameters!Category.Value</ToolTip>
                                   <Style>
                                     <Format>'$'#,0,.00;('$'#,0,.00)</Format>
                                     <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
@@ -562,6 +564,7 @@ FROM            Categories</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ProductSales</rd:DefaultName>
+                          <ToolTip>=Fields!ProductName.Value</ToolTip>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>

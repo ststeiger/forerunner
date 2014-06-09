@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 
 namespace ReportManager
 {

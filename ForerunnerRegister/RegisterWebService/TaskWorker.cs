@@ -101,6 +101,33 @@ namespace ForerunnerWebService
 
         }
 
+        public void LoadPASSLeads()
+        {
+            
+            string [] lines = System.IO.File.ReadAllLines("Leads.csv");
+            string [] row;
+            string[] sp = { "," };
+            RegistrationData rd;
+            Register reg = new Register();
+
+            for (int i = 1; i< lines.Length;i++)
+            {
+                row = lines[i].Split(sp, System.StringSplitOptions.None);
+                rd = new RegistrationData();
+
+                rd.FirstName = row[4];
+                rd.LastName = row[5];
+                rd.CompanyName = row[7];
+                rd.Email = row[16];
+                rd.PhoneNumber = row[14];
+                reg.RegisterDownload(rd);
+                
+            }
+
+
+
+        }
+
         public void SaveTask(string TaskType, string TaskData,string Requester = "No Requester")
         {
             ForerunnerDB DB = new ForerunnerDB();

@@ -69,7 +69,7 @@ namespace Jayrock.Json
             set { _prettyPrint = value; }
         }
 
-        protected TextWriter InnerWriter
+        public TextWriter InnerWriter
         {
             get { return _writer; }
         }

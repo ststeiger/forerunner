@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+    <b>Add Button Detail:</b>
+    <p>
+        The Add Button sample shows how to add a new button to an instance of the
+        <a href="~/Docs/$.forerunner.reportViewerEZ.html" target="_blank">reportViewerEZ</a> widget.
+        It does this by calling the toolBase <a href="~/Docs/$.forerunner.toolBase.html" target="_blank">addtools</a>
+        function. Note that the <a href="~/Docs/$.forerunner.toolbar.html" target="_blank">toolbar</a> and 
+        <a href="~/Docs/$.forerunner.toolPane.html" target="_blank">toolPane</a> widgets derive from
+        <a href="~/Docs/$.forerunner.toolBase.html" target="_blank">toolBase</a> so all of toolBase methods
+        can be called on <a href="~/Docs/$.forerunner.toolbar.html" target="_blank">toolbar</a> or
+        <a href="~/Docs/$.forerunner.toolPane.html" target="_blank">toolPane</a>.
+    </p>
+
+    <div class="toggle-source-code" data-file="AddButton.cshtml"></div>
+
+    <p>
+      Create a layout page in your project that includes the style sheets and scripts files.
+    </p>
+
+    <div class="toggle-source-code" data-file="_SamplesLayout.cshtml"></div>
+
+    <p><a onclick="NavigateToSiteURL('appEnum.SDKSamples', 'Samples/AddButton')">Click here to see the sample run</a></p>
+}

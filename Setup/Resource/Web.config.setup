@@ -18,6 +18,9 @@
     <add key="PreserveLoginUrl" value="true"/>
     <add key="ClientValidationEnabled" value="true"/>
     <add key="UnobtrusiveJavaScriptEnabled" value="true"/>
+    <add key="Forerunner.IsNative" value="true" />
+    <add key="Forerunner.SharePointHost" value="" />
+    <add key="Forerunner.DefaultUserDomain" value="" />
     <add key="Forerunner.ReportServerWSUrl" value="http://localhost/ReportServer" />
     <add key="Forerunner.ReportServerDataSource" value="." />
     <add key="Forerunner.UseIntegratedSecurityForSQL" value="false" />
@@ -25,7 +28,7 @@
     <add key="Forerunner.ReportServerDBUser" value="" />
     <add key="Forerunner.ReportServerDBPWD" value="" />
     <add key="Forerunner.ReportServerDBDomain" value="" />
-    <add key="Forerunner.ReportServerDBAccountType" value="SQLAccount"/>
+    <add key="Forerunner.ReportServerTimeout" value="100000" />
   </appSettings>
   <!--
     For a description of web.config changes for .NET 4.5 see http://go.microsoft.com/fwlink/?LinkId=235367.
@@ -113,6 +116,27 @@
     </defaultConnectionFactory>
   </entityFramework>
   <system.diagnostics>
+    <switches>
+      <add name="MobilizerTraceType" value="Error"/>
+      <!--        Available log events types, Mobilizer default to Error        -->
+
+      <!--ActivityTracing  - -	Allows the Stop, Start, Suspend, Transfer, and Resume events through.
+      
+          All              - - 	Allows all events through.
+          
+          Critical         - -	Allows only Critical events through.
+          
+          Error            - -	Allows Critical and Error events through.
+          
+          Warning          - -	Allows Critical, Error, and Warning events through.
+          
+          Information      - -	Allows Critical, Error, Warning, and Information events through.
+          
+          Verbose          - -	Allows Critical, Error, Warning, Information, and Verbose events through.
+          
+          Off              - -	Does not allow any events through.
+        -->
+    </switches>
     <trace autoflush="false" indentsize="4">
       <listeners>
         <add name="myListener" type="System.Diagnostics.TextWriterTraceListener" initializeData="TextWriterOutput.log" />

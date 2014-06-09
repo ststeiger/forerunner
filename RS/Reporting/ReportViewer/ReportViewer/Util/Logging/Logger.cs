@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace ReportManager.Util.Logging
+namespace Forerunner.Logging
 {
     public enum LogType
     {
@@ -14,72 +14,63 @@ namespace ReportManager.Util.Logging
 
     public class Logger
     {
-        //private static string logPath = ConfigurationManager.AppSettings["ForeRunner.LogPath"];
-        //private static string logPath = string.Empty;
-
-        //public static string LogPath
-        //{
-        //    get
-        //    {
-        //        if (logPath == string.Empty)
-        //            logPath = AppDomain.CurrentDomain.BaseDirectory + @"bin\Logs\" + DateTime.Now.ToString("yyyy-MM-dd") + @"\";
-        //        return logPath;
-        //    }
-        //    set { logPath = value; }
-        //}
-
-        //private static string logFilePrefix = string.Empty;
-        //public static string LogFilePrefix
-        //{
-        //    get { return logFilePrefix; }
-        //    set { logFilePrefix = value; }
-        //}
-
-        public static void WriteLineIf(bool isTrace, String category, String message)
+        static private SourceSwitch sourceSwitch = new SourceSwitch("MobilizerTraceType");
+        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", sourceSwitch.Level);
+        
+        static Logger()
         {
-            System.Diagnostics.Trace.WriteLineIf(isTrace, category, message);
+            lock (ts)
+            {
+                string path = AppDomain.CurrentDomain.BaseDirectory;
+                DateTime now = DateTime.Now;
+                string fileName = String.Format("Forerunner_V2_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
+                string filePath = path + @"\..\LogFiles\" + fileName;
+                TraceListener listener = new TextWriterTraceListener(filePath) { TraceOutputOptions = TraceOptions.DateTime | TraceOptions.ThreadId };
+                ts.Listeners.Add(listener);
+                ts.Listeners.Add(new ConsoleTraceListener() { TraceOutputOptions = TraceOptions.DateTime | TraceOptions.ThreadId });
+
+                ts.TraceEvent(TraceEventType.Information, 0, "Logging to " + fileName + "...");
+                ts.Flush();
+            }
         }
 
-        public static void Trace(LogType logType, string message, Object[] objects = null) 
+        public static void Trace(LogType logType, string message, Object[] objects = null)
         {
+            TraceEventType eventType = TraceEventType.Information;
             switch (logType)
             {
                 case LogType.Error:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceError(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceError(message, objects);
-                    }
+                    eventType = TraceEventType.Error;
                     break;
                 case LogType.Info:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceInformation(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceInformation(message, objects);
-                    }
+                    eventType = TraceEventType.Information;
                     break;
                 case LogType.Warning:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceWarning(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceWarning(message, objects);
-                    }
+                    eventType = TraceEventType.Warning;
                     break;
             }
+
+            if (objects == null)
+            {
+                ts.TraceEvent(eventType, 0, message);
+            }
+            else
+            {
+                ts.TraceEvent(eventType, 0, message, objects);
+            }
+            ts.Flush();
         }
     }
 
     public class ExceptionLogGenerator
     {
+        public static void LogException(string errorStr,string sourceStr)
+        {
+            string error = string.Format("[Time:{0}] \r\n [Type:{1}] \r\n [TargetSite:{2}] \r\n [Source:{3}] \r\n [Message:{4}]  ",
+                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), "unknown", "unknown", sourceStr, errorStr);
+
+            Logger.Trace(LogType.Error, "Exception:\r\n{0}", new object[] { error });
+        }
         public static void LogException(object obj)
         {
             Exception e = (Exception)obj;

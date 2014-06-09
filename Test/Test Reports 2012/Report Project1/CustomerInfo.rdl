@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition">
-  <AutoRefresh>0</AutoRefresh>
+  <AutoRefresh>8</AutoRefresh>
   <DataSources>
     <DataSource Name="Northwind">
       <DataSourceReference>Northwind</DataSourceReference>
@@ -78,13 +78,13 @@
                   <Width>1.55208in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.33333in</Width>
+                  <Width>1.33334in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.6875in</Width>
+                  <Width>1.44792in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>1.29167in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -111,7 +111,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -133,7 +133,6 @@
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="Textbox12">
-                          <CanGrow>true</CanGrow>
                           <UserSort>
                             <SortExpression>=Fields!CustomerID.Value</SortExpression>
                           </UserSort>
@@ -149,7 +148,9 @@
                                   </Style>
                                 </TextRun>
                               </TextRuns>
-                              <Style />
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox12</rd:DefaultName>
@@ -161,8 +162,6 @@
                             <BackgroundColor>Silver</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -509,7 +508,7 @@
             <Top>0.73833in</Top>
             <Left>0.26958in</Left>
             <Height>0.5in</Height>
-            <Width>5.57291in</Width>
+            <Width>5.62501in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>

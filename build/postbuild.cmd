@@ -50,6 +50,7 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
+
 echo PostBuild SUCCEEDED. >> %BUILD_LOG%
 type %POSTBUILD_LOG% >> %BUILD_LOG%
 exit /b 0

@@ -10,6 +10,7 @@ using System.Text;
 using System.IO;
 using System.Collections;
 using ForerunnerWebService;
+using System.Globalization;
 
 namespace ForerunnerLicense
 {
@@ -19,6 +20,7 @@ namespace ForerunnerLicense
         string Response = "<LicenseResponse><Status>{0}</Status><StatusCode>{1}</StatusCode><Value>{2}</Value></LicenseResponse>";
         public string NewLicenseKey = null;
         public string MergeKey = null;
+        public int NumberOfCores = 0;
         internal MachineId NewMachineData = null;
         public string Action = null;
         public int Status = 0;
@@ -59,6 +61,9 @@ namespace ForerunnerLicense
                         case "MergeKey":
                             MergeKey = XMLReq.ReadElementContentAsString();
                             break;
+                        case "NumberOfCores":
+                            NumberOfCores = XMLReq.ReadElementContentAsInt();
+                            break;
                     }                    
                 }
                 else
@@ -97,6 +102,8 @@ namespace ForerunnerLicense
                     return ProcessDeActivate();
                 case "Merge":
                     return ProcessMerge();
+                case "Split":
+                    return ProcessSplit();
             }
 
             return String.Format(Response, "Fail", "2", "Invalid License Request");
@@ -105,7 +112,7 @@ namespace ForerunnerLicense
         private string GetActivatePackage(LicenseData ld)
         {
             string value = "<License><SKU>{0}</SKU><Quantity>{1}</Quantity>{2}<LicenseKey>{3}</LicenseKey><RequireValidation>{4}</RequireValidation><ActivationDate>{5}</ActivationDate><LicenseDuration>{6}</LicenseDuration><IsTrial>{7}</IsTrial></License>";
-            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate, ld.LicenseDuration,ld.IsTrial), pkey);
+            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate.ToString( CultureInfo.CreateSpecificCulture("en-us")), ld.LicenseDuration,ld.IsTrial), pkey);
         }
 
         private string ProcessMerge()
@@ -113,18 +120,32 @@ namespace ForerunnerLicense
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
 
-            string SQL = @"UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
-                        DELETE License Where LicenseID = @MergeKey
+            string SQL = @"IF EXISTS (SELECT * FROM License m INNER JOIN License l ON m.LicenseID = @MergeKey AND m.SKU= l.SKU AND l.LicenseID = @LicenseKey)
+                            BEGIN
+                                UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
+                                UPDATE License SET Quantity = 0 WHERE LicenseID = @MergeKey
+                            END
                         ";
+
+            if (NewLicenseKey == MergeKey)
+            {
+                Response = String.Format(Response, "Fail", "110", "Cannot merge the same key");
+                return Response;
+            }
+
+
             try
             {
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
                 SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
-                SQLComm.ExecuteNonQuery();
+                int rows = SQLComm.ExecuteNonQuery();               
                 SQLConn.Close();
-                Response = String.Format(Response, "Success", "0", "Licenses Merged");
+                if (rows <= 0)
+                    Response = String.Format(Response, "Fail", "110", "Invalid License combination or license not found");
+                else
+                    Response = String.Format(Response, "Success", "0", "Licenses Merged");
             }
             catch
             {
@@ -146,7 +167,7 @@ namespace ForerunnerLicense
             
                     
             string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID
-                           SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,s.Duration,RequireValidation,IsTrial FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
+                           SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
            try
             {
                 SQLConn.Open();
@@ -206,7 +227,7 @@ namespace ForerunnerLicense
                        success = false;
                    }
                }
-               //Trying to acitivate a used license or a new version on an upgrade license
+               //Trying to acitivate a used license or a new version on an upgradable license
                else
                {
                     //If no license data then use machine data from request
@@ -215,7 +236,7 @@ namespace ForerunnerLicense
                     ts = DateTime.Now - NewLD.FirstActivationDate;
 
                    //If Update on subcription
-                   if ((OldLD.MachineData.machineKey == NewLD.MachineData.machineKey) && (NewLD.LicenseDuration > ts.TotalDays) && NewLD.IsSubscription == 1)
+                   if (OldLD.MachineData.IsSame(NewLD.MachineData) && (NewLD.LicenseDuration > ts.TotalDays) && (NewLD.IsSubscription == 1 || NewLD.IsTrial == 1))
                    {
                        Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
                        success = true;
@@ -223,7 +244,8 @@ namespace ForerunnerLicense
 
                   //this key is alrady activated, maybe lost HD allow activation on new machine if more than 90 days
                    else
-                   {                       
+                   {               
+                       //TODO:  Change the license for a SA subscription if it is expired to the latest SKU that was avaialble at the time of expiration.
                        ts = DateTime.Now - NewLD.LastActivation;
                        if (ts.TotalDays < 90)
                            Response = String.Format(Response, "Fail", "101", "Already Activated");
@@ -284,6 +306,50 @@ namespace ForerunnerLicense
             return Response;
 
         }
+
+        private string ProcessSplit()
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+
+            if (NumberOfCores == 0 || NumberOfCores >= OldLD.Quantity)
+            {
+                Response = String.Format(Response, "Fail", "115", "Invalid Number of Cores");
+                return Response;
+            }
+               
+            
+            string SQL = @"UPDATE License SET Quantity = @NewQuantity WHERE LicenseID = @LicenseID AND MachineKey = @MachineKey";
+            SQLConn.Open();
+            try
+            {
+                int NewQuantity = OldLD.Quantity-NumberOfCores;
+                int NewLicQuantity = NumberOfCores;
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseID", OldLD.LicenseKey);
+                SQLComm.Parameters.AddWithValue("@MachineKey", OldLD.MachineData.machineKey);
+                SQLComm.Parameters.AddWithValue("@NewQuantity", NewQuantity);
+                int rows = SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                if (rows == 0)
+                    Response = String.Format(Response, "Fail", "105", "Invalid LicenseKey or MachineKey");
+                else
+                {
+                    string NewLic = ForerunnerDB.NewLicenseID();
+                    Response = String.Format(Response, "Success", "0", NewLic);
+                    new Order().WriteLicense(Guid.NewGuid().ToString(), OldLD.SKU, "", NewLicQuantity, NewLic, OldLD.LicenseKey);
+                }                
+                
+            }
+            catch
+            {
+                Response = String.Format(Response, "Fail", "3", "Server Error");
+                SQLConn.Close();               
+            }
+
+            return Response;
+
+        }
         private string ProcessValidate()
         {
             ForerunnerDB DB = new ForerunnerDB();
@@ -319,15 +385,15 @@ namespace ForerunnerLicense
                 SQLConn.Close();
 
 
-                if (ld.MachineData.machineKey == null)
+                if (ld.MachineData == null || ld.MachineData.machineKey == null)
                     Response = String.Format(Response, "Fail", "105", "Invalid License Key or Machine Key");
                 else
                 {
                     TimeSpan ts = DateTime.Now - ld.FirstActivationDate;
-                    if (ld.LicenseDuration < ts.TotalDays )
-                        Response = String.Format(Response, "Fail", "200", "Subcription Expired");
+                    if (ld.LicenseDuration < ts.TotalDays && ld.IsSubscription ==1)
+                        Response = String.Format(Response, "Fail", "200", "Subscription Expired");
                     else
-                        Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToString(),pkey));
+                        Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToUniversalTime().Ticks.ToString(),pkey));
                 }
             }
             catch 

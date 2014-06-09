@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <bundle minify="true" runOnBuild="true" output="Forerunner-widgets.js">
-  <!--The order of the <file> elements determines the order of them when bundled.-->
-  <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
-  <file>/Forerunner/Common/js/Toolbase.js</file>
-  <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
-  <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
-  <file>/Forerunner/ReportViewer/js/PageNav.js</file>
-  <file>/Forerunner/ReportExplorer/js/ReportExplorerToolbar.js</file>
-  <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
-  <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportPrint.js</file>
-  <file>/Forerunner/ReportViewer/js/DefaultAppTemplate.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
-  <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
-  <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
+    <!--The order of the <file> elements determines the order of them when bundled.-->
+    <file>/Forerunner/Common/js/History.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
+    <file>/Forerunner/ReportExplorer/js/ParameterModel.js</file>
+    <file>/Forerunner/Common/js/Toolbase.js</file>
+    <file>/Forerunner/Common/js/MessageBox.js</file>
+    <file>/Forerunner/Common/js/DefaultAppTemplate.js</file>
+    <file>/Forerunner/Common/js/DashboardModel.js</file>
+    <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
+    <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
+    <file>/Forerunner/ReportViewer/js/PageNav.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerToolbar.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerToolpane.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
+    <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportPrint.js</file>
+    <file>/Forerunner/ReportViewer/js/RDLExtDialog.js</file>
+    <file>/Forerunner/ReportViewer/js/ManageParamSets.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
+    <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
+    <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
+    <file>/Forerunner/ReportExplorer/js/CreateDashboard.js</file>
+    <file>/Forerunner/ReportExplorer/js/EmailSubscription.js</file>
+    <file>/Forerunner/Lib/jsTree/jstree.js</file>
+    <file>/Forerunner/Dashboard/js/DashboardEZ.js</file>
+    <file>/Forerunner/Dashboard/js/DashboardToolbar.js</file>
+    <file>/Forerunner/Dashboard/js/DashboardToolPane.js</file>
+    <file>/Forerunner/Dashboard/js/DashboardViewer.js</file>
+    <file>/Forerunner/Dashboard/js/DashboardEditor.js</file>
+    <file>/Forerunner/Dashboard/js/ReportProperties.js</file>
+    <file>/Forerunner/Dashboard/js/SaveAsDashboard.js</file>
 </bundle>

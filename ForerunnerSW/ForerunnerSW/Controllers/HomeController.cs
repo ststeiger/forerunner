@@ -31,7 +31,31 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Activation()
+        {
+            return View();
+        }
         public ActionResult Thankyou()
+        {
+            return View();
+        }
+        public ActionResult PASS()
+        {
+            return View();
+        }
+        public ActionResult Support()
+        {
+            return View();
+        }
+        public ActionResult Developers()
+        {
+            return View();
+        }
+        public ActionResult Samples()
+        {
+            return View();
+        }
+        public ActionResult NotFound()
         {
             return View();
         }

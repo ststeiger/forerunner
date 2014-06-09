@@ -394,6 +394,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\Explorer_Examples.css"
   File "${LOCALROOT}\Custom\MobilizerSettings.txt"
   File "${LOCALROOT}\Custom\MobilizerSettings_Examples.txt"
+  File "${LOCALROOT}\Custom\MobilizerSharedSchedule.txt"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"

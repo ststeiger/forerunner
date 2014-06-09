@@ -163,13 +163,20 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("HasPermission")]
+        public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetCatalogPermission(path, permission)), "text/JSON");
+        }
+
+        [HttpGet]
         [ActionName("Resource")]
         public HttpResponseMessage Resource(string path, string instance = null)
         {
             byte[] result = null;
             string mimetype = null;
             result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
-            return GetResponseFromBytes(result,mimetype);
+            return GetResponseFromBytes(result, mimetype);
         }
 
         [HttpPost]

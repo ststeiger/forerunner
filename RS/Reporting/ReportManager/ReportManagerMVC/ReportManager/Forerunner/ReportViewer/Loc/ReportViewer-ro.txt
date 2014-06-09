@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Salvați Tabloul de bord a eșuat",
     "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
     "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
-    "loadDashboard":"încărcare Tablou de bord"
+    "loadDashboard":"încărcare Tablou de bord",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -203,7 +204,8 @@
     "submit":"executa",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extension",

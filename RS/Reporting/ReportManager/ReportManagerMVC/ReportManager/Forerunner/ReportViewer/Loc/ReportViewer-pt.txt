@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Salve Painel Falha",
     "saveDashboardSucceeded":"Salve Painel Sucedido",
     "loadDashboardFailed":"Carga Painel Falha",
-    "loadDashboard":"carga Painel"
+    "loadDashboard":"carga Painel",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
@@ -203,7 +204,8 @@
     "submit":"submeter",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensões",

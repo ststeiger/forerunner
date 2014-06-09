@@ -438,8 +438,8 @@ $(function () {
             /** widget + event, lowercase */
             reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
-            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
-},
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); },
+    },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *
@@ -1182,6 +1182,32 @@ $(function () {
                 if (fail)
                     fail(jqXHR, textStatus, errorThrown,this);
             });
+        },
+        /**
+        * Returns json data indicating is the user has the requested permission for the given path
+        *
+        * @param {String} path - fully qualified path to the resource
+        * @param {String} permission - Requested permission
+        */
+        hasPermission: function (path, permission) {
+            var permissionData = null;
+
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
+                "?path=" + encodeURIComponent(path) +
+                "&permission=" + permission;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    permissionData = data;
+                },
+                fail: function (jqXHR) {
+                    console.log("hasPermission() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+            return permissionData;
         }
     };
     /**

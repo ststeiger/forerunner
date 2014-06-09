@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Enregistrer Dashboard Échec",
     "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
     "loadDashboardFailed":"Charge Dashboard Échec",
-    "loadDashboard":"charge Dashboard"
+    "loadDashboard":"charge Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -204,7 +205,8 @@
     "submit":"soumettre",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"Extensions RDL",

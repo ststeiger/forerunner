@@ -17,7 +17,8 @@
     "saveDashboardFailed":"ダッシュボードの失敗を保存",
     "saveDashboardSucceeded":"成功しましたダッシュボードを保存",
     "loadDashboardFailed":"負荷ダッシュに失敗しました",
-    "loadDashboard":"ロード·ダッシュボード"
+    "loadDashboard":"ロード·ダッシュボード",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",
@@ -203,7 +204,8 @@
     "submit":"提出する",
     "dashboardName":"Name",
     "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template"
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL拡張",

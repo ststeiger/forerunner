@@ -53,14 +53,23 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
             if (enableEdit) {
-                me.showTool(dtb.btnView.selectorClass);
-                me.enableTools([dtb.btnSave]);
-                me.hideTool(dtb.btnEdit.selectorClass);
-            } else {
-                me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
-                me.showTool(dtb.btnEdit.selectorClass);
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dtb.btnView.selectorClass);
+                    me.enableTools([dtb.btnSave]);
+                    me.hideTool(dtb.btnEdit.selectorClass);
+                    return;
+                }
             }
+
+            // Disable the edit buttons
+            me.hideTool(dtb.btnView.selectorClass);
+            me.disableTools([dtb.btnSave]);
+            me.showTool(dtb.btnEdit.selectorClass);
         },
         _init: function () {
             var me = this;

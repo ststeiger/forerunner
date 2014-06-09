@@ -87,6 +87,7 @@ $(function () {
 
             // If we have a report definition, load the report
             if (me.model.dashboardDef.reports[reportId]) {
+                $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,

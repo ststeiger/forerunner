@@ -33,57 +33,16 @@ $(function () {
 
             setTimeout(function () {
                 me.loadDefinition(path, false);
-                me.showUI(true);
+                me._showUI(true);
             }, timeout);
         },
         /**
-         * Show or hide the edit UI
-         * @function $.forerunner.dashboardEditor#showUI
+         * Returns the fully qualified dashboard path
+         * @function $.forerunner.dashboardEditor#getPath
          */
-        showUI: function (show) {
-            var me = this;
-            if (show) {
-                me._renderButtons();
-            } else {
-                me._removeButtons();
-            }
-            me._makeOpaque(show);
-        },
         getPath: function () {
             var me = this;
             return me.parentFolder + me.dashboardName;
-        },
-        _renderButtons: function () {
-            var me = this;
-            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                var $item = $(item);
-
-                // Create the button
-                var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
-                $item.append($btn);
-
-                // Hook the onClick event
-                $btn.on("click", function (e) {
-                    me._onClickProperties.apply(me, arguments);
-                });
-
-                // Position the button
-                var left = $item.width() / 2 - ($btn.width() / 2);
-                var top = $item.height() / 2 - ($btn.height() / 2);
-                $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
-            });
-        },
-        _removeButtons: function() {
-            var me = this;
-            me.element.find(".fr-dashboard-btn").remove();
-        },
-        _makeOpaque: function (addMask) {
-            var me = this;
-            if (addMask) {
-                me.element.find(".fr-report-container").addClass("fr-core-mask");
-            } else {
-                me.element.find(".fr-report-container").removeClass("fr-core-mask");
-            }
         },
         /**
          * Save the dashboard
@@ -167,8 +126,55 @@ $(function () {
             setTimeout(function () {
                 // Load the given report
                 me._loadReport(data.reportId, true);
+                me._renderButtons();
                 me._makeOpaque(true);
             });
+        },
+        _showUI: function (show) {
+            var me = this;
+            if (show) {
+                me._renderButtons();
+            } else {
+                me._removeButtons();
+            }
+            me._makeOpaque(show);
+        },
+        _renderButtons: function () {
+            var me = this;
+            me._removeButtons();
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._renderButton(item);
+            });
+        },
+        _renderButton: function (item) {
+            var me = this;
+            var $item = $(item);
+
+            // Create the button
+            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            $item.append($btn);
+
+            // Hook the onClick event
+            $btn.on("click", function (e) {
+                me._onClickProperties.apply(me, arguments);
+            });
+
+            // Position the button
+            var left = $item.width() / 2 - ($btn.width() / 2);
+            var top = $item.height() / 2 - ($btn.height() / 2);
+            $btn.css({ position: "absolute", left: left + "px", top: top + "px" });
+        },
+        _removeButtons: function () {
+            var me = this;
+            me.element.find(".fr-dashboard-btn").remove();
+        },
+        _makeOpaque: function (addMask) {
+            var me = this;
+            if (addMask) {
+                me.element.find(".fr-report-container").addClass("fr-core-mask");
+            } else {
+                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+            }
         },
         _create: function () {
             var me = this;

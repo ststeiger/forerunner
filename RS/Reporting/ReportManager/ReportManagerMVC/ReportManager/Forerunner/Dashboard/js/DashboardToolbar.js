@@ -54,9 +54,11 @@ $(function () {
             var me = this;
             if (enableEdit) {
                 me.showTool(dtb.btnView.selectorClass);
+                me.enableTools([dtb.btnSave]);
                 me.hideTool(dtb.btnEdit.selectorClass);
             } else {
                 me.hideTool(dtb.btnView.selectorClass);
+                me.disableTools([dtb.btnSave]);
                 me.showTool(dtb.btnEdit.selectorClass);
             }
         },

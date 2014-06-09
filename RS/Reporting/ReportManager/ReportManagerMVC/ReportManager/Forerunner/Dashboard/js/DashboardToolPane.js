@@ -46,9 +46,11 @@ $(function () {
             var me = this;
             if (enableEdit) {
                 me.showTool(dbtp.itemView.selectorClass);
+                me.enableTools([dbtp.itemSave]);
                 me.hideTool(dbtp.itemEdit.selectorClass);
             } else {
                 me.hideTool(dbtp.itemView.selectorClass);
+                me.disableTools([dbtp.itemSave]);
                 me.showTool(dbtp.itemEdit.selectorClass);
             }
         },

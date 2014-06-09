@@ -13601,13 +13601,7 @@ $(function () {
 
             me.element.css("background-color", "");
         },
-        /**
-         * Transition to Open Dashboard view
-         *
-         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
-         * @param {String} name - Name of the dashboard template
-         */
-        transitionToOpenDashboard: function (path) {
+        _transitionToDashboard: function (path, enableEdit) {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
@@ -13624,51 +13618,42 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    enableEdit: false,
+                    enableEdit: enableEdit,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                if (enableEdit) {
+                    $dashboardEditor.dashboardEditor("editDashboard", path);
+                } else {
+                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                }
+
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
         },
         /**
+         * Transition to Open Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
+         * @param {String} path - Fully qualified path to the dashboard
+         */
+        transitionToOpenDashboard: function (path) {
+            var me = this;
+            me._transitionToDashboard(path, false);
+        },
+        /**
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
-         * @param {String} name - Name of the dashboard template
+         * @param {String} path - Fully qualified path to the dashboard
          */
         transitionToCreateDashboard: function (path) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-            layout.$mainsection.html("");
-            forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            layout._selectedItemPath = null;
-            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
-            //To resolved bug 909, 845, 811 on iOS
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
-            setTimeout(function () {
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
-                    DefaultAppTemplate: layout,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    isReportManager: true,
-                    enableEdit: true,
-                    rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings()
-                });
-
-                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("editDashboard", path);
-                layout.$mainsection.fadeIn("fast");
-            }, timeout);
-
-            me.element.css("background-color", "");
+            me._transitionToDashboard(path, true);
         },
         _init: function () {
             var me = this;
@@ -20175,9 +20160,11 @@ $(function () {
             var me = this;
             if (enableEdit) {
                 me.showTool(dtb.btnView.selectorClass);
+                me.enableTools([dtb.btnSave]);
                 me.hideTool(dtb.btnEdit.selectorClass);
             } else {
                 me.hideTool(dtb.btnView.selectorClass);
+                me.disableTools([dtb.btnSave]);
                 me.showTool(dtb.btnEdit.selectorClass);
             }
         },
@@ -20254,9 +20241,11 @@ $(function () {
             var me = this;
             if (enableEdit) {
                 me.showTool(dbtp.itemView.selectorClass);
+                me.enableTools([dbtp.itemSave]);
                 me.hideTool(dbtp.itemEdit.selectorClass);
             } else {
                 me.hideTool(dbtp.itemView.selectorClass);
+                me.disableTools([dbtp.itemSave]);
                 me.showTool(dbtp.itemEdit.selectorClass);
             }
         },

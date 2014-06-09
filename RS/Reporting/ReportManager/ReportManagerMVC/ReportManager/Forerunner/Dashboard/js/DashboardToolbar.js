@@ -44,17 +44,42 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolbar"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolbar#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dtb.btnView.selectorClass);
+                    me.enableTools([dtb.btnSave]);
+                    me.hideTool(dtb.btnEdit.selectorClass);
+                    return;
+                }
+            }
+
+            // Disable the edit buttons
+            me.hideTool(dtb.btnView.selectorClass);
+            me.disableTools([dtb.btnSave]);
+            me.showTool(dtb.btnEdit.selectorClass);
+        },
         _init: function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
-            me.addTools(1, true, [dtb.btnMenu]);
-            if (me.options.enableEdit) {
-                me.addTools(2, true, [dtb.btnSave]);
-            } else {
-                me.addTools(2, true, [dtb.btnEdit]);
-            }
+            me.removeAllTools();
+
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();

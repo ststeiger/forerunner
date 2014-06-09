@@ -34,8 +34,7 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null,
-            isAdmin:false,
+            $unzoomtoolbar: null
         };
 
         // Merge options with the default settings
@@ -47,6 +46,11 @@ $(function () {
         if (me.options.isReportManager || me.options.useReportManagerSettings) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
+        }
+
+        me.subscriptionModel = null;
+        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+            me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
         }
     };
 
@@ -72,8 +76,7 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
+                rsInstance: me.options.rsInstance
             });
 
             // Create / render the toolbar
@@ -122,7 +125,7 @@ $(function () {
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
                 if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 13, true, [mi.itemLogOff]);
+                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
                 }
 
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
@@ -162,6 +165,20 @@ $(function () {
             var $dlg;
             $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+            $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+
+            $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-emailsubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
             $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });

@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Сохранить Dashboard Failed",
     "saveDashboardSucceeded":"Сохранить Dashboard удалось",
     "loadDashboardFailed":"Нагрузка Dashboard удалось",
-    "loadDashboard":"Нагрузка Dashboard"
+    "loadDashboard":"Нагрузка Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Подробнее",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Расширение",
     "saveDashboard":"Сохранить Dashboard",
     "editDashboard":"Редактировать Dashboard",
-    "tags":"Метки"
+    "tags":"Метки",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -92,7 +94,8 @@
     "createDashboard":"Создание Dashboard",
     "editDashboard":"Редактировать Dashboard",
     "saveDashboard":"Сохранить Dashboard",
-    "searchFolder":"Поиск Папка"
+    "searchFolder":"Поиск Папка",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Печать отчета",
@@ -113,6 +116,7 @@
     "submit":"Оклахома",
     "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс",
+	"Email":"Email",
     "AdminUI":"UI Админ"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"Создание Dashboard",
     "cancel":"отменить",
-    "submit":"представлять"
+    "submit":"представлять",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Расширения",

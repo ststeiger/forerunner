@@ -17,7 +17,8 @@
     "saveDashboardFailed":"ダッシュボードの失敗を保存",
     "saveDashboardSucceeded":"成功しましたダッシュボードを保存",
     "loadDashboardFailed":"負荷ダッシュに失敗しました",
-    "loadDashboard":"ロード·ダッシュボード"
+    "loadDashboard":"ロード·ダッシュボード",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL拡張",
     "saveDashboard":"ダッシュボードを保存",
     "editDashboard":"編集ダッシュボード",
-    "tags":"タグ"
+    "tags":"タグ",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"裏面",
@@ -92,7 +94,8 @@
     "createDashboard":"ダッシュボードの作成",
     "editDashboard":"編集ダッシュボード",
     "saveDashboard":"ダッシュボードを保存",
-    "searchFolder":"検索フォルダ"
+    "searchFolder":"検索フォルダ",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -113,6 +116,7 @@
     "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI",
+	"Email":"Email",
     "AdminUI":"管理UI"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"ダッシュボードの作成",
     "cancel":"取り消す",
-    "submit":"提出する"
+    "submit":"提出する",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL拡張",

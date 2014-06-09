@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Enregistrer Dashboard Échec",
     "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
     "loadDashboardFailed":"Charge Dashboard Échec",
-    "loadDashboard":"charge Dashboard"
+    "loadDashboard":"charge Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -93,6 +94,7 @@
     "createDashboard":"Créer Dashboard",
     "editDashboard":"Modifier Dashboard",
     "saveDashboard":"enregistrer du tableau de bord",
+    "viewDashboard":"View Dashboard",
     "searchFolder":"dossier de recherche"
   },
   "print": {
@@ -114,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive",
+	"Email":"Email",
     "AdminUI":"administrateur UI"
   },
   "paramPane": {
@@ -200,7 +203,11 @@
   "createDashboard": {
     "title":"créer Dashboard",
     "cancel":"annuler",
-    "submit":"soumettre"
+    "submit":"soumettre",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"Extensions RDL",

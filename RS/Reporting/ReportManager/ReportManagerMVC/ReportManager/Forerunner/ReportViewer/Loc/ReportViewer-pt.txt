@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Salve Painel Falha",
     "saveDashboardSucceeded":"Salve Painel Sucedido",
     "loadDashboardFailed":"Carga Painel Falha",
-    "loadDashboard":"carga Painel"
+    "loadDashboard":"carga Painel",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Extensão",
     "saveDashboard":"Salve o Dashboard",
     "editDashboard":"Editar o Dashboard",
-    "tags":"Marcações"
+    "tags":"Marcações",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Volta",
@@ -92,7 +94,8 @@
     "createDashboard":"criar o Dashboard",
     "editDashboard":"Editar o Dashboard",
     "saveDashboard":"Salve o Dashboard",
-    "searchFolder":"pasta de Pesquisa"
+    "searchFolder":"pasta de Pesquisa",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -113,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive",
+	"Email":"Email",
     "AdminUI":"UI Administrador"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"criar o Dashboard",
     "cancel":"cancelar",
-    "submit":"submeter"
+    "submit":"submeter",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensões",

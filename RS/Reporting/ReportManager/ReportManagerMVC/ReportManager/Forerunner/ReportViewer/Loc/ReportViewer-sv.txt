@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Spara Dashboard misslyckades",
     "saveDashboardSucceeded":"Spara Dashboard Lyckades",
     "loadDashboardFailed":"Lastinstrumentpanels Misslyckades",
-    "loadDashboard":"Lastinstrumentbräda"
+    "loadDashboard":"Lastinstrumentbräda",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Extension",
     "saveDashboard":"Spara Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
-    "tags":"Taggar"
+    "tags":"Taggar",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"bakåt",
@@ -92,7 +94,8 @@
     "createDashboard":"Skapa Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
     "saveDashboard":"Spara Dashboard",
-    "searchFolder":"sökmapp"
+    "searchFolder":"sökmapp",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -113,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI",
+	"Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"Skapa Dashboard",
     "cancel":"Avbryt",
-    "submit":"inkomma"
+    "submit":"inkomma",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensions",

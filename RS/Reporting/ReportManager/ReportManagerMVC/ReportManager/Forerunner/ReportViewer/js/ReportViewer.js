@@ -35,6 +35,7 @@ $(function () {
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -65,8 +66,7 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null,
-            isAdmin: false,
+            rsInstance: null
         },
 
         _destroy: function () {
@@ -1527,6 +1527,32 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
+        showEmailSubscription : function (subscriptionID) {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var paramList = null;
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
+                }
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
+                me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        manageSubscription : function() {
+            var me = this;
+            me._setManageSubscriptionUI();
+            if (me.$manageSub) {
+                me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
+                me.$manageSub.manageSubscription("listSubscriptions", null);
+                me.$manageSub.manageSubscription("openDialog");
+            }
+        },
         /**
          * Print current reprot in PDF format
          *
@@ -1559,6 +1585,16 @@ $(function () {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
             me.$printDialog.reportPrint("setPrint", pageLayout);
+        },
+        _setEmailSubscriptionUI : function() {
+            var me = this;
+            if (!me.$emailSub)
+                me.$emailSub = me.options.$appContainer.find(".fr-emailsubscription-section");
+        },
+        _setManageSubscriptionUI: function () {
+            var me = this;
+            if (!me.$manageSub)
+                me.$manageSub = me.options.$appContainer.find(".fr-managesubscription-section");
         },
        
         //Page Loading
@@ -2450,6 +2486,8 @@ $(function () {
             if (me.$printDialog)
                 me.$printDialog.reportPrint("destroy");
 
+            if (me.$emailSub)
+                me.$emailSub.emailSubscription("destroy");
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }

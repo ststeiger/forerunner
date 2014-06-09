@@ -97,6 +97,9 @@
     <Compile Include="SSRS Proxy\ReportingService2006.cs" />
     <Compile Include="SSRS Proxy\ReportingService200X.cs" />
     <Compile Include="SSRS Proxy\RSManagmentProxy.cs" />
+    <Compile Include="SubscriptionExtensionSettings.cs" />
+    <Compile Include="SubscriptionInfo.cs" />
+    <Compile Include="SubscriptionSchedule.cs" />
     <Compile Include="ThreadContext.cs" />
     <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>

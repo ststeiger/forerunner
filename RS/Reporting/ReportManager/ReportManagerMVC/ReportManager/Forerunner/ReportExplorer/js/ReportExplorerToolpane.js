@@ -78,6 +78,11 @@ $(function () {
             }
 
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+
+            
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates.call(me);
+            });
         },
         _init: function () {
             var me = this;
@@ -86,7 +91,7 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
 
             //Add admin feature buttons detect
             if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
@@ -105,6 +110,10 @@ $(function () {
 
             if (forerunner.ajax.isFormsAuth()) {
                 toolpaneItems.push([tp.itemLogOff]);
+            }
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                me.addTools(3, false, [tp.itemCreateDashboard]);
             }
 
             me.addTools(1, true, toolpaneItems);
@@ -132,11 +141,18 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+
             if (lastFetched.view === "catalog") {
-                me.enableTools([tp.itemCreateDashboard]);
-            } else {
-                me.disableTools([tp.itemCreateDashboard]);
+                var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                if (permission && permission.hasPermission === true) {
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button
+                    me.enableTools([tp.itemCreateDashboard]);
+                    return;
+                }
             }
+
+            me.disableTools([tp.itemCreateDashboard]);
         }
     });  // $.widget
 });  // function()

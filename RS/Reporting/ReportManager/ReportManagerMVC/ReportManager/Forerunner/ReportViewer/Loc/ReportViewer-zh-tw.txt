@@ -17,7 +17,8 @@
     "saveDashboardFailed":"保存指示板失敗",
     "saveDashboardSucceeded":"保存指示板成功",
     "loadDashboardFailed":"加載指示板失敗",
-    "loadDashboard":"加載指示板"
+    "loadDashboard":"加載指示板",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"點擊查看更多訊息",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL擴展",
     "saveDashboard":"保存指示板",
     "editDashboard":"編輯指示板",
-    "tags":"標籤"
+    "tags":"標籤",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"返回",
@@ -92,7 +94,8 @@
     "createDashboard":"創建指示板",
     "editDashboard":"編輯指示板",
     "saveDashboard":"保存指示板",
-    "searchFolder":"搜索文件夾"
+    "searchFolder":"搜索文件夾",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"打印報表",
@@ -113,6 +116,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
+	"Email":"Email",
     "AdminUI":"管理員UI"
   },
   "paramPane": {
@@ -205,7 +209,11 @@
   "createDashboard": {
     "title":"創建指示板",
     "cancel":"取消",
-    "submit":"提交"
+    "submit":"提交",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "dashboardEditor": {
     "propertiesBtn":"屬性"

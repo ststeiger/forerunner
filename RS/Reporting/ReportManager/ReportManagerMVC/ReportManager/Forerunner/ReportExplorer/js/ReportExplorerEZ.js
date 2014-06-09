@@ -35,7 +35,6 @@ $(function () {
 	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Optional,Report service instance name
-     * @prop {String} options.isAdmin - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
      */
@@ -46,7 +45,6 @@ $(function () {
             isFullScreen: true,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin:false,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -75,7 +73,6 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                isAdmin: me.options.isAdmin,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur,
             });
@@ -102,7 +99,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:name": "transitionToCreateDashboard",
+                    "createDashboard/:path": "transitionToCreateDashboard"
                     "searchfolder/:path": "transitionToSearchFolder"
                 }
             });
@@ -152,7 +149,7 @@ $(function () {
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(name);
+                me.transitionToCreateDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -249,6 +246,12 @@ $(function () {
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
+        _getUserSettings: function () {
+            var me = this;
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
+            return me.$reportExplorer.reportExplorer("getUserSettings");
+        },
         /**
          * Transition to ReportViewer view
          *
@@ -261,15 +264,6 @@ $(function () {
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            //Update isAdmin
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            var settings = me.$reportExplorer.reportExplorer("getUserSettings");
-            if (settings && settings.adminUI === true )
-                me.options.isAdmin = true;
-            else
-                me.options.isAdmin = false;
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -288,7 +282,7 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    isAdmin: me.options.isAdmin,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -302,13 +296,7 @@ $(function () {
 
             me.element.css("background-color", "");
         },
-        /**
-         * Transition to Open Dashboard view
-         *
-         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
-         * @param {String} name - Name of the dashboard template
-         */
-        transitionToOpenDashboard: function (path) {
+        _transitionToDashboard: function (path, enableEdit) {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
@@ -325,55 +313,42 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    enableEdit: false,
-                    rsInstance: me.options.rsInstance
+                    enableEdit: enableEdit,
+                    rsInstance: me.options.rsInstance,
+                    userSettings: me._getUserSettings()
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadDefinition", path, false);
+                if (enableEdit) {
+                    $dashboardEditor.dashboardEditor("editDashboard", path);
+                } else {
+                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
+                }
+
+                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");
         },
         /**
+         * Transition to Open Dashboard view
+         *
+         * @function $.forerunner.reportExplorerEZ#transitionToOpenDashboard
+         * @param {String} path - Fully qualified path to the dashboard
+         */
+        transitionToOpenDashboard: function (path) {
+            var me = this;
+            me._transitionToDashboard(path, false);
+        },
+        /**
          * Transition to Create Dashboard view
          *
          * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
-         * @param {String} name - Name of the dashboard template
+         * @param {String} path - Fully qualified path to the dashboard
          */
-        transitionToCreateDashboard: function (templateName) {
+        transitionToCreateDashboard: function (path) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-            layout.$mainsection.html("");
-            forerunner.dialog.closeAllModalDialogs(layout.$container);
-
-            layout._selectedItemPath = null;
-            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
-            //To resolved bug 909, 845, 811 on iOS
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
-            setTimeout(function () {
-                // TODO
-                // What about the case where the user navigates directly to the create dashboard URL.
-                // We need to pass the parentFolder to the URL
-                var parentFolder = "/";
-                if (me.$reportExplorer) {
-                    var lastFetched = me.$reportExplorer.reportExplorer("getLastFetched");
-                    parentFolder = lastFetched.path;
-                }
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
-                    DefaultAppTemplate: layout,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    isReportManager: true,
-                    enableEdit: true,
-                    rsInstance: me.options.rsInstance
-                });
-
-                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("loadTemplate", parentFolder, templateName);
-            }, timeout);
-
-            me.element.css("background-color", "");
+            me._transitionToDashboard(path, true);
         },
         _init: function () {
             var me = this;

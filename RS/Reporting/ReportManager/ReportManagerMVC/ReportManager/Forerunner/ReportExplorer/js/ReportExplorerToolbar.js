@@ -82,7 +82,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnCreateDashboard, tb.btnHome, tb.btnRecent, tb.btnFav];
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav];
 
             //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
             //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
@@ -104,8 +104,6 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
-
-            me._updateBtnStates();
         },
 
         _destroy: function () {
@@ -117,19 +115,6 @@ $(function () {
             $(window).resize(function () {
                 me.onWindowResize.call(me);
             });
-
-            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me._updateBtnStates();
-            });
-        },
-        _updateBtnStates: function () {
-            var me = this;
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-            if (lastFetched.view === "catalog") {
-                me.enableTools([tb.btnCreateDashboard]);
-            } else {
-                me.disableTools([tb.btnCreateDashboard]);
-            }
         }
     });  // $.widget
 });  // function()

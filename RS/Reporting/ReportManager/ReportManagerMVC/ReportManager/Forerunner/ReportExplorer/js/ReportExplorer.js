@@ -48,7 +48,6 @@ $(function () {
             $appContainer: null,
             explorerSettings: null,
             rsInstance: null,
-            isAdmin: false,
             onInputBlur: null,
             onInputFocus: null,
         },
@@ -70,7 +69,6 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    me.options.isAdmin = settings.adminUI;
                 },
                 error: function (data) {
                     console.log(data);
@@ -96,7 +94,6 @@ $(function () {
             var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
-                me.options.isAdmin = settings.adminUI;
             }
 
             return me.userSettings;
@@ -337,7 +334,7 @@ $(function () {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -417,7 +414,8 @@ $(function () {
             me._fetch(me.options.view, me.options.path);
 
             me.userSettings = {
-                responsiveUI: false
+                responsiveUI: false,
+                adminUI: false
             };
             me.getUserSettings(true);
 
@@ -466,7 +464,10 @@ $(function () {
                 $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.createDashboard({
                     $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
+                    $reportExplorer: me.element,
+                    parentFolder: me.lastFetched.path,
+                    reportManagerAPI: me.options.reportManagerAPI,
+                    rsInstance: me.options.rsInstance
                 });
                 me.options.$appContainer.append($dlg);
                 me._createDashboardDialog = $dlg;

@@ -43,7 +43,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            //sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -382,6 +381,19 @@ $(function () {
             }
         },
         /** @member */
+        btnEmailSubscription: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-toolbar-email-button",
+            imageClass: "fr-icons24x24-emailsubscription",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            tooltip: "Email",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showEmailSubscription");
+                }
+            }
+        },
+        /** @member */
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
@@ -407,7 +419,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -447,7 +458,19 @@ $(function () {
             tooltip: locData.toolbar.editDashboard,
             events: {
                 click: function (e) {
-                    e.data.me.options.$dashboardEZ.dashboardEZ("edit");
+                    e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", true);
+                }
+            }
+        },
+        /** @member */
+        btnView: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-dashboard-toolbar-view-button",
+            imageClass: "fr-icons24x24-createdashboard",
+            tooltip: locData.toolbar.viewDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", false);
                 }
             }
         },
@@ -529,7 +552,20 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-edit-button"]);
-                    e.data.me.options.$dashboardEZ.dashboardEZ("edit");
+                    e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", true);
+                }
+            }
+        },
+        /** @member */
+        itemView: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-dashboardtoolpane-view-button",
+            imageClass: "fr-icons24x24-createdashboard",
+            text: locData.toolPane.viewDashboard,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-view-button"]);
+                    e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", false);
                 }
             }
         },
@@ -986,6 +1022,32 @@ $(function () {
             }
         },
         /** @member */
+        itemEmailSubscription: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-emailsubscription",
+            imageClass: "fr-icons24x24-emailsubscription",
+            text: "Email",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("showEmailSubscription");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-emailsubscription"]);
+                }
+            }
+        },
+        /** @member */
+        itemManageSubscription: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-managesubscription",
+            imageClass: "fr-icons24x24-managesubscription",
+            text: "Manage Subscription",
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("manageSubscription");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-managesubscription"]);
+                }
+            }
+        },
+        /** @member */
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
@@ -1194,7 +1256,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
-            //sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {
@@ -1212,18 +1273,6 @@ $(function () {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
-        btnCreateDashboard: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-createdashboard",
-            imageClass: "fr-icons24x24-createdashboard",
-            tooltip: locData.toolbar.createDashboard,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
                 }
             }
         },

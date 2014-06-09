@@ -15,20 +15,18 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {
-
+            rsInstance: null
         },
         subscriptionList: null,
         extensionList: null,
         extensionParameter: null,
         extensionSettings: {},
-        subscriptionCache: {},
         schedules: null,
         _create: function () {
         },
         getSubscriptionList: function (reportPath) {
             var me = this;
-            if (me.subscriptionList) return me.subscriptionList;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -36,17 +34,16 @@ $(function () {
             })
             .done(function (data) {
                 console.log("ListSubscriptions succeeded.");
-                me.subscriptionList = data;
             })
             .fail(function (data) {
                 console.log("ListSubscriptions call failed.");
             });
-            return me.subscriptionList || jqxhr;
+            return jqxhr;
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return me.schedules;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules";
+            if (me.schedules) return [me.schedules];
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -54,7 +51,6 @@ $(function () {
             })
             .done(
                 function (data) {
-                    console.log('here');
                     me.schedules = data;
                 })
             .fail(
@@ -65,38 +61,28 @@ $(function () {
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return me.extensionList;
-            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions";
-            var jqxhr = forerunner.ajax.ajax({
+            if (me.extensionList) return [me.extensionList];
+            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            return forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: true
             })
             .done(
                 function (data) {
-                    console.log('hello');
-                    for (var i = 0; i < data.length; i++) {
-                        var extensionName = data[i].Name;
-                        if (extensionName == "NULL") {
-                            data.splice(i, 1);
-                        }
-                    }
-                    me.extensionList = data; me._getExtensionSettings(data);
+                    me.extensionList = data; 
                 })
             .fail(function () {
                 console.log("ListDeliveryExtensions call failed.");
             });
-            return me.extensionList || jqxhr;
         },
         _extensionSettingsCount: 0,
         _extensionSettingsJQXHR : {},
-        _getExtensionSettings: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var extensionName = data[i].Name;
-                if (extensionName == "NULL") continue;
-                var me = this;
-                var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName;
-                var jqxhr = forerunner.ajax.ajax({
+        getExtensionSettings: function (extensionName) {
+            if (extensionName == "NULL") return;
+            var me = this;
+            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            return forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: true
@@ -113,17 +99,10 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
-                me._extensionSettingsJQXHR[extensionName] = jqxhr;
-            }
-        },
-        getExtensionSettings: function (extensionName) {
-            var me = this;
-            return me.extensionSettings[extensionName] || me._extensionSettingsJQXHR[extensionName];
         },
         getSubscription: function (subscriptionID) {
             var me = this;
-            if (me.subscriptionCache[subscriptionID]) return me.subscriptionCache[subscriptionID];
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID" + subscriptionID;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
             var retval;
             forerunner.ajax.ajax({
                 url: url,
@@ -136,7 +115,6 @@ $(function () {
                     console.log("getSubscription failed: " + data.status);
                 }
             });
-            me.subscriptionCache[subscriptionID] = data;
             return retval;
         },
         createSubscription: function (subscriptionInfo, success, error) {
@@ -147,13 +125,12 @@ $(function () {
         },
         deleteSubscription: function (subscriptionID, success, error) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
-                succes: function (data, textStatus, jqXHR) {
-                    me.subscriptionCache[data] = subscriptionInfo;
+                success: function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
                         success(data);
                     }
@@ -167,15 +144,12 @@ $(function () {
         },
         _saveSubscription: function (verb, subscriptionInfo, success, error) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + verb;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/" + verb;
+            subscriptionInfo.Instance = me.options.rsInstance;
             forerunner.ajax.post(
                 url,
-                {
-                    reportPath: me.reportPath,
-                    parameters: JSON.stringify(subscriptionInfo),
-                },
+                subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    me.subscriptionCache[data] = subscriptionInfo;
                     if (success && typeof (success) === "function") {
                         success(data);
                     }

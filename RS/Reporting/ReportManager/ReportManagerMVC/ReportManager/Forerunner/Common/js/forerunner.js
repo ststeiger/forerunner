@@ -194,6 +194,8 @@ $(function () {
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
             /** @constant */
+            emailSubscription: "emailSubscription",
+            /** @constant */
             reportExplorerToolbar: "reportExplorerToolbar",
             /** @constant */
             reportExplorerToolpane: "reportExplorerToolpane",
@@ -440,8 +442,8 @@ $(function () {
             /** widget + event, lowercase */
             reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
-            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); }
-        },
+            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); },
+    },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *
@@ -608,6 +610,31 @@ $(function () {
             }
 
             return this._customSettings;
+        },
+        /**
+         * Get list of mobilizer shared schedule, which everybody can read, unlike the RS shared schedule.
+         *
+         * 
+         */
+        getMobilizerSharedSchedule: function () {
+            if (!this._forerunnerSharedSchedule) {
+                $.ajax({
+                    url: forerunner.config.forerunnerFolder() + "../Custom/MobilizerSharedSchedule.txt",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        forerunner.config._forerunnerSharedSchedule = data.SharedSubscriptions;
+                    },
+                    fail: function () {
+                        console.log("Load mobilizer custom settings failed");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Load mobilizer custom settings .  " + textStatus);
+                    },
+                });
+            }
+
+            return this._forerunnerSharedSchedule;
         },
         /**
        * Get user custom settings
@@ -1159,6 +1186,32 @@ $(function () {
                 if (fail)
                     fail(jqXHR, textStatus, errorThrown,this);
             });
+        },
+        /**
+        * Returns json data indicating is the user has the requested permission for the given path
+        *
+        * @param {String} path - fully qualified path to the resource
+        * @param {String} permission - Requested permission
+        */
+        hasPermission: function (path, permission) {
+            var permissionData = null;
+
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
+                "?path=" + encodeURIComponent(path) +
+                "&permission=" + permission;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    permissionData = data;
+                },
+                fail: function (jqXHR) {
+                    console.log("hasPermission() - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+            return permissionData;
         }
     };
     /**

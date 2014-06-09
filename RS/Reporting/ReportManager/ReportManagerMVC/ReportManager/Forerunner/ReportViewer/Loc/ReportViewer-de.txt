@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Sparen Sie Dashboard-Fehler",
     "saveDashboardSucceeded":"Sparen Sie Dashboard-Nachfolger",
     "loadDashboardFailed":"Last-Dashboard fehlgeschlagen",
-    "loadDashboard":"Last-Dashboard"
+    "loadDashboard":"Last-Dashboard",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL-Erweiterung",
     "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save Dashboard",
-    "tags":"Schlagworte"
+    "tags":"Schlagworte",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Zurück",
@@ -92,7 +94,8 @@
     "createDashboard":"Dashboard erstellen",
     "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save-Dashboard",
-    "searchFolder":"Suchordner"
+    "searchFolder":"Suchordner",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Bericht drucken",
@@ -113,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Abbestellen",
     "ResponsiveUI":"Responsive UI",
+	"Email":"Email",
     "AdminUI":"Admin-Benutzeroberfläche"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"Dashboard erstellen",
     "cancel":"stornieren",
-    "submit":"einreichen"
+    "submit":"einreichen",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL-Erweiterungen",

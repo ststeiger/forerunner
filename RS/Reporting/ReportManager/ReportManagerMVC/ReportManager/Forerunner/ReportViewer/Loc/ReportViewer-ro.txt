@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Salvați Tabloul de bord a eșuat",
     "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
     "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
-    "loadDashboard":"încărcare Tablou de bord"
+    "loadDashboard":"încărcare Tablou de bord",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salvați Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
-    "tags":"Tag-uri"
+    "tags":"Tag-uri",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -92,7 +94,8 @@
     "createDashboard":"crea Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
     "saveDashboard":"Salvați Tablou de bord",
-    "searchFolder":"Folder de căutare"
+    "searchFolder":"Folder de căutare",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"imprima raportul",
@@ -113,6 +116,7 @@
     "submit":"bine",
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
+	"Email":"Email",
     "AdminUI":"UI admin"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"crea Tablou de bord",
     "cancel":"anula",
-    "submit":"executa"
+    "submit":"executa",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extension",

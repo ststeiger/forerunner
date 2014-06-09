@@ -15,14 +15,15 @@ $(function () {
     *
     * @namespace $.forerunner.dashboardEZ
     * @prop {Object} options - The options
-    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
+    * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.
     * @prop {Object} options.parentFolder - Fully qualified URL of the parent folder
     * @prop {Object} options.navigateTo - Callback function used to navigate to a path and view
     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
     * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-    * @prop {String} options.rsInstance - Optional,Report service instance name
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.rsInstance - Optional, User specific options
     *
     * @example
     * $("#dashboardEZId").dashboardEZ({
@@ -36,16 +37,29 @@ $(function () {
             isFullScreen: true,
             isReportManager: false,
             enableEdit: true,
-            rsInstance: null
+            rsInstance: null,
+            userSettings: null
         },
         /**
-         * Switch the UI from dashboard view to the dashboard editor
+         * Show the edit or view UI
          *
-         * @function $.forerunner.dashboardEZ#edit
+         * @function $.forerunner.dashboardEZ#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
          */
-        edit: function () {
-            // TODO
-            alert("dashboardEZ edit()");
+        enableEdit: function (enableEdit) {
+            var me = this;
+            me.options.enableEdit = enableEdit;
+
+            // Set the tools to the correct edit mode
+            me.$toolbar.dashboardToolbar("enableEdit", enableEdit);
+            me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
+
+            var $dashboardEditor = me.getDashboardEditor();
+            if (enableEdit) {
+                $dashboardEditor.dashboardEditor("editDashboard", null);
+            } else {
+                $dashboardEditor.dashboardEditor("loadDefinition", null, true);
+            }
         },
         _init: function () {
             var me = this;
@@ -60,18 +74,17 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            var $dashboardContainer = $("<div class='fr-dashboard-container'></div>");
-            me.layout.$mainsection.append($dashboardContainer);
-            $dashboardContainer.dashboardEditor({
+            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.layout.$mainsection.append(me.$dashboardContainer);
+            me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
-                parentFolder: me.options.parentFolder,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 rsInstance: me.options.rsInstance
             });
 
-            var $toolbar = me.layout.$mainheadersection;
-            $toolbar.dashboardToolbar({
+            me.$toolbar = me.layout.$mainheadersection;
+            me.$toolbar.dashboardToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -84,8 +97,8 @@ $(function () {
                 $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
             }
 
-            var $toolpane = me.layout.$leftpanecontent;
-            $toolpane.dashboardToolPane({
+            me.$toolpane = me.layout.$leftpanecontent;
+            me.$toolpane.dashboardToolPane({
                 navigateTo: me.options.navigateTo,
                 $appContainer: me.layout.$container,
                 $dashboardEZ: me.element,
@@ -98,13 +111,13 @@ $(function () {
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
-                $toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                $toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+                me.$toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                me.$toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
             }
 
             if (me.options.historyBack) {
-                $toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
-                $toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
+                me.$toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                me.$toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
             }
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());

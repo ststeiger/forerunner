@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Vista Mælaborð mistókst",
     "saveDashboardSucceeded":"Vista Mælaborð Eftirmaður",
     "loadDashboardFailed":"Hlaða Mælaborð mistókst",
-    "loadDashboard":"hlaða Mælaborð"
+    "loadDashboard":"hlaða Mælaborð",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Eftirnafn",
     "saveDashboard":"vista Mælaborð",
     "editDashboard":"breyta Mælaborð",
-    "tags":"Tags"
+    "tags":"Tags",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"Til baka",
@@ -92,7 +94,8 @@
     "createDashboard":"Búa Mælaborð",
     "editDashboard":"breyta Mælaborð",
     "saveDashboard":"vista Mælaborð",
-    "searchFolder":"Leita Mappa"
+    "searchFolder":"Leita Mappa",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Print Report",
@@ -113,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Hætta",
     "ResponsiveUI":"móttækilegur HÍ",
+	"Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"Búa Mælaborð",
     "cancel":"hætta",
-    "submit":"leggja"
+    "submit":"leggja",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Eftirnafn",

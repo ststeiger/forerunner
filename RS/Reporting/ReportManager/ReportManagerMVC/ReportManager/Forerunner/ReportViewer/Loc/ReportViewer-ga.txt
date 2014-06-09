@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Sábháil Ar Phainéal Theip",
     "saveDashboardSucceeded":"Sábháil Ar Phainéal Comharba",
     "loadDashboardFailed":"Painéal na Luchtaigh Theip",
-    "loadDashboard":"Painéal na Luchtaigh"
+    "loadDashboard":"Painéal na Luchtaigh",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",
@@ -56,6 +57,7 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
+    "editDashboard":"Edit Dashboard",
     "editDashboard":"Painéal na Eagar",
     "tags":"Clibeanna"
   },
@@ -92,7 +94,8 @@
     "createDashboard":"Cruthaigh Phainéil",
     "editDashboard":"Painéal na Eagar",
     "saveDashboard":"Sábháil Ar Phainéal",
-    "searchFolder":"Cuardaigh Fillteán"
+    "searchFolder":"Cuardaigh Fillteán",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -113,6 +116,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach",
+	"Email":"Email",
     "AdminUI":"Chomhéadain Riarachán"
   },
   "paramPane": {
@@ -199,7 +203,11 @@
   "createDashboard": {
     "title":"Cruthaigh Phainéil",
     "cancel":"Cealaigh",
-    "submit":"Cuir"
+    "submit":"Cuir",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Síneadh",

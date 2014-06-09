@@ -36,23 +36,46 @@ $(function () {
             enableEdit: true,
             toolClass: "fr-dashboard-toolpane"
         },
+        /**
+         * Show the edit or view UI
+         *
+         * @function $.forerunner.dashboardToolPane#enableEdit
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        enableEdit: function (enableEdit) {
+            var me = this;
+            if (enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dbtp.itemView.selectorClass);
+                    me.enableTools([dbtp.itemSave]);
+                    me.hideTool(dbtp.itemEdit.selectorClass);
+                    return;
+                }
+            }
+
+            // Disable the edit buttons
+            me.hideTool(dbtp.itemView.selectorClass);
+            me.disableTools([dbtp.itemSave]);
+            me.showTool(dbtp.itemEdit.selectorClass);
+        },
         _init: function () {
             var me = this;
             me._super();
 
-            me.element.html("");
-            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
-            $(me.element).append($toolpane);
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            me.removeAllTools();
 
-            if (me.options.enableEdit) {
-                me.addTools(1, true, [dbtp.itemSave]);
-            } else {
-                me.addTools(1, true, [dbtp.itemEdit]);
-            }
+            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
-            $toolpane.append($spacerdiv);
+            me.element.append($spacerdiv);
         },
     });  // $.widget
 });  // function()

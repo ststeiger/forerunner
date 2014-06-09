@@ -188,6 +188,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\tiff.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xls.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xml.png"
+  File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"
@@ -326,6 +327,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\Explorer_Examples.css"
   File "${LOCALROOT}\Custom\MobilizerSettings.txt"
   File "${LOCALROOT}\Custom\MobilizerSettings_Examples.txt"
+  File "${LOCALROOT}\Custom\MobilizerSharedSchedule.txt"
 
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"

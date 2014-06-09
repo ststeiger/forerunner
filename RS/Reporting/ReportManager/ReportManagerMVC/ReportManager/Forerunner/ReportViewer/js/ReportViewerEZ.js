@@ -41,8 +41,7 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false,
-            isAdmin: false,
+            useReportManagerSettings: false
         },
         _render: function () {
             var me = this;
@@ -75,8 +74,7 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection,
-                isAdmin: me.options.isAdmin,
+                $unzoomtoolbar: layout.$unzoomsection
             });
 
             initializer.render();

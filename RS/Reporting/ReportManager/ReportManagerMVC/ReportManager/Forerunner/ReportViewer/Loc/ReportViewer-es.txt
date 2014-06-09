@@ -17,7 +17,8 @@
     "saveDashboardFailed":"Ahorra Dashboard Error",
     "saveDashboardSucceeded":"Ahorra Dashboard Sucedido",
     "loadDashboardFailed":"Dashboard No se pudo cargar",
-    "loadDashboard":"Dashboard de carga"
+    "loadDashboard":"Dashboard de carga",
+    "createFailed":"A Dashboard with that already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
@@ -57,7 +58,8 @@
     "RDLExt":"RDL Extensión",
     "saveDashboard":"Ahorra Dashboard",
     "editDashboard":"Editar Dashboard",
-    "tags":"Etiquetas"
+    "tags":"Etiquetas",
+    "viewDashboard":"View Dashboard"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -93,7 +95,8 @@
     "createDashboard":"Crear Dashboard",
     "editDashboard":"Editar Dashboard",
     "saveDashboard":"Ahorra Dashboard",
-    "searchFolder":"carpeta de búsqueda"
+    "searchFolder":"carpeta de búsqueda",
+    "viewDashboard":"View Dashboard"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -114,6 +117,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive",
+	"Email":"Email",
     "AdminUI":"interfaz del administrador"
   },
   "paramPane": {
@@ -200,7 +204,11 @@
   "createDashboard": {
     "title":"Crear Dashboard",
     "cancel":"cancelar",
-    "submit":"presentar"
+    "submit":"presentar",
+    "dashboardName":"Name",
+    "namePlaceholder":"dashboard name",
+    "dashboardTemplate":"Template",
+    "overwrite":"Overwrite"
   },
   "RDLExt": {
     "title":"RDL Extensión",

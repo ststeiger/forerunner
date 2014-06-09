@@ -152,11 +152,11 @@
 
 .fr-icons24x24-createdashboard {
   background-position: -24px -120px;
-}*/
+}
 
 .fr-icons24x24-editdashboard {
   background-position: -48px -120px;
-}
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
 
 
@@ -313,18 +313,22 @@
 }
 
 .fr-icons24x24-createdashboard {
-  background-image:url(../images/ToolbarIcons/CreateDashboard.png);
+  background-image:url(../images/ToolbarIcons/Dashboard.png);
+}
+
+.fr-icons24x24-editdashboard {
+  background-image:url(../images/ToolbarIcons/DashboardEdit.png);
 }
 
 .fr-icons24x24-rdlextension {
     background-image:url(../images/ToolbarIcons/SaveExtension.png);
 }
 
-.fr-icons24x24-dashboard {
-    background-image:url(../images/ToolbarIcons/Dashboard.png);
-}
-
 .fr-icons24x24-emailsubscription {
     background-image:url(../images/ToolbarIcons/EmailSubscription.png);
+}
+
+.fr-icons24x24-managesubscription {
+    background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
 }
 

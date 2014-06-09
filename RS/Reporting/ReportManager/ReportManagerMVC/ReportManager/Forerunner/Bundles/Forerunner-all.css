@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -299,11 +299,11 @@ div.fr-layout-position-absolute { position: absolute; }
 
 .fr-icons24x24-createdashboard {
   background-position: -24px -120px;
-}*/
+}
 
 .fr-icons24x24-editdashboard {
   background-position: -48px -120px;
-}
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
 
 
@@ -460,19 +460,23 @@ div.fr-layout-position-absolute { position: absolute; }
 }
 
 .fr-icons24x24-createdashboard {
-  background-image:url(../images/ToolbarIcons/CreateDashboard.png);
+  background-image:url(../images/ToolbarIcons/Dashboard.png);
+}
+
+.fr-icons24x24-editdashboard {
+  background-image:url(../images/ToolbarIcons/DashboardEdit.png);
 }
 
 .fr-icons24x24-rdlextension {
     background-image:url(../images/ToolbarIcons/SaveExtension.png);
 }
 
-.fr-icons24x24-dashboard {
-    background-image:url(../images/ToolbarIcons/Dashboard.png);
-}
-
 .fr-icons24x24-emailsubscription {
     background-image:url(../images/ToolbarIcons/EmailSubscription.png);
+}
+
+.fr-icons24x24-managesubscription {
+    background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
 }
 
 
@@ -911,31 +915,51 @@ table, td, tr div {
   .fr-us-form .fr-us-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
   .fr-us-form .fr-us-label { height: 20px; display: inline-block; }
   .fr-us-form .fr-us-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+  .fr-us-form .fr-us-textbox { display: inline-block; margin: 0 6px 0 12px; width: 200px; height: 1em; border: 1px solid black;}
 
 .fr-buildversion-container { font-size: 8pt; margin: 16px 0 0 0; }
 
 .fr-cdb-section { display: none; }
 
 .fr-cdb-form { margin-right: 16px; }
-  .fr-cdb-form .fr-cdb-text-input { display: block; width: 156px; margin: auto 0; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-  .fr-cdb-form select { margin: auto 0; font-size: 13px; height: 26px; min-width: 200px; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; }
+    .fr-cdb-form .fr-cdb-label { display: inline; vertical-align: middle; margin-right: 10px; font-size: 13pt; }
+    .fr-cdb-form .fr-cdb-input { display: inline; vertical-align: middle; padding: 0 4px 0 4px; font-size: 13pt; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+    .fr-cdb-form .fr-cdb-dashboard-name { min-width: 200px; height: 24px; }
+    .fr-cdb-form .fr-cdb-template-name { min-width: 210px; margin-top: 5px; }
+    .fr-cdb-form .fr-cdb-overwrite-checkbox { display: inline; vertical-align: middle; height: 28px; }
+
+    .fr-cdb-form .fr-cdb-error-span { display: inline; font-size: 10pt; margin-left: 5px; }
+    .fr-cdb-form .fr-cdb-error-position { display: inline; }
+    .fr-cdb-form .fr-cdb-error { border-width: thin; border-color: red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
-  .fr-cdb-form { margin-right: 4px; }
+    .fr-cdb-form { margin-right: 4px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  .fr-cdb-form { margin-right: 4px; }
+    .fr-cdb-form { margin-right: 4px; }
 }
 
+.fr-sub-form {min-width: 200px; min-height: 300px;}
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:0px;}
 .fr-sub-listitem {display: inline-block; border-bottom: 1px solid #000000; width: 100%;}
 .fr-sub-delete-icon { float: left; }
 .fr-sub-edit-icon { float: left; }
-
-
+.fr-email-form { padding-right: 15px;}
+.fr-email-table { }
+.fr-email-description { width: 100%; border: 0px; border-bottom: 1px solid black; float: left; }
+.fr-email-to { width: 100%; border: 0px; border-bottom: 1px solid black; float: left; }
+.fr-email-subject { width: 100%; border: 0px; border-bottom: 1px solid black; }
+.fr-email-comment{ width: 100%; height: 5em; border: 0px; border-bottom: 1px solid black; resize:none;}
+.fr-email-include {display: inline-block;}
+.fr-email-include input { display:none; }
+.fr-email-include input ~ label { color: gray;}
+.fr-email-include input:Checked ~ label { color: black;}
+.fr-email-renderformat { width: 200px; }
+.fr-email-schedule { width: 200px;}
+.fr-emailsubscription-section { display: none; }
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons128x128 {
   width:128px;
@@ -1820,6 +1844,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dsc-input-container{ display:inline-block; }
 .fr-dashboard-report-container { overflow: auto; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 .fr-dashboard-btn { z-index: 1; height: 38px; padding: 0 10px; border: 1px solid #546681; cursor: pointer; text-align: center; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
+.fr-dashboard-hide { display: none; }
 
 .fr-2up1down { background-color: rgb(210, 223, 237); }
   .fr-2up1down #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }

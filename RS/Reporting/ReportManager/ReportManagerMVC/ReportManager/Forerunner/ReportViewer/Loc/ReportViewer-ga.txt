@@ -57,7 +57,7 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
-    "editDashboard":"Edit Dashboard",
+    "viewDashboard":"View Dashboard",
     "editDashboard":"Painéal na Eagar",
     "tags":"Clibeanna"
   },

@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -5253,6 +5253,15 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me.disableTools([tp.itemTags]);
+
+                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
+                if (addTagPermission && addTagPermission.hasPermission === true) {
+                    me.enableTools([tp.itemTags]);
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap]);
@@ -5355,7 +5364,7 @@ $(function () {
 
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemRDLExt]);
+                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
             }
 
             return listOfItems;
@@ -5821,7 +5830,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tg.explorerFindGroup]);
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav];
 
             //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
             //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
@@ -5934,9 +5943,9 @@ $(function () {
                 me.enableTools([tp.itemLogOff]);
             }
 
-            if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
-                me.enableTools([tp.itemSearchFolder, tp.itemTags]);
-            }
+            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
+            //    me.enableTools([tp.itemSearchFolder, tp.itemTags]);
+            //}
 
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
 
@@ -5951,33 +5960,33 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            me.addTools(1, true, [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup, tg.explorerItemFindGroup]);
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemCreateDashboard, tp.itemSetup];
 
-            //Add admin feature buttons detect
-            if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
-                //Not allow add tags on the root page
-                if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
-                me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-                    toolpaneItems.push(tp.itemTags);
-                }
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
 
-                //Only allow add tags and search folder in catalog view
-                if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-                    toolpaneItems.push(tp.itemSearchFolder);
-                }
+            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+
+                ////Not allow add tags on the root page
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentPath") !== "/" &&
+                //    me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemTags);
+                //}
+
+                ////Only allow add tags and search folder in catalog view
+                //if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
+                //    toolpaneItems.push(tp.itemSearchFolder);
+                //}
+
+                toolpaneItems.push(tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard);
             }
+
             toolpaneItems.push(tg.explorerItemFindGroup);
 
             if (forerunner.ajax.isFormsAuth()) {
-                me.addTools(5, true, [tp.itemLogOff]);
-            }
-            var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
-            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                me.addTools(3, false, [tp.itemCreateDashboard]);
+                toolpaneItems.push(tp.itemLogOff);
             }
 
-
+            me.addTools(1, false, toolpaneItems);
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -6004,16 +6013,22 @@ $(function () {
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
 
             if (lastFetched.view === "catalog") {
+                me.disableTools([tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard]);
+
                 var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
                 if (permission && permission.hasPermission === true) {
                     // If the last fetched folder is a catalog and the user has permission to create a
-                    // resource in this folder, enable the create dashboard button
-                    me.enableTools([tp.itemCreateDashboard]);
-                    return;
+                    // resource in this folder, enable the create dashboard button and create search folder button
+                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                }
+
+                if (lastFetched.path !== "/") {
+                    var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                    if (addTagPermission && addTagPermission.hasPermission === true) {
+                        me.enableTools([tp.itemTags]);
+                    }
                 }
             }
-
-            me.disableTools([tp.itemCreateDashboard]);
         }
     });  // $.widget
 });  // function()
@@ -13036,11 +13051,7 @@ $(function () {
             }
             $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
-            $dlg = me.options.$appContainer.find(".fr-dsc-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dsc-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
             $dlg = me._findSection("fr-tag-section");
@@ -13952,7 +13963,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:path": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
                 }
             });

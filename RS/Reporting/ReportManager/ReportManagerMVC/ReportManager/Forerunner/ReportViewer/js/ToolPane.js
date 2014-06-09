@@ -58,6 +58,15 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me.disableTools([tp.itemTags]);
+
+                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
+                if (addTagPermission && addTagPermission.hasPermission === true) {
+                    me.enableTools([tp.itemTags]);
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap]);
@@ -157,9 +166,10 @@ $(function () {
                 else
                     listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
             }
-                         
+
+            var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([[tp.itemTags, tp.itemRDLExt]);
+                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
             }
 
             return listOfItems;

@@ -99,7 +99,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:path": "transitionToCreateDashboard"
+                    "createDashboard/:path": "transitionToCreateDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
                 }
             });

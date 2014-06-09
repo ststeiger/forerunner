@@ -59,6 +59,7 @@
     "RDLExt":"RDL Extension",
     "saveDashboard":"enregistrer du tableau de bord",
     "editDashboard":"Modifier Dashboard",
+	"viewDashboard":"View Dashboard",
     "tags":"Mots clés"
   },
   "toolbar": {

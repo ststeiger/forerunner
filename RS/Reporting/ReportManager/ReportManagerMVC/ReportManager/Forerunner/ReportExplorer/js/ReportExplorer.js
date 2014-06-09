@@ -326,7 +326,7 @@ $(function () {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);

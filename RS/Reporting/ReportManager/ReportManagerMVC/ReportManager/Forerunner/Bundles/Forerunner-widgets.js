@@ -5900,6 +5900,11 @@ $(function () {
             }
 
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+
+            
+            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
+                me._updateBtnStates.call(me);
+            });
         },
         _init: function () {
             var me = this;
@@ -5913,8 +5918,9 @@ $(function () {
             }
             var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                me.addTools(3, true, [tp.itemCreateDashboard]);
+                me.addTools(3, false, [tp.itemCreateDashboard]);
             }
+
 
             me._initCallbacks();
 
@@ -5940,11 +5946,18 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+
             if (lastFetched.view === "catalog") {
-                me.enableTools([tp.itemCreateDashboard]);
-            } else {
-                me.disableTools([tp.itemCreateDashboard]);
+                var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                if (permission && permission.hasPermission === true) {
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button
+                    me.enableTools([tp.itemCreateDashboard]);
+                    return;
+                }
             }
+
+            me.disableTools([tp.itemCreateDashboard]);
         }
     });  // $.widget
 });  // function()
@@ -6278,7 +6291,7 @@ $(function () {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched });
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -20558,14 +20571,23 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
             if (enableEdit) {
-                me.showTool(dtb.btnView.selectorClass);
-                me.enableTools([dtb.btnSave]);
-                me.hideTool(dtb.btnEdit.selectorClass);
-            } else {
-                me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
-                me.showTool(dtb.btnEdit.selectorClass);
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dtb.btnView.selectorClass);
+                    me.enableTools([dtb.btnSave]);
+                    me.hideTool(dtb.btnEdit.selectorClass);
+                    return;
+                }
             }
+
+            // Disable the edit buttons
+            me.hideTool(dtb.btnView.selectorClass);
+            me.disableTools([dtb.btnSave]);
+            me.showTool(dtb.btnEdit.selectorClass);
         },
         _init: function () {
             var me = this;
@@ -20639,14 +20661,23 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
             if (enableEdit) {
-                me.showTool(dbtp.itemView.selectorClass);
-                me.enableTools([dbtp.itemSave]);
-                me.hideTool(dbtp.itemEdit.selectorClass);
-            } else {
-                me.hideTool(dbtp.itemView.selectorClass);
-                me.disableTools([dbtp.itemSave]);
-                me.showTool(dbtp.itemEdit.selectorClass);
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+                var permission = forerunner.ajax.hasPermission(path, "Update Content");
+                if (permission && permission.hasPermission === true) {
+                    // If the user has update resource permission for this dashboard, we will
+                    // enable the edit buttons
+                    me.showTool(dbtp.itemView.selectorClass);
+                    me.enableTools([dbtp.itemSave]);
+                    me.hideTool(dbtp.itemEdit.selectorClass);
+                    return;
+                }
             }
+
+            // Disable the edit buttons
+            me.hideTool(dbtp.itemView.selectorClass);
+            me.disableTools([dbtp.itemSave]);
+            me.showTool(dbtp.itemEdit.selectorClass);
         },
         _init: function () {
             var me = this;

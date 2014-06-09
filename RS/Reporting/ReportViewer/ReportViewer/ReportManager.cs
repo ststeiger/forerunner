@@ -1149,6 +1149,16 @@ namespace Forerunner.SSRS.Manager
 
             return hasPermission;
         }
+        public string GetCatalogPermission(string path, string permission)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("hasPermission");
+            bool hasPermission = HasPermission(path, permission);
+            w.WriteBoolean(hasPermission);
+            w.WriteEndObject();
+            return w.ToString();
+        }
 
         public byte[] GetCatalogImage(string path)
         {

@@ -253,28 +253,38 @@ namespace Forerunner.SSRS.JSONRender
             this.RPL = new RPLReader(RPL);
         }
 
+        Exception LicenseCheckException = null;
+
         private void ValidateLicense(object context)
         {
             AutoResetEvent waitHandle =  (AutoResetEvent)context;
-            ClientLicense.Validate();
+            try
+            {
+                ClientLicense.Validate();
+            }
+            catch (TypeInitializationException e)
+            {
+                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");                
+                this.LicenseCheckException = LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "License Initialization failed");
+            }
+            catch (Exception e)
+            {
+                this.LicenseCheckException = e;
+            }
             waitHandle.Set();
         }
         public StringWriter RPLToJSON(int NumPages)
         {
 
 //#if !DEBUG           
-            try
-            {
-                AutoResetEvent waitHandle = new AutoResetEvent(false);
-                ThreadPool.QueueUserWorkItem(this.ValidateLicense, waitHandle);
-                waitHandle.WaitOne();
+            AutoResetEvent waitHandle = new AutoResetEvent(false);
+            ThreadPool.QueueUserWorkItem(this.ValidateLicense, waitHandle);
+            waitHandle.WaitOne();
 
-            }
-            catch (TypeInitializationException e)
-            {
-                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");
-                LicenseException.Throw(LicenseException.FailReason.InitializationFailure, "License Initialization failed");                
-            }
+            //There was an excpetion
+            if (this.LicenseCheckException != null)
+                throw (this.LicenseCheckException);
+            
 //#endif
 
             LicenseData License = ClientLicense.GetLicense();

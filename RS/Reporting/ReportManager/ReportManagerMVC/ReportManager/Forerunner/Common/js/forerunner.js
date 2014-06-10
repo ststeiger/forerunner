@@ -1461,8 +1461,9 @@ $(function () {
             me._removeEventsBinding();
 
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
-                if ($(modalDialog).is(":visible")) {
-                    $(modalDialog).dialog("destroy");
+                var $dlg = $(modalDialog);
+                if ($dlg.is(":visible") && $dlg.data().dialog) {
+                    $dlg.dialog("destroy");
                 }
             });
         },

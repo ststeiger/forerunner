@@ -41,6 +41,16 @@ $(function () {
             userSettings: null
         },
         /**
+         * Returns the user settings
+         *
+         * @function $.forerunner.dashboardEZ#getUserSettings
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        getUserSettings: function () {
+            var me = this;
+            return me.options.userSettings;
+        },
+        /**
          * Show the edit or view UI
          *
          * @function $.forerunner.dashboardEZ#enableEdit

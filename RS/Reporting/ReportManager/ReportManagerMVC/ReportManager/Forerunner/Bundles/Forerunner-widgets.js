@@ -5956,7 +5956,7 @@ $(function () {
                 }
             });
         },
-        isAdmin: function () {
+        _isAdmin: function () {
             var me = this;
             var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
@@ -6011,7 +6011,7 @@ $(function () {
                 me.hideTool(tp.itemLogOff.selectorClass);
             }
 
-            if (!me.isAdmin()) {
+            if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
                 me.hideTool(tp.itemCreateDashboard.selectorClass);
                 me.hideTool(tp.itemTags.selectorClass);
@@ -6809,18 +6809,34 @@ $(function () {
                 headerHtml +
                 // form
                 "<form class='fr-us-form fr-core-dialog-form'>" +
-                    "<div class='fr-us-setting-container'>" +
-                        "<table><tr><td>" +
-                        "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                        "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-                        "</tr></td><tr><td>" +
-                        "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
-                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
-                        "</tr></td><tr><td>" +
-                        "<label class='fr-us-label fr-us-separator'>" + userSettings.AdminUI + "</label>" +
-                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
-                        "</td></tr></table>" +
-                    "</div>" +
+                    "<table>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td colspan='2'>" +
+                                "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td colspan='2'>" +
+                                "<input class='fr-us-email-id fr-us-textbox' autofocus='autofocus' name='Email' type='email'/>" +
+                            "</td>" +
+                        "</tr>" +
+                    "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
@@ -10629,7 +10645,7 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
                     $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
@@ -10741,7 +10757,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].Value;
                 var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
-                if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
+                if ((predefinedValue && predefinedValue === optionValue)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
@@ -13054,18 +13070,10 @@ $(function () {
             $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-managesubscription-section");
             $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
-            $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-emailsubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-emailsubscription-section");
             $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
             $dlg = me._findSection("fr-dsc-section");
@@ -21187,6 +21195,16 @@ $(function () {
             userSettings: null
         },
         /**
+         * Returns the user settings
+         *
+         * @function $.forerunner.dashboardEZ#getUserSettings
+         * @param {bool} enableEdit - true = enable, false = view
+         */
+        getUserSettings: function () {
+            var me = this;
+            return me.options.userSettings;
+        },
+        /**
          * Show the edit or view UI
          *
          * @function $.forerunner.dashboardEZ#enableEdit
@@ -21377,27 +21395,46 @@ $(function () {
          */
         enableEdit: function (enableEdit) {
             var me = this;
-            if (enableEdit) {
-                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = { hasPermission: true };
-                if (path) {
-                    permission = forerunner.ajax.hasPermission(path, "Update Content");
-                }
-                if (!path || (permission && permission.hasPermission === true)) {
-                    // If the user has update resource permission for this dashboard, we will
-                    // enable the edit buttons
-                    me.showTool(dtb.btnView.selectorClass);
-                    me.enableTools([dtb.btnSave]);
-                    me.hideTool(dtb.btnEdit.selectorClass);
-                    return;
-                }
-            }
 
-            // Disable the edit buttons
-            me.hideTool(dtb.btnView.selectorClass);
-            me.disableTools([dtb.btnSave]);
-            me.showTool(dtb.btnEdit.selectorClass);
+            if (!me._isAdmin()) {
+                me.hideTool(dtb.btnSave.selectorClass);
+                me.hideTool(dtb.btnEdit.selectorClass);
+                me.hideTool(dtb.btnView.selectorClass);
+            } else {
+                me.showTool(dtb.btnSave.selectorClass);
+                me.showTool(dtb.btnEdit.selectorClass);
+                me.showTool(dtb.btnView.selectorClass);
+
+                if (enableEdit) {
+                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                    var path = $dashboardEditor.dashboardEditor("getPath");
+                    var permission = { hasPermission: true };
+                    if (path) {
+                        permission = forerunner.ajax.hasPermission(path, "Update Content");
+                    }
+                    if (!path || (permission && permission.hasPermission === true)) {
+                        // If the user has update resource permission for this dashboard, we will
+                        // enable the edit buttons
+                        me.showTool(dtb.btnView.selectorClass);
+                        me.enableTools([dtb.btnSave]);
+                        me.hideTool(dtb.btnEdit.selectorClass);
+                        return;
+                    }
+                }
+
+                // Disable the edit buttons
+                me.hideTool(dtb.btnView.selectorClass);
+                me.disableTools([dtb.btnSave]);
+                me.showTool(dtb.btnEdit.selectorClass);
+            }
+        },
+        _isAdmin: function () {
+            var me = this;
+            var userSettings = me.options.$dashboardEZ.dashboardEZ("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                return true;
+            }
+            return false;
         },
         _init: function () {
             var me = this;
@@ -21662,7 +21699,7 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
-    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 10;
 
     /**
      * Widget used to create and edit dashboards
@@ -21820,9 +21857,9 @@ $(function () {
         _makeOpaque: function (addMask) {
             var me = this;
             if (addMask) {
-                me.element.find(".fr-report-container").addClass("fr-core-mask");
+                me.element.find(".fr-report-container").addClass("fr-dashboard-mask");
             } else {
-                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+                me.element.find(".fr-report-container").removeClass("fr-dashboard-mask");
             }
         },
         _create: function () {

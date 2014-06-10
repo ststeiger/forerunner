@@ -52,27 +52,46 @@ $(function () {
          */
         enableEdit: function (enableEdit) {
             var me = this;
-            if (enableEdit) {
-                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = { hasPermission: true };
-                if (path) {
-                    permission = forerunner.ajax.hasPermission(path, "Update Content");
-                }
-                if (!path || (permission && permission.hasPermission === true)) {
-                    // If the user has update resource permission for this dashboard, we will
-                    // enable the edit buttons
-                    me.showTool(dtb.btnView.selectorClass);
-                    me.enableTools([dtb.btnSave]);
-                    me.hideTool(dtb.btnEdit.selectorClass);
-                    return;
-                }
-            }
 
-            // Disable the edit buttons
-            me.hideTool(dtb.btnView.selectorClass);
-            me.disableTools([dtb.btnSave]);
-            me.showTool(dtb.btnEdit.selectorClass);
+            if (!me._isAdmin()) {
+                me.hideTool(dtb.btnSave.selectorClass);
+                me.hideTool(dtb.btnEdit.selectorClass);
+                me.hideTool(dtb.btnView.selectorClass);
+            } else {
+                me.showTool(dtb.btnSave.selectorClass);
+                me.showTool(dtb.btnEdit.selectorClass);
+                me.showTool(dtb.btnView.selectorClass);
+
+                if (enableEdit) {
+                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                    var path = $dashboardEditor.dashboardEditor("getPath");
+                    var permission = { hasPermission: true };
+                    if (path) {
+                        permission = forerunner.ajax.hasPermission(path, "Update Content");
+                    }
+                    if (!path || (permission && permission.hasPermission === true)) {
+                        // If the user has update resource permission for this dashboard, we will
+                        // enable the edit buttons
+                        me.showTool(dtb.btnView.selectorClass);
+                        me.enableTools([dtb.btnSave]);
+                        me.hideTool(dtb.btnEdit.selectorClass);
+                        return;
+                    }
+                }
+
+                // Disable the edit buttons
+                me.hideTool(dtb.btnView.selectorClass);
+                me.disableTools([dtb.btnSave]);
+                me.showTool(dtb.btnEdit.selectorClass);
+            }
+        },
+        _isAdmin: function () {
+            var me = this;
+            var userSettings = me.options.$dashboardEZ.dashboardEZ("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                return true;
+            }
+            return false;
         },
         _init: function () {
             var me = this;

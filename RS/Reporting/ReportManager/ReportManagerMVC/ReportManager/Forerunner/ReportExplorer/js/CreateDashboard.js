@@ -160,6 +160,7 @@ $(function () {
                 navigateTo("createDashboard", path);
 
                 me.closeDialog();
+                return;
             }
 
             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);

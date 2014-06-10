@@ -14453,6 +14453,7 @@ $(function () {
                 navigateTo("createDashboard", path);
 
                 me.closeDialog();
+                return;
             }
 
             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
@@ -21699,7 +21700,7 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
-    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 10;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
 
     /**
      * Widget used to create and edit dashboards

@@ -1272,6 +1272,7 @@ namespace Forerunner.SSRS.Manager
                     isUserSpecific = IsUserSpecific(path);
                     rep.Dispose();
                 }
+                threadContext.Undo();
             }
             catch (Exception e)
             {
@@ -1305,6 +1306,7 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                sqlImpersonator.Dispose();
                 threadContext.Dispose();
             }
         }

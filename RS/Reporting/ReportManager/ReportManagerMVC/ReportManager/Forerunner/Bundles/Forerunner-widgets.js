@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2709,7 +2709,7 @@ $(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
                 });
             }
-
+             
             if (!me.pages[newPageNum]) {
                 me.pages[newPageNum] = new reportPage(data);
             }

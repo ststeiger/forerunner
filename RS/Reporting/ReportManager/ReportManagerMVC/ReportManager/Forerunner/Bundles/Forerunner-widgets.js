@@ -13070,18 +13070,10 @@ $(function () {
             $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-managesubscription-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-managesubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-managesubscription-section");
             $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
-            $dlg = me.options.$appContainer.find(".fr-emailsubscription-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-emailsubscription-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-            }
+            $dlg = me._findSection("fr-emailsubscription-section");
             $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
 
             $dlg = me._findSection("fr-dsc-section");

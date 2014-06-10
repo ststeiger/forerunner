@@ -960,6 +960,7 @@ table, td, tr div {
 .fr-email-renderformat { width: 200px; }
 .fr-email-schedule { width: 200px;}
 .fr-emailsubscription-section { display: none; }
+.fr-managesubscription-section {display:none; }
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons128x128 {
   width:128px;

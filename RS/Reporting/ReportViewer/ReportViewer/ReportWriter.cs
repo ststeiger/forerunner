@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Jayrock.Json;
 using ForerunnerLicense;
 using Forerunner.Logging;
@@ -252,13 +253,22 @@ namespace Forerunner.SSRS.JSONRender
             this.RPL = new RPLReader(RPL);
         }
 
+        private void ValidateLicense(object context)
+        {
+            AutoResetEvent waitHandle =  (AutoResetEvent)context;
+            ClientLicense.Validate();
+            waitHandle.Set();
+        }
         public StringWriter RPLToJSON(int NumPages)
         {
 
 //#if !DEBUG           
             try
             {
-                ClientLicense.Validate();
+                AutoResetEvent waitHandle = new AutoResetEvent(false);
+                ThreadPool.QueueUserWorkItem(this.ValidateLicense, waitHandle);
+                waitHandle.WaitOne();
+
             }
             catch (TypeInitializationException e)
             {
@@ -266,7 +276,7 @@ namespace Forerunner.SSRS.JSONRender
                 LicenseException.Throw(LicenseException.FailReason.InitializationFailure, "License Initialization failed");                
             }
 //#endif
-            
+
             LicenseData License = ClientLicense.GetLicense();
 
             RPL.position = 0;

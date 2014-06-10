@@ -1106,7 +1106,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 IID = GetItemID(Path);
-                SaveImage(retval, Path, null, IID, isUserSpecific);
+                SaveImage(retval, Path, HttpContext.Current.User.Identity.Name, IID, isUserSpecific);
             }
 
         }

@@ -10,6 +10,7 @@ using Forerunner.SSRS.JSONRender;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
+using System.Threading;
 using Forerunner.Security;
 using Forerunner.Logging;
 using ForerunnerLicense;
@@ -40,6 +41,8 @@ namespace Forerunner.SSRS.Viewer
         static private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
+        private byte[] imageResult = null;
+        private AutoResetEvent waitHandle = new AutoResetEvent(false);
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
 
         public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
@@ -791,6 +794,42 @@ namespace Forerunner.SSRS.Viewer
             return Encoding.UTF8.GetBytes(MHT.ToString());
         }
 
+        private void GenerateImage(Object context)
+        {
+            try
+            {
+                byte[] result = (byte[])context;
+                string fileName = Path.GetTempPath() + Path.GetRandomFileName();
+                if (!ReportViewer.MHTMLRendering)
+                {
+                    result = GetMHTfromHTML(result);
+                    fileName += ".htm";
+                }
+                else
+                    fileName += ".mht";
+                System.IO.File.WriteAllBytes(fileName, result);
+
+                //Call external app to get image
+                System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
+                start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
+                start.FileName = @"Forerunner.Thumbnail.exe";
+                start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                start.Arguments = fileName;
+                Process p = System.Diagnostics.Process.Start(start);
+                p.WaitForExit();
+
+                result = System.IO.File.ReadAllBytes(fileName + ".jpg");
+                File.Delete(fileName + ".jpg");
+                this.imageResult = result;
+            }
+            finally
+            {
+                waitHandle.Set();
+            }
+        }
+
+                    
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;
@@ -815,7 +854,6 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
-            CurrentUserImpersonator newImpersonator = null;
             try
             {
                 GetServerRendering();
@@ -850,30 +888,11 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!ReportViewer.ServerRendering)
                 {
-                    string fileName = Path.GetTempPath() + Path.GetRandomFileName();
-                    if (!ReportViewer.MHTMLRendering)
-                    {
-                        result = GetMHTfromHTML(result);
-                        fileName += ".htm";
-                    }
-                    else
-                        fileName += ".mht";
-                    System.IO.File.WriteAllBytes(fileName, result);
-
-                    //Call external app to get image
-                    System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
-                    start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
-                    start.FileName = @"Forerunner.Thumbnail.exe";
-                    start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    start.Arguments = fileName;
-                    Process p = System.Diagnostics.Process.Start(start);
-                    p.WaitForExit();
-
-                    result = System.IO.File.ReadAllBytes(fileName + ".jpg");
-                    File.Delete(fileName + ".jpg");
+                    ThreadPool.QueueUserWorkItem(this.GenerateImage, result); 
                 }
-                
-                return result;
+
+                waitHandle.WaitOne();
+                return imageResult;
             }
             catch (Exception e)
             {
@@ -883,10 +902,6 @@ namespace Forerunner.SSRS.Viewer
             }
             finally
             {
-                if (newImpersonator != null)
-                {
-                    newImpersonator.Dispose();
-                }
             }
         }
 

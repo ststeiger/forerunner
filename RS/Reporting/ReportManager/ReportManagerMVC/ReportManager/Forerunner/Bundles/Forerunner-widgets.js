@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -7903,7 +7903,7 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
                     $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
@@ -8026,7 +8026,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].Value;
                 var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
-                if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
+                if ((predefinedValue && predefinedValue === optionValue)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;

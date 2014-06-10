@@ -81,7 +81,7 @@ namespace Forerunner.Security
                             NetworkCredential networkCredential = new NetworkCredential(userName, password, domain);
                             ReportViewer reportViewer = new ReportViewer(GetFirstUrl(), ReportServerTimeout);
                             reportViewer.SetCredentials(networkCredential);
-                            reportViewer.forceGetServerRendering();
+                            reportViewer.VaidateServerConnection();
                             authenticated = true;
                         }
                         catch (Exception e)

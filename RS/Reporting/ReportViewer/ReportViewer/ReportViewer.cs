@@ -15,6 +15,7 @@ using Forerunner.Logging;
 using ForerunnerLicense;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
+using System.Collections.Generic;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -31,15 +32,80 @@ namespace Forerunner.SSRS.Viewer
 
     public class ReportViewer:IDisposable
     {
+
         private String ReportServerURL;
         private Credentials Credentials = new Credentials();
         private ReportExecutionService rs = new ReportExecutionService();
-        static private bool ServerRendering = false;
-        static private bool MHTMLRendering = false;
-        static private bool checkedServerRendering = false;
+        
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
+        static private Dictionary<string,SSRSServer>  SSRSServers = new Dictionary<string,SSRSServer>();
+
+        private class SSRSServer{
+            public bool ServerRendering = false;
+            public bool MHTMLRendering = false;
+            public string SSRSVerion = "";
+            public string SSRSEdition = "";
+
+            public int GetVersionNumber()
+            {
+                int retval;
+
+                int.TryParse(SSRSVerion.Substring(0, 4), out retval);
+                return retval;
+
+            }
+
+        }
+
+        private SSRSServer GetServerInfo()
+        {
+            SSRSServer retval = null;
+
+            SSRSServers.TryGetValue(this.ReportServerURL,out retval);
+
+            if (retval == null)
+                retval = LoadServerData();
+            return retval;
+        }
+
+        public void VaidateServerConnection()
+        {
+            if (rs.Credentials == null)
+                rs.Credentials = GetCredentials();
+
+            rs.ListRenderingExtensions();
+        }
+
+        private SSRSServer LoadServerData()
+        {            
+            SSRSServer retval = new SSRSServer();
+
+            if (rs.Credentials == null)
+                rs.Credentials = GetCredentials();
+
+            rs.ServerInfoHeaderValue = new ServerInfoHeader();
+
+            foreach (Extension Ex in rs.ListRenderingExtensions())
+            {
+                if (Ex.Name == "ForerunnerJSON")
+                    retval.ServerRendering = true;
+                if (Ex.Name == "MHTML")
+                    retval.MHTMLRendering = true;
+
+            }
+            retval.SSRSVerion = rs.ServerInfoHeaderValue.ReportServerVersionNumber;
+            retval.SSRSEdition = rs.ServerInfoHeaderValue.ReportServerEdition;
+#if DEBUG 
+            retval.ServerRendering = false;
+            //retval.MHTMLRendering = false;
+#endif
+
+
+            SSRSServers.Add(this.ReportServerURL, retval);
+            return retval;
+        }
 
         public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
         {
@@ -93,33 +159,9 @@ namespace Forerunner.SSRS.Viewer
 
         internal bool GetServerRendering()
         {
-            if (checkedServerRendering)
-            {
-                return ReportViewer.ServerRendering;
-            }
-            return forceGetServerRendering();
+            return GetServerInfo().ServerRendering;
         }
 
-        internal bool forceGetServerRendering()
-        {
-            if (rs.Credentials == null)
-                rs.Credentials = GetCredentials();
-            foreach (Extension Ex in rs.ListRenderingExtensions())
-            {
-                if (Ex.Name == "ForerunnerJSON")
-                    ReportViewer.ServerRendering = true;
-                if (Ex.Name == "MHTML")
-                    ReportViewer.MHTMLRendering = true;
-                
-            }
-#if DEBUG 
-            ReportViewer.ServerRendering = false;
-            //this.MHTMLRendering = false;
-#endif
-            ReportViewer.checkedServerRendering = true;
-
-            return ReportViewer.ServerRendering;
-        }
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
             return GetImageInternal(SessionID, ImageID, out mimeType);
@@ -141,7 +183,7 @@ namespace Forerunner.SSRS.Viewer
 
                 string format;
                 GetServerRendering();
-                if (ReportViewer.ServerRendering)
+                if (GetServerInfo().ServerRendering)
                     format = "ForerunnerJSON";
                 else
                     format = "RPL";
@@ -325,7 +367,7 @@ namespace Forerunner.SSRS.Viewer
                     GetServerRendering();
 
                     //Use local to get RPL for debug, will through an error
-                    if (ReportViewer.ServerRendering && (IsDebug != "WRPL"))
+                    if (GetServerInfo().ServerRendering && (IsDebug != "WRPL"))
                         format = "ForerunnerJSON";
                     else
                         format = "RPL";
@@ -400,7 +442,7 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportContainer");
 
                     MemoryStream ms;
-                    if (ReportViewer.ServerRendering && IsDebug != "RPL")
+                    if (GetServerInfo().ServerRendering && IsDebug != "RPL")
                     {
                         ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
                     }
@@ -832,9 +874,9 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                if (ReportViewer.ServerRendering)
+                if (GetServerInfo().ServerRendering)
                     format = "ForerunnerThumbnail";
-                if (!ReportViewer.MHTMLRendering)
+                if (!GetServerInfo().MHTMLRendering)
                 {
                    // Support for Express and Web that do not support MHTML                
                     format = "HTML4.0";
@@ -848,10 +890,10 @@ namespace Forerunner.SSRS.Viewer
                 result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                if (!ReportViewer.ServerRendering)
+                if (!GetServerInfo().ServerRendering)
                 {
                     string fileName = Path.GetTempPath() + Path.GetRandomFileName();
-                    if (!ReportViewer.MHTMLRendering)
+                    if (!GetServerInfo().MHTMLRendering)
                     {
                         result = GetMHTfromHTML(result);
                         fileName += ".htm";
@@ -927,14 +969,13 @@ namespace Forerunner.SSRS.Viewer
                 execInfo = rs.LoadReport(ReportPath, historyID);
 
             NewSession = rs.ExecutionHeaderValue.ExecutionID;
+            
+            if (ExportType == "EXCELOPENXML" && GetServerInfo().GetVersionNumber() < 2011) 
+                ExportType = "EXCEL";
 
-            //if (rs.GetExecutionInfo().Parameters.Length != 0)
-            //{
-            //    if (ParametersList != null)
-            //    {
-            //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-            //    }
-            //}
+            if (ExportType == "WORDOPENXML" && GetServerInfo().GetVersionNumber() < 2011)
+                ExportType = "WORD";
+            
 
             if (devInfo == null)
             {

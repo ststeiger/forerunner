@@ -1353,14 +1353,9 @@ $(function () {
             Style = "";
 
             if (Obj.Cell) {
-                if (Obj.Cell.ReportItem.Type !== "SubReport") {
-                    if (Obj.Cell.ReportItem.Elements.NonSharedElements)
-                        Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
-                }
-                else {
-                    if (Obj.Cell.ReportItem.SubReportProperties.NonSharedElements)
-                        Style += me._getFullBorderStyle(Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style);
-                }
+                if (me._getElements(Obj.Cell.ReportItem).NonSharedElements)
+                    Style += me._getFullBorderStyle(me._getElements(Obj.Cell.ReportItem).NonSharedElements.Style);
+               
                 $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
             }
 
@@ -1391,14 +1386,8 @@ $(function () {
                
             if (Obj.Cell){
                 //Background color goes on the cell
-                if (Obj.Cell.ReportItem.Type !== "SubReport") {
-                    if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
-                        Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
-                }
-                else {
-                    if (Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style && Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style.BackgroundColor)
-                        Style += "background-color:" + Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style.BackgroundColor + ";";
-                }
+                if (me._getElements(Obj.Cell.ReportItem).NonSharedElements.Style && me._getElements(Obj.Cell.ReportItem).NonSharedElements.Style.BackgroundColor)
+                    Style += "background-color:" + me._getElements(Obj.Cell.ReportItem).NonSharedElements.Style.BackgroundColor + ";";
 
                 $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
@@ -1702,7 +1691,7 @@ $(function () {
                             if (respCols.Columns[BRObj.ColumnIndex].HeaderIndex === undefined)
                                 respCols.Columns[BRObj.ColumnIndex].HeaderIndex = 0;
                             if (respCols.Columns[BRObj.ColumnIndex].HeaderName === undefined)
-                                respCols.Columns[BRObj.ColumnIndex].HeaderName = BRObj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
+                                respCols.Columns[BRObj.ColumnIndex].HeaderName = me._getElements(BRObj.Cell.ReportItem).NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
                             $ExtRow = null;
@@ -1732,7 +1721,7 @@ $(function () {
                         if (respCols.Columns[Obj.ColumnIndex].HeaderIndex === undefined)
                             respCols.Columns[Obj.ColumnIndex].HeaderIndex = 0;
                         if (respCols.Columns[Obj.ColumnIndex].HeaderName === undefined)
-                            respCols.Columns[Obj.ColumnIndex].HeaderName = Obj.Cell.ReportItem.Elements.NonSharedElements.UniqueName;
+                            respCols.Columns[Obj.ColumnIndex].HeaderName = me._getElements(Obj.Cell.ReportItem).NonSharedElements.UniqueName;
                         respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
                         $ExtRow = null;
@@ -1763,8 +1752,10 @@ $(function () {
 
         _isHeader: function(respCols,cell){
             var me = this;
+            var cellDefName;
 
-            var cellDefName = (me._getSharedElements(cell.ReportItem.Elements.SharedElements)).Name ;
+            cellDefName = (me._getSharedElements(me._getElements(cell.ReportItem).SharedElements)).Name;
+
             if (respCols.ColumnHeaders[cellDefName])
                 return true;
             return false;
@@ -1803,7 +1794,7 @@ $(function () {
             $Drilldown.addClass("fr-render-respTablix-expand");
             $Drilldown.addClass("fr-render-respIcon");
 
-            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: Cell.ReportItem.Elements.NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
+            $Drilldown.on("click", { ExtRow: $ExtRow, ColIndex: ColIndex, UniqueName: me._getElements(Cell.ReportItem).NonSharedElements.UniqueName, $Tablix: $Tablix }, function (e) {
 
                 me._TablixRespShow(this, e.data.ExtRow, e.data.ColIndex, e.data.UniqueName, e.data.$Tablix);
                 return;
@@ -2019,6 +2010,14 @@ $(function () {
             return me._convertToMM(height);
 
         },
+        _getElements: function (CurrObj) {
+            //Use to handle report items and sub reports
+            if (CurrObj.Elements)
+                return CurrObj.Elements;
+            if (CurrObj.SubReportProperties)
+                return CurrObj.SubReportProperties
+        },
+
         _getElementsStyle: function (RS, CurrObj) {
             var Style = "";
             var me = this;

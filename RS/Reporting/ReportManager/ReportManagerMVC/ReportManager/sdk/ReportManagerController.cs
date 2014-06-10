@@ -258,17 +258,8 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ListSubscriptions(string reportPath, string instance = null)
         {
-            /// Need to pass in current owner.
-            ///
-            Subscription[] subscriptions = null;
-            try
-            {
-                subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
-            }
-            catch
-            {
-            }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(subscriptions != null ? ToString(subscriptions) : "[]"), "text/JSON"); 
+            Subscription[] subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
         }
 
         [HttpGet]
@@ -288,17 +279,8 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ListSchedules(string instance = null)
         {
-            Schedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            List<SubscriptionSchedule> retVal = new List<SubscriptionSchedule>();
-            foreach (Schedule schedule in schedules)
-            {
-                SubscriptionSchedule value = new SubscriptionSchedule();
-                value.ScheduleID = schedule.ScheduleID;
-                value.Name = schedule.Name;
-                value.MatchData = Forerunner.Subscription.MatchDataSerialization.GetMatchDataFromScheduleDefinition(schedule.Definition);
-                retVal.Add(value);
-            }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(retVal)), "text/JSON"); 
+            SubscriptionSchedule[] schedules = GetReportManager(instance).ListSchedules(null);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
         }
 
         [HttpGet]

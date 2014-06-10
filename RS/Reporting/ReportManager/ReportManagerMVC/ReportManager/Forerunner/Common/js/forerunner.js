@@ -494,7 +494,7 @@ $(function () {
             csv: "CSV",
             pdf: "PDF",
             mhtml: "MHTML",
-            excel: "EXCELOPENXML",
+            excel: "EXCELOPENXML",            
             tiff: "IMAGE",
             word: "WORDOPENXML"
         },

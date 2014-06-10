@@ -2079,7 +2079,7 @@ $(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
                 });
             }
-
+             
             if (!me.pages[newPageNum]) {
                 me.pages[newPageNum] = new reportPage(data);
             }

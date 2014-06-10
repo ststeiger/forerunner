@@ -38,9 +38,15 @@ namespace ForerunnerLicense
 
         internal static LicenseException Throw(LicenseException.FailReason reason,string message)
         {
+            throw GetException(reason, message);
+
+        }
+
+        internal static LicenseException GetException(LicenseException.FailReason reason, string message)
+        {
             LicenseException e = new LicenseException(message);
             e.Data.Add(LicenseException.failKey, reason);
-            throw e;
+            return e;
         }
 
         internal LicenseException() : base() { }

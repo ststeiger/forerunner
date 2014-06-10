@@ -10,6 +10,7 @@ using Forerunner.SSRS.JSONRender;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
+using System.Threading;
 using Forerunner.Security;
 using Forerunner.Logging;
 using ForerunnerLicense;
@@ -40,6 +41,8 @@ namespace Forerunner.SSRS.Viewer
         static private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
+        private byte[] imageResult = null;
+        private AutoResetEvent waitHandle = new AutoResetEvent(false);
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
 
         public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
@@ -428,7 +431,7 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                 {
-                    if (execInfo.NumPages < int.Parse(PageNum))
+                    if (execInfo.NumPages != 0 && execInfo.NumPages < int.Parse(PageNum))
                         throw new Exception("No such page");
                     else
                         LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
@@ -791,6 +794,42 @@ namespace Forerunner.SSRS.Viewer
             return Encoding.UTF8.GetBytes(MHT.ToString());
         }
 
+        private void GenerateImage(Object context)
+        {
+            try
+            {
+                byte[] result = (byte[])context;
+                string fileName = Path.GetTempPath() + Path.GetRandomFileName();
+                if (!ReportViewer.MHTMLRendering)
+                {
+                    result = GetMHTfromHTML(result);
+                    fileName += ".htm";
+                }
+                else
+                    fileName += ".mht";
+                System.IO.File.WriteAllBytes(fileName, result);
+
+                //Call external app to get image
+                System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
+                start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
+                start.FileName = @"Forerunner.Thumbnail.exe";
+                start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                start.Arguments = fileName;
+                Process p = System.Diagnostics.Process.Start(start);
+                p.WaitForExit();
+
+                result = System.IO.File.ReadAllBytes(fileName + ".jpg");
+                File.Delete(fileName + ".jpg");
+                this.imageResult = result;
+            }
+            finally
+            {
+                waitHandle.Set();
+            }
+        }
+
+                    
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;
@@ -815,7 +854,6 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
-            CurrentUserImpersonator newImpersonator = null;
             try
             {
                 GetServerRendering();
@@ -850,30 +888,11 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!ReportViewer.ServerRendering)
                 {
-                    string fileName = Path.GetTempPath() + Path.GetRandomFileName();
-                    if (!ReportViewer.MHTMLRendering)
-                    {
-                        result = GetMHTfromHTML(result);
-                        fileName += ".htm";
-                    }
-                    else
-                        fileName += ".mht";
-                    System.IO.File.WriteAllBytes(fileName, result);
-
-                    //Call external app to get image
-                    System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
-                    start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
-                    start.FileName = @"Forerunner.Thumbnail.exe";
-                    start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-                    start.Arguments = fileName;
-                    Process p = System.Diagnostics.Process.Start(start);
-                    p.WaitForExit();
-
-                    result = System.IO.File.ReadAllBytes(fileName + ".jpg");
-                    File.Delete(fileName + ".jpg");
+                    ThreadPool.QueueUserWorkItem(this.GenerateImage, result); 
                 }
-                
-                return result;
+
+                waitHandle.WaitOne();
+                return imageResult;
             }
             catch (Exception e)
             {
@@ -883,10 +902,6 @@ namespace Forerunner.SSRS.Viewer
             }
             finally
             {
-                if (newImpersonator != null)
-                {
-                    newImpersonator.Dispose();
-                }
             }
         }
 
@@ -920,38 +935,31 @@ namespace Forerunner.SSRS.Viewer
             rs.Credentials = GetCredentials();
             FileName = "";
             rs.ExecutionHeaderValue = execHeader;
-            try
+         
+            if (NewSession != "")
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+            else
+                execInfo = rs.LoadReport(ReportPath, historyID);
+
+            NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+            //if (rs.GetExecutionInfo().Parameters.Length != 0)
+            //{
+            //    if (ParametersList != null)
+            //    {
+            //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
+            //    }
+            //}
+
+            if (devInfo == null)
             {
-                if (NewSession != "")
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                else
-                    execInfo = rs.LoadReport(ReportPath, historyID);
-
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-                //if (rs.GetExecutionInfo().Parameters.Length != 0)
-                //{
-                //    if (ParametersList != null)
-                //    {
-                //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-                //    }
-                //}
-
-                if (devInfo == null)
-                {
-                    devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
-                }
-                result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
-                FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
-                return result;
+                devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
             }
-            catch (Exception e)
-            {
-                MimeType = string.Empty;
-                ExceptionLogGenerator.LogException(e);
-                Console.WriteLine(e.Message);
-                return null;
-            }
+            result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
+            FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
+            return result;
+       
+      
         }
 
         protected virtual void Dispose(bool disposing)

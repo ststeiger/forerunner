@@ -39,8 +39,8 @@ namespace Forerunner.SSRS.Manager
     {
         RSManagementProxy rs;
         Credentials WSCredentials;
-        Credentials DBCredentials;
-        bool useIntegratedSecurity;
+        static Credentials DBCredentials;
+        static bool useIntegratedSecurity;
         bool IsNativeRS = true;
         string URL;
         bool isSchemaChecked = false;
@@ -53,9 +53,10 @@ namespace Forerunner.SSRS.Manager
         private static bool isReportServerDB(SqlConnection conn)
         {
             string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
-
+            Impersonator impersonator = null;
             try
             {
+                impersonator = tryImpersonate();
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(SQL, conn))
                 {
@@ -76,6 +77,10 @@ namespace Forerunner.SSRS.Manager
                 return false;
             }
             finally {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
                 if (conn.State == System.Data.ConnectionState.Open) {
                     conn.Close();
                 }
@@ -88,6 +93,8 @@ namespace Forerunner.SSRS.Manager
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
+            ReportManager.DBCredentials = DBCredentials;
+            ReportManager.useIntegratedSecurity = useIntegratedSecurity;
             if (useIntegratedSecurity)
             {
                 builder.IntegratedSecurity = true;
@@ -122,8 +129,6 @@ namespace Forerunner.SSRS.Manager
             this.SharePointHostName = SharePointHostName;
             this.IsNativeRS = IsNativeRS;
             this.WSCredentials = WSCredentials;
-            this.DBCredentials = DBCredentials;
-            this.useIntegratedSecurity = useIntegratedSecurity;
             rs.Url = URL;
             this.URL = URL;
             
@@ -232,6 +237,19 @@ namespace Forerunner.SSRS.Manager
             FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
             
             return new NetworkCredential(authTicket.Name, authTicket.UserData);
+        }
+
+        // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
+        private String GetUserName()
+        {
+            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+            {
+                HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+                FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                return authTicket.Name;
+            }
+
+            return HttpContext.Current.User.Identity.Name;
         }
 
         private CatalogItem[] callListChildren(string path, Boolean isRecursive)
@@ -354,7 +372,7 @@ namespace Forerunner.SSRS.Manager
             foreach (CatalogItem ci in items)
             {
                 added = false;
-                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || showAll) && (!ci.Hidden || showHidden))
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
                 {
                     list.Add(ci);
                     added = true;
@@ -367,7 +385,7 @@ namespace Forerunner.SSRS.Manager
 
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || showAll)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
                             {
                                 if (!ci.Hidden || showHidden)
                                 {
@@ -388,7 +406,7 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
         }
 
-        private Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
+        private static Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
         {
             if (!useIntegratedSecurity) return null;
             
@@ -440,7 +458,7 @@ namespace Forerunner.SSRS.Manager
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerSubscriptions')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
+                                CREATE TABLE dbo.ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerItemTags')
                             BEGIN	                            	                            
@@ -499,6 +517,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -512,7 +531,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
@@ -556,6 +575,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -568,7 +588,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.ExecuteNonQuery();
@@ -591,6 +611,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -604,7 +625,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
@@ -628,6 +649,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -638,7 +660,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -678,6 +700,7 @@ namespace Forerunner.SSRS.Manager
         public string SaveUserSettings(string settings)
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -691,7 +714,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@Params", settings);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -712,6 +735,7 @@ namespace Forerunner.SSRS.Manager
         public string GetUserSettings()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -722,7 +746,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         settings = string.Empty;
@@ -781,6 +805,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -791,7 +816,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -847,6 +872,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -859,7 +885,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         while (SQLReader.Read())
@@ -890,6 +916,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetRecentReports()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -910,7 +937,7 @@ namespace Forerunner.SSRS.Manager
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
-                SetUserNameParameters(SQLComm);
+                SetUserNameParameters(SQLComm, userName);
 
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
@@ -944,6 +971,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -953,7 +981,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
 
@@ -973,11 +1001,8 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        private void SetUserNameParameters(SqlCommand SQLComm, string domainUserNameFromCaller = null)
-        {
-            string domainUserName = domainUserNameFromCaller == null ? HttpContext.Current.User.Identity.Name : domainUserNameFromCaller;
-
-                       
+        private void SetUserNameParameters(SqlCommand SQLComm, string domainUserName)
+        {                       
             string[] stringTokens = domainUserName.Split('\\');
             string uName = stringTokens[stringTokens.Length - 1];
 
@@ -1081,7 +1106,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 IID = GetItemID(Path);
-                SaveImage(retval, Path, null, IID, isUserSpecific);
+                SaveImage(retval, Path, HttpContext.Current.User.Identity.Name, IID, isUserSpecific);
             }
 
         }
@@ -1089,8 +1114,8 @@ namespace Forerunner.SSRS.Manager
         public byte[] GetDBImage(string path)
         {
             string IID = GetItemID(path);
-
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1105,7 +1130,7 @@ namespace Forerunner.SSRS.Manager
                     //SQLComm.Prepare();
                     SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         if (SQLReader.HasRows)
@@ -1247,6 +1272,7 @@ namespace Forerunner.SSRS.Manager
                     isUserSpecific = IsUserSpecific(path);
                     rep.Dispose();
                 }
+                threadContext.Undo();
             }
             catch (Exception e)
             {
@@ -1280,6 +1306,7 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                sqlImpersonator.Dispose();
                 threadContext.Dispose();
             }
         }
@@ -1296,10 +1323,32 @@ namespace Forerunner.SSRS.Manager
             return rs.GetExtensionSettings(extension);
         }
 
-        public Schedule[] ListSchedules(string siteName)
+        public SubscriptionSchedule[] ListSchedules(string siteName)
         {
             rs.Credentials = GetCredentials();
-            return rs.ListSchedules(siteName);
+            Schedule[] schedules = null;
+            try
+            {
+                schedules = rs.ListSchedules(siteName);
+            }
+            catch
+            {
+            }
+
+            List<SubscriptionSchedule> retVal = new List<SubscriptionSchedule>();
+            if (schedules != null)
+            {
+                foreach (Schedule schedule in schedules)
+                {
+                    SubscriptionSchedule value = new SubscriptionSchedule();
+                    value.ScheduleID = schedule.ScheduleID;
+                    value.Name = schedule.Name;
+                    value.MatchData = Forerunner.Subscription.MatchDataSerialization.GetMatchDataFromScheduleDefinition(schedule.Definition);
+                    retVal.Add(value);
+                }
+            }
+
+            return retVal.ToArray<SubscriptionSchedule>();
         }
 
         public class ExtensionSettings
@@ -1357,6 +1406,7 @@ namespace Forerunner.SSRS.Manager
         private void SaveMobilizerSubscription(string path, string subscriptionID, string scheduleID)
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 string IID = GetItemID(path);
@@ -1370,7 +1420,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
                     SQLComm.Parameters.AddWithValue("@ScheduleID", scheduleID);
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
@@ -1497,6 +1547,7 @@ namespace Forerunner.SSRS.Manager
         private void DeleteMoblizerSubscription(string subscriptionID)
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1504,7 +1555,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -1529,6 +1580,7 @@ namespace Forerunner.SSRS.Manager
             string IID = GetItemID(report);
 
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1536,7 +1588,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {

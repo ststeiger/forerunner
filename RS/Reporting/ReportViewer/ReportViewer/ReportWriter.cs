@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using Jayrock.Json;
 using ForerunnerLicense;
 using Forerunner.Logging;
@@ -252,21 +253,40 @@ namespace Forerunner.SSRS.JSONRender
             this.RPL = new RPLReader(RPL);
         }
 
-        public StringWriter RPLToJSON(int NumPages)
-        {
+        Exception LicenseCheckException = null;
 
-//#if !DEBUG           
+        private void ValidateLicense(object context)
+        {
+            AutoResetEvent waitHandle =  (AutoResetEvent)context;
             try
             {
                 ClientLicense.Validate();
             }
             catch (TypeInitializationException e)
             {
-                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");
-                LicenseException.Throw(LicenseException.FailReason.InitializationFailure, "License Initialization failed");                
+                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");                
+                this.LicenseCheckException = LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "License Initialization failed");
             }
-//#endif
+            catch (Exception e)
+            {
+                this.LicenseCheckException = e;
+            }
+            waitHandle.Set();
+        }
+        public StringWriter RPLToJSON(int NumPages)
+        {
+
+//#if !DEBUG           
+            AutoResetEvent waitHandle = new AutoResetEvent(false);
+            ThreadPool.QueueUserWorkItem(this.ValidateLicense, waitHandle);
+            waitHandle.WaitOne();
+
+            //There was an excpetion
+            if (this.LicenseCheckException != null)
+                throw (this.LicenseCheckException);
             
+//#endif
+
             LicenseData License = ClientLicense.GetLicense();
 
             RPL.position = 0;

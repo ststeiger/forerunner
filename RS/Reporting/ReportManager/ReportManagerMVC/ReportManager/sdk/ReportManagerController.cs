@@ -259,8 +259,16 @@ namespace ReportManager.Controllers
         public HttpResponseMessage ListSubscriptions(string reportPath, string instance = null)
         {
             /// Need to pass in current owner.
-            Subscription[] subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
+            ///
+            Subscription[] subscriptions = null;
+            try
+            {
+                subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
+            }
+            catch
+            {
+            }
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(subscriptions != null ? ToString(subscriptions) : "[]"), "text/JSON"); 
         }
 
         [HttpGet]

@@ -1296,10 +1296,32 @@ namespace Forerunner.SSRS.Manager
             return rs.GetExtensionSettings(extension);
         }
 
-        public Schedule[] ListSchedules(string siteName)
+        public SubscriptionSchedule[] ListSchedules(string siteName)
         {
             rs.Credentials = GetCredentials();
-            return rs.ListSchedules(siteName);
+            Schedule[] schedules = null;
+            try
+            {
+                schedules = rs.ListSchedules(siteName);
+            }
+            catch
+            {
+            }
+
+            List<SubscriptionSchedule> retVal = new List<SubscriptionSchedule>();
+            if (schedules != null)
+            {
+                foreach (Schedule schedule in schedules)
+                {
+                    SubscriptionSchedule value = new SubscriptionSchedule();
+                    value.ScheduleID = schedule.ScheduleID;
+                    value.Name = schedule.Name;
+                    value.MatchData = Forerunner.Subscription.MatchDataSerialization.GetMatchDataFromScheduleDefinition(schedule.Definition);
+                    retVal.Add(value);
+                }
+            }
+
+            return retVal.ToArray<SubscriptionSchedule>();
         }
 
         public class ExtensionSettings

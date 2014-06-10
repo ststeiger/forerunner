@@ -1065,8 +1065,10 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
+            Impersonator impersonator = null;
             try
             {
+                impersonator = tryImpersonate();
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1084,6 +1086,10 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
                 CloseSQLConn();
             }
         }

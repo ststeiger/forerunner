@@ -516,10 +516,9 @@ WHERE        OrderID IN (@Orders)</CommandText>
     <ReportParameter Name="CatID">
       <DataType>String</DataType>
       <DefaultValue>
-        <DataSetReference>
-          <DataSetName>Cat</DataSetName>
-          <ValueField>CategoryName</ValueField>
-        </DataSetReference>
+        <Values>
+          <Value>1</Value>
+        </Values>
       </DefaultValue>
       <Prompt>Cat ID</Prompt>
       <ValidValues>

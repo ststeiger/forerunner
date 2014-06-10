@@ -48,18 +48,34 @@ $(function () {
                 headerHtml +
                 // form
                 "<form class='fr-us-form fr-core-dialog-form'>" +
-                    "<div class='fr-us-setting-container'>" +
-                        "<table><tr><td>" +
-                        "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                        "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-                        "</tr></td><tr><td>" +
-                        "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
-                        "<input class='fr-us-email-id fr-us-textbox' name='Email' type='email'/>" +
-                        "</tr></td><tr><td>" +
-                        "<label class='fr-us-label fr-us-separator'>" + userSettings.AdminUI + "</label>" +
-                        "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
-                        "</td></tr></table>" +
-                    "</div>" +
+                    "<table>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td colspan='2'>" +
+                                "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td colspan='2'>" +
+                                "<input class='fr-us-email-id fr-us-textbox' autofocus='autofocus' name='Email' type='email'/>" +
+                            "</td>" +
+                        "</tr>" +
+                    "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +

@@ -13,7 +13,7 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
-    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 10;
 
     /**
      * Widget used to create and edit dashboards
@@ -171,9 +171,9 @@ $(function () {
         _makeOpaque: function (addMask) {
             var me = this;
             if (addMask) {
-                me.element.find(".fr-report-container").addClass("fr-core-mask");
+                me.element.find(".fr-report-container").addClass("fr-dashboard-mask");
             } else {
-                me.element.find(".fr-report-container").removeClass("fr-core-mask");
+                me.element.find(".fr-report-container").removeClass("fr-dashboard-mask");
             }
         },
         _create: function () {

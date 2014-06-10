@@ -86,7 +86,7 @@ $(function () {
                 }
             });
         },
-        isAdmin: function () {
+        _isAdmin: function () {
             var me = this;
             var userSettings = me.options.$reportExplorer.reportExplorer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
@@ -141,7 +141,7 @@ $(function () {
                 me.hideTool(tp.itemLogOff.selectorClass);
             }
 
-            if (!me.isAdmin()) {
+            if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
                 me.hideTool(tp.itemCreateDashboard.selectorClass);
                 me.hideTool(tp.itemTags.selectorClass);

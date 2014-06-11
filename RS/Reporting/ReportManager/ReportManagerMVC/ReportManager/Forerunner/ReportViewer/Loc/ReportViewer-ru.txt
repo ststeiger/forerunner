@@ -225,13 +225,6 @@
     "selectReport":"<выберите отчет>",
     "hideToolbar":"Скрыть панель инструментов"
   },
-  "saveAsDashboard": {
-    "title":"Сохранить как",
-    "cancel":"отменить",
-    "submit":"представлять",
-    "dashboardName":"Панель Имя",
-    "namePlaceholder":"Панель Имя"
-  },
   "tags": {
     "title":"Метки",
     "tags":"Метки",

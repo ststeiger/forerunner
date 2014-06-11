@@ -225,13 +225,6 @@
     "selectReport":"<selecione relatório>",
     "hideToolbar":"Ocultar barra de ferramentas"
   },
-  "saveAsDashboard": {
-    "title":"salvar como",
-    "cancel":"cancelar",
-    "submit":"submeter",
-    "dashboardName":"Nome do Dashboard",
-    "namePlaceholder":"Nome do Dashboard"
-  },
   "tags": {
     "title":"Marcações",
     "tags":"Marcações",

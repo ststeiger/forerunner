@@ -225,13 +225,6 @@
     "selectReport":"<[レポート]を選択>",
     "hideToolbar":"ツールバーを隠す"
   },
-  "saveAsDashboard": {
-    "title":"新規保管",
-    "cancel":"キャンセル",
-    "submit":"提出する",
-    "dashboardName":"ダッシュボードの名前",
-    "namePlaceholder":"ダッシュボードの名前"
-  },
   "tags": {
     "title":"タグ",
     "tags":"タグ",

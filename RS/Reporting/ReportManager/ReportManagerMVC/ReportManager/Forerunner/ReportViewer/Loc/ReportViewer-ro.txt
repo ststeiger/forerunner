@@ -225,13 +225,6 @@
     "selectReport":"<selectați raport>",
     "hideToolbar":"Ascunde Toolbar"
   },
-  "saveAsDashboard": {
-    "title":"Salvare ca",
-    "cancel":"anula",
-    "submit":"executa",
-    "dashboardName":"Nume tablou de bord",
-    "namePlaceholder":"Nume tablou de bord"
-  },
   "tags": {
     "title":"Tag-uri",
     "tags":"Tag-uri",

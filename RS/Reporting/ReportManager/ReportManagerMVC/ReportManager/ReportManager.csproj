@@ -267,13 +267,11 @@
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
     <Content Include="Forerunner\Common\js\History.js" />
     <Content Include="Forerunner\Common\js\MessageBox.js" />
-    <Content Include="Forerunner\Dashboard\css\SaveAsDashboard.css" />
     <Content Include="Forerunner\Dashboard\css\ReportProperties.css" />
     <Content Include="Forerunner\Dashboard\css\Dashboard-all.css" />
     <Content Include="Forerunner\Dashboard\css\DashboardToolbar.css" />
     <Content Include="Forerunner\Dashboard\css\DashboardToolPane.css" />
     <Content Include="Forerunner\Dashboard\dashboards\2up2down-en.txt" />
-    <Content Include="Forerunner\Dashboard\js\SaveAsDashboard.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardEZ.js" />
     <Content Include="Forerunner\Dashboard\js\ReportProperties.js" />
     <Content Include="Forerunner\Dashboard\js\DashboardViewer.js" />

@@ -225,13 +225,6 @@
   "dashboardEditor": {
     "propertiesBtn":"属性"
   },
-  "saveAsDashboard": {
-    "title":"另存为",
-    "cancel":"取消",
-    "submit":"提交",
-    "dashboardName":"指示板名称",
-    "namePlaceholder":"指示板名称"
-  },
   "tags": {
     "title":"标签",
     "tags":"标签",

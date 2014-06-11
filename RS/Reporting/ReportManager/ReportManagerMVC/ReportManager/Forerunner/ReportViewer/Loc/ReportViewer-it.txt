@@ -225,13 +225,6 @@
     "selectReport":"<selezionare il rapporto>",
     "hideToolbar":"Nascondi barra degli strumenti"
   },
-  "saveAsDashboard": {
-    "title":"Salva con nome",
-    "cancel":"cancellare",
-    "submit":"presentare",
-    "dashboardName":"Dashboard Nome",
-    "namePlaceholder":"Dashboard Nome"
-  },
   "tags": {
     "title":"tag",
     "tags":"tag",

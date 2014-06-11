@@ -220,8 +220,6 @@ $(function () {
             /** @constant */
             dashboardToolPane: "dashboardToolPane",
             /** @constant */
-            saveAsDashboard: "saveAsDashboard",
-            /** @constant */
             forerunnerTags: "forerunnerTags",
             /** @constant */
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
@@ -441,8 +439,6 @@ $(function () {
             close: "close",
             /** widget + event, lowercase */
             reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
-            /** widget + event, lowercase */
-            saveAsDashboardClose: function () { return (forerunner.ssr.constants.widgets.saveAsDashboard + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             userSettingsClose: function () { return (forerunner.ssr.constants.widgets.userSettings + this.close).toLowerCase(); },
         },

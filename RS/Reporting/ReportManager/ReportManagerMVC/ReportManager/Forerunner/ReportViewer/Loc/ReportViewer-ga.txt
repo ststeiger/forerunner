@@ -225,13 +225,6 @@
     "selectReport":"<tuarascáil roghnú>",
     "hideToolbar":"Folaigh Barra Uirlisí"
   },
-  "saveAsDashboard": {
-    "title":"Sábháil Mar",
-    "cancel":"Cealaigh",
-    "submit":"Cuir",
-    "dashboardName":"Ainm an Phainéil",
-    "namePlaceholder":"Ainm an Phainéil"
-  },
   "tags": {
     "title":"Clibeanna",
     "tags":"Clibeanna",

@@ -225,13 +225,6 @@
     "selectReport":"<Veldu skýrslu>",
     "hideToolbar":"fela tækjastiku"
   },
-  "saveAsDashboard": {
-    "title":"vista sem",
-    "cancel":"hætta",
-    "submit":"leggja",
-    "dashboardName":"Mælaborð Name",
-    "namePlaceholder":"Mælaborð Name"
-  },
   "tags": {
     "title":"Tags",
     "tags":"Tags",

@@ -226,13 +226,6 @@
     "selectReport":"<seleccione Informe>",
     "hideToolbar":"Ocultar barra de herramientas"
   },
-  "saveAsDashboard": {
-    "title":"guardar como",
-    "cancel":"cancelar",
-    "submit":"presentar",
-    "dashboardName":"Dashboard Nombre",
-    "namePlaceholder":"Dashboard Nombre"
-  },
   "tags": {
     "title":"Etiquetas",
     "tags":"Etiquetas",

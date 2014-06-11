@@ -49,38 +49,6 @@ $(function () {
             var me = this;
             return me.parentFolder + me.dashboardName;
         },
-        /**
-         * Save the dashboard and prompt for a name
-         * @function $.forerunner.dashboardEditor#saveAs
-         */
-        saveAs: function (overwrite) {
-            var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-sad-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-sad-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append($dlg);
-                $dlg.on(events.saveAsDashboardClose(), function (e, data) {
-                    me._onSaveAsDashboardClose.apply(me, arguments);
-                });
-            }
-            $dlg.saveAsDashboard({
-                $appContainer: me.options.$appContainer,
-                overwrite: overwrite,
-                dashboardName: me.dashboardName
-            });
-            $dlg.saveAsDashboard("openDialog");
-        },
-        _onSaveAsDashboardClose: function (e, data) {
-            var me = this;
-            if (!data.isSubmit) {
-                // Wasn't a submit so just return
-                return;
-            }
-
-            // Save the dashboard to the server
-            me.dashboardName = data.dashboardName;
-            me._save(true);
-        },
         _save: function (overwrite) {
             var me = this;
 

@@ -226,13 +226,6 @@
     "selectReport":"<sélectionnez rapport>",
     "hideToolbar":"Masquer la barre d'outils"
   },
-  "saveAsDashboard": {
-    "title":"enregistrer en tant que",
-    "cancel":"annuler",
-    "submit":"soumettre",
-    "dashboardName":"Dashboard Nom",
-    "namePlaceholder":"Dashboard Nom"
-  },
   "tags": {
     "title":"Mots clés",
     "tags":"Mots clés",

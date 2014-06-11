@@ -225,13 +225,6 @@
     "selectReport":"<wählen Bericht>",
     "hideToolbar":"Symbolleiste ausblenden"
   },
-  "saveAsDashboard": {
-    "title":"speichern unter",
-    "cancel":"stornieren",
-    "submit":"einreichen",
-    "dashboardName":"Dashboard-Namen",
-    "namePlaceholder":"Dashboard-Namen"
-  },
   "tags": {
     "title":"Schlagworte",
     "tags":"Schlagworte",

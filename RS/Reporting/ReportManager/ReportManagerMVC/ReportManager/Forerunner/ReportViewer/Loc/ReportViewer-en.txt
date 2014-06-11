@@ -232,13 +232,6 @@
     "selectReport":"<select report>",
     "hideToolbar":"Hide Toolbar"
   },
-  "saveAsDashboard": {
-    "title":"Save As",
-    "cancel":"Cancel",
-    "submit":"Save",
-    "dashboardName": "Dashboard Name",
-    "namePlaceholder": "dashboard name"
-  },
   "tags": {
     "title":"Tags",
     "tags":"Tags",

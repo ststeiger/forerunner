@@ -225,13 +225,6 @@
     "selectReport":"<väljer rapport>",
     "hideToolbar":"Hide Toolbar"
   },
-  "saveAsDashboard": {
-    "title":"Spara som",
-    "cancel":"Avbryt",
-    "submit":"inkomma",
-    "dashboardName":"Instrumentpanels Namn",
-    "namePlaceholder":"Instrumentpanels Namn"
-  },
   "tags": {
     "title":"Taggar",
     "tags":"Taggar",

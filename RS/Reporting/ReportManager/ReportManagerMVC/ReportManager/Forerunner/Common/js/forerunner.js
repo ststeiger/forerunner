@@ -860,8 +860,8 @@ $(function () {
          *
          * @member
          */
-        parseCss: function (element, property) {
-            return parseInt($.css(element, property), 10) || 0;
+        parseCss: function ($control, property) {
+            return parseInt($control.css(property), 10) || 0;
         }
     },
         

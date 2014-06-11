@@ -12927,7 +12927,8 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null
+            $unzoomtoolbar: null,
+            hideToolbar: false
         };
 
         // Merge options with the default settings
@@ -12989,8 +12990,12 @@ $(function () {
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
-            // Let the report viewer know the height of the toolbar
-            $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            if (me.options.hideToolbar) {
+                $toolbar.hide();
+            } else {
+                // Let the report viewer know the height of the toolbar
+                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
             if ($unzoomtoolbar !== null) {
@@ -13341,7 +13346,8 @@ $(function () {
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
-     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isREportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.hideToolbar - Defaults to false, True = hide the tool bar
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13362,7 +13368,8 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false
+            useReportManagerSettings: false,
+            hideToolbar: false
         },
         _render: function () {
             var me = this;
@@ -13395,7 +13402,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                hideToolbar: me.options.hideToolbar
             });
 
             initializer.render();
@@ -21586,6 +21594,9 @@ $(function () {
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance
             });
+
+            // For the viewer widget alone, this will always stay false
+            me.enableEdit = false;
         },
         _init: function () {
             var me = this;
@@ -21637,13 +21648,15 @@ $(function () {
             $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
-            if (me.model.dashboardDef.reports[reportId]) {
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+            if (reportProperties) {
                 $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
-                    isFullScreen: false
+                    isFullScreen: false,
+                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -21651,6 +21664,7 @@ $(function () {
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
+                // We catch this event so as to auto save when the user changes parameters
                 var $reportParameter = $item.reportViewerEZ("getReportParameter");
                 $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
                     me._onReportParameterSubmit.apply(me, arguments);

@@ -40,6 +40,9 @@ $(function () {
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance
             });
+
+            // For the viewer widget alone, this will always stay false
+            me.enableEdit = false;
         },
         _init: function () {
             var me = this;
@@ -91,13 +94,15 @@ $(function () {
             $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
-            if (me.model.dashboardDef.reports[reportId]) {
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+            if (reportProperties) {
                 $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
-                    isFullScreen: false
+                    isFullScreen: false,
+                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -105,6 +110,7 @@ $(function () {
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
+                // We catch this event so as to auto save when the user changes parameters
                 var $reportParameter = $item.reportViewerEZ("getReportParameter");
                 $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
                     me._onReportParameterSubmit.apply(me, arguments);

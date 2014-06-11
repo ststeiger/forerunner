@@ -60,7 +60,7 @@ namespace Forerunner.SSRS.Manager
                     conn.Close();
                 }
             }
-            catch (SqlException e)
+            catch (Exception e)
             {
                 Logger.Trace(LogType.Error, "An exception happens while validating the report server database.  Connection string: " + conn.ConnectionString);
                 ExceptionLogGenerator.LogException(e);
@@ -95,9 +95,8 @@ namespace Forerunner.SSRS.Manager
                 builder.Password = Password;
             }
 
-
             SqlConnection conn = new SqlConnection(builder.ConnectionString);
-
+            
             if (ReportManager.isReportServerDB(conn, DBCredentials))
             {
                 Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");

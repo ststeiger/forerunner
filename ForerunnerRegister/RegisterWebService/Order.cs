@@ -219,6 +219,8 @@ namespace ForerunnerWebService
 
             string NewMailBody = String.Format(LicenseMailBody, LicensesText);
             string NewMailSubject = String.Format(LicenseMailSubject, OrderNumber);
+
+            tw.SendMail(LicenseMailFromAccount, "Archive@forerunnersw.com", NewMailSubject, NewMailBody);
             return tw.SendMail(LicenseMailFromAccount, Email, NewMailSubject, NewMailBody);
 
         }

@@ -42,13 +42,36 @@ namespace Forerunner.SSRS.Manager
         Credentials DBCredentials;
         bool useIntegratedSecurity;
         bool IsNativeRS = true;
-        string URL;
-        bool isSchemaChecked = false;
+        string URL;        
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
+        static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
+
+        private class SSRSServer
+        {
+            public bool isSchemaChecked = false;
+
+        }
+
+        private SSRSServer GetServerInfo()
+        {
+            SSRSServer retval = null;
+
+            SSRSServers.TryGetValue(this.URL, out retval);
+
+            if (retval == null)
+                retval = LoadServerData();
+            return retval;
+        }
+        private SSRSServer LoadServerData()
+        {
+            SSRSServer retval = new SSRSServer();
+            SSRSServers.Add(this.URL, retval);
+            return retval;
+        }
 
         private static bool isReportServerDB(SqlConnection conn, Credentials DBCredentials)
         {
@@ -429,7 +452,7 @@ namespace Forerunner.SSRS.Manager
 
         void CheckSchema()
         {
-            if (isSchemaChecked)
+            if (GetServerInfo().isSchemaChecked)
                 return;
             Impersonator impersonator = null;
             try
@@ -509,7 +532,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SQLComm.ExecuteNonQuery();
-                    isSchemaChecked = true;
+                    GetServerInfo().isSchemaChecked = true;
                 }
             }
             finally
@@ -1074,8 +1097,10 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
+            Impersonator impersonator = null;
             try
             {
+                impersonator = tryImpersonate();
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1093,6 +1118,10 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
                 CloseSQLConn();
             }
         }

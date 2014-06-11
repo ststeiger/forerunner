@@ -42,8 +42,6 @@ namespace Forerunner.SSRS.Viewer
         private byte[] imageResult = null;
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
-
-
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
 
         private class SSRSServer
@@ -75,6 +73,14 @@ namespace Forerunner.SSRS.Viewer
             return retval;
         }
 
+        public void VaidateServerConnection()
+        {
+            if (rs.Credentials == null)
+                rs.Credentials = GetCredentials();
+
+            rs.ListRenderingExtensions();
+        }
+
         private SSRSServer LoadServerData()
         {
             SSRSServer retval = new SSRSServer();
@@ -102,14 +108,6 @@ namespace Forerunner.SSRS.Viewer
 
             SSRSServers.Add(this.ReportServerURL, retval);
             return retval;
-        }
-
-        public void VaidateServerConnection()
-        {
-            if (rs.Credentials == null)
-                rs.Credentials = GetCredentials();
-
-            rs.ListRenderingExtensions();
         }
 
         public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
@@ -166,7 +164,6 @@ namespace Forerunner.SSRS.Viewer
         {
             return GetServerInfo().ServerRendering;
         }
-
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
             return GetImageInternal(SessionID, ImageID, out mimeType);
@@ -372,7 +369,7 @@ namespace Forerunner.SSRS.Viewer
                     GetServerRendering();
 
                     //Use local to get RPL for debug, will through an error
-                    if (GetServerInfo().ServerRendering&& (IsDebug != "WRPL"))
+                    if (GetServerInfo().ServerRendering && (IsDebug != "WRPL"))
                         format = "ForerunnerJSON";
                     else
                         format = "RPL";
@@ -447,7 +444,7 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportContainer");
 
                     MemoryStream ms;
-                    if (GetServerInfo().ServerRendering&& IsDebug != "RPL")
+                    if (GetServerInfo().ServerRendering && IsDebug != "RPL")
                     {
                         ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
                     }
@@ -987,7 +984,7 @@ namespace Forerunner.SSRS.Viewer
 
             NewSession = rs.ExecutionHeaderValue.ExecutionID;
             
-            if (ExportType == "EXCELOPENXML" && GetServerInfo().GetVersionNumber() < 2011) 
+            if (ExportType == "EXCELOPENXML" && GetServerInfo().GetVersionNumber() < 2011)
                 ExportType = "EXCEL";
 
             if (ExportType == "WORDOPENXML" && GetServerInfo().GetVersionNumber() < 2011)

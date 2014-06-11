@@ -46,11 +46,9 @@ $(function () {
             var me = this;
 
             if (!me._isAdmin()) {
-                me.hideTool(dbtp.itemSave.selectorClass);
                 me.hideTool(dbtp.itemEdit.selectorClass);
                 me.hideTool(dbtp.itemView.selectorClass);
             } else {
-                me.showTool(dbtp.itemSave.selectorClass);
                 me.showTool(dbtp.itemEdit.selectorClass);
                 me.showTool(dbtp.itemView.selectorClass);
 
@@ -65,7 +63,6 @@ $(function () {
                         // If the user has update resource permission for this dashboard, we will
                         // enable the edit buttons
                         me.showTool(dbtp.itemView.selectorClass);
-                        me.enableTools([dbtp.itemSave]);
                         me.hideTool(dbtp.itemEdit.selectorClass);
                         return;
                     }
@@ -73,7 +70,6 @@ $(function () {
 
                 // Disable the edit buttons
                 me.hideTool(dbtp.itemView.selectorClass);
-                me.disableTools([dbtp.itemSave]);
                 me.showTool(dbtp.itemEdit.selectorClass);
             }
         },
@@ -92,7 +88,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.addTools(2, true, [dbtp.itemEdit, dbtp.itemView]);
             me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");

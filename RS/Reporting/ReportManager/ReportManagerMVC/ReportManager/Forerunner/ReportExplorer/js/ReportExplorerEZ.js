@@ -319,11 +319,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                if (enableEdit) {
-                    $dashboardEditor.dashboardEditor("editDashboard", path);
-                } else {
-                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
-                }
+                $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
 
                 layout.$mainsection.fadeIn("fast");
             }, timeout);

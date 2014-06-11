@@ -19,22 +19,27 @@ $(function () {
      * Widget used to create and edit dashboards
      *
      * @namespace $.forerunner.dashboardEditor
-     * @prop {Object} options - The options for dashboardEditor
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**
          * Loads the given dashboard definition and opens the dashboard for editing
+         *
          * @function $.forerunner.dashboardEditor#editDashboard
          */
-        editDashboard: function (path) {
+        editDashboard: function (path, enableEdit) {
             var me = this;
 
-            setTimeout(function () {
+            me.enableEdit = enableEdit;
+            if (enableEdit) {
+                setTimeout(function () {
+                    me.loadDefinition(path, false);
+                    me._showUI(true);
+                }, timeout);
+            } else {
                 me.loadDefinition(path, false);
-                me._showUI(true);
-            }, timeout);
+            }
         },
         /**
          * Returns the fully qualified dashboard path
@@ -43,20 +48,6 @@ $(function () {
         getPath: function () {
             var me = this;
             return me.parentFolder + me.dashboardName;
-        },
-        /**
-         * Save the dashboard
-         * @function $.forerunner.dashboardEditor#save
-         */
-        save: function (overwrite) {
-            var me = this;
-            if (!me.dashboardName) {
-                // If we don't have the name, we need to do a save as
-                me.saveAs(overwrite);
-                return;
-            }
-            // If we have the dashboard name we can just save
-            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -92,10 +83,30 @@ $(function () {
         },
         _save: function (overwrite) {
             var me = this;
-            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
-            } else {
+
+            // Extract and save any / all parameter definitions
+            var $reportContainers = me.element.find(".fr-dashboard-report-id");
+            $reportContainers.each(function (index, item) {
+                var reportId = item.id;
+                var $item = $(item);
+
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                if (numOfVisibleParameters > 0) {
+                    // Save the parameters
+                    me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                }
+            });
+
+            // Save the model
+            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
+            }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            var me = this;
+            if (me.enableEdit === true) {
+                me._save(true);
             }
         },
         _onClickProperties: function (e) {
@@ -129,6 +140,8 @@ $(function () {
                 me._renderButtons();
                 me._makeOpaque(true);
             }, timeout);
+
+            me._save(true);
         },
         _showUI: function (show) {
             var me = this;

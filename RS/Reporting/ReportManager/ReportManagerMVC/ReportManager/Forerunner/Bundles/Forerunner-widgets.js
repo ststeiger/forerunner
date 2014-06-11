@@ -14197,11 +14197,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                if (enableEdit) {
-                    $dashboardEditor.dashboardEditor("editDashboard", path);
-                } else {
-                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
-                }
+                $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
 
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
@@ -21213,11 +21209,7 @@ $(function () {
             me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
 
             var $dashboardEditor = me.getDashboardEditor();
-            if (enableEdit) {
-                $dashboardEditor.dashboardEditor("editDashboard", null);
-            } else {
-                $dashboardEditor.dashboardEditor("loadDefinition", null, true);
-            }
+            $dashboardEditor.dashboardEditor("editDashboard", null, enableEdit);
         },
         _init: function () {
             var me = this;
@@ -21391,11 +21383,9 @@ $(function () {
             var me = this;
 
             if (!me._isAdmin()) {
-                me.hideTool(dtb.btnSave.selectorClass);
                 me.hideTool(dtb.btnEdit.selectorClass);
                 me.hideTool(dtb.btnView.selectorClass);
             } else {
-                me.showTool(dtb.btnSave.selectorClass);
                 me.showTool(dtb.btnEdit.selectorClass);
                 me.showTool(dtb.btnView.selectorClass);
 
@@ -21410,7 +21400,6 @@ $(function () {
                         // If the user has update resource permission for this dashboard, we will
                         // enable the edit buttons
                         me.showTool(dtb.btnView.selectorClass);
-                        me.enableTools([dtb.btnSave]);
                         me.hideTool(dtb.btnEdit.selectorClass);
                         return;
                     }
@@ -21418,7 +21407,6 @@ $(function () {
 
                 // Disable the edit buttons
                 me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
                 me.showTool(dtb.btnEdit.selectorClass);
             }
         },
@@ -21437,7 +21425,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
@@ -21503,11 +21491,9 @@ $(function () {
             var me = this;
 
             if (!me._isAdmin()) {
-                me.hideTool(dbtp.itemSave.selectorClass);
                 me.hideTool(dbtp.itemEdit.selectorClass);
                 me.hideTool(dbtp.itemView.selectorClass);
             } else {
-                me.showTool(dbtp.itemSave.selectorClass);
                 me.showTool(dbtp.itemEdit.selectorClass);
                 me.showTool(dbtp.itemView.selectorClass);
 
@@ -21522,7 +21508,6 @@ $(function () {
                         // If the user has update resource permission for this dashboard, we will
                         // enable the edit buttons
                         me.showTool(dbtp.itemView.selectorClass);
-                        me.enableTools([dbtp.itemSave]);
                         me.hideTool(dbtp.itemEdit.selectorClass);
                         return;
                     }
@@ -21530,7 +21515,6 @@ $(function () {
 
                 // Disable the edit buttons
                 me.hideTool(dbtp.itemView.selectorClass);
-                me.disableTools([dbtp.itemSave]);
                 me.showTool(dbtp.itemEdit.selectorClass);
             }
         },
@@ -21549,7 +21533,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.addTools(2, true, [dbtp.itemEdit, dbtp.itemView]);
             me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
@@ -21608,6 +21592,11 @@ $(function () {
             me.model.clearState();
             me.element.html("");
         },
+        /**
+         * Loads the given dashboard definition and opens
+         *
+         * @function $.forerunner.dashboardEditor#loadDefinition
+         */
         loadDefinition: function (path, hideMissing) {
             var me = this;
 
@@ -21658,11 +21647,20 @@ $(function () {
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                var parameters = me.model.dashboardDef.reports[reportId].parameters;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
+
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                    me._onReportParameterSubmit.apply(me, arguments);
+                });
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            // Ment to be overridden in the dashboard editor widget
         },
         _getName: function (path) {
             if (!path) return null;
@@ -21718,22 +21716,27 @@ $(function () {
      * Widget used to create and edit dashboards
      *
      * @namespace $.forerunner.dashboardEditor
-     * @prop {Object} options - The options for dashboardEditor
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**
          * Loads the given dashboard definition and opens the dashboard for editing
+         *
          * @function $.forerunner.dashboardEditor#editDashboard
          */
-        editDashboard: function (path) {
+        editDashboard: function (path, enableEdit) {
             var me = this;
 
-            setTimeout(function () {
+            me.enableEdit = enableEdit;
+            if (enableEdit) {
+                setTimeout(function () {
+                    me.loadDefinition(path, false);
+                    me._showUI(true);
+                }, timeout);
+            } else {
                 me.loadDefinition(path, false);
-                me._showUI(true);
-            }, timeout);
+            }
         },
         /**
          * Returns the fully qualified dashboard path
@@ -21742,20 +21745,6 @@ $(function () {
         getPath: function () {
             var me = this;
             return me.parentFolder + me.dashboardName;
-        },
-        /**
-         * Save the dashboard
-         * @function $.forerunner.dashboardEditor#save
-         */
-        save: function (overwrite) {
-            var me = this;
-            if (!me.dashboardName) {
-                // If we don't have the name, we need to do a save as
-                me.saveAs(overwrite);
-                return;
-            }
-            // If we have the dashboard name we can just save
-            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -21791,10 +21780,30 @@ $(function () {
         },
         _save: function (overwrite) {
             var me = this;
-            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
-            } else {
+
+            // Extract and save any / all parameter definitions
+            var $reportContainers = me.element.find(".fr-dashboard-report-id");
+            $reportContainers.each(function (index, item) {
+                var reportId = item.id;
+                var $item = $(item);
+
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                if (numOfVisibleParameters > 0) {
+                    // Save the parameters
+                    me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                }
+            });
+
+            // Save the model
+            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
+            }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            var me = this;
+            if (me.enableEdit === true) {
+                me._save(true);
             }
         },
         _onClickProperties: function (e) {
@@ -21828,6 +21837,8 @@ $(function () {
                 me._renderButtons();
                 me._makeOpaque(true);
             }, timeout);
+
+            me._save(true);
         },
         _showUI: function (show) {
             var me = this;

@@ -46,6 +46,11 @@ $(function () {
             me.model.clearState();
             me.element.html("");
         },
+        /**
+         * Loads the given dashboard definition and opens
+         *
+         * @function $.forerunner.dashboardEditor#loadDefinition
+         */
         loadDefinition: function (path, hideMissing) {
             var me = this;
 
@@ -96,11 +101,20 @@ $(function () {
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                var parameters = me.model.dashboardDef.reports[reportId].parameters;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
+
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                    me._onReportParameterSubmit.apply(me, arguments);
+                });
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            // Ment to be overridden in the dashboard editor widget
         },
         _getName: function (path) {
             if (!path) return null;

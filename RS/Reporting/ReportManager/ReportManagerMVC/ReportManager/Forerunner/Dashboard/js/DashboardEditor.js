@@ -90,11 +90,13 @@ $(function () {
                 var reportId = item.id;
                 var $item = $(item);
 
-                var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
-                if (numOfVisibleParameters > 0) {
-                    // Save the parameters
-                    me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                if ($item.data().reportViewerEZ) {
+                    // If we have a reportVewerEZ attached then get and save the parameter list
+                    var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                    var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                    if (numOfVisibleParameters > 0) {
+                        me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                    }
                 }
             });
 

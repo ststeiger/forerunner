@@ -69,7 +69,9 @@ $(function () {
             // Hook up the toolbar element events
             me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tb.btnLogOff]);
+                me.showTool(tb.btnLogOff.selectorClass);
+            } else {
+                me.hideTool(tb.btnLogOff.selectorClass);
             }
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
@@ -82,20 +84,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav];
-
-            //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
-            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
-            //    if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-            //        toolbarList.push(tb.btnSearchFolder);
-            //    }
-            //}
-            
-            if (forerunner.ajax.isFormsAuth()) {
-                toolbarList.push(tb.btnLogOff)
-            }
-            toolbarList.push(tg.explorerFindGroup);
-
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 

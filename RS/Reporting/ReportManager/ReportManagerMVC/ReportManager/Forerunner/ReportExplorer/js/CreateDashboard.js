@@ -54,7 +54,11 @@ $(function () {
                 me.$select.append($option);
             }
         },
-        _init: function() {
+        _init: function () {
+            var me = this;
+            // Reinitialize the fields
+            me.$dashboardName.val("");
+            me.$overwrite.prop({ checked: false });
         },
         _create: function () {
             var me = this;

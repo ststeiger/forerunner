@@ -262,7 +262,7 @@ namespace Forerunner.SSRS.Manager
             foreach (CatalogItem ci in items)
             {
                 added = false;
-                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
                 {
                     list.Add(ci);
                     added = true;
@@ -275,7 +275,7 @@ namespace Forerunner.SSRS.Manager
 
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site  || fci.Type == ItemTypeEnum.LinkedReport || showAll)
                             {
                                 if (!ci.Hidden || showHidden)
                                 {
@@ -298,6 +298,9 @@ namespace Forerunner.SSRS.Manager
 
         private static Impersonator tryImpersonate(Credentials DBCredentials)
         {
+            if (DBCredentials.SecurityType != Credentials.SecurityTypeEnum.Integrated)
+                return null;
+
             String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
             Impersonator impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
 
@@ -946,8 +949,10 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
+            Impersonator impersonator = null;
             try
             {
+                impersonator = tryImpersonate();
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -965,6 +970,10 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
                 CloseSQLConn();
             }
         }

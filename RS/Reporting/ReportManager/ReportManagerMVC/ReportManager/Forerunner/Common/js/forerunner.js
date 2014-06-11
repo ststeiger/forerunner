@@ -854,6 +854,14 @@ $(function () {
 
         hasAttr: function ($control, attribute) {
             return typeof ($control.attr(attribute)) !== "undefined";
+        },
+        /**
+         * Parse css property value to integer value
+         *
+         * @member
+         */
+        parseCss: function (element, property) {
+            return parseInt($.css(element, property), 10) || 0;
         }
     },
         

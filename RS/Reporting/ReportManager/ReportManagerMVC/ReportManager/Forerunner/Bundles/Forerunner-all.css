@@ -1352,7 +1352,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     overflow:auto;
     padding-right:16px;
     border-bottom: 1px solid black;
-    min-width:180px; 
+    min-width:178px; 
     max-width:240px; 
     background:#fff 50% 50% repeat-x; 
     z-index:5;

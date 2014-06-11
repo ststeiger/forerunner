@@ -924,7 +924,12 @@ $(function () {
             else {
                 $input.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
                 $tree.show();
-                $tree.position({ my: "left top", at: "left bottom", of: $input });
+                //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
+                //so here I wrote code to got shop up position to popup tree panel
+                var left = forerunner.helper.parseCss($input[0], "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
+                var top = forerunner.helper.parseCss($input[0], "marginTop") + $input.outerHeight();
+                $tree.css({ top: top, left: left });
+                //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
             }
         },

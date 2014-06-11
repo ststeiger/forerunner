@@ -29,8 +29,8 @@ namespace Forerunner.SSRS.Manager
     {
         RSManagementProxy rs;
         Credentials WSCredentials;
-        static Credentials DBCredentials;
-        static bool useIntegratedSecurity;
+        Credentials DBCredentials;
+        bool useIntegratedSecurity;
         bool IsNativeRS = true;
         string URL;
         bool isSchemaChecked = false;
@@ -40,13 +40,13 @@ namespace Forerunner.SSRS.Manager
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
-        private static bool isReportServerDB(SqlConnection conn)
+        private static bool isReportServerDB(SqlConnection conn, Credentials DBCredentials)
         {
             string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
             Impersonator impersonator = null;
             try
             {
-                impersonator = tryImpersonate();
+                impersonator = tryImpersonate(DBCredentials);
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(SQL, conn))
                 {
@@ -83,8 +83,7 @@ namespace Forerunner.SSRS.Manager
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            ReportManager.DBCredentials = DBCredentials;
-            ReportManager.useIntegratedSecurity = useIntegratedSecurity;
+
             if (useIntegratedSecurity)
             {
                 builder.IntegratedSecurity = true;
@@ -99,7 +98,7 @@ namespace Forerunner.SSRS.Manager
 
             SqlConnection conn = new SqlConnection(builder.ConnectionString);
 
-            if (ReportManager.isReportServerDB(conn))
+            if (ReportManager.isReportServerDB(conn, DBCredentials))
             {
                 Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
                 return true;
@@ -119,6 +118,8 @@ namespace Forerunner.SSRS.Manager
             this.SharePointHostName = SharePointHostName;
             this.IsNativeRS = IsNativeRS;
             this.WSCredentials = WSCredentials;
+            this.useIntegratedSecurity = useIntegratedSecurity;
+            this.DBCredentials = DBCredentials;
             rs.Url = URL;
             this.URL = URL;
             
@@ -295,7 +296,16 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
         }
 
-        private static Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
+        private static Impersonator tryImpersonate(Credentials DBCredentials)
+        {
+            String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+            Impersonator impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
+
+            impersonator.Impersonate();
+            return impersonator;
+        }
+
+        private Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
         {
             if (!useIntegratedSecurity) return null;
             

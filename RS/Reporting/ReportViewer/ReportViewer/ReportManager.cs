@@ -29,23 +29,24 @@ namespace Forerunner.SSRS.Manager
     {
         RSManagementProxy rs;
         Credentials WSCredentials;
-        Credentials DBCredentials;
-        bool useIntegratedSecurity;
+        static Credentials DBCredentials;
+        static bool useIntegratedSecurity;
         bool IsNativeRS = true;
         string URL;
         bool isSchemaChecked = false;
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
-        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", false);
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
 
         private static bool isReportServerDB(SqlConnection conn)
         {
             string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
-
+            Impersonator impersonator = null;
             try
             {
+                impersonator = tryImpersonate();
                 conn.Open();
                 using (SqlCommand cmd = new SqlCommand(SQL, conn))
                 {
@@ -66,6 +67,10 @@ namespace Forerunner.SSRS.Manager
                 return false;
             }
             finally {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
                 if (conn.State == System.Data.ConnectionState.Open) {
                     conn.Close();
                 }
@@ -78,6 +83,8 @@ namespace Forerunner.SSRS.Manager
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
+            ReportManager.DBCredentials = DBCredentials;
+            ReportManager.useIntegratedSecurity = useIntegratedSecurity;
             if (useIntegratedSecurity)
             {
                 builder.IntegratedSecurity = true;
@@ -112,8 +119,6 @@ namespace Forerunner.SSRS.Manager
             this.SharePointHostName = SharePointHostName;
             this.IsNativeRS = IsNativeRS;
             this.WSCredentials = WSCredentials;
-            this.DBCredentials = DBCredentials;
-            this.useIntegratedSecurity = useIntegratedSecurity;
             rs.Url = URL;
             this.URL = URL;
             
@@ -195,6 +200,19 @@ namespace Forerunner.SSRS.Manager
             return new NetworkCredential(authTicket.Name, authTicket.UserData);
         }
 
+        // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
+        private String GetUserName()
+        {
+            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+            {
+                HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+                FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                return authTicket.Name;
+            }
+
+            return HttpContext.Current.User.Identity.Name;
+        }
+
         private CatalogItem[] callListChildren(string path, Boolean isRecursive)
         {
             rs.Credentials = GetCredentials();
@@ -226,34 +244,39 @@ namespace Forerunner.SSRS.Manager
 
             return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
-
+        
         private string[] callGetPermissions(string path)
         {
             rs.Credentials = GetCredentials();
             return rs.GetPermissions(path);
         }
 
-        public CatalogItem[] ListChildren(string path, Boolean isRecursive)
+        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = false)
         {
             Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem[] items = callListChildren(path, isRecursive);
+            bool added = false;
+
             foreach (CatalogItem ci in items)
             {
-                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.LinkedReport) && !ci.Hidden)
+                added = false;
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
                 {
                     list.Add(ci);
+                    added = true;
                 }
                 if (RecurseFolders)
                 {
-                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
                     {
                         CatalogItem[] folder = callListChildren(ci.Path, false);
+
                         foreach (CatalogItem fci in folder)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.LinkedReport)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
                             {
-                                if (!ci.Hidden)
+                                if (!ci.Hidden || showHidden)
                                 {
                                     list.Add(ci);
                                     break;
@@ -262,7 +285,7 @@ namespace Forerunner.SSRS.Manager
                         }
                     }
                 }
-                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
                 {
                     list.Add(ci);
                 }
@@ -272,7 +295,7 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
         }
 
-        private Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
+        private static Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
         {
             if (!useIntegratedSecurity) return null;
             
@@ -322,7 +345,7 @@ namespace Forerunner.SSRS.Manager
                             BEGIN	                            	                            
                                 CREATE TABLE dbo.ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
                             END
-
+                           
                            /*  Version update Code */
                            IF @DBVersionPrev = '1.1'
                             BEGIN
@@ -375,6 +398,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -388,19 +412,14 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -412,7 +431,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveUserParamaters(string path, string parameters)
+        public string SaveUserParameters(string path, string parameters)
         {
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
@@ -437,6 +456,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -449,19 +469,14 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.ExecuteNonQuery();
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -477,6 +492,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -490,7 +506,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
@@ -498,12 +514,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -519,6 +530,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -529,7 +541,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -569,6 +581,7 @@ namespace Forerunner.SSRS.Manager
         public string SaveUserSettings(string settings)
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -582,18 +595,13 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@Params", settings);
                     SQLComm.ExecuteNonQuery();
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -608,6 +616,7 @@ namespace Forerunner.SSRS.Manager
         public string GetUserSettings()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -618,7 +627,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         settings = string.Empty;
@@ -644,20 +653,30 @@ namespace Forerunner.SSRS.Manager
         }
         private string GetItemID(string path)
         {            
+
+            return GetProperty(path,"ID");
+
+        }
+        public string GetProperty(string path,string propName)
+        {
             Property[] props = new Property[1];
             Property retrieveProp = new Property();
-            retrieveProp.Name = "ID";
+            retrieveProp.Name = propName;
             props[0] = retrieveProp;
 
             Property[] properties = callGetProperties(path, props);
 
-            return properties[0].Value;
-
+            if (properties.Length > 0)
+                return properties[0].Value;
+            else
+                return "";
         }
+       
         public string IsFavorite(string path)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -668,7 +687,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -704,9 +723,27 @@ namespace Forerunner.SSRS.Manager
             return SharePointHostName + path.Substring(39);            
 
         }
+        public string CombinePaths(string path1, string path2)
+        {
+            if (path1.Length == 0)
+            {
+                return path2;
+            }
+
+            if (path2.Length == 0)
+            {
+                return path1;
+            }
+
+            path1 = path1.TrimEnd('/', '\\');
+            path2 = path2.TrimStart('/', '\\');
+
+            return string.Format("{0}/{1}", path1, path2);
+        }
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -719,7 +756,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         while (SQLReader.Read())
@@ -750,6 +787,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetRecentReports()
         {
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -770,7 +808,7 @@ namespace Forerunner.SSRS.Manager
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
-                SetUserNameParameters(SQLComm);
+                SetUserNameParameters(SQLComm, userName);
 
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
@@ -804,6 +842,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -813,7 +852,7 @@ namespace Forerunner.SSRS.Manager
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
 
@@ -821,12 +860,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
+                return getReturnSuccess();
             }
             finally
             {
@@ -838,11 +872,8 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        private void SetUserNameParameters(SqlCommand SQLComm, string domainUserNameFromCaller = null)
-        {
-            string domainUserName = domainUserNameFromCaller == null ? HttpContext.Current.User.Identity.Name : domainUserNameFromCaller;
-
-                       
+        private void SetUserNameParameters(SqlCommand SQLComm, string domainUserName)
+        {                       
             string[] stringTokens = domainUserName.Split('\\');
             string uName = stringTokens[stringTokens.Length - 1];
 
@@ -905,10 +936,8 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
-            Impersonator impersonator = null;
             try
             {
-                impersonator = tryImpersonate();
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -926,10 +955,6 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
-                if (impersonator != null)
-                {
-                    impersonator.Dispose();
-                }
                 CloseSQLConn();
             }
         }
@@ -952,7 +977,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 IID = GetItemID(Path);
-                SaveImage(retval, Path, null, IID, isUserSpecific);
+                SaveImage(retval, Path, HttpContext.Current.User.Identity.Name, IID, isUserSpecific);
             }
 
         }
@@ -960,8 +985,8 @@ namespace Forerunner.SSRS.Manager
         public byte[] GetDBImage(string path)
         {
             string IID = GetItemID(path);
-
             Impersonator impersonator = null;
+            string userName = GetUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -976,7 +1001,7 @@ namespace Forerunner.SSRS.Manager
                     //SQLComm.Prepare();
                     SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
-                    SetUserNameParameters(SQLComm);
+                    SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         if (SQLReader.HasRows)
@@ -1001,6 +1026,18 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public bool CanCreateSubscription(string path)
+        {
+            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
+            {
+                if (permission.IndexOf("Create Subscription", StringComparison.OrdinalIgnoreCase) != -1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;
@@ -1014,6 +1051,16 @@ namespace Forerunner.SSRS.Manager
             }
 
             return hasPermission;
+        }
+        public string GetCatalogPermission(string path, string permission)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("hasPermission");
+            bool hasPermission = HasPermission(path, permission);
+            w.WriteBoolean(hasPermission);
+            w.WriteEndObject();
+            return w.ToString();
         }
 
         public byte[] GetCatalogImage(string path)
@@ -1096,6 +1143,7 @@ namespace Forerunner.SSRS.Manager
                     isUserSpecific = IsUserSpecific(path);
                     rep.Dispose();
                 }
+                threadContext.Undo();
             }
             catch (Exception e)
             {
@@ -1129,6 +1177,7 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
+                sqlImpersonator.Dispose();
                 threadContext.Dispose();
             }
         }
@@ -1145,81 +1194,103 @@ namespace Forerunner.SSRS.Manager
             return rs.GetExtensionSettings(extension);
         }
 
-        public Schedule[] ListSchedules(string siteName)
+        
+       
+
+
+       
+
+        private string getReturnSuccess()
         {
-            rs.Credentials = GetCredentials();
-            return rs.ListSchedules(siteName);
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
         }
 
-
-        public class SubscriptionInfo
+        public string GetReportTags(string path)
         {
-            public SubscriptionInfo(string subscriptionID, string report, ExtensionSettings extensionSettings, string description, string eventType, ScheduleReference scheduleReferene, ParameterValue[] parameters)
+            string IID = GetItemID(path);
+            Impersonator impersonator = null;
+            try
             {
-                SubscriptionID = subscriptionID;
-                Report = report;
-                ExtensionSettings = extensionSettings;
-                Description = description;
-                EventType = eventType;
-                ScheduleReference = scheduleReferene;
-                Parameters = parameters;
+                impersonator = tryImpersonate();
+                string tags = string.Empty;
+                string SQL = @"SELECT Tags FROM ForerunnerItemTags WHERE ItemID = @ItemID";
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            tags = SQLReader.GetString(0);
+                        }
+                    }
+                }
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Tags");
+                if (tags == "")
+                {
+                    w.WriteString("NotFound");
+                }
+                else
+                {
+                    w.WriteStartArray();
+                    foreach (string str in tags.Split(','))
+                    {
+                        w.WriteString(str);
+                    }
+                    w.WriteEndArray();
+                }
+                w.WriteEndObject();
+                tags = w.ToString();
+                //Need to try catch and return error
+                return tags;
             }
-            public string SubscriptionID { get; set; }
-            public string Report { get; set; }
-            public ExtensionSettings ExtensionSettings { get; set; }
-            public string Description { get; set; }
-            public string EventType { get; set; }
-            public ScheduleReference ScheduleReference { get; set; }
-            public ParameterValue[] Parameters { get; set; }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
         }
-
-        public string CreateSubscription(SubscriptionInfo info)
+        public void SaveReportTags(string tags, string path)
         {
-            rs.Credentials = GetCredentials();
-            string MatchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            return rs.CreateSubscription(info.Report, info.ExtensionSettings, info.Description, info.EventType, MatchData, info.Parameters);
-        }
+            string IID = GetItemID(path);
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerItemTags WHERE ItemID = @ItemID)
+                                  INSERT ForerunnerItemTags (ItemID, Tags) SELECT @ItemID, @Tags
+                               ELSE
+                                  UPDATE ForerunnerItemTags SET Tags = @Tags WHERE ItemID = @ItemID";
 
-        public SubscriptionInfo GetSubscription(string subscriptionID)
-        {
-            rs.Credentials = GetCredentials();
-            ExtensionSettings extensionSettings;
-            string description;
-            ActiveState activeState;
-            string status;
-            string eventType;
-            string matchData;
-            ParameterValue[] parameters;
-            rs.GetSubscriptionProperties(subscriptionID,
-                out extensionSettings,
-                out description,
-                out activeState,
-                out status,
-                out eventType,
-                out matchData,
-                out parameters);
-            ScheduleReference scheduleReference = MatchDataSerialization.GetScheduleFromMatchData(matchData);
-            SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, scheduleReference, parameters);
-            return retVal;
-        }
-
-        public void SetSubscription(SubscriptionInfo info)
-        {
-            rs.Credentials = GetCredentials();
-            string matchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
-            rs.SetSubscriptionProperties(info.SubscriptionID, info.ExtensionSettings, info.Description, info.EventType, matchData , info.Parameters);
-        }
-
-        public void DeleteSubscription(string subscriptionID)
-        {
-            rs.Credentials = GetCredentials();
-            rs.DeleteSubscription(subscriptionID);
-        }
-
-        public Management.Subscription[] ListSubscriptions(string report, string owner)
-        {
-            rs.Credentials = GetCredentials();
-            return rs.ListSubscriptions(report, owner);
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.Parameters.AddWithValue("@Tags", tags);
+                    SQLComm.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                CloseSQLConn();
+            }
         }
 
         protected virtual void Dispose(bool disposing)

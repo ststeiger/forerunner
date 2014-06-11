@@ -126,7 +126,7 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]
@@ -138,63 +138,6 @@ namespace ReportManager.Controllers
         public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings)), "text/JSON");
-        }
-
-        [HttpPost]
-        public HttpResponseMessage CreateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
-        {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).CreateSubscription(info)), "text/JSON");
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetSubscription(string subscriptionID, string instance = null)
-        {
-            Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
-        }
-
-        [HttpPost]
-        public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
-        {
-           
-            GetReportManager(instance).SetSubscription(info);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
-        }
-
-        [HttpGet]
-        public HttpResponseMessage DeleteSubscription(string subscriptionID, string instance = null)
-        {
-            GetReportManager(instance).DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListSubscriptions(string reportPath, string instance = null)
-        {
-            /// Need to pass in current owner.
-            Subscription[] subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListDeliveryExtensions(string instance = null)
-        {
-            Extension[] extensions = GetReportManager(instance).ListDeliveryExtensions();
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensions)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetExtensionSettings(string extension, string instance = null)
-        {
-            ExtensionParameter[] extensionSettings = GetReportManager(instance).GetExtensionSettings(extension);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensionSettings)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListSchedules(string instance = null)
-        {
-            Schedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
         }
 
         private string ToString<T>(T value)

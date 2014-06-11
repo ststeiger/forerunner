@@ -7,9 +7,9 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using System.Net;
+using System.Globalization;
 using System.Management;
 using Forerunner.Logging;
-using System.Globalization;
 
 namespace ForerunnerLicense
 {
@@ -38,9 +38,15 @@ namespace ForerunnerLicense
 
         internal static LicenseException Throw(LicenseException.FailReason reason,string message)
         {
+            throw GetException(reason, message);
+
+        }
+
+        internal static LicenseException GetException(LicenseException.FailReason reason, string message)
+        {
             LicenseException e = new LicenseException(message);
             e.Data.Add(LicenseException.failKey, reason);
-            throw e;
+            return e;
         }
 
         internal LicenseException() : base() { }
@@ -325,7 +331,7 @@ namespace ForerunnerLicense
                         RequireValidation = XMLReq.ReadElementContentAsInt();
                         break;
                     case "ActivationDate":
-                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString(),  CultureInfo.CreateSpecificCulture("en-us"));
+                        FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString(), CultureInfo.CreateSpecificCulture("en-us"));
                         break;
                     case "LastActivationDate":
                         LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString(), CultureInfo.CreateSpecificCulture("en-us"));

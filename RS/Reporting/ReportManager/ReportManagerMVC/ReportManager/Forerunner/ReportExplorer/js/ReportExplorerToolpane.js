@@ -106,12 +106,6 @@ $(function () {
             me.addTools(1, true, toolpaneItems);
             me._initCallbacks();
 
-            if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tp.itemLogOff]);
-            } else {
-                me.disableTools([tp.itemLogOff]);
-            }
-
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);

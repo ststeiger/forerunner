@@ -34,7 +34,8 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null
+            $unzoomtoolbar: null,
+            hideToolbar: false
         };
 
         // Merge options with the default settings
@@ -96,8 +97,12 @@ $(function () {
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
-            // Let the report viewer know the height of the toolbar
-            $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            if (me.options.hideToolbar) {
+                $toolbar.hide();
+            } else {
+                // Let the report viewer know the height of the toolbar
+                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
             if ($unzoomtoolbar !== null) {

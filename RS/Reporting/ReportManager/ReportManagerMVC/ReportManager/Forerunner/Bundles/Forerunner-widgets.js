@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -5817,7 +5817,9 @@ $(function () {
             // Hook up the toolbar element events
             me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
             if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tb.btnLogOff]);
+                me.showTool(tb.btnLogOff.selectorClass);
+            } else {
+                me.hideTool(tb.btnLogOff.selectorClass);
             }
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
@@ -5830,20 +5832,7 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav];
-
-            //Now I didn't add search folder button in explorer toolbar, since it's an admin feature
-            //if (me.options.$reportExplorer.reportExplorer("option", "isAdmin")) {
-            //    if (me.options.$reportExplorer.reportExplorer("getCurrentView") === "catalog") {
-            //        toolbarList.push(tb.btnSearchFolder);
-            //    }
-            //}
-            
-            if (forerunner.ajax.isFormsAuth()) {
-                toolbarList.push(tb.btnLogOff)
-            }
-            toolbarList.push(tg.explorerFindGroup);
-
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
@@ -5975,12 +5964,6 @@ $(function () {
 
             me.addTools(1, true, toolpaneItems);
             me._initCallbacks();
-
-            if (forerunner.ajax.isFormsAuth()) {
-                me.enableTools([tp.itemLogOff]);
-            } else {
-                me.disableTools([tp.itemLogOff]);
-            }
 
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
@@ -6509,16 +6492,18 @@ $(function () {
             var $dlg = me.options.$appContainer.find(".fr-cdb-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.createDashboard({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element,
-                    parentFolder: me.lastFetched.path,
-                    reportManagerAPI: me.options.reportManagerAPI,
-                    rsInstance: me.options.rsInstance
-                });
                 me.options.$appContainer.append($dlg);
                 me._createDashboardDialog = $dlg;
             }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.createDashboard({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                parentFolder: me.lastFetched.path,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
             me._createDashboardDialog.createDashboard("openDialog");
         },
         /**
@@ -10815,7 +10800,12 @@ $(function () {
             else {
                 $input.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
                 $tree.show();
-                $tree.position({ my: "left top", at: "left bottom", of: $input });
+                //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
+                //so here I wrote code to got shop up position to popup tree panel
+                var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
+                var top = forerunner.helper.parseCss($input, "marginTop") + $input.outerHeight();
+                $tree.css({ top: top, left: left });
+                //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
             }
         },
@@ -12937,7 +12927,8 @@ $(function () {
             $appContainer: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            $unzoomtoolbar: null
+            $unzoomtoolbar: null,
+            hideToolbar: false
         };
 
         // Merge options with the default settings
@@ -12999,8 +12990,12 @@ $(function () {
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
-            // Let the report viewer know the height of the toolbar
-            $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            if (me.options.hideToolbar) {
+                $toolbar.hide();
+            } else {
+                // Let the report viewer know the height of the toolbar
+                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+            }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
             if ($unzoomtoolbar !== null) {
@@ -13351,7 +13346,8 @@ $(function () {
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
-     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isREportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.hideToolbar - Defaults to false, True = hide the tool bar
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13372,7 +13368,8 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false
+            useReportManagerSettings: false,
+            hideToolbar: false
         },
         _render: function () {
             var me = this;
@@ -13405,7 +13402,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                hideToolbar: me.options.hideToolbar
             });
 
             initializer.render();
@@ -14207,11 +14205,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                if (enableEdit) {
-                    $dashboardEditor.dashboardEditor("editDashboard", path);
-                } else {
-                    $dashboardEditor.dashboardEditor("loadDefinition", path, true);
-                }
+                $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
 
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
@@ -14346,7 +14340,11 @@ $(function () {
                 me.$select.append($option);
             }
         },
-        _init: function() {
+        _init: function () {
+            var me = this;
+            // Reinitialize the fields
+            me.$dashboardName.val("");
+            me.$overwrite.prop({ checked: false });
         },
         _create: function () {
             var me = this;
@@ -14452,6 +14450,7 @@ $(function () {
                 navigateTo("createDashboard", path);
 
                 me.closeDialog();
+                return;
             }
 
             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
@@ -21218,11 +21217,7 @@ $(function () {
             me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
 
             var $dashboardEditor = me.getDashboardEditor();
-            if (enableEdit) {
-                $dashboardEditor.dashboardEditor("editDashboard", null);
-            } else {
-                $dashboardEditor.dashboardEditor("loadDefinition", null, true);
-            }
+            $dashboardEditor.dashboardEditor("editDashboard", null, enableEdit);
         },
         _init: function () {
             var me = this;
@@ -21396,11 +21391,9 @@ $(function () {
             var me = this;
 
             if (!me._isAdmin()) {
-                me.hideTool(dtb.btnSave.selectorClass);
                 me.hideTool(dtb.btnEdit.selectorClass);
                 me.hideTool(dtb.btnView.selectorClass);
             } else {
-                me.showTool(dtb.btnSave.selectorClass);
                 me.showTool(dtb.btnEdit.selectorClass);
                 me.showTool(dtb.btnView.selectorClass);
 
@@ -21415,7 +21408,6 @@ $(function () {
                         // If the user has update resource permission for this dashboard, we will
                         // enable the edit buttons
                         me.showTool(dtb.btnView.selectorClass);
-                        me.enableTools([dtb.btnSave]);
                         me.hideTool(dtb.btnEdit.selectorClass);
                         return;
                     }
@@ -21423,7 +21415,6 @@ $(function () {
 
                 // Disable the edit buttons
                 me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
                 me.showTool(dtb.btnEdit.selectorClass);
             }
         },
@@ -21442,7 +21433,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
@@ -21506,27 +21497,42 @@ $(function () {
          */
         enableEdit: function (enableEdit) {
             var me = this;
-            if (enableEdit) {
-                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = { hasPermission: true };
-                if (path) {
-                    permission = forerunner.ajax.hasPermission(path, "Update Content");
-                }
-                if (!path || (permission && permission.hasPermission === true)) {
-                    // If the user has update resource permission for this dashboard, we will
-                    // enable the edit buttons
-                    me.showTool(dbtp.itemView.selectorClass);
-                    me.enableTools([dbtp.itemSave]);
-                    me.hideTool(dbtp.itemEdit.selectorClass);
-                    return;
-                }
-            }
 
-            // Disable the edit buttons
-            me.hideTool(dbtp.itemView.selectorClass);
-            me.disableTools([dbtp.itemSave]);
-            me.showTool(dbtp.itemEdit.selectorClass);
+            if (!me._isAdmin()) {
+                me.hideTool(dbtp.itemEdit.selectorClass);
+                me.hideTool(dbtp.itemView.selectorClass);
+            } else {
+                me.showTool(dbtp.itemEdit.selectorClass);
+                me.showTool(dbtp.itemView.selectorClass);
+
+                if (enableEdit) {
+                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                    var path = $dashboardEditor.dashboardEditor("getPath");
+                    var permission = { hasPermission: true };
+                    if (path) {
+                        permission = forerunner.ajax.hasPermission(path, "Update Content");
+                    }
+                    if (!path || (permission && permission.hasPermission === true)) {
+                        // If the user has update resource permission for this dashboard, we will
+                        // enable the edit buttons
+                        me.showTool(dbtp.itemView.selectorClass);
+                        me.hideTool(dbtp.itemEdit.selectorClass);
+                        return;
+                    }
+                }
+
+                // Disable the edit buttons
+                me.hideTool(dbtp.itemView.selectorClass);
+                me.showTool(dbtp.itemEdit.selectorClass);
+            }
+        },
+        _isAdmin: function () {
+            var me = this;
+            var userSettings = me.options.$dashboardEZ.dashboardEZ("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                return true;
+            }
+            return false;
         },
         _init: function () {
             var me = this;
@@ -21535,7 +21541,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.addTools(2, true, [dbtp.itemEdit, dbtp.itemView]);
             me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
@@ -21588,12 +21594,20 @@ $(function () {
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance
             });
+
+            // For the viewer widget alone, this will always stay false
+            me.enableEdit = false;
         },
         _init: function () {
             var me = this;
             me.model.clearState();
             me.element.html("");
         },
+        /**
+         * Loads the given dashboard definition and opens
+         *
+         * @function $.forerunner.dashboardEditor#loadDefinition
+         */
         loadDefinition: function (path, hideMissing) {
             var me = this;
 
@@ -21634,21 +21648,33 @@ $(function () {
             $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
-            if (me.model.dashboardDef.reports[reportId]) {
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+            if (reportProperties) {
                 $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
-                    isFullScreen: false
+                    isFullScreen: false,
+                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                var parameters = me.model.dashboardDef.reports[reportId].parameters;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
+
+                // We catch this event so as to auto save when the user changes parameters
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                    me._onReportParameterSubmit.apply(me, arguments);
+                });
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            // Ment to be overridden in the dashboard editor widget
         },
         _getName: function (path) {
             if (!path) return null;
@@ -21698,28 +21724,33 @@ $(function () {
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
-    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 10;
+    var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
 
     /**
      * Widget used to create and edit dashboards
      *
      * @namespace $.forerunner.dashboardEditor
-     * @prop {Object} options - The options for dashboardEditor
      */
     $.widget(widgets.getFullname(widgets.dashboardEditor), $.forerunner.dashboardViewer /** @lends $.forerunner.dashboardEditor */, {
         options: {
         },
         /**
          * Loads the given dashboard definition and opens the dashboard for editing
+         *
          * @function $.forerunner.dashboardEditor#editDashboard
          */
-        editDashboard: function (path) {
+        editDashboard: function (path, enableEdit) {
             var me = this;
 
-            setTimeout(function () {
+            me.enableEdit = enableEdit;
+            if (enableEdit) {
+                setTimeout(function () {
+                    me.loadDefinition(path, false);
+                    me._showUI(true);
+                }, timeout);
+            } else {
                 me.loadDefinition(path, false);
-                me._showUI(true);
-            }, timeout);
+            }
         },
         /**
          * Returns the fully qualified dashboard path
@@ -21728,20 +21759,6 @@ $(function () {
         getPath: function () {
             var me = this;
             return me.parentFolder + me.dashboardName;
-        },
-        /**
-         * Save the dashboard
-         * @function $.forerunner.dashboardEditor#save
-         */
-        save: function (overwrite) {
-            var me = this;
-            if (!me.dashboardName) {
-                // If we don't have the name, we need to do a save as
-                me.saveAs(overwrite);
-                return;
-            }
-            // If we have the dashboard name we can just save
-            me._save(true);
         },
         /**
          * Save the dashboard and prompt for a name
@@ -21777,10 +21794,32 @@ $(function () {
         },
         _save: function (overwrite) {
             var me = this;
-            if (me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardSucceeded, toolbar.saveDashboard);
-            } else {
+
+            // Extract and save any / all parameter definitions
+            var $reportContainers = me.element.find(".fr-dashboard-report-id");
+            $reportContainers.each(function (index, item) {
+                var reportId = item.id;
+                var $item = $(item);
+
+                if ($item.data().reportViewerEZ) {
+                    // If we have a reportVewerEZ attached then get and save the parameter list
+                    var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                    var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                    if (numOfVisibleParameters > 0) {
+                        me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                    }
+                }
+            });
+
+            // Save the model
+            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
+            }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            var me = this;
+            if (me.enableEdit === true) {
+                me._save(true);
             }
         },
         _onClickProperties: function (e) {
@@ -21814,6 +21853,8 @@ $(function () {
                 me._renderButtons();
                 me._makeOpaque(true);
             }, timeout);
+
+            me._save(true);
         },
         _showUI: function (show) {
             var me = this;
@@ -21968,10 +22009,11 @@ $(function () {
                     },
                     children: []
                 };
-                curNode.children.push(newNode);
                 if (item.Type === me._itemType.folder) {
+                    curNode.children.push(newNode);
                     me._createTreeItems(newNode, view, item.Path)
                 } else if (item.Type === me._itemType.report) {
+                    curNode.children.push(newNode);
                     newNode.icon = "jstree-file"
                     newNode.li_attr.dataReport = true;
                 }

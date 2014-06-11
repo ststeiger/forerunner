@@ -439,18 +439,6 @@ $(function () {
             }
         },
         /** @member */
-        btnSave: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-dashboard-toolbar-save-button",
-            imageClass: "fr-icons24x24-save-param",
-            tooltip: locData.toolbar.saveDashboard,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$dashboardEditor.dashboardEditor("save");
-                }
-            }
-        },
-        /** @member */
         btnEdit: {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-edit-button",
@@ -530,19 +518,6 @@ $(function () {
      * @namespace
      */
     forerunner.ssr.tools.dashboardToolPane = {
-        /** @member */
-        itemSave: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-dashboardtoolpane-save-button",
-            imageClass: "fr-icons24x24-save-param",
-            text: locData.toolPane.saveDashboard,
-            events: {
-                click: function (e) {
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-save-button"]);
-                    e.data.me.options.$dashboardEditor.dashboardEditor("save");
-                }
-            }
-        },
         /** @member */
         itemEdit: {
             toolType: toolTypes.containerItem,

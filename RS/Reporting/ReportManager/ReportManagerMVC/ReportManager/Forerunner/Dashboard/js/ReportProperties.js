@@ -91,10 +91,11 @@ $(function () {
                     },
                     children: []
                 };
-                curNode.children.push(newNode);
                 if (item.Type === me._itemType.folder) {
+                    curNode.children.push(newNode);
                     me._createTreeItems(newNode, view, item.Path)
                 } else if (item.Type === me._itemType.report) {
+                    curNode.children.push(newNode);
                     newNode.icon = "jstree-file"
                     newNode.li_attr.dataReport = true;
                 }

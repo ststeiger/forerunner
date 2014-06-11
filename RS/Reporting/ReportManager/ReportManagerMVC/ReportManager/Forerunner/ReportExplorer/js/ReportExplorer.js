@@ -462,16 +462,18 @@ $(function () {
             var $dlg = me.options.$appContainer.find(".fr-cdb-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-cdb-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.createDashboard({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element,
-                    parentFolder: me.lastFetched.path,
-                    reportManagerAPI: me.options.reportManagerAPI,
-                    rsInstance: me.options.rsInstance
-                });
                 me.options.$appContainer.append($dlg);
                 me._createDashboardDialog = $dlg;
             }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.createDashboard({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                parentFolder: me.lastFetched.path,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance
+            });
             me._createDashboardDialog.createDashboard("openDialog");
         },
         /**

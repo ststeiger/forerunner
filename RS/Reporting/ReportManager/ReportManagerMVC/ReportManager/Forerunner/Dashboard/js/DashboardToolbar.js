@@ -54,11 +54,9 @@ $(function () {
             var me = this;
 
             if (!me._isAdmin()) {
-                me.hideTool(dtb.btnSave.selectorClass);
                 me.hideTool(dtb.btnEdit.selectorClass);
                 me.hideTool(dtb.btnView.selectorClass);
             } else {
-                me.showTool(dtb.btnSave.selectorClass);
                 me.showTool(dtb.btnEdit.selectorClass);
                 me.showTool(dtb.btnView.selectorClass);
 
@@ -73,7 +71,6 @@ $(function () {
                         // If the user has update resource permission for this dashboard, we will
                         // enable the edit buttons
                         me.showTool(dtb.btnView.selectorClass);
-                        me.enableTools([dtb.btnSave]);
                         me.hideTool(dtb.btnEdit.selectorClass);
                         return;
                     }
@@ -81,7 +78,6 @@ $(function () {
 
                 // Disable the edit buttons
                 me.hideTool(dtb.btnView.selectorClass);
-                me.disableTools([dtb.btnSave]);
                 me.showTool(dtb.btnEdit.selectorClass);
             }
         },
@@ -100,7 +96,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnSave, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility

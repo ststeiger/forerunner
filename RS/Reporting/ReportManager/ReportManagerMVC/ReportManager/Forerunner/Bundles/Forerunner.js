@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -855,6 +855,14 @@ $(function () {
 
         hasAttr: function ($control, attribute) {
             return typeof ($control.attr(attribute)) !== "undefined";
+        },
+        /**
+         * Parse css property value to integer value
+         *
+         * @member
+         */
+        parseCss: function ($control, property) {
+            return parseInt($control.css(property), 10) || 0;
         }
     },
         

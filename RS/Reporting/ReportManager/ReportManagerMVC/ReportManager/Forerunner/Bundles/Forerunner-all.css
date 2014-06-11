@@ -1352,7 +1352,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     overflow:auto;
     padding-right:16px;
     border-bottom: 1px solid black;
-    min-width:180px; 
+    min-width:178px; 
     max-width:240px; 
     background:#fff 50% 50% repeat-x; 
     z-index:5;
@@ -1890,29 +1890,29 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-rp-section { display: none; }
 
-.fr-rp-form { margin-right: 16px; position: relative;}
-  .fr-rp-form .fr-rp-dropdown-container { position: relative; }
-  .fr-rp-form .fr-rp-text-input { display: block; height: 26px; width: 330px; margin: auto 0; padding: 0 22px 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-  .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 5px; }
-  .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
-  .fr-rp-form .fr-rp-popup-container { display: none; position:fixed; border: 1px solid #424242; background-color: white; }
-  .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 400px; }
-  .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
-  .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
-  .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+.fr-rp-form { margin-right: 16px; position: relative; }
+    .fr-rp-form .fr-rp-dropdown-container { position: relative; }
+    .fr-rp-form .fr-rp-text-input { display: block; height: 26px; min-width: 375px; margin: auto 0; padding: 0 22px 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+    .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 5px; }
+    .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
+    .fr-rp-form .fr-rp-popup-container { display: none; position: fixed; border: 1px solid #424242; background-color: white; }
+    .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 400px; }
+    .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+    .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
+    .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
 
-  .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
-  .fr-rp-form .fr-rp-error-position { display: inline; }
-  .fr-rp-form .fr-rp-error { border-width: thin; border-color: red; }
+    .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
+    .fr-rp-form .fr-rp-error-position { display: inline; }
+    .fr-rp-form .fr-rp-error { border-width: thin; border-color: red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
-  .fr-rp-form { margin-right: 4px; }
+    .fr-rp-form { margin-right: 4px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  .fr-rp-form { margin-right: 4px; }
+    .fr-rp-form { margin-right: 4px; }
 }
 
 .fr-sad-section { display: none; }

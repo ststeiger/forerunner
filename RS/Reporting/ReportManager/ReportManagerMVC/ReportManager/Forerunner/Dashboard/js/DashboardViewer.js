@@ -40,12 +40,20 @@ $(function () {
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance
             });
+
+            // For the viewer widget alone, this will always stay false
+            me.enableEdit = false;
         },
         _init: function () {
             var me = this;
             me.model.clearState();
             me.element.html("");
         },
+        /**
+         * Loads the given dashboard definition and opens
+         *
+         * @function $.forerunner.dashboardEditor#loadDefinition
+         */
         loadDefinition: function (path, hideMissing) {
             var me = this;
 
@@ -86,21 +94,33 @@ $(function () {
             $item.removeClass("fr-dashboard-hide");
 
             // If we have a report definition, load the report
-            if (me.model.dashboardDef.reports[reportId]) {
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+            if (reportProperties) {
                 $item.html("");
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
-                    isFullScreen: false
+                    isFullScreen: false,
+                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
+                var parameters = me.model.dashboardDef.reports[reportId].parameters;
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
-                $reportViewer.reportViewer("loadReport", catalogItem.Path);
+                $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
+
+                // We catch this event so as to auto save when the user changes parameters
+                var $reportParameter = $item.reportViewerEZ("getReportParameter");
+                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                    me._onReportParameterSubmit.apply(me, arguments);
+                });
             } else if (hideMissing) {
                 $item.addClass("fr-dashboard-hide");
             }
+        },
+        _onReportParameterSubmit: function (e, data) {
+            // Ment to be overridden in the dashboard editor widget
         },
         _getName: function (path) {
             if (!path) return null;

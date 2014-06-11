@@ -44,27 +44,42 @@ $(function () {
          */
         enableEdit: function (enableEdit) {
             var me = this;
-            if (enableEdit) {
-                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                var path = $dashboardEditor.dashboardEditor("getPath");
-                var permission = { hasPermission: true };
-                if (path) {
-                    permission = forerunner.ajax.hasPermission(path, "Update Content");
-                }
-                if (!path || (permission && permission.hasPermission === true)) {
-                    // If the user has update resource permission for this dashboard, we will
-                    // enable the edit buttons
-                    me.showTool(dbtp.itemView.selectorClass);
-                    me.enableTools([dbtp.itemSave]);
-                    me.hideTool(dbtp.itemEdit.selectorClass);
-                    return;
-                }
-            }
 
-            // Disable the edit buttons
-            me.hideTool(dbtp.itemView.selectorClass);
-            me.disableTools([dbtp.itemSave]);
-            me.showTool(dbtp.itemEdit.selectorClass);
+            if (!me._isAdmin()) {
+                me.hideTool(dbtp.itemEdit.selectorClass);
+                me.hideTool(dbtp.itemView.selectorClass);
+            } else {
+                me.showTool(dbtp.itemEdit.selectorClass);
+                me.showTool(dbtp.itemView.selectorClass);
+
+                if (enableEdit) {
+                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                    var path = $dashboardEditor.dashboardEditor("getPath");
+                    var permission = { hasPermission: true };
+                    if (path) {
+                        permission = forerunner.ajax.hasPermission(path, "Update Content");
+                    }
+                    if (!path || (permission && permission.hasPermission === true)) {
+                        // If the user has update resource permission for this dashboard, we will
+                        // enable the edit buttons
+                        me.showTool(dbtp.itemView.selectorClass);
+                        me.hideTool(dbtp.itemEdit.selectorClass);
+                        return;
+                    }
+                }
+
+                // Disable the edit buttons
+                me.hideTool(dbtp.itemView.selectorClass);
+                me.showTool(dbtp.itemEdit.selectorClass);
+            }
+        },
+        _isAdmin: function () {
+            var me = this;
+            var userSettings = me.options.$dashboardEZ.dashboardEZ("getUserSettings");
+            if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
+                return true;
+            }
+            return false;
         },
         _init: function () {
             var me = this;
@@ -73,7 +88,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            me.addTools(2, true, [dbtp.itemSave, dbtp.itemEdit, dbtp.itemView]);
+            me.addTools(2, true, [dbtp.itemEdit, dbtp.itemView]);
             me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");

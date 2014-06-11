@@ -20,7 +20,8 @@ $(function () {
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
-     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isREportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
+     * @prop {Boolean} options.hideToolbar - Defaults to false, True = hide the tool bar
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -41,7 +42,8 @@ $(function () {
             isFullScreen: true,
             userSettings: null,
             rsInstance: null,
-            useReportManagerSettings: false
+            useReportManagerSettings: false,
+            hideToolbar: false
         },
         _render: function () {
             var me = this;
@@ -74,7 +76,8 @@ $(function () {
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
-                $unzoomtoolbar: layout.$unzoomsection
+                $unzoomtoolbar: layout.$unzoomsection,
+                hideToolbar: me.options.hideToolbar
             });
 
             initializer.render();

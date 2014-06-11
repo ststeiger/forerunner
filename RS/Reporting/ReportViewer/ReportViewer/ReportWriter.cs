@@ -264,14 +264,17 @@ namespace Forerunner.SSRS.JSONRender
             }
             catch (TypeInitializationException e)
             {
-                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");                
+                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");
                 this.LicenseCheckException = LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "License Initialization failed");
             }
             catch (Exception e)
             {
                 this.LicenseCheckException = e;
             }
-            waitHandle.Set();
+            finally
+            {
+                waitHandle.Set();
+            }
         }
         public StringWriter RPLToJSON(int NumPages)
         {

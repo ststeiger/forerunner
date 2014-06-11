@@ -265,6 +265,8 @@ namespace ForerunnerRegister
             tw.SendMail(RegMailFromAccount, "Sales@forerunnersw.com", "New Trial Registration", NewMailBody);
 
             NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
+
+            tw.SendMail(RegMailFromAccount, "Archive@forerunnersw.com", MailSubject, NewMailBody);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

@@ -989,6 +989,11 @@ namespace Forerunner.SSRS.Viewer
 
             NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
+            if (ExportType == "EXCELOPENXML" && GetServerInfo().GetVersionNumber() < 2011)
+                ExportType = "EXCEL";
+
+            if (ExportType == "WORDOPENXML" && GetServerInfo().GetVersionNumber() < 2011)
+                ExportType = "WORD";
         
             if (devInfo == null)
             {

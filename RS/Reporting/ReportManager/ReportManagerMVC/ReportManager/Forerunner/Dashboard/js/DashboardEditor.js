@@ -38,7 +38,7 @@ $(function () {
                     me._showUI(true);
                 }, timeout);
             } else {
-                me.loadDefinition(path, false);
+                me.loadDefinition(path, true);
             }
         },
         /**
@@ -62,8 +62,11 @@ $(function () {
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
                     var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                    var reportProperties = me.model.dashboardDef.reports[reportId];
                     if (numOfVisibleParameters > 0) {
-                        me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                        reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
+                    } else {
+                        reportProperties.parameters = null;
                     }
                 }
             });
@@ -106,7 +109,7 @@ $(function () {
 
             setTimeout(function () {
                 // Load the given report
-                me._loadReport(data.reportId, true);
+                me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
             }, timeout);

@@ -223,7 +223,8 @@
     "cancel":"Cancel",
     "submit":"Ok",
     "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar"
+    "hideToolbar":"Hide Toolbar",
+    "noReport": "<no report>"
   },
   "tags": {
     "title":"Tags",

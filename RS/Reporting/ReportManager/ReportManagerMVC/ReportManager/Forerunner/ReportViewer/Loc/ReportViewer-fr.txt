@@ -59,7 +59,7 @@
     "RDLExt":"RDL Extension",
     "saveDashboard":"enregistrer du tableau de bord",
     "editDashboard":"Modifier Dashboard",
-	"viewDashboard":"View Dashboard",
+    "viewDashboard":"View Dashboard",
     "tags":"Mots clés"
   },
   "toolbar": {
@@ -117,7 +117,7 @@
     "submit":"Ok",
     "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"administrateur UI"
   },
   "paramPane": {
@@ -224,7 +224,8 @@
     "cancel":"annuler",
     "submit":"soumettre",
     "selectReport":"<sélectionnez rapport>",
-    "hideToolbar":"Masquer la barre d'outils"
+    "hideToolbar":"Masquer la barre d'outils",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Mots clés",

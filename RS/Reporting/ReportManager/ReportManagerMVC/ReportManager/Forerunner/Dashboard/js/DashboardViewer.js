@@ -93,10 +93,11 @@ $(function () {
             var $item = me.element.find("#" + reportId);
             $item.removeClass("fr-dashboard-hide");
 
+            $item.html("");
+
             // If we have a report definition, load the report
             var reportProperties = me.model.dashboardDef.reports[reportId];
-            if (reportProperties) {
-                $item.html("");
+            if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,

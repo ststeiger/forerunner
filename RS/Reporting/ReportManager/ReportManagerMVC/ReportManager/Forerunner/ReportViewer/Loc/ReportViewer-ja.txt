@@ -116,7 +116,7 @@
     "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"管理UI"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"キャンセル",
     "submit":"提出する",
     "selectReport":"<[レポート]を選択>",
-    "hideToolbar":"ツールバーを隠す"
+    "hideToolbar":"ツールバーを隠す",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"タグ",

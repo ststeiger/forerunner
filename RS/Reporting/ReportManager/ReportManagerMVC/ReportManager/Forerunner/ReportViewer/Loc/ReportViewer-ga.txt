@@ -116,7 +116,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"Chomhéadain Riarachán"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"Cealaigh",
     "submit":"Cuir",
     "selectReport":"<tuarascáil roghnú>",
-    "hideToolbar":"Folaigh Barra Uirlisí"
+    "hideToolbar":"Folaigh Barra Uirlisí",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Clibeanna",

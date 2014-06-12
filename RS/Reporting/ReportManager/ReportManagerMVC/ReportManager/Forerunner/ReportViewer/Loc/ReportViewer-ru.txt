@@ -116,7 +116,7 @@
     "submit":"Оклахома",
     "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"UI Админ"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"отменить",
     "submit":"представлять",
     "selectReport":"<выберите отчет>",
-    "hideToolbar":"Скрыть панель инструментов"
+    "hideToolbar":"Скрыть панель инструментов",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Метки",

@@ -116,7 +116,7 @@
     "submit":"Ok",
     "cancel":"Abbestellen",
     "ResponsiveUI":"Responsive UI",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"Admin-Benutzeroberfläche"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"stornieren",
     "submit":"einsenden",
     "selectReport":"<wählen Bericht>",
-    "hideToolbar":"Symbolleiste ausblenden"
+    "hideToolbar":"Symbolleiste ausblenden",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Schlagworte",

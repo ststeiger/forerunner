@@ -21608,6 +21608,8 @@ $(function () {
          * Loads the given dashboard definition and opens
          *
          * @function $.forerunner.dashboardEditor#loadDefinition
+         * @param {String} path - Fully qualified path to the dashboard
+         * @param {Bool} hideMissing - True = hide report slots that don't have a report assigned
          */
         loadDefinition: function (path, hideMissing) {
             var me = this;
@@ -21723,9 +21725,11 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given dashboard definition and opens the dashboard for editing
+         * Loads the given dashboard definition and opens the dashboard for editing or viewing
          *
          * @function $.forerunner.dashboardEditor#editDashboard
+         * @param {String} path - Fully qualified path to the dashboard
+         * @param {Bool} enableEdit - True = display the dashboard in edit mode, False = view mode
          */
         editDashboard: function (path, enableEdit) {
             var me = this;

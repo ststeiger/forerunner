@@ -116,7 +116,7 @@
     "submit":"Ok",
     "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"interfaccia utente Admin"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"cancellare",
     "submit":"presentare",
     "selectReport":"<selezionare il rapporto>",
-    "hideToolbar":"Nascondi barra degli strumenti"
+    "hideToolbar":"Nascondi barra degli strumenti",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"tag",

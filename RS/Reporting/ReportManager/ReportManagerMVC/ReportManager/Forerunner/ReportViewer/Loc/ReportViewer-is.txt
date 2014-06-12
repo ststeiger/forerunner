@@ -116,7 +116,7 @@
     "submit":"Ok",
     "cancel":"Hætta",
     "ResponsiveUI":"móttækilegur HÍ",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"hætta",
     "submit":"leggja",
     "selectReport":"<Veldu skýrslu>",
-    "hideToolbar":"fela tækjastiku"
+    "hideToolbar":"fela tækjastiku",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Tags",

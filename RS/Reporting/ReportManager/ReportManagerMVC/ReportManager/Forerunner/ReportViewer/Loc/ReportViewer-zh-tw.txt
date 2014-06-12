@@ -116,7 +116,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"管理員UI"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"取消",
     "submit":"提交",
     "selectReport":"<選擇報表>",
-    "hideToolbar":"隱藏工具欄"
+    "hideToolbar":"隱藏工具欄",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"標籤",

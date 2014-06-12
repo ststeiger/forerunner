@@ -21647,10 +21647,11 @@ $(function () {
             var $item = me.element.find("#" + reportId);
             $item.removeClass("fr-dashboard-hide");
 
+            $item.html("");
+
             // If we have a report definition, load the report
             var reportProperties = me.model.dashboardDef.reports[reportId];
-            if (reportProperties) {
-                $item.html("");
+            if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
@@ -21749,7 +21750,7 @@ $(function () {
                     me._showUI(true);
                 }, timeout);
             } else {
-                me.loadDefinition(path, false);
+                me.loadDefinition(path, true);
             }
         },
         /**
@@ -21773,8 +21774,11 @@ $(function () {
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
                     var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                    var reportProperties = me.model.dashboardDef.reports[reportId];
                     if (numOfVisibleParameters > 0) {
-                        me.model.dashboardDef.reports[reportId].parameters = $reportParameter.reportParameter("getParamsList", true);
+                        reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
+                    } else {
+                        reportProperties.parameters = null;
                     }
                 }
             });
@@ -21817,7 +21821,7 @@ $(function () {
 
             setTimeout(function () {
                 // Load the given report
-                me._loadReport(data.reportId, true);
+                me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
             }, timeout);
@@ -21900,6 +21904,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
+    var noReportText = forerunner.helper.htmlEncode(reportProperties.noReport);
 
     /**
      * Widget used to select a new dashbard template
@@ -21963,8 +21968,19 @@ $(function () {
                 },
                 children: []
             };
+            var noReportNode = {
+                text: noReportText,
+                state: {
+                    opened: true
+                },
+                icon: "jstree-file",
+                li_attr: {
+                    dataReport: true
+                },
+                children: []
+            };
             me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree];
+            return [nodeTree, noReportNode];
         },
         _createTreeItems: function (curNode, view, path) {
             var me = this;
@@ -22004,7 +22020,7 @@ $(function () {
                         "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false' required='true'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -22068,8 +22084,13 @@ $(function () {
 
             // Set the value if this is a report
             if (data.node.li_attr.dataReport === true) {
-                me.$reportInput.val(data.node.text);
-                me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
+                if (data.node.text === noReportText) {
+                    me.$reportInput.val("");
+                    me.properties.catalogItem = null;
+                } else {
+                    me.$reportInput.val(data.node.text);
+                    me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
+                }
                 me.$popup.hide();
             }
             else {

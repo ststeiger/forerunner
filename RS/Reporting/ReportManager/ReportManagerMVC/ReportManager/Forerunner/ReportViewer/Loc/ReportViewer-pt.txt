@@ -116,7 +116,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"UI Administrador"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"cancelar",
     "submit":"submeter",
     "selectReport":"<selecione relatório>",
-    "hideToolbar":"Ocultar barra de ferramentas"
+    "hideToolbar":"Ocultar barra de ferramentas",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Marcações",

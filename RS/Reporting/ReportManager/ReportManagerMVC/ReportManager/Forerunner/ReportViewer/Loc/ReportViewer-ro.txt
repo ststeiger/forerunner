@@ -116,7 +116,7 @@
     "submit":"bine",
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"UI admin"
   },
   "paramPane": {
@@ -223,7 +223,8 @@
     "cancel":"anula",
     "submit":"executa",
     "selectReport":"<selectați raport>",
-    "hideToolbar":"Ascunde Toolbar"
+    "hideToolbar":"Ascunde Toolbar",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Tag-uri",

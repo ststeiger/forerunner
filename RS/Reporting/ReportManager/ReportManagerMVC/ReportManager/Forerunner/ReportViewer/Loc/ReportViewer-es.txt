@@ -117,7 +117,7 @@
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"interfaz del administrador"
   },
   "paramPane": {
@@ -224,7 +224,8 @@
     "cancel":"cancelar",
     "submit":"presentar",
     "selectReport":"<seleccione Informe>",
-    "hideToolbar":"Ocultar barra de herramientas"
+    "hideToolbar":"Ocultar barra de herramientas",
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Etiquetas",

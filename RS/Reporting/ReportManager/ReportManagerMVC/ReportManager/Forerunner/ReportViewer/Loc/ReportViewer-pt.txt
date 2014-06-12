@@ -18,7 +18,11 @@
     "saveDashboardSucceeded":"Salve Painel Sucedido",
     "loadDashboardFailed":"Carga Painel Falha",
     "loadDashboard":"carga Painel",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
+    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
+    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
+    "saveSearchFolderFailed":"Search Folder Created Failed",
+    "addTagsSucceeded":"Add Tags Succeeded",
+    "addTagsFailed":"Add Tags Failed"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",

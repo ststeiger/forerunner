@@ -511,10 +511,12 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 success: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveDashboardSucceeded, toolbar.saveDashboard);
+                    //refresh the page if search folder created succeeded
+                    location.reload(true);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
                 },
                 error: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
                 }
             });
         },

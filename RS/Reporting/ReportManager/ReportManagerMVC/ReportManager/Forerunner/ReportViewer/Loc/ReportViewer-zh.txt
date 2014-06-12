@@ -18,7 +18,11 @@
     "saveDashboardSucceeded":"保存指示板成功",
     "loadDashboardFailed":"加载指示板失败",
     "loadDashboard":"加载指示板",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
+    "createFailed":"同名指示板已经存在. 您可以: 1) 重命名指示板 或者 2) 选中覆盖并重试.",
+    "saveSearchFolderSucceeded":"搜索文件夹创建成功",
+    "saveSearchFolderFailed":"搜索文件夹创建失败",
+    "addTagsSucceeded":"添加标签成功",
+    "addTagsFailed":"添加标签失败"
   },
   "errorTag": {
     "moreDetail":"点击查看更多信息",
@@ -59,7 +63,7 @@
     "saveDashboard":"保存指示板",
     "editDashboard":"编辑指示板",
     "tags":"标签",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"查看指示板"
   },
   "toolbar": {
     "back":"返回",
@@ -95,7 +99,7 @@
     "editDashboard":"编辑指示板",
     "saveDashboard":"保存指示板",
     "searchFolder":"搜索文件夹",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"查看指示板"
   },
   "print": {
     "title":"打印报表",
@@ -210,10 +214,10 @@
     "title":"创建指示板",
     "cancel":"取消",
     "submit":"提交",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"名称",
+    "namePlaceholder":"指示板名称",
+    "dashboardTemplate":"模板",
+    "overwrite":"覆盖"
   },
   "reportProperties": {
     "title":"报表属性",
@@ -221,7 +225,7 @@
     "submit":"提交",
     "selectReport":"<选择报表>",
     "hideToolbar":"隐藏工具栏",
-    "noReport":"<no report>"
+    "noReport":"<无报表>"
   },
   "dashboardEditor": {
     "propertiesBtn":"属性"

@@ -6541,10 +6541,12 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 success: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveDashboardSucceeded, toolbar.saveDashboard);
+                    //refresh the page if search folder created succeeded
+                    location.reload(true);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
                 },
                 error: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
                 }
             });
         },
@@ -7034,7 +7036,6 @@ $(function () {
                         }
                     },
                     fail: function (data) {
-                        console.log('get tags failed')
                     },
                 });
                 me.path = path;
@@ -7070,10 +7071,10 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     success: function (data) {
-                        return true;
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsSucceeded, locData.toolPane.tags);
                     },
                     fail: function (data) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
                     },
                     async: false
                 });

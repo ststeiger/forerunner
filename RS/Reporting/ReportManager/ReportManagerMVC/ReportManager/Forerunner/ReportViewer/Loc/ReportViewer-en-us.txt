@@ -18,7 +18,11 @@
     "saveDashboardSucceeded":"Save Dashboard Succeeded",
     "loadDashboardFailed":"Load Dashboard Failed",
     "loadDashboard":"Load Dashboard",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again."
+    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
+    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
+    "saveSearchFolderFailed":"Search Folder Created Failed",
+    "addTagsSucceeded":"Add Tags Succeeded",
+    "addTagsFailed":"Add Tags Failed"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",
@@ -116,7 +120,7 @@
     "submit":"Ok",
     "cancel":"Cancel",
     "ResponsiveUI":"Responsive UI",
-	"Email":"Email",
+    "Email":"Email",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -224,7 +228,7 @@
     "submit":"Ok",
     "selectReport":"<select report>",
     "hideToolbar":"Hide Toolbar",
-    "noReport": "<no report>"
+    "noReport":"<no report>"
   },
   "tags": {
     "title":"Tags",

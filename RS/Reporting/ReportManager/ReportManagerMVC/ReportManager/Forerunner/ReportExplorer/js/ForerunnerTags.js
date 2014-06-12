@@ -111,7 +111,6 @@ $(function () {
                         }
                     },
                     fail: function (data) {
-                        console.log('get tags failed')
                     },
                 });
                 me.path = path;
@@ -147,10 +146,10 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     success: function (data) {
-                        return true;
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsSucceeded, locData.toolPane.tags);
                     },
                     fail: function (data) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
                     },
                     async: false
                 });

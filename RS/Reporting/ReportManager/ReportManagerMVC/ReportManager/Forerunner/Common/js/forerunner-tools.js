@@ -1330,7 +1330,7 @@ $(function () {
                             return;
                         }
 
-                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
+                        //e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }

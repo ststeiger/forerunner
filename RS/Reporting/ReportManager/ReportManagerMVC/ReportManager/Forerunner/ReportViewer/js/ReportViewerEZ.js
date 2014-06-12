@@ -112,6 +112,11 @@ $(function () {
 
             layout.$rightheaderspacer.height(layout.$topdiv.height());
             layout.$leftheaderspacer.height(layout.$topdiv.height());
+
+            var parameterPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
+            layout.$rightpane.width(parameterPaneWidth);
+            layout.$rightheader.width(parameterPaneWidth);
+            layout.$rightpanecontent.width(parameterPaneWidth);
         },
         _init: function () {
             var me = this;

@@ -859,7 +859,34 @@ $(function () {
          */
         parseCss: function ($control, property) {
             return parseInt($control.css(property), 10) || 0;
-        }
+        },
+        /**
+         * Get parent item path by the given path
+         *
+         * @member
+         */
+        getParentPath: function (path) {
+            if (!path || path === "/") return null;
+
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return null;
+            
+            return path.slice(0, lastIndex);
+        },
+        /**
+         * Get current item name by the given path
+         *
+         * @member
+         */
+        getCurrentItemName: function (path) {
+            if (!path) return null;
+
+            var lastIndex = path.lastIndexOf("/");
+            if (lastIndex === -1) return path;
+
+            return path.slice(lastIndex + 1);
+        },
     },
         
 

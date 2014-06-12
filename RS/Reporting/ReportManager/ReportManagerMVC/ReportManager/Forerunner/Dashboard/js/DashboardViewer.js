@@ -122,27 +122,13 @@ $(function () {
         _onReportParameterSubmit: function (e, data) {
             // Ment to be overridden in the dashboard editor widget
         },
-        _getName: function (path) {
-            if (!path) return null;
-
-            var lastIndex = path.lastIndexOf("/");
-            if (lastIndex === -1) return path;
-            return path.slice(lastIndex + 1);
-        },
-        _getFolder: function (path) {
-            if (!path) return null;
-
-            var lastIndex = path.lastIndexOf("/");
-            if (lastIndex === -1) return null;
-            return path.slice(0, lastIndex + 1);
-        },
         _loadResource: function (path) {
             var me = this;
             var status = false;
 
             // Set the parent folder and dashboard name properties
-            me.dashboardName = me._getName(path);
-            me.parentFolder = me._getFolder(path);
+            me.dashboardName = forerunner.helper.getCurrentItemName(path);
+            me.parentFolder = forerunner.helper.getParentPath(path);
 
             // Fetch the model from the server
             return me.model.fetch(path);

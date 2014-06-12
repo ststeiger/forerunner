@@ -348,7 +348,7 @@ $(function () {
 
             me.parentPath = null;
             if (view === "searchfolder") {
-                me.parentPath = me._getParentPath(me.options.path);
+                me.parentPath = forerunner.helper.getParentPath(me.options.path);
             }
 
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -632,11 +632,6 @@ $(function () {
         getCurrentView: function () {
             var me = this;
             return me.options.view;
-        },
-        _getParentPath: function (path) {
-            var index = path.lastIndexOf("/");
-            var parentPath = path.substring(0, index);
-            return parentPath;
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null;

@@ -68,18 +68,21 @@ namespace Forerunner.Security
                         Marshal.GetLastWin32Error());
 
                 // ----------------------------------
-                var dupHandle = IntPtr.Zero;
+                /*var dupHandle = IntPtr.Zero;
                 if (!NativeMethods.DuplicateToken(handle,
                     SecurityImpersonation,
                     ref dupHandle))
                     throw new ApplicationException(
-                        "Logon failed attemting to duplicate handle");
+                        "Logon failed attemting to duplicate handle");*/
                 // Logon Succeeded ! return new WindowsIdentity instance
-                securityHandle = dupHandle;
-                return (new WindowsIdentity(dupHandle));
+                securityHandle = handle;//dupHandle;
+                return (new WindowsIdentity(securityHandle));
             }
             // close the open handle to the authenticated account
-            finally { NativeMethods.CloseHandle(handle); }
+            finally 
+            { 
+                //NativeMethods.CloseHandle(handle); 
+            }
         }
         #endregion Private Methods
 

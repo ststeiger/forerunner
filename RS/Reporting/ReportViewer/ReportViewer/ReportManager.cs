@@ -432,6 +432,9 @@ namespace Forerunner.SSRS.Manager
 
         private static Impersonator tryImpersonate(Credentials DBCredentials)
         {
+            if (DBCredentials.SecurityType != Credentials.SecurityTypeEnum.Integrated)
+                return null;
+
             String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
             Impersonator impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
             impersonator.Impersonate();

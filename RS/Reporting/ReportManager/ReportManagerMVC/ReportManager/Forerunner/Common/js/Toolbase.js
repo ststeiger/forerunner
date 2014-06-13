@@ -174,7 +174,7 @@ $(function () {
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
-                $dropdown.css("top", e.data.$tool.height());
+                $dropdown.css("top", e.data.$tool.height() + 18);
                 $dropdown.toggle();
             });
 

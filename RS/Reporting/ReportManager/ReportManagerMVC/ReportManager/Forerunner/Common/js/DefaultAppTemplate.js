@@ -58,6 +58,11 @@ $(function () {
             $topdiv.addClass("fr-layout-topdiv");
             me.$topdiv = $topdiv;
             $mainviewport.append($topdiv);
+            //route path link
+            var $linksection = new $("<div />");
+            $linksection.addClass("fr-layout-linksection");
+            me.$linksection = $linksection;
+            $topdiv.append($linksection);
             var $mainheadersection = new $("<div />");
             $mainheadersection.addClass("fr-layout-mainheadersection");
             me.$mainheadersection = $mainheadersection;
@@ -278,11 +283,12 @@ $(function () {
             if (me.options.isFullScreen)
                 return;
 
-            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - 38);
+            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
+            var linkSectionHeight = me.$linksection.outerHeight();
             if (me.$leftpane.is(":visible")) {
-                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
+                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
             } else if (me.$rightpane.is(":visible")) {
-                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
+                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
             }
             me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
             me.$topdiv.css("left", me.$container.scrollLeft());
@@ -331,6 +337,7 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
+            var linkSectionHeight = me.$linksection.outerHeight();
             values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
 
@@ -353,6 +360,8 @@ $(function () {
                 values.windowHeight = window.innerHeight;
             }
 
+            values.windowHeight -= linkSectionHeight;
+            values.containerHeight -= linkSectionHeight;
             values.max = Math.max(values.windowHeight, values.containerHeight);
             if (me.options.isFullScreen) {
                 values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
@@ -648,12 +657,13 @@ $(function () {
             var delay = Number(200);
             
             if (!slideoutPane.is(":visible")) {
-                slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
+                var routeLinkPaneOffset = me.$linksection.outerHeight();
+                slideoutPane.css({ height: Math.max($(window).height() - routeLinkPaneOffset, mainViewPort.height()) - routeLinkPaneOffset });
                 if (isLeftPane) {
-                    slideoutPane.css({ top: me.$container.scrollTop()});
+                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
                     slideoutPane.slideLeftShow(delay);
                 } else {
-                    slideoutPane.css({ top: me.$container.scrollTop()});
+                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
                     slideoutPane.slideRightShow(delay);
                 }
                 
@@ -688,15 +698,16 @@ $(function () {
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
             var containerWidth = me.$container.width();
+            var topDivHeight = me.$topdiv.outerHeight();
             
-            if (reportArea.height() > (containerHeight - 38) || reportArea.width() > containerWidth) {// 38 is toolbar height
+            if (reportArea.height() > (containerHeight - topDivHeight) || reportArea.width() > containerWidth) {
                 $(".fr-render-bglayer", me.$container).css("position", "absolute").
-                    css("height", Math.max(reportArea.height(), (containerHeight - 38)))
+                    css("height", Math.max(reportArea.height(), (containerHeight - topDivHeight)))
                     .css("width", Math.max(reportArea.width(), containerWidth));
             }
             else {
                 $(".fr-render-bglayer", me.$container).css("position", "absolute")
-                    .css("height", (containerHeight - 38)).css("width", containerWidth);
+                    .css("height", (containerHeight - topDivHeight)).css("width", containerWidth);
             }
         },
         cleanUp: function () {

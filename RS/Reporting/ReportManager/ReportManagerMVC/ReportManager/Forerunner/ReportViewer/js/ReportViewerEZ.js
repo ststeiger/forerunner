@@ -62,6 +62,7 @@ $(function () {
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
                 $toolPane: layout.$leftpanecontent,
+                $routeLink: layout.$linksection,
                 $viewer: $viewer,
                 $nav: layout.$bottomdiv,
                 $paramarea: layout.$rightpanecontent,
@@ -109,9 +110,6 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
-
-            layout.$rightheaderspacer.height(layout.$topdiv.height());
-            layout.$leftheaderspacer.height(layout.$topdiv.height());
 
             var parameterPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
             layout.$rightpane.width(parameterPaneWidth);

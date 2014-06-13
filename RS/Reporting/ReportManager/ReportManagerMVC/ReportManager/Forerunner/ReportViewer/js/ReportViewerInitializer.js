@@ -19,6 +19,7 @@ $(function () {
         me.options = {
             $toolbar: null,
             $toolPane: null,
+            $routeLink: null,
             $viewer: null,
             $nav: null,
             $paramarea: null,
@@ -100,8 +101,8 @@ $(function () {
             if (me.options.hideToolbar) {
                 $toolbar.hide();
             } else {
-                // Let the report viewer know the height of the toolbar
-                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight());
+                // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
+                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;

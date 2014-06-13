@@ -43,6 +43,10 @@
 
 .fr-explorer-notfound{ margin:4px; font-size:large; }
 
+.fr-location-link { cursor:pointer; color:lightblue; }
+
+.fr-location-link-last { cursor:default; color:white; }
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
   /* Styles */

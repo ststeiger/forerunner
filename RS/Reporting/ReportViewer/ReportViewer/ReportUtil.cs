@@ -21,7 +21,7 @@ namespace Forerunner
     public enum ReportServerProtocalEnum { HTTP, HTTPS };
     public class Credentials
     {
-        public enum SecurityTypeEnum { Network = 0, Custom = 1 };
+        public enum SecurityTypeEnum { Network = 0, Custom = 1, Integrated = 2 };
         public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
         public string UserName;
         public string Domain;
@@ -99,7 +99,12 @@ namespace Forerunner
 
         private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
         {
-            Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+            Credentials dbCred;
+            if (useIntegratedSecuritForSQL)
+                dbCred = new Credentials(Credentials.SecurityTypeEnum.Integrated, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+            else
+                dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+
             if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
             {
                 Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");

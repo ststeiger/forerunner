@@ -173,7 +173,7 @@ namespace ForerunnerRegister
             SqlCommand SQLComm;
 
             //Check for bot
-            if (RegData.zip.Trim() != "")
+            if (RegData.zip.Trim() != "" || RegData.CompanyName.Trim().ToLower() == "carrefour")
             {
                 SQLConn.Open();
                 SQLComm = new SqlCommand("INSERT BotReg (email,CreateDate) SELECT @Email,GETDATE()", SQLConn);

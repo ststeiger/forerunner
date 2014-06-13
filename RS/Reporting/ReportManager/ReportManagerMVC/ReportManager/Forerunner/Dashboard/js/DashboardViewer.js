@@ -132,6 +132,10 @@ $(function () {
             // Set the parent folder and dashboard name properties
             me.dashboardName = forerunner.helper.getCurrentItemName(path);
             me.parentFolder = forerunner.helper.getParentPath(path);
+            if (!me.parentFolder) {
+                me.parentFolder = "/";
+            }
+
 
             // Fetch the model from the server
             return me.model.fetch(path);

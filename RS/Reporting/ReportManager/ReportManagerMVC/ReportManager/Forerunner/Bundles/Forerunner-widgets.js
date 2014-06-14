@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -14560,6 +14560,8 @@ $(function () {
                 me._extensionSettings = data1;
                 me._initRenderFormat(data1[0]);
                 me._initSharedSchedule(data2[0]);
+                me.$includeReport.prop('checked', true);
+                me.$includeLink.prop('checked', true);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
@@ -14579,9 +14581,9 @@ $(function () {
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeReport.attr("checked", "");
+                                me.$includeReport.prop('checked', true);
                             } else {
-                                me.$includeReport.removeAttr("checked");
+                                me.$includeReport.prop('checked', false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
@@ -14676,6 +14678,7 @@ $(function () {
                 var setting = data[i];
                 if (setting.Name == "RenderFormat") {
                     me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
+                    me.$renderFormat.val(setting.Value);
                     me.$renderFormat.addClass(".fr-email-renderformat");
                 }
             }

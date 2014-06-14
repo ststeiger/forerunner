@@ -24,9 +24,11 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given dashboard definition and opens the dashboard for editing
+         * Loads the given dashboard definition and opens the dashboard for editing or viewing
          *
          * @function $.forerunner.dashboardEditor#editDashboard
+         * @param {String} path - Fully qualified path to the dashboard
+         * @param {Bool} enableEdit - True = display the dashboard in edit mode, False = view mode
          */
         editDashboard: function (path, enableEdit) {
             var me = this;

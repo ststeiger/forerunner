@@ -142,7 +142,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\Dashboard.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\DashboardEdit.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\CSV.png"
-  File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\Dashboard.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\DataSourceCred.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\doc.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\doc_export_icon24.png"
@@ -286,8 +285,12 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
 
   SetOutPath "$INSTDIR\Forerunner\Dashboard\css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\Dashboard-all.css"
   File "${LOCALROOT}\Forerunner\Dashboard\css\dashboards.css"
-  
+  File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolbar.css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolPane.css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\ReportProperties.css"
+
   SetOutPath "$INSTDIR\Forerunner\Dashboard\dashboards"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dashboards-en.txt"

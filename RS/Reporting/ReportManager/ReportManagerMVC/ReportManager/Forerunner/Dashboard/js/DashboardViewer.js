@@ -53,6 +53,8 @@ $(function () {
          * Loads the given dashboard definition and opens
          *
          * @function $.forerunner.dashboardEditor#loadDefinition
+         * @param {String} path - Fully qualified path to the dashboard
+         * @param {Bool} hideMissing - True = hide report slots that don't have a report assigned
          */
         loadDefinition: function (path, hideMissing) {
             var me = this;
@@ -130,6 +132,10 @@ $(function () {
             // Set the parent folder and dashboard name properties
             me.dashboardName = forerunner.helper.getCurrentItemName(path);
             me.parentFolder = forerunner.helper.getParentPath(path);
+            if (!me.parentFolder) {
+                me.parentFolder = "/";
+            }
+
 
             // Fetch the model from the server
             return me.model.fetch(path);

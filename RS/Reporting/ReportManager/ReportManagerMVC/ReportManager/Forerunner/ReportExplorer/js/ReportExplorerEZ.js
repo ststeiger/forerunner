@@ -13,6 +13,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
@@ -107,6 +108,7 @@ $(function () {
             // Hook the router route event
             me.router.on(events.routerRoute(), function (event, data) {
                 me._onRoute.apply(me, arguments);
+                me._generateRouteLink.apply(me, arguments);
             });
 
             if (!me.options.historyBack) {
@@ -178,6 +180,56 @@ $(function () {
             }
             me._lastAction = action;
         },
+        _generateRouteLink: function (event, data) {
+            var me = this;
+
+            //clear prior route link
+            me.DefaultAppTemplate.$linksection.html("");
+            var path = data.args[0];
+            me._getParentLink(path, me.DefaultAppTemplate.$linksection, 0);
+        },
+        _getParentLink: function (path, $container, index) {
+            var me = this,
+                parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
+                name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
+                $link = new $("<span />"),
+                $arrowTag;
+
+            $link.addClass("fr-location-link");
+            index++;
+            if (parentPath === null) {
+                $link.text(name);
+                if (index !== 1) {
+                    $link.on("click", function () {
+                        me._navigateTo("home");
+                    });
+                }
+                else {
+                    $link.addClass("fr-location-link-last");
+                }
+                $container.append($link);
+                return;
+            }
+            else {
+                me._getParentLink(parentPath, $container);
+            }
+
+            $arrowTag = new $("<span/>");
+            $arrowTag.text(" > ");
+
+            $link.text(name);
+            if (index !== 1) {
+                $link.on("click", function () {
+                    //only report folder can be selected in the path, so always pass explore to do the route
+                    me._navigateTo("explore", path);
+                });
+            }
+            else {
+                $link.addClass("fr-location-link-last");
+            }
+
+            $container.append($arrowTag).append($link);
+        },
 
         /**
          * Transition to ReportManager view.
@@ -236,15 +288,31 @@ $(function () {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
 
-                layout.$rightheader.height(layout.$topdiv.height());
-                layout.$leftheader.height(layout.$topdiv.height());
-                layout.$rightheaderspacer.height(layout.$topdiv.height());
-                layout.$leftheaderspacer.height(layout.$topdiv.height());
+                me._setLeftRightPaneStyle();
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
+        },
+        _setLeftRightPaneStyle: function () {
+            var me = this;
+            var layout = me.DefaultAppTemplate;
+
+            var routeLinkSectionHeight = layout.$linksection.outerHeight();//default to 18px
+            var toolpaneheaderheight = layout.$topdiv.height() - routeLinkSectionHeight; //equal toolbar height
+
+            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;// window phone 7 get top property wrong
+
+            layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
+            layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
+            layout.$rightheaderspacer.height(toolpaneheaderheight);
+            layout.$leftheaderspacer.height(toolpaneheaderheight);
+
+            if (forerunner.device.isWindowsPhone()) {
+                layout.$leftpanecontent.css({ top: toolpaneheaderheight });
+                layout.$rightpanecontent.css({ top: toolpaneheaderheight });
+            }
         },
         _getUserSettings: function () {
             var me = this;
@@ -292,6 +360,8 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                 }
 
+                me._setLeftRightPaneStyle();
+
             }, timeout);
 
             me.element.css("background-color", "");
@@ -320,7 +390,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
-
+                me._setLeftRightPaneStyle();
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
 

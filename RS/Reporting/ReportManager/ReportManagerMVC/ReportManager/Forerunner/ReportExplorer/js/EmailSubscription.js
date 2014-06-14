@@ -96,8 +96,11 @@ $(function () {
                     
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
-                    if (me.options.userSettings)
+                    if (me.options.userSettings) {
                         me.$to.attr("value", me.options.userSettings.email );
+                        me.$desc.val(locData.subscription.description.format(me.options.userSettings.email));
+                    }
+                    me.$subject.val(locData.subscription.subject);
                 }
             }); 
         },
@@ -119,7 +122,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
+                //me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
@@ -138,9 +141,9 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    }
+                    //if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
+                    //    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    //}
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
@@ -270,7 +273,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', "Email", "fr-email-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -280,21 +283,21 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "Description");
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.description_placeholder);
             me.$theTable.append(me._createTableRow(me.$desc));
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "To");
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.to_placeholder);
             me.$theTable.append(me._createTableRow(me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "Subject")
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subject_placeholder)
             me.$theTable.append(me._createTableRow(me.$subject));
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment")
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder)
             me.$theTable.append(me._createTableRow(me.$comment));
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
-            me.$includeLink = me._createToggleInput(me.$colOfLastRow, "[Include Link]");
-            me.$includeReport = me._createToggleInput(me.$colOfLastRow, "[Include Report]");
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], "submit", null)
-            me.$submitButton.val("Save");
+            me.$includeLink = me._createToggleInput(me.$colOfLastRow, "[{0}]".format(locData.subscription.includeLink));
+            me.$includeReport = me._createToggleInput(me.$colOfLastRow, "[{0}]".format(locData.subscription.includeReport));
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton.val(locData.subscription.save);
             me.$theForm.append(me.$submitButton)
             me._initSections();
             me.element.append(me.$outerContainer);

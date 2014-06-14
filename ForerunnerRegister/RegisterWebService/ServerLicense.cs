@@ -68,7 +68,7 @@ namespace ForerunnerLicense
                 }
                 else
                     XMLReq.Read();
-            }
+            }            
         }
     
         private void UnPackLicenseData(string LicenseData)
@@ -155,24 +155,19 @@ namespace ForerunnerLicense
             return Response;
         }
 
-        private string ProcessActivate()
+        private LicenseData LoadLicenseFromServer(string key)
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
-            bool success = false;
             LicenseData NewLD = null;
-            TimeSpan ts;
-
-            
                     
-            string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID
-                           SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
-           try
+            string SQL = @"SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial,l.CreateDate FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
+            try
             {
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.Parameters.AddWithValue("@LicenseID", NewLicenseKey);
+                SQLComm.Parameters.AddWithValue("@LicenseID", key);
 
                 SQLReader = SQLComm.ExecuteReader();
                 while (SQLReader.Read())
@@ -191,10 +186,43 @@ namespace ForerunnerLicense
                     NewLD.LicenseDuration = SQLReader.GetInt32(6);
                     NewLD.RequireValidation = SQLReader.GetInt32(7);
                     NewLD.IsTrial = SQLReader.GetInt32(8);
+                    NewLD.PurchaseDate = SQLReader.GetDateTime(9);
                 }
                 SQLReader.Close();
+                return NewLD;
+            }
+            catch(Exception e)
+            {
+                return NewLD;
+            }
+            finally
+            {
                 SQLConn.Close();
-               
+            }
+        }
+
+        private string ProcessActivate()
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+            bool success = false;
+            LicenseData NewLD = null;
+            TimeSpan ts;
+
+
+
+            string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID";                          
+           try
+            {
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseID", NewLicenseKey);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                
+               NewLD = LoadLicenseFromServer(NewLicenseKey);
+               OldLD = LoadLicenseFromServer(OldLD.LicenseKey);
+
                 //retuen error after logging activation attempt
                 if (NewMachineData== null || NewLD == null)
                 {
@@ -205,6 +233,7 @@ namespace ForerunnerLicense
                 //Activate new license, check to see if it is valid for this machine
                 if (NewLD.MachineData == null)
                {
+                   //TODO:  Change the license for a SA subscription if it is expired to the latest SKU that was avaialble at the time of expiration.
                    NewLD.MachineData = NewMachineData;
                     if (NewLD.FirstActivationDate == DateTime.MinValue)
                         NewLD.FirstActivationDate = DateTime.Now;
@@ -216,7 +245,7 @@ namespace ForerunnerLicense
                    //Check to see if it is a subscription uprade and add durration
                    else if (OldLD.IsSubscription == 1)
                    {
-                      ts = DateTime.Now - OldLD.FirstActivationDate;
+                      ts = DateTime.Now - OldLD.PurchaseDate;
                       NewLD.LicenseDuration += OldLD.LicenseDuration - (int)ts.TotalDays;
                       Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
                       success = true;
@@ -233,7 +262,7 @@ namespace ForerunnerLicense
                     //If no license data then use machine data from request
                    if (OldLD.MachineData == null)
                        OldLD.MachineData = NewMachineData;
-                    ts = DateTime.Now - NewLD.FirstActivationDate;
+                    ts = DateTime.Now - NewLD.PurchaseDate;
 
                    //If Update on subcription
                    if (OldLD.MachineData.IsSame(NewLD.MachineData) && (NewLD.LicenseDuration > ts.TotalDays) && (NewLD.IsSubscription == 1 || NewLD.IsTrial == 1))
@@ -273,7 +302,8 @@ namespace ForerunnerLicense
             }
             catch 
             {
-                SQLConn.Close();
+                if (SQLConn.State != System.Data.ConnectionState.Closed)
+                    SQLConn.Close();
                 Response =  String.Format(Response, "Fail", "3", "Server Error");
             }
 
@@ -353,43 +383,18 @@ namespace ForerunnerLicense
         private string ProcessValidate()
         {
             ForerunnerDB DB = new ForerunnerDB();
-            SqlConnection SQLConn = DB.GetSQLConn();
-            SqlDataReader SQLReader;
-            LicenseData LastLD = OldLD;
             LicenseData ld = new LicenseData();
 
-            string SQL = @"SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration) FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID AND MachineKey = @MachineKey";
 
             try
             {
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.Parameters.AddWithValue("@LicenseID", LastLD.LicenseKey);
-                SQLComm.Parameters.AddWithValue("@MachineKey", LastLD.MachineData.machineKey);
-                
-                SQLReader = SQLComm.ExecuteReader();
-                while (SQLReader.Read())
-                {
-                    if (!SQLReader.IsDBNull(0))
-                        ld.MachineData = new MachineId(SQLReader.GetString(0));
-                    if (!SQLReader.IsDBNull(1))
-                        ld.LastActivation = SQLReader.GetDateTime(1);
-                    ld.Quantity = SQLReader.GetInt32(2);
-                    ld.SKU = SQLReader.GetString(3);
-                    if (!SQLReader.IsDBNull(4))
-                        ld.FirstActivationDate = SQLReader.GetDateTime(4);
-                    ld.IsSubscription = SQLReader.GetInt32(5);
-                    ld.LicenseDuration = SQLReader.GetInt32(6);
-                }
-                SQLReader.Close();
-                SQLConn.Close();
+                ld = LoadLicenseFromServer(OldLD.LicenseKey);
 
-
-                if (ld.MachineData == null || ld.MachineData.machineKey == null)
+                if (ld.MachineData == null || ld.MachineData.machineKey != OldLD.MachineData.machineKey )
                     Response = String.Format(Response, "Fail", "105", "Invalid License Key or Machine Key");
                 else
                 {
-                    TimeSpan ts = DateTime.Now - ld.FirstActivationDate;
+                    TimeSpan ts = DateTime.Now - ld.PurchaseDate;
                     if (ld.LicenseDuration < ts.TotalDays && ld.IsSubscription ==1)
                         Response = String.Format(Response, "Fail", "200", "Subscription Expired");
                     else
@@ -397,8 +402,7 @@ namespace ForerunnerLicense
                 }
             }
             catch 
-            {
-                SQLConn.Close();
+            {                
                 Response = String.Format(Response, "Fail", "3", "Server Error");
             }
             return Response;

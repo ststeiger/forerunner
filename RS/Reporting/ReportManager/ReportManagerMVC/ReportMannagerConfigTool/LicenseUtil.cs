@@ -284,6 +284,7 @@ namespace ForerunnerLicense
         public MachineId MachineData = null;
         public DateTime LastActivation;
         public DateTime FirstActivationDate;
+        public DateTime PurchaseDate;
         public int Quantity = 0;
         public string SKU = null;
         public int IsSubscription = 0;
@@ -365,7 +366,7 @@ namespace ForerunnerLicense
         internal string machineKey;
         internal int numberOfCores;
 
-        private string SerializeString = "<MachineData><MachineKey>{0}</MachineKey><MotherBoardId>{1}</MotherBoardId><HostName>{2}</HostName><BiosId>{3}</BiosId><MacId>{4}</MacId></MachineData>";
+        private string SerializeString = "<MachineData><MachineKey>{0}</MachineKey><MotherBoardId>{1}</MotherBoardId><HostName>{2}</HostName><BiosId>{3}</BiosId><MacId>{4}</MacId><Cores>{5}</Cores></MachineData>";
 
 
         internal MachineId()
@@ -465,9 +466,9 @@ namespace ForerunnerLicense
         internal string Serialize(bool Encrypt = true)
         {
             if (Encrypt)
-                return LicenseUtil.Encrypt(string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId),LicenseUtil.pubkey);
+                return LicenseUtil.Encrypt(string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId, numberOfCores), LicenseUtil.pubkey);
             else
-                return string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId);
+                return string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId,numberOfCores);
         }
         private static int GetNumberOfCores()
         {

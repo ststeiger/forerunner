@@ -1361,7 +1361,36 @@ namespace Forerunner.SSRS.Manager
         public ExtensionParameter[] GetExtensionSettings(string extension)
         {
             rs.Credentials = GetCredentials();
-            return rs.GetExtensionSettings(extension);
+            ExtensionParameter[] retVal = rs.GetExtensionSettings(extension);
+            HashSet<string> visibleExtensions = new HashSet<string>();
+            
+            Forerunner.SSRS.Execution.ReportExecutionService es = new Execution.ReportExecutionService();
+            es.Url= this.URL + "/ReportExecution2005.asmx";
+            es.Credentials = GetCredentials();
+            Execution.Extension[] renderingExtensions = es.ListRenderingExtensions();
+            foreach(Execution.Extension ex in renderingExtensions) 
+            {
+                if (ex.Visible)
+                    visibleExtensions.Add(ex.Name);
+            }
+
+            foreach (ExtensionParameter param in retVal)
+            {
+                if (param.Name == "RenderFormat")
+                {
+                    List<ValidValue> newList = new List<ValidValue>();
+                    foreach (ValidValue validValue in param.ValidValues)
+                    {
+                        if (visibleExtensions.Contains(validValue.Value))
+                        {
+                            newList.Add(validValue);
+                        }
+                    }
+                    param.ValidValues = newList.ToArray<ValidValue>();
+                }
+            }
+            
+            return retVal;
         }
 
         public SubscriptionSchedule[] ListSchedules(string siteName)

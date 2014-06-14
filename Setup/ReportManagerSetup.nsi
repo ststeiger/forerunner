@@ -355,7 +355,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
   
   SetOutPath "$INSTDIR\Forerunner\Dashboard\css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\Dashboard-all.css"
   File "${LOCALROOT}\Forerunner\Dashboard\css\dashboards.css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolbar.css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolPane.css"
+  File "${LOCALROOT}\Forerunner\Dashboard\css\ReportProperties.css"
 
   SetOutPath "$INSTDIR\Forerunner\Dashboard\dashboards"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
@@ -870,7 +874,6 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\Dashboard.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\DashboardEdit.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\CSV.png"
-  Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\Dashboard.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\DataSourceCred.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\doc.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\doc_export_icon24.png"

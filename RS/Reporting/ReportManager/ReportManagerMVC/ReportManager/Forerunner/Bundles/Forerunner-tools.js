@@ -69,6 +69,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
+            sharedClass: "fr-toolbase-config-minimal",
             tooltip: locData.toolbar.paramarea,
             events: {
                 click: function (e) {

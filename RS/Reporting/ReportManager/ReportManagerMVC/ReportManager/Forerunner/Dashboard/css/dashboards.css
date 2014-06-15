@@ -1,19 +1,21 @@
 ﻿.fr-dashboard-report-container { overflow: auto; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 .fr-dashboard-btn { z-index: 1; height: 38px; padding: 0 10px; border: 1px solid #546681; cursor: pointer; text-align: center; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
-.fr-dashboard-hide { display: none; }
+
+/* Add this style if you want to remove the UI for changing the size of a dashboard report slot */
+.fr-dashboard-size-not-user-changable { }
 
 .fr-2up1down { background-color: rgb(210, 223, 237); }
-  .fr-2up1down #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up1down #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up1down #Report3 { min-width:1096px; min-height: 406px; max-width:1096px; max-height: 406px; }
+  .fr-2up1down #Report1 { }
+  .fr-2up1down #Report2 { }
+  .fr-2up1down #Report3 { }
 
 .fr-sidebyside { background-color: rgb(210, 223, 237); }
-  .fr-sidebyside #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-sidebyside #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
+  .fr-sidebyside #Report1 { }
+  .fr-sidebyside #Report2 { }
 
 .fr-2up2down { background-color: rgb(210, 223, 237); }
-  .fr-2up2down #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report3 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report4 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
+  .fr-2up2down #Report1 { }
+  .fr-2up2down #Report2 { }
+  .fr-2up2down #Report3 { }
+  .fr-2up2down #Report4 { }

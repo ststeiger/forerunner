@@ -20,7 +20,7 @@ $(function () {
      * @prop {Object} options.$appContainer - Container for the dashboardEditor widget
      * @prop {Object} options.$dashboardEZ - dashboardEZ widget
      * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolbar)
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolpane)
      * @example
      * $("#dashboardToolPaneId").dashboardToolPane({
 	 * });

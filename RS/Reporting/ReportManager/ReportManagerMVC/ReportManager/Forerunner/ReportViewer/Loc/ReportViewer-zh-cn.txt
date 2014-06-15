@@ -225,7 +225,9 @@
     "submit":"提交",
     "selectReport":"<选择报表>",
     "hideToolbar":"隐藏工具栏",
-    "noReport":"<无报表>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "dashboardEditor": {
     "propertiesBtn":"属性"

@@ -229,7 +229,9 @@
     "submit":"soumettre",
     "selectReport":"<sélectionnez rapport>",
     "hideToolbar":"Masquer la barre d'outils",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Mots clés",

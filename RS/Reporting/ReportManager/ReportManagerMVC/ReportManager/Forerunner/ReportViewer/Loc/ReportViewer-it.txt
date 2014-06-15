@@ -228,7 +228,9 @@
     "submit":"presentare",
     "selectReport":"<selezionare il rapporto>",
     "hideToolbar":"Nascondi barra degli strumenti",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"tag",

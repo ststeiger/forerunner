@@ -459,6 +459,17 @@ $(function () {
             select: "select"
         },
         /**
+         * Toolbar configuration options
+         *
+         * @readonly
+         * @enum {String}
+         */
+        toolbarConfigOption: {
+            hide: "hide",
+            minimal: "minimal",
+            full: "full"
+        },
+        /**
          * sort order used in the Report Viewer sort() method.
          *
          * @readonly

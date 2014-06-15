@@ -5,8 +5,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
     
      /**
      * Widget used to view a report
@@ -21,7 +21,7 @@ $(function () {
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
-     * @prop {Boolean} options.hideToolbar - Defaults to false, True = hide the tool bar
+     * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -43,7 +43,7 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            hideToolbar: false
+            toolbarConfigOption: constants.toolbarConfigOption.full
         },
         _render: function () {
             var me = this;
@@ -78,7 +78,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
-                hideToolbar: me.options.hideToolbar
+                toolbarConfigOption: me.options.toolbarConfigOption
             });
 
             initializer.render();

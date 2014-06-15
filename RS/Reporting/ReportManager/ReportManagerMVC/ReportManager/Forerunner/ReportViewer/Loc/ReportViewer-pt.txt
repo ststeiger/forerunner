@@ -228,7 +228,9 @@
     "submit":"submeter",
     "selectReport":"<selecione relatório>",
     "hideToolbar":"Ocultar barra de ferramentas",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Marcações",

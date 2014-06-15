@@ -3471,9 +3471,10 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var toolTypes = constants.toolTypes;
+    var events = constants.events;
 
     var dropdownContainerClass = "fr-toolbase-dropdown-container";
 
@@ -3559,6 +3560,32 @@ $(function () {
             me.allTools = me.allTools || {};
             me.allTools.length = 0;
         },
+        /**
+         * Configures the toolbar to hide / show buttons based upon the given configuration option
+         *
+         * @function $.forerunner.toolBase#configure
+         */
+        configure: function (toolbarConfigOption) {
+            var me = this;
+            me.toolbarConfigOption = toolbarConfigOption;
+            $.each(me.allTools, function (Index, tool) {
+                var $tool = me.element.find("." + tool.selectorClass);
+                if ($tool.length > 0 && !me._isButtonInConfig($tool)) {
+                    $tool.hide();
+                }
+            });
+        },
+        _isButtonInConfig: function ($tool) {
+            var me = this;
+            if (!me.toolbarConfigOption) {
+                return true;
+            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
+                return true;
+            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                return true;
+            }
+            return false;
+        },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
             me.allTools = me.allTools || {};
@@ -3638,7 +3665,7 @@ $(function () {
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
-                $dropdown.css("top", e.data.$tool.height() + 18);
+                $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
                 $dropdown.toggle();
             });
 
@@ -3675,7 +3702,10 @@ $(function () {
                 // the display style on the element and thereby revert the visibility
                 // back to the style sheet definition.
                 var $toolEl = me.element.find("." + selectorClass);
-                $toolEl.css({"display": ""});
+
+                if (me._isButtonInConfig($toolEl)) {
+                    $toolEl.css({ "display": "" });
+                }
             }
         },
         /**
@@ -3713,12 +3743,10 @@ $(function () {
          */
         hideAllTools: function (){
             var me = this;
-
             $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass)
                     me.hideTool(Obj.selectorClass);
             });
-
         },
         /**
          * Enable or disable tool frozen
@@ -3824,17 +3852,17 @@ $(function () {
             var veryLargeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-very-large";
 
             // Remove any previously added fr-toolbar-hidden classes
-            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
+            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-core-hidden");
 
             var width = me.element.width();
             if (width < 480) {
-                me.element.find(smallClass).addClass("fr-toolbar-hidden");
+                me.element.find(smallClass).addClass("fr-core-hidden");
             } else if (width < 568) {
-                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
+                me.element.find(mediumClass).addClass("fr-core-hidden");
             } else if (width < 768) {
-                me.element.find(largeClass).addClass("fr-toolbar-hidden");
+                me.element.find(largeClass).addClass("fr-core-hidden");
             } else {  // Screen >= 769
-                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
+                me.element.find(veryLargeClass).addClass("fr-core-hidden");
             }
         },
         _getToolHtml: function (toolInfo) {
@@ -5113,7 +5141,7 @@ $(function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
-            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
@@ -5842,7 +5870,7 @@ $(function () {
             me._super();
 
             me.element.empty();
-            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
             var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
@@ -12906,9 +12934,10 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var events = constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var widgets = forerunner.ssr.constants.widgets;
+    var widgets = constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
@@ -12936,7 +12965,7 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
-            hideToolbar: false
+            toolbarConfigOption: constants.toolbarConfigOption.full
         };
 
         // Merge options with the default settings
@@ -12998,9 +13027,12 @@ $(function () {
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
-            if (me.options.hideToolbar) {
+            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
+                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
+                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
             }
@@ -13339,8 +13371,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
     
      /**
      * Widget used to view a report
@@ -13355,7 +13387,7 @@ $(function () {
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
-     * @prop {Boolean} options.hideToolbar - Defaults to false, True = hide the tool bar
+     * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13377,7 +13409,7 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            hideToolbar: false
+            toolbarConfigOption: constants.toolbarConfigOption.full
         },
         _render: function () {
             var me = this;
@@ -13412,7 +13444,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
-                hideToolbar: me.options.hideToolbar
+                toolbarConfigOption: me.options.toolbarConfigOption
             });
 
             initializer.render();
@@ -21511,7 +21543,7 @@ $(function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
-            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
             me.removeAllTools();
 
             me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
@@ -21554,7 +21586,7 @@ $(function () {
      * @prop {Object} options.$appContainer - Container for the dashboardEditor widget
      * @prop {Object} options.$dashboardEZ - dashboardEZ widget
      * @prop {Boolean} options.enableEdit - Enable the dashboard for create and / or editing. Default to true.
-     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolbar)
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolpane)
      * @example
      * $("#dashboardToolPaneId").dashboardToolPane({
 	 * });
@@ -21642,8 +21674,9 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
@@ -21728,7 +21761,7 @@ $(function () {
         _loadReport: function (reportId, hideMissing) {
             var me = this;
             var $item = me.element.find("#" + reportId);
-            $item.removeClass("fr-dashboard-hide");
+            $item.removeClass("fr-core-hidden");
 
             $item.html("");
 
@@ -21740,7 +21773,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -21754,7 +21787,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
-                $item.addClass("fr-dashboard-hide");
+                $item.addClass("fr-core-hidden");
             }
         },
         _onReportParameterSubmit: function (e, data) {
@@ -21845,7 +21878,7 @@ $(function () {
                 var reportId = item.id;
                 var $item = $(item);
 
-                if ($item.data().reportViewerEZ) {
+                if ($item.data().forerunnerReportViewerEZ) {
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
                     var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
@@ -21975,11 +22008,11 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
-    var noReportText = forerunner.helper.htmlEncode(reportProperties.noReport);
 
     /**
      * Widget used to select a new dashbard template
@@ -22006,6 +22039,13 @@ $(function () {
             $dashboardEditor: null,
             reportId: null
         },
+        _setCheckbox: function (setting, $e) {
+            if (setting === true) {
+                $e.prop("checked", true);
+            } else {
+                $e.prop("checked", false);
+            }
+        },
         _init: function () {
             var me = this;
 
@@ -22017,8 +22057,7 @@ $(function () {
             me.$tree.jstree("deselect_all", true);
 
             // Restore the report name
-            if (me.properties &&
-                me.properties.catalogItem &&
+            if (me.properties.catalogItem &&
                 me.properties.catalogItem.Name) {
                 me.$reportInput.val(me.properties.catalogItem.Name);
             } else {
@@ -22026,10 +22065,20 @@ $(function () {
             }
 
             // Restore the hide toolbar checkbox
-            if (me.properties && me.properties.hideToolbar === true) {
-                me.$hideToolbar.prop("checked", true);
+            me._setCheckbox(false, me.$hideToolbar);
+            me._setCheckbox(false, me.$minimalToolbar);
+            me._setCheckbox(false, me.$fullToolbar);
+
+            if (me.properties.toolbarConfigOption) {
+                if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                    me._setCheckbox(true, me.$hideToolbar);
+                } else if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
+                    me._setCheckbox(true, me.$minimalToolbar);
+                } else {
+                    me._setCheckbox(true, me.$fullToolbar);
+                }
             } else {
-                me.$hideToolbar.prop("checked", false);
+                me._setCheckbox(true, me.$hideToolbar);
             }
 
             me._resetValidateMessage();
@@ -22043,19 +22092,8 @@ $(function () {
                 },
                 children: []
             };
-            var noReportNode = {
-                text: noReportText,
-                state: {
-                    opened: true
-                },
-                icon: "jstree-file",
-                li_attr: {
-                    dataReport: true
-                },
-                children: []
-            };
             me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree, noReportNode];
+            return [nodeTree];
         },
         _createTreeItems: function (curNode, view, path) {
             var me = this;
@@ -22088,11 +22126,6 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
-                        // Hide toolbar checkbox
-                        "<div class='fr-rp-setting-container'>" +
-                            "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
-                            "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                        "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
                             "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
@@ -22104,6 +22137,28 @@ $(function () {
                         "<div class='fr-rp-popup-container'>" +
                             "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
+                        // Toolbar options
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.toolbar + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                                    "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.minimal + "</label>" +
+                                    "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.full + "</label>" +
+                                    "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                            "<tr>" +
+                            "</tr>" +
+                        "</table>" +
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
@@ -22124,6 +22179,18 @@ $(function () {
             })
 
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
+            me.$hideToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+            me.$minimalToolbar = me.element.find(".fr-rp-minimal-toolbar-id");
+            me.$minimalToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+            me.$fullToolbar = me.element.find(".fr-rp-full-toolbar-id");
+            me.$fullToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
@@ -22154,18 +22221,21 @@ $(function () {
                 me.closeDialog();
             });
         },
+        _onChangeToolbarOption: function (e, data) {
+            var me = this;
+            me.$hideToolbar.prop("checked", false);
+            me.$minimalToolbar.prop("checked", false);
+            me.$fullToolbar.prop("checked", false);
+
+            $(e.target).prop("checked", true);
+        },
         _onChangedjsTree: function (e, data) {
             var me = this;
 
             // Set the value if this is a report
             if (data.node.li_attr.dataReport === true) {
-                if (data.node.text === noReportText) {
-                    me.$reportInput.val("");
-                    me.properties.catalogItem = null;
-                } else {
-                    me.$reportInput.val(data.node.text);
-                    me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-                }
+                me.$reportInput.val(data.node.text);
+                me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
                 me.$popup.hide();
             }
             else {
@@ -22243,7 +22313,12 @@ $(function () {
             var me = this;
 
             if (me.$form.valid() === true) {
-                me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+                me.properties.toolbarConfigOption = constants.toolbarConfigOption.hide;
+                if (me.$minimalToolbar.prop("checked")) {
+                    me.properties.toolbarConfigOption = constants.toolbarConfigOption.minimal;
+                } else if (me.$fullToolbar.prop("checked")) {
+                    me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
+                }
                 me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
 
                 me._triggerClose(true);

@@ -7,9 +7,10 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var toolTypes = constants.toolTypes;
+    var events = constants.events;
 
     var dropdownContainerClass = "fr-toolbase-dropdown-container";
 
@@ -95,6 +96,32 @@ $(function () {
             me.allTools = me.allTools || {};
             me.allTools.length = 0;
         },
+        /**
+         * Configures the toolbar to hide / show buttons based upon the given configuration option
+         *
+         * @function $.forerunner.toolBase#configure
+         */
+        configure: function (toolbarConfigOption) {
+            var me = this;
+            me.toolbarConfigOption = toolbarConfigOption;
+            $.each(me.allTools, function (Index, tool) {
+                var $tool = me.element.find("." + tool.selectorClass);
+                if ($tool.length > 0 && !me._isButtonInConfig($tool)) {
+                    $tool.hide();
+                }
+            });
+        },
+        _isButtonInConfig: function ($tool) {
+            var me = this;
+            if (!me.toolbarConfigOption) {
+                return true;
+            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
+                return true;
+            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                return true;
+            }
+            return false;
+        },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
             me.allTools = me.allTools || {};
@@ -174,7 +201,7 @@ $(function () {
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
-                $dropdown.css("top", e.data.$tool.height() + 18);
+                $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
                 $dropdown.toggle();
             });
 
@@ -211,7 +238,10 @@ $(function () {
                 // the display style on the element and thereby revert the visibility
                 // back to the style sheet definition.
                 var $toolEl = me.element.find("." + selectorClass);
-                $toolEl.css({"display": ""});
+
+                if (me._isButtonInConfig($toolEl)) {
+                    $toolEl.css({ "display": "" });
+                }
             }
         },
         /**
@@ -249,12 +279,10 @@ $(function () {
          */
         hideAllTools: function (){
             var me = this;
-
             $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass)
                     me.hideTool(Obj.selectorClass);
             });
-
         },
         /**
          * Enable or disable tool frozen
@@ -360,17 +388,17 @@ $(function () {
             var veryLargeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-very-large";
 
             // Remove any previously added fr-toolbar-hidden classes
-            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
+            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-core-hidden");
 
             var width = me.element.width();
             if (width < 480) {
-                me.element.find(smallClass).addClass("fr-toolbar-hidden");
+                me.element.find(smallClass).addClass("fr-core-hidden");
             } else if (width < 568) {
-                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
+                me.element.find(mediumClass).addClass("fr-core-hidden");
             } else if (width < 768) {
-                me.element.find(largeClass).addClass("fr-toolbar-hidden");
+                me.element.find(largeClass).addClass("fr-core-hidden");
             } else {  // Screen >= 769
-                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
+                me.element.find(veryLargeClass).addClass("fr-core-hidden");
             }
         },
         _getToolHtml: function (toolInfo) {

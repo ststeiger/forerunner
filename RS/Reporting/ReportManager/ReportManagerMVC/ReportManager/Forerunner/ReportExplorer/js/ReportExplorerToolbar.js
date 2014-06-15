@@ -83,7 +83,7 @@ $(function () {
             me._super();
 
             me.element.empty();
-            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
             var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
             me.addTools(1, true, toolbarList);
             me._initCallbacks();

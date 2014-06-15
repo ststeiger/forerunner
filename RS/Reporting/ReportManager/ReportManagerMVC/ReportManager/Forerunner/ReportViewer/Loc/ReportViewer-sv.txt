@@ -228,7 +228,9 @@
     "submit":"inkomma",
     "selectReport":"<väljer rapport>",
     "hideToolbar":"Hide Toolbar",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Taggar",

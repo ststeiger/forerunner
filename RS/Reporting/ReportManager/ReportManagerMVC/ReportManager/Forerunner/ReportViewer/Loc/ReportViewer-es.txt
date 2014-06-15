@@ -229,7 +229,9 @@
     "submit":"presentar",
     "selectReport":"<seleccione Informe>",
     "hideToolbar":"Ocultar barra de herramientas",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Etiquetas",

@@ -93,7 +93,7 @@ $(function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
 
-            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
             me.removeAllTools();
 
             me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);

@@ -6,9 +6,10 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var events = constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var widgets = forerunner.ssr.constants.widgets;
+    var widgets = constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
@@ -36,7 +37,7 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
-            hideToolbar: false
+            toolbarConfigOption: constants.toolbarConfigOption.full
         };
 
         // Merge options with the default settings
@@ -98,9 +99,12 @@ $(function () {
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
-            if (me.options.hideToolbar) {
+            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
+                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
+                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
             }

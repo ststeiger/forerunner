@@ -219,13 +219,6 @@
     "dashboardTemplate": "Template",
     "overwrite": "Overwrite"
   },
-  "reportProperties": {
-    "title":"Report Properties",
-    "cancel":"Cancel",
-    "submit":"Ok",
-    "selectReport": "<select report>",
-    "hideToolbar": "Hide Toolbar"
-  },
   "dashboardEditor": {
     "propertiesBtn": "Properties"
   },
@@ -234,8 +227,10 @@
     "cancel":"Cancel",
     "submit":"Submit",
     "selectReport":"<select report>",
-    "hideToolbar":"Hide Toolbar",
-    "noReport": "<no report>"
+    "hideToolbar":"Hide",
+    "toolbar": "Toolbar:",
+    "minimal": "Minimal",
+    "full": "Full"
   },
   "tags": {
     "title":"Tags",

@@ -60,7 +60,7 @@ $(function () {
                 var reportId = item.id;
                 var $item = $(item);
 
-                if ($item.data().reportViewerEZ) {
+                if ($item.data().forerunnerReportViewerEZ) {
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
                     var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");

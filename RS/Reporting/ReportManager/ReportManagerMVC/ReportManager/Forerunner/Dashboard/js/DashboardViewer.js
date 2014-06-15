@@ -7,8 +7,9 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
@@ -93,7 +94,7 @@ $(function () {
         _loadReport: function (reportId, hideMissing) {
             var me = this;
             var $item = me.element.find("#" + reportId);
-            $item.removeClass("fr-dashboard-hide");
+            $item.removeClass("fr-core-hidden");
 
             $item.html("");
 
@@ -105,7 +106,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    hideToolbar: reportProperties.hideToolbar && !me.enableEdit
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -119,7 +120,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
-                $item.addClass("fr-dashboard-hide");
+                $item.addClass("fr-core-hidden");
             }
         },
         _onReportParameterSubmit: function (e, data) {

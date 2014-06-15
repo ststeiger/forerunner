@@ -83,6 +83,7 @@ div.fr-layout-position-absolute { position: absolute; }
 }
 
 .fr-core-cursorpointer { cursor: pointer; }
+.fr-core-hidden { display: none; }
 
 .fr-core-center { display: table; margin: 0 auto; }
 
@@ -105,6 +106,11 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-core-dialog-submit { width: 200px; display: inline-block; }
 .fr-core-dialog-button { height: 38px; padding: 0 0; border: 1px solid #546681; cursor: pointer; text-align: center; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
 .fr-core-mask { opacity: 0.75; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
+
+.fr-core-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
+  .fr-core-toolbar input[type=number]::-webkit-inner-spin-button,
+  .fr-core-toolbar input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .fr-core-toolbar input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
@@ -1738,11 +1744,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     left: 0px; 
     overflow: auto;
 }
-.fr-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
-  .fr-toolbar input[type=number]::-webkit-inner-spin-button,
-  .fr-toolbar input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .fr-toolbar input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
-  .fr-toolbar .fr-toolbar-hidden { display: none; }
+.fr-toolbar { }
   .fr-toolbar .fr-toolbase-input-invalid { border-width: thin; border-color: red; }
 
 .fr-toolbar-slide { margin: 0px; padding: 0px; width: 100%; height: 38px; background: #4971a5; /* Old browsers */ background: -moz-linear-gradient(top, #4971a5 0%, #2f4a7d 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4971a5), color-stop(100%,#2f4a7d)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* IE10+ */ background: linear-gradient(to bottom, #4971a5 0%,#2f4a7d 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4971a5', endColorstr='#2f4a7d',GradientType=0 ); /* IE6-9 */ }
@@ -1852,31 +1854,27 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dashboard-report-container { overflow: auto; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 .fr-dashboard-btn { z-index: 1; height: 38px; padding: 0 10px; border: 1px solid #546681; cursor: pointer; text-align: center; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
-.fr-dashboard-hide { display: none; }
+
+/* Add this style if you want to remove the UI for changing the size of a dashboard report slot */
+.fr-dashboard-size-not-user-changable { }
 
 .fr-2up1down { background-color: rgb(210, 223, 237); }
-  .fr-2up1down #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up1down #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up1down #Report3 { min-width:1096px; min-height: 406px; max-width:1096px; max-height: 406px; }
+  .fr-2up1down #Report1 { }
+  .fr-2up1down #Report2 { }
+  .fr-2up1down #Report3 { }
 
 .fr-sidebyside { background-color: rgb(210, 223, 237); }
-  .fr-sidebyside #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-sidebyside #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
+  .fr-sidebyside #Report1 { }
+  .fr-sidebyside #Report2 { }
 
 .fr-2up2down { background-color: rgb(210, 223, 237); }
-  .fr-2up2down #Report1 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report2 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report3 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
-  .fr-2up2down #Report4 { min-width:543px; min-height: 500px; max-width:543px; max-height: 500px; }
+  .fr-2up2down #Report1 { }
+  .fr-2up2down #Report2 { }
+  .fr-2up2down #Report3 { }
+  .fr-2up2down #Report4 { }
 
-.fr-dashboard-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
-  .fr-dashboard-toolbar input[type=number]::-webkit-inner-spin-button,
-  .fr-dashboard-toolbar input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
-  .fr-dashboard-toolbar input { font-size: 13px; margin: 0; height: 22px; background-color: white; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
-  .fr-dashboard-toolbar .fr-toolbar-hidden { display: none; }
-
+.fr-dashboard-toolbar { }
 .fr-dashboard-button-home, .fr-dashboard-button-recent, .fr-dashboard-button-favorite, .fr-dashboard-button-logOff { float: right; }
-
 
 .fr-dashboard-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; overflow-y: auto; }
   .fr-dashboard-toolpane input[type=number]::-webkit-inner-spin-button,
@@ -1897,7 +1895,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-rp-section { display: none; }
 
 .fr-rp-form { margin-right: 16px; position: relative; }
-    .fr-rp-form .fr-rp-dropdown-container { position: relative; }
+    .fr-rp-form .fr-rp-dropdown-container { position: relative; margin-top: 6px; }
     .fr-rp-form .fr-rp-text-input { display: block; height: 26px; min-width: 375px; margin: auto 0; padding: 0 22px 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
     .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 5px; }
     .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
@@ -1906,6 +1904,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
     .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
     .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+    .fr-rp-form .fr-rp-separator { margin-top: 10px; }
 
     .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
     .fr-rp-form .fr-rp-error-position { display: inline; }

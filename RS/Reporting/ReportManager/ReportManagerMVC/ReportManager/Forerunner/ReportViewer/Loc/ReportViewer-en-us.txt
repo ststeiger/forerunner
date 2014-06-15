@@ -228,7 +228,9 @@
     "submit":"Ok",
     "selectReport":"<select report>",
     "hideToolbar":"Hide Toolbar",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Tags",

@@ -228,7 +228,9 @@
     "submit":"Cuir",
     "selectReport":"<tuarascáil roghnú>",
     "hideToolbar":"Folaigh Barra Uirlisí",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Clibeanna",

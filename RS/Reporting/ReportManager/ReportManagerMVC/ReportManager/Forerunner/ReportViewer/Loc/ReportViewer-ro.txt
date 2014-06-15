@@ -228,7 +228,9 @@
     "submit":"executa",
     "selectReport":"<selectați raport>",
     "hideToolbar":"Ascunde Toolbar",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Tag-uri",

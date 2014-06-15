@@ -10,11 +10,11 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
-    var noReportText = forerunner.helper.htmlEncode(reportProperties.noReport);
 
     /**
      * Widget used to select a new dashbard template
@@ -41,6 +41,13 @@ $(function () {
             $dashboardEditor: null,
             reportId: null
         },
+        _setCheckbox: function (setting, $e) {
+            if (setting === true) {
+                $e.prop("checked", true);
+            } else {
+                $e.prop("checked", false);
+            }
+        },
         _init: function () {
             var me = this;
 
@@ -52,8 +59,7 @@ $(function () {
             me.$tree.jstree("deselect_all", true);
 
             // Restore the report name
-            if (me.properties &&
-                me.properties.catalogItem &&
+            if (me.properties.catalogItem &&
                 me.properties.catalogItem.Name) {
                 me.$reportInput.val(me.properties.catalogItem.Name);
             } else {
@@ -61,10 +67,20 @@ $(function () {
             }
 
             // Restore the hide toolbar checkbox
-            if (me.properties && me.properties.hideToolbar === true) {
-                me.$hideToolbar.prop("checked", true);
+            me._setCheckbox(false, me.$hideToolbar);
+            me._setCheckbox(false, me.$minimalToolbar);
+            me._setCheckbox(false, me.$fullToolbar);
+
+            if (me.properties.toolbarConfigOption) {
+                if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                    me._setCheckbox(true, me.$hideToolbar);
+                } else if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
+                    me._setCheckbox(true, me.$minimalToolbar);
+                } else {
+                    me._setCheckbox(true, me.$fullToolbar);
+                }
             } else {
-                me.$hideToolbar.prop("checked", false);
+                me._setCheckbox(true, me.$hideToolbar);
             }
 
             me._resetValidateMessage();
@@ -78,19 +94,8 @@ $(function () {
                 },
                 children: []
             };
-            var noReportNode = {
-                text: noReportText,
-                state: {
-                    opened: true
-                },
-                icon: "jstree-file",
-                li_attr: {
-                    dataReport: true
-                },
-                children: []
-            };
             me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree, noReportNode];
+            return [nodeTree];
         },
         _createTreeItems: function (curNode, view, path) {
             var me = this;
@@ -123,11 +128,6 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
-                        // Hide toolbar checkbox
-                        "<div class='fr-rp-setting-container'>" +
-                            "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
-                            "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                        "</div>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
                             "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
@@ -139,6 +139,28 @@ $(function () {
                         "<div class='fr-rp-popup-container'>" +
                             "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
+                        // Toolbar options
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.toolbar + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                                    "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.minimal + "</label>" +
+                                    "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label'>" + reportProperties.full + "</label>" +
+                                    "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                            "<tr>" +
+                            "</tr>" +
+                        "</table>" +
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
@@ -159,6 +181,18 @@ $(function () {
             })
 
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
+            me.$hideToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+            me.$minimalToolbar = me.element.find(".fr-rp-minimal-toolbar-id");
+            me.$minimalToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+            me.$fullToolbar = me.element.find(".fr-rp-full-toolbar-id");
+            me.$fullToolbar.on("change", function (e, data) {
+                me._onChangeToolbarOption.apply(me, arguments);
+            });
+
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
@@ -189,18 +223,21 @@ $(function () {
                 me.closeDialog();
             });
         },
+        _onChangeToolbarOption: function (e, data) {
+            var me = this;
+            me.$hideToolbar.prop("checked", false);
+            me.$minimalToolbar.prop("checked", false);
+            me.$fullToolbar.prop("checked", false);
+
+            $(e.target).prop("checked", true);
+        },
         _onChangedjsTree: function (e, data) {
             var me = this;
 
             // Set the value if this is a report
             if (data.node.li_attr.dataReport === true) {
-                if (data.node.text === noReportText) {
-                    me.$reportInput.val("");
-                    me.properties.catalogItem = null;
-                } else {
-                    me.$reportInput.val(data.node.text);
-                    me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-                }
+                me.$reportInput.val(data.node.text);
+                me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
                 me.$popup.hide();
             }
             else {
@@ -278,7 +315,12 @@ $(function () {
             var me = this;
 
             if (me.$form.valid() === true) {
-                me.properties.hideToolbar = me.$hideToolbar.prop("checked");
+                me.properties.toolbarConfigOption = constants.toolbarConfigOption.hide;
+                if (me.$minimalToolbar.prop("checked")) {
+                    me.properties.toolbarConfigOption = constants.toolbarConfigOption.minimal;
+                } else if (me.$fullToolbar.prop("checked")) {
+                    me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
+                }
                 me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
 
                 me._triggerClose(true);

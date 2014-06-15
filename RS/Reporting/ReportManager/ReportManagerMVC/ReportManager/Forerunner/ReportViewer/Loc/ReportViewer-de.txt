@@ -228,7 +228,9 @@
     "submit":"einsenden",
     "selectReport":"<wählen Bericht>",
     "hideToolbar":"Symbolleiste ausblenden",
-    "noReport":"<no report>"
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"Full"
   },
   "tags": {
     "title":"Schlagworte",

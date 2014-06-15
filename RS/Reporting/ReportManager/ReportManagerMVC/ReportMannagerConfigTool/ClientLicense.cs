@@ -26,8 +26,8 @@ namespace ForerunnerLicense
         private const String VersionKey = "Version3";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
-        //private static string url = "https://forerunnersw.com/register/api/License";
-        private static string url = "http://localhost:13149/api/License";
+        private static string url = "https://forerunnersw.com/register/api/License";
+        //private static string url = "http://localhost:13149/api/License";
 
 
         private static LicenseData license = null;

@@ -122,14 +122,16 @@ namespace ForerunnerWebService
             return "success";
         }
 
-        internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity,string LicenseID = null,string SplitKey = "")
+        internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity,string LicenseID = null,string SplitKey = "",DateTime CreateDate = new DateTime())
         {
             string SQL = @"IF NOT EXISTS (SELECT * FROM License WHERE LicenseID = @LicenseID)
                             INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate,SplitKey)
-                            SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,GETDATE(),@SplitKey";
+                            SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,@CreateDate,@SplitKey";
 
             ForerunnerDB DB = new ForerunnerDB();
             string ID;
+            if (CreateDate == DateTime.MinValue)
+                CreateDate = DateTime.Now;
 
             if (LicenseID == null)
                 ID = ForerunnerDB.NewLicenseID();
@@ -148,6 +150,7 @@ namespace ForerunnerWebService
                 SQLComm.Parameters.AddWithValue("@ProductName", ProductName);
                 SQLComm.Parameters.AddWithValue("@Quantity", Quantity);
                 SQLComm.Parameters.AddWithValue("@SplitKey", SplitKey);
+                SQLComm.Parameters.AddWithValue("@CreateDate", CreateDate);
                 SQLComm.ExecuteNonQuery();
             }
             catch (Exception e)

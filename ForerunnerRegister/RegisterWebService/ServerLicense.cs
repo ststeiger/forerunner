@@ -77,6 +77,8 @@ namespace ForerunnerLicense
             {
                 if (LicenseData != "")
                     OldLD.LoadLicenseData(LicenseUtil.Verify(LicenseData, LicenseUtil.pubkey));
+                if (OldLD.LicenseKey != null)
+                    OldLD = LoadLicenseFromServer(OldLD.LicenseKey);
                 Status = 0;
             }
             catch
@@ -120,12 +122,13 @@ namespace ForerunnerLicense
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
 
-            string SQL = @"IF EXISTS (SELECT * FROM License m INNER JOIN License l ON m.LicenseID = @MergeKey AND m.SKU= l.SKU AND l.LicenseID = @LicenseKey)
-                            BEGIN
-                                UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
-                                UPDATE License SET Quantity = 0 WHERE LicenseID = @MergeKey
-                            END
-                        ";
+            LicenseData Lic = LoadLicenseFromServer(NewLicenseKey);
+            LicenseData MergeLic = LoadLicenseFromServer(MergeKey);
+
+            if (Lic == null || MergeLic == null)
+            {
+                return String.Format(Response, "Fail", "110", "Invalid License combination or license not found");
+            }
 
             if (NewLicenseKey == MergeKey)
             {
@@ -133,6 +136,27 @@ namespace ForerunnerLicense
                 return Response;
             }
 
+            if (Lic.SKU == MergeLic.SKU)
+            {
+                Lic.Quantity += MergeLic.Quantity;
+                MergeLic.Quantity = 0;
+            }
+
+            if (MergeLic.IsExtension == 1)
+            {
+                if (MergeLic.Quantity != Lic.Quantity)
+                    return String.Format(Response, "Fail", "115", "Extension License must have same number of cores as license");
+
+                if (MergeLic.IsTrial != Lic.IsTrial || MergeLic.IsSubscription != Lic.IsSubscription || Lic.LicenseType != MergeLic.LicenseType)
+                    return String.Format(Response, "Fail", "116", "Invalid license combination");
+
+                Lic.LicenseDuration += MergeLic.LicenseDuration;
+                MergeLic.LicenseDuration = 0;
+
+            }
+
+            string SQL = @"UPDATE License SET Quantity = @NewQuantity, Duration = @NewDuration WHERE LicenseID = @LicenseKey
+                           UPDATE License SET Quantity =0, Duration = 0 WHERE LicenseID = @MergeKey ";
 
             try
             {
@@ -140,12 +164,12 @@ namespace ForerunnerLicense
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
                 SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
-                int rows = SQLComm.ExecuteNonQuery();               
+                SQLComm.Parameters.AddWithValue("@NewQuantity", Lic.Quantity);
+                SQLComm.Parameters.AddWithValue("@NewDuration", Lic.LicenseDuration);
+
+                SQLComm.ExecuteNonQuery();               
                 SQLConn.Close();
-                if (rows <= 0)
-                    Response = String.Format(Response, "Fail", "110", "Invalid License combination or license not found");
-                else
-                    Response = String.Format(Response, "Success", "0", "Licenses Merged");
+                Response = String.Format(Response, "Success", "0", "Merge Sucessfull");
             }
             catch
             {
@@ -162,7 +186,7 @@ namespace ForerunnerLicense
             SqlDataReader SQLReader;
             LicenseData NewLD = null;
                     
-            string SQL = @"SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial,l.CreateDate FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
+            string SQL = @"SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial,l.CreateDate,s.IsExtension,LicenseType FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
             try
             {
                 SQLConn.Open();
@@ -173,7 +197,7 @@ namespace ForerunnerLicense
                 while (SQLReader.Read())
                 {
                     NewLD = new LicenseData();
-                    NewLD.LicenseKey = NewLicenseKey;
+                    NewLD.LicenseKey = key;
                     if (!SQLReader.IsDBNull(0))
                         NewLD.MachineData = new MachineId(SQLReader.GetString(0));
                     if (!SQLReader.IsDBNull(1))
@@ -187,6 +211,8 @@ namespace ForerunnerLicense
                     NewLD.RequireValidation = SQLReader.GetInt32(7);
                     NewLD.IsTrial = SQLReader.GetInt32(8);
                     NewLD.PurchaseDate = SQLReader.GetDateTime(9);
+                    NewLD.IsExtension = SQLReader.GetInt32(10);
+                    NewLD.LicenseType = SQLReader.GetString(11);
                 }
                 SQLReader.Close();
                 return NewLD;
@@ -207,11 +233,9 @@ namespace ForerunnerLicense
             SqlConnection SQLConn = DB.GetSQLConn();
             bool success = false;
             LicenseData NewLD = null;
-            TimeSpan ts;
+            TimeSpan LicenseSpan;
 
-
-
-            string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID";                          
+           string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID";                          
            try
             {
                 SQLConn.Open();
@@ -230,53 +254,67 @@ namespace ForerunnerLicense
                     return Response;
                 }
 
+                if (NewLD.IsExtension ==1)
+                {
+                    Response = String.Format(Response, "Fail", "120", "Cannot activate Extension license, please merge license");
+                    return Response;
+                }
+
                 //Activate new license, check to see if it is valid for this machine
                 if (NewLD.MachineData == null)
                {
-                   //TODO:  Change the license for a SA subscription if it is expired to the latest SKU that was avaialble at the time of expiration.
                    NewLD.MachineData = NewMachineData;
                     if (NewLD.FirstActivationDate == DateTime.MinValue)
                         NewLD.FirstActivationDate = DateTime.Now;
-                    if (OldLD == null || OldLD.SKU == null)
-                   {
-                       Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
-                       success = true;
-                   }
-                   //Check to see if it is a subscription uprade and add durration
-                   else if (OldLD.IsSubscription == 1)
-                   {
-                      ts = DateTime.Now - OldLD.PurchaseDate;
-                      NewLD.LicenseDuration += OldLD.LicenseDuration - (int)ts.TotalDays;
-                      Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
-                      success = true;
-                   }
-                   else
-                   {
-                       Response = String.Format(Response, "Fail", "106", "Invalid License Combination, De-Activate before Activation");
-                       success = false;
-                   }
+                   
+                    //Check for subscription expiration
+                    LicenseSpan = DateTime.Now - NewLD.PurchaseDate;
+                    if ((NewLD.IsTrial == 1 || NewLD.IsSubscription == 1) && LicenseSpan.TotalDays > NewLD.LicenseDuration)
+                    {
+                        Response = String.Format(Response, "Fail", "200", "Subscription Expired");
+                        success = false;
+                    }
+                   
+                    Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
+                    success = true;
                }
                //Trying to acitivate a used license or a new version on an upgradable license
                else
                {
                     //If no license data then use machine data from request
-                   if (OldLD.MachineData == null)
+                   if (OldLD == null || OldLD.MachineData == null)
+                   {
+                       OldLD = new LicenseData();
                        OldLD.MachineData = NewMachineData;
-                    ts = DateTime.Now - NewLD.PurchaseDate;
+                   }
+                   LicenseSpan = DateTime.Now - NewLD.PurchaseDate;
 
                    //If Update on subcription
-                   if (OldLD.MachineData.IsSame(NewLD.MachineData) && (NewLD.LicenseDuration > ts.TotalDays) && (NewLD.IsSubscription == 1 || NewLD.IsTrial == 1))
+                   if (OldLD.MachineData.IsSame(NewLD.MachineData))
                    {
-                       Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
-                       success = true;
+                       // if not a subscription
+                       if (NewLD.IsSubscription == 0 && NewLD.IsTrial == 0)
+                       {
+                            Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
+                            success = true;
+                       }
+                       else if (NewLD.LicenseDuration > LicenseSpan.TotalDays)
+                       {
+                           Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
+                           success = true;
+
+                       }
+                       else
+                       {
+                           Response = String.Format(Response, "Fail", "200", "Subscription Expired");
+                           success = false;
+                       }
                    }
 
                   //this key is alrady activated, maybe lost HD allow activation on new machine if more than 90 days
                    else
                    {               
-                       //TODO:  Change the license for a SA subscription if it is expired to the latest SKU that was avaialble at the time of expiration.
-                       ts = DateTime.Now - NewLD.LastActivation;
-                       if (ts.TotalDays < 90)
+                       if (LicenseSpan.TotalDays < 90)
                            Response = String.Format(Response, "Fail", "101", "Already Activated");
                        else
                        {
@@ -367,7 +405,7 @@ namespace ForerunnerLicense
                 {
                     string NewLic = ForerunnerDB.NewLicenseID();
                     Response = String.Format(Response, "Success", "0", NewLic);
-                    new Order().WriteLicense(Guid.NewGuid().ToString(), OldLD.SKU, "", NewLicQuantity, NewLic, OldLD.LicenseKey);
+                    new Order().WriteLicense(Guid.NewGuid().ToString(), OldLD.SKU, "", NewLicQuantity, NewLic, OldLD.LicenseKey, OldLD.PurchaseDate);
                 }                
                 
             }

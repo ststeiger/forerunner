@@ -23,11 +23,11 @@ namespace ForerunnerLicense
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";       
         private const String ProductKey = "Mobilizer";
-        private const String VersionKey = "Version2";
+        private const String VersionKey = "Version3";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
-        private static string url = "https://forerunnersw.com/register/api/License";
-        //private static string url = "http://localhost:13149/api/License";
+        //private static string url = "https://forerunnersw.com/register/api/License";
+        private static string url = "http://localhost:13149/api/License";
 
 
         private static LicenseData license = null;
@@ -209,7 +209,9 @@ namespace ForerunnerLicense
             if (MobV1Key != null)
             {
                 MobV1Key.DeleteValue(LicenseDataKey,false);
-                MobV1Key.DeleteValue(LicenseTimestampKey, false);                
+                MobV1Key.DeleteValue(LicenseTimestampKey, false);
+                LastServerValidation = DateTime.MinValue;
+                LastServerValidationTry = DateTime.MinValue;
             }
             license = null;
             LicenseString = null;
@@ -368,9 +370,10 @@ namespace ForerunnerLicense
                     {
                         try
                         {
-                            Thread t = new Thread(new ThreadStart(ValidateInner));
-                            t.Start();
-                            t.Join();
+                            ValidateInner();
+                            //Thread t = new Thread(new ThreadStart(ValidateInner));
+                            //t.Start();
+                            //t.Join();
                         }
                         catch (Exception e)
                         {

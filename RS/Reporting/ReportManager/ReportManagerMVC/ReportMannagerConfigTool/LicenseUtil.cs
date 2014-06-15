@@ -291,6 +291,8 @@ namespace ForerunnerLicense
         public int LicenseDuration = 30;
         public int RequireValidation = 1;
         public int IsTrial = 1;
+        public int IsExtension = 0;
+        public string LicenseType = null;
 
         internal LicenseData()
         { 

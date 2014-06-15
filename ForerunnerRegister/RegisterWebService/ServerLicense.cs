@@ -237,7 +237,7 @@ namespace ForerunnerLicense
                    NewLD.MachineData = NewMachineData;
                     if (NewLD.FirstActivationDate == DateTime.MinValue)
                         NewLD.FirstActivationDate = DateTime.Now;
-                   if (OldLD.SKU == null )
+                    if (OldLD == null || OldLD.SKU == null)
                    {
                        Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
                        success = true;
@@ -395,7 +395,7 @@ namespace ForerunnerLicense
                 else
                 {
                     TimeSpan ts = DateTime.Now - ld.PurchaseDate;
-                    if (ld.LicenseDuration < ts.TotalDays && ld.IsSubscription ==1)
+                    if (ld.LicenseDuration < ts.TotalDays && (ld.IsSubscription ==1 || ld.IsTrial ==1))
                         Response = String.Format(Response, "Fail", "200", "Subscription Expired");
                     else
                         Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToUniversalTime().Ticks.ToString(),pkey));

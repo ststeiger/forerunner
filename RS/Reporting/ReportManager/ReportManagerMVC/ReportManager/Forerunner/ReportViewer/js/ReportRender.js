@@ -1234,7 +1234,7 @@ $(function () {
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
                 me._writeUniqueName($map, "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-                //$map.attr("data-uniqName", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                $map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $map.attr("id", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
                 for (var i = 0; i < actionImageMapAreas.Count; i++) {

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -388,7 +388,7 @@ $(function () {
             selectorClass: "fr-toolbar-email-button",
             imageClass: "fr-icons24x24-emailsubscription",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-            tooltip: "Email",
+            tooltip: locData.subscription.email,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showEmailSubscription");
@@ -1003,7 +1003,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-emailsubscription",
             imageClass: "fr-icons24x24-emailsubscription",
-            text: "Email",
+            text: locData.subscription.email,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showEmailSubscription");
@@ -1016,7 +1016,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-managesubscription",
             imageClass: "fr-icons24x24-managesubscription",
-            text: "Manage Subscription",
+            text: locData.subscription.manageSubscription,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("manageSubscription");

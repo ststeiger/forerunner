@@ -23,7 +23,7 @@ namespace ForerunnerLicense
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";       
         private const String ProductKey = "Mobilizer";
-        private const String VersionKey = "Version2";
+        private const String VersionKey = "Version3";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
         private static string url = "https://forerunnersw.com/register/api/License";
@@ -209,7 +209,9 @@ namespace ForerunnerLicense
             if (MobV1Key != null)
             {
                 MobV1Key.DeleteValue(LicenseDataKey,false);
-                MobV1Key.DeleteValue(LicenseTimestampKey, false);                
+                MobV1Key.DeleteValue(LicenseTimestampKey, false);
+                LastServerValidation = DateTime.MinValue;
+                LastServerValidationTry = DateTime.MinValue;
             }
             license = null;
             LicenseString = null;
@@ -341,11 +343,14 @@ namespace ForerunnerLicense
             if (IsMachineSame != 1 && ThisMachine != null)
                 LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
 
-            if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
-                LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
+            //If quantity = -1 it is server license, do not check cores
+            if (License.Quantity != -1)
+                if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity )
+                    LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
             //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
-            if (License.SKU.Substring(0, 5) == "Mob10")
+            string lic = License.SKU.Substring(0, 5);
+            if (lic == "Mob10" || lic == "Mob20")
                 LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
         }
 
@@ -365,9 +370,10 @@ namespace ForerunnerLicense
                     {
                         try
                         {
-                            Thread t = new Thread(new ThreadStart(ValidateInner));
-                            t.Start();
-                            t.Join();
+                            ValidateInner();
+                            //Thread t = new Thread(new ThreadStart(ValidateInner));
+                            //t.Start();
+                            //t.Join();
                         }
                         catch (Exception e)
                         {

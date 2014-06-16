@@ -14128,14 +14128,15 @@ $(function () {
             index++;
             if (parentPath === null) {
                 $link.text(name);
-                if (index !== 1) {
+                //make home link always clickable
+                //if (index !== 1) {
                     $link.on("click", function () {
                         me._navigateTo("home");
                     });
-                }
-                else {
-                    $link.addClass("fr-location-link-last");
-                }
+                //}
+                //else {
+                //    $link.addClass("fr-location-link-last");
+                //}
                 $container.append($link);
                 return;
             }

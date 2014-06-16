@@ -3575,16 +3575,29 @@ $(function () {
                 }
             });
         },
+        _configurations: function () {
+            return [
+                { name: constants.toolbarConfigOption.minimal, selectorClass: "fr-toolbase-config-minimal" },
+                { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
+            ];
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
-                return true;
-            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
-                return true;
-            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                // Default is full so this case we always return true
                 return true;
             }
-            return false;
+
+            var found = false;
+            $.each(me._configurations(), function (index, config) {
+                if (me.toolbarConfigOption === config.name && $tool.hasClass(config.selectorClass)) {
+                    // We must match the config name and have the selector class
+                    found = true;
+                }
+            });
+
+            // Otherwise this button is not in this configuration
+            return found;
         },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
@@ -13053,8 +13066,8 @@ $(function () {
             if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
-                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
-                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
+                    $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
@@ -21798,7 +21811,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;

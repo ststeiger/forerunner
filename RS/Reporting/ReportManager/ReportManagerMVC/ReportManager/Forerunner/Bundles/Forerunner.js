@@ -479,6 +479,7 @@ $(function () {
         toolbarConfigOption: {
             hide: "hide",
             minimal: "minimal",
+            dashboardEdit: "dashboardEdit",
             full: "full"
         },
         /**

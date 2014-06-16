@@ -102,8 +102,8 @@ $(function () {
             if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
-                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
-                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
+                    $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());

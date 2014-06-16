@@ -106,7 +106,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;

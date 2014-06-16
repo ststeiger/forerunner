@@ -68,7 +68,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
-            sharedClass: "fr-toolbase-config-minimal",
+            sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit",
             tooltip: locData.toolbar.paramarea,
             events: {
                 click: function (e) {

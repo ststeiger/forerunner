@@ -425,6 +425,9 @@ namespace ForerunnerLicense
                         case "MachineKey":
                             machineKey = XMLReq.ReadElementContentAsString();
                             break;
+                        case "Cores":
+                            numberOfCores = XMLReq.ReadElementContentAsInt();
+                            break;
                     }
                 }
                 else

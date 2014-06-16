@@ -4416,11 +4416,8 @@ $(function () {
                 }
             });
 
-            $(window).resize(function () {
-                me.ResetSize();
-
-                me._updateTopDiv(me);
-                me.setBackgroundLayout();
+            $(window).on("resize", function () {
+                me._windowResizeHandler.call(me)
             });
 
             if (!me.options.isFullScreen && !isTouch) {
@@ -4446,7 +4443,22 @@ $(function () {
                 });
             }
         },
-
+        _windowResizeTimer: null,
+        _windowResizeHandler: function () {
+            var me = this;
+            //handle window resize event when the call interval is more than 100 milliseconds
+            //this will optimize performance when resize action rapid succession to make it only execute one time
+            if (me._windowResizeTimer) {
+                clearTimeout(me._windowResizeTimer);
+                me._windowResizeTimer = null;
+            }
+            
+            me._windowResizeTimer = setTimeout(function () {
+                me.ResetSize();
+                me._updateTopDiv(me);
+                me.setBackgroundLayout();
+            }, 100);
+        },
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -4565,6 +4577,15 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $(".fr-toolpane", me.$container).css({ height: "100%" });
+
+            //reset parameter pane size, make sure it small than the container width
+            var containerWidth = me.$container.width();
+            var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
+            var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;
+
+            me.$rightpane.width(parameterPaneWidth);
+            me.$rightheader.width(parameterPaneWidth);
+            me.$rightpanecontent.width(parameterPaneWidth);
         },
 
         showTopDiv: function (isEnabled) {
@@ -13478,11 +13499,6 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
-
-            var parameterPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
-            layout.$rightpane.width(parameterPaneWidth);
-            layout.$rightheader.width(parameterPaneWidth);
-            layout.$rightpanecontent.width(parameterPaneWidth);
         },
         _init: function () {
             var me = this;

@@ -110,11 +110,6 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
-
-            var parameterPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
-            layout.$rightpane.width(parameterPaneWidth);
-            layout.$rightheader.width(parameterPaneWidth);
-            layout.$rightpanecontent.width(parameterPaneWidth);
         },
         _init: function () {
             var me = this;

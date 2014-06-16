@@ -146,7 +146,8 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     success: function (data) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsSucceeded, locData.toolPane.tags);
+                        //bug 1078, not show succeeded dialig, instead just close current dialog
+                        //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsSucceeded, locData.toolPane.tags);
                     },
                     fail: function (data) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);

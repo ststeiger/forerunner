@@ -513,7 +513,8 @@ $(function () {
                 success: function (data) {
                     //refresh the page if search folder created succeeded
                     location.reload(true);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
+                    //bug 1078, not show succeeded dialig, instead just close current dialog
+                    //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
                 },
                 error: function (data) {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);

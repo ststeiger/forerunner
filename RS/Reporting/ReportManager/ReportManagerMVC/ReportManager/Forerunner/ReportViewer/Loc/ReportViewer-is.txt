@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Vista Mælaborð Eftirmaður",
     "loadDashboardFailed":"Hlaða Mælaborð mistókst",
     "loadDashboard":"hlaða Mælaborð",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"A mælaborð með þessu nafni er þegar til. Þú getur annað hvort: 1) endurnefna mælaborðið þitt eða 2) athuga yfirskrifa kassi þá reyna aftur.",
+    "saveSearchFolderSucceeded":"Leita Mappa Búið Eftirmaður",
+    "saveSearchFolderFailed":"Leita Mappa Búið mistókst",
+    "addTagsSucceeded":"Bæta Tags Eftirmaður",
+    "addTagsFailed":"Bæta Tags mistókst"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",
@@ -63,7 +63,7 @@
     "saveDashboard":"vista Mælaborð",
     "editDashboard":"breyta Mælaborð",
     "tags":"Tags",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Skoða Mælaborð"
   },
   "toolbar": {
     "back":"Til baka",
@@ -99,7 +99,7 @@
     "editDashboard":"breyta Mælaborð",
     "saveDashboard":"vista Mælaborð",
     "searchFolder":"Leita Mappa",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Skoða Mælaborð"
   },
   "print": {
     "title":"Print Report",
@@ -208,10 +208,10 @@
     "title":"Búa Mælaborð",
     "cancel":"hætta",
     "submit":"leggja",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nafn",
+    "namePlaceholder":"nafn mælaborð",
+    "dashboardTemplate":"Snið",
+    "overwrite":"Skrifa yfir"
   },
   "RDLExt": {
     "title":"RDL Eftirnafn",
@@ -228,9 +228,9 @@
     "submit":"leggja",
     "selectReport":"<Veldu skýrslu>",
     "hideToolbar":"fela tækjastiku",
-    "toolbar":"Toolbar:",
+    "toolbar":"tækjastika:",
     "minimal":"Minimal",
-    "full":"Full"
+    "full":"fullur"
   },
   "tags": {
     "title":"Tags",
@@ -252,16 +252,16 @@
   },
   "subscription": {
     "email":"Email",
-    "cancel":"Cancel",
-    "save":"Save",
-    "manageSubscription":"Manage Subscription",
-    "to_placeholder":"To",
+    "cancel":"hætta",
+    "save":"vista",
+    "manageSubscription":"stjórna áskrift",
+    "to_placeholder":"að",
     "subject_placeholder":"Subject",
-    "description_placeholder":"Description",
-    "comment_placeholder":"Comment",
-    "subject":"@ReportName was executed at @ExecutionTime",
-    "description":"Send email to {0}",
-    "includeLink":"Include link",
-    "includeReport":"Include report"
+    "description_placeholder":"Lýsing",
+    "comment_placeholder":"athugasemd",
+    "subject":"@ ReportName var keyrð á @ ExecutionTime",
+    "description":"Senda tölvupóst til {0}",
+    "includeLink":"Hafa tengil",
+    "includeReport":"fela skýrslu"
   }
 }

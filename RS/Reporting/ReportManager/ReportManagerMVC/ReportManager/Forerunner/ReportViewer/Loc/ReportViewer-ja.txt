@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"成功しましたダッシュボードを保存",
     "loadDashboardFailed":"負荷ダッシュに失敗しました",
     "loadDashboard":"ロード·ダッシュボード",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"その名前を使用したダッシュボードは、すでに存在しています。次のいずれかを実行できます1）ダッシュボードの名前を変更するか、2）やり直して上書きチェックボックスをオンにします。",
+    "saveSearchFolderSucceeded":"検索フォルダ成功作成",
+    "saveSearchFolderFailed":"検索フォルダに失敗しました作成",
+    "addTagsSucceeded":"成功タグを追加する",
+    "addTagsFailed":"障害タグを追加する"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",
@@ -63,7 +63,7 @@
     "saveDashboard":"ダッシュボードを保存",
     "editDashboard":"編集ダッシュボード",
     "tags":"タグ",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"ビューダッシュボード"
   },
   "toolbar": {
     "back":"裏面",
@@ -99,7 +99,7 @@
     "editDashboard":"編集ダッシュボード",
     "saveDashboard":"ダッシュボードを保存",
     "searchFolder":"検索フォルダ",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"ビューダッシュボード"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -120,7 +120,7 @@
     "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI",
-    "Email":"Email",
+    "Email":"Eメール",
     "AdminUI":"管理UI"
   },
   "paramPane": {
@@ -208,10 +208,10 @@
     "title":"ダッシュボードの作成",
     "cancel":"取り消す",
     "submit":"提出する",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"名前",
+    "namePlaceholder":"ダッシュボードの名前",
+    "dashboardTemplate":"テンプレート",
+    "overwrite":"上書きする"
   },
   "RDLExt": {
     "title":"RDL拡張",
@@ -228,9 +228,9 @@
     "submit":"提出する",
     "selectReport":"<[レポート]を選択>",
     "hideToolbar":"ツールバーを隠す",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"ツールバー:",
+    "minimal":"最小限の",
+    "full":"フル"
   },
   "tags": {
     "title":"タグ",
@@ -251,17 +251,17 @@
     "createTo":"下に作成"
   },
   "subscription": {
-    "email":"Email",
-    "cancel":"Cancel",
-    "save":"Save",
-    "manageSubscription":"Manage Subscription",
-    "to_placeholder":"To",
-    "subject_placeholder":"Subject",
-    "description_placeholder":"Description",
-    "comment_placeholder":"Comment",
-    "subject":"@ReportName was executed at @ExecutionTime",
-    "description":"Send email to {0}",
-    "includeLink":"Include link",
-    "includeReport":"Include report"
+    "email":"Eメール",
+    "cancel":"キャンセル",
+    "save":"保存",
+    "manageSubscription":"サブスクリプションを管理",
+    "to_placeholder":"へ",
+    "subject_placeholder":"テーマ",
+    "description_placeholder":"説明",
+    "comment_placeholder":"コメント",
+    "subject":"@ ReportNameのは@ EXECUTIONTIMEで実行されました",
+    "description":"にメールを送信して{0}",
+    "includeLink":"リンクを含める",
+    "includeReport":"レポートを含める"
   }
 }

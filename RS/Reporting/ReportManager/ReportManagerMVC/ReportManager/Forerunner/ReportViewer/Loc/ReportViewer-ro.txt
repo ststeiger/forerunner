@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
     "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
     "loadDashboard":"încărcare Tablou de bord",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Un tablou de bord cu acest nume există deja. Puteți fie: 1) redenumi tabloul de bord sau 2), bifați caseta de suprascriere, apoi încercați din nou.",
+    "saveSearchFolderSucceeded":"Folder de căutare Creat Urmat",
+    "saveSearchFolderFailed":"Folder de căutare Creat eșuată",
+    "addTagsSucceeded":"Adauga etichete Reușit",
+    "addTagsFailed":"Adauga Tag-uri eșuate"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -63,7 +63,7 @@
     "saveDashboard":"Salvați Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
     "tags":"Tag-uri",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Vezi Tablou de bord"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -99,7 +99,7 @@
     "editDashboard":"Edit Tablou de bord",
     "saveDashboard":"Salvați Tablou de bord",
     "searchFolder":"Folder de căutare",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Vezi Tablou de bord"
   },
   "print": {
     "title":"imprima raportul",
@@ -120,13 +120,13 @@
     "submit":"bine",
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
-    "Email":"Email",
+    "Email":"E-mail",
     "AdminUI":"UI admin"
   },
   "paramPane": {
-    "nullField":"Null",
+    "nullField":"nul",
     "isTrue":"Adevărat",
-    "isFalse":"False",
+    "isFalse":"fals",
     "required":"Necesare",
     "viewReport":"Vedere",
     "cancel":"Anula",
@@ -208,10 +208,10 @@
     "title":"crea Tablou de bord",
     "cancel":"anula",
     "submit":"executa",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nume",
+    "namePlaceholder":"nume de tablou de bord",
+    "dashboardTemplate":"șablon",
+    "overwrite":"suprascriere"
   },
   "RDLExt": {
     "title":"RDL Extension",
@@ -229,8 +229,8 @@
     "selectReport":"<selectați raport>",
     "hideToolbar":"Ascunde Toolbar",
     "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "minimal":"minim",
+    "full":"complet"
   },
   "tags": {
     "title":"Tag-uri",
@@ -251,17 +251,17 @@
     "createTo":"creat sub"
   },
   "subscription": {
-    "email":"Email",
-    "cancel":"Cancel",
-    "save":"Save",
-    "manageSubscription":"Manage Subscription",
-    "to_placeholder":"To",
-    "subject_placeholder":"Subject",
-    "description_placeholder":"Description",
-    "comment_placeholder":"Comment",
-    "subject":"@ReportName was executed at @ExecutionTime",
-    "description":"Send email to {0}",
-    "includeLink":"Include link",
-    "includeReport":"Include report"
+    "email":"E-mail",
+    "cancel":"Anula",
+    "save":"salva",
+    "manageSubscription":"Gestionați abonament",
+    "to_placeholder":"la",
+    "subject_placeholder":"subiect",
+    "description_placeholder":"descriere",
+    "comment_placeholder":"comentariu",
+    "subject":"@ ReportName a fost executat la @ ExecutionTime",
+    "description":"Trimite un email la {0}",
+    "includeLink":"include link-",
+    "includeReport":"Includeți raport"
   }
 }

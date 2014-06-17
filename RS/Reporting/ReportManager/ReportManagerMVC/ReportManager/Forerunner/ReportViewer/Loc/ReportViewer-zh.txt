@@ -225,9 +225,9 @@
     "submit":"提交",
     "selectReport":"<选择报表>",
     "hideToolbar":"隐藏工具栏",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"工具栏:",
+    "minimal":"最小化",
+    "full":"充满"
   },
   "dashboardEditor": {
     "propertiesBtn":"属性"
@@ -249,5 +249,19 @@
     "prompt":"使用逗号分隔标签.",
     "homePage":"主页",
     "createTo":"创建到"
+  },
+  "subscription": {
+    "email":"电子邮件",
+    "cancel":"取消",
+    "save":"保存",
+    "manageSubscription":"管理订阅",
+    "to_placeholder":"发送到",
+    "subject_placeholder":"主题",
+    "description_placeholder":"描述",
+    "comment_placeholder":"注释",
+    "subject":"@ReportName 运行于 @ExecutionTime",
+    "description":"发送邮件到 {0}",
+    "includeLink":"包含连接",
+    "includeReport":"包含报表"
   }
 }

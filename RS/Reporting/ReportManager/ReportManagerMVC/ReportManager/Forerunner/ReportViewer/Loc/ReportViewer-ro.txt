@@ -249,5 +249,19 @@
     "prompt":"Tag-uri separate prin virgula.",
     "homePage":"pagina principală",
     "createTo":"creat sub"
+  },
+  "subscription": {
+    "email":"Email",
+    "cancel":"Cancel",
+    "save":"Save",
+    "manageSubscription":"Manage Subscription",
+    "to_placeholder":"To",
+    "subject_placeholder":"Subject",
+    "description_placeholder":"Description",
+    "comment_placeholder":"Comment",
+    "subject":"@ReportName was executed at @ExecutionTime",
+    "description":"Send email to {0}",
+    "includeLink":"Include link",
+    "includeReport":"Include report"
   }
 }

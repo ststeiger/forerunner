@@ -228,9 +228,9 @@
     "submit":"提交",
     "selectReport":"<選擇報表>",
     "hideToolbar":"隱藏工具欄",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"工具欄:",
+    "minimal":"最小化",
+    "full":"充满"
   },
   "tags": {
     "title":"標籤",
@@ -249,5 +249,19 @@
     "prompt":"使用逗號分隔標籤.",
     "homePage":"主頁",
     "createTo":"創建到"
+  },
+  "subscription": {
+    "email":"電子郵件",
+    "cancel":"取消",
+    "save":"保存",
+    "manageSubscription":"管理訂閱",
+    "to_placeholder":"發送到",
+    "subject_placeholder":"主題",
+    "description_placeholder":"描述",
+    "comment_placeholder":"註釋",
+    "subject":"@ReportName 運行於 @ExecutionTime",
+    "description":"發送郵件到 {0}",
+    "includeLink":"包含連接",
+    "includeReport":"包含報表"
   }
 }

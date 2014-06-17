@@ -1023,6 +1023,7 @@ $(function () {
      */
     forerunner.localize = {
         _locData: {},
+        _languageList: null,
 
         _getFallBackLanguage: function (locFileLocation, lang, dataType) {
             if (lang.length > 2) {
@@ -1071,22 +1072,26 @@ $(function () {
             
         },
         _getLanguages: function () {
-            var returnValue = null;
-            $.ajax({
-                url: forerunner.config.forerunnerAPIBase() + "reportViewer/AcceptLanguage",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    returnValue = data;
-                },
-                fail: function () {
-                    returnValue = null;
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    returnValue = null;
-                },
-            });
-            return returnValue;
+            var me = this;
+
+            if (!me._languageList) {
+                $.ajax({
+                    url: forerunner.config.forerunnerAPIBase() + "reportViewer/AcceptLanguage",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me._languageList = data;
+                    },
+                    fail: function () {
+                        me._languageList = null;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        me._languageList = null;
+                    },
+                });
+            }
+            
+            return me._languageList;
         },        
         _loadFile: function (locFileLocation, lang, dataType) {
             var me = this;
@@ -1575,7 +1580,6 @@ $(function () {
                 clearTimeout(me._timer);
                 me._timer = null;
             }
-
             me._timer = setTimeout(function () {
                 var target = event.data.target;
                 if (target && target.element.is(":visible")) {
@@ -1611,7 +1615,7 @@ $(function () {
                 clearTimeout(me._timer);
                 me._timer = null;
             }
-
+            
             $(window).off("resize", me._setPosition);
             $(document).off("keyup", me._bindKeyboard);
         }

@@ -15,8 +15,8 @@
     <file>/Forerunner/ReportExplorer/js/ReportExplorerToolpane.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
     <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
-  <file>/Forerunner/ReportExplorer/js/ForerunnerTags.js</file>
-  <file>/Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js</file>
+    <file>/Forerunner/ReportExplorer/js/ForerunnerTags.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js</file>
     <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
     <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
     <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>

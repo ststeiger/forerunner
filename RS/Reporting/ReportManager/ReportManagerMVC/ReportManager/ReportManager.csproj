@@ -332,6 +332,7 @@
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
     <Content Include="Forerunner\ReportExplorer\js\ForerunnerTags.js" />
     <Content Include="Forerunner\ReportExplorer\js\EmailSubscription.js" />
+    <Content Include="Forerunner\ReportExplorer\js\ManageSubscription.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerSearchFolder.js" />

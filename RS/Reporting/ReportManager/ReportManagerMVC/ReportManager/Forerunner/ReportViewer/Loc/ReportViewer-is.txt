@@ -84,7 +84,7 @@
     "previousPage":"Fyrri",
     "recent":"Nýleg",
     "refresh":"Uppfæra",
-    "reportPage":"Page",
+    "reportPage":"síða",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "userSettings":"Stillingar",

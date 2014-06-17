@@ -61,7 +61,7 @@
     "addToFavorites":"Aggiungi ai Preferiti",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salva Dashboard",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Mostra Dashboard",
     "editDashboard":"Modifica Dashboard",
     "tags":"etichetta"
   },
@@ -98,7 +98,7 @@
     "createDashboard":"Crea Dashboard",
     "editDashboard":"Modifica Dashboard",
     "saveDashboard":"Salva Dashboard",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Mostra Dashboard",
     "searchFolder":"Folder ricerca"
   },
   "print": {
@@ -120,7 +120,7 @@
     "submit":"Ok",
     "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive",
-    "Email":"Email",
+    "Email":"e-mail",
     "AdminUI":"interfaccia utente Admin"
   },
   "paramPane": {

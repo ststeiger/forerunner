@@ -251,7 +251,7 @@
     "createTo":"Criado em"
   },
   "subscription": {
-    "email":"Email",
+    "email":"e-mail",
     "cancel":"cancelar",
     "save":"salvar",
     "manageSubscription":"Gerenciar Assinatura",

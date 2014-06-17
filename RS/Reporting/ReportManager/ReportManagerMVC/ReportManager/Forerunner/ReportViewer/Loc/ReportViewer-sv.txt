@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Spara Dashboard Lyckades",
     "loadDashboardFailed":"Lastinstrumentpanels Misslyckades",
     "loadDashboard":"Lastinstrumentbräda",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"En Dashboard med det namnet finns redan. Du kan antingen: 1) byta namn på instrumentpanelen eller 2) kontrollerar överskrivnings rutan och försök igen.",
+    "saveSearchFolderSucceeded":"Sökmapp Skapad Efterföljande",
+    "saveSearchFolderFailed":"Sökmapp Skapad misslyckades",
+    "addTagsSucceeded":"Lägg till etiketter Efterföljande",
+    "addTagsFailed":"Lägg till etiketter Misslyckade"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",
@@ -63,7 +63,7 @@
     "saveDashboard":"Spara Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
     "tags":"Taggar",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Se instrumentpanel"
   },
   "toolbar": {
     "back":"bakåt",
@@ -99,7 +99,7 @@
     "editDashboard":"Redigera Instrumentbräda",
     "saveDashboard":"Spara Dashboard",
     "searchFolder":"sökmapp",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Se instrumentpanel"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -120,7 +120,7 @@
     "submit":"Ok",
     "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI",
-    "Email":"Email",
+    "Email":"E",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -208,10 +208,10 @@
     "title":"Skapa Dashboard",
     "cancel":"Avbryt",
     "submit":"inkomma",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"Namn",
+    "namePlaceholder":"instrumentbräda namn",
+    "dashboardTemplate":"Mall",
+    "overwrite":"Skriv över"
   },
   "RDLExt": {
     "title":"RDL Extensions",
@@ -228,9 +228,9 @@
     "submit":"inkomma",
     "selectReport":"<väljer rapport>",
     "hideToolbar":"Hide Toolbar",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"Verktygsfält:",
+    "minimal":"Kortaste",
+    "full":"Fullständig"
   },
   "tags": {
     "title":"Taggar",
@@ -243,7 +243,7 @@
   "searchFolder": {
     "title":"sökmapp",
     "name":"Namn",
-    "tags":"Tags",
+    "tags":"Taggar",
     "cancel":"Avbryt",
     "submit":"inkomma",
     "prompt":"åtskilja taggar med kommatecken.",
@@ -251,17 +251,17 @@
     "createTo":"Tillverkad enligt"
   },
   "subscription": {
-    "email":"Email",
-    "cancel":"Cancel",
-    "save":"Save",
-    "manageSubscription":"Manage Subscription",
-    "to_placeholder":"To",
-    "subject_placeholder":"Subject",
-    "description_placeholder":"Description",
-    "comment_placeholder":"Comment",
-    "subject":"@ReportName was executed at @ExecutionTime",
-    "description":"Send email to {0}",
-    "includeLink":"Include link",
-    "includeReport":"Include report"
+    "email":"E",
+    "cancel":"Avbryt",
+    "save":"Spara",
+    "manageSubscription":"Hantera prenumeration",
+    "to_placeholder":"Till",
+    "subject_placeholder":"Ämne",
+    "description_placeholder":"Beskrivning",
+    "comment_placeholder":"Kommentar",
+    "subject":"@ REPORT avrättades på @ ExecutionTime",
+    "description":"Skicka e-post till {0}",
+    "includeLink":"Inkludera länk",
+    "includeReport":"inkludera rapport"
   }
 }

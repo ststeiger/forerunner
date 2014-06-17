@@ -34,19 +34,19 @@
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
     "lastPage": ["ga"],
-    "logOff": ["ga", "it", "pt", "ro"],
+    "logOff": ["ga", "it", "ro", "pt"],
     "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
     "firstPage": ["is"],
     "previousPage": ["fr"],
-    "reportPage": ["fr", "is"],
+    "reportPage": ["is","fr"],
     "zoom": ["ru"],
- 		"dsCredential":["sv"],
-        "reportPage":["fr"],
-        "lastPage":["ga"],
-        "logOff":["ga"],
-        "addToFavorites": ["ga"],
+ 	"dsCredential":["sv"],
+    "reportPage":["fr"],
+    "lastPage":["ga"],
+    "logOff":["ga", "it", "pt", "ro"],
+    "addToFavorites": ["ga"],
     "unzoom":["is", "ga", "de","es", "it","pt", "ro", "ru"],
     "RDLExt":["it", "sv","ro"]
   },
@@ -59,7 +59,7 @@
   "userSettings": {
     "submit": ["de", "es", "fr", "ga", "is", "it", "ja", "pt", "sv"],
     "ResponsiveUI": ["de"],
-    "Email":["fr", "de", "es", "ga", "is"],
+    "Email":["fr", "de", "es", "ga", "is", "pt"],
     "AdminUI":["is", "sv", "ro"]
   },
   "paramPane": {
@@ -118,10 +118,10 @@
   },
   "dsCredential": {
     "title":["sv"],
-	  "username":["de", "it"],
+	"username":["de", "it"],
    	"password":["it"],
   	"reset":["it"]
-     },
+  },
   "searchFolder": {
     "title":[],
     "name":["de"]
@@ -155,7 +155,8 @@
     },
   "searchFolder": {
        "tags":["is"],
-       "homePage":["it", "pt"]
+       "homePage":["it", "pt"],
+       "name": ["de"]
    },
   "RDLExt": {
       "title":["ro", "sv", "it"],

@@ -6,9 +6,9 @@
 .fr-dashboard-size-not-user-changable { }
 
 .fr-2up1down { background-color: rgb(210, 223, 237); }
-  .fr-2up1down #Report1 { }
-  .fr-2up1down #Report2 { }
-  .fr-2up1down #Report3 { }
+  .fr-2up1down #Report1 { display: inline-block; }
+  .fr-2up1down #Report2 { display: inline-block; }
+  .fr-2up1down #Report3 { display: inline-block; }
 
 .fr-sidebyside { background-color: rgb(210, 223, 237); }
   .fr-sidebyside #Report1 { }

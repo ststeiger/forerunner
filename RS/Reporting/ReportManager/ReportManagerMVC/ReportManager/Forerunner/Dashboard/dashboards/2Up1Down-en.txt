@@ -2,8 +2,6 @@
     <tr>
         <td>
             <div id="Report1" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
-        <td>
             <div id="Report2" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
         </td>
     </tr>

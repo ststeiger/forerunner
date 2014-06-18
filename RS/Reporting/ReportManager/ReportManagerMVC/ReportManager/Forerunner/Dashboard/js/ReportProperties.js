@@ -66,7 +66,7 @@ $(function () {
                 me.$reportInput.val("");
             }
 
-            // Restore the hide toolbar checkbox
+            // Restore the toolbar option checkboxes
             me._setCheckbox(false, me.$hideToolbar);
             me._setCheckbox(false, me.$minimalToolbar);
             me._setCheckbox(false, me.$fullToolbar);
@@ -81,6 +81,23 @@ $(function () {
                 }
             } else {
                 me._setCheckbox(true, me.$hideToolbar);
+            }
+
+            // Restore the size checkboxes
+            me._setCheckbox(false, me.$templateSize);
+            me._setCheckbox(false, me.$reportSize);
+            me._setCheckbox(false, me.$customSize);
+
+            if (me.properties.dashboardSizeOption) {
+                if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._setCheckbox(true, me.$templateSize);
+                } else if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._setCheckbox(true, me.$reportSize);
+                } else {
+                    me._setCheckbox(true, me.$customSize);
+                }
+            } else {
+                me._setCheckbox(true, me.$templateSize);
             }
 
             me._resetValidateMessage();
@@ -143,22 +160,73 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
                                     "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.minimal + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
                                     "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.full + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
                                     "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                             "<tr>" +
+                        "</table>" +
+                        // Size options
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.templateSize + "</label>" +
+                                    "<input class='fr-rp-template-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.reportSize + "</label>" +
+                                    "<input class='fr-rp-report-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.custom + "</label>" +
+                                    "<input class='fr-rp-custom-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                            "<tr>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Custom Size options
+                        "<table class='fr-rp-custom-size-form'>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Custom width
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
+                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-width-slots-id' name='hideToolbar' type='number'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Custom height
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
+                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-height-slots-id' name='hideToolbar' type='number'/>" +
+                                "</td>" +
                             "</tr>" +
                         "</table>" +
                         // Submit conatiner
@@ -180,6 +248,7 @@ $(function () {
                 me._onClickTreeDropdown.apply(me, arguments);
             })
 
+            // Toolbar options
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
             me.$hideToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
@@ -191,6 +260,20 @@ $(function () {
             me.$fullToolbar = me.element.find(".fr-rp-full-toolbar-id");
             me.$fullToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
+            });
+
+            // Size options
+            me.$templateSize = me.element.find(".fr-rp-template-size-id");
+            me.$templateSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$reportSize = me.element.find(".fr-rp-report-size-id");
+            me.$reportSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$customSize = me.element.find(".fr-rp-custom-size-id");
+            me.$customSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
@@ -222,6 +305,14 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+        },
+        _onChangeSizeOption: function (e, data) {
+            var me = this;
+            me.$templateSize.prop("checked", false);
+            me.$reportSize.prop("checked", false);
+            me.$customSize.prop("checked", false);
+
+            $(e.target).prop("checked", true);
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;
@@ -315,14 +406,22 @@ $(function () {
             var me = this;
 
             if (me.$form.valid() === true) {
+                // Toolbar options
                 me.properties.toolbarConfigOption = constants.toolbarConfigOption.hide;
                 if (me.$minimalToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.minimal;
                 } else if (me.$fullToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
                 }
-                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+                // Size options
+                me.properties.dashboardSizeOption = constants.dashboardSizeOption.template;
+                if (me.$reportSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.report;
+                } else if (me.$customSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
+                }
 
+                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }

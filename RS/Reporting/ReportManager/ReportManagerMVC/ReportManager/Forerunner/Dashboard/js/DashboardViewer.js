@@ -74,8 +74,30 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._saveTemplateSizes($(item));
                 me._loadReport(item.id, hideMissing);
             });
+        },
+        _clearSizes: function ($item) {
+            $item.css({ minWidth: "", maxWidth: "", minHeight: "", maxHeight: "" });
+        },
+        _resetTemplateSizes: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            $item.css(reportProperties.sizes);
+        },
+        _saveTemplateSizes: function ($item) {
+            var me = this;
+            var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
+            var sizes = {};
+            $.each(styles, function (prop, value) {
+                sizes[prop] = value;
+            });
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -85,21 +107,37 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
+            if (!me.model.dashboardDef.reports[reportId]) {
+                me.model.dashboardDef.reports[reportId] = {};
+            }
             return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.model.dashboardDef.reports[reportId] = properties;
+            var reportProperties = me.getReportProperties(reportId);
+            $.extend(reportProperties, properties);
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+
             var $item = me.element.find("#" + reportId);
-            $item.removeClass("fr-core-hidden");
+            $item.css("display", "");
 
             $item.html("");
 
+            // Set the report size
+            if (reportProperties.dashboardSizeOption) {
+                if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._resetTemplateSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._clearSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
+                    // TODO
+                }
+            }
+
             // If we have a report definition, load the report
-            var reportProperties = me.model.dashboardDef.reports[reportId];
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
@@ -120,7 +158,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
-                $item.addClass("fr-core-hidden");
+                $item.css("display", "none");
             }
         },
         _onReportParameterSubmit: function (e, data) {

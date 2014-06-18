@@ -1855,9 +1855,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dashboard-size-not-user-changable { }
 
 .fr-2up1down { background-color: rgb(210, 223, 237); }
-  .fr-2up1down #Report1 { }
-  .fr-2up1down #Report2 { }
-  .fr-2up1down #Report3 { }
+  .fr-2up1down #Report1 { display: inline-block; }
+  .fr-2up1down #Report2 { display: inline-block; }
+  .fr-2up1down #Report3 { display: inline-block; }
 
 .fr-sidebyside { background-color: rgb(210, 223, 237); }
   .fr-sidebyside #Report1 { }
@@ -1900,7 +1900,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
     .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
     .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
-    .fr-rp-form .fr-rp-separator { margin-top: 10px; }
+    .fr-rp-form .fr-rp-section-separator { margin-top: 10px; }
+    .fr-rp-form .fr-rp-separator { margin-top: 5px; }
+    .fr-rp-form .fr-rp-dimension-select { }
 
     .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
     .fr-rp-form .fr-rp-error-position { display: inline; }

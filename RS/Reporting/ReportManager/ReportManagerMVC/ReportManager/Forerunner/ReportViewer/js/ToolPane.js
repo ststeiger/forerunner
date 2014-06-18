@@ -151,25 +151,34 @@ $(function () {
             }
         },
         _viewerItems: function (allButtons) {
-            var listOfItems;
             var me = this;
+            var listOfItems = [tg.itemVCRGroup, tg.itemFolderGroup];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
-            else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
+            //check back button
+            if (allButtons === true || allButtons === undefined) {
+                listOfItems.push(tp.itemReportBack);
+            }
+
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
-                else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems.pop();
             }
 
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+
+            //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
+                listOfItems.push(tp.itemTags, tp.itemRDLExt);
+            }
+
+            listOfItems.push(tg.itemFindGroup);
+
+            //check authentication type to show log off button or not 
+            if (forerunner.ajax.isFormsAuth()) {
+                listOfItems.push(mi.itemLogOff);
             }
 
             return listOfItems;

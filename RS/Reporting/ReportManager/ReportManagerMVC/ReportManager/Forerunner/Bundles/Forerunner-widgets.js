@@ -5172,19 +5172,21 @@ $(function () {
             }
         },
         _viewerButtons: function (allButtons) {
-            var listOfButtons;
+            var listOfButtons = [tb.btnMenu];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-            else
-                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
-                else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
+            //check button button
+            if (allButtons === true || allButtons === undefined) {
+                listOfButtons.push(tb.btnReportBack);
             }
+
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+
+            //remove zoom button on android
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                listOfButtons.pop()
+            }
+
+            listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
 
             return listOfButtons;
         },
@@ -5406,25 +5408,34 @@ $(function () {
             }
         },
         _viewerItems: function (allButtons) {
-            var listOfItems;
             var me = this;
+            var listOfItems = [tg.itemVCRGroup, tg.itemFolderGroup];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
-            else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
+            //check back button
+            if (allButtons === true || allButtons === undefined) {
+                listOfItems.push(tp.itemReportBack);
+            }
+
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
-                else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems.pop();
             }
 
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+
+            //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
+                listOfItems.push(tp.itemTags, tp.itemRDLExt);
+            }
+
+            listOfItems.push(tg.itemFindGroup);
+
+            //check authentication type to show log off button or not 
+            if (forerunner.ajax.isFormsAuth()) {
+                listOfItems.push(mi.itemLogOff);
             }
 
             return listOfItems;
@@ -5872,15 +5883,7 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
-
-            // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tb.btnLogOff.selectorClass);
-            } else {
-                me.hideTool(tb.btnLogOff.selectorClass);
-            }
+            me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
@@ -5892,7 +5895,22 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
+
+            //check whether hide home button is enable
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
+            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnHome);
+            }
+
+            toolbarList.push(tb.btnRecent, tb.btnFav);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolbarList.push(tb.btnLogOff);
+            }
+
+            toolbarList.push(tg.explorerFindGroup);
+
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
@@ -6023,7 +6041,11 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
 
             me.addTools(1, true, toolpaneItems);
 
@@ -6035,10 +6057,8 @@ $(function () {
 
             me.updateBtnStates();
         },
-
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
             //this toolpane exist in all explorer page, so we should put some initialization here
@@ -6047,13 +6067,6 @@ $(function () {
         },
         updateBtnStates: function () {
             var me = this;
-
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tp.itemLogOff.selectorClass);
-            } else {
-                me.hideTool(tp.itemLogOff.selectorClass);
-            }
 
             if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
@@ -13064,7 +13077,13 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                var listOfButtons = [];
+                //add home button if user enable it
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(tb.btnHome);
+                }
+                listOfButtons.push(tb.btnRecent, tb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(tb.btnLogOff);
                 }
@@ -13104,16 +13123,12 @@ $(function () {
 
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
-            var tg = forerunner.ssr.tools.groups;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
-                if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
-                }
-
+                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
                 $toolPane.toolPane("disableTools", [mi.itemFav]);
+
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
                     $toolPane.toolPane("enableTools", [mi.itemFav]);
                     $toolbar.toolbar("enableTools", [tb.btnFav]);

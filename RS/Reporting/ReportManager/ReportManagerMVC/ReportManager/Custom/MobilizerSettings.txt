@@ -6,5 +6,6 @@
 	"FullScreenPageNavSize" : 768,
 	"DefaultResponsiveTablix" : "on",
 	"FirefoxPDFbug":"on",
-	"ParameterPaneWidth":"300"
+	"ParameterPaneWidth":"350",
+	"showHomeButton":"off"
 }

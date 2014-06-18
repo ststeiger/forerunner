@@ -147,7 +147,6 @@ $(function () {
 
                 if (lastFetched.view === "catalog") {
                     //maintain a local permission list to reduce the hasPermission call
-                    if (!me.permissionList){console.log('create local permission list')}
                     me.permissionList = me.permissionList || [];
                     me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
                     var curPermission = me.permissionList[lastFetched.path];

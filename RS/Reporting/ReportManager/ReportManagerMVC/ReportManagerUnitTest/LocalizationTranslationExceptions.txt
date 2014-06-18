@@ -26,21 +26,26 @@
     "dsCredential":["de", "sv"],
 		"views":["is"],
     "addToFavorites": ["ga"],
+    "editDashboard":["fr"],
+    "tags":["is"],
     "RDLExt":["fr","it","ro", "sv"]
   },
   "toolbar": {
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
     "lastPage": ["ga"],
-    "logOff": ["ga", "it", "pt", "ro"],
+    "logOff": ["ga", "it", "ro", "pt"],
     "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
     "firstPage": ["is"],
     "previousPage": ["fr"],
-    "reportPage": ["fr", "is"],
+    "reportPage": ["is","fr"],
     "zoom": ["ru"],
- 		"dsCredential":["sv"],
+ 	"dsCredential":["sv"],
+    "reportPage":["fr"],
+    "lastPage":["ga"],
+    "logOff":["ga", "it", "pt", "ro"],
     "addToFavorites": ["ga"],
     "unzoom":["is", "ga", "de","es", "it","pt", "ro", "ru"],
     "RDLExt":["it", "sv","ro"]
@@ -54,15 +59,37 @@
   "userSettings": {
     "submit": ["de", "es", "fr", "ga", "is", "it", "ja", "pt", "sv"],
     "ResponsiveUI": ["de"],
-    "AdminUI":["is", "sv"]
+    "Email":["fr", "de", "es", "ga", "is", "pt"],
+    "AdminUI":["is", "sv", "ro"]
   },
   "paramPane": {
-    "nullField": [],
+    "nullField": ["ga", "is"],
     "isTrue": ["ga", "is"],
     "isFalse": ["is", "ro"],
      "cancel": ["ro"],
     "datePicker": ["fr"]
-  },
+    },
+  "createDashboard": {
+    "title":[],
+    "cancel":[],
+    "submit":[],
+    "dashboardName":["de"],
+    "namePlaceholder":[],
+    "dashboardTemplate":[],
+    "overwrite":[]
+     },
+  "manageParamSets": {
+    "manageSets":[],
+    "cancel":[],
+    "add":[],
+    "addNewSet":[],
+    "name":["de"],
+    "defaultHeader":["de", "is"],
+    "allUsers":[],
+    "deleteHeader":[],
+    "apply":[],
+    "newSet":[]
+    },
  	"validateError": {
     "invalid":["ro"]
   },
@@ -91,17 +118,46 @@
   },
   "dsCredential": {
     "title":["sv"],
-	  "username":["de", "it"],
+	"username":["de", "it"],
    	"password":["it"],
   	"reset":["it"]
+  },
+  "searchFolder": {
+    "title":[],
+    "name":["de"]
     },
   "reportProperties": {
     "title":[],
     "cancel":[],
     "submit":[],
+    "toolbar":["de", "ga","it", "ro"],
+    "minimal":["de", "fr", "is"],
     "selectReport":[],
     "hideToolbar":["sv"]
-  },
+    },
+  "tags": {
+    "title":["is"],
+    "tags":["is"]
+ },
+  "subscription": {
+    "email":["es", "fr", "is", "it", "pt"],
+    "cancel":[],
+    "save":[],
+    "manageSubscription":[],
+    "to_placeholder":[],
+    "subject_placeholder":["is"],
+    "description_placeholder":[],
+    "comment_placeholder":["ga"],
+    "subject":["fr"],
+    "description":[],
+    "includeLink":[],
+    "includeReport":[]
+    },
+  "searchFolder": {
+       "tags":["is"],
+       "homePage":["it", "pt"],
+       "name": ["de"]
+   },
   "RDLExt": {
       "title":["ro", "sv", "it"],
       "dialogTitle":["fr", "ro"]

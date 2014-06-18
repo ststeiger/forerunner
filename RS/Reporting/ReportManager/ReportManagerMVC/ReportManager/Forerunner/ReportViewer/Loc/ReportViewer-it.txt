@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Salva Dashboard Riuscito",
     "loadDashboardFailed":"Carico Dashboard riuscita",
     "loadDashboard":"carico Dashboard",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Un Dashboard con questo nome esiste già. È possibile: 1) rinominare il cruscotto o 2) selezionare la casella di sovrascrittura poi riprovare.",
+    "saveSearchFolderSucceeded":"Ricerca cartella Creato Riuscito",
+    "saveSearchFolderFailed":"Ricerca cartella Creazione non riuscita",
+    "addTagsSucceeded":"Aggiungi Tag Completato",
+    "addTagsFailed":"Aggiungi Tag falliti"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",
@@ -61,9 +61,9 @@
     "addToFavorites":"Aggiungi ai Preferiti",
     "RDLExt":"RDL Extension",
     "saveDashboard":"Salva Dashboard",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Mostra Dashboard",
     "editDashboard":"Modifica Dashboard",
-    "tags":"tag"
+    "tags":"etichetta"
   },
   "toolbar": {
     "back":"indietro",
@@ -98,7 +98,7 @@
     "createDashboard":"Crea Dashboard",
     "editDashboard":"Modifica Dashboard",
     "saveDashboard":"Salva Dashboard",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Mostra Dashboard",
     "searchFolder":"Folder ricerca"
   },
   "print": {
@@ -120,7 +120,7 @@
     "submit":"Ok",
     "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive",
-    "Email":"Email",
+    "Email":"e-mail",
     "AdminUI":"interfaccia utente Admin"
   },
   "paramPane": {
@@ -208,10 +208,10 @@
     "title":"Crea Dashboard",
     "cancel":"cancellare",
     "submit":"presentare",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nome",
+    "namePlaceholder":"nome dashboard",
+    "dashboardTemplate":"sagoma",
+    "overwrite":"sovrascrivere"
   },
   "RDLExt": {
     "title":"RDL estensioni",
@@ -229,12 +229,12 @@
     "selectReport":"<selezionare il rapporto>",
     "hideToolbar":"Nascondi barra degli strumenti",
     "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "minimal":"minimo",
+    "full":"completo"
   },
   "tags": {
-    "title":"tag",
-    "tags":"tag",
+    "title":"etichetta",
+    "tags":"etichetta",
     "cancel":"cancellare",
     "submit":"presentare",
     "prompt":"Separa i tags con virgole.",
@@ -243,7 +243,7 @@
   "searchFolder": {
     "title":"Folder ricerca",
     "name":"nome",
-    "tags":"tag",
+    "tags":"etichetta",
     "cancel":"cancellare",
     "submit":"presentare",
     "prompt":"Separa i tags con virgole.",
@@ -252,16 +252,16 @@
   },
   "subscription": {
     "email":"Email",
-    "cancel":"Cancel",
-    "save":"Save",
-    "manageSubscription":"Manage Subscription",
-    "to_placeholder":"To",
-    "subject_placeholder":"Subject",
-    "description_placeholder":"Description",
-    "comment_placeholder":"Comment",
-    "subject":"@ReportName was executed at @ExecutionTime",
-    "description":"Send email to {0}",
-    "includeLink":"Include link",
-    "includeReport":"Include report"
+    "cancel":"cancellare",
+    "save":"salvare",
+    "manageSubscription":"Gestione abbonamento",
+    "to_placeholder":"a",
+    "subject_placeholder":"soggetto",
+    "description_placeholder":"descrizione",
+    "comment_placeholder":"commento",
+    "subject":"@ ReportName è stato eseguito a @ ExecutionTime",
+    "description":"Invia e-mail a {0}",
+    "includeLink":"Includi collegamento",
+    "includeReport":"Includi rapporto"
   }
 }

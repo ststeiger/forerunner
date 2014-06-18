@@ -79,7 +79,8 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
 
             // Create / render the toolbar

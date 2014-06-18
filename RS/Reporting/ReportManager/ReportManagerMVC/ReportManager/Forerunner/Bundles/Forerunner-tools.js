@@ -1097,7 +1097,7 @@ $(function () {
         itemTags: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-tags",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-tags",
             text: locData.toolPane.tags,
             events: {
                 click: function (e) {
@@ -1556,7 +1556,7 @@ $(function () {
         itemTags: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-tags",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-tags",
             text: locData.toolPane.tags,
             events: {
                 click: function (e) {
@@ -1569,7 +1569,7 @@ $(function () {
         itemSearchFolder: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-searchfolder",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-searchfolder",
             text: locData.toolbar.searchFolder,
             events: {
                 click: function (e) {

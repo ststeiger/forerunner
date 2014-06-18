@@ -6263,10 +6263,12 @@ $(function () {
                 }
             }
             else if (catalogItem.Type === 3) {//resource files
-                outerImage.addClass("fr-icons128x128");
-
                 var fileTypeClass = me._getFileTypeClass(catalogItem.MimeType);
                 outerImage.addClass(fileTypeClass);
+
+                if (catalogItem.MimeType === "json/forerunner-searchfolder" && isSelected) {
+                    outerImage.addClass("fr-explorer-searchfolder-selected").removeClass("fr-explorer-searchfolder");
+                }
             }
             else {
 
@@ -6740,7 +6742,9 @@ $(function () {
             return me.options.view;
         },
         _getFileTypeClass: function (mimeType) {
-            var fileTypeClass = null;
+            var fileTypeClass = null,
+                isFeatureIcon = false;
+
             switch (mimeType) {
                 case "application/pdf":
                     fileTypeClass = "fr-icons128x128-file-pdf";
@@ -6800,14 +6804,20 @@ $(function () {
                     fileTypeClass = "fr-icons128x128-file-css";
                     break;
                 case "json/forerunner-dashboard":
+                    isFeatureIcon = true;
                     fileTypeClass = "fr-icons128x128-file-dashboard";
                     break;
                 case "json/forerunner-searchfolder":
-                    fileTypeClass = "fr-icons128x128-file-zip";
+                    isFeatureIcon = true;
+                    fileTypeClass = "fr-explorer-searchfolder";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";
                     break;
+            }
+
+            if (isFeatureIcon === false) {
+                fileTypeClass = "fr-icons128x128 " + fileTypeClass;
             }
 
             return fileTypeClass;
@@ -7027,7 +7037,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.tags.title, "fr-tag-cancel", locData.tags.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.tags.title, "fr-tag-cancel", locData.tags.cancel);
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -7190,7 +7200,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -12509,7 +12519,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", locData.title, "fr-rdl-cancel", locData.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-rdlextension", locData.title, "fr-rdl-cancel", locData.cancel);
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +

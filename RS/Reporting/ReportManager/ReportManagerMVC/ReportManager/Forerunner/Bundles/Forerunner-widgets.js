@@ -14835,7 +14835,8 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                //me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
+                if (me.options.userSettings && me.options.userSettings.adminUI == true)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
@@ -15004,6 +15005,10 @@ $(function () {
             me.$theTable.append(me._createTableRow(me.$subject));
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder)
             me.$theTable.append(me._createTableRow(me.$comment));
+            if (!me.options.userSettings || !me.options.userSettings.adminUI) {
+                me.$desc.hide();
+                me.$comment.hide();
+            }
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);

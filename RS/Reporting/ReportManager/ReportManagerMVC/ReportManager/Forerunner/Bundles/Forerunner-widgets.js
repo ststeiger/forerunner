@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -673,6 +673,7 @@ $(function () {
      * @prop {Object} options.savePosition - Saved report page scroll position 
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
@@ -696,7 +697,8 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null
+            rsInstance: null,
+            showSubscriptionUI: false
         },
 
         _destroy: function () {
@@ -788,6 +790,15 @@ $(function () {
          */
         getUserSettings: function () {
             return this.options.userSettings;
+        },
+        /**
+         * Get the flag to indicate whether to show subscription UI
+         *
+         * @function $.forerunner.reportViewer#showSubscriptionUI
+         * @return {Object} - Flag to indicate whether to show subscription UI
+         */
+        showSubscriptionUI: function() {
+            return this.options.showSubscriptionUI;
         },
         /**
          * Get current page number
@@ -2159,6 +2170,7 @@ $(function () {
         },
         showEmailSubscription : function (subscriptionID) {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
                 var paramList = null;
@@ -2176,6 +2188,7 @@ $(function () {
         },
         manageSubscription : function() {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setManageSubscriptionUI();
             if (me.$manageSub) {
                 me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
@@ -5118,10 +5131,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
                 me._leaveCurReport();
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5130,6 +5148,8 @@ $(function () {
                 if (data.credentialRequired === true) {
                     me.enableTools([tb.btnCredential]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
@@ -5165,6 +5185,8 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI"))
+                me.hideTool(tb.btnEmailSubscription.selectorClass);
             me.addTools(1, false, [tb.btnParamarea]);
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
@@ -5240,6 +5262,16 @@ $(function () {
             me.disableTools([tb.btnCredential, tb.btnParamarea]);
             //me.enableTools([tb.btnReportBack]);
         },
+        _checkSubscription: function () {
+            var me = this;
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+                me.showTool(tb.btnEmailSubscription.selectorClass);
+            } else {
+                me.hideTool(tb.btnEmailSubscription.selectorClass);
+            }
+        },
+        
         _destroy: function () {
         },
         _create: function () {
@@ -5349,10 +5381,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
                 me._leaveCurReport();
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5361,6 +5398,8 @@ $(function () {
                 if (data.credentialRequired === true) {
                     me.enableTools([tp.itemCredential]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
@@ -5393,6 +5432,10 @@ $(function () {
             $(me.element).append($toolpane);
             
             me.addTools(1, false, me._viewerItems());
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
             
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
@@ -5419,7 +5462,7 @@ $(function () {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
             }
 
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
@@ -5480,6 +5523,17 @@ $(function () {
             me.disableTools(me._viewerItems(false));
             me.disableTools([tp.itemCredential]);
             //me.enableTools([tp.itemReportBack]);
+        },
+        _checkSubscription: function () {
+            var me = this;
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+                me.showTool(tp.itemManageSubscription.selectorClass);
+                me.showTool(tp.itemEmailSubscription.selectorClass);
+            } else {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
         },
     });  // $.widget
 });  // function()
@@ -13053,7 +13107,8 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
 
             // Create / render the toolbar

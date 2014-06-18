@@ -94,10 +94,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
                 me._leaveCurReport();
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -106,6 +111,8 @@ $(function () {
                 if (data.credentialRequired === true) {
                     me.enableTools([tp.itemCredential]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
@@ -138,6 +145,10 @@ $(function () {
             $(me.element).append($toolpane);
             
             me.addTools(1, false, me._viewerItems());
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
             
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
@@ -164,7 +175,7 @@ $(function () {
                 if (allButtons === true || allButtons === undefined)
                     listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
             }
 
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
@@ -225,6 +236,17 @@ $(function () {
             me.disableTools(me._viewerItems(false));
             me.disableTools([tp.itemCredential]);
             //me.enableTools([tp.itemReportBack]);
+        },
+        _checkSubscription: function () {
+            var me = this;
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+                me.showTool(tp.itemManageSubscription.selectorClass);
+                me.showTool(tp.itemEmailSubscription.selectorClass);
+            } else {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
         },
     });  // $.widget
 });  // function()

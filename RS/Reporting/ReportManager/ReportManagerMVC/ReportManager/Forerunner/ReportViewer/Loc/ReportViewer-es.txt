@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Ahorra Dashboard Sucedido",
     "loadDashboardFailed":"Dashboard No se pudo cargar",
     "loadDashboard":"Dashboard de carga",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Un tablero de instrumentos con ese nombre ya existe. Usted puede: 1) cambiar el nombre de su tablero de instrumentos o 2) marque la casilla de sobreescritura vuelva a intentarlo.",
+    "saveSearchFolderSucceeded":"Carpeta de búsqueda Creado Sucedido",
+    "saveSearchFolderFailed":"Buscar carpeta creada Failed",
+    "addTagsSucceeded":"Añadir etiquetas Succeeded",
+    "addTagsFailed":"Añadir etiquetas fallidas"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
@@ -63,7 +63,7 @@
     "saveDashboard":"Ahorra Dashboard",
     "editDashboard":"Editar Dashboard",
     "tags":"Etiquetas",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Ver tablero"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -100,7 +100,7 @@
     "editDashboard":"Editar Dashboard",
     "saveDashboard":"Ahorra Dashboard",
     "searchFolder":"carpeta de búsqueda",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Ver tablero"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -209,10 +209,10 @@
     "title":"Crear Dashboard",
     "cancel":"cancelar",
     "submit":"presentar",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nombre",
+    "namePlaceholder":"nombre del salpicadero",
+    "dashboardTemplate":"plantilla",
+    "overwrite":"Sobrescribir"
   },
   "RDLExt": {
     "title":"RDL Extensión",
@@ -229,9 +229,9 @@
     "submit":"presentar",
     "selectReport":"<seleccione Informe>",
     "hideToolbar":"Ocultar barra de herramientas",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"Barra de herramientas:",
+    "minimal":"mínimo",
+    "full":"completo"
   },
   "tags": {
     "title":"Etiquetas",
@@ -250,5 +250,19 @@
     "prompt":"Separa las etiquetas con comas.",
     "homePage":"página de Inicio",
     "createTo":"Creado bajo"
+  },
+  "subscription": {
+    "email":"Email",
+    "cancel":"cancelar",
+    "save":"guardar",
+    "manageSubscription":"Gestione Suscripción",
+    "to_placeholder":"a",
+    "subject_placeholder":"sujeto",
+    "description_placeholder":"descripción",
+    "comment_placeholder":"comentario",
+    "subject":"@ ReportName fue ejecutado en @ ExecutionTime",
+    "description":"Enviar email a {0}",
+    "includeLink":"incluir enlace",
+    "includeReport":"Incluya informe"
   }
 }

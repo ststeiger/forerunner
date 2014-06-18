@@ -43,6 +43,7 @@ $(function () {
      * @prop {Object} options.savePosition - Saved report page scroll position 
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
@@ -66,7 +67,8 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null
+            rsInstance: null,
+            showSubscriptionUI: false
         },
 
         _destroy: function () {
@@ -158,6 +160,15 @@ $(function () {
          */
         getUserSettings: function () {
             return this.options.userSettings;
+        },
+        /**
+         * Get the flag to indicate whether to show subscription UI
+         *
+         * @function $.forerunner.reportViewer#showSubscriptionUI
+         * @return {Object} - Flag to indicate whether to show subscription UI
+         */
+        showSubscriptionUI: function() {
+            return this.options.showSubscriptionUI;
         },
         /**
          * Get current page number
@@ -1529,6 +1540,7 @@ $(function () {
         },
         showEmailSubscription : function (subscriptionID) {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
                 var paramList = null;
@@ -1546,6 +1558,7 @@ $(function () {
         },
         manageSubscription : function() {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setManageSubscriptionUI();
             if (me.$manageSub) {
                 me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());

@@ -476,7 +476,7 @@ div.fr-layout-position-absolute { position: absolute; }
 }
 
 .fr-icons24x24-rdlextension {
-    background-image:url(../images/ToolbarIcons/SaveExtension.png);
+    background-image:url(../images/ToolbarIcons/RDLExtension.png);
 }
 
 .fr-icons24x24-emailsubscription {
@@ -487,7 +487,13 @@ div.fr-layout-position-absolute { position: absolute; }
     background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
 }
 
+.fr-icons24x24-tags{
+    background-image:url(../images/ToolbarIcons/Tags.png);
+}
 
+.fr-icons24x24-searchfolder{
+    background-image:url(../images/ToolbarIcons/SearchFolder_icon.png);
+}
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons25x31 {
   width:25px;
@@ -838,7 +844,6 @@ table, td, tr div {
 
 .fr-explorer-item { display: inline-block;  margin-left:20px; padding: 28px 28px 0px 28px; cursor: pointer; }
 
-
 .fr-explorer-item-selected { border: 2px solid darkblue; }
 
 .fr-explorer-caption { width: 200px; display: table-caption; margin-left: auto; margin-right: auto; }
@@ -870,6 +875,10 @@ table, td, tr div {
 .fr-explorer-folder { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder.png); background-repeat: no-repeat; background-position: center; }
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
+
+.fr-explorer-searchfolder { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/Folder_Search.png); background-repeat: no-repeat; background-position: center; }
+
+.fr-explorer-searchfolder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/SelectedFolder_Search.png); background-repeat: no-repeat; background-position: center; }
 
 .fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group, .fr-rm-button-createdashboard { float: right; }
 

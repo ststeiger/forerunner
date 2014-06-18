@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Sábháil Ar Phainéal Comharba",
     "loadDashboardFailed":"Painéal na Luchtaigh Theip",
     "loadDashboard":"Painéal na Luchtaigh",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Tá an Phainéil leis an ainm sin ann cheana. Is féidir leat ceachtar: 1) a athainmniú do Painéal na nIonstraimí nó 2) a sheiceáil sa bhosca forscríobh ansin déan iarracht eile.",
+    "saveSearchFolderSucceeded":"Cuardaigh Fillteán Cruthaithe Comharba",
+    "saveSearchFolderFailed":"Cuardaigh Fillteán Cruthaithe Theip",
+    "addTagsSucceeded":"Add Tags Comharba",
+    "addTagsFailed":"Add Tags Theip"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",
@@ -61,7 +61,7 @@
     "addToFavorites":"Add to Favorites",
     "RDLExt":"RDL Síneadh",
     "saveDashboard":"Sábháil Ar Phainéal",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Féach ar Phainéil",
     "editDashboard":"Painéal na Eagar",
     "tags":"Clibeanna"
   },
@@ -76,7 +76,7 @@
     "keyword":"Eochairfhocal",
     "lastPage":"Last",
     "logOff":"logoff",
-    "menu":"Menu",
+    "menu":"roghchlár",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",
     "pageOf":"de",
@@ -99,7 +99,7 @@
     "editDashboard":"Painéal na Eagar",
     "saveDashboard":"Sábháil Ar Phainéal",
     "searchFolder":"Cuardaigh Fillteán",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Féach ar Phainéil"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -125,7 +125,7 @@
   },
   "paramPane": {
     "nullField":"Null",
-    "isTrue":"True",
+    "isTrue":"Fíor",
     "isFalse":"bréagach",
     "required":"Riachtanach",
     "viewReport":"Féach",
@@ -208,10 +208,10 @@
     "title":"Cruthaigh Phainéil",
     "cancel":"Cealaigh",
     "submit":"Cuir",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"Ainm",
+    "namePlaceholder":"ainm painéal na nIonstraimí",
+    "dashboardTemplate":"teimpléad",
+    "overwrite":"forscríobh"
   },
   "RDLExt": {
     "title":"RDL Síneadh",
@@ -229,8 +229,8 @@
     "selectReport":"<tuarascáil roghnú>",
     "hideToolbar":"Folaigh Barra Uirlisí",
     "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "minimal":"Íosráta",
+    "full":"Iomlán"
   },
   "tags": {
     "title":"Clibeanna",
@@ -249,5 +249,19 @@
     "prompt":"Clibeanna ar leith le camóga.",
     "homePage":"leathanach baile",
     "createTo":"cruthaithe faoi"
+  },
+  "subscription": {
+    "email":"Ríomhphost",
+    "cancel":"Cealaigh",
+    "save":"Sábháil",
+    "manageSubscription":"Bainistigh Síntiúis",
+    "to_placeholder":"To",
+    "subject_placeholder":"Ábhar",
+    "description_placeholder":"Cur síos",
+    "comment_placeholder":"Comment",
+    "subject":"@ Cuireadh chun báis ReportName ag @ ExecutionTime",
+    "description":"Seol r-phost chuig {0}",
+    "includeLink":"Cuir nasc",
+    "includeReport":"Cuir an tuarascáil"
   }
 }

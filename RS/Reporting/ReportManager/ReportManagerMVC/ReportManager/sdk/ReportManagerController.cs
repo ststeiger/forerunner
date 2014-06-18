@@ -227,13 +227,6 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage CanCreateSubscription(String reportPath, String instance = null)
-        {
-            reportPath = System.Web.HttpUtility.UrlDecode(reportPath);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).CanCreateSubscription(reportPath) ? "True" : "False"), "text/JSON");
-        }
-
-        [HttpGet]
         public HttpResponseMessage GetSubscription(string subscriptionID, string instance = null)
         {
             Forerunner.SSRS.Manager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);

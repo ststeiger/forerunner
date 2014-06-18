@@ -2,7 +2,6 @@
 
 .fr-explorer-item { display: inline-block;  margin-left:20px; padding: 28px 28px 0px 28px; cursor: pointer; }
 
-
 .fr-explorer-item-selected { border: 2px solid darkblue; }
 
 .fr-explorer-caption { width: 200px; display: table-caption; margin-left: auto; margin-right: auto; }
@@ -34,6 +33,10 @@
 .fr-explorer-folder { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder.png); background-repeat: no-repeat; background-position: center; }
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
+
+.fr-explorer-searchfolder { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/Folder_Search.png); background-repeat: no-repeat; background-position: center; }
+
+.fr-explorer-searchfolder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/SelectedFolder_Search.png); background-repeat: no-repeat; background-position: center; }
 
 .fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group, .fr-rm-button-createdashboard { float: right; }
 

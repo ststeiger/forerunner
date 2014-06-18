@@ -673,6 +673,7 @@ $(function () {
      * @prop {Object} options.savePosition - Saved report page scroll position 
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
@@ -696,7 +697,8 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
-            rsInstance: null
+            rsInstance: null,
+            showSubscriptionUI: false
         },
 
         _destroy: function () {
@@ -788,6 +790,15 @@ $(function () {
          */
         getUserSettings: function () {
             return this.options.userSettings;
+        },
+        /**
+         * Get the flag to indicate whether to show subscription UI
+         *
+         * @function $.forerunner.reportViewer#showSubscriptionUI
+         * @return {Object} - Flag to indicate whether to show subscription UI
+         */
+        showSubscriptionUI: function() {
+            return this.options.showSubscriptionUI;
         },
         /**
          * Get current page number
@@ -2159,6 +2170,7 @@ $(function () {
         },
         showEmailSubscription : function (subscriptionID) {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
                 var paramList = null;
@@ -2176,6 +2188,7 @@ $(function () {
         },
         manageSubscription : function() {
             var me = this;
+            if (!me.showSubscriptionUI()) return;
             me._setManageSubscriptionUI();
             if (me.$manageSub) {
                 me.$manageSub.manageSubscription("option", "reportPath", me.getReportPath());
@@ -5131,10 +5144,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
                 me._leaveCurReport();
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5143,6 +5161,8 @@ $(function () {
                 if (data.credentialRequired === true) {
                     me.enableTools([tb.btnCredential]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
@@ -5178,6 +5198,8 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI"))
+                me.hideTool(tb.btnEmailSubscription.selectorClass);
             me.addTools(1, false, [tb.btnParamarea]);
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
@@ -5185,19 +5207,21 @@ $(function () {
             }
         },
         _viewerButtons: function (allButtons) {
-            var listOfButtons;
+            var listOfButtons = [tb.btnMenu];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-            else
-                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
-                else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
+            //check button button
+            if (allButtons === true || allButtons === undefined) {
+                listOfButtons.push(tb.btnReportBack);
             }
+
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+
+            //remove zoom button on android
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                listOfButtons.pop()
+            }
+
+            listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
 
             return listOfButtons;
         },
@@ -5253,6 +5277,16 @@ $(function () {
             me.disableTools([tb.btnCredential, tb.btnParamarea]);
             //me.enableTools([tb.btnReportBack]);
         },
+        _checkSubscription: function () {
+            var me = this;
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+                me.showTool(tb.btnEmailSubscription.selectorClass);
+            } else {
+                me.hideTool(tb.btnEmailSubscription.selectorClass);
+            }
+        },
+        
         _destroy: function () {
         },
         _create: function () {
@@ -5362,10 +5396,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
                 me._leaveCurReport();
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5374,6 +5413,8 @@ $(function () {
                 if (data.credentialRequired === true) {
                     me.enableTools([tp.itemCredential]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
@@ -5406,6 +5447,10 @@ $(function () {
             $(me.element).append($toolpane);
             
             me.addTools(1, false, me._viewerItems());
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
             
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
@@ -5419,25 +5464,34 @@ $(function () {
             }
         },
         _viewerItems: function (allButtons) {
-            var listOfItems;
             var me = this;
+            var listOfItems = [tg.itemVCRGroup, tg.itemFolderGroup];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
-            else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
+            //check back button
+            if (allButtons === true || allButtons === undefined) {
+                listOfItems.push(tp.itemReportBack);
+            }
+
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
-                else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
+                listOfItems.pop();
             }
 
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+
+            //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
+                listOfItems.push(tp.itemTags, tp.itemRDLExt);
+            }
+
+            listOfItems.push(tg.itemFindGroup);
+
+            //check authentication type to show log off button or not 
+            if (forerunner.ajax.isFormsAuth()) {
+                listOfItems.push(mi.itemLogOff);
             }
 
             return listOfItems;
@@ -5493,6 +5547,17 @@ $(function () {
             me.disableTools(me._viewerItems(false));
             me.disableTools([tp.itemCredential]);
             //me.enableTools([tp.itemReportBack]);
+        },
+        _checkSubscription: function () {
+            var me = this;
+            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+                me.showTool(tp.itemManageSubscription.selectorClass);
+                me.showTool(tp.itemEmailSubscription.selectorClass);
+            } else {
+                me.hideTool(tp.itemManageSubscription.selectorClass);
+                me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
         },
     });  // $.widget
 });  // function()
@@ -5885,15 +5950,7 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
-
-            // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tb.btnLogOff.selectorClass);
-            } else {
-                me.hideTool(tb.btnLogOff.selectorClass);
-            }
+            me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
@@ -5905,7 +5962,22 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
+
+            //check whether hide home button is enable
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
+            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnHome);
+            }
+
+            toolbarList.push(tb.btnRecent, tb.btnFav);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolbarList.push(tb.btnLogOff);
+            }
+
+            toolbarList.push(tg.explorerFindGroup);
+
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
@@ -6002,16 +6074,19 @@ $(function () {
                 $item.removeClass(itemActiveClass);
             });
         },
-        _initCallbacks: function () {
+        _createCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
+
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-            
+
+            // Hook up any / all custom events that the report explorer may trigger
+            me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
                 me.updateBtnStates.call(me);
             });
 
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
+            $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
                 if (data.isSubmit) {
                     me.updateBtnStates.call(me);
@@ -6033,10 +6108,13 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
 
             me.addTools(1, true, toolpaneItems);
-            me._initCallbacks();
 
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
@@ -6046,26 +6124,16 @@ $(function () {
 
             me.updateBtnStates();
         },
-
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
-            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me.updateBtnStates();
-            });
+            //this toolpane exist in all explorer page, so we should put some initialization here
+            //to make it only run one time
+            me._createCallbacks();
         },
         updateBtnStates: function () {
             var me = this;
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tp.itemLogOff.selectorClass);
-            } else {
-                me.hideTool(tp.itemLogOff.selectorClass);
-            }
 
             if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
@@ -6077,26 +6145,37 @@ $(function () {
                 me.showTool(tp.itemCreateDashboard.selectorClass);
                 me.showTool(tp.itemTags.selectorClass);
 
+                var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 // Then we start out disabled and enable if needed
                 me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
                 if (lastFetched.view === "catalog") {
-                    var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                    if (permission && permission.hasPermission === true) {
-                        // If the last fetched folder is a catalog and the user has permission to create a
-                        // resource in this folder, enable the create dashboard button and create search folder button
-                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    //maintain a local permission list to reduce the hasPermission call
+                    me.permissionList = me.permissionList || [];
+                    me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
+                    var curPermission = me.permissionList[lastFetched.path];
+
+                    if (curPermission.createResource === undefined) {
+                        var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                        curPermission.createResource = (permission && permission.hasPermission === true) ? true : false;
+                    }                   
+
+                    if (lastFetched.path !== "/" && curPermission.updateProperties === undefined) {
+                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                        curPermission.updateProperties = (addTagPermission && addTagPermission.hasPermission === true) ? true : false;
                     }
 
-                    if (lastFetched.path !== "/") {
-                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                        if (addTagPermission && addTagPermission.hasPermission === true) {
-                            me.enableTools([tp.itemTags]);
-                        }
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button and create search folder button
+                    if (curPermission.createResource === true) {
+                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    }
+                    if (curPermission.updateProperties === true) {
+                        me.enableTools([tp.itemTags]);
                     }
                 }
             }
-        }
+        },
     });  // $.widget
 });  // function()
 
@@ -6263,10 +6342,12 @@ $(function () {
                 }
             }
             else if (catalogItem.Type === 3) {//resource files
-                outerImage.addClass("fr-icons128x128");
-
                 var fileTypeClass = me._getFileTypeClass(catalogItem.MimeType);
                 outerImage.addClass(fileTypeClass);
+
+                if (catalogItem.MimeType === "json/forerunner-searchfolder" && isSelected) {
+                    outerImage.addClass("fr-explorer-searchfolder-selected").removeClass("fr-explorer-searchfolder");
+                }
             }
             else {
 
@@ -6740,7 +6821,9 @@ $(function () {
             return me.options.view;
         },
         _getFileTypeClass: function (mimeType) {
-            var fileTypeClass = null;
+            var fileTypeClass = null,
+                isFeatureIcon = false;
+
             switch (mimeType) {
                 case "application/pdf":
                     fileTypeClass = "fr-icons128x128-file-pdf";
@@ -6800,14 +6883,20 @@ $(function () {
                     fileTypeClass = "fr-icons128x128-file-css";
                     break;
                 case "json/forerunner-dashboard":
+                    isFeatureIcon = true;
                     fileTypeClass = "fr-icons128x128-file-dashboard";
                     break;
                 case "json/forerunner-searchfolder":
-                    fileTypeClass = "fr-icons128x128-file-zip";
+                    isFeatureIcon = true;
+                    fileTypeClass = "fr-explorer-searchfolder";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";
                     break;
+            }
+
+            if (isFeatureIcon === false) {
+                fileTypeClass = "fr-icons128x128 " + fileTypeClass;
             }
 
             return fileTypeClass;
@@ -7027,7 +7116,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.tags.title, "fr-tag-cancel", locData.tags.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.tags.title, "fr-tag-cancel", locData.tags.cancel);
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -7190,7 +7279,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -12509,7 +12598,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", locData.title, "fr-rdl-cancel", locData.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-rdlextension", locData.title, "fr-rdl-cancel", locData.cancel);
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -13043,7 +13132,8 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
 
             // Create / render the toolbar
@@ -13054,7 +13144,13 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                var listOfButtons = [];
+                //add home button if user enable it
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(tb.btnHome);
+                }
+                listOfButtons.push(tb.btnRecent, tb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(tb.btnLogOff);
                 }
@@ -13094,16 +13190,12 @@ $(function () {
 
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
-            var tg = forerunner.ssr.tools.groups;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
-                if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
-                }
-
+                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
                 $toolPane.toolPane("disableTools", [mi.itemFav]);
+
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
                     $toolPane.toolPane("enableTools", [mi.itemFav]);
                     $toolbar.toolbar("enableTools", [tb.btnFav]);
@@ -14659,7 +14751,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     $.widget(widgets.getFullname(widgets.emailSubscription), {
         options: {
@@ -14770,7 +14862,8 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                //me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
+                if (me.options.userSettings && me.options.userSettings.adminUI == true)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
@@ -14939,6 +15032,10 @@ $(function () {
             me.$theTable.append(me._createTableRow(me.$subject));
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder)
             me.$theTable.append(me._createTableRow(me.$comment));
+            if (!me.options.userSettings || !me.options.userSettings.adminUI) {
+                me.$desc.hide();
+                me.$comment.hide();
+            }
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
@@ -15009,7 +15106,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     $.widget(widgets.getFullname(widgets.manageSubscription), {
         options: {

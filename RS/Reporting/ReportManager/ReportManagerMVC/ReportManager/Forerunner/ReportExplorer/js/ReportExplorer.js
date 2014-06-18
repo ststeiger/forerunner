@@ -160,10 +160,12 @@ $(function () {
                 }
             }
             else if (catalogItem.Type === 3) {//resource files
-                outerImage.addClass("fr-icons128x128");
-
                 var fileTypeClass = me._getFileTypeClass(catalogItem.MimeType);
                 outerImage.addClass(fileTypeClass);
+
+                if (catalogItem.MimeType === "json/forerunner-searchfolder" && isSelected) {
+                    outerImage.addClass("fr-explorer-searchfolder-selected").removeClass("fr-explorer-searchfolder");
+                }
             }
             else {
 
@@ -637,7 +639,9 @@ $(function () {
             return me.options.view;
         },
         _getFileTypeClass: function (mimeType) {
-            var fileTypeClass = null;
+            var fileTypeClass = null,
+                isFeatureIcon = false;
+
             switch (mimeType) {
                 case "application/pdf":
                     fileTypeClass = "fr-icons128x128-file-pdf";
@@ -697,14 +701,20 @@ $(function () {
                     fileTypeClass = "fr-icons128x128-file-css";
                     break;
                 case "json/forerunner-dashboard":
+                    isFeatureIcon = true;
                     fileTypeClass = "fr-icons128x128-file-dashboard";
                     break;
                 case "json/forerunner-searchfolder":
-                    fileTypeClass = "fr-icons128x128-file-zip";
+                    isFeatureIcon = true;
+                    fileTypeClass = "fr-explorer-searchfolder";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";
                     break;
+            }
+
+            if (isFeatureIcon === false) {
+                fileTypeClass = "fr-icons128x128 " + fileTypeClass;
             }
 
             return fileTypeClass;

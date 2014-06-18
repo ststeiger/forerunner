@@ -17,12 +17,12 @@
     "saveDashboardFailed":"Enregistrer Dashboard Échec",
     "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
     "loadDashboardFailed":"Charge Dashboard Échec",
-    "loadDashboard":"charge Dashboard",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "loadDashboard":"frais Dashboard",
+    "createFailed":"Un tableau de bord avec ce nom existe déjà. Vous pouvez soit: 1) renommer votre tableau de bord ou 2) cochez la case de l'écrasement puis essayez à nouveau.",
+    "saveSearchFolderSucceeded":"Dossier de recherche Crée Réussi",
+    "saveSearchFolderFailed":"Dossier de recherche Créé en déroute",
+    "addTagsSucceeded":"Ajouter des mots clés Réussi",
+    "addTagsFailed":"Ajouter des mots clés perdus"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -63,7 +63,7 @@
     "RDLExt":"RDL Extension",
     "saveDashboard":"enregistrer du tableau de bord",
     "editDashboard":"Modifier Dashboard",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Voir Tableau de bord",
     "tags":"Mots clés"
   },
   "toolbar": {
@@ -99,7 +99,7 @@
     "createDashboard":"Créer Dashboard",
     "editDashboard":"Modifier Dashboard",
     "saveDashboard":"enregistrer du tableau de bord",
-    "viewDashboard":"View Dashboard",
+    "viewDashboard":"Voir Tableau de bord",
     "searchFolder":"dossier de recherche"
   },
   "print": {
@@ -209,10 +209,10 @@
     "title":"créer Dashboard",
     "cancel":"annuler",
     "submit":"soumettre",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nom",
+    "namePlaceholder":"nom de tableau de bord",
+    "dashboardTemplate":"modèle",
+    "overwrite":"écraser"
   },
   "RDLExt": {
     "title":"Extensions RDL",
@@ -229,9 +229,9 @@
     "submit":"soumettre",
     "selectReport":"<sélectionnez rapport>",
     "hideToolbar":"Masquer la barre d'outils",
-    "toolbar":"Toolbar:",
+    "toolbar":"barre d'outils:",
     "minimal":"Minimal",
-    "full":"Full"
+    "full":"plein"
   },
   "tags": {
     "title":"Mots clés",
@@ -250,5 +250,19 @@
     "prompt":"Séparez les tags par des virgules.",
     "homePage":"Page d'accueil",
     "createTo":"créé en vertu de"
+  },
+  "subscription": {
+    "email":"Email",
+    "cancel":"annuler",
+    "save":"sauver",
+    "manageSubscription":"Gestion de votre souscription",
+    "to_placeholder":"à",
+    "subject_placeholder":"sujet",
+    "description_placeholder":"Description",
+    "comment_placeholder":"commentaire",
+    "subject":"@ ReportName a été exécuté à @ ExecutionTime",
+    "description":"Envoyer un email à {0}",
+    "includeLink":"inclure lien",
+    "includeReport":"inclure rapport"
   }
 }

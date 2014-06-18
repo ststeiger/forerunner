@@ -79,7 +79,8 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
 
             // Create / render the toolbar
@@ -90,7 +91,13 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                var listOfButtons = [];
+                //add home button if user enable it
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(tb.btnHome);
+                }
+                listOfButtons.push(tb.btnRecent, tb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(tb.btnLogOff);
                 }
@@ -130,16 +137,12 @@ $(function () {
 
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
-            var tg = forerunner.ssr.tools.groups;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
-                if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
-                }
-
+                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
                 $toolPane.toolPane("disableTools", [mi.itemFav]);
+
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
                     $toolPane.toolPane("enableTools", [mi.itemFav]);
                     $toolbar.toolbar("enableTools", [tb.btnFav]);

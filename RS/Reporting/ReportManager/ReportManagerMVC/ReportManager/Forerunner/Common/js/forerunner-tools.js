@@ -1096,7 +1096,7 @@ $(function () {
         itemTags: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-tags",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-tags",
             text: locData.toolPane.tags,
             events: {
                 click: function (e) {
@@ -1555,7 +1555,7 @@ $(function () {
         itemTags: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-tags",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-tags",
             text: locData.toolPane.tags,
             events: {
                 click: function (e) {
@@ -1568,7 +1568,7 @@ $(function () {
         itemSearchFolder: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-searchfolder",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-searchfolder",
             text: locData.toolbar.searchFolder,
             events: {
                 click: function (e) {
@@ -1797,7 +1797,8 @@ $(function () {
             visible: false,
             selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
+
+            tools: [tp.itemFavorite, tp.itemRecent]
         },
         /** @member */
         explorerFindGroup: {
@@ -1820,7 +1821,7 @@ $(function () {
             visible: false,
             selectorClass: "fr-rm-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [rep.itemFav, rep.itemRecent, rep.itemHome]
+            tools: [rep.itemFav, rep.itemRecent]
         },
         /** @member */
         dashboardItemFolderGroup: {
@@ -1828,12 +1829,17 @@ $(function () {
             visible: false,
             selectorClass: "fr-dashboard-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [dbtp.itemFavorite, dbtp.itemRecent, dbtp.itemHome]
+            tools: [dbtp.itemFavorite, dbtp.itemRecent]
         },
     };
-
-    // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
+
+    if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+        tg.itemFolderGroup.tools.push(tp.itemHome);
+        tg.explorerItemFolderGroup.tools.push(rep.itemHome);
+        tg.dashboardItemFolderGroup.tools.push(dbtp.itemHome);
+    }
+    // Dynamically add in any / all accordionGroup definitions into the associate items
     tp.itemExport.accordionGroup = tg.itemExportGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
     rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;

@@ -70,16 +70,19 @@ $(function () {
                 $item.removeClass(itemActiveClass);
             });
         },
-        _initCallbacks: function () {
+        _createCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
+
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-            
+
+            // Hook up any / all custom events that the report explorer may trigger
+            me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
                 me.updateBtnStates.call(me);
             });
 
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
+            $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
                 if (data.isSubmit) {
                     me.updateBtnStates.call(me);
@@ -101,10 +104,13 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
 
             me.addTools(1, true, toolpaneItems);
-            me._initCallbacks();
 
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
@@ -114,26 +120,16 @@ $(function () {
 
             me.updateBtnStates();
         },
-
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
-            me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me.updateBtnStates();
-            });
+            //this toolpane exist in all explorer page, so we should put some initialization here
+            //to make it only run one time
+            me._createCallbacks();
         },
         updateBtnStates: function () {
             var me = this;
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tp.itemLogOff.selectorClass);
-            } else {
-                me.hideTool(tp.itemLogOff.selectorClass);
-            }
 
             if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
@@ -145,25 +141,36 @@ $(function () {
                 me.showTool(tp.itemCreateDashboard.selectorClass);
                 me.showTool(tp.itemTags.selectorClass);
 
+                var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 // Then we start out disabled and enable if needed
                 me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
                 if (lastFetched.view === "catalog") {
-                    var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                    if (permission && permission.hasPermission === true) {
-                        // If the last fetched folder is a catalog and the user has permission to create a
-                        // resource in this folder, enable the create dashboard button and create search folder button
-                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    //maintain a local permission list to reduce the hasPermission call
+                    me.permissionList = me.permissionList || [];
+                    me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
+                    var curPermission = me.permissionList[lastFetched.path];
+
+                    if (curPermission.createResource === undefined) {
+                        var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
+                        curPermission.createResource = (permission && permission.hasPermission === true) ? true : false;
+                    }                   
+
+                    if (lastFetched.path !== "/" && curPermission.updateProperties === undefined) {
+                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
+                        curPermission.updateProperties = (addTagPermission && addTagPermission.hasPermission === true) ? true : false;
                     }
 
-                    if (lastFetched.path !== "/") {
-                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                        if (addTagPermission && addTagPermission.hasPermission === true) {
-                            me.enableTools([tp.itemTags]);
-                        }
+                    // If the last fetched folder is a catalog and the user has permission to create a
+                    // resource in this folder, enable the create dashboard button and create search folder button
+                    if (curPermission.createResource === true) {
+                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    }
+                    if (curPermission.updateProperties === true) {
+                        me.enableTools([tp.itemTags]);
                     }
                 }
             }
-        }
+        },
     });  // $.widget
 });  // function()

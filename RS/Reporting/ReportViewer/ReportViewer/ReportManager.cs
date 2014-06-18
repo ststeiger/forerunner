@@ -1196,18 +1196,6 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public bool CanCreateSubscription(string path)
-        {
-            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
-            {
-                if (permission.IndexOf("Create Subscription", StringComparison.OrdinalIgnoreCase) != -1)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;

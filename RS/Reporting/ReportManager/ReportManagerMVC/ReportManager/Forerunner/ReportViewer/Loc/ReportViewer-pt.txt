@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Salve Painel Sucedido",
     "loadDashboardFailed":"Carga Painel Falha",
     "loadDashboard":"carga Painel",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Um painel com esse nome já existe. Você pode: 1) mudar o nome do painel ou 2) marque a caixa de substituição, em seguida, tente novamente.",
+    "saveSearchFolderSucceeded":"Pasta de Pesquisa Criado Sucedido",
+    "saveSearchFolderFailed":"Pasta de Pesquisa Criado Failed",
+    "addTagsSucceeded":"Adicionar tags Sucedido",
+    "addTagsFailed":"Adicionar tags Falha"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
@@ -63,7 +63,7 @@
     "saveDashboard":"Salve o Dashboard",
     "editDashboard":"Editar o Dashboard",
     "tags":"Marcações",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Ver o Dashboard"
   },
   "toolbar": {
     "back":"Volta",
@@ -99,7 +99,7 @@
     "editDashboard":"Editar o Dashboard",
     "saveDashboard":"Salve o Dashboard",
     "searchFolder":"pasta de Pesquisa",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Ver o Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -208,10 +208,10 @@
     "title":"criar o Dashboard",
     "cancel":"cancelar",
     "submit":"submeter",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"nome",
+    "namePlaceholder":"nome dashboard",
+    "dashboardTemplate":"modelo",
+    "overwrite":"sobrescrever"
   },
   "RDLExt": {
     "title":"RDL Extensões",
@@ -228,9 +228,9 @@
     "submit":"submeter",
     "selectReport":"<selecione relatório>",
     "hideToolbar":"Ocultar barra de ferramentas",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"Barra de Ferramentas:",
+    "minimal":"mínimo",
+    "full":"completo"
   },
   "tags": {
     "title":"Marcações",
@@ -249,5 +249,19 @@
     "prompt":"Separe tags com vírgulas.",
     "homePage":"Home page",
     "createTo":"Criado em"
+  },
+  "subscription": {
+    "email":"e-mail",
+    "cancel":"cancelar",
+    "save":"salvar",
+    "manageSubscription":"Gerenciar Assinatura",
+    "to_placeholder":"para",
+    "subject_placeholder":"assunto",
+    "description_placeholder":"descrição",
+    "comment_placeholder":"comentário",
+    "subject":"@ ReportName foi executado em @ ExecutionTime",
+    "description":"Enviar e-mail para {0}",
+    "includeLink":"incluir ligação",
+    "includeReport":"incluir relatório"
   }
 }

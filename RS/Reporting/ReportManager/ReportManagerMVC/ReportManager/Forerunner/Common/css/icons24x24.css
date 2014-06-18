@@ -321,7 +321,7 @@
 }
 
 .fr-icons24x24-rdlextension {
-    background-image:url(../images/ToolbarIcons/SaveExtension.png);
+    background-image:url(../images/ToolbarIcons/RDLExtension.png);
 }
 
 .fr-icons24x24-emailsubscription {
@@ -332,3 +332,10 @@
     background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
 }
 
+.fr-icons24x24-tags{
+    background-image:url(../images/ToolbarIcons/Tags.png);
+}
+
+.fr-icons24x24-searchfolder{
+    background-image:url(../images/ToolbarIcons/SearchFolder_icon.png);
+}

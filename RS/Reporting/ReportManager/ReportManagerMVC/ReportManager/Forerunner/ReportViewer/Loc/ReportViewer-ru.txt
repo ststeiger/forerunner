@@ -18,11 +18,11 @@
     "saveDashboardSucceeded":"Сохранить Dashboard удалось",
     "loadDashboardFailed":"Нагрузка Dashboard удалось",
     "loadDashboard":"Нагрузка Dashboard",
-    "createFailed":"A Dashboard with that name already exists. You can either: 1) rename your dashboard or 2) check the overwrite box then try again.",
-    "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
-    "saveSearchFolderFailed":"Search Folder Created Failed",
-    "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "createFailed":"Приборная панель с таким именем уже существует. Вы можете либо: 1) переименовать панель или 2) установите флажок перезаписи затем повторите попытку.",
+    "saveSearchFolderSucceeded":"Поиск Папка создания Преемник",
+    "saveSearchFolderFailed":"Поиск Папка создания Неудачный",
+    "addTagsSucceeded":"Добавить метки успешно завершено",
+    "addTagsFailed":"Добавить метки Failed"
   },
   "errorTag": {
     "moreDetail":"Подробнее",
@@ -63,7 +63,7 @@
     "saveDashboard":"Сохранить Dashboard",
     "editDashboard":"Редактировать Dashboard",
     "tags":"Метки",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Посмотреть Dashboard"
   },
   "toolbar": {
     "back":"Назад",
@@ -99,7 +99,7 @@
     "editDashboard":"Редактировать Dashboard",
     "saveDashboard":"Сохранить Dashboard",
     "searchFolder":"Поиск Папка",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"Посмотреть Dashboard"
   },
   "print": {
     "title":"Печать отчета",
@@ -120,7 +120,7 @@
     "submit":"Оклахома",
     "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс",
-    "Email":"Email",
+    "Email":"по электронной почте",
     "AdminUI":"UI Админ"
   },
   "paramPane": {
@@ -208,10 +208,10 @@
     "title":"Создание Dashboard",
     "cancel":"отменить",
     "submit":"представлять",
-    "dashboardName":"Name",
-    "namePlaceholder":"dashboard name",
-    "dashboardTemplate":"Template",
-    "overwrite":"Overwrite"
+    "dashboardName":"название",
+    "namePlaceholder":"имя приборной панели",
+    "dashboardTemplate":"шаблон",
+    "overwrite":"переписывать"
   },
   "RDLExt": {
     "title":"RDL Расширения",
@@ -228,9 +228,9 @@
     "submit":"представлять",
     "selectReport":"<выберите отчет>",
     "hideToolbar":"Скрыть панель инструментов",
-    "toolbar":"Toolbar:",
-    "minimal":"Minimal",
-    "full":"Full"
+    "toolbar":"Панель инструментов:",
+    "minimal":"минимальный",
+    "full":"полный"
   },
   "tags": {
     "title":"Метки",
@@ -249,5 +249,19 @@
     "prompt":"разделяйте метки запятыми.",
     "homePage":"Главная",
     "createTo":"Созданный под"
+  },
+  "subscription": {
+    "email":"Электронная почта",
+    "cancel":"отменить",
+    "save":"экономить",
+    "manageSubscription":"Управление Подписчикам",
+    "to_placeholder":"к",
+    "subject_placeholder":"тема",
+    "description_placeholder":"описание",
+    "comment_placeholder":"комментарий",
+    "subject":"@ ReportName был казнен в @ ExecutionTime",
+    "description":"Отправить персональное сообщение для {0}",
+    "includeLink":"Включите ссылку",
+    "includeReport":"Включите отчет"
   }
 }

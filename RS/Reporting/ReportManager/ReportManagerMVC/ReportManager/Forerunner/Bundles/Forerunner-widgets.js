@@ -6554,7 +6554,7 @@ $(function () {
                     console.log(textStatus);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
                 });
-        },
+        }, 
         _initCallbacks: function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
@@ -13148,7 +13148,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
-            
+
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });

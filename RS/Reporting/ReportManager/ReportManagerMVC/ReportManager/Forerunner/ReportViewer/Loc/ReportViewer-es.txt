@@ -229,15 +229,15 @@
     "toolbar":"Barra de herramientas:",
     "minimal":"mínimo",
     "full":"completo",
-    "size":"Size:",
-    "templateSize":"Template",
-    "reportSize":"Report",
-    "custom":"Custom",
-    "customSize":"Custom Size:",
+    "size":"tamaño:",
+    "templateSize":"plantilla",
+    "reportSize":"informe",
+    "custom":"costumbre",
+    "customSize":"Tamaño personalizado:",
     "slots":"Slots",
-    "width":"Width",
-    "height":"Height",
-    "removeReport":"Remove Report"
+    "width":"ancho",
+    "height":"altura",
+    "removeReport":"Retire Reportar"
   },
   "tags": {
     "title":"Etiquetas",

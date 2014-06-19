@@ -146,27 +146,12 @@ $(function () {
                 me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
                 if (lastFetched.view === "catalog") {
-                    //maintain a local permission list to reduce the hasPermission call
-                    me.permissionList = me.permissionList || [];
-                    me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
-                    var curPermission = me.permissionList[lastFetched.path];
-
-                    if (curPermission.createResource === undefined) {
-                        var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                        curPermission.createResource = (permission && permission.hasPermission === true) ? true : false;
-                    }                   
-
-                    if (lastFetched.path !== "/" && curPermission.updateProperties === undefined) {
-                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                        curPermission.updateProperties = (addTagPermission && addTagPermission.hasPermission === true) ? true : false;
-                    }
-
-                    // If the last fetched folder is a catalog and the user has permission to create a
-                    // resource in this folder, enable the create dashboard button and create search folder button
-                    if (curPermission.createResource === true) {
+                    var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
+                    if (permissions["Create Resource"]) {
                         me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
                     }
-                    if (curPermission.updateProperties === true) {
+
+                    if (lastFetched.path !== "/" && permissions["Update Properties"]) {
                         me.enableTools([tp.itemTags]);
                     }
                 }

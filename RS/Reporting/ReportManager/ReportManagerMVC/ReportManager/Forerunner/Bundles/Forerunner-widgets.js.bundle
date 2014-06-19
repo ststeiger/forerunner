@@ -28,9 +28,9 @@
     <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
     <file>/Forerunner/ReportExplorer/js/CreateDashboard.js</file>
-    <file>/Forerunner/ReportExplorer/js/EmailSubscription.js</file>
-    <file>/Forerunner/ReportExplorer/js/ManageSubscription.js</file>
-    <file>/Forerunner/ReportExplorer/js/SubscriptionModel.js</file>
+    <file>/Forerunner/ReportViewer/js/EmailSubscription.js</file>
+    <file>/Forerunner/ReportViewer/js/ManageSubscription.js</file>
+    <file>/Forerunner/ReportViewer/js/SubscriptionModel.js</file>
     <file>/Forerunner/Lib/jsTree/jstree.js</file>
     <file>/Forerunner/Dashboard/js/DashboardEZ.js</file>
     <file>/Forerunner/Dashboard/js/DashboardToolbar.js</file>

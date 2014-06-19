@@ -31,8 +31,9 @@ $(function () {
             var me = this;
             var $listItem = new $("<DIV />");
             $listItem.addClass("fr-sub-listitem");
-            var $deleteIcon = me._createDiv(["ui-icon-circle-close", "ui-icon"]);
-            var $editIcon = me._createDiv(["ui-icon-pencil", "ui-icon"]);
+            $listItem.append(subInfo.Description);
+            var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
+            var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
             $deleteIcon.on("click", function () {
@@ -45,7 +46,6 @@ $(function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
             $listItem.append($editIcon);
-            $listItem.append(subInfo.Description);
             return $listItem;
         },
         _editSubscription: function (subscriptionID) {

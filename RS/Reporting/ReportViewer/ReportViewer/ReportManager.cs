@@ -1210,13 +1210,23 @@ namespace Forerunner.SSRS.Manager
 
             return hasPermission;
         }
-        public string GetCatalogPermission(string path, string permission)
+
+        public string GetCatalogPermission(string path, string permissions)
         {
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
-            w.WriteMember("hasPermission");
-            bool hasPermission = HasPermission(path, permission);
-            w.WriteBoolean(hasPermission);
+            string[] allPermission = callGetPermissions(HttpUtility.UrlDecode(path));
+
+            foreach (string per in permissions.Split(','))
+            {
+                bool hasPermission = false;
+                w.WriteMember(per);
+                if (allPermission.Contains(per))
+                {
+                    hasPermission = true;
+                }
+                w.WriteBoolean(hasPermission);
+            }            
             w.WriteEndObject();
             return w.ToString();
         }
@@ -1810,20 +1820,15 @@ namespace Forerunner.SSRS.Manager
                         {
                             string itemPath = GetPath(SQLReader.GetString(0));
                             int itemType = SQLReader.GetInt32(3);
-                            string permission = itemType == 1 ? "Read Properties" : "Execute and View";
-                            //Check if user have access to this path, for folder add it by default
 
-                            if (HasPermission(itemPath, permission))
-                            {
-                                item = new CatalogItem();
-                                item.Path = itemPath;
-                                item.Name = SQLReader.GetString(1);
-                                item.ModifiedDate = SQLReader.GetDateTime(2);
-                                item.ModifiedDateSpecified = true;
-                                item.Type = (ItemTypeEnum)itemType;
-                                item.ID = SQLReader.GetGuid(4).ToString();
-                                list.Add(item);
-                            }
+                            item = new CatalogItem();
+                            item.Path = itemPath;
+                            item.Name = SQLReader.GetString(1);
+                            item.ModifiedDate = SQLReader.GetDateTime(2);
+                            item.ModifiedDateSpecified = true;
+                            item.Type = (ItemTypeEnum)itemType;
+                            item.ID = SQLReader.GetGuid(4).ToString();
+                            list.Add(item);
                         }
                     }
 

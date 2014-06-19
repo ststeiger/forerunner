@@ -76,6 +76,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur,
+                userSettings: me._getUserSettings()
             });
         },
 
@@ -124,7 +125,7 @@ $(function () {
             var me = this;
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
-
+            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -317,9 +318,7 @@ $(function () {
         },
         _getUserSettings: function () {
             var me = this;
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            return me.$reportExplorer.reportExplorer("getUserSettings");
+            return forerunner.ajax.getUserSetting(me.options.rsInstance);
         },
         /**
          * Transition to ReportViewer view
@@ -385,6 +384,7 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: enableEdit,
+                    path: path,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings()
                 });

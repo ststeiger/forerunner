@@ -133,6 +133,9 @@
     "toolbar":["de", "ga","it", "ro"],
     "minimal":["de", "fr", "is"],
     "selectReport":[],
+    "slots":["es", "fr", "it", "ro"],
+    "custom":["is"],
+    "customSize":["ro", "is"],
     "hideToolbar":["sv"]
     },
   "tags": {

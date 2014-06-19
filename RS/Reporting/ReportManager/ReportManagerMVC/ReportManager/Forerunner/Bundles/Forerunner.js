@@ -1262,17 +1262,17 @@ $(function () {
             });
         },
         /**
-        * Returns json data indicating is the user has the requested permission for the given path
+        * Returns json data indicating is the user has the requested permissions for the given path
         *
         * @param {String} path - fully qualified path to the resource
-        * @param {String} permission - Requested permission
+        * @param {String} permissions - Requested permissions list
         */
-        hasPermission: function (path, permission) {
+        hasPermission: function (path, permissions) {
             var permissionData = null;
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
                 "?path=" + encodeURIComponent(path) +
-                "&permission=" + permission;
+                "&permission=" + permissions;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",

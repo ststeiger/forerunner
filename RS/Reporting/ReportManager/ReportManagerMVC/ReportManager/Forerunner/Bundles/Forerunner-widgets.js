@@ -782,6 +782,26 @@ $(function () {
                 });
             }
         },
+        _checkPermission: function (path) {
+            var me = this;
+            //Create Subscription: create subscription
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Subscription", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermissions: function () {
+            var me = this;
+
+            return me.permissions;
+        },
         /**
          * Get current user settings
          *
@@ -2459,7 +2479,8 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
-
+            
+            me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
@@ -5280,7 +5301,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tb.btnEmailSubscription.selectorClass);
             } else {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
@@ -5363,10 +5386,12 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
                 me.disableTools([tp.itemTags]);
 
-                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
-                if (addTagPermission && addTagPermission.hasPermission === true) {
+                var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+                if (permissions["Update Properties"] === true) {
                     me.enableTools([tp.itemTags]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -5401,10 +5426,6 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
-            });
-
-            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
-                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5551,7 +5572,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tp.itemManageSubscription.selectorClass);
                 me.showTool(tp.itemEmailSubscription.selectorClass);
             } else {
@@ -6150,27 +6173,12 @@ $(function () {
                 me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
                 if (lastFetched.view === "catalog") {
-                    //maintain a local permission list to reduce the hasPermission call
-                    me.permissionList = me.permissionList || [];
-                    me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
-                    var curPermission = me.permissionList[lastFetched.path];
-
-                    if (curPermission.createResource === undefined) {
-                        var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                        curPermission.createResource = (permission && permission.hasPermission === true) ? true : false;
-                    }                   
-
-                    if (lastFetched.path !== "/" && curPermission.updateProperties === undefined) {
-                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                        curPermission.updateProperties = (addTagPermission && addTagPermission.hasPermission === true) ? true : false;
-                    }
-
-                    // If the last fetched folder is a catalog and the user has permission to create a
-                    // resource in this folder, enable the create dashboard button and create search folder button
-                    if (curPermission.createResource === true) {
+                    var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
+                    if (permissions["Create Resource"]) {
                         me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
                     }
-                    if (curPermission.updateProperties === true) {
+
+                    if (lastFetched.path !== "/" && permissions["Update Properties"]) {
                         me.enableTools([tp.itemTags]);
                     }
                 }
@@ -6581,6 +6589,8 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
+            me._checkPermission();
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
@@ -6618,6 +6628,25 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._forerunnerTagsDialog = $dlg;
+        },
+        _checkPermission: function () {
+            var me = this;
+            //create resource: create resource file (search folder/dashboard)
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Resource", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Show the create dashboard modal dialog.
@@ -13120,7 +13149,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
-
+            
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
@@ -14405,6 +14434,7 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: enableEdit,
+                    path: path,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings()
                 });
@@ -21413,7 +21443,8 @@ $(function () {
             isReportManager: false,
             enableEdit: true,
             rsInstance: null,
-            userSettings: null
+            userSettings: null,
+            path: null
         },
         /**
          * Returns the user settings
@@ -21450,6 +21481,8 @@ $(function () {
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
+
+            me._checkPermission();
 
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
@@ -21502,6 +21535,24 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+        },
+        _checkPermission: function () {
+            var me = this;
+            //Update Content: update resource content (dashboard)
+            //for more properties, add to the list
+            var permissionList = ["Update Content"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Get dashboard editor
@@ -21622,16 +21673,16 @@ $(function () {
                 if (enableEdit) {
                     var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                     var path = $dashboardEditor.dashboardEditor("getPath");
-                    var permission = { hasPermission: true };
+
                     if (path) {
-                        permission = forerunner.ajax.hasPermission(path, "Update Content");
-                    }
-                    if (!path || (permission && permission.hasPermission === true)) {
-                        // If the user has update resource permission for this dashboard, we will
-                        // enable the edit buttons
-                        me.showTool(dtb.btnView.selectorClass);
-                        me.hideTool(dtb.btnEdit.selectorClass);
-                        return;
+                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                        if (permissions["Update Content"] === true) {
+                            // If the user has update resource permission for this dashboard, we will
+                            // enable the edit buttons
+                            me.showTool(dtb.btnView.selectorClass);
+                            me.hideTool(dtb.btnEdit.selectorClass);
+                            return;
+                        }
                     }
                 }
 
@@ -21730,16 +21781,16 @@ $(function () {
                 if (enableEdit) {
                     var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                     var path = $dashboardEditor.dashboardEditor("getPath");
-                    var permission = { hasPermission: true };
+                    
                     if (path) {
-                        permission = forerunner.ajax.hasPermission(path, "Update Content");
-                    }
-                    if (!path || (permission && permission.hasPermission === true)) {
-                        // If the user has update resource permission for this dashboard, we will
-                        // enable the edit buttons
-                        me.showTool(dbtp.itemView.selectorClass);
-                        me.hideTool(dbtp.itemEdit.selectorClass);
-                        return;
+                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                        if (permissions["Update Content"] === true) {
+                            // If the user has update resource permission for this dashboard, we will
+                            // enable the edit buttons
+                            me.showTool(dbtp.itemView.selectorClass);
+                            me.hideTool(dbtp.itemEdit.selectorClass);
+                            return;
+                        }
                     }
                 }
 

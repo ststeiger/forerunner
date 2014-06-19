@@ -384,6 +384,7 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: enableEdit,
+                    path: path,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings()
                 });

@@ -235,7 +235,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tb.btnEmailSubscription.selectorClass);
             } else {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);

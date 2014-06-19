@@ -399,6 +399,8 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
+            me._checkPermission();
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
@@ -436,6 +438,25 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._forerunnerTagsDialog = $dlg;
+        },
+        _checkPermission: function () {
+            var me = this;
+            //create resource: create resource file (search folder/dashboard)
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Resource", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Show the create dashboard modal dialog.

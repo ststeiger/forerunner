@@ -38,7 +38,8 @@ $(function () {
             isReportManager: false,
             enableEdit: true,
             rsInstance: null,
-            userSettings: null
+            userSettings: null,
+            path: null
         },
         /**
          * Returns the user settings
@@ -75,6 +76,8 @@ $(function () {
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
+
+            me._checkPermission();
 
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
@@ -127,6 +130,24 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+        },
+        _checkPermission: function () {
+            var me = this;
+            //Update Content: update resource content (dashboard)
+            //for more properties, add to the list
+            var permissionList = ["Update Content"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Get dashboard editor

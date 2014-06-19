@@ -219,9 +219,6 @@
     "cancel":"anula",
     "dialogTitle":"RDL Extension JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"Proprietăți"
-  },
   "reportProperties": {
     "title":"Raport Properties",
     "cancel":"anula",
@@ -230,7 +227,16 @@
     "hideToolbar":"Ascunde Toolbar",
     "toolbar":"Toolbar:",
     "minimal":"minim",
-    "full":"complet"
+    "full":"complet",
+    "size":"dimensiune:",
+    "templateSize":"șablon",
+    "reportSize":"raport",
+    "custom":"obicei",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"lățime",
+    "height":"înălțime",
+    "removeReport":"Scoateți Raport"
   },
   "tags": {
     "title":"Tag-uri",

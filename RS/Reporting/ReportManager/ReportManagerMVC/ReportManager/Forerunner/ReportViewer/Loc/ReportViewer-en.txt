@@ -233,18 +233,24 @@
     "dashboardTemplate": "Template",
     "overwrite": "Overwrite"
   },
-  "dashboardEditor": {
-    "propertiesBtn": "Properties"
-  },
   "reportProperties": {
-    "title":"Report Properties",
+    "title":"Edit View",
     "cancel":"Cancel",
     "submit":"Submit",
     "selectReport":"<select report>",
     "hideToolbar":"Hide",
     "toolbar": "Toolbar:",
     "minimal": "Minimal",
-    "full": "Full"
+    "full": "Full",
+    "size": "Size:",
+    "templateSize": "Template",
+    "reportSize": "Report",
+    "custom": "Custom",
+    "customSize": "Custom Size:",
+    "slots":  "Slots",
+    "width": "Width",
+    "height": "Height",
+    "removeReport": "Remove Report"
   },
   "tags": {
     "title":"Tags",

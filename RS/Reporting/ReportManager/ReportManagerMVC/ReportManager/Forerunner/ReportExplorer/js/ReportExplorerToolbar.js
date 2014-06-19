@@ -64,15 +64,7 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
-
-            // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tb.btnLogOff.selectorClass);
-            } else {
-                me.hideTool(tb.btnLogOff.selectorClass);
-            }
+            me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
@@ -84,7 +76,22 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
+
+            //check whether hide home button is enable
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
+            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnHome);
+            }
+
+            toolbarList.push(tb.btnRecent, tb.btnFav);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolbarList.push(tb.btnLogOff);
+            }
+
+            toolbarList.push(tg.explorerFindGroup);
+
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 

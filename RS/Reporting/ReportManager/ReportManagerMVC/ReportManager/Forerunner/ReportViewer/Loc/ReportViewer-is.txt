@@ -219,9 +219,6 @@
     "cancel":"hætta",
     "dialogTitle":"RDL Eftirnafn JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"eiginleikar"
-  },
   "reportProperties": {
     "title":"skýrslu Properties",
     "cancel":"hætta",
@@ -230,7 +227,16 @@
     "hideToolbar":"fela tækjastiku",
     "toolbar":"tækjastika:",
     "minimal":"Minimal",
-    "full":"fullur"
+    "full":"fullur",
+    "size":"stærð:",
+    "templateSize":"Snið",
+    "reportSize":"skýrslu",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"rifa",
+    "width":"breidd",
+    "height":"Hæð",
+    "removeReport":"fjarlægja sKÝRSLA"
   },
   "tags": {
     "title":"Tags",

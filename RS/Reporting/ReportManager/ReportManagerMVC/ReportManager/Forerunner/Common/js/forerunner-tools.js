@@ -68,7 +68,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
-            sharedClass: "fr-toolbase-config-minimal",
+            sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit",
             tooltip: locData.toolbar.paramarea,
             events: {
                 click: function (e) {
@@ -119,6 +119,7 @@ $(function () {
         btnReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-reportpage-textbox",
+            sharedClass: "fr-core-input",
             //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
@@ -216,7 +217,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
+            sharedClass: "fr-core-input fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -713,6 +714,7 @@ $(function () {
         itemReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
+            sharedClass: "fr-core-input",
             //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
@@ -945,8 +947,8 @@ $(function () {
         /** @member */
         itemKeyword: {
             toolType: toolTypes.input,
-            selectorClass: "fr-item-keyword-textbox",
-            sharedClass: "fr-toolbase-find-textbox",
+            selectorClass: "fr-item-keyword-textbox fr-core-input",
+            sharedClass: "fr-toolbase-find-textbox fr-item-keyword-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -1797,7 +1799,8 @@ $(function () {
             visible: false,
             selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
+
+            tools: [tp.itemFavorite, tp.itemRecent]
         },
         /** @member */
         explorerFindGroup: {
@@ -1820,7 +1823,7 @@ $(function () {
             visible: false,
             selectorClass: "fr-rm-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [rep.itemFav, rep.itemRecent, rep.itemHome]
+            tools: [rep.itemFav, rep.itemRecent]
         },
         /** @member */
         dashboardItemFolderGroup: {
@@ -1828,12 +1831,17 @@ $(function () {
             visible: false,
             selectorClass: "fr-dashboard-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [dbtp.itemFavorite, dbtp.itemRecent, dbtp.itemHome]
+            tools: [dbtp.itemFavorite, dbtp.itemRecent]
         },
     };
-
-    // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
+
+    if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+        tg.itemFolderGroup.tools.push(tp.itemHome);
+        tg.explorerItemFolderGroup.tools.push(rep.itemHome);
+        tg.dashboardItemFolderGroup.tools.push(dbtp.itemHome);
+    }
+    // Dynamically add in any / all accordionGroup definitions into the associate items
     tp.itemExport.accordionGroup = tg.itemExportGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
     rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;

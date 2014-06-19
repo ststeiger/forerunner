@@ -1,1 +1,13 @@
-﻿{    "230px - iPhone 5 Portrait width 2 slots": 230,    "470px - iPhone 5 portait width 1 slot": 470,    "274px - iPhone 5 portrait height 2 slots": 274,    "558px - iPhone 5 portrait height 1 slots": 558,    "374px - iPad portrait width 2 slots": 374,    "758px - iPad portrait width 2 slots": 758,    "502px - iPad Portrait height 2 slots": 502,    "1014px - iPad Portrait height 1 slots": 1014,    "630px - PC 1280 width 2 slots": 630,    "1279px - PC 1280 width 1 slots": 1279,    "470px - PC 960 height 2 slots": 470,    "950px - PC 960 height 1 slots": 950,    "790px - PC 1600 width 2 slots": 790,    "1590px - PC 1600 width 1 slots": 1590,    "440px - PC 900 height 2 slots": 440,    "890px - PC 900 height 1 slots": 890,    "630px - PC 1920 width 3 slots": 630,    "950px - PC 1920 width 2 slots": 950,    "1910px - PC 1920 width 1 slot": 1910,    "350px - PC 1080 height 3 slots": 350,    "530px - PC 1080 height 2 slots": 530,    "1070px - PC 1080 height 1 slots": 1070}
+﻿[
+    {"name": "<report>", "value": 0},
+    {"name": "iPhone 5 portait width", "value": 470},
+    {"name": "iPhone 5 portrait height", "value": 558},
+    {"name": "iPad portrait width", "value": 758},
+    {"name": "iPad Portrait height", "value": 1014},
+    {"name": "PC 900 px", "value": 890},
+    {"name": "PC 960 px", "value": 950},
+    {"name": "PC 1080 px", "value": 1070},
+    {"name": "PC 1280 px", "value": 1270},
+    {"name": "PC 1600 px", "value": 1590},
+    {"name": "PC 1920 px", "value": 1910}
+]

@@ -219,9 +219,6 @@
     "cancel":"Cealaigh",
     "dialogTitle":"RDL Síneadh JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"airíonna"
-  },
   "reportProperties": {
     "title":"Airíonna Tuarascáil",
     "cancel":"Cealaigh",
@@ -230,7 +227,16 @@
     "hideToolbar":"Folaigh Barra Uirlisí",
     "toolbar":"Toolbar:",
     "minimal":"Íosráta",
-    "full":"Iomlán"
+    "full":"Iomlán",
+    "size":"méid:",
+    "templateSize":"teimpléad",
+    "reportSize":"Tuarascáil",
+    "custom":"saincheaptha",
+    "customSize":"Méid an Chustaim:",
+    "slots":"Sliotáin",
+    "width":"leithead",
+    "height":"airde",
+    "removeReport":"Bain Tuarascáil"
   },
   "tags": {
     "title":"Clibeanna",

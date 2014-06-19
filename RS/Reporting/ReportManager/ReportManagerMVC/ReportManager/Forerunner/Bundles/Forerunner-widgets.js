@@ -3588,16 +3588,29 @@ $(function () {
                 }
             });
         },
+        _configurations: function () {
+            return [
+                { name: constants.toolbarConfigOption.minimal, selectorClass: "fr-toolbase-config-minimal" },
+                { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
+            ];
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
-                return true;
-            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
-                return true;
-            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                // Default is full so this case we always return true
                 return true;
             }
-            return false;
+
+            var found = false;
+            $.each(me._configurations(), function (index, config) {
+                if (me.toolbarConfigOption === config.name && $tool.hasClass(config.selectorClass)) {
+                    // We must match the config name and have the selector class
+                    found = true;
+                }
+            });
+
+            // Otherwise this button is not in this configuration
+            return found;
         },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
@@ -5194,19 +5207,21 @@ $(function () {
             }
         },
         _viewerButtons: function (allButtons) {
-            var listOfButtons;
+            var listOfButtons = [tb.btnMenu];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-            else
-                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
-                else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
+            //check button button
+            if (allButtons === true || allButtons === undefined) {
+                listOfButtons.push(tb.btnReportBack);
             }
+
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+
+            //remove zoom button on android
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                listOfButtons.pop()
+            }
+
+            listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
 
             return listOfButtons;
         },
@@ -5449,25 +5464,34 @@ $(function () {
             }
         },
         _viewerItems: function (allButtons) {
-            var listOfItems;
             var me = this;
+            var listOfItems = [tg.itemVCRGroup, tg.itemFolderGroup];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint,tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
-            else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
+            //check back button
+            if (allButtons === true || allButtons === undefined) {
+                listOfItems.push(tp.itemReportBack);
+            }
+
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tg.itemFindGroup];
-                else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription, tg.itemFindGroup];
+                listOfItems.pop();
             }
 
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+
+            //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems = listOfItems.concat([tp.itemTags, tp.itemRDLExt]);
+                listOfItems.push(tp.itemTags, tp.itemRDLExt);
+            }
+
+            listOfItems.push(tg.itemFindGroup);
+
+            //check authentication type to show log off button or not 
+            if (forerunner.ajax.isFormsAuth()) {
+                listOfItems.push(mi.itemLogOff);
             }
 
             return listOfItems;
@@ -5926,15 +5950,7 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            // Hook up any / all custom events that the report viewer may trigger
-
-            // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tb.btnLogOff.selectorClass);
-            } else {
-                me.hideTool(tb.btnLogOff.selectorClass);
-            }
+            me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
@@ -5946,7 +5962,22 @@ $(function () {
 
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav, tb.btnLogOff, tg.explorerFindGroup];
+
+            //check whether hide home button is enable
+            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
+            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnHome);
+            }
+
+            toolbarList.push(tb.btnRecent, tb.btnFav);
+
+            if (forerunner.ajax.isFormsAuth()) {
+                toolbarList.push(tb.btnLogOff);
+            }
+
+            toolbarList.push(tg.explorerFindGroup);
+
             me.addTools(1, true, toolbarList);
             me._initCallbacks();
 
@@ -6077,7 +6108,11 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
 
             me.addTools(1, true, toolpaneItems);
 
@@ -6089,10 +6124,8 @@ $(function () {
 
             me.updateBtnStates();
         },
-
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
             //this toolpane exist in all explorer page, so we should put some initialization here
@@ -6101,13 +6134,6 @@ $(function () {
         },
         updateBtnStates: function () {
             var me = this;
-
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tp.itemLogOff.selectorClass);
-            } else {
-                me.hideTool(tp.itemLogOff.selectorClass);
-            }
 
             if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
@@ -6125,7 +6151,6 @@ $(function () {
 
                 if (lastFetched.view === "catalog") {
                     //maintain a local permission list to reduce the hasPermission call
-                    if (!me.permissionList){console.log('create local permission list')}
                     me.permissionList = me.permissionList || [];
                     me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
                     var curPermission = me.permissionList[lastFetched.path];
@@ -7100,7 +7125,7 @@ $(function () {
                             "<table class='fr-tag-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-tag-text' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-tag-text' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-tag-prompt'>" +
                                     "<td></td>" +
@@ -12164,7 +12189,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
@@ -12175,7 +12200,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +
@@ -12768,7 +12793,7 @@ $(function () {
             }
 
             var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -13119,7 +13144,13 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                var listOfButtons = [];
+                //add home button if user enable it
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(tb.btnHome);
+                }
+                listOfButtons.push(tb.btnRecent, tb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(tb.btnLogOff);
                 }
@@ -13131,8 +13162,8 @@ $(function () {
             if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
-                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
-                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
+                    $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
@@ -13159,16 +13190,12 @@ $(function () {
 
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
-            var tg = forerunner.ssr.tools.groups;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
-                if (forerunner.ajax.isFormsAuth()) {
-                    $toolPane.toolPane("addTools", 14, true, [mi.itemLogOff]);
-                }
-
+                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
                 $toolPane.toolPane("disableTools", [mi.itemFav]);
+
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
                     $toolPane.toolPane("enableTools", [mi.itemFav]);
                     $toolbar.toolbar("enableTools", [tb.btnFav]);
@@ -21453,7 +21480,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
             me.layout.$mainsection.append(me.$dashboardContainer);
             me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
@@ -21513,7 +21540,7 @@ $(function () {
             var me = this;
 
             if (me.layout) {
-                var $dashboard = me.layout.$mainsection.find(".fr-dashboard-container");
+                var $dashboard = me.layout.$mainsection.find(".fr-dashboard");
                 if ($dashboard.length !== 0) {
                     return $dashboard;
                 }
@@ -21786,7 +21813,6 @@ $(function () {
     var widgets = constants.widgets;
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages = locData.messages;
 
@@ -21849,8 +21875,49 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._saveTemplateSizes($(item));
                 me._loadReport(item.id, hideMissing);
             });
+        },
+        _clearSizes: function ($item) {
+            $item.css({ minWidth: "", maxWidth: "", minHeight: "", maxHeight: "" });
+        },
+        _resetTemplateSizes: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            $item.css(reportProperties.sizes);
+        },
+        _setCustomSize: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            me._setCustomDimension($item, reportProperties.customSize.width, "minWidth", "maxWidth");
+            me._setCustomDimension($item, reportProperties.customSize.height, "minHeight", "maxHeight");
+        },
+        _setCustomDimension: function ($item, dimension, minString, maxString) {
+            if (dimension.value > 0) {
+                var length = dimension.value / dimension.slots;
+                $item.css(minString, length);
+                $item.css(maxString, length);
+            } else {
+                $item.css(minString, "");
+                $item.css(maxString, "");
+            }
+        },
+        _saveTemplateSizes: function ($item) {
+            var me = this;
+            var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
+            var sizes = {};
+            $.each(styles, function (prop, value) {
+                sizes[prop] = value;
+            });
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -21860,28 +21927,46 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
+            if (!me.model.dashboardDef.reports[reportId]) {
+                me.model.dashboardDef.reports[reportId] = {};
+            }
             return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.model.dashboardDef.reports[reportId] = properties;
+            var reportProperties = me.getReportProperties(reportId);
+            $.extend(reportProperties, properties);
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+
             var $item = me.element.find("#" + reportId);
-            $item.removeClass("fr-core-hidden");
+            $item.css("display", "");
 
             $item.html("");
 
+            // Set the report size
+            if (me.enableEdit) {
+                me._resetTemplateSizes($item);
+            } else if (reportProperties.dashboardSizeOption) {
+                if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._resetTemplateSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._clearSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
+                    me._setCustomSize($item);
+                }
+            }
+
             // If we have a report definition, load the report
-            var reportProperties = me.model.dashboardDef.reports[reportId];
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -21895,7 +21980,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
-                $item.addClass("fr-core-hidden");
+                $item.css("display", "none");
             }
         },
         _onReportParameterSubmit: function (e, data) {
@@ -21936,7 +22021,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
@@ -22065,7 +22149,7 @@ $(function () {
             var $item = $(item);
 
             // Create the button
-            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");
             $item.append($btn);
 
             // Hook the onClick event
@@ -22121,6 +22205,7 @@ $(function () {
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
+    var dimemsions = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dimensions");
 
     /**
      * Widget used to select a new dashbard template
@@ -22172,7 +22257,7 @@ $(function () {
                 me.$reportInput.val("");
             }
 
-            // Restore the hide toolbar checkbox
+            // Restore the toolbar option checkboxes
             me._setCheckbox(false, me.$hideToolbar);
             me._setCheckbox(false, me.$minimalToolbar);
             me._setCheckbox(false, me.$fullToolbar);
@@ -22189,7 +22274,54 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
+            // Restore the size checkboxes
+            me._setCheckbox(false, me.$templateSize);
+            me._setCheckbox(false, me.$reportSize);
+            me._setCheckbox(false, me.$customSize);
+
+            if (me.properties.dashboardSizeOption) {
+                if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._setCheckbox(true, me.$templateSize);
+                } else if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._setCheckbox(true, me.$reportSize);
+                } else {
+                    me._setCheckbox(true, me.$customSize);
+                }
+            } else {
+                me._setCheckbox(true, me.$templateSize);
+            }
+
+            // Hide or show the custome size table
+            me._showCustomSizeTable();
+
+            // Load the custome size dimensions
+            me._loadDimensions(me.$widthSelect, me.properties.customSize ? me.properties.customSize.width.value : null);
+            me._loadDimensions(me.$heightSelect, me.properties.customSize ? me.properties.customSize.height.value : null);
+
             me._resetValidateMessage();
+
+            // Setup the report selector UI
+            var JSData = me._createJSData("/");
+            me.$tree.jstree({
+                core: {
+                    data: JSData
+                }
+            });
+        },
+        _loadDimensions: function ($select, selectedValue) {
+            $select.html("");
+
+            $.each(dimemsions, function (index, item) {
+                var encodedName = forerunner.helper.htmlEncode(item.name);
+                $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
+                $select.append($option);
+            });
+
+            $select.children("option").each(function (index, option) {
+                if ($(option).val() === selectedValue) {
+                    $select.prop("selectedIndex", index);
+                }
+            });
         },
         _createJSData: function (path) {
             var me = this;
@@ -22229,14 +22361,15 @@ $(function () {
 
             me.element.html("");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
+                        "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -22249,22 +22382,79 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
                                     "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.minimal + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
                                     "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.full + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
                                     "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                             "<tr>" +
+                        "</table>" +
+                        // Size options
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                    "</h3>" +
+                                "</td>" +
+                            "</tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.templateSize + "</label>" +
+                                    "<input class='fr-rp-template-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.reportSize + "</label>" +
+                                    "<input class='fr-rp-report-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.custom + "</label>" +
+                                    "<input class='fr-rp-custom-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                            "<tr>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Custom Size options
+                        "<table class='fr-rp-custom-size-table'>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                    "</h3>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Width
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
+                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select fr-core-input'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Height
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
+                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select fr-core-input'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
+                                "</td>" +
                             "</tr>" +
                         "</table>" +
                         // Submit conatiner
@@ -22286,6 +22476,12 @@ $(function () {
                 me._onClickTreeDropdown.apply(me, arguments);
             })
 
+            me.$removeReport = me.element.find(".fr-rp-remove-report-id");
+            me.$removeReport.on("click", function (e, data) {
+                me._onRemoveReport.apply(me, arguments);
+            });
+
+            // Toolbar options
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
             me.$hideToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
@@ -22299,17 +22495,32 @@ $(function () {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
+            // Size options
+            me.$templateSize = me.element.find(".fr-rp-template-size-id");
+            me.$templateSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$reportSize = me.element.find(".fr-rp-report-size-id");
+            me.$reportSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$customSize = me.element.find(".fr-rp-custom-size-id");
+            me.$customSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
 
-            // Setup the report selector UI
-            var JSData = me._createJSData("/");
-            me.$tree.jstree({
-                core: {
-                    data: JSData
-                }
-            });
+            // Custom size options
+            me.$widthSelect = me.element.find(".fr-rp-width-select-id");
+            me.$widthSlots = me.element.find(".fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find(".fr-rp-height-select-id");
+            me.$heightSlots = me.element.find(".fr-rp-height-slots-id");
+
+            me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
+
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });
@@ -22328,6 +22539,28 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+        },
+        _onRemoveReport: function (e, data) {
+            var me = this;
+            me.$reportInput.val("");
+            me.properties.catalogItem = null;
+        },
+        _onChangeSizeOption: function (e, data) {
+            var me = this;
+            me.$templateSize.prop("checked", false);
+            me.$reportSize.prop("checked", false);
+            me.$customSize.prop("checked", false);
+
+            $(e.target).prop("checked", true);
+            me._showCustomSizeTable();
+        },
+        _showCustomSizeTable: function () {
+            var me = this;
+            if (me.$customSize.prop("checked")) {
+                me.$customSizeTable.show();
+            } else {
+                me.$customSizeTable.hide();
+            }
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;
@@ -22421,17 +22654,41 @@ $(function () {
             var me = this;
 
             if (me.$form.valid() === true) {
+                // Toolbar options
                 me.properties.toolbarConfigOption = constants.toolbarConfigOption.hide;
                 if (me.$minimalToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.minimal;
                 } else if (me.$fullToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
                 }
-                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+                // Size options
+                me.properties.dashboardSizeOption = constants.dashboardSizeOption.template;
+                if (me.$reportSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.report;
+                } else if (me.$customSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
+                }
 
+                // Custom Size
+                if (me.$customSize.prop("checked")) {
+                    me.properties.customSize = {
+                        width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
+                        height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
+                    }
+                } else {
+                    me.properties.customSize = null;
+                }
+
+                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }
+        },
+        _getCustomSize: function ($select, $slots) {
+            return {
+                value: $select.val(),
+                slots: $slots.val(),
+            };
         },
         /**
          * Close parameter set dialog

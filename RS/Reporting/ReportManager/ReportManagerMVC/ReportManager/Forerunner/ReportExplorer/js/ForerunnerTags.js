@@ -37,7 +37,7 @@ $(function () {
                             "<table class='fr-tag-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-tag-text' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-tag-text' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-tag-prompt'>" +
                                     "<td></td>" +

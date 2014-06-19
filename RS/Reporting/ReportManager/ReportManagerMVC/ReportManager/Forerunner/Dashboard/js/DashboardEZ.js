@@ -80,7 +80,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
             me.layout.$mainsection.append(me.$dashboardContainer);
             me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
@@ -140,7 +140,7 @@ $(function () {
             var me = this;
 
             if (me.layout) {
-                var $dashboard = me.layout.$mainsection.find(".fr-dashboard-container");
+                var $dashboard = me.layout.$mainsection.find(".fr-dashboard");
                 if ($dashboard.length !== 0) {
                     return $dashboard;
                 }

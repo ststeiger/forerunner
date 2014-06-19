@@ -159,6 +159,18 @@
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>SalesByCountry.rdl</Name>
+      <FullPath>SalesByCountry.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SalesByEmployee.rdl</Name>
+      <FullPath>SalesByEmployee.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SalesByYear.rdl</Name>
+      <FullPath>SalesByYear.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Simple Matrix.rdl</Name>
       <FullPath>Simple Matrix.rdl</FullPath>
     </ProjectItem>
@@ -222,18 +234,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>SalesByCountry.rdl</Name>
-      <FullPath>SalesByCountry.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>SalesByEmployee.rdl</Name>
-      <FullPath>SalesByEmployee.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>SalesByYear.rdl</Name>
-      <FullPath>SalesByYear.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -242,7 +242,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://demo.forerunnersw.com/reportserver_beta</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

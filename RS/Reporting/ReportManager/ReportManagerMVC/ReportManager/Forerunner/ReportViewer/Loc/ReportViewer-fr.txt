@@ -220,9 +220,6 @@
     "cancel":"annuler",
     "dialogTitle":"RDL Extension JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"propriétés"
-  },
   "reportProperties": {
     "title":"Propriétés du rapport",
     "cancel":"annuler",
@@ -231,7 +228,16 @@
     "hideToolbar":"Masquer la barre d'outils",
     "toolbar":"barre d'outils:",
     "minimal":"Minimal",
-    "full":"plein"
+    "full":"plein",
+    "size":"taille:",
+    "templateSize":"modèle",
+    "reportSize":"rapport",
+    "custom":"coutume",
+    "customSize":"Taille personnalisée:",
+    "slots":"Slots",
+    "width":"largeur",
+    "height":"hauteur",
+    "removeReport":"retirer rapport"
   },
   "tags": {
     "title":"Mots clés",

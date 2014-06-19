@@ -104,7 +104,11 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tg.explorerItemFindGroup, tp.itemSetup, tp.itemLogOff];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            // Only show the log off is we are configured for forms authentication
+            if (forerunner.ajax.isFormsAuth()) {
+                toolpaneItems.push(tp.itemLogOff);
+            }
 
             me.addTools(1, true, toolpaneItems);
 
@@ -116,10 +120,8 @@ $(function () {
 
             me.updateBtnStates();
         },
-
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
             //this toolpane exist in all explorer page, so we should put some initialization here
@@ -128,13 +130,6 @@ $(function () {
         },
         updateBtnStates: function () {
             var me = this;
-
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                me.showTool(tp.itemLogOff.selectorClass);
-            } else {
-                me.hideTool(tp.itemLogOff.selectorClass);
-            }
 
             if (!me._isAdmin()) {
                 me.hideTool(tp.itemSearchFolder.selectorClass);
@@ -152,7 +147,6 @@ $(function () {
 
                 if (lastFetched.view === "catalog") {
                     //maintain a local permission list to reduce the hasPermission call
-                    if (!me.permissionList){console.log('create local permission list')}
                     me.permissionList = me.permissionList || [];
                     me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
                     var curPermission = me.permissionList[lastFetched.path];

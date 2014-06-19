@@ -111,16 +111,29 @@ $(function () {
                 }
             });
         },
+        _configurations: function () {
+            return [
+                { name: constants.toolbarConfigOption.minimal, selectorClass: "fr-toolbase-config-minimal" },
+                { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
+            ];
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
-                return true;
-            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
-                return true;
-            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                // Default is full so this case we always return true
                 return true;
             }
-            return false;
+
+            var found = false;
+            $.each(me._configurations(), function (index, config) {
+                if (me.toolbarConfigOption === config.name && $tool.hasClass(config.selectorClass)) {
+                    // We must match the config name and have the selector class
+                    found = true;
+                }
+            });
+
+            // Otherwise this button is not in this configuration
+            return found;
         },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;

@@ -162,19 +162,21 @@ $(function () {
             }
         },
         _viewerButtons: function (allButtons) {
-            var listOfButtons;
+            var listOfButtons = [tb.btnMenu];
 
-            if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-            else
-                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnEmailSubscription];
-
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
-                else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint, tb.btnEmailSubscription];
+            //check button button
+            if (allButtons === true || allButtons === undefined) {
+                listOfButtons.push(tb.btnReportBack);
             }
+
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+
+            //remove zoom button on android
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                listOfButtons.pop()
+            }
+
+            listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
 
             return listOfButtons;
         },

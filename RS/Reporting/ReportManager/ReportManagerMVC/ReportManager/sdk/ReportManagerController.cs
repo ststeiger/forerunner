@@ -76,7 +76,7 @@ namespace ReportManager.Controllers
         // GET api/ReportMananger/GetItems
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
-        {
+        {            
             try
             {
                 string CatItems = new JavaScriptSerializer().Serialize(GetReportManager(instance).GetItems(view, path));

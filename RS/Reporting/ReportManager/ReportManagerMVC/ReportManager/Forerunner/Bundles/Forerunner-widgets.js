@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4985,20 +4985,21 @@ $(function () {
                 async: false,
                 data: {
                     view: view,
-                    path: path                    
-                },
-                success: function (data) {
-                    if (data.Exception) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    }
-                    else
-                        me._render(data);
-                },
-                error: function (data) {
-                    console.log(data);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    path: path
                 }
-            });
+            }).done(
+                 function (data) {
+                     if (data.Exception) {
+                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                     }
+                     else
+                         me._render(data);
+                 }).fail(
+                function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer,textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
+                });
+            
         },
         _initCallbacks: function () {
             var me = this;

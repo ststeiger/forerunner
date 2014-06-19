@@ -1,12 +1,13 @@
-﻿{
-    "iPhone 5 portait width": 470,
-    "iPhone 5 portrait height": 558,
-    "iPad portrait width": 758,
-    "iPad Portrait height": 1014,
-    "PC 900 px": 890,
-    "PC 960 px": 950,
-    "PC 1080 px": 1070,
-    "PC 1280 px": 1270,
-    "PC 1600 px": 1590,
-    "PC 1920 px": 1910
-}
+﻿[
+    {"name": "<report>", "value": 0},
+    {"name": "iPhone 5 portait width", "value": 470},
+    {"name": "iPhone 5 portrait height", "value": 558},
+    {"name": "iPad portrait width", "value": 758},
+    {"name": "iPad Portrait height", "value": 1014},
+    {"name": "PC 900 px", "value": 890},
+    {"name": "PC 960 px", "value": 950},
+    {"name": "PC 1080 px", "value": 1070},
+    {"name": "PC 1280 px", "value": 1270},
+    {"name": "PC 1600 px", "value": 1590},
+    {"name": "PC 1920 px", "value": 1910}
+]

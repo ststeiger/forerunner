@@ -120,7 +120,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
-    "Email":"Email",
+    "Email":"電子郵件",
     "AdminUI":"管理員UI"
   },
   "paramPane": {
@@ -228,15 +228,15 @@
     "toolbar":"工具欄:",
     "minimal":"最小化",
     "full":"充满",
-    "size":"Size:",
-    "templateSize":"Template",
-    "reportSize":"Report",
-    "custom":"Custom",
-    "customSize":"Custom Size:",
-    "slots":"Slots",
-    "width":"Width",
-    "height":"Height",
-    "removeReport":"Remove Report"
+    "size":"尺寸:",
+    "templateSize":"模板",
+    "reportSize":"报表",
+    "custom":"自定義",
+    "customSize":"自定義尺寸:",
+    "slots":"插槽",
+    "width":"寬度",
+    "height":"高度",
+    "removeReport":"移除報表"
   },
   "tags": {
     "title":"標籤",

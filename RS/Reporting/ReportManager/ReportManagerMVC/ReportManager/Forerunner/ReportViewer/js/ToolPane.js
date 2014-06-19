@@ -61,10 +61,12 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
                 me.disableTools([tp.itemTags]);
 
-                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
-                if (addTagPermission && addTagPermission.hasPermission === true) {
+                var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+                if (permissions["Update Properties"] === true) {
                     me.enableTools([tp.itemTags]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -99,10 +101,6 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
-            });
-
-            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
-                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -249,7 +247,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tp.itemManageSubscription.selectorClass);
                 me.showTool(tp.itemEmailSubscription.selectorClass);
             } else {

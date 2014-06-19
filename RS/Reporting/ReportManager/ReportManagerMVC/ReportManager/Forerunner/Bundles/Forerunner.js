@@ -1262,17 +1262,17 @@ $(function () {
             });
         },
         /**
-        * Returns json data indicating is the user has the requested permission for the given path
+        * Returns json data indicating is the user has the requested permissions for the given path
         *
         * @param {String} path - fully qualified path to the resource
-        * @param {String} permission - Requested permission
+        * @param {String} permissions - Requested permissions list
         */
-        hasPermission: function (path, permission) {
+        hasPermission: function (path, permissions) {
             var permissionData = null;
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
                 "?path=" + encodeURIComponent(path) +
-                "&permission=" + permission;
+                "&permission=" + permissions;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -1286,6 +1286,39 @@ $(function () {
                 }
             });
             return permissionData;
+        },
+        _userSetting: null,
+        /**
+         * Set user settings object
+         *
+         * @param {Object} User Settings Object
+         */
+        setUserSetting: function (usetSetting) {
+            this._userSetting = usetSetting;
+        },
+        /**
+        * Get user settings object, will retrieve from database if not set.
+        */
+        getUserSetting: function (rsInstance) {
+            if (this._userSetting === null) {
+                var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetUserSettings";
+
+                if (rsInstance) {
+                    url += "?instance=" + rsInstance;
+                }
+
+                forerunner.ajax.ajax({
+                    url: url,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data && data.responsiveUI !== undefined) {
+                            forerunner.ajax._userSetting = data;
+                        }
+                    }
+                });
+            }
+            return this._userSetting;
         }
     };
     /**
@@ -1610,7 +1643,6 @@ $(function () {
         },
         _bindKeyboard: function (event) {
             var element = event.data.target.element;
-            
             //trigger generic event, each modal dialog widget can listener part/all of them 
             switch (event.keyCode) {
                 case 13://Enter to trigger generic submit

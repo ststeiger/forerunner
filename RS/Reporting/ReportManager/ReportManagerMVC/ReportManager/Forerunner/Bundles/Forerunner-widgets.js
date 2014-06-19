@@ -782,6 +782,26 @@ $(function () {
                 });
             }
         },
+        _checkPermission: function (path) {
+            var me = this;
+            //Create Subscription: create subscription
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Subscription", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermissions: function () {
+            var me = this;
+
+            return me.permissions;
+        },
         /**
          * Get current user settings
          *
@@ -2459,7 +2479,8 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
-
+            
+            me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {
@@ -5280,7 +5301,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tb.btnEmailSubscription.selectorClass);
             } else {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
@@ -5363,10 +5386,12 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
                 me.disableTools([tp.itemTags]);
 
-                var addTagPermission = forerunner.ajax.hasPermission(data.reportPath, "Update Properties");
-                if (addTagPermission && addTagPermission.hasPermission === true) {
+                var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+                if (permissions["Update Properties"] === true) {
                     me.enableTools([tp.itemTags]);
                 }
+
+                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -5401,10 +5426,6 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                 me._leaveCurReport();
-            });
-
-            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
-                me._checkSubscription();
             });
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
@@ -5551,7 +5572,9 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
-            if (forerunner.ajax.hasPermission(me.options.$reportViewer.reportViewer("getReportPath"), "Create Subscription")) {
+
+            var permissions = me.options.$reportViewer.reportViewer("getPermissions");
+            if (permissions["Create Subscription"] === true) {
                 me.showTool(tp.itemManageSubscription.selectorClass);
                 me.showTool(tp.itemEmailSubscription.selectorClass);
             } else {
@@ -6150,27 +6173,12 @@ $(function () {
                 me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
 
                 if (lastFetched.view === "catalog") {
-                    //maintain a local permission list to reduce the hasPermission call
-                    me.permissionList = me.permissionList || [];
-                    me.permissionList[lastFetched.path] = me.permissionList[lastFetched.path] || {};
-                    var curPermission = me.permissionList[lastFetched.path];
-
-                    if (curPermission.createResource === undefined) {
-                        var permission = forerunner.ajax.hasPermission(lastFetched.path, "Create Resource");
-                        curPermission.createResource = (permission && permission.hasPermission === true) ? true : false;
-                    }                   
-
-                    if (lastFetched.path !== "/" && curPermission.updateProperties === undefined) {
-                        var addTagPermission = forerunner.ajax.hasPermission(lastFetched.path, "Update Properties");
-                        curPermission.updateProperties = (addTagPermission && addTagPermission.hasPermission === true) ? true : false;
-                    }
-
-                    // If the last fetched folder is a catalog and the user has permission to create a
-                    // resource in this folder, enable the create dashboard button and create search folder button
-                    if (curPermission.createResource === true) {
+                    var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
+                    if (permissions["Create Resource"]) {
                         me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
                     }
-                    if (curPermission.updateProperties === true) {
+
+                    if (lastFetched.path !== "/" && permissions["Update Properties"]) {
                         me.enableTools([tp.itemTags]);
                     }
                 }
@@ -6232,6 +6240,7 @@ $(function () {
             rsInstance: null,
             onInputBlur: null,
             onInputFocus: null,
+            userSettings: null,
         },
         /**
          * Save the user settings
@@ -6262,23 +6271,11 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {Boolean} forceLoadFromServer - if true, always load from the server
-         *
          * @return {Object} - User settings
          */
-        getUserSettings: function (forceLoadFromServer) {
+        getUserSettings: function () {
             var me = this;
-
-            if (forceLoadFromServer !== true && me.userSettings) {
-                return me.userSettings;
-            }
-
-            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
-            if (settings) {
-                me.userSettings = settings;
-            }
-
-            return me.userSettings;
+            return me.options.userSettings;
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -6591,16 +6588,12 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
+            me._checkPermission();
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
             me._fetch(me.options.view, me.options.path);
-
-            me.userSettings = {
-                responsiveUI: false,
-                adminUI: false
-            };
-            me.getUserSettings(true);
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
@@ -6634,6 +6627,25 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._forerunnerTagsDialog = $dlg;
+        },
+        _checkPermission: function () {
+            var me = this;
+            //create resource: create resource file (search folder/dashboard)
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Resource", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Show the create dashboard modal dialog.
@@ -7070,6 +7082,8 @@ $(function () {
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
             me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
+            //update cached setting
+            forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
             me._triggerClose(true);
         },
@@ -13120,7 +13134,7 @@ $(function () {
 
             var userSettings = me.options.userSettings;
             if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
-                userSettings = me.getUserSettings(me.options);
+                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
             }
 
             me.options.$docMap.hide();
@@ -13134,7 +13148,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
             });
-
+            
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
@@ -13307,22 +13321,6 @@ $(function () {
                     }
                 }
             });
-        },
-        getUserSettings : function(options) {
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            if (options.rsInstance) url += "?instance=" + options.rsInstance;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-            return settings;
         },
         onClickBtnFavorite: function (e) {
             var me = this;
@@ -14127,6 +14125,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur,
+                userSettings: me._getUserSettings()
             });
         },
 
@@ -14175,7 +14174,7 @@ $(function () {
             var me = this;
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
-
+            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -14368,9 +14367,7 @@ $(function () {
         },
         _getUserSettings: function () {
             var me = this;
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            return me.$reportExplorer.reportExplorer("getUserSettings");
+            return forerunner.ajax.getUserSetting(me.options.rsInstance);
         },
         /**
          * Transition to ReportViewer view
@@ -14436,6 +14433,7 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     enableEdit: enableEdit,
+                    path: path,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings()
                 });
@@ -14586,6 +14584,8 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
             var $dialog = $(
@@ -14736,7 +14736,7 @@ $(function () {
         },
     }); //$.widget
 });
-///#source 1 1 /Forerunner/ReportExplorer/js/EmailSubscription.js
+///#source 1 1 /Forerunner/ReportViewer/js/EmailSubscription.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -14786,7 +14786,8 @@ $(function () {
             me.$colOfLastRow.append($retVal);
             return $retVal;
         },
-        _subscriptionData : null,
+        _subscriptionData: null,
+        _canEditComment: false,
         _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
@@ -14861,7 +14862,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                if (me.options.userSettings && me.options.userSettings.adminUI == true)
+                if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
@@ -14881,9 +14882,9 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    //if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
-                    //    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    //}
+                    if (me._canEditComment) {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
@@ -15035,6 +15036,10 @@ $(function () {
                 me.$desc.hide();
                 me.$comment.hide();
             }
+            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
+            if (!me._canEditComment) {
+                me.$comment.hide();
+            }
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
@@ -15091,7 +15096,7 @@ $(function () {
     });  // $.widget(
 });  // $(function ()
 
-///#source 1 1 /Forerunner/ReportExplorer/js/ManageSubscription.js
+///#source 1 1 /Forerunner/ReportViewer/js/ManageSubscription.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -15125,8 +15130,9 @@ $(function () {
             var me = this;
             var $listItem = new $("<DIV />");
             $listItem.addClass("fr-sub-listitem");
-            var $deleteIcon = me._createDiv(["ui-icon-circle-close", "ui-icon"]);
-            var $editIcon = me._createDiv(["ui-icon-pencil", "ui-icon"]);
+            $listItem.append(subInfo.Description);
+            var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
+            var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
             $deleteIcon.on("click", function () {
@@ -15139,7 +15145,6 @@ $(function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
             $listItem.append($editIcon);
-            $listItem.append(subInfo.Description);
             return $listItem;
         },
         _editSubscription: function (subscriptionID) {
@@ -15215,7 +15220,7 @@ $(function () {
     });  // $.widget(
 });  // $(function ()
 
-///#source 1 1 /Forerunner/ReportExplorer/js/SubscriptionModel.js
+///#source 1 1 /Forerunner/ReportViewer/js/SubscriptionModel.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -21437,13 +21442,13 @@ $(function () {
             isReportManager: false,
             enableEdit: true,
             rsInstance: null,
-            userSettings: null
+            userSettings: null,
+            path: null
         },
         /**
          * Returns the user settings
          *
          * @function $.forerunner.dashboardEZ#getUserSettings
-         * @param {bool} enableEdit - true = enable, false = view
          */
         getUserSettings: function () {
             var me = this;
@@ -21475,6 +21480,8 @@ $(function () {
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
+
+            me._checkPermission();
 
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
@@ -21527,6 +21534,24 @@ $(function () {
 
             me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
             me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+        },
+        _checkPermission: function () {
+            var me = this;
+            //Update Content: update resource content (dashboard)
+            //for more properties, add to the list
+            var permissionList = ["Update Content"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Get dashboard editor
@@ -21647,16 +21672,16 @@ $(function () {
                 if (enableEdit) {
                     var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                     var path = $dashboardEditor.dashboardEditor("getPath");
-                    var permission = { hasPermission: true };
+
                     if (path) {
-                        permission = forerunner.ajax.hasPermission(path, "Update Content");
-                    }
-                    if (!path || (permission && permission.hasPermission === true)) {
-                        // If the user has update resource permission for this dashboard, we will
-                        // enable the edit buttons
-                        me.showTool(dtb.btnView.selectorClass);
-                        me.hideTool(dtb.btnEdit.selectorClass);
-                        return;
+                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                        if (permissions["Update Content"] === true) {
+                            // If the user has update resource permission for this dashboard, we will
+                            // enable the edit buttons
+                            me.showTool(dtb.btnView.selectorClass);
+                            me.hideTool(dtb.btnEdit.selectorClass);
+                            return;
+                        }
                     }
                 }
 
@@ -21755,16 +21780,16 @@ $(function () {
                 if (enableEdit) {
                     var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
                     var path = $dashboardEditor.dashboardEditor("getPath");
-                    var permission = { hasPermission: true };
+                    
                     if (path) {
-                        permission = forerunner.ajax.hasPermission(path, "Update Content");
-                    }
-                    if (!path || (permission && permission.hasPermission === true)) {
-                        // If the user has update resource permission for this dashboard, we will
-                        // enable the edit buttons
-                        me.showTool(dbtp.itemView.selectorClass);
-                        me.hideTool(dbtp.itemEdit.selectorClass);
-                        return;
+                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                        if (permissions["Update Content"] === true) {
+                            // If the user has update resource permission for this dashboard, we will
+                            // enable the edit buttons
+                            me.showTool(dbtp.itemView.selectorClass);
+                            me.hideTool(dbtp.itemEdit.selectorClass);
+                            return;
+                        }
                     }
                 }
 

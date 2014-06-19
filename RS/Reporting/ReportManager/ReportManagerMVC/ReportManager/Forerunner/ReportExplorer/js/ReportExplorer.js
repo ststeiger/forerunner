@@ -50,6 +50,7 @@ $(function () {
             rsInstance: null,
             onInputBlur: null,
             onInputFocus: null,
+            userSettings: null,
         },
         /**
          * Save the user settings
@@ -80,23 +81,11 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {Boolean} forceLoadFromServer - if true, always load from the server
-         *
          * @return {Object} - User settings
          */
-        getUserSettings: function (forceLoadFromServer) {
+        getUserSettings: function () {
             var me = this;
-
-            if (forceLoadFromServer !== true && me.userSettings) {
-                return me.userSettings;
-            }
-
-            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
-            if (settings) {
-                me.userSettings = settings;
-            }
-
-            return me.userSettings;
+            return me.options.userSettings;
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -409,16 +398,12 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
+            me._checkPermission();
+
             if (me.options.explorerSettings) {
                 me._initOverrides();
             }
             me._fetch(me.options.view, me.options.path);
-
-            me.userSettings = {
-                responsiveUI: false,
-                adminUI: false
-            };
-            me.getUserSettings(true);
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
@@ -452,6 +437,25 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._forerunnerTagsDialog = $dlg;
+        },
+        _checkPermission: function () {
+            var me = this;
+            //create resource: create resource file (search folder/dashboard)
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Resource", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermission: function () {
+            var me = this;
+            return me.permissions;
         },
         /**
          * Show the create dashboard modal dialog.

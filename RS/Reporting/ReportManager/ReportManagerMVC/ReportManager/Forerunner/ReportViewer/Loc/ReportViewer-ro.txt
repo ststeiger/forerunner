@@ -228,15 +228,15 @@
     "toolbar":"Toolbar:",
     "minimal":"minim",
     "full":"complet",
-    "size":"Size:",
-    "templateSize":"Template",
-    "reportSize":"Report",
-    "custom":"Custom",
+    "size":"dimensiune:",
+    "templateSize":"șablon",
+    "reportSize":"raport",
+    "custom":"obicei",
     "customSize":"Custom Size:",
     "slots":"Slots",
-    "width":"Width",
-    "height":"Height",
-    "removeReport":"Remove Report"
+    "width":"lățime",
+    "height":"înălțime",
+    "removeReport":"Scoateți Raport"
   },
   "tags": {
     "title":"Tag-uri",

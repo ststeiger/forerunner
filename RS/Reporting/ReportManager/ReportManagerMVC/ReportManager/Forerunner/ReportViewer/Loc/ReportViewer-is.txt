@@ -228,15 +228,15 @@
     "toolbar":"tækjastika:",
     "minimal":"Minimal",
     "full":"fullur",
-    "size":"Size:",
-    "templateSize":"Template",
-    "reportSize":"Report",
+    "size":"stærð:",
+    "templateSize":"Snið",
+    "reportSize":"skýrslu",
     "custom":"Custom",
     "customSize":"Custom Size:",
-    "slots":"Slots",
-    "width":"Width",
-    "height":"Height",
-    "removeReport":"Remove Report"
+    "slots":"rifa",
+    "width":"breidd",
+    "height":"Hæð",
+    "removeReport":"fjarlægja sKÝRSLA"
   },
   "tags": {
     "title":"Tags",

@@ -68,7 +68,7 @@ $(function () {
 
             var userSettings = me.options.userSettings;
             if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
-                userSettings = me.getUserSettings(me.options);
+                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
             }
 
             me.options.$docMap.hide();
@@ -255,22 +255,6 @@ $(function () {
                     }
                 }
             });
-        },
-        getUserSettings : function(options) {
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            if (options.rsInstance) url += "?instance=" + options.rsInstance;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-            return settings;
         },
         onClickBtnFavorite: function (e) {
             var me = this;

@@ -152,6 +152,26 @@ $(function () {
                 });
             }
         },
+        _checkPermission: function (path) {
+            var me = this;
+            //Create Subscription: create subscription
+            //update properties: update report properties (tags)
+            //for more properties, add to the list
+            var permissionList = ["Create Subscription", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
+        },
+        /**
+         * Get current path user permission
+         *
+         * @function $.forerunner.dashboardEZ#getPermission
+         * 
+         * @return {Object} - permission jQuery object
+         */
+        getPermissions: function () {
+            var me = this;
+
+            return me.permissions;
+        },
         /**
          * Get current user settings
          *
@@ -1829,7 +1849,8 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
-
+            
+            me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
             if (me._reloadFromSessionStorage()) {

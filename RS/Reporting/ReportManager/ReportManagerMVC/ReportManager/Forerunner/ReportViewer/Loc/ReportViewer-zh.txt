@@ -120,7 +120,7 @@
     "submit":"保存",
     "cancel":"取消",
     "ResponsiveUI":"动态UI",
-    "Email":"Email",
+    "Email":"电子邮件",
     "AdminUI":"管理员UI"
   },
   "paramPane": {
@@ -227,10 +227,16 @@
     "hideToolbar":"隐藏工具栏",
     "toolbar":"工具栏:",
     "minimal":"最小化",
-    "full":"充满"
-  },
-  "dashboardEditor": {
-    "propertiesBtn":"属性"
+    "full":"充满",
+    "size":"尺寸:",
+    "templateSize":"模板",
+    "reportSize":"报表",
+    "custom":"自定义",
+    "customSize":"自定义尺寸:",
+    "slots":"插槽",
+    "width":"宽度",
+    "height":"高度",
+    "removeReport":"移除报表"
   },
   "tags": {
     "title":"标签",

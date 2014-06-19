@@ -44,7 +44,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
@@ -55,7 +55,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +

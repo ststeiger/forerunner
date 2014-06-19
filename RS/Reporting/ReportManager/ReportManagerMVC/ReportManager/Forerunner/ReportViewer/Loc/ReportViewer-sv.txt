@@ -219,9 +219,6 @@
     "cancel":"Avbryt",
     "dialogTitle":"RDL Förlängnings JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"Egenskaper"
-  },
   "reportProperties": {
     "title":"Rapportera Egenskaper",
     "cancel":"Avbryt",
@@ -230,7 +227,16 @@
     "hideToolbar":"Hide Toolbar",
     "toolbar":"Verktygsfält:",
     "minimal":"Kortaste",
-    "full":"Fullständig"
+    "full":"Fullständig",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height",
+    "removeReport":"Remove Report"
   },
   "tags": {
     "title":"Taggar",

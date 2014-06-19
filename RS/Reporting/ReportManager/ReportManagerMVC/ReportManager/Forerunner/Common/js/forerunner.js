@@ -478,7 +478,19 @@ $(function () {
         toolbarConfigOption: {
             hide: "hide",
             minimal: "minimal",
+            dashboardEdit: "dashboardEdit",
             full: "full"
+        },
+        /**
+         * Dashboard report slot, size options
+         *
+         * @readonly
+         * @enum {String}
+         */
+        dashboardSizeOption: {
+            template: "template",
+            report: "report",
+            custom: "custom"
         },
         /**
          * sort order used in the Report Viewer sort() method.

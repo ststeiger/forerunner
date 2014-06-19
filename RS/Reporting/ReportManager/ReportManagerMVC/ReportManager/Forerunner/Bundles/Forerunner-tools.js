@@ -69,7 +69,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
-            sharedClass: "fr-toolbase-config-minimal",
+            sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit",
             tooltip: locData.toolbar.paramarea,
             events: {
                 click: function (e) {
@@ -120,6 +120,7 @@ $(function () {
         btnReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-reportpage-textbox",
+            sharedClass: "fr-core-input",
             //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
@@ -217,7 +218,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
+            sharedClass: "fr-core-input fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -714,6 +715,7 @@ $(function () {
         itemReportPage: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
+            sharedClass: "fr-core-input",
             //inputType: "number",
             tooltip: locData.toolbar.reportPage,
             events: {
@@ -946,8 +948,8 @@ $(function () {
         /** @member */
         itemKeyword: {
             toolType: toolTypes.input,
-            selectorClass: "fr-item-keyword-textbox",
-            sharedClass: "fr-toolbase-find-textbox",
+            selectorClass: "fr-item-keyword-textbox fr-core-input",
+            sharedClass: "fr-toolbase-find-textbox fr-item-keyword-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {

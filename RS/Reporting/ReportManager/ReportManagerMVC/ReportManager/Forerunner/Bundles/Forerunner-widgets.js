@@ -3588,16 +3588,29 @@ $(function () {
                 }
             });
         },
+        _configurations: function () {
+            return [
+                { name: constants.toolbarConfigOption.minimal, selectorClass: "fr-toolbase-config-minimal" },
+                { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
+            ];
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
-                return true;
-            } else if (me.toolbarConfigOption !== constants.toolbarConfigOption.minimal) {
-                return true;
-            } else if ($tool.hasClass("fr-toolbase-config-minimal")) {
+                // Default is full so this case we always return true
                 return true;
             }
-            return false;
+
+            var found = false;
+            $.each(me._configurations(), function (index, config) {
+                if (me.toolbarConfigOption === config.name && $tool.hasClass(config.selectorClass)) {
+                    // We must match the config name and have the selector class
+                    found = true;
+                }
+            });
+
+            // Otherwise this button is not in this configuration
+            return found;
         },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
@@ -7112,7 +7125,7 @@ $(function () {
                             "<table class='fr-tag-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-tag-text' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-tag-text' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-tag-prompt'>" +
                                     "<td></td>" +
@@ -12176,7 +12189,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
@@ -12187,7 +12200,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +
@@ -12780,7 +12793,7 @@ $(function () {
             }
 
             var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -13149,8 +13162,8 @@ $(function () {
             if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
                 $toolbar.hide();
             } else {
-                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
-                    $toolbar.toolbar("configure", constants.toolbarConfigOption.minimal);
+                if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
+                    $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
                 $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
@@ -21467,7 +21480,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
             me.layout.$mainsection.append(me.$dashboardContainer);
             me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
@@ -21527,7 +21540,7 @@ $(function () {
             var me = this;
 
             if (me.layout) {
-                var $dashboard = me.layout.$mainsection.find(".fr-dashboard-container");
+                var $dashboard = me.layout.$mainsection.find(".fr-dashboard");
                 if ($dashboard.length !== 0) {
                     return $dashboard;
                 }
@@ -21800,7 +21813,6 @@ $(function () {
     var widgets = constants.widgets;
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages = locData.messages;
 
@@ -21863,8 +21875,30 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                me._saveTemplateSizes($(item));
                 me._loadReport(item.id, hideMissing);
             });
+        },
+        _clearSizes: function ($item) {
+            $item.css({ minWidth: "", maxWidth: "", minHeight: "", maxHeight: "" });
+        },
+        _resetTemplateSizes: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            $item.css(reportProperties.sizes);
+        },
+        _saveTemplateSizes: function ($item) {
+            var me = this;
+            var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
+            var sizes = {};
+            $.each(styles, function (prop, value) {
+                sizes[prop] = value;
+            });
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
             return me.parentFolder;
@@ -21874,28 +21908,44 @@ $(function () {
         },
         getReportProperties: function (reportId) {
             var me = this;
+            if (!me.model.dashboardDef.reports[reportId]) {
+                me.model.dashboardDef.reports[reportId] = {};
+            }
             return me.model.dashboardDef.reports[reportId];
         },
         setReportProperties: function (reportId, properties) {
             var me = this;
-            me.model.dashboardDef.reports[reportId] = properties;
+            var reportProperties = me.getReportProperties(reportId);
+            $.extend(reportProperties, properties);
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
+            var reportProperties = me.model.dashboardDef.reports[reportId];
+
             var $item = me.element.find("#" + reportId);
-            $item.removeClass("fr-core-hidden");
+            $item.css("display", "");
 
             $item.html("");
 
+            // Set the report size
+            if (reportProperties.dashboardSizeOption) {
+                if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._resetTemplateSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._clearSizes($item);
+                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
+                    // TODO
+                }
+            }
+
             // If we have a report definition, load the report
-            var reportProperties = me.model.dashboardDef.reports[reportId];
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
                     navigateTo: me.options.navigateTo,
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
-                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.minimal : reportProperties.toolbarConfigOption
+                    toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
@@ -21909,7 +21959,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
-                $item.addClass("fr-core-hidden");
+                $item.css("display", "none");
             }
         },
         _onReportParameterSubmit: function (e, data) {
@@ -21950,7 +22000,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
@@ -22079,7 +22128,7 @@ $(function () {
             var $item = $(item);
 
             // Create the button
-            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");
             $item.append($btn);
 
             // Hook the onClick event
@@ -22186,7 +22235,7 @@ $(function () {
                 me.$reportInput.val("");
             }
 
-            // Restore the hide toolbar checkbox
+            // Restore the toolbar option checkboxes
             me._setCheckbox(false, me.$hideToolbar);
             me._setCheckbox(false, me.$minimalToolbar);
             me._setCheckbox(false, me.$fullToolbar);
@@ -22203,7 +22252,35 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
+            // Restore the size checkboxes
+            me._setCheckbox(false, me.$templateSize);
+            me._setCheckbox(false, me.$reportSize);
+            me._setCheckbox(false, me.$customSize);
+
+            if (me.properties.dashboardSizeOption) {
+                if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.template) {
+                    me._setCheckbox(true, me.$templateSize);
+                } else if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.report) {
+                    me._setCheckbox(true, me.$reportSize);
+                } else {
+                    me._setCheckbox(true, me.$customSize);
+                }
+            } else {
+                me._setCheckbox(true, me.$templateSize);
+            }
+
+            // Hide or show the custome size table
+            me._showCustomSizeTable();
+
             me._resetValidateMessage();
+
+            // Setup the report selector UI
+            var JSData = me._createJSData("/");
+            me.$tree.jstree({
+                core: {
+                    data: JSData
+                }
+            });
         },
         _createJSData: function (path) {
             var me = this;
@@ -22243,14 +22320,15 @@ $(function () {
 
             me.element.html("");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
+                        "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -22263,22 +22341,73 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.hideToolbar + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
                                     "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.minimal + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
                                     "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label'>" + reportProperties.full + "</label>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
                                     "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                                 "</td>" +
                             "<tr>" +
+                        "</table>" +
+                        // Size options
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.templateSize + "</label>" +
+                                    "<input class='fr-rp-template-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.reportSize + "</label>" +
+                                    "<input class='fr-rp-report-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.custom + "</label>" +
+                                    "<input class='fr-rp-custom-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                                "</td>" +
+                            "<tr>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Custom Size options
+                        "<table class='fr-rp-custom-size-table'>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Width
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
+                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select fr-core-input'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            // Height
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
+                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select fr-core-input'/>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                "</td>" +
                             "</tr>" +
                         "</table>" +
                         // Submit conatiner
@@ -22300,6 +22429,12 @@ $(function () {
                 me._onClickTreeDropdown.apply(me, arguments);
             })
 
+            me.$removeReport = me.element.find(".fr-rp-remove-report-id");
+            me.$removeReport.on("click", function (e, data) {
+                me._onRemoveReport.apply(me, arguments);
+            });
+
+            // Toolbar options
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
             me.$hideToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
@@ -22313,17 +22448,32 @@ $(function () {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
+            // Size options
+            me.$templateSize = me.element.find(".fr-rp-template-size-id");
+            me.$templateSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$reportSize = me.element.find(".fr-rp-report-size-id");
+            me.$reportSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+            me.$customSize = me.element.find(".fr-rp-custom-size-id");
+            me.$customSize.on("change", function (e, data) {
+                me._onChangeSizeOption.apply(me, arguments);
+            });
+
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
 
-            // Setup the report selector UI
-            var JSData = me._createJSData("/");
-            me.$tree.jstree({
-                core: {
-                    data: JSData
-                }
-            });
+            // Custom size options
+            me.$widthSelect = me.element.find("fr-rp-width-select-id");
+            me.$widthSlot = me.element.find("fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find("fr-rp-height-select-id");
+            me.$heightSlot = me.element.find("fr-rp-height-slots-id");
+
+            me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
+
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });
@@ -22342,6 +22492,28 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+        },
+        _onRemoveReport: function (e, data) {
+            var me = this;
+            me.$reportInput.val("");
+            me.properties.catalogItem = null;
+        },
+        _onChangeSizeOption: function (e, data) {
+            var me = this;
+            me.$templateSize.prop("checked", false);
+            me.$reportSize.prop("checked", false);
+            me.$customSize.prop("checked", false);
+
+            $(e.target).prop("checked", true);
+            me._showCustomSizeTable();
+        },
+        _showCustomSizeTable: function () {
+            var me = this;
+            if (me.$customSize.prop("checked")) {
+                me.$customSizeTable.show();
+            } else {
+                me.$customSizeTable.hide();
+            }
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;
@@ -22435,14 +22607,22 @@ $(function () {
             var me = this;
 
             if (me.$form.valid() === true) {
+                // Toolbar options
                 me.properties.toolbarConfigOption = constants.toolbarConfigOption.hide;
                 if (me.$minimalToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.minimal;
                 } else if (me.$fullToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
                 }
-                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
+                // Size options
+                me.properties.dashboardSizeOption = constants.dashboardSizeOption.template;
+                if (me.$reportSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.report;
+                } else if (me.$customSize.prop("checked")) {
+                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
+                }
 
+                me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }

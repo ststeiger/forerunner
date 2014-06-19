@@ -219,9 +219,6 @@
     "cancel":"отменить",
     "dialogTitle":"RDL расширение JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"свойства"
-  },
   "reportProperties": {
     "title":"Свойства Сообщить",
     "cancel":"отменить",
@@ -230,7 +227,16 @@
     "hideToolbar":"Скрыть панель инструментов",
     "toolbar":"Панель инструментов:",
     "minimal":"минимальный",
-    "full":"полный"
+    "full":"полный",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height",
+    "removeReport":"Remove Report"
   },
   "tags": {
     "title":"Метки",

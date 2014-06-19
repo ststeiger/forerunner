@@ -104,6 +104,14 @@ $(function () {
             me._showCustomSizeTable();
 
             me._resetValidateMessage();
+
+            // Setup the report selector UI
+            var JSData = me._createJSData("/");
+            me.$tree.jstree({
+                core: {
+                    data: JSData
+                }
+            });
         },
         _createJSData: function (path) {
             var me = this;
@@ -297,13 +305,6 @@ $(function () {
 
             me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
 
-            // Setup the report selector UI
-            var JSData = me._createJSData("/");
-            me.$tree.jstree({
-                core: {
-                    data: JSData
-                }
-            });
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });

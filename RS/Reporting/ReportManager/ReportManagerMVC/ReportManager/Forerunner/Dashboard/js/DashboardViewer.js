@@ -87,6 +87,25 @@ $(function () {
             var reportProperties = me.getReportProperties(id);
             $item.css(reportProperties.sizes);
         },
+        _setCustomSize: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            me._setCustomDimension($item, reportProperties.customSize.width, "minWidth", "maxWidth");
+            me._setCustomDimension($item, reportProperties.customSize.height, "minHeight", "maxHeight");
+        },
+        _setCustomDimension: function ($item, dimension, minString, maxString) {
+            if (dimension.value > 0) {
+                var length = dimension.value / dimension.slots;
+                $item.css(minString, length);
+                $item.css(maxString, length);
+            } else {
+                $item.css(minString, "");
+                $item.css(maxString, "");
+            }
+        },
         _saveTemplateSizes: function ($item) {
             var me = this;
             var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
@@ -126,13 +145,15 @@ $(function () {
             $item.html("");
 
             // Set the report size
-            if (reportProperties.dashboardSizeOption) {
+            if (me.enableEdit) {
+                me._resetTemplateSizes($item);
+            } else if (reportProperties.dashboardSizeOption) {
                 if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
                     me._resetTemplateSizes($item);
                 } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
                     me._clearSizes($item);
                 } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
-                    // TODO
+                    me._setCustomSize($item);
                 }
             }
 

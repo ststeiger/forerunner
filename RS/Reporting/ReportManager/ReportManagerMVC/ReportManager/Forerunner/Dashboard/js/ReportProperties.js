@@ -15,6 +15,7 @@ $(function () {
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
+    var dimemsions = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dimensions");
 
     /**
      * Widget used to select a new dashbard template
@@ -103,6 +104,10 @@ $(function () {
             // Hide or show the custome size table
             me._showCustomSizeTable();
 
+            // Load the custome size dimensions
+            me._loadDimensions(me.$widthSelect, me.properties.customSize ? me.properties.customSize.width.value : null);
+            me._loadDimensions(me.$heightSelect, me.properties.customSize ? me.properties.customSize.height.value : null);
+
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -110,6 +115,21 @@ $(function () {
             me.$tree.jstree({
                 core: {
                     data: JSData
+                }
+            });
+        },
+        _loadDimensions: function ($select, selectedValue) {
+            $select.html("");
+
+            $.each(dimemsions, function (index, item) {
+                var encodedName = forerunner.helper.htmlEncode(item.name);
+                $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
+                $select.append($option);
+            });
+
+            $select.children("option").each(function (index, option) {
+                if ($(option).val() === selectedValue) {
+                    $select.prop("selectedIndex", index);
                 }
             });
         },
@@ -172,7 +192,9 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
@@ -193,7 +215,9 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
@@ -215,7 +239,9 @@ $(function () {
                         "<table class='fr-rp-custom-size-table'>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                             // Width
@@ -226,7 +252,7 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                             // Height
@@ -237,7 +263,7 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +
@@ -298,10 +324,10 @@ $(function () {
             me.$tree = me.element.find(".fr-report-tree-id");
 
             // Custom size options
-            me.$widthSelect = me.element.find("fr-rp-width-select-id");
-            me.$widthSlot = me.element.find("fr-rp-width-slots-id");
-            me.$heightSelect = me.element.find("fr-rp-height-select-id");
-            me.$heightSlot = me.element.find("fr-rp-height-slots-id");
+            me.$widthSelect = me.element.find(".fr-rp-width-select-id");
+            me.$widthSlots = me.element.find(".fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find(".fr-rp-height-select-id");
+            me.$heightSlots = me.element.find(".fr-rp-height-slots-id");
 
             me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
 
@@ -453,10 +479,26 @@ $(function () {
                     me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
                 }
 
+                // Custom Size
+                if (me.$customSize.prop("checked")) {
+                    me.properties.customSize = {
+                        width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
+                        height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
+                    }
+                } else {
+                    me.properties.customSize = null;
+                }
+
                 me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }
+        },
+        _getCustomSize: function ($select, $slots) {
+            return {
+                value: $select.val(),
+                slots: $slots.val(),
+            };
         },
         /**
          * Close parameter set dialog

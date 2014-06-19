@@ -14787,7 +14787,8 @@ $(function () {
             me.$colOfLastRow.append($retVal);
             return $retVal;
         },
-        _subscriptionData : null,
+        _subscriptionData: null,
+        _canEditComment: false,
         _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
@@ -14862,7 +14863,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                if (me.options.userSettings && me.options.userSettings.adminUI == true)
+                if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
@@ -14882,9 +14883,9 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    //if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
-                    //    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    //}
+                    if (me._canEditComment) {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
@@ -15034,6 +15035,10 @@ $(function () {
             me.$theTable.append(me._createTableRow(me.$comment));
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
                 me.$desc.hide();
+                me.$comment.hide();
+            }
+            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
+            if (!me._canEditComment) {
                 me.$comment.hide();
             }
             me.$lastRow = me._createTableRow();

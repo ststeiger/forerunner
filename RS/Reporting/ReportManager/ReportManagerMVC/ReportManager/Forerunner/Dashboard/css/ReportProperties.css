@@ -14,6 +14,7 @@
     .fr-rp-form .fr-rp-separator { margin-top: 5px; }
     .fr-rp-form .fr-rp-dimension-select { margin-left: 5px; }
     .fr-rp-form .fr-rp-slots { margin-left: 5px; width: 32px; text-align: right; }
+    .fr-rp-form .fr-rp-action-button { height: 24px; font-size: 10pt; padding: 0 10px 0 10px; }
 
     .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
     .fr-rp-form .fr-rp-error-position { display: inline; }

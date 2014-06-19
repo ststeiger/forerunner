@@ -236,7 +236,8 @@
     "customSize":"Custom Size:",
     "slots":"Slots",
     "width":"Width",
-    "height":"Height"
+    "height":"Height",
+    "removeReport":"Remove Report"
   },
   "tags": {
     "title":"Mots clés",

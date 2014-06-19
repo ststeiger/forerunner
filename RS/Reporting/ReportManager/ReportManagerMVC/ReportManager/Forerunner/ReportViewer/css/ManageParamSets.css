@@ -4,17 +4,7 @@
   .fr-mps-form .fr-mps-action-button { width: 90px; margin: 10px 10px 10px 0; }
   .fr-mps-form [name='delete'] { float: right; }
   .fr-mps-form .fr-mps-add-id { height: 24px; font-size: 10pt; }
-    .fr-mps-form .fr-mps-text-input
-    {
-        display: block;
-        width: 156px;
-        padding: 0 0 0 4px;
-        overflow: hidden;
-        white-space: nowrap;
-        -ms-text-overflow: ellipsis;
-        -o-text-overflow: ellipsis;
-        text-overflow: ellipsis;
-    }
+  .fr-mps-form .fr-mps-text-input { display: block; width: 156px; padding: 0 0 0 4px; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
 
 .fr-mps-main-table { }
   .fr-mps-main-table th { font-weight: bold; }

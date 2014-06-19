@@ -22317,6 +22317,7 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
+                        "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
                             "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
@@ -22420,6 +22421,11 @@ $(function () {
                 me._onClickTreeDropdown.apply(me, arguments);
             })
 
+            me.$removeReport = me.element.find(".fr-rp-remove-report-id");
+            me.$removeReport.on("click", function (e, data) {
+                me._onRemoveReport.apply(me, arguments);
+            });
+
             // Toolbar options
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
             me.$hideToolbar.on("change", function (e, data) {
@@ -22485,6 +22491,11 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+        },
+        _onRemoveReport: function (e, data) {
+            var me = this;
+            me.$reportInput.val("");
+            me.properties.catalogItem = null;
         },
         _onChangeSizeOption: function (e, data) {
             var me = this;

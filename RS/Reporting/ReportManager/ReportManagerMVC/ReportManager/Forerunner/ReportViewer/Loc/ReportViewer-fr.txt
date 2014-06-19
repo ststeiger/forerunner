@@ -229,15 +229,15 @@
     "toolbar":"barre d'outils:",
     "minimal":"Minimal",
     "full":"plein",
-    "size":"Size:",
-    "templateSize":"Template",
-    "reportSize":"Report",
-    "custom":"Custom",
-    "customSize":"Custom Size:",
+    "size":"taille:",
+    "templateSize":"modèle",
+    "reportSize":"rapport",
+    "custom":"coutume",
+    "customSize":"Taille personnalisée:",
     "slots":"Slots",
-    "width":"Width",
-    "height":"Height",
-    "removeReport":"Remove Report"
+    "width":"largeur",
+    "height":"hauteur",
+    "removeReport":"retirer rapport"
   },
   "tags": {
     "title":"Mots clés",

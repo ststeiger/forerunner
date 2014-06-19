@@ -6232,6 +6232,7 @@ $(function () {
             rsInstance: null,
             onInputBlur: null,
             onInputFocus: null,
+            userSettings: null,
         },
         /**
          * Save the user settings
@@ -6262,23 +6263,11 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {Boolean} forceLoadFromServer - if true, always load from the server
-         *
          * @return {Object} - User settings
          */
-        getUserSettings: function (forceLoadFromServer) {
+        getUserSettings: function () {
             var me = this;
-
-            if (forceLoadFromServer !== true && me.userSettings) {
-                return me.userSettings;
-            }
-
-            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
-            if (settings) {
-                me.userSettings = settings;
-            }
-
-            return me.userSettings;
+            return me.options.userSettings;
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -6596,12 +6585,6 @@ $(function () {
                 me._initOverrides();
             }
             me._fetch(me.options.view, me.options.path);
-
-            me.userSettings = {
-                responsiveUI: false,
-                adminUI: false
-            };
-            me.getUserSettings(true);
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
@@ -7071,6 +7054,8 @@ $(function () {
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
             me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
+            //update cached setting
+            forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
             me._triggerClose(true);
         },
@@ -13121,7 +13106,7 @@ $(function () {
 
             var userSettings = me.options.userSettings;
             if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
-                userSettings = me.getUserSettings(me.options);
+                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
             }
 
             me.options.$docMap.hide();
@@ -13308,22 +13293,6 @@ $(function () {
                     }
                 }
             });
-        },
-        getUserSettings : function(options) {
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            if (options.rsInstance) url += "?instance=" + options.rsInstance;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-            return settings;
         },
         onClickBtnFavorite: function (e) {
             var me = this;
@@ -14128,6 +14097,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 onInputFocus: layout.onInputFocus,
                 onInputBlur: layout.onInputBlur,
+                userSettings: me._getUserSettings()
             });
         },
 
@@ -14176,7 +14146,7 @@ $(function () {
             var me = this;
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
-
+            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -14369,9 +14339,7 @@ $(function () {
         },
         _getUserSettings: function () {
             var me = this;
-            if (!me.$reportExplorer)
-                me._createReportExplorer();
-            return me.$reportExplorer.reportExplorer("getUserSettings");
+            return forerunner.ajax.getUserSetting(me.options.rsInstance);
         },
         /**
          * Transition to ReportViewer view
@@ -14587,6 +14555,8 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
             var $dialog = $(
@@ -21444,7 +21414,6 @@ $(function () {
          * Returns the user settings
          *
          * @function $.forerunner.dashboardEZ#getUserSettings
-         * @param {bool} enableEdit - true = enable, false = view
          */
         getUserSettings: function () {
             var me = this;

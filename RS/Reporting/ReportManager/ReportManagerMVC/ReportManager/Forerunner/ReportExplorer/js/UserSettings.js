@@ -165,6 +165,8 @@ $(function () {
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
             me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
+            //update cached setting
+            forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
             me._triggerClose(true);
         },

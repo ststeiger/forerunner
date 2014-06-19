@@ -1,8 +1,9 @@
 ﻿.fr-sub-form {min-width: 200px; min-height: 300px;}
-.fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:0px;}
-.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #000000; width: 100%;}
-.fr-sub-delete-icon { float: left; }
-.fr-sub-edit-icon { float: left; }
+.fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
+.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width: 100%;}
+.fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
+.fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); }
+.fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); }
 .fr-email-form { padding-right: 15px;}
 .fr-email-table { }
 .fr-email-description { width: 100%; border: 0px; border-bottom: 1px solid black; float: left; }

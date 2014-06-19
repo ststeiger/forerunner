@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -14707,7 +14707,7 @@ $(function () {
         },
     }); //$.widget
 });
-///#source 1 1 /Forerunner/ReportExplorer/js/EmailSubscription.js
+///#source 1 1 /Forerunner/ReportViewer/js/EmailSubscription.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -14757,7 +14757,8 @@ $(function () {
             me.$colOfLastRow.append($retVal);
             return $retVal;
         },
-        _subscriptionData : null,
+        _subscriptionData: null,
+        _canEditComment: false,
         _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
@@ -14832,7 +14833,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                if (me.options.userSettings && me.options.userSettings.adminUI == true)
+                if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
@@ -14852,9 +14853,9 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    //if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
-                    //    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    //}
+                    if (me._canEditComment) {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
                     }
@@ -15006,6 +15007,10 @@ $(function () {
                 me.$desc.hide();
                 me.$comment.hide();
             }
+            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
+            if (!me._canEditComment) {
+                me.$comment.hide();
+            }
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
@@ -15062,7 +15067,7 @@ $(function () {
     });  // $.widget(
 });  // $(function ()
 
-///#source 1 1 /Forerunner/ReportExplorer/js/ManageSubscription.js
+///#source 1 1 /Forerunner/ReportViewer/js/ManageSubscription.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -15096,8 +15101,9 @@ $(function () {
             var me = this;
             var $listItem = new $("<DIV />");
             $listItem.addClass("fr-sub-listitem");
-            var $deleteIcon = me._createDiv(["ui-icon-circle-close", "ui-icon"]);
-            var $editIcon = me._createDiv(["ui-icon-pencil", "ui-icon"]);
+            $listItem.append(subInfo.Description);
+            var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
+            var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
             $deleteIcon.on("click", function () {
@@ -15110,7 +15116,6 @@ $(function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
             $listItem.append($editIcon);
-            $listItem.append(subInfo.Description);
             return $listItem;
         },
         _editSubscription: function (subscriptionID) {
@@ -15186,7 +15191,7 @@ $(function () {
     });  // $.widget(
 });  // $(function ()
 
-///#source 1 1 /Forerunner/ReportExplorer/js/SubscriptionModel.js
+///#source 1 1 /Forerunner/ReportViewer/js/SubscriptionModel.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -21858,6 +21863,25 @@ $(function () {
             var reportProperties = me.getReportProperties(id);
             $item.css(reportProperties.sizes);
         },
+        _setCustomSize: function ($item) {
+            var me = this;
+            me._clearSizes($item);
+            
+            var id = $item.attr("id");
+            var reportProperties = me.getReportProperties(id);
+            me._setCustomDimension($item, reportProperties.customSize.width, "minWidth", "maxWidth");
+            me._setCustomDimension($item, reportProperties.customSize.height, "minHeight", "maxHeight");
+        },
+        _setCustomDimension: function ($item, dimension, minString, maxString) {
+            if (dimension.value > 0) {
+                var length = dimension.value / dimension.slots;
+                $item.css(minString, length);
+                $item.css(maxString, length);
+            } else {
+                $item.css(minString, "");
+                $item.css(maxString, "");
+            }
+        },
         _saveTemplateSizes: function ($item) {
             var me = this;
             var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
@@ -21897,13 +21921,15 @@ $(function () {
             $item.html("");
 
             // Set the report size
-            if (reportProperties.dashboardSizeOption) {
+            if (me.enableEdit) {
+                me._resetTemplateSizes($item);
+            } else if (reportProperties.dashboardSizeOption) {
                 if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
                     me._resetTemplateSizes($item);
                 } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
                     me._clearSizes($item);
                 } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
-                    // TODO
+                    me._setCustomSize($item);
                 }
             }
 
@@ -22153,6 +22179,7 @@ $(function () {
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
+    var dimemsions = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dimensions");
 
     /**
      * Widget used to select a new dashbard template
@@ -22241,6 +22268,10 @@ $(function () {
             // Hide or show the custome size table
             me._showCustomSizeTable();
 
+            // Load the custome size dimensions
+            me._loadDimensions(me.$widthSelect, me.properties.customSize ? me.properties.customSize.width.value : null);
+            me._loadDimensions(me.$heightSelect, me.properties.customSize ? me.properties.customSize.height.value : null);
+
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -22248,6 +22279,21 @@ $(function () {
             me.$tree.jstree({
                 core: {
                     data: JSData
+                }
+            });
+        },
+        _loadDimensions: function ($select, selectedValue) {
+            $select.html("");
+
+            $.each(dimemsions, function (index, item) {
+                var encodedName = forerunner.helper.htmlEncode(item.name);
+                $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
+                $select.append($option);
+            });
+
+            $select.children("option").each(function (index, option) {
+                if ($(option).val() === selectedValue) {
+                    $select.prop("selectedIndex", index);
                 }
             });
         },
@@ -22310,7 +22356,9 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
@@ -22331,7 +22379,9 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                                 "<td>" +
@@ -22353,7 +22403,9 @@ $(function () {
                         "<table class='fr-rp-custom-size-table'>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                    "<h3>" +
+                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
+                                    "</h3>" +
                                 "</td>" +
                             "</tr>" +
                             // Width
@@ -22364,7 +22416,7 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                             // Height
@@ -22375,7 +22427,7 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +
@@ -22436,10 +22488,10 @@ $(function () {
             me.$tree = me.element.find(".fr-report-tree-id");
 
             // Custom size options
-            me.$widthSelect = me.element.find("fr-rp-width-select-id");
-            me.$widthSlot = me.element.find("fr-rp-width-slots-id");
-            me.$heightSelect = me.element.find("fr-rp-height-select-id");
-            me.$heightSlot = me.element.find("fr-rp-height-slots-id");
+            me.$widthSelect = me.element.find(".fr-rp-width-select-id");
+            me.$widthSlots = me.element.find(".fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find(".fr-rp-height-select-id");
+            me.$heightSlots = me.element.find(".fr-rp-height-slots-id");
 
             me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
 
@@ -22591,10 +22643,26 @@ $(function () {
                     me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
                 }
 
+                // Custom Size
+                if (me.$customSize.prop("checked")) {
+                    me.properties.customSize = {
+                        width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
+                        height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
+                    }
+                } else {
+                    me.properties.customSize = null;
+                }
+
                 me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }
+        },
+        _getCustomSize: function ($select, $slots) {
+            return {
+                value: $select.val(),
+                slots: $slots.val(),
+            };
         },
         /**
          * Close parameter set dialog

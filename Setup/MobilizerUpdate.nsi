@@ -264,6 +264,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTreeThrobber.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Collapse.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\EditSubscription.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\DeleteSubscription.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
@@ -682,6 +684,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Drilldown_Collapse.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Drilldown_Expand.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\EditSubscription.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\DeleteSubscription.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\EmptyIndent.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\NotSorted.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Parameter_Collapse.png"

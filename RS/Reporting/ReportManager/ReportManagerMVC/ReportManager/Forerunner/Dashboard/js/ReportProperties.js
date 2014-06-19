@@ -100,6 +100,9 @@ $(function () {
                 me._setCheckbox(true, me.$templateSize);
             }
 
+            // Hide or show the custome size table
+            me._showCustomSizeTable();
+
             me._resetValidateMessage();
         },
         _createJSData: function (path) {
@@ -140,14 +143,14 @@ $(function () {
 
             me.element.html("");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -200,32 +203,32 @@ $(function () {
                             "</tr>" +
                         "</table>" +
                         // Custom Size options
-                        "<table class='fr-rp-custom-size-form'>" +
+                        "<table class='fr-rp-custom-size-table'>" +
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
                                 "</td>" +
                             "</tr>" +
-                            // Custom width
+                            // Width
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
-                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select'/>" +
+                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select fr-core-input'/>" +
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-width-slots-id' name='hideToolbar' type='number'/>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
-                            // Custom height
+                            // Height
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
-                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select'/>" +
+                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select fr-core-input'/>" +
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-height-slots-id' name='hideToolbar' type='number'/>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +
@@ -280,6 +283,14 @@ $(function () {
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
 
+            // Custom size options
+            me.$widthSelect = me.element.find("fr-rp-width-select-id");
+            me.$widthSlot = me.element.find("fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find("fr-rp-height-select-id");
+            me.$heightSlot = me.element.find("fr-rp-height-slots-id");
+
+            me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
+
             // Setup the report selector UI
             var JSData = me._createJSData("/");
             me.$tree.jstree({
@@ -313,6 +324,15 @@ $(function () {
             me.$customSize.prop("checked", false);
 
             $(e.target).prop("checked", true);
+            me._showCustomSizeTable();
+        },
+        _showCustomSizeTable: function () {
+            var me = this;
+            if (me.$customSize.prop("checked")) {
+                me.$customSizeTable.show();
+            } else {
+                me.$customSizeTable.hide();
+            }
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;

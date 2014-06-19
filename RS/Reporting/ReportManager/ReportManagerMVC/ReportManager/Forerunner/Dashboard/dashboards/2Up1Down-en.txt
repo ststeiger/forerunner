@@ -1,13 +1,22 @@
-﻿<table class="fr-2up1down">
-    <tr>
-        <td>
-            <div id="Report1" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-            <div id="Report2" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <div id="Report3" style="min-width:1279px; max-width:1279px; min-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
-    </tr>
-</table>
+﻿<script type="text/javascript">
+    $(function () {
+    });
+</script>
+
+<div class="fr-2up1down fr-dashboard-id">
+    <table>
+        <tr>
+            <td>
+                <div id="Report1" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
+                <div id="Report2" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
+            </td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <div id="Report3" style="min-width:1279px; max-width:1279px; min-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
+            </td>
+        </tr>
+    </table>
+</div>

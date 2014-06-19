@@ -219,9 +219,6 @@
     "cancel":"stornieren",
     "dialogTitle":"RDL JSON-Erweiterung"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"Eigenschaften"
-  },
   "reportProperties": {
     "title":"Berichtseigenschaften",
     "cancel":"stornieren",
@@ -230,7 +227,15 @@
     "hideToolbar":"Symbolleiste ausblenden",
     "toolbar":"Toolbar:",
     "minimal":"Minimal",
-    "full":"voll"
+    "full":"voll",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height"
   },
   "tags": {
     "title":"Schlagworte",

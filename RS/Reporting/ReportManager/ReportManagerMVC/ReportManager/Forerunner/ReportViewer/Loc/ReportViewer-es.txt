@@ -220,9 +220,6 @@
     "cancel":"cancelar",
     "dialogTitle":"RDL extensión JSON"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"propiedades"
-  },
   "reportProperties": {
     "title":"Propiedades del informe",
     "cancel":"cancelar",
@@ -231,7 +228,15 @@
     "hideToolbar":"Ocultar barra de herramientas",
     "toolbar":"Barra de herramientas:",
     "minimal":"mínimo",
-    "full":"completo"
+    "full":"completo",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height"
   },
   "tags": {
     "title":"Etiquetas",

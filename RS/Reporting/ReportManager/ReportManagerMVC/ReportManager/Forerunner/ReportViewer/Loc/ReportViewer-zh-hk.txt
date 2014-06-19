@@ -219,9 +219,6 @@
     "cancel":"取消",
     "dialogTitle":"RDL的JSON擴展"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"屬性"
-  },
   "reportProperties": {
     "title":"報表屬性",
     "cancel":"取消",
@@ -230,7 +227,15 @@
     "hideToolbar":"隱藏工具欄",
     "toolbar":"工具欄:",
     "minimal":"最小化",
-    "full":"充满"
+    "full":"充满",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height"
   },
   "tags": {
     "title":"標籤",

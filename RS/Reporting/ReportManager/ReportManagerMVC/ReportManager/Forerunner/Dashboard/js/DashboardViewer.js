@@ -11,7 +11,6 @@ $(function () {
     var widgets = constants.widgets;
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages = locData.messages;
 

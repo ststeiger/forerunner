@@ -7125,7 +7125,7 @@ $(function () {
                             "<table class='fr-tag-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-tag-text' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-tag-text' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-tag-prompt'>" +
                                     "<td></td>" +
@@ -12189,7 +12189,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
@@ -12200,7 +12200,7 @@ $(function () {
                         "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
                     "</td>" +
                     "<td>" +
-                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                        "<input class='fr-core-input fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
                     "</td>" +
                     "<td>" +
                         "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +
@@ -12793,7 +12793,7 @@ $(function () {
             }
 
             var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -21480,7 +21480,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.layout.$mainsection.html(null);
 
-            me.$dashboardContainer = $("<div class='fr-dashboard-container'></div>");
+            me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
             me.layout.$mainsection.append(me.$dashboardContainer);
             me.$dashboardContainer.dashboardEditor({
                 $appContainer: me.layout.$container,
@@ -21540,7 +21540,7 @@ $(function () {
             var me = this;
 
             if (me.layout) {
-                var $dashboard = me.layout.$mainsection.find(".fr-dashboard-container");
+                var $dashboard = me.layout.$mainsection.find(".fr-dashboard");
                 if ($dashboard.length !== 0) {
                     return $dashboard;
                 }
@@ -21813,7 +21813,6 @@ $(function () {
     var widgets = constants.widgets;
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages = locData.messages;
 
@@ -22001,7 +22000,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
@@ -22130,7 +22128,7 @@ $(function () {
             var $item = $(item);
 
             // Create the button
-            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");
             $item.append($btn);
 
             // Hook the onClick event
@@ -22271,6 +22269,9 @@ $(function () {
                 me._setCheckbox(true, me.$templateSize);
             }
 
+            // Hide or show the custome size table
+            me._showCustomSizeTable();
+
             me._resetValidateMessage();
         },
         _createJSData: function (path) {
@@ -22311,14 +22312,14 @@ $(function () {
 
             me.element.html("");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                     "<form class='fr-rp-form fr-core-dialog-form'>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -22371,32 +22372,32 @@ $(function () {
                             "</tr>" +
                         "</table>" +
                         // Custom Size options
-                        "<table class='fr-rp-custom-size-form'>" +
+                        "<table class='fr-rp-custom-size-table'>" +
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
                                 "</td>" +
                             "</tr>" +
-                            // Custom width
+                            // Width
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
-                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select'/>" +
+                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select fr-core-input'/>" +
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-width-slots-id' name='hideToolbar' type='number'/>" +
+                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
-                            // Custom height
+                            // Height
                             "<tr>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
-                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select'/>" +
+                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select fr-core-input'/>" +
                                 "</td>" +
                                 "<td>" +
                                     "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-height-slots-id' name='hideToolbar' type='number'/>" +
+                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' min='1' max='4'/>" +
                                 "</td>" +
                             "</tr>" +
                         "</table>" +
@@ -22451,6 +22452,14 @@ $(function () {
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
 
+            // Custom size options
+            me.$widthSelect = me.element.find("fr-rp-width-select-id");
+            me.$widthSlot = me.element.find("fr-rp-width-slots-id");
+            me.$heightSelect = me.element.find("fr-rp-height-select-id");
+            me.$heightSlot = me.element.find("fr-rp-height-slots-id");
+
+            me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
+
             // Setup the report selector UI
             var JSData = me._createJSData("/");
             me.$tree.jstree({
@@ -22484,6 +22493,15 @@ $(function () {
             me.$customSize.prop("checked", false);
 
             $(e.target).prop("checked", true);
+            me._showCustomSizeTable();
+        },
+        _showCustomSizeTable: function () {
+            var me = this;
+            if (me.$customSize.prop("checked")) {
+                me.$customSizeTable.show();
+            } else {
+                me.$customSizeTable.hide();
+            }
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;

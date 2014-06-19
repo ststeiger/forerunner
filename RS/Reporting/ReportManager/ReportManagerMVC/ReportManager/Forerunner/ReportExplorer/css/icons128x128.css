@@ -183,6 +183,5 @@
   background-image:url(../images/ResourceIcons/unknown.png);
 }
 
-.fr-icons128x128-file-dashboard {
-  background-image:url(../images/ResourceIcons/dashboard.png);
-}
+.fr-icons128x128-file-dashboard { height: 100%; width: 100%; background-image: url(../images/ResourceIcons/dashboard.png); background-repeat: no-repeat; background-position: center; }
+

@@ -10,7 +10,6 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var dashboardEditor = locData.dashboardEditor;
     var toolbar = locData.toolbar;
     var messages =locData.messages;
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
@@ -139,7 +138,7 @@ $(function () {
             var $item = $(item);
 
             // Create the button
-            var $btn = $("<input type=button class='fr-dashboard-btn' value='" + dashboardEditor.propertiesBtn + "' name='" + item.id + "'/>");
+            var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");
             $item.append($btn);
 
             // Hook the onClick event

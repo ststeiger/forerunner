@@ -290,10 +290,16 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolbar.css"
   File "${LOCALROOT}\Forerunner\Dashboard\css\DashboardToolPane.css"
   File "${LOCALROOT}\Forerunner\Dashboard\css\ReportProperties.css"
+  
+  SetOutPath "$INSTDIR\Forerunner\Dashboard\images"
+  File "${LOCALROOT}\Forerunner\Dashboard\images\Edit.png"
+  File "${LOCALROOT}\Forerunner\Dashboard\images\Edit_Widget.png"
 
   SetOutPath "$INSTDIR\Forerunner\Dashboard\dashboards"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up2Down-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dimensions-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
 
   SetOutPath "$INSTDIR\Forerunner\Bundles"
@@ -858,10 +864,20 @@ Section Uninstall
   Delete "$INSTDIR\Custom\MobilizerSettings.txt"
   Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   
+  Delete "$INSTDIR\Forerunner\Dashboard\css\Dashboard-all.css"
   Delete "$INSTDIR\Forerunner\Dashboard\css\dashboards.css"
+  Delete "$INSTDIR\Forerunner\Dashboard\css\DashboardToolbar.css"
+  Delete "$INSTDIR\Forerunner\Dashboard\css\DashboardToolPane.css"
+  Delete "$INSTDIR\Forerunner\Dashboard\css\ReportProperties.css"
+
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up2Down-en.txt"
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dashboards-en.txt"
+  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dimensions-en.txt"
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
+
+  Delete "$INSTDIR\Forerunner\Dashboard\images\Edit.png"
+  Delete "$INSTDIR\Forerunner\Dashboard\images\Edit_Widget.png"
 
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
@@ -922,6 +938,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\ReportExplorer\css"
   RMDir "$INSTDIR\Forerunner\ReportExplorer"  
   RMDir "$INSTDIR\Forerunner\Dashboard\css"
+  RMDir "$INSTDIR\Forerunner\Dashboard\images"
   RMDir "$INSTDIR\Forerunner\Dashboard\dashboards"
   RMDir "$INSTDIR\Forerunner\Dashboard"
   RMDir "$INSTDIR\Forerunner\Lib\Misc\js"

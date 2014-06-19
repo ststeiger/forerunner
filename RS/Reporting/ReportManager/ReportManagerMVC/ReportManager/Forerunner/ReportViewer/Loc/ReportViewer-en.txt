@@ -233,11 +233,8 @@
     "dashboardTemplate": "Template",
     "overwrite": "Overwrite"
   },
-  "dashboardEditor": {
-    "propertiesBtn": "Properties"
-  },
   "reportProperties": {
-    "title":"Report Properties",
+    "title":"Edit View",
     "cancel":"Cancel",
     "submit":"Submit",
     "selectReport":"<select report>",
@@ -250,7 +247,7 @@
     "reportSize": "Report",
     "custom": "Custom",
     "customSize": "Custom Size:",
-    "slots", "Slots",
+    "slots":  "Slots",
     "width": "Width",
     "height": "Height"
   },

@@ -227,10 +227,15 @@
     "hideToolbar":"隐藏工具栏",
     "toolbar":"工具栏:",
     "minimal":"最小化",
-    "full":"充满"
-  },
-  "dashboardEditor": {
-    "propertiesBtn":"属性"
+    "full":"充满",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height"
   },
   "tags": {
     "title":"标签",

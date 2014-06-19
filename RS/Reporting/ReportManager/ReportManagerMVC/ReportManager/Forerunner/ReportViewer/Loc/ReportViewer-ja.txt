@@ -219,9 +219,6 @@
     "cancel":"キャンセル",
     "dialogTitle":"RDL拡張JSON形式"
   },
-  "dashboardEditor": {
-    "propertiesBtn":"プロパティ"
-  },
   "reportProperties": {
     "title":"レポートのプロパティ",
     "cancel":"キャンセル",
@@ -230,7 +227,15 @@
     "hideToolbar":"ツールバーを隠す",
     "toolbar":"ツールバー:",
     "minimal":"最小限の",
-    "full":"フル"
+    "full":"フル",
+    "size":"Size:",
+    "templateSize":"Template",
+    "reportSize":"Report",
+    "custom":"Custom",
+    "customSize":"Custom Size:",
+    "slots":"Slots",
+    "width":"Width",
+    "height":"Height"
   },
   "tags": {
     "title":"タグ",

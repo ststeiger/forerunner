@@ -112,7 +112,7 @@ $(function () {
             }
 
             var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {

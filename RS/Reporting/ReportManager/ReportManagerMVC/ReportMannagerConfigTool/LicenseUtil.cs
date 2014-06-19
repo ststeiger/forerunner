@@ -369,6 +369,7 @@ namespace ForerunnerLicense
         internal int numberOfCores;
 
         private string SerializeString = "<MachineData><MachineKey>{0}</MachineKey><MotherBoardId>{1}</MotherBoardId><HostName>{2}</HostName><BiosId>{3}</BiosId><MacId>{4}</MacId><Cores>{5}</Cores></MachineData>";
+        private string SerializeStringV2 = "<MachineData><MachineKey>{0}</MachineKey><MotherBoardId>{1}</MotherBoardId><HostName>{2}</HostName><BiosId>{3}</BiosId><MacId>{4}</MacId></MachineData>";
 
 
         internal MachineId()
@@ -468,12 +469,22 @@ namespace ForerunnerLicense
 
             return sameCount >= 2;
         }
-        internal string Serialize(bool Encrypt = true)
+        internal string Serialize(bool Encrypt = true,bool backcompat = false)
         {
             if (Encrypt)
-                return LicenseUtil.Encrypt(string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId, numberOfCores), LicenseUtil.pubkey);
+            {
+                if (backcompat)
+                    return LicenseUtil.Encrypt(string.Format(SerializeStringV2, machineKey, motherBoardId, hostName, biosId, macId), LicenseUtil.pubkey);
+                else
+                    return LicenseUtil.Encrypt(string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId, numberOfCores), LicenseUtil.pubkey);
+            }
             else
-                return string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId,numberOfCores);
+            {
+                if (backcompat)
+                    return string.Format(SerializeStringV2, machineKey, motherBoardId, hostName, biosId, macId);
+                else
+                    return string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId, numberOfCores);
+            }
         }
         private static int GetNumberOfCores()
         {

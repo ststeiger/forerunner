@@ -36,7 +36,7 @@
 
 .fr-param-tree {
     display:none; 
-    position:absolute; 
+    position:absolute;
     max-height:300px;
     overflow:auto;
     padding-right:16px;
@@ -47,6 +47,8 @@
     z-index:5;
     color:black;
     font-size:13px;
+    padding-bottom:4px;
+    -ms-overflow-style:auto;
 }
 
 .fr-param-tree ul{

@@ -1368,7 +1368,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-param-tree {
     display:none; 
-    position:absolute; 
+    position:absolute;
     max-height:300px;
     overflow:auto;
     padding-right:16px;
@@ -1379,6 +1379,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     z-index:5;
     color:black;
     font-size:13px;
+    padding-bottom:4px;
+    -ms-overflow-style:auto;
 }
 
 .fr-param-tree ul{

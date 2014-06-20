@@ -23,7 +23,7 @@ $(function () {
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolpane)
      * @example
      * $("#dashboardToolPaneId").dashboardToolPane({
-	 * });
+     * });
      *
      * Note:
      *  ToolPane can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}

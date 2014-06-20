@@ -52,7 +52,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='submit' type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
                         "</div>" +
                         "<div class='fr-sf-location' />" +
                     "</div>" +
@@ -73,6 +73,9 @@ $(function () {
                 }
             });
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me.element.find(".fr-sf-cancel").on("click", function (e) {
                 me.closeDialog();
             });
@@ -80,7 +83,7 @@ $(function () {
             me.element.find(".fr-sf-submit-id").on("click", function (e) {
                 me._createSearchFolder();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._createSearchFolder();
             });

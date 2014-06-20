@@ -101,12 +101,15 @@ $(function () {
                 me._setCheckbox(true, me.$templateSize);
             }
 
-            // Hide or show the custome size table
+            // Hide or show the custom size table
             me._showCustomSizeTable();
 
-            // Load the custome size dimensions
-            me._loadDimensions(me.$widthSelect, me.properties.customSize ? me.properties.customSize.width.value : null);
-            me._loadDimensions(me.$heightSelect, me.properties.customSize ? me.properties.customSize.height.value : null);
+            // Load the custom size dimensions
+            var customSize = me.properties.customSize;
+            me._loadDimensions(me.$widthSelect, customSize ? customSize.width.value : null);
+            me.$widthSlots.val(customSize.width.slots);
+            me._loadDimensions(me.$heightSelect, customSize ? customSize.height.value : null);
+            me.$heightSlots.val(customSize.height.slots);
 
             me._resetValidateMessage();
 
@@ -119,8 +122,9 @@ $(function () {
             });
         },
         _loadDimensions: function ($select, selectedValue) {
-            $select.html("");
+            var $option = null;
 
+            $select.html("");
             $.each(dimemsions, function (index, item) {
                 var encodedName = forerunner.helper.htmlEncode(item.name);
                 $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
@@ -158,10 +162,10 @@ $(function () {
                 };
                 if (item.Type === me._itemType.folder) {
                     curNode.children.push(newNode);
-                    me._createTreeItems(newNode, view, item.Path)
+                    me._createTreeItems(newNode, view, item.Path);
                 } else if (item.Type === me._itemType.report) {
                     curNode.children.push(newNode);
-                    newNode.icon = "jstree-file"
+                    newNode.icon = "jstree-file";
                     newNode.li_attr.dataReport = true;
                 }
             });
@@ -170,6 +174,8 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
@@ -284,7 +290,7 @@ $(function () {
             me.$dropdown = me.element.find(".fr-rp-dropdown-container");
             me.$dropdown.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
-            })
+            });
 
             me.$removeReport = me.element.find(".fr-rp-remove-report-id");
             me.$removeReport.on("click", function (e, data) {
@@ -484,7 +490,7 @@ $(function () {
                     me.properties.customSize = {
                         width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
                         height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
-                    }
+                    };
                 } else {
                     me.properties.customSize = null;
                 }

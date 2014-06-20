@@ -312,6 +312,9 @@ $(function () {
             me._initSections();
             me.element.append(me.$outerContainer);
 
+            //disable form auto submit when click enter on the keyboard
+            me.$theForm.on("submit", function () { return false; });
+
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 me._submit();
             });

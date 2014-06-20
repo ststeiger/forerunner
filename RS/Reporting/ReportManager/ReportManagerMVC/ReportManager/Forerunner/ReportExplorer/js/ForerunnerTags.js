@@ -48,7 +48,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='reset' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
+                            "<input name='submit' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
                         "</div>" +
                         "<div class='fr-tag-location' />" +
                     "</div>" +
@@ -65,7 +65,7 @@ $(function () {
             me.element.find(".fr-tag-cancel").on("click", function (e) {
                 me.closeDialog();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._saveTags();
             });
@@ -73,7 +73,11 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },    
+
+            me.element.find(".fr-tag-form").on("submit", function () {
+                return false;
+            });
+        },
         openDialog: function (path) {
             var me = this;
             me._getTags(path);

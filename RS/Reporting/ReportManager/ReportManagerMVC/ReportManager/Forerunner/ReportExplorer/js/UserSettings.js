@@ -85,9 +85,13 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
+            "</div>");
+            //http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
+
+            //disable form auto submit when click enter on the keyboard
+            me.element.find(".fr-us-form").on("submit", function () { return false; });
 
             me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();

@@ -7002,9 +7002,13 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
+            "</div>");
+            //http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
+
+            //disable form auto submit when click enter on the keyboard
+            me.element.find(".fr-us-form").on("submit", function () { return false; });
 
             me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
@@ -7149,7 +7153,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='reset' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
+                            "<input name='submit' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
                         "</div>" +
                         "<div class='fr-tag-location' />" +
                     "</div>" +
@@ -7166,7 +7170,7 @@ $(function () {
             me.element.find(".fr-tag-cancel").on("click", function (e) {
                 me.closeDialog();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._saveTags();
             });
@@ -7174,7 +7178,11 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },    
+
+            me.element.find(".fr-tag-form").on("submit", function () {
+                return false;
+            });
+        },
         openDialog: function (path) {
             var me = this;
             me._getTags(path);
@@ -7316,7 +7324,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='submit' type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
                         "</div>" +
                         "<div class='fr-sf-location' />" +
                     "</div>" +
@@ -7337,6 +7345,9 @@ $(function () {
                 }
             });
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me.element.find(".fr-sf-cancel").on("click", function (e) {
                 me.closeDialog();
             });
@@ -7344,7 +7355,7 @@ $(function () {
             me.element.find(".fr-sf-submit-id").on("click", function (e) {
                 me._createSearchFolder();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._createSearchFolder();
             });
@@ -12295,6 +12306,8 @@ $(function () {
 
             me.element.append($printForm);
             me.$form = me.element.find(".fr-print-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
@@ -12512,7 +12525,7 @@ $(function () {
         _generatePrintProperty: function () {
             var me = this;
             var a = [];
-            if (me.element.find(".fr-print-form").valid() === true) {
+            if (me.$form.valid() === true) {
 
                 me.element.find(".fr-print-text").each(function () {
                     a.push({ key: this.name, value: me._generateUnitConvert(this.value) });
@@ -12872,6 +12885,8 @@ $(function () {
             me._initTBody();
 
             me.$form = me.element.find(".fr-mps-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me._resetValidateMessage();
 
@@ -13835,6 +13850,9 @@ $(function () {
             me.$container = me.element.find(".fr-dsc-main-container");
             me.$form = me.element.find('.fr-dsc-form');
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me._resetValidateMessage();
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
@@ -14637,6 +14655,8 @@ $(function () {
 
             me.$form = me.element.find(".fr-cdb-form");
             me._validateForm(me.$form);
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
@@ -15050,6 +15070,9 @@ $(function () {
             me.$theForm.append(me.$submitButton)
             me._initSections();
             me.element.append(me.$outerContainer);
+
+            //disable form auto submit when click enter on the keyboard
+            me.$theForm.on("submit", function () { return false; });
 
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 me._submit();
@@ -21519,7 +21542,13 @@ $(function () {
             });
 
             if (me.options.isReportManager) {
-                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                var listOfButtons = [];
+
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(dtb.btnHome);
+                }
+                listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }
@@ -21640,7 +21669,7 @@ $(function () {
      *      $appContainer: layout.$container,
      *      $dashboardEZ: me.dashboardEZ,
      *      enableEdit: me.options.enableEdit
-  	 * });
+     * });
      *
      * Note:
      *  Toolbar can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
@@ -21748,7 +21777,7 @@ $(function () {
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-dashboard-toolpane)
      * @example
      * $("#dashboardToolPaneId").dashboardToolPane({
-	 * });
+     * });
      *
      * Note:
      *  ToolPane can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
@@ -21944,9 +21973,11 @@ $(function () {
             reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
+            var me = this;
             return me.parentFolder;
         },
         getDashboardName: function () {
+            var me = this;
             return me.dashboardName;
         },
         getReportProperties: function (reportId) {
@@ -22315,12 +22346,15 @@ $(function () {
                 me._setCheckbox(true, me.$templateSize);
             }
 
-            // Hide or show the custome size table
+            // Hide or show the custom size table
             me._showCustomSizeTable();
 
-            // Load the custome size dimensions
-            me._loadDimensions(me.$widthSelect, me.properties.customSize ? me.properties.customSize.width.value : null);
-            me._loadDimensions(me.$heightSelect, me.properties.customSize ? me.properties.customSize.height.value : null);
+            // Load the custom size dimensions
+            var customSize = me.properties.customSize;
+            me._loadDimensions(me.$widthSelect, customSize ? customSize.width.value : null);
+            me.$widthSlots.val(customSize.width.slots);
+            me._loadDimensions(me.$heightSelect, customSize ? customSize.height.value : null);
+            me.$heightSlots.val(customSize.height.slots);
 
             me._resetValidateMessage();
 
@@ -22333,8 +22367,9 @@ $(function () {
             });
         },
         _loadDimensions: function ($select, selectedValue) {
-            $select.html("");
+            var $option = null;
 
+            $select.html("");
             $.each(dimemsions, function (index, item) {
                 var encodedName = forerunner.helper.htmlEncode(item.name);
                 $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
@@ -22372,10 +22407,10 @@ $(function () {
                 };
                 if (item.Type === me._itemType.folder) {
                     curNode.children.push(newNode);
-                    me._createTreeItems(newNode, view, item.Path)
+                    me._createTreeItems(newNode, view, item.Path);
                 } else if (item.Type === me._itemType.report) {
                     curNode.children.push(newNode);
-                    newNode.icon = "jstree-file"
+                    newNode.icon = "jstree-file";
                     newNode.li_attr.dataReport = true;
                 }
             });
@@ -22384,6 +22419,8 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
@@ -22498,7 +22535,7 @@ $(function () {
             me.$dropdown = me.element.find(".fr-rp-dropdown-container");
             me.$dropdown.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
-            })
+            });
 
             me.$removeReport = me.element.find(".fr-rp-remove-report-id");
             me.$removeReport.on("click", function (e, data) {
@@ -22698,7 +22735,7 @@ $(function () {
                     me.properties.customSize = {
                         width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
                         height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
-                    }
+                    };
                 } else {
                     me.properties.customSize = null;
                 }

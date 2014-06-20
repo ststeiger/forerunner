@@ -118,9 +118,11 @@ $(function () {
             reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
+            var me = this;
             return me.parentFolder;
         },
         getDashboardName: function () {
+            var me = this;
             return me.dashboardName;
         },
         getReportProperties: function (reportId) {

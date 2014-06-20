@@ -117,6 +117,8 @@ $(function () {
 
             me.$form = me.element.find(".fr-cdb-form");
             me._validateForm(me.$form);
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");

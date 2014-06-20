@@ -178,6 +178,8 @@ $(function () {
             me._initTBody();
 
             me.$form = me.element.find(".fr-mps-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me._resetValidateMessage();
 

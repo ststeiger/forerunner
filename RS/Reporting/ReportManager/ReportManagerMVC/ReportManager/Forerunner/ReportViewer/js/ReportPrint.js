@@ -137,6 +137,8 @@ $(function () {
 
             me.element.append($printForm);
             me.$form = me.element.find(".fr-print-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
@@ -354,7 +356,7 @@ $(function () {
         _generatePrintProperty: function () {
             var me = this;
             var a = [];
-            if (me.element.find(".fr-print-form").valid() === true) {
+            if (me.$form.valid() === true) {
 
                 me.element.find(".fr-print-text").each(function () {
                     a.push({ key: this.name, value: me._generateUnitConvert(this.value) });

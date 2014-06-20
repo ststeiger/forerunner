@@ -115,7 +115,13 @@ $(function () {
             });
 
             if (me.options.isReportManager) {
-                var listOfButtons = [dtb.btnHome, dtb.btnRecent, dtb.btnFavorite];
+                var listOfButtons = [];
+
+                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                    listOfButtons.push(dtb.btnHome);
+                }
+                listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);
+
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);
                 }

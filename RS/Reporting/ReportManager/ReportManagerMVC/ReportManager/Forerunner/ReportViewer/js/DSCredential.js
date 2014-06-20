@@ -66,6 +66,9 @@ $(function () {
             me.$container = me.element.find(".fr-dsc-main-container");
             me.$form = me.element.find('.fr-dsc-form');
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me._resetValidateMessage();
 
             me.element.find(".fr-dsc-cancel").on("click", function () {

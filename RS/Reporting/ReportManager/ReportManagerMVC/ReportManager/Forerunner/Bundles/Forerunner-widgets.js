@@ -7003,9 +7003,13 @@ $(function () {
                 "<div class='fr-buildversion-container'>" +
                     buildVersion +
                 "</div>" +
-            "</div>");http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
+            "</div>");
+            //http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
+
+            //disable form auto submit when click enter on the keyboard
+            me.element.find(".fr-us-form").on("submit", function () { return false; });
 
             me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
@@ -7150,7 +7154,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='reset' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
+                            "<input name='submit' type='button' class='fr-tag-submit-id fr-tag-button fr-core-dialog-button' value='" + locData.tags.submit + "' />" +
                         "</div>" +
                         "<div class='fr-tag-location' />" +
                     "</div>" +
@@ -7167,7 +7171,7 @@ $(function () {
             me.element.find(".fr-tag-cancel").on("click", function (e) {
                 me.closeDialog();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._saveTags();
             });
@@ -7175,7 +7179,11 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },    
+
+            me.element.find(".fr-tag-form").on("submit", function () {
+                return false;
+            });
+        },
         openDialog: function (path) {
             var me = this;
             me._getTags(path);
@@ -7317,7 +7325,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='submit' type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
                         "</div>" +
                         "<div class='fr-sf-location' />" +
                     "</div>" +
@@ -7338,6 +7346,9 @@ $(function () {
                 }
             });
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me.element.find(".fr-sf-cancel").on("click", function (e) {
                 me.closeDialog();
             });
@@ -7345,7 +7356,7 @@ $(function () {
             me.element.find(".fr-sf-submit-id").on("click", function (e) {
                 me._createSearchFolder();
             });
-
+            
             me.element.on(events.modalDialogGenericSubmit, function () {
                 me._createSearchFolder();
             });
@@ -12296,6 +12307,8 @@ $(function () {
 
             me.element.append($printForm);
             me.$form = me.element.find(".fr-print-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
@@ -12513,7 +12526,7 @@ $(function () {
         _generatePrintProperty: function () {
             var me = this;
             var a = [];
-            if (me.element.find(".fr-print-form").valid() === true) {
+            if (me.$form.valid() === true) {
 
                 me.element.find(".fr-print-text").each(function () {
                     a.push({ key: this.name, value: me._generateUnitConvert(this.value) });
@@ -12873,6 +12886,8 @@ $(function () {
             me._initTBody();
 
             me.$form = me.element.find(".fr-mps-form");
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me._resetValidateMessage();
 
@@ -13836,6 +13851,9 @@ $(function () {
             me.$container = me.element.find(".fr-dsc-main-container");
             me.$form = me.element.find('.fr-dsc-form');
 
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
+
             me._resetValidateMessage();
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
@@ -14638,6 +14656,8 @@ $(function () {
 
             me.$form = me.element.find(".fr-cdb-form");
             me._validateForm(me.$form);
+            //disable form auto submit when click enter on the keyboard
+            me.$form.on("submit", function () { return false; });
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
@@ -15051,6 +15071,9 @@ $(function () {
             me.$theForm.append(me.$submitButton)
             me._initSections();
             me.element.append(me.$outerContainer);
+
+            //disable form auto submit when click enter on the keyboard
+            me.$theForm.on("submit", function () { return false; });
 
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 me._submit();
@@ -22397,6 +22420,8 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(

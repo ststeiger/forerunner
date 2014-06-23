@@ -1603,13 +1603,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 
 .fr-render-error { margin: 4px; left: 10px; }
-
   .fr-render-error h3, h4 { color: red; font-weight: bold; }
 
-/*.fr-render-find-keyword
-{
-    color:red;
-}*/
+/*.fr-render-find-keyword{    color:red;}*/
 
 .fr-iframe-seamless{background-color: transparent;    border: 0px none transparent;    padding: 0px;    overflow: hidden;}
 
@@ -1631,6 +1627,12 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-render-tablix{border-collapse:collapse;padding:0;margin:0;table-layout:fixed;}
 .fr-r-fS{width:100%;height:100%;}
 .fr-lazyNext{color:blue;font-size:large;}
+
+.fr-input-text {border:none;}
+.fr-input-button {}
+.fr-input--textarea{}
+
+
 .fr-report-container {
   position:relative;
   width:100%;

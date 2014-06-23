@@ -192,7 +192,6 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Tags.png" />
     <Content Include="Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png" />
-    <Content Include="Forerunner\Dashboard\dashboards\dimensions-en.txt" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
     <Content Include="Forerunner\ReportExplorer\css\ForerunnerTags.css" />

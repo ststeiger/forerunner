@@ -229,14 +229,6 @@
     "toolbar":"barre d'outils:",
     "minimal":"Minimal",
     "full":"plein",
-    "size":"taille:",
-    "templateSize":"modèle",
-    "reportSize":"rapport",
-    "custom":"coutume",
-    "customSize":"Taille personnalisée:",
-    "slots":"Slots",
-    "width":"largeur",
-    "height":"hauteur",
     "removeReport":"retirer rapport"
   },
   "tags": {

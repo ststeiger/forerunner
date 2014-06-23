@@ -228,14 +228,6 @@
     "toolbar":"Verktygsfält:",
     "minimal":"Kortaste",
     "full":"Fullständig",
-    "size":"Storlek:",
-    "templateSize":"Mall",
-    "reportSize":"Rapportera",
-    "custom":"Anpassad",
-    "customSize":"Anpassad storlek:",
-    "slots":"spelautomater",
-    "width":"Bredd",
-    "height":"Höjd",
     "removeReport":"Avlägsna Rapportera"
   },
   "tags": {

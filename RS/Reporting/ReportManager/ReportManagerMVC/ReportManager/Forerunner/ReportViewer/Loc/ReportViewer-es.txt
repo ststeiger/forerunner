@@ -229,14 +229,6 @@
     "toolbar":"Barra de herramientas:",
     "minimal":"mínimo",
     "full":"completo",
-    "size":"tamaño:",
-    "templateSize":"plantilla",
-    "reportSize":"informe",
-    "custom":"costumbre",
-    "customSize":"Tamaño personalizado:",
-    "slots":"Slots",
-    "width":"ancho",
-    "height":"altura",
     "removeReport":"Retire Reportar"
   },
   "tags": {

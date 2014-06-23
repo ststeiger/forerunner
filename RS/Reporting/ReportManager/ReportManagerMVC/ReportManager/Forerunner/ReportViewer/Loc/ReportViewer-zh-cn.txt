@@ -228,14 +228,6 @@
     "toolbar":"工具栏:",
     "minimal":"最小化",
     "full":"充满",
-    "size":"尺寸:",
-    "templateSize":"模板",
-    "reportSize":"报表",
-    "custom":"自定义",
-    "customSize":"自定义尺寸:",
-    "slots":"插槽",
-    "width":"宽度",
-    "height":"高度",
     "removeReport":"移除报表"
   },
   "tags": {

@@ -228,14 +228,6 @@
     "toolbar":"ツールバー:",
     "minimal":"最小限の",
     "full":"フル",
-    "size":"サイズ:",
-    "templateSize":"テンプレート",
-    "reportSize":"レポート",
-    "custom":"カスタム",
-    "customSize":"カスタムサイズ：",
-    "slots":"スロット",
-    "width":"幅",
-    "height":"高さ",
     "removeReport":"レポートを削除する"
   },
   "tags": {

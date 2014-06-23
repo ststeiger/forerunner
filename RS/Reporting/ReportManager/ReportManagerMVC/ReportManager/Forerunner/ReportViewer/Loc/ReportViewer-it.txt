@@ -228,14 +228,6 @@
     "toolbar":"Toolbar:",
     "minimal":"minimo",
     "full":"completo",
-    "size":"dimensione:",
-    "templateSize":"sagoma",
-    "reportSize":"rapporto",
-    "custom":"costume",
-    "customSize":"Formato personalizzato:",
-    "slots":"Slots",
-    "width":"larghezza",
-    "height":"altezza",
     "removeReport":"rimuovere Rapporto"
   },
   "tags": {

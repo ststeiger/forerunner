@@ -228,14 +228,6 @@
     "toolbar":"Toolbar:",
     "minimal":"Minimal",
     "full":"voll",
-    "size":"Größe:",
-    "templateSize":"Schablone",
-    "reportSize":"Bericht",
-    "custom":"Brauch",
-    "customSize":"Benutzerdefinierte Größe:",
-    "slots":"Spielautomaten",
-    "width":"Breite",
-    "height":"Höhe",
     "removeReport":"Bericht entfernen"
   },
   "tags": {

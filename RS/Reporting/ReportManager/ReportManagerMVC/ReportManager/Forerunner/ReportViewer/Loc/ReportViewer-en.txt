@@ -242,14 +242,6 @@
     "toolbar": "Toolbar:",
     "minimal": "Minimal",
     "full": "Full",
-    "size": "Size:",
-    "templateSize": "Template",
-    "reportSize": "Report",
-    "custom": "Custom",
-    "customSize": "Custom Size:",
-    "slots":  "Slots",
-    "width": "Width",
-    "height": "Height",
     "removeReport": "Remove Report"
   },
   "tags": {

@@ -301,7 +301,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\2Up2Down-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dashboards-en.txt"
-  File "${LOCALROOT}\Forerunner\Dashboard\dashboards\dimensions-en.txt"
   File "${LOCALROOT}\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
 
   SetOutPath "$INSTDIR\Forerunner\Bundles"
@@ -877,7 +876,6 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up1Down-en.txt"
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\2Up2Down-en.txt"
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dashboards-en.txt"
-  Delete "$INSTDIR\Forerunner\Dashboard\dashboards\dimensions-en.txt"
   Delete "$INSTDIR\Forerunner\Dashboard\dashboards\SideBySide-en.txt"
 
   Delete "$INSTDIR\Forerunner\Dashboard\images\Edit.png"

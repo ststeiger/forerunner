@@ -228,14 +228,6 @@
     "toolbar":"Barra de Ferramentas:",
     "minimal":"mínimo",
     "full":"completo",
-    "size":"tamanho:",
-    "templateSize":"modelo",
-    "reportSize":"relatório",
-    "custom":"personalizado",
-    "customSize":"Tamanho personalizado:",
-    "slots":"caça-níqueis",
-    "width":"largura",
-    "height":"altura",
     "removeReport":"Remover Relatório"
   },
   "tags": {

@@ -22378,33 +22378,6 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
-            // Restore the size checkboxes
-            me._setCheckbox(false, me.$templateSize);
-            me._setCheckbox(false, me.$reportSize);
-            me._setCheckbox(false, me.$customSize);
-
-            if (me.properties.dashboardSizeOption) {
-                if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.template) {
-                    me._setCheckbox(true, me.$templateSize);
-                } else if (me.properties.dashboardSizeOption === constants.dashboardSizeOption.report) {
-                    me._setCheckbox(true, me.$reportSize);
-                } else {
-                    me._setCheckbox(true, me.$customSize);
-                }
-            } else {
-                me._setCheckbox(true, me.$templateSize);
-            }
-
-            // Hide or show the custom size table
-            me._showCustomSizeTable();
-
-            // Load the custom size dimensions
-            var customSize = me.properties.customSize;
-            me._loadDimensions(me.$widthSelect, customSize ? customSize.width.value : null);
-            me.$widthSlots.val(customSize.width.slots);
-            me._loadDimensions(me.$heightSelect, customSize ? customSize.height.value : null);
-            me.$heightSlots.val(customSize.height.slots);
-
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -22412,22 +22385,6 @@ $(function () {
             me.$tree.jstree({
                 core: {
                     data: JSData
-                }
-            });
-        },
-        _loadDimensions: function ($select, selectedValue) {
-            var $option = null;
-
-            $select.html("");
-            $.each(dimemsions, function (index, item) {
-                var encodedName = forerunner.helper.htmlEncode(item.name);
-                $option = $("<option value=" + item.value + ">" + encodedName + "</option>");
-                $select.append($option);
-            });
-
-            $select.children("option").each(function (index, option) {
-                if ($(option).val() === selectedValue) {
-                    $select.prop("selectedIndex", index);
                 }
             });
         },
@@ -22511,62 +22468,6 @@ $(function () {
                                 "</td>" +
                             "<tr>" +
                         "</table>" +
-                        // Size options
-                        "<table>" +
-                            "<tr>" +
-                                "<td>" +
-                                    "<h3>" +
-                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.size + "</label>" +
-                                    "</h3>" +
-                                "</td>" +
-                            "</tr>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.templateSize + "</label>" +
-                                    "<input class='fr-rp-template-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.reportSize + "</label>" +
-                                    "<input class='fr-rp-report-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.custom + "</label>" +
-                                    "<input class='fr-rp-custom-size-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                            "<tr>" +
-                            "</tr>" +
-                        "</table>" +
-                        // Custom Size options
-                        "<table class='fr-rp-custom-size-table'>" +
-                            "<tr>" +
-                                "<td>" +
-                                    "<h3>" +
-                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.customSize + "</label>" +
-                                    "</h3>" +
-                                "</td>" +
-                            "</tr>" +
-                            // Width
-                            "<tr>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.width + "</label>" +
-                                    "<select class='fr-rp-width-select-id fr-rp-dimension-select fr-core-input'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-width-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
-                                "</td>" +
-                            "</tr>" +
-                            // Height
-                            "<tr>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.height + "</label>" +
-                                    "<select class='fr-rp-height-select-id fr-rp-dimension-select fr-core-input'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.slots + "</label>" +
-                                    "<input class='fr-rp-height-slots-id fr-rp-slots fr-core-input' name='hideToolbar' type='number' value='1' min='1' max='4'/>" +
-                                "</td>" +
-                            "</tr>" +
-                        "</table>" +
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
@@ -22605,36 +22506,13 @@ $(function () {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
-            // Size options
-            me.$templateSize = me.element.find(".fr-rp-template-size-id");
-            me.$templateSize.on("change", function (e, data) {
-                me._onChangeSizeOption.apply(me, arguments);
-            });
-            me.$reportSize = me.element.find(".fr-rp-report-size-id");
-            me.$reportSize.on("change", function (e, data) {
-                me._onChangeSizeOption.apply(me, arguments);
-            });
-            me.$customSize = me.element.find(".fr-rp-custom-size-id");
-            me.$customSize.on("change", function (e, data) {
-                me._onChangeSizeOption.apply(me, arguments);
-            });
-
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
 
-            // Custom size options
-            me.$widthSelect = me.element.find(".fr-rp-width-select-id");
-            me.$widthSlots = me.element.find(".fr-rp-width-slots-id");
-            me.$heightSelect = me.element.find(".fr-rp-height-select-id");
-            me.$heightSlots = me.element.find(".fr-rp-height-slots-id");
-
-            me.$customSizeTable = me.element.find(".fr-rp-custom-size-table");
-
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);
             });
-
 
             // Hook the cancel and submit events
             me.element.find(".fr-rp-cancel").on("click", function(e) {
@@ -22654,23 +22532,6 @@ $(function () {
             var me = this;
             me.$reportInput.val("");
             me.properties.catalogItem = null;
-        },
-        _onChangeSizeOption: function (e, data) {
-            var me = this;
-            me.$templateSize.prop("checked", false);
-            me.$reportSize.prop("checked", false);
-            me.$customSize.prop("checked", false);
-
-            $(e.target).prop("checked", true);
-            me._showCustomSizeTable();
-        },
-        _showCustomSizeTable: function () {
-            var me = this;
-            if (me.$customSize.prop("checked")) {
-                me.$customSizeTable.show();
-            } else {
-                me.$customSizeTable.hide();
-            }
         },
         _onChangeToolbarOption: function (e, data) {
             var me = this;
@@ -22771,34 +22632,11 @@ $(function () {
                 } else if (me.$fullToolbar.prop("checked")) {
                     me.properties.toolbarConfigOption = constants.toolbarConfigOption.full;
                 }
-                // Size options
-                me.properties.dashboardSizeOption = constants.dashboardSizeOption.template;
-                if (me.$reportSize.prop("checked")) {
-                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.report;
-                } else if (me.$customSize.prop("checked")) {
-                    me.properties.dashboardSizeOption = constants.dashboardSizeOption.custom;
-                }
-
-                // Custom Size
-                if (me.$customSize.prop("checked")) {
-                    me.properties.customSize = {
-                        width: me._getCustomSize(me.$widthSelect, me.$widthSlots),
-                        height: me._getCustomSize(me.$heightSelect, me.$heightSlots)
-                    };
-                } else {
-                    me.properties.customSize = null;
-                }
 
                 me.options.$dashboardEditor.setReportProperties(me.options.reportId, me.properties);
                 me._triggerClose(true);
                 forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
             }
-        },
-        _getCustomSize: function ($select, $slots) {
-            return {
-                value: $select.val(),
-                slots: $slots.val(),
-            };
         },
         /**
          * Close parameter set dialog

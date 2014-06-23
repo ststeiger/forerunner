@@ -1312,9 +1312,8 @@ $(function () {
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if (data && data.responsiveUI !== undefined) {
-                            forerunner.ajax._userSetting = data;
-                        }
+                        forerunner.ajax._userSetting = data;
+                        
                     }
                 });
             }

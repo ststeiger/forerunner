@@ -1333,7 +1333,6 @@ $(function () {
                             return;
                         }
 
-                        //e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
@@ -1364,7 +1363,6 @@ $(function () {
                         return;
                     }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }
@@ -1497,7 +1495,6 @@ $(function () {
                             return;
                         }
 
-                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
@@ -1528,7 +1525,6 @@ $(function () {
                         return;
                     }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }
@@ -1873,7 +1869,6 @@ $(function () {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-item-keyword").val());
                     if (keyword === "") { return; }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }

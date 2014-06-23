@@ -199,16 +199,8 @@ $(function () {
             $link.addClass("fr-location-link");
             index++;
             if (parentPath === null) {
-                $link.text(name);
-                //make home link always clickable
-                //if (index !== 1) {
-                    $link.on("click", function () {
-                        me._navigateTo("home");
-                    });
-                //}
-                //else {
-                //    $link.addClass("fr-location-link-last");
-                //}
+                $link.text(locData.toolbar.home);
+                $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
                 return;
             }

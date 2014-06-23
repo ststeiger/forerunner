@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -6588,7 +6588,9 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
-            me._checkPermission();
+            if (me.options.view === "catalog") {
+                me._checkPermission();
+            }
 
             if (me.options.explorerSettings) {
                 me._initOverrides();
@@ -14266,16 +14268,8 @@ $(function () {
             $link.addClass("fr-location-link");
             index++;
             if (parentPath === null) {
-                $link.text(name);
-                //make home link always clickable
-                //if (index !== 1) {
-                    $link.on("click", function () {
-                        me._navigateTo("home");
-                    });
-                //}
-                //else {
-                //    $link.addClass("fr-location-link-last");
-                //}
+                $link.text(locData.toolbar.home);
+                $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
                 return;
             }

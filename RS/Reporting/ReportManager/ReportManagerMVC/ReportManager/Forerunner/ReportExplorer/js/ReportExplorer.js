@@ -398,7 +398,9 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
-            me._checkPermission();
+            if (me.options.view === "catalog") {
+                me._checkPermission();
+            }
 
             if (me.options.explorerSettings) {
                 me._initOverrides();

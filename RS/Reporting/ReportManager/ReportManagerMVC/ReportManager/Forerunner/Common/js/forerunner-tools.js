@@ -1333,7 +1333,6 @@ $(function () {
                             return;
                         }
 
-                        //e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
@@ -1364,7 +1363,6 @@ $(function () {
                         return;
                     }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }
@@ -1391,6 +1389,7 @@ $(function () {
             imageClass: "fr-icons24x24-homeBlue",
             text: locData.toolbar.home,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1446,6 +1445,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             text: locData.toolbar.favorites,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1461,6 +1461,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             text: locData.toolbar.recent,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1497,7 +1498,6 @@ $(function () {
                             return;
                         }
 
-                        e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                         e.data.me.options.navigateTo("search", keyword);
                         return false;
                     }
@@ -1528,7 +1528,6 @@ $(function () {
                         return;
                     }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }
@@ -1873,7 +1872,6 @@ $(function () {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-item-keyword").val());
                     if (keyword === "") { return; }
 
-                    e.data.me.options.$reportExplorer.reportExplorer("savedPath");
                     e.data.me.options.navigateTo("search", keyword);
                 }
             }

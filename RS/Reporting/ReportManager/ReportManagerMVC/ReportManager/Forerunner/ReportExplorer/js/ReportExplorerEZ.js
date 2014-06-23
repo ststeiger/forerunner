@@ -125,6 +125,8 @@ $(function () {
             var me = this;
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
+
+            me._routeAction = null;
             
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -145,10 +147,13 @@ $(function () {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
                 me.transitionToReportManager(keyword, "search");
+                me._routeAction = "search";
             } else if (data.name === "transitionToFavorites") {
                 me.transitionToReportManager(null, "favorites");
+                me._routeAction = "favorite";
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+                me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToCreateDashboard") {
@@ -160,7 +165,7 @@ $(function () {
         _lastAction: null,
         _navigateTo: function (action, path) {
             var me = this;
-
+            
             if (path !== null) {
                 path = encodeURIComponent(path);
             }
@@ -184,36 +189,58 @@ $(function () {
         _generateRouteLink: function (event, data) {
             var me = this;
 
+            var $linksection = me.DefaultAppTemplate.$linksection;
             //clear prior route link
-            me.DefaultAppTemplate.$linksection.html("");
+            $linksection.html("");
             var path = data.args[0];
-            me._getParentLink(path, me.DefaultAppTemplate.$linksection, 0);
+            me._getLink(path, $linksection, 0);
+
+            me._linkResize($linksection);
         },
-        _getParentLink: function (path, $container, index) {
+        _getLink: function (path, $container, index) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
                 $link = new $("<span />"),
-                $arrowTag;
+                $arrowTag,
+                $forerunnerViewLink,
+                forerunerViewText;
 
             $link.addClass("fr-location-link");
             index++;
             if (parentPath === null) {
-                $link.text(name);
-                //make home link always clickable
-                //if (index !== 1) {
-                    $link.on("click", function () {
-                        me._navigateTo("home");
-                    });
-                //}
-                //else {
-                //    $link.addClass("fr-location-link-last");
-                //}
+                $link.text(locData.toolbar.home);
+                $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
+
+                if (me._routeAction) {
+                    $arrowTag = new $("<span/>");
+                    $arrowTag.text(" > ");
+                    $container.append($arrowTag);
+                    //Add special handle for search, favorite, recent views
+                    $forerunnerViewLink = new $("<span />");
+                    $forerunnerViewLink.addClass("fr-location-link-last");
+
+                    switch (me._routeAction) {
+                        case "search":
+                            forerunerViewText = locData.toolbar.search;
+                            break;
+                        case "favorite":
+                            forerunerViewText = locData.toolbar.favorites;
+                            break;
+                        case "recent":
+                            forerunerViewText = locData.toolbar.recent;
+                            break;
+                    }
+
+                    $forerunnerViewLink.text(forerunerViewText);
+                    $container.append($forerunnerViewLink);
+                }
+                
                 return;
             }
             else {
-                me._getParentLink(parentPath, $container);
+                me._getLink(parentPath, $container);
             }
 
             $arrowTag = new $("<span/>");
@@ -232,7 +259,28 @@ $(function () {
 
             $container.append($arrowTag).append($link);
         },
+        //compare link section and container width, ellipsis long word to only keep 10 characters.
+        _linkResize: function ($linksection) {
+            var me = this;
 
+            var $lastLink = $linksection.find(".fr-location-link-last"),
+                text,
+                newText;
+
+            if ($lastLink.length && ($lastLink.offset().left + $lastLink.width()) > $linksection.width()) {
+                //get the last not ellipsis link
+                var $link = $linksection.find(".fr-location-link:not(.fr-link-ellipsis):last");
+                if ($link.length === 0) return;//stop ellisis if all links have been ellipsis
+
+                text = $link.text();
+                if (text.length > 10) {
+                    newText = text.substring(0, 10) + "..";
+                }
+                $link.addClass("fr-link-ellipsis").text(newText);
+
+                me._linkResize($linksection);
+            }
+        },
         /**
          * Transition to ReportManager view.
          *

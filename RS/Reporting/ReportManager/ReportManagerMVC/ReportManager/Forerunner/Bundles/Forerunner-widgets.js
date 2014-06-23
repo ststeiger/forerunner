@@ -8133,6 +8133,7 @@ $(function () {
                     $TextObj.attr("required", true);
                 if (textExt.InputSubmit)
                     $TextObj.attr("data-submitType", textExt.InputSubmit);
+                $TextObj.addClass("fr-input-" + textExt.InputType);
                 //Handle EasySubmit
                 if (textExt.EasySubmitURL && textExt.EasySubmitType) {
                     $TextObj.on("click", { reportViewer: me.options.reportViewer.element, element: $TextObj, getInputs: me._getInputsInRow, easySubmit:me._submitRow, veryEasySubmit: me._easySubmit }, function (e) {

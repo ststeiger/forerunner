@@ -929,11 +929,12 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!GetServerInfo().ServerRendering)
                 {
-                    ThreadPool.QueueUserWorkItem(this.GenerateImage, result); 
+                    ThreadPool.QueueUserWorkItem(this.GenerateImage, result);
+                    waitHandle.WaitOne();
+                    return imageResult;
                 }
-
-                waitHandle.WaitOne();
-                return imageResult;
+                else
+                    return result;
             }
             catch (Exception e)
             {

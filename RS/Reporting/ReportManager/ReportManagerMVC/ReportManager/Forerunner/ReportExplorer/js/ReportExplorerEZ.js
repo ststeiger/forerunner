@@ -125,6 +125,8 @@ $(function () {
             var me = this;
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
+
+            me._routeAction = null;
             
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
@@ -145,10 +147,13 @@ $(function () {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
                 me.transitionToReportManager(keyword, "search");
+                me._routeAction = "search";
             } else if (data.name === "transitionToFavorites") {
                 me.transitionToReportManager(null, "favorites");
+                me._routeAction = "favorite";
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
+                me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToCreateDashboard") {
@@ -160,7 +165,7 @@ $(function () {
         _lastAction: null,
         _navigateTo: function (action, path) {
             var me = this;
-
+            
             if (path !== null) {
                 path = encodeURIComponent(path);
             }
@@ -194,7 +199,9 @@ $(function () {
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
                 $link = new $("<span />"),
-                $arrowTag;
+                $arrowTag,
+                $forerunnerViewLink,
+                forerunerViewText;
 
             $link.addClass("fr-location-link");
             index++;
@@ -202,6 +209,31 @@ $(function () {
                 $link.text(locData.toolbar.home);
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
+
+                if (me._routeAction) {
+                    $arrowTag = new $("<span/>");
+                    $arrowTag.text(" > ");
+                    $container.append($arrowTag);
+                    //Add special handle for search, favorite, recent views
+                    $forerunnerViewLink = new $("<span />");
+                    $forerunnerViewLink.addClass("fr-location-link-last");
+
+                    switch (me._routeAction) {
+                        case "search":
+                            forerunerViewText = locData.toolbar.search;
+                            break;
+                        case "favorite":
+                            forerunerViewText = locData.toolbar.favorites;
+                            break;
+                        case "recent":
+                            forerunerViewText = locData.toolbar.recent;
+                            break;
+                    }
+
+                    $forerunnerViewLink.text(forerunerViewText);
+                    $container.append($forerunnerViewLink);
+                }
+                
                 return;
             }
             else {

@@ -1389,6 +1389,7 @@ $(function () {
             imageClass: "fr-icons24x24-homeBlue",
             text: locData.toolbar.home,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1444,6 +1445,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             text: locData.toolbar.favorites,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1459,6 +1461,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             text: locData.toolbar.recent,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);

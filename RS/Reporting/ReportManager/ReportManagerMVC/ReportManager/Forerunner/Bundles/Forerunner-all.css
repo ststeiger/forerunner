@@ -1759,6 +1759,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 }
 .fr-toolbar { }
   .fr-toolbar .fr-toolbase-input-invalid { border-width: thin; border-color: red; }
+  .fr-toolbar .fr-core-hidden { display: none; }
 
 .fr-toolbar-slide { margin: 0px; padding: 0px; width: 100%; height: 38px; background: #4971a5; /* Old browsers */ background: -moz-linear-gradient(top, #4971a5 0%, #2f4a7d 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4971a5), color-stop(100%,#2f4a7d)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #4971a5 0%,#2f4a7d 100%); /* IE10+ */ background: linear-gradient(to bottom, #4971a5 0%,#2f4a7d 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4971a5', endColorstr='#2f4a7d',GradientType=0 ); /* IE6-9 */ }
 .fr-toolbar-zoom { margin: 0px; padding: 0px; width: 100%; height: 38px; }
@@ -1883,6 +1884,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-2up2down #Report4 { }
 
 .fr-dashboard-toolbar { }
+    .fr-dashboard-toolbar .fr-core-hidden {display: none; }
+
 .fr-dashboard-button-home, .fr-dashboard-button-recent, .fr-dashboard-button-favorite, .fr-dashboard-button-logOff { float: right; }
 
 .fr-dashboard-toolpane { margin: 0px; padding: 0px; width: 100%; height: 100%; overflow-x: hidden; -webkit-overflow-scrolling: touch; -ms-overflow-style: none; overflow-y: auto; }

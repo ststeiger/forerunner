@@ -14258,12 +14258,15 @@ $(function () {
         _generateRouteLink: function (event, data) {
             var me = this;
 
+            var $linksection = me.DefaultAppTemplate.$linksection;
             //clear prior route link
-            me.DefaultAppTemplate.$linksection.html("");
+            $linksection.html("");
             var path = data.args[0];
-            me._getParentLink(path, me.DefaultAppTemplate.$linksection, 0);
+            me._getLink(path, $linksection, 0);
+
+            me._linkResize($linksection);
         },
-        _getParentLink: function (path, $container, index) {
+        _getLink: function (path, $container, index) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
@@ -14306,7 +14309,7 @@ $(function () {
                 return;
             }
             else {
-                me._getParentLink(parentPath, $container);
+                me._getLink(parentPath, $container);
             }
 
             $arrowTag = new $("<span/>");
@@ -14325,7 +14328,28 @@ $(function () {
 
             $container.append($arrowTag).append($link);
         },
+        //compare link section and container width, ellipsis long word to only keep 10 characters.
+        _linkResize: function ($linksection) {
+            var me = this;
 
+            var $lastLink = $linksection.find(".fr-location-link-last"),
+                text,
+                newText;
+
+            if ($lastLink.length && ($lastLink.offset().left + $lastLink.width()) > $linksection.width()) {
+                //get the last not ellipsis link
+                var $link = $linksection.find(".fr-location-link:not(.fr-link-ellipsis):last");
+                if ($link.length === 0) return;//stop ellisis if all links have been ellipsis
+
+                text = $link.text();
+                if (text.length > 10) {
+                    newText = text.substring(0, 10) + "..";
+                }
+                $link.addClass("fr-link-ellipsis").text(newText);
+
+                me._linkResize($linksection);
+            }
+        },
         /**
          * Transition to ReportManager view.
          *

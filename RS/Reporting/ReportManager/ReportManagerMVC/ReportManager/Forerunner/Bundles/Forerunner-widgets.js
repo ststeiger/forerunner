@@ -14249,9 +14249,7 @@ $(function () {
                 me.router.router("navigate", "#recent", { trigger: true, replace: false });
             } else {
                 var targetUrl = "#" + action + "/" + path;
-                // Do not trigger for Firefox when we are changing the anchor
-                var trigger = !forerunner.device.isFirefox() || me._lastAction === action || !me._lastAction;
-                me.router.router("navigate", targetUrl, { trigger: trigger, replace: false });
+                me.router.router("navigate", targetUrl, { trigger: true, replace: false });
             }
             me._lastAction = action;
         },

@@ -65,7 +65,7 @@ $(function () {
             me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
 
             var $dashboardEditor = me.getDashboardEditor();
-            $dashboardEditor.dashboardEditor("editDashboard", null, enableEdit);
+            $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);
         },
         _init: function () {
             var me = this;

@@ -15,7 +15,6 @@ $(function () {
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
-    var dimemsions = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dimensions");
 
     /**
      * Widget used to select a new dashbard template

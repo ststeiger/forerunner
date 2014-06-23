@@ -45,32 +45,27 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
 
-            if (!me._isAdmin()) {
-                me.hideTool(dbtp.itemEdit.selectorClass);
-                me.hideTool(dbtp.itemView.selectorClass);
-            } else {
-                me.showTool(dbtp.itemEdit.selectorClass);
-                me.showTool(dbtp.itemView.selectorClass);
+            me.hideTool(dbtp.itemEdit.selectorClass);
+            me.hideTool(dbtp.itemView.selectorClass);
 
-                if (enableEdit) {
-                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                    var path = $dashboardEditor.dashboardEditor("getPath");
-                    
-                    if (path) {
-                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
-                        if (permissions["Update Content"] === true) {
-                            // If the user has update resource permission for this dashboard, we will
-                            // enable the edit buttons
-                            me.showTool(dbtp.itemView.selectorClass);
-                            me.hideTool(dbtp.itemEdit.selectorClass);
-                            return;
-                        }
+            if (!me._isAdmin()) {
+                return;
+            }
+
+            if (!enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+
+                if (path) {
+                    var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                    if (permissions["Update Content"] === true) {
+                        // If the user has update resource permission for this dashboard, we will enable the edit button
+                        me.showTool(dbtp.itemEdit.selectorClass);
+                        return;
                     }
                 }
-
-                // Disable the edit buttons
-                me.hideTool(dbtp.itemView.selectorClass);
-                me.showTool(dbtp.itemEdit.selectorClass);
+            } else {
+                me.showTool(dbtp.itemView.selectorClass);
             }
         },
         _isAdmin: function () {

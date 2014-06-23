@@ -1,18 +1,10 @@
 ﻿<table class="fr-2up2down">
     <tr>
-        <td>
-            <div id="Report1" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
-        <td>
-            <div id="Report2" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
+        <div id="Report1" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        <div id="Report2" class="fr-dashboard-report-id fr-dashboard-report-container" />
     </tr>
     <tr>
-        <td>
-            <div id="Report3" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
-        <td>
-            <div id="Report4" style="min-width:630px; max-width:630px; min-height:470px; max-height:470px;" class="fr-dashboard-report-id fr-dashboard-report-container" />
-        </td>
+        <div id="Report3" class="fr-dashboard-report-id fr-dashboard-report-container" />
+        <div id="Report4" class="fr-dashboard-report-id fr-dashboard-report-container" />
     </tr>
 </table>

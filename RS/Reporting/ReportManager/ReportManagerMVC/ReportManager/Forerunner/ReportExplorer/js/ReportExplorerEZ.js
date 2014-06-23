@@ -101,7 +101,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:path": "transitionToCreateDashboard",
+                    "editDashboard/:path": "transitionToEditDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
                 }
             });
@@ -156,8 +156,8 @@ $(function () {
                 me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
-            } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(path);
+            } else if (data.name === "transitionToEditDashboard") {
+                me.transitionToEditDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -436,7 +436,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
+                $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 me._setLeftRightPaneStyle();
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
@@ -456,10 +456,10 @@ $(function () {
         /**
          * Transition to Create Dashboard view
          *
-         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @function $.forerunner.reportExplorerEZ#transitionToEditDashboard
          * @param {String} path - Fully qualified path to the dashboard
          */
-        transitionToCreateDashboard: function (path) {
+        transitionToEditDashboard: function (path) {
             var me = this;
             me._transitionToDashboard(path, true);
         },

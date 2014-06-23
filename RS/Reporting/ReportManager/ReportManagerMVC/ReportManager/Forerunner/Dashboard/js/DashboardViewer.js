@@ -73,49 +73,8 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._saveTemplateSizes($(item));
                 me._loadReport(item.id, hideMissing);
             });
-        },
-        _clearSizes: function ($item) {
-            $item.css({ minWidth: "", maxWidth: "", minHeight: "", maxHeight: "" });
-        },
-        _resetTemplateSizes: function ($item) {
-            var me = this;
-            me._clearSizes($item);
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            $item.css(reportProperties.sizes);
-        },
-        _setCustomSize: function ($item) {
-            var me = this;
-            me._clearSizes($item);
-            
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            me._setCustomDimension($item, reportProperties.customSize.width, "minWidth", "maxWidth");
-            me._setCustomDimension($item, reportProperties.customSize.height, "minHeight", "maxHeight");
-        },
-        _setCustomDimension: function ($item, dimension, minString, maxString) {
-            if (dimension.value > 0) {
-                var length = dimension.value / dimension.slots;
-                $item.css(minString, length);
-                $item.css(maxString, length);
-            } else {
-                $item.css(minString, "");
-                $item.css(maxString, "");
-            }
-        },
-        _saveTemplateSizes: function ($item) {
-            var me = this;
-            var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
-            var sizes = {};
-            $.each(styles, function (prop, value) {
-                sizes[prop] = value;
-            });
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
             var me = this;
@@ -146,19 +105,6 @@ $(function () {
 
             $item.html("");
 
-            // Set the report size
-            if (me.enableEdit) {
-                me._resetTemplateSizes($item);
-            } else if (reportProperties.dashboardSizeOption) {
-                if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
-                    me._resetTemplateSizes($item);
-                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
-                    me._clearSizes($item);
-                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
-                    me._setCustomSize($item);
-                }
-            }
-
             // If we have a report definition, load the report
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
@@ -169,14 +115,20 @@ $(function () {
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
+                var $reportViewer = $item.reportViewerEZ("getReportViewer");
+
+                $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
+                    data.reportId = reportId;
+                    me._onAfterReportLoaded.apply(me, arguments);
+                });
+
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var parameters = me.model.dashboardDef.reports[reportId].parameters;
-                var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
                 // We catch this event so as to auto save when the user changes parameters
                 var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                $reportParameter.one(events.reportParameterSubmit(), function (e, data) {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
@@ -184,7 +136,10 @@ $(function () {
             }
         },
         _onReportParameterSubmit: function (e, data) {
-            // Ment to be overridden in the dashboard editor widget
+            // Meant to be overridden in the dashboard editor widget
+        },
+        _onAfterReportLoaded: function (e, data) {
+            // Meant to be overridden in the dashboard editor widget
         },
         _loadResource: function (path) {
             var me = this;

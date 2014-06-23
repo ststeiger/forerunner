@@ -165,7 +165,7 @@ $(function () {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
                 var path = me.options.parentFolder + dashboardName;
-                navigateTo("createDashboard", path);
+                navigateTo("editDashboard", path);
 
                 me.closeDialog();
                 return;

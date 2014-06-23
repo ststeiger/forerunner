@@ -53,32 +53,27 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
 
+            me.hideTool(dtb.btnEdit.selectorClass);
+            me.hideTool(dtb.btnView.selectorClass);
+
             if (!me._isAdmin()) {
-                me.hideTool(dtb.btnEdit.selectorClass);
-                me.hideTool(dtb.btnView.selectorClass);
-            } else {
-                me.showTool(dtb.btnEdit.selectorClass);
-                me.showTool(dtb.btnView.selectorClass);
+                return;
+            }
 
-                if (enableEdit) {
-                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                    var path = $dashboardEditor.dashboardEditor("getPath");
+            if (!enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
 
-                    if (path) {
-                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
-                        if (permissions["Update Content"] === true) {
-                            // If the user has update resource permission for this dashboard, we will
-                            // enable the edit buttons
-                            me.showTool(dtb.btnView.selectorClass);
-                            me.hideTool(dtb.btnEdit.selectorClass);
-                            return;
-                        }
+                if (path) {
+                    var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                    if (permissions["Update Content"] === true) {
+                        // If the user has update resource permission for this dashboard, we will enable the edit button
+                        me.showTool(dtb.btnEdit.selectorClass);
+                        return;
                     }
                 }
-
-                // Disable the edit buttons
-                me.hideTool(dtb.btnView.selectorClass);
-                me.showTool(dtb.btnEdit.selectorClass);
+            } else {
+                me.showTool(dtb.btnView.selectorClass);
             }
         },
         _isAdmin: function () {

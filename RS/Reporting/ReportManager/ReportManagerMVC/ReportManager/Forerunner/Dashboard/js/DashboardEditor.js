@@ -23,13 +23,13 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given dashboard definition and opens the dashboard for editing or viewing
+         * Opens the given dashboard definition for editing or viewing
          *
          * @function $.forerunner.dashboardEditor#editDashboard
          * @param {String} path - Fully qualified path to the dashboard
          * @param {Bool} enableEdit - True = display the dashboard in edit mode, False = view mode
          */
-        editDashboard: function (path, enableEdit) {
+        openDashboard: function (path, enableEdit) {
             var me = this;
 
             me.enableEdit = enableEdit;
@@ -82,6 +82,10 @@ $(function () {
             if (me.enableEdit === true) {
                 me._save(true);
             }
+        },
+        _onAfterReportLoaded: function (e, data) {
+            var me = this;
+            me._showUI(me.enableEdit);
         },
         _onClickProperties: function (e) {
             var me = this;
@@ -136,6 +140,12 @@ $(function () {
         _renderButton: function (item) {
             var me = this;
             var $item = $(item);
+
+            if ($item.height() === 0) {
+                $item.height("480px");
+            } else {
+                $item.height("");
+            }
 
             // Create the button
             var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");

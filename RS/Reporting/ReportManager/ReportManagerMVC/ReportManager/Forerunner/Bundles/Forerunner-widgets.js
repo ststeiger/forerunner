@@ -14171,7 +14171,7 @@ $(function () {
                     "search/:keyword": "transitionToSearch",
                     "favorites": "transitionToFavorites",
                     "recent": "transitionToRecent",
-                    "createDashboard/:path": "transitionToCreateDashboard",
+                    "editDashboard/:path": "transitionToEditDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
                 }
             });
@@ -14226,8 +14226,8 @@ $(function () {
                 me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
-            } else if (data.name === "transitionToCreateDashboard") {
-                me.transitionToCreateDashboard(path);
+            } else if (data.name === "transitionToEditDashboard") {
+                me.transitionToEditDashboard(path);
             } else if (data.name == "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
@@ -14506,7 +14506,7 @@ $(function () {
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("editDashboard", path, enableEdit);
+                $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 me._setLeftRightPaneStyle();
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
@@ -14526,10 +14526,10 @@ $(function () {
         /**
          * Transition to Create Dashboard view
          *
-         * @function $.forerunner.reportExplorerEZ#transitionToCreateDashboard
+         * @function $.forerunner.reportExplorerEZ#transitionToEditDashboard
          * @param {String} path - Fully qualified path to the dashboard
          */
-        transitionToCreateDashboard: function (path) {
+        transitionToEditDashboard: function (path) {
             var me = this;
             me._transitionToDashboard(path, true);
         },
@@ -14752,7 +14752,7 @@ $(function () {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
                 var path = me.options.parentFolder + dashboardName;
-                navigateTo("createDashboard", path);
+                navigateTo("editDashboard", path);
 
                 me.closeDialog();
                 return;
@@ -21541,7 +21541,7 @@ $(function () {
             me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
 
             var $dashboardEditor = me.getDashboardEditor();
-            $dashboardEditor.dashboardEditor("editDashboard", null, enableEdit);
+            $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);
         },
         _init: function () {
             var me = this;
@@ -21740,32 +21740,27 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
 
+            me.hideTool(dtb.btnEdit.selectorClass);
+            me.hideTool(dtb.btnView.selectorClass);
+
             if (!me._isAdmin()) {
-                me.hideTool(dtb.btnEdit.selectorClass);
-                me.hideTool(dtb.btnView.selectorClass);
-            } else {
-                me.showTool(dtb.btnEdit.selectorClass);
-                me.showTool(dtb.btnView.selectorClass);
+                return;
+            }
 
-                if (enableEdit) {
-                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                    var path = $dashboardEditor.dashboardEditor("getPath");
+            if (!enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
 
-                    if (path) {
-                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
-                        if (permissions["Update Content"] === true) {
-                            // If the user has update resource permission for this dashboard, we will
-                            // enable the edit buttons
-                            me.showTool(dtb.btnView.selectorClass);
-                            me.hideTool(dtb.btnEdit.selectorClass);
-                            return;
-                        }
+                if (path) {
+                    var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                    if (permissions["Update Content"] === true) {
+                        // If the user has update resource permission for this dashboard, we will enable the edit button
+                        me.showTool(dtb.btnEdit.selectorClass);
+                        return;
                     }
                 }
-
-                // Disable the edit buttons
-                me.hideTool(dtb.btnView.selectorClass);
-                me.showTool(dtb.btnEdit.selectorClass);
+            } else {
+                me.showTool(dtb.btnView.selectorClass);
             }
         },
         _isAdmin: function () {
@@ -21848,32 +21843,27 @@ $(function () {
         enableEdit: function (enableEdit) {
             var me = this;
 
-            if (!me._isAdmin()) {
-                me.hideTool(dbtp.itemEdit.selectorClass);
-                me.hideTool(dbtp.itemView.selectorClass);
-            } else {
-                me.showTool(dbtp.itemEdit.selectorClass);
-                me.showTool(dbtp.itemView.selectorClass);
+            me.hideTool(dbtp.itemEdit.selectorClass);
+            me.hideTool(dbtp.itemView.selectorClass);
 
-                if (enableEdit) {
-                    var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
-                    var path = $dashboardEditor.dashboardEditor("getPath");
-                    
-                    if (path) {
-                        var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
-                        if (permissions["Update Content"] === true) {
-                            // If the user has update resource permission for this dashboard, we will
-                            // enable the edit buttons
-                            me.showTool(dbtp.itemView.selectorClass);
-                            me.hideTool(dbtp.itemEdit.selectorClass);
-                            return;
-                        }
+            if (!me._isAdmin()) {
+                return;
+            }
+
+            if (!enableEdit) {
+                var $dashboardEditor = me.options.$dashboardEZ.dashboardEZ("getDashboardEditor");
+                var path = $dashboardEditor.dashboardEditor("getPath");
+
+                if (path) {
+                    var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+                    if (permissions["Update Content"] === true) {
+                        // If the user has update resource permission for this dashboard, we will enable the edit button
+                        me.showTool(dbtp.itemEdit.selectorClass);
+                        return;
                     }
                 }
-
-                // Disable the edit buttons
-                me.hideTool(dbtp.itemView.selectorClass);
-                me.showTool(dbtp.itemEdit.selectorClass);
+            } else {
+                me.showTool(dbtp.itemView.selectorClass);
             }
         },
         _isAdmin: function () {
@@ -21977,49 +21967,8 @@ $(function () {
             // Render the template and load the reports
             me.element.html(me.model.dashboardDef.template);
             me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                me._saveTemplateSizes($(item));
                 me._loadReport(item.id, hideMissing);
             });
-        },
-        _clearSizes: function ($item) {
-            $item.css({ minWidth: "", maxWidth: "", minHeight: "", maxHeight: "" });
-        },
-        _resetTemplateSizes: function ($item) {
-            var me = this;
-            me._clearSizes($item);
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            $item.css(reportProperties.sizes);
-        },
-        _setCustomSize: function ($item) {
-            var me = this;
-            me._clearSizes($item);
-            
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            me._setCustomDimension($item, reportProperties.customSize.width, "minWidth", "maxWidth");
-            me._setCustomDimension($item, reportProperties.customSize.height, "minHeight", "maxHeight");
-        },
-        _setCustomDimension: function ($item, dimension, minString, maxString) {
-            if (dimension.value > 0) {
-                var length = dimension.value / dimension.slots;
-                $item.css(minString, length);
-                $item.css(maxString, length);
-            } else {
-                $item.css(minString, "");
-                $item.css(maxString, "");
-            }
-        },
-        _saveTemplateSizes: function ($item) {
-            var me = this;
-            var styles = $item.css(["min-width", "max-width", "min-height", "max-height"]);
-            var sizes = {};
-            $.each(styles, function (prop, value) {
-                sizes[prop] = value;
-            });
-            var id = $item.attr("id");
-            var reportProperties = me.getReportProperties(id);
-            reportProperties.sizes = sizes;
         },
         getParentFolder: function () {
             var me = this;
@@ -22050,19 +21999,6 @@ $(function () {
 
             $item.html("");
 
-            // Set the report size
-            if (me.enableEdit) {
-                me._resetTemplateSizes($item);
-            } else if (reportProperties.dashboardSizeOption) {
-                if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.template) {
-                    me._resetTemplateSizes($item);
-                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.report) {
-                    me._clearSizes($item);
-                } else if (reportProperties.dashboardSizeOption === constants.dashboardSizeOption.custom) {
-                    me._setCustomSize($item);
-                }
-            }
-
             // If we have a report definition, load the report
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
@@ -22073,14 +22009,20 @@ $(function () {
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
+                var $reportViewer = $item.reportViewerEZ("getReportViewer");
+
+                $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
+                    data.reportId = reportId;
+                    me._onAfterReportLoaded.apply(me, arguments);
+                });
+
                 var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
                 var parameters = me.model.dashboardDef.reports[reportId].parameters;
-                var $reportViewer = $item.reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
                 // We catch this event so as to auto save when the user changes parameters
                 var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                $reportParameter.on(events.reportParameterSubmit(), function (e, data) {
+                $reportParameter.one(events.reportParameterSubmit(), function (e, data) {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
@@ -22088,7 +22030,10 @@ $(function () {
             }
         },
         _onReportParameterSubmit: function (e, data) {
-            // Ment to be overridden in the dashboard editor widget
+            // Meant to be overridden in the dashboard editor widget
+        },
+        _onAfterReportLoaded: function (e, data) {
+            // Meant to be overridden in the dashboard editor widget
         },
         _loadResource: function (path) {
             var me = this;
@@ -22138,13 +22083,13 @@ $(function () {
         options: {
         },
         /**
-         * Loads the given dashboard definition and opens the dashboard for editing or viewing
+         * Opens the given dashboard definition for editing or viewing
          *
          * @function $.forerunner.dashboardEditor#editDashboard
          * @param {String} path - Fully qualified path to the dashboard
          * @param {Bool} enableEdit - True = display the dashboard in edit mode, False = view mode
          */
-        editDashboard: function (path, enableEdit) {
+        openDashboard: function (path, enableEdit) {
             var me = this;
 
             me.enableEdit = enableEdit;
@@ -22197,6 +22142,10 @@ $(function () {
             if (me.enableEdit === true) {
                 me._save(true);
             }
+        },
+        _onAfterReportLoaded: function (e, data) {
+            var me = this;
+            me._showUI(me.enableEdit);
         },
         _onClickProperties: function (e) {
             var me = this;
@@ -22251,6 +22200,12 @@ $(function () {
         _renderButton: function (item) {
             var me = this;
             var $item = $(item);
+
+            if ($item.height() === 0) {
+                $item.height("480px");
+            } else {
+                $item.height("");
+            }
 
             // Create the button
             var $btn = $("<input type=button class='fr-dashboard-btn' name='" + item.id + "'/>");
@@ -22309,7 +22264,6 @@ $(function () {
     var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var reportProperties = locData.reportProperties;
-    var dimemsions = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dimensions");
 
     /**
      * Widget used to select a new dashbard template

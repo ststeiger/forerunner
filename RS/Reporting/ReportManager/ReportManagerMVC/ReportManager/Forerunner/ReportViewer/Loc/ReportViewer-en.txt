@@ -138,7 +138,10 @@
 	"includeReport": "Include report",
 	"schedule": "Schedule",
 	"format": "Format",
-	"saveFailed": "Saving subscription failed"
+	"saveFailed": "Saving subscription failed",
+	"addNew": "Create",
+	"delete": "Delete",
+	"deleteFailed": "Subscription deletion failed"
   },
   "paramPane": {
     "nullField":"Null",

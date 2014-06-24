@@ -103,7 +103,11 @@ div.fr-layout-position-absolute { position: absolute; }
     .fr-core-dialog-header .fr-core-dialog-title{ height: 45px; vertical-align: middle; display: table-cell; }
     .fr-core-dialog-header .fr-core-dialog-cancel-container{ display: inline-block; margin: 0 11px 0 17px; float: right; }
     .fr-core-dialog-header .fr-core-dialog-cancel{ height: 45px; padding: 0; margin: 0; font-size: 13pt; color: #ffffff; background-color: transparent; border: none; cursor: pointer; }
+    .fr-core-dialog-header .fr-core-dialog-action-container{ display: inline-block; margin: 0 11px 0 17px; }
+    .fr-core-dialog-header .fr-core-dialog-action{ height: 37px; padding: 0px; margin: 3px; font-size: 13pt; color: #ffffff; background-color: transparent; border: 1px solid white; cursor: pointer; }
 
+.fr-core-dialog-delete{ height: 45px; width: 100px; padding: 0; padding-left: 10px; margin: 0; font-size: 13pt; color: #000000; background-color: transparent; border: none; cursor: pointer; }
+    
 .fr-core-dialog-form { margin: 16px 0 25px 16px; font-size: 13pt; font-weight: bold; color: #172949; text-align: left; display: block; overflow-x:hidden; overflow-y:auto; max-height:500px;}
 .fr-core-dialog-submit-container { width: 100%; display: block; margin: 25px 0 0 0; }
 .fr-core-dialog-submit { width: 200px; display: inline-block; }
@@ -967,8 +971,8 @@ table, td, tr div {
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
 .fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width: 100%;}
 .fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
-.fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); }
-.fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); }
+.fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); cursor: pointer; }
+.fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); cursor: pointer; }
 .fr-email-form { padding-right: 15px;}
 .fr-email-table table, td, tr{ padding: 5px;}
 .fr-email-description { width: 100%; border: 0px; float: left; }
@@ -977,7 +981,9 @@ table, td, tr div {
 .fr-email-comment{ width: 100%; height: 5em; border: 0px; resize:none;}
 .fr-email-renderformat { width: 200px; }
 .fr-email-schedule { width: 200px;}
-.fr-email-submit-id {display: table; margin: 10px auto;}
+.fr-email-submit-container { display: table; margin: 10px auto;}
+.fr-email-submit-id {display: inline-block;}
+.fr-email-delete-id {display: inline-block;}
 .fr-emailsubscription-section { display: none; }
 .fr-managesubscription-section {display:none; }
 /*** IconGen - start automatically generated, do not hand modify ***/

@@ -50,7 +50,8 @@ $(function () {
         },
         _editSubscription: function (subscriptionID) {
             var me = this;
-            me.options.$reportViewer.reportViewer("showEmailSubscription", subscriptionID);
+            me.options.$reportViewer.reportViewer("editEmailSubscription", subscriptionID);
+            me.closeDialog();
         },
         _renderList: function () {
             var me = this;

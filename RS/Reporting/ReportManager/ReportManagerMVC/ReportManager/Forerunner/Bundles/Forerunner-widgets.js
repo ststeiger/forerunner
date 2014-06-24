@@ -2188,22 +2188,42 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
-        showEmailSubscription : function (subscriptionID) {
+        editEmailSubscription : function(subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+
                 var paramList = null;
                 if (me.paramLoaded) {
                     var $paramArea = me.options.paramArea;
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 if (paramList)
                     me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        showEmailSubscription : function (subscriptionID) {
+            var me = this;
+            if (!me.showSubscriptionUI()) return;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
+                    .done(function (data) {
+                        if (data.length == 0) {
+                            me.editEmailSubscription(null);
+                        } else if (data.length == 1) {
+                            me.editEmailSubscription(data[0].SubscriptionID);
+                        } else {
+                            me.manageSubscription();
+                        }
+                    })
+                    .fail(function() { me._showEmailSubscriptionDialog(null); });
             }
         },
         manageSubscription : function() {
@@ -5469,7 +5489,6 @@ $(function () {
             
             me.addTools(1, false, me._viewerItems());
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
-                me.hideTool(tp.itemManageSubscription.selectorClass);
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
             
@@ -5500,7 +5519,7 @@ $(function () {
                 listOfItems.pop();
             }
 
-            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription);
 
             //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
@@ -5575,10 +5594,8 @@ $(function () {
 
             var permissions = me.options.$reportViewer.reportViewer("getPermissions");
             if (permissions["Create Subscription"] === true) {
-                me.showTool(tp.itemManageSubscription.selectorClass);
                 me.showTool(tp.itemEmailSubscription.selectorClass);
             } else {
-                me.hideTool(tp.itemManageSubscription.selectorClass);
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
         },
@@ -14942,7 +14959,7 @@ $(function () {
                 me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
                 if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
                     me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
-                for (var i = 0; i < me._subscriptionData.ExtensionSettings.length; i++) {
+                for (var i = 0; i < me._subscriptionData.ExtensionSettings.ParameterValues.length; i++) {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
                     }
@@ -15075,7 +15092,12 @@ $(function () {
         },
         _init : function () {
         },
-        _subscriptionID : null,
+        _subscriptionID: null,
+
+        getSubscriptionList : function() {
+            var me = this;
+            return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
+        },
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
@@ -15084,13 +15106,15 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel, "fr-email-create-id fr-core-dialog-button", locData.subscription.addNew) :
+                forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
             me.$theForm.addClass("fr-core-dialog-form");
             me.$outerContainer.append(headerHtml);
             me.$outerContainer.append(me.$theForm);
+
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
@@ -15121,9 +15145,18 @@ $(function () {
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
 
+            me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
             me.$submitButton.val(locData.subscription.save);
-            me.$theForm.append(me.$submitButton)
+            me.$submitContainer.append(me.$submitButton);
+            
+            
+            if (subscripitonID) {
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton.val(locData.subscription.delete);
+                me.$submitContainer.append(me.$deleteButton);
+            }
+            me.$theForm.append(me.$submitContainer);
             me._initSections();
             me.element.append(me.$outerContainer);
 
@@ -15132,6 +15165,14 @@ $(function () {
 
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 me._submit();
+            });
+
+            me.element.find(".fr-email-create-id").on("click", function (e) {
+                me._createNew();
+            });
+
+            me.element.find(".fr-email-delete-id").on("click", function (e) {
+                me._deleteMe();
             });
 
             me.element.find(".fr-email-cancel").on("click", function (e) {
@@ -15156,8 +15197,20 @@ $(function () {
                 subscriptionInfo,
                 function () { me.closeDialog(); },
                 function () { forerunner.dialog.showMessageBox(me.options.$appContainer,  locData.subscription.saveFailed); });
-            
-            
+        },
+
+        _createNew: function () {
+            var me = this;
+            me.loadSubscription(null);
+        },
+
+        _deleteMe: function () {
+            var me = this;
+            me.options.subscriptionModel.subscriptionModel(
+               "deleteSubscription",
+               me._subscriptionID,
+               function () { me.closeDialog(); },
+               function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
         },
         
         openDialog: function () {
@@ -15230,7 +15283,8 @@ $(function () {
         },
         _editSubscription: function (subscriptionID) {
             var me = this;
-            me.options.$reportViewer.reportViewer("showEmailSubscription", subscriptionID);
+            me.options.$reportViewer.reportViewer("editEmailSubscription", subscriptionID);
+            me.closeDialog();
         },
         _renderList: function () {
             var me = this;

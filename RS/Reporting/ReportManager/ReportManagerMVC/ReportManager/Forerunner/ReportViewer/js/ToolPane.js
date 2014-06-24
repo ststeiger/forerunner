@@ -144,7 +144,6 @@ $(function () {
             
             me.addTools(1, false, me._viewerItems());
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
-                me.hideTool(tp.itemManageSubscription.selectorClass);
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
             
@@ -175,7 +174,7 @@ $(function () {
                 listOfItems.pop();
             }
 
-            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription, tp.itemManageSubscription);
+            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription);
 
             //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
@@ -250,10 +249,8 @@ $(function () {
 
             var permissions = me.options.$reportViewer.reportViewer("getPermissions");
             if (permissions["Create Subscription"] === true) {
-                me.showTool(tp.itemManageSubscription.selectorClass);
                 me.showTool(tp.itemEmailSubscription.selectorClass);
             } else {
-                me.hideTool(tp.itemManageSubscription.selectorClass);
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
         },

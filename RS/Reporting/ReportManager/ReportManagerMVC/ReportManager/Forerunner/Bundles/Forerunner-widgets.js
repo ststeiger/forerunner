@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -14845,15 +14845,12 @@ $(function () {
         },
         _createDropDownWithLabel: function (label, validValues) {
             var me = this;
-            me.$colOfLastRow.append("<BR/>");
             var id = forerunner.helper.guidGen();
             var $label = new $("<LABEL />");
             $label.attr("for", id);
             $label.append(label);
             $retVal = me._createDropDownForValidValues(validValues);
             $retVal.attr("id", id);
-            me.$colOfLastRow.append($label);
-            me.$colOfLastRow.append($retVal);
             return $retVal;
         },
         _subscriptionData: null,
@@ -14987,9 +14984,10 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name == "RenderFormat") {
-                    me.$renderFormat = me._createDropDownWithLabel("Format:", setting.ValidValues);
+                    me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
                     me.$renderFormat.val(setting.Value);
                     me.$renderFormat.addClass(".fr-email-renderformat");
+                    me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
                 }
             }
         },
@@ -15012,7 +15010,8 @@ $(function () {
                     me._sharedSchedule[data[i].ScheduleID] = data[i];
                 }
             }
-            me.$sharedSchedule = me._createDropDownWithLabel("Schedule:", validValues);
+            me.$sharedSchedule = me._createDropDownForValidValues(validValues);
+            me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
             me.$sharedSchedule.addClass("fr-email-schedule");
         },
         _initProcessingOptions: function () {
@@ -15044,13 +15043,19 @@ $(function () {
             }
             return $input;
         },
-        _createTableRow: function ($div) {
+        _createTableRow: function (label, $div2) {
             var me = this;
             $row = new $("<TR/>");
-            $col = new $("<TD/>");
-            $row.append($col)
-            if ($div)
-                $col.append($div);
+            $col1 = new $("<TD/>");
+            $col1.addClass("fr-sub-left-col");
+            $col2 = new $("<TD/>");
+            $col2.addClass("fr-sub-right-col");
+            $row.append($col1)
+            $row.append($col2)
+            if (label)
+                $col1.append(label);
+            if ($div2)
+                $col2.append($div2);
             return $row;
         },
         _createCheckBox: function ($div, label) {
@@ -15059,18 +15064,13 @@ $(function () {
             var id = forerunner.helper.guidGen();
             $cb.attr("type", "checkbox");
             $cb.attr("id", id);
-            var $label = new $("<LABEL />");
-            $label.attr("for", id);
-            $label.append(label);
-            $div.append($cb);
-            $div.append($label);
-            return $cb;
-        },
-        _createToggleInput: function ($container, label) {
-            var me = this;
-            $div = forerunner.helper.createDiv(["fr-email-include"]);
-            $cb = me._createCheckBox($div, label);
-            $container.append($div);
+            if ($div && label) {
+                var $label = new $("<LABEL />");
+                $label.attr("for", id);
+                $label.append(label);
+                $div.append($cb);
+                $div.append($label);
+            }
             return $cb;
         },
         _init : function () {
@@ -15095,26 +15095,32 @@ $(function () {
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
             me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.description_placeholder);
-            me.$theTable.append(me._createTableRow(me.$desc));
+            me.$theTable.append(me._createTableRow(locData.subscription.description_placeholder, me.$desc));
             me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.to_placeholder);
-            me.$theTable.append(me._createTableRow(me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subject_placeholder)
-            me.$theTable.append(me._createTableRow(me.$subject));
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder)
-            me.$theTable.append(me._createTableRow(me.$comment));
+            me.$theTable.append(me._createTableRow(locData.subscription.to_placeholder, me.$to));
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subject_placeholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.subject_placeholder, me.$subject));
+            me.$includeLink = me._createCheckBox();
+            me.$includeLink.addClass("fr-email-include");
+            me.$includeReport = me._createCheckBox();
+            me.$includeReport.addClass("fr-email-include");
+            me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
+            me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.comment_placeholder, me.$comment));
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
-                me.$desc.hide();
-                me.$comment.hide();
+                me.$subject.parent().parent().hide();
+                me.$desc.parent().parent().hide();
+                me.$comment.parent().parent().hide();
             }
             me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
             if (!me._canEditComment) {
-                me.$comment.hide();
+                me.$comment.parent().parent().hide();
             }
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);
-            me.$includeLink = me._createToggleInput(me.$colOfLastRow, "[{0}]".format(locData.subscription.includeLink));
-            me.$includeReport = me._createToggleInput(me.$colOfLastRow, "[{0}]".format(locData.subscription.includeReport));
+
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
             me.$submitButton.val(locData.subscription.save);
             me.$theForm.append(me.$submitButton)

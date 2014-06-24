@@ -135,7 +135,9 @@
 	"subject": "@ReportName was executed at @ExecutionTime",
 	"description": "Send email to {0}",
 	"includeLink": "Include link",
-	"includeReport": "Include report"
+	"includeReport": "Include report",
+	"schedule": "Schedule",
+	"format": "Format"
   },
   "paramPane": {
     "nullField":"Null",

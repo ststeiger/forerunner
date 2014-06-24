@@ -262,6 +262,10 @@
     "includeLink":"包含连接",
     "includeReport":"包含报表",
     "schedule":"计划",
-    "format":"格式"
+    "format":"格式",
+    "saveFailed":"Saving subscription failed",
+    "addNew":"Create",
+    "delete":"Delete",
+    "deleteFailed":"Subscription deletion failed"
   }
 }

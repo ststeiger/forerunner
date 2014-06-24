@@ -262,6 +262,10 @@
     "includeLink":"Inkludera länk",
     "includeReport":"inkludera rapport",
     "schedule":"tidtabell ",
-    "format":"Format"
+    "format":"Format",
+    "saveFailed":"Att spara abonnemang misslyckades",
+    "addNew":"Skapa",
+    "delete":"Radera",
+    "deleteFailed":"Prenumerations deletion misslyckades"
   }
 }

@@ -262,6 +262,10 @@
     "includeLink":"Fügen Link",
     "includeReport":"Fügen Bericht",
     "schedule":"Zeitplan",
-    "format":"Format"
+    "format":"Format",
+    "saveFailed":"Speichern Abonnement gescheitert ",
+    "addNew":"Schaffen ",
+    "delete":"Löschen ",
+    "deleteFailed":"Abonnement Löschung gescheitert"
   }
 }

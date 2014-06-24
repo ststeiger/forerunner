@@ -251,18 +251,22 @@
   },
   "subscription": {
     "email":"Email",
-    "cancel":"cancelar",
-    "save":"guardar",
+    "cancel":"Cancelar",
+    "save":"Guardar",
     "manageSubscription":"Gestione Suscripción",
     "to_placeholder":"a",
-    "subject_placeholder":"sujeto",
-    "description_placeholder":"descripción",
-    "comment_placeholder":"comentario",
+    "subject_placeholder":"Aujeto",
+    "description_placeholder":"Descripción",
+    "comment_placeholder":"Comentario",
     "subject":"@ ReportName fue ejecutado en @ ExecutionTime",
     "description":"Enviar email a {0}",
-    "includeLink":"incluir enlace",
+    "includeLink":"Incluir enlace",
     "includeReport":"Incluya informe",
-    "schedule":"horario",
-    "format":"formato"
+    "schedule":"Horario",
+    "format":"Formato",
+    "saveFailed":"Suscripción Ahorro fallado ",
+    "addNew":"Crear",
+    "delete":"Borrar",
+    "deleteFailed":"Eliminación Suscripción fallado"
   }
 }

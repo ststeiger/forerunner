@@ -262,6 +262,10 @@
     "includeLink":"include link-",
     "includeReport":"Includeți raport",
     "schedule":"program ",
-    "format":"Format"
+    "format":"Format",
+    "saveFailed":"Salvarea abonament eșuat",
+    "addNew":"crea",
+    "delete":"șterge",
+    "deleteFailed":"Ștergerea abonament eșuat"
   }
 }

@@ -262,6 +262,10 @@
     "includeLink":"incluir ligação",
     "includeReport":"incluir relatório",
     "schedule":"horário ",
-    "format":"formato"
+    "format":"formato",
+    "saveFailed":"Salvando subscrição falhou",
+    "addNew":"criar",
+    "delete":"excluir",
+    "deleteFailed":"Exclusão Assinatura falhou"
   }
 }

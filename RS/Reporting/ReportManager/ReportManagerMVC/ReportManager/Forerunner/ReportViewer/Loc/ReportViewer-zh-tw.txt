@@ -261,7 +261,7 @@
     "description":"發送郵件到 {0}",
     "includeLink":"包含連接",
     "includeReport":"包含報表",
-    "schedule":"Schedule",
-    "format":"Format"
+    "schedule":"計劃",
+    "format":"格式"
   }
 }

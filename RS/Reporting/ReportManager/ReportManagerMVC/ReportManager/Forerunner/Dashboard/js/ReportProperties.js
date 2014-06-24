@@ -83,6 +83,9 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
+            // Make sure the popup is hidden
+            me.$popup.addClass("fr-core-hidden");
+
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -147,7 +150,7 @@ $(function () {
                             "</div>" +
                         "</div>" +
                         // Popup container
-                        "<div class='fr-rp-popup-container'>" +
+                        "<div class='fr-rp-popup-container fr-core-hidden'>" +
                             "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Toolbar options
@@ -253,7 +256,7 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-                me.$popup.hide();
+                me.$popup.addClass("fr-core-hidden");
             }
             else {
                 me.$tree.jstree("toggle_node", data.node);
@@ -261,12 +264,14 @@ $(function () {
         },
         _onClickTreeDropdown: function (e) {
             var me = this;
+            var $window = $(window);
+
             // Show the popup
-            var top = me.$dropdown.offset().top + me.$dropdown.height();
-            var left = me.$dropdown.offset().left;
+            var top = me.$dropdown.offset().top + me.$dropdown.height() - $window.scrollTop();
+            var left = me.$dropdown.offset().left - $window.scrollLeft();
             var width = me.$dropdown.width();
             me.$popup.css({ top: top, left: left, width: width });
-            me.$popup.toggle();
+            me.$popup.toggleClass("fr-core-hidden");
         },
         // _getItems will return back an array of CatalogItem objects where:
         //

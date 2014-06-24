@@ -2247,7 +2247,9 @@ $(function () {
         _setPrint: function (pageLayout) {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
-            me.$printDialog.reportPrint("setPrint", pageLayout);
+            if (widgets.hasWidget(me.$printDialog, widgets.reportPrint)) {
+                me.$printDialog.reportPrint("setPrint", pageLayout);
+            }
         },
         _setEmailSubscriptionUI : function() {
             var me = this;
@@ -21938,6 +21940,29 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
+
+            $(window).on("resize", function (e, data) {
+                me._onWindowResize.apply(me, arguments);
+            });
+        },
+        _onWindowResize: function (e, data) {
+            var me = this;
+
+            var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
+
+            setTimeout(function () {
+                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                    var $item = $(item);
+                    var responsiveStyle = isResponsive ? "inline-block" : "";
+                    var currentStyle = $item.css("display");
+
+                    if (responsiveStyle !== currentStyle) {
+                        $item.css("display", responsiveStyle);
+                    }
+                });
+            }, 250);
         },
         _init: function () {
             var me = this;
@@ -22130,7 +22155,7 @@ $(function () {
 
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                    if ($reportParameter.data().forerunnerReportParameter) {
+                    if (widgets.hasWidget($reportParameter, widgets.reportParameter)) {
                         var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
                         if (numOfVisibleParameters > 0) {
                             reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
@@ -22205,10 +22230,7 @@ $(function () {
             });
         },
         _hasReport: function ($item) {
-            if ($item.data().forerunnerReportViewerEZ) {
-                return true;
-            };
-            return false;
+            return widgets.hasWidget($item, widgets.reportViewerEZ);
         },
         _renderButton: function (item) {
             var me = this;
@@ -22347,6 +22369,9 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
+            // Make sure the popup is hidden
+            me.$popup.addClass("fr-core-hidden");
+
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -22411,7 +22436,7 @@ $(function () {
                             "</div>" +
                         "</div>" +
                         // Popup container
-                        "<div class='fr-rp-popup-container'>" +
+                        "<div class='fr-rp-popup-container fr-core-hidden'>" +
                             "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Toolbar options
@@ -22517,7 +22542,7 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-                me.$popup.hide();
+                me.$popup.addClass("fr-core-hidden");
             }
             else {
                 me.$tree.jstree("toggle_node", data.node);
@@ -22525,12 +22550,14 @@ $(function () {
         },
         _onClickTreeDropdown: function (e) {
             var me = this;
+            var $window = $(window);
+
             // Show the popup
-            var top = me.$dropdown.offset().top + me.$dropdown.height();
-            var left = me.$dropdown.offset().left;
+            var top = me.$dropdown.offset().top + me.$dropdown.height() - $window.scrollTop();
+            var left = me.$dropdown.offset().left - $window.scrollLeft();
             var width = me.$dropdown.width();
             me.$popup.css({ top: top, left: left, width: width });
-            me.$popup.toggle();
+            me.$popup.toggleClass("fr-core-hidden");
         },
         // _getItems will return back an array of CatalogItem objects where:
         //

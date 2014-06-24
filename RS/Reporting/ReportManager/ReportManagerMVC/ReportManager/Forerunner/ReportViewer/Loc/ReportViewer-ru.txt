@@ -260,6 +260,12 @@
     "subject":"@ ReportName был казнен в @ ExecutionTime",
     "description":"Отправить персональное сообщение для {0}",
     "includeLink":"Включите ссылку",
-    "includeReport":"Включите отчет"
+    "includeReport":"Включите отчет",
+    "schedule":"график ",
+    "format":"формат",
+    "saveFailed":"Сохранение подписка не удалось",
+    "addNew":"создавать",
+    "delete":"удалять",
+    "deleteFailed":"Подписка Ошибка удаления"
   }
 }

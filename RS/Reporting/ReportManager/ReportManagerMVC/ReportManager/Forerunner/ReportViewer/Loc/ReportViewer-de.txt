@@ -120,7 +120,7 @@
     "submit":"Ok",
     "cancel":"Abbestellen",
     "ResponsiveUI":"Responsive UI",
-    "Email":"Email",
+    "Email":"E-Mail",
     "AdminUI":"Admin-Benutzeroberfläche"
   },
   "paramPane": {
@@ -260,6 +260,12 @@
     "subject":"@ Report wurde unter @ ExecutionTime ausgeführt",
     "description":"E-Mail an {0}",
     "includeLink":"Fügen Link",
-    "includeReport":"Fügen Bericht"
+    "includeReport":"Fügen Bericht",
+    "schedule":"Zeitplan",
+    "format":"Format",
+    "saveFailed":"Speichern Abonnement gescheitert ",
+    "addNew":"Schaffen ",
+    "delete":"Löschen ",
+    "deleteFailed":"Abonnement Löschung gescheitert"
   }
 }

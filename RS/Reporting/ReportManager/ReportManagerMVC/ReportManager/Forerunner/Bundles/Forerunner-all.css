@@ -103,7 +103,11 @@ div.fr-layout-position-absolute { position: absolute; }
     .fr-core-dialog-header .fr-core-dialog-title{ height: 45px; vertical-align: middle; display: table-cell; }
     .fr-core-dialog-header .fr-core-dialog-cancel-container{ display: inline-block; margin: 0 11px 0 17px; float: right; }
     .fr-core-dialog-header .fr-core-dialog-cancel{ height: 45px; padding: 0; margin: 0; font-size: 13pt; color: #ffffff; background-color: transparent; border: none; cursor: pointer; }
+    .fr-core-dialog-header .fr-core-dialog-action-container{ display: inline-block; margin: 0 11px 0 17px; }
+    .fr-core-dialog-header .fr-core-dialog-action{ height: 37px; padding: 0px; margin: 3px; font-size: 13pt; color: #ffffff; background-color: transparent; border: 1px solid white; cursor: pointer; }
 
+.fr-core-dialog-delete{ height: 45px; width: 100px; padding: 0; padding-left: 10px; margin: 0; font-size: 13pt; color: #000000; background-color: transparent; border: none; cursor: pointer; }
+    
 .fr-core-dialog-form { margin: 16px 0 25px 16px; font-size: 13pt; font-weight: bold; color: #172949; text-align: left; display: block; overflow-x:hidden; overflow-y:auto; max-height:500px;}
 .fr-core-dialog-submit-container { width: 100%; display: block; margin: 25px 0 0 0; }
 .fr-core-dialog-submit { width: 200px; display: inline-block; }
@@ -967,20 +971,19 @@ table, td, tr div {
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
 .fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width: 100%;}
 .fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
-.fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); }
-.fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); }
+.fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); cursor: pointer; }
+.fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); cursor: pointer; }
 .fr-email-form { padding-right: 15px;}
-.fr-email-table { }
-.fr-email-description { width: 100%; border: 0px; border-bottom: 1px solid black; float: left; }
-.fr-email-to { width: 100%; border: 0px; border-bottom: 1px solid black; float: left; }
-.fr-email-subject { width: 100%; border: 0px; border-bottom: 1px solid black; }
-.fr-email-comment{ width: 100%; height: 5em; border: 0px; border-bottom: 1px solid black; resize:none;}
-.fr-email-include {display: inline-block;}
-.fr-email-include input { display:none; }
-.fr-email-include input ~ label { color: gray;}
-.fr-email-include input:Checked ~ label { color: black;}
+.fr-email-table table, td, tr{ padding: 5px;}
+.fr-email-description { width: 100%; border: 0px; float: left; }
+.fr-email-to { width: 100%; border: 0px; float: left; }
+.fr-email-subject { width: 100%; border: 0px; }
+.fr-email-comment{ width: 100%; height: 5em; border: 0px; resize:none;}
 .fr-email-renderformat { width: 200px; }
 .fr-email-schedule { width: 200px;}
+.fr-email-submit-container { display: table; margin: 10px auto;}
+.fr-email-submit-id {display: inline-block;}
+.fr-email-delete-id {display: inline-block;}
 .fr-emailsubscription-section { display: none; }
 .fr-managesubscription-section {display:none; }
 /*** IconGen - start automatically generated, do not hand modify ***/
@@ -1334,8 +1337,13 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
-.fr-param, .fr-param-form .fr-param-client { margin: 4px; width: 180px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
-.fr-param-form .fr-param-dropdown-textbox, .fr-param-autocomplete-textbox { width: 180px; padding-right: 26px; overflow:hidden;white-space:nowrap; text-overflow:ellipsis; -ms-text-overflow:ellipsis; -o-text-overflow:ellipsis;  }
+.fr-param, .fr-param-client { margin: 4px; width: 180px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
+.fr-param-form 
+    .fr-param-dropdown-textbox, 
+    .fr-param-autocomplete-textbox, 
+    .fr-param-tree-input, 
+    .fr-param-client { outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
+.fr-param-dropdown-div { border: 1px solid #1f98c7; margin-left:4px; width:180px; background-color:white; }
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; font-weight:normal; font-size: medium; }
@@ -1349,12 +1357,12 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-form .fr-param-cancel { max-width:120px; height: 39px; margin-left: 30px; text-align:center; cursor: pointer; font-size: 11pt; color: #ffffff; background-color: transparent; border: none; }
 .fr-param-enable { background-color: rgb(255,255,255); color: rgb(0,0,0); }
 .fr-param-disable { background-color: rgb(222,231,242); color: rgb(84,84,84); }
-.fr-param-dropdown { padding: 4px; margin: 0px 4px; border: 1px solid DarkGray; color: black; overflow: auto; background-color: window; position: absolute; z-index: 11; display: none; max-height: 180px; }
+.fr-param-dropdown { padding: 4px; border: 1px solid DarkGray; color: black; overflow: auto; background-color: window; position: absolute; z-index: 11; display: none; max-height: 180px; }
   .fr-param-dropdown input[type="checkbox"] { padding: 5px; font-size: 1em; margin: 5px 0px 6px 0px; }
   .fr-param-dropdown Label { margin: 4px; }
 .fr-param-dropdown-input { margin-bottom: 0px; }
 .fr-param-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
-.fr-param-dropdown-iconcontainer { position: absolute; right: 4px; top: 4px; border:4px solid transparent; }
+.fr-param-dropdown-iconcontainer { position: absolute; right: 0px; top: 0px; border:3px solid transparent; }
 .fr-param-dropdown-textarea { width: 95%; height: 80px; overflow: auto; padding: 2px; }
 .fr-param-checkbox-container { display: inline-block; min-width: 180px; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
@@ -1382,7 +1390,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     padding-bottom:4px;
     -ms-overflow-style:auto;
 }
-
 .fr-param-tree ul{
     padding:0;
 }
@@ -1401,7 +1408,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-tree .fr-param-tree-item{
     background-image: url("../images/JSTree32px.png");
 }
-
 .fr-param-tree .fr-param-tree-item
 {
     min-height: 24px;
@@ -1409,12 +1415,10 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     margin-left: 24px;
     min-width: 24px;
 }
-
 .fr-param-tree > .fr-param-tree-ul > .fr-param-tree-item {
     margin-left:0;
     margin-right:0;
 }
-
 .fr-param-tree-icon {
   display: inline-block;
   text-decoration: none;
@@ -1423,7 +1427,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   vertical-align: top;
   text-align: center;
 }
-
 .fr-param-tree-icon:empty
 {
     display: inline-block;
@@ -1433,7 +1436,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     vertical-align: top;
     text-align: center;
 }
-
 .fr-param-tree .fr-param-tree-icon {
   width: 24px;
   height: 24px;
@@ -1445,7 +1447,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-tree-anchor > .fr-param-tree-icon-hidden {
   display:none;
 }
-
 .fr-param-tree .fr-param-tree-icon-cb {
     background-position: -164px -4px;
 }
@@ -1479,7 +1480,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-tree .fr-param-tree-item-last{
     background:transparent;
 }
-
 .fr-param-tree-anchor{
     transition: background-color 0.15s, box-shadow 0.15s;
     -webkit-transition:background-color 0.15s, box-shadow 0.15s;
@@ -1494,28 +1494,21 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     line-height:24px;
     height:24px;
 }
-
 .fr-param-tree-anchor:focus {
   outline: 0;
 }
-
-.fr-param-tree-anchor, .fr-param-tree-anchor:link, .fr-param-tree-anchor:visited, .fr-param-tree-anchor:hover, .fr-param-tree-anchor:active
-{
+.fr-param-tree-anchor, .fr-param-tree-anchor:link, .fr-param-tree-anchor:visited, .fr-param-tree-anchor:hover, .fr-param-tree-anchor:active {
     text-decoration: none;
     color: inherit;
 }
-
 .fr-param-tree-anchor-selected,.fr-param-tree-item-selected .fr-param-tree-anchor-udm {
     background-color:#beebff;
     border-radius:2px;
     box-shadow:inset 0 0 1px #999;
 }
-
 .fr-param-tree-anchor > .fr-param-tree-icon-theme {
   display:none;
 }
-
-
 .fr-param-tree .fr-param-tree-loading .fr-param-tree-icon-theme {
     display:inline-block;
     background: url("../Images/JSTreeThrobber.gif") center center no-repeat;
@@ -1523,7 +1516,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-tree-container {
     z-index: inherit;
 }
-
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }
 .fr-param-form{}

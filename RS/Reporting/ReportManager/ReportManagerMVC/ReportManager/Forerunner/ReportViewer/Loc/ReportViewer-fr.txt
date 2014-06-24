@@ -255,12 +255,18 @@
     "save":"sauver",
     "manageSubscription":"Gestion de votre souscription",
     "to_placeholder":"à",
-    "subject_placeholder":"sujet",
+    "subject_placeholder":"Sujet",
     "description_placeholder":"Description",
-    "comment_placeholder":"commentaire",
+    "comment_placeholder":"Commentaire",
     "subject":"@ ReportName a été exécuté à @ ExecutionTime",
     "description":"Envoyer un email à {0}",
-    "includeLink":"inclure lien",
-    "includeReport":"inclure rapport"
+    "includeLink":"Inclure lien",
+    "includeReport":"Inclure rapport",
+    "schedule":"Calendrier ",
+    "format":"Format",
+    "saveFailed":"Abonnement sauver échoué ",
+    "addNew":"Créer",
+    "delete":"Effacer",
+    "deleteFailed":"Suppression abonnement qui a échoué"
   }
 }

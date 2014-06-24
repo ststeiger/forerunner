@@ -1615,7 +1615,7 @@ $(function () {
         *
         * @return {String} - modal dialog header html snippet
         */
-        getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord) {
+        getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord, actionClass, actionWord) {
             var html = "<div class='fr-core-dialog-header'>" +
                             "<div class='fr-core-dialog-icon-container'>" +
                                 "<div class='fr-core-dialog-icon-inner'>" +
@@ -1626,8 +1626,13 @@ $(function () {
                                 "<div class='fr-core-dialog-title'>" +
                                    title +
                                 "</div>" +
-                            "</div>" +
-                            "<div class='fr-core-dialog-cancel-container'>" +
+                            "</div>";
+            if (actionClass) {
+                html += "<div class='fr-core-dialog-action-container'>" +
+                                "<input type='button' class='fr-core-dialog-action " + actionClass + "' value='" + actionWord + "' />" +
+                        "</div>";
+            }
+            html +=    "<div class='fr-core-dialog-cancel-container'>" +
                                 "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
                             "</div>" +
                        "</div>";

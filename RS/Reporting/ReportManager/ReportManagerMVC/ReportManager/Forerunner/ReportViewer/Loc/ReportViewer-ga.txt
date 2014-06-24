@@ -260,6 +260,12 @@
     "subject":"@ Cuireadh chun báis ReportName ag @ ExecutionTime",
     "description":"Seol r-phost chuig {0}",
     "includeLink":"Cuir nasc",
-    "includeReport":"Cuir an tuarascáil"
+    "includeReport":"Cuir an tuarascáil",
+    "schedule":"Sceideal ",
+    "format":"Formáid",
+    "saveFailed":"Theip síntiús Shábháil",
+    "addNew":"Cruthaigh",
+    "delete":"Scrios",
+    "deleteFailed":"Theip scriosadh Síntiúis"
   }
 }

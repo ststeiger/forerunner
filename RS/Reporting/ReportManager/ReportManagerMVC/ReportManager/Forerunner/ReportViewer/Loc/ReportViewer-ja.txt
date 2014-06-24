@@ -260,6 +260,12 @@
     "subject":"@ ReportNameのは@ EXECUTIONTIMEで実行されました",
     "description":"にメールを送信して{0}",
     "includeLink":"リンクを含める",
-    "includeReport":"レポートを含める"
+    "includeReport":"レポートを含める",
+    "schedule":"スケジュール ",
+    "format":"フォーマット",
+    "saveFailed":"節約のサブスクリプションに失敗しました",
+    "addNew":"作る",
+    "delete":"削除",
+    "deleteFailed":"サブスクリプションの削除に失敗しました"
   }
 }

@@ -135,7 +135,13 @@
 	"subject": "@ReportName was executed at @ExecutionTime",
 	"description": "Send email to {0}",
 	"includeLink": "Include link",
-	"includeReport": "Include report"
+	"includeReport": "Include report",
+	"schedule": "Schedule",
+	"format": "Format",
+	"saveFailed": "Saving subscription failed",
+	"addNew": "Create",
+	"delete": "Delete",
+	"deleteFailed": "Subscription deletion failed"
   },
   "paramPane": {
     "nullField":"Null",

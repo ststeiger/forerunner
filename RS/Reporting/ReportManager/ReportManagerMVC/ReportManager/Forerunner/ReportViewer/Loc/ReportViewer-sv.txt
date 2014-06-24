@@ -260,6 +260,12 @@
     "subject":"@ REPORT avrättades på @ ExecutionTime",
     "description":"Skicka e-post till {0}",
     "includeLink":"Inkludera länk",
-    "includeReport":"inkludera rapport"
+    "includeReport":"inkludera rapport",
+    "schedule":"tidtabell ",
+    "format":"Format",
+    "saveFailed":"Att spara abonnemang misslyckades",
+    "addNew":"Skapa",
+    "delete":"Radera",
+    "deleteFailed":"Prenumerations deletion misslyckades"
   }
 }

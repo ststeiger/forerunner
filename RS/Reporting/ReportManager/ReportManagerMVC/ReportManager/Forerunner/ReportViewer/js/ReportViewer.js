@@ -1558,22 +1558,42 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
-        showEmailSubscription : function (subscriptionID) {
+        editEmailSubscription : function(subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+
                 var paramList = null;
                 if (me.paramLoaded) {
                     var $paramArea = me.options.paramArea;
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 if (paramList)
                     me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
+            }
+        },
+        showEmailSubscription : function (subscriptionID) {
+            var me = this;
+            if (!me.showSubscriptionUI()) return;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
+                $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
+                    .done(function (data) {
+                        if (data.length == 0) {
+                            me.editEmailSubscription(null);
+                        } else if (data.length == 1) {
+                            me.editEmailSubscription(data[0].SubscriptionID);
+                        } else {
+                            me.manageSubscription();
+                        }
+                    })
+                    .fail(function() { me._showEmailSubscriptionDialog(null); });
             }
         },
         manageSubscription : function() {

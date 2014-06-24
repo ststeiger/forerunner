@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -10792,7 +10792,7 @@ $(function () {
                 isOpen = false,
                 enterLock = false;
 
-            var $container = me._createDiv(["fr-param-element-container"]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
@@ -10849,6 +10849,7 @@ $(function () {
                 delay: 0,
                 autoFocus: true,
                 appendTo: me.$params,
+                position: { of: $container },
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
@@ -10969,7 +10970,7 @@ $(function () {
             var me = this;
             var nodeLevel = 1;
 
-            var $container = me._createDiv(["fr-param-element-container fr-param-tree-container"]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
             $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input");
             me._getParameterControlProperty(param, $input);
@@ -11007,7 +11008,7 @@ $(function () {
                 //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
                 //so here I wrote code to got shop up position to popup tree panel
                 var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
-                var top = forerunner.helper.parseCss($input, "marginTop") + $input.outerHeight();
+                var top = forerunner.helper.parseCss($input, "marginTop") + $input.parent().outerHeight();
                 $tree.css({ top: top, left: left });
                 //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
@@ -11531,7 +11532,7 @@ $(function () {
         },
         _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var $control = me._createDiv(["fr-param-element-container"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
 
             var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
 
@@ -11626,7 +11627,7 @@ $(function () {
         _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
             var me = this;
             //me._getTextAreaValue(predefinedValue);
-            var $control = me._createDiv(["fr-param-element-container"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
 
             var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
@@ -11733,11 +11734,11 @@ $(function () {
                 $multipleControl.parent().css("z-index", 1);
 
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    //popup at above, 4 is margin top
-                    $dropDown.css("top", (($dropDown.height() + 10) * -1) + 4);
+                    //popup at above
+                    $dropDown.css("top", ($dropDown.height() + 10) * -1);
                 }
-                else {//popup at bottom, 15 is margin + padding + border
-                    $dropDown.css("top", $multipleControl.height() + 15);
+                else {//popup at bottom, 9 is margin + padding + border
+                    $dropDown.css("top", $multipleControl.height() + 9);
                 }
 
                 if ($dropDown.is(":hidden")) {

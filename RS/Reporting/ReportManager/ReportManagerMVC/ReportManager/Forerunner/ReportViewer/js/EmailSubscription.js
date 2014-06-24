@@ -341,12 +341,14 @@ $(function () {
         _submit : function () {
             var me = this;
             var subscriptionInfo = me._getSubscriptionInfo();
-            if (me._subscriptionID) {
-                me.options.subscriptionModel.subscriptionModel("updateSubscription", subscriptionInfo)
-            } else {
-                me.options.subscriptionModel.subscriptionModel("createSubscription", subscriptionInfo)
-            }
-            me.closeDialog();
+            
+            me.options.subscriptionModel.subscriptionModel(
+                me._subscriptionID ? "updateSubscription" : "createSubscription",
+                subscriptionInfo,
+                function () { me.closeDialog(); },
+                function () { forerunner.dialog.showMessageBox(me.options.$appContainer,  locData.subscription.saveFailed); });
+            
+            
         },
         
         openDialog: function () {

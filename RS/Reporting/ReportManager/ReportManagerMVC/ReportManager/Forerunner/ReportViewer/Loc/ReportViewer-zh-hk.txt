@@ -260,6 +260,8 @@
     "subject":"@ReportName 運行於 @ExecutionTime",
     "description":"發送郵件到 {0}",
     "includeLink":"包含連接",
-    "includeReport":"包含報表"
+    "includeReport":"包含報表",
+    "schedule":"Schedule",
+    "format":"Format"
   }
 }

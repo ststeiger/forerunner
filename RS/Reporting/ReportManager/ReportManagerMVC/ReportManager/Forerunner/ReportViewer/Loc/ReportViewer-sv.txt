@@ -260,6 +260,8 @@
     "subject":"@ REPORT avrättades på @ ExecutionTime",
     "description":"Skicka e-post till {0}",
     "includeLink":"Inkludera länk",
-    "includeReport":"inkludera rapport"
+    "includeReport":"inkludera rapport",
+    "schedule":"tidtabell ",
+    "format":"Format"
   }
 }

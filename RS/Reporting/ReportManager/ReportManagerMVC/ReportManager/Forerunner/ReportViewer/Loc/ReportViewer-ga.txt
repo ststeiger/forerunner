@@ -260,6 +260,8 @@
     "subject":"@ Cuireadh chun báis ReportName ag @ ExecutionTime",
     "description":"Seol r-phost chuig {0}",
     "includeLink":"Cuir nasc",
-    "includeReport":"Cuir an tuarascáil"
+    "includeReport":"Cuir an tuarascáil",
+    "schedule":"Sceideal ",
+    "format":"Formáid"
   }
 }

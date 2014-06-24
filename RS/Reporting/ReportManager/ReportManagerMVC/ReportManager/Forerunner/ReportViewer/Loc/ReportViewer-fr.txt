@@ -261,6 +261,8 @@
     "subject":"@ ReportName a été exécuté à @ ExecutionTime",
     "description":"Envoyer un email à {0}",
     "includeLink":"inclure lien",
-    "includeReport":"inclure rapport"
+    "includeReport":"inclure rapport",
+    "schedule":"calendrier ",
+    "format":"Format"
   }
 }

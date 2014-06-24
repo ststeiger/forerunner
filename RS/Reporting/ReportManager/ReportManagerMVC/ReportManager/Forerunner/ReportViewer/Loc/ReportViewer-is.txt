@@ -260,6 +260,8 @@
     "subject":"@ ReportName var keyrð á @ ExecutionTime",
     "description":"Senda tölvupóst til {0}",
     "includeLink":"Hafa tengil",
-    "includeReport":"fela skýrslu"
+    "includeReport":"fela skýrslu",
+    "schedule":"Stundaskrá ",
+    "format":"Format"
   }
 }

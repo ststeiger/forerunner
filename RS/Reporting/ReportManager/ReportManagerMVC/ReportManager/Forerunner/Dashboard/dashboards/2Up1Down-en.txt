@@ -1,5 +1,5 @@
-﻿<div class="fr-2up1down fr-dashboard-id">
-    <table>
+﻿<div class="fr-2up1down">
+    <table class="fr-dashboard-full-width-table">
         <tr>
             <td>
                 <div id="Report1" class="fr-dashboard-report-id fr-dashboard-report-container" />

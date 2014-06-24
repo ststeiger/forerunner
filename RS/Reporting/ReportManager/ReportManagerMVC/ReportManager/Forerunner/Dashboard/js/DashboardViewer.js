@@ -58,14 +58,16 @@ $(function () {
                 var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
-                    var responsiveStyle = isResponsive ? "inline-block" : "";
                     var currentStyle = $item.css("display");
-
-                    if (responsiveStyle !== currentStyle) {
-                        $item.css("display", responsiveStyle);
+                    if (isResponsive) {
+                        if (currentStyle !== "inline-block") {
+                            $item.css("display", "inline-block");
+                        }
+                    } else {
+                        $item.css("display", "");
                     }
                 });
-            }, 250);
+            }, 100);
         },
         _init: function () {
             var me = this;

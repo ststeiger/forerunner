@@ -137,7 +137,8 @@
 	"includeLink": "Include link",
 	"includeReport": "Include report",
 	"schedule": "Schedule",
-	"format": "Format"
+	"format": "Format",
+	"saveFailed": "Saving subscription failed"
   },
   "paramPane": {
     "nullField":"Null",

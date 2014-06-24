@@ -437,6 +437,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
+                $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
                 me._setLeftRightPaneStyle();
                 layout.$mainsection.fadeIn("fast");
             }, timeout);

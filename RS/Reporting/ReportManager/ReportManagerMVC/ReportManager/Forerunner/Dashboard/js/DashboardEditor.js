@@ -48,6 +48,10 @@ $(function () {
          */
         getPath: function () {
             var me = this;
+            if (!me.parentFolder || !me.dashboardName) {
+                return null;
+            }
+
             return me.parentFolder + me.dashboardName;
         },
         _save: function (overwrite) {
@@ -59,15 +63,17 @@ $(function () {
                 var reportId = item.id;
                 var $item = $(item);
 
-                if ($item.data().forerunnerReportViewerEZ) {
+                if (me._hasReport($item)) {
+                    var reportProperties = me.model.dashboardDef.reports[reportId];
+                    reportProperties.parameters = null;
+
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                    var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
-                    var reportProperties = me.model.dashboardDef.reports[reportId];
-                    if (numOfVisibleParameters > 0) {
-                        reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
-                    } else {
-                        reportProperties.parameters = null;
+                    if ($reportParameter.data().forerunnerReportParameter) {
+                        var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
+                        if (numOfVisibleParameters > 0) {
+                            reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
+                        }
                     }
                 }
             });
@@ -137,14 +143,22 @@ $(function () {
                 me._renderButton(item);
             });
         },
+        _hasReport: function ($item) {
+            if ($item.data().forerunnerReportViewerEZ) {
+                return true;
+            };
+            return false;
+        },
         _renderButton: function (item) {
             var me = this;
             var $item = $(item);
 
-            if ($item.height() === 0) {
-                $item.height("480px");
-            } else {
+            if (me._hasReport($item)){
+                // Use the reort height
                 $item.height("");
+            } else {
+                // Put in a default height until a report is loaded
+                $item.height("480px");
             }
 
             // Create the button

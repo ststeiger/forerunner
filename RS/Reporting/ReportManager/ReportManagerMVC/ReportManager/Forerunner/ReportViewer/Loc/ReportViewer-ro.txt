@@ -260,6 +260,8 @@
     "subject":"@ ReportName a fost executat la @ ExecutionTime",
     "description":"Trimite un email la {0}",
     "includeLink":"include link-",
-    "includeReport":"Includeți raport"
+    "includeReport":"Includeți raport",
+    "schedule":"program ",
+    "format":"Format"
   }
 }

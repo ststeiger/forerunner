@@ -154,7 +154,8 @@
     "subject":["fr"],
     "description":[],
     "includeLink":[],
-    "includeReport":[]
+    "includeReport":[],
+    "format":["de", "fr", "sv", "pt", "is", "ro"]
     },
   "searchFolder": {
        "tags":["is"],

@@ -260,6 +260,8 @@
     "subject":"@ ReportName foi executado em @ ExecutionTime",
     "description":"Enviar e-mail para {0}",
     "includeLink":"incluir ligação",
-    "includeReport":"incluir relatório"
+    "includeReport":"incluir relatório",
+    "schedule":"horário ",
+    "format":"formato"
   }
 }

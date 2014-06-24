@@ -260,6 +260,8 @@
     "subject":"@ ReportName è stato eseguito a @ ExecutionTime",
     "description":"Invia e-mail a {0}",
     "includeLink":"Includi collegamento",
-    "includeReport":"Includi rapporto"
+    "includeReport":"Includi rapporto",
+    "schedule":"piano ",
+    "format":"formato"
   }
 }

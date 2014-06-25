@@ -15166,13 +15166,13 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
-                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.delete);
                 me.$submitContainer.append(me.$deleteButton);
             }
@@ -15322,7 +15322,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -15333,7 +15333,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', "Manage Subscription", "fr-managesubscription-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', locData.subscription.manageSubscription, "fr-managesubscription-cancel", "Cancel");
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -22025,6 +22025,14 @@ $(function () {
                 me._onWindowResize.apply(me, arguments);
             });
         },
+        _setWidths: function ($item, $reportViewerEZ, width) {
+            if ($item) {
+                $item.width(width);
+            }
+            if ($reportViewerEZ) {
+                $reportViewerEZ.width(width);
+            }
+        },
         _onWindowResize: function (e, data) {
             var me = this;
 
@@ -22036,15 +22044,37 @@ $(function () {
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
                     var currentStyle = $item.css("display");
+                    var $reportViewer = null;
+                    if (widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                        $reportViewer = $item.reportViewerEZ("getReportViewer");
+                    }
+
                     if (isResponsive) {
+                        // Set the dispay on the element to inline-block
                         if (currentStyle !== "inline-block") {
                             $item.css("display", "inline-block");
                         }
+
+                        if (me.element.width() < $item.width()) {
+                            // Set the width of the report <div> to the viewer width
+                            me._setWidths($item, $reportViewer, me.element.width());
+                        } else {
+                            // Remove any explicit width
+                            me._setWidths($item, $reportViewer, "");
+                        }
                     } else {
-                        $item.css("display", "");
+                        // Remove any explicit width
+                        me._setWidths($item, $reportViewer, "");
+
+                        if (currentStyle) {
+                            // Remove any explicitly set display and default back to whatever the template designer wanted
+                            $item.css("display", "");
+                        }
+                        // Need this to refresh the viewer to see the changes
+                        me.element.hide().show(0);
                     }
                 });
-            }, 100);
+            }, 1);
         },
         _init: function () {
             var me = this;
@@ -22100,7 +22130,7 @@ $(function () {
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
-            var reportProperties = me.model.dashboardDef.reports[reportId];
+            var reportProperties = me.getReportProperties(reportId);
 
             var $item = me.element.find("#" + reportId);
             $item.css("display", "");
@@ -22124,8 +22154,8 @@ $(function () {
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
-                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
-                var parameters = me.model.dashboardDef.reports[reportId].parameters;
+                var catalogItem = reportProperties.catalogItem;
+                var parameters = reportProperties.parameters;
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
                 // We catch this event so as to auto save when the user changes parameters
@@ -22232,7 +22262,7 @@ $(function () {
                 var $item = $(item);
 
                 if (me._hasReport($item)) {
-                    var reportProperties = me.model.dashboardDef.reports[reportId];
+                    var reportProperties = me.getReportProperties(reportId);
                     reportProperties.parameters = null;
 
                     // If we have a reportVewerEZ attached then get and save the parameter list
@@ -22624,6 +22654,10 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
+
+                // Clear any previously save parameters. These get added on the save call later
+                me.properties.parameters = null;
+
                 me.$popup.addClass("fr-core-hidden");
             }
             else {

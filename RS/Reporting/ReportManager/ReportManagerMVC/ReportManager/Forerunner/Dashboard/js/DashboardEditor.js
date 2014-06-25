@@ -64,7 +64,7 @@ $(function () {
                 var $item = $(item);
 
                 if (me._hasReport($item)) {
-                    var reportProperties = me.model.dashboardDef.reports[reportId];
+                    var reportProperties = me.getReportProperties(reportId);
                     reportProperties.parameters = null;
 
                     // If we have a reportVewerEZ attached then get and save the parameter list

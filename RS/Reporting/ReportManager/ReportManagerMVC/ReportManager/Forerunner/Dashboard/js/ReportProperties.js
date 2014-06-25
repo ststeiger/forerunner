@@ -256,6 +256,10 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
+
+                // Clear any previously save parameters. These get added on the save call later
+                me.properties.parameters = null;
+
                 me.$popup.addClass("fr-core-hidden");
             }
             else {

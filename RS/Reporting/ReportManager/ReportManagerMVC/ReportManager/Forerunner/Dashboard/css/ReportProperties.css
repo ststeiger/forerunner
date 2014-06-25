@@ -5,7 +5,7 @@
     .fr-rp-form .fr-rp-text-input { display: block; min-width: 375px; padding: 0 22px 0 4px; }
     .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 3px; }
     .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
-    .fr-rp-form .fr-rp-popup-container { display: none; position: fixed; border: 1px solid #424242; background-color: white; }
+    .fr-rp-form .fr-rp-popup-container { position: fixed; border: 1px solid #424242; background-color: white; }
     .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 400px; }
     .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
     .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }

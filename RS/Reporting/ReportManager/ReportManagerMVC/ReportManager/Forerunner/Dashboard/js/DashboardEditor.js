@@ -64,12 +64,12 @@ $(function () {
                 var $item = $(item);
 
                 if (me._hasReport($item)) {
-                    var reportProperties = me.model.dashboardDef.reports[reportId];
+                    var reportProperties = me.getReportProperties(reportId);
                     reportProperties.parameters = null;
 
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                    if ($reportParameter.data().forerunnerReportParameter) {
+                    if (widgets.hasWidget($reportParameter, widgets.reportParameter)) {
                         var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
                         if (numOfVisibleParameters > 0) {
                             reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
@@ -144,10 +144,7 @@ $(function () {
             });
         },
         _hasReport: function ($item) {
-            if ($item.data().forerunnerReportViewerEZ) {
-                return true;
-            };
-            return false;
+            return widgets.hasWidget($item, widgets.reportViewerEZ);
         },
         _renderButton: function (item) {
             var me = this;

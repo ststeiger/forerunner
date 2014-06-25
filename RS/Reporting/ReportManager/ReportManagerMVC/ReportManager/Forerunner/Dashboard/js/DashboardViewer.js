@@ -43,6 +43,61 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
+
+            $(window).on("resize", function (e, data) {
+                me._onWindowResize.apply(me, arguments);
+            });
+        },
+        _setWidths: function ($item, $reportViewerEZ, width) {
+            if ($item) {
+                $item.width(width);
+            }
+            if ($reportViewerEZ) {
+                $reportViewerEZ.width(width);
+            }
+        },
+        _onWindowResize: function (e, data) {
+            var me = this;
+
+            var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
+
+            setTimeout(function () {
+                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                    var $item = $(item);
+                    var currentStyle = $item.css("display");
+                    var $reportViewer = null;
+                    if (widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                        $reportViewer = $item.reportViewerEZ("getReportViewer");
+                    }
+
+                    if (isResponsive) {
+                        // Set the dispay on the element to inline-block
+                        if (currentStyle !== "inline-block") {
+                            $item.css("display", "inline-block");
+                        }
+
+                        if (me.element.width() < $item.width()) {
+                            // Set the width of the report <div> to the viewer width
+                            me._setWidths($item, $reportViewer, me.element.width());
+                        } else {
+                            // Remove any explicit width
+                            me._setWidths($item, $reportViewer, "");
+                        }
+                    } else {
+                        // Remove any explicit width
+                        me._setWidths($item, $reportViewer, "");
+
+                        if (currentStyle) {
+                            // Remove any explicitly set display and default back to whatever the template designer wanted
+                            $item.css("display", "");
+                        }
+                        // Need this to refresh the viewer to see the changes
+                        me.element.hide().show(0);
+                    }
+                });
+            }, 1);
         },
         _init: function () {
             var me = this;
@@ -98,7 +153,7 @@ $(function () {
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
-            var reportProperties = me.model.dashboardDef.reports[reportId];
+            var reportProperties = me.getReportProperties(reportId);
 
             var $item = me.element.find("#" + reportId);
             $item.css("display", "");
@@ -112,6 +167,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
@@ -122,8 +178,8 @@ $(function () {
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
-                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
-                var parameters = me.model.dashboardDef.reports[reportId].parameters;
+                var catalogItem = reportProperties.catalogItem;
+                var parameters = reportProperties.parameters;
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
                 // We catch this event so as to auto save when the user changes parameters

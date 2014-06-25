@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -246,7 +246,23 @@ $(function () {
              */
             getFullname: function (name) {
                 return this.namespace + "." + name;
-            }
+            },
+            _getDataName: function (name) {
+                return this.namespace + name.substr(0, 1).toUpperCase() + name.substr(1);
+            },
+            /**
+             * @param {Function} $element - jQuery selector function to test
+             * @param {String} name - Name of the widget
+             *
+             * @return {Bool} true = $element has the widget defined
+             */
+            hasWidget: function ($element, name) {
+                var dataName = this._getDataName(name);
+                if ($element.data() && $element.data()[dataName]) {
+                    return true;
+                };
+                return false;
+            },
         },
         /** 
          * Defines the event name constant used to trigger the event as well as the fully qualified event name

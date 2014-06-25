@@ -2267,7 +2267,9 @@ $(function () {
         _setPrint: function (pageLayout) {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
-            me.$printDialog.reportPrint("setPrint", pageLayout);
+            if (widgets.hasWidget(me.$printDialog, widgets.reportPrint)) {
+                me.$printDialog.reportPrint("setPrint", pageLayout);
+            }
         },
         _setEmailSubscriptionUI : function() {
             var me = this;
@@ -7217,10 +7219,14 @@ $(function () {
 
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        _tags: null,
         _getTags: function (path) {
             var me = this;
 
             if (me.path !== path) {
+                me._tags = null;
+                me.path = null;
+
                 forerunner.ajax.ajax({
                     type: "GET",
                     dataType: "JSON",
@@ -7231,23 +7237,22 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     success: function (data) {
+                        me.path = path;
+
                         if (data.Tags !== "NotFound") {
-                            me.tags = data.Tags.join(",");
-                        }
-                        else {
-                            me.tags = null;
+                            me._tags = data.Tags.join(",");
                         }
                     },
                     fail: function (data) {
                     },
                 });
-                me.path = path;
             }
 
-            if (me.tags) {
-                me.tags = me.tags.replace(/"/g, '');
-                me.$tags.val(me.tags);
+            if (me._tags) {
+                me._tags = me._tags.replace(/"/g, '');
             }
+
+            me.$tags.val(me._tags);
         },
         _saveTags: function () {
             var me = this;
@@ -7255,13 +7260,13 @@ $(function () {
             var tags = me.$tags.val(),
                 tagList;
 
-            if (tags.trim() !== "" && tags !== me.tags) {
+            if (tags.trim() !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
                     tagList[i] = '"' + tagList[i].trim() + '"';
                 }
                 tags = tagList.join(",");
-                me.tags = tags;
+                me._tags = tags;
 
                 forerunner.ajax.ajax(
                 {
@@ -10273,6 +10278,8 @@ $(function () {
                 else
                     me._checkHiddenParam(param);
             });
+            //resize the textbox width when custom right pane width is big
+            me._elementWidthCheck();
 
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
@@ -10366,7 +10373,21 @@ $(function () {
         },
 
         _submittedParamsList: null,
+        _elementWidthCheck: function () {
+            var me = this;
+            
+            var containerWidth = me.options.$appContainer.width();
+            var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
+            var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;
+            var elementWidth = parameterPaneWidth - 128;
 
+            //180 is the default element width
+            if (elementWidth > 180) {
+                me.element.find(".fr-param-width").css({ "width": elementWidth });
+                me.element.find(".fr-param-dropdown-input").css({ "width": elementWidth - 24 });
+                me.element.find(".ui-autocomplete").css({ "min-width": elementWidth, "max-width": elementWidth });
+            }
+        },
         /**
          * Set parameters with specify parameter list
          *
@@ -10677,7 +10698,7 @@ $(function () {
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
-            var $control = me._createDiv(["fr-param-checkbox-container"]);
+            var $control = me._createDiv(["fr-param-checkbox-container", "fr-param-width"]);
             $control.attr("ismultiple", param.MultiValue);
             $control.attr("datatype", param.Type);
 
@@ -10710,7 +10731,7 @@ $(function () {
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
+            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
             if (dependenceDisable) {
@@ -10792,8 +10813,8 @@ $(function () {
                 isOpen = false,
                 enterLock = false;
 
-            var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
-            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
@@ -10928,7 +10949,7 @@ $(function () {
         _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var $control = new $("<select class='fr-param fr-param-select fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
+            var $control = new $("<select class='fr-param fr-param-select fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
                 param.MultiValue + "' datatype='" + param.Type + "' readonly='true'>");
 
             if (dependenceDisable) {
@@ -10970,9 +10991,9 @@ $(function () {
             var me = this;
             var nodeLevel = 1;
 
-            var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div"]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div", "fr-param-width"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
-            $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input");
+            $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input").addClass("fr-param-dropdown-input");
             me._getParameterControlProperty(param, $input);
 
             var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -11007,9 +11028,10 @@ $(function () {
                 $tree.show();
                 //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
                 //so here I wrote code to got shop up position to popup tree panel
+                var $parent = $input.parent();
                 var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
-                var top = forerunner.helper.parseCss($input, "marginTop") + $input.parent().outerHeight();
-                $tree.css({ top: top, left: left });
+                var top = forerunner.helper.parseCss($input, "marginTop") + $parent.outerHeight();
+                $tree.css({ "top": top, "left": left, "min-width": $parent.width() });
                 //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
             }
@@ -11532,9 +11554,9 @@ $(function () {
         },
         _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
 
-            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
@@ -11627,9 +11649,9 @@ $(function () {
         _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
             var me = this;
             //me._getTextAreaValue(predefinedValue);
-            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
 
-            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
             $openDropDown.append($dropdownicon);
@@ -15147,13 +15169,13 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
-                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.delete);
                 me.$submitContainer.append(me.$deleteButton);
             }
@@ -15303,7 +15325,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -15314,7 +15336,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', "Manage Subscription", "fr-managesubscription-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', locData.subscription.manageSubscription, "fr-managesubscription-cancel", "Cancel");
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -22001,6 +22023,61 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
+
+            $(window).on("resize", function (e, data) {
+                me._onWindowResize.apply(me, arguments);
+            });
+        },
+        _setWidths: function ($item, $reportViewerEZ, width) {
+            if ($item) {
+                $item.width(width);
+            }
+            if ($reportViewerEZ) {
+                $reportViewerEZ.width(width);
+            }
+        },
+        _onWindowResize: function (e, data) {
+            var me = this;
+
+            var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
+
+            setTimeout(function () {
+                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                    var $item = $(item);
+                    var currentStyle = $item.css("display");
+                    var $reportViewer = null;
+                    if (widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                        $reportViewer = $item.reportViewerEZ("getReportViewer");
+                    }
+
+                    if (isResponsive) {
+                        // Set the dispay on the element to inline-block
+                        if (currentStyle !== "inline-block") {
+                            $item.css("display", "inline-block");
+                        }
+
+                        if (me.element.width() < $item.width()) {
+                            // Set the width of the report <div> to the viewer width
+                            me._setWidths($item, $reportViewer, me.element.width());
+                        } else {
+                            // Remove any explicit width
+                            me._setWidths($item, $reportViewer, "");
+                        }
+                    } else {
+                        // Remove any explicit width
+                        me._setWidths($item, $reportViewer, "");
+
+                        if (currentStyle) {
+                            // Remove any explicitly set display and default back to whatever the template designer wanted
+                            $item.css("display", "");
+                        }
+                        // Need this to refresh the viewer to see the changes
+                        me.element.hide().show(0);
+                    }
+                });
+            }, 1);
         },
         _init: function () {
             var me = this;
@@ -22056,7 +22133,7 @@ $(function () {
         },
         _loadReport: function (reportId, hideMissing) {
             var me = this;
-            var reportProperties = me.model.dashboardDef.reports[reportId];
+            var reportProperties = me.getReportProperties(reportId);
 
             var $item = me.element.find("#" + reportId);
             $item.css("display", "");
@@ -22070,6 +22147,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 
@@ -22080,8 +22158,8 @@ $(function () {
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
-                var catalogItem = me.model.dashboardDef.reports[reportId].catalogItem;
-                var parameters = me.model.dashboardDef.reports[reportId].parameters;
+                var catalogItem = reportProperties.catalogItem;
+                var parameters = reportProperties.parameters;
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);
 
                 // We catch this event so as to auto save when the user changes parameters
@@ -22188,12 +22266,12 @@ $(function () {
                 var $item = $(item);
 
                 if (me._hasReport($item)) {
-                    var reportProperties = me.model.dashboardDef.reports[reportId];
+                    var reportProperties = me.getReportProperties(reportId);
                     reportProperties.parameters = null;
 
                     // If we have a reportVewerEZ attached then get and save the parameter list
                     var $reportParameter = $item.reportViewerEZ("getReportParameter");
-                    if ($reportParameter.data().forerunnerReportParameter) {
+                    if (widgets.hasWidget($reportParameter, widgets.reportParameter)) {
                         var numOfVisibleParameters = $reportParameter.reportParameter("getNumOfVisibleParameters");
                         if (numOfVisibleParameters > 0) {
                             reportProperties.parameters = $reportParameter.reportParameter("getParamsList", true);
@@ -22268,10 +22346,7 @@ $(function () {
             });
         },
         _hasReport: function ($item) {
-            if ($item.data().forerunnerReportViewerEZ) {
-                return true;
-            };
-            return false;
+            return widgets.hasWidget($item, widgets.reportViewerEZ);
         },
         _renderButton: function (item) {
             var me = this;
@@ -22410,6 +22485,9 @@ $(function () {
                 me._setCheckbox(true, me.$hideToolbar);
             }
 
+            // Make sure the popup is hidden
+            me.$popup.addClass("fr-core-hidden");
+
             me._resetValidateMessage();
 
             // Setup the report selector UI
@@ -22474,7 +22552,7 @@ $(function () {
                             "</div>" +
                         "</div>" +
                         // Popup container
-                        "<div class='fr-rp-popup-container'>" +
+                        "<div class='fr-rp-popup-container fr-core-hidden'>" +
                             "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Toolbar options
@@ -22580,7 +22658,11 @@ $(function () {
             if (data.node.li_attr.dataReport === true) {
                 me.$reportInput.val(data.node.text);
                 me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-                me.$popup.hide();
+
+                // Clear any previously save parameters. These get added on the save call later
+                me.properties.parameters = null;
+
+                me.$popup.addClass("fr-core-hidden");
             }
             else {
                 me.$tree.jstree("toggle_node", data.node);
@@ -22588,12 +22670,14 @@ $(function () {
         },
         _onClickTreeDropdown: function (e) {
             var me = this;
+            var $window = $(window);
+
             // Show the popup
-            var top = me.$dropdown.offset().top + me.$dropdown.height();
-            var left = me.$dropdown.offset().left;
+            var top = me.$dropdown.offset().top + me.$dropdown.height() - $window.scrollTop();
+            var left = me.$dropdown.offset().left - $window.scrollLeft();
             var width = me.$dropdown.width();
             me.$popup.css({ top: top, left: left, width: width });
-            me.$popup.toggle();
+            me.$popup.toggleClass("fr-core-hidden");
         },
         // _getItems will return back an array of CatalogItem objects where:
         //

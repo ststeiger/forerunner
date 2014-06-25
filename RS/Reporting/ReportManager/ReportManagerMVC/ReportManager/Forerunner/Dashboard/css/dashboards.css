@@ -1,6 +1,7 @@
 ﻿.fr-dashboard { width: 100%; }
+.fr-dashboard-full-width-table { width: 100%; }
 
-.fr-dashboard-report-container { display: table-cell; vertical-align: top; min-width:320px; min-height:480px; overflow: hidden; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
+.fr-dashboard-report-container { display: table-cell; vertical-align: top; min-width:320px; min-height:480px; /*overflow: hidden;*/ box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 .fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
@@ -12,11 +13,11 @@
   .fr-2up1down #Report2 { }
   .fr-2up1down #Report3 { }
 
-.fr-sidebyside { background-color: rgb(210, 223, 237); }
+.fr-sidebyside { background-color: rgb(210, 223, 237); width: 100%; }
   .fr-sidebyside #Report1 { }
   .fr-sidebyside #Report2 { }
 
-.fr-2up2down { background-color: rgb(210, 223, 237); }
+.fr-2up2down { background-color: rgb(210, 223, 237); width: 100%; }
   .fr-2up2down #Report1 { }
   .fr-2up2down #Report2 { }
   .fr-2up2down #Report3 { }

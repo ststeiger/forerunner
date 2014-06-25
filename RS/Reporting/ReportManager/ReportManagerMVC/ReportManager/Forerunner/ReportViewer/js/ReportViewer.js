@@ -1637,7 +1637,9 @@ $(function () {
         _setPrint: function (pageLayout) {
             var me = this;
             me.$printDialog = me.options.$appContainer.find(".fr-print-section");
-            me.$printDialog.reportPrint("setPrint", pageLayout);
+            if (widgets.hasWidget(me.$printDialog, widgets.reportPrint)) {
+                me.$printDialog.reportPrint("setPrint", pageLayout);
+            }
         },
         _setEmailSubscriptionUI : function() {
             var me = this;

@@ -1339,7 +1339,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
 .fr-param, .fr-param-client { margin: 4px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
 .fr-param-width { width:180px; }
-.fr-param-dropdown-input { margin-bottom: 0px;outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
+.fr-param-dropdown-input { margin-bottom: 0px;outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; -ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; text-overflow:ellipsis;}
 .fr-param-dropdown-div { border: 1px solid #1f98c7; margin:2px 4px; background-color:white; }
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
@@ -1348,7 +1348,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-form .fr-param-radio { width: 24px; }
 .fr-param-form .fr-param-radio-label { color: #ffffff; }
 .fr-param-form .fr-param-checkbox { margin-left: 4px; margin-right: 2px; padding: 2px; display:inline-block; }
-.fr-param-form .fr-param-select { overflow:hidden; white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
+.fr-param-form .fr-param-select { overflow:hidden; white-space:nowrap; -ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; text-overflow:ellipsis; }
 .fr-param-submit-container { display: inline-block; }
 .fr-param-cancel-container { display: inline-block; }
 .fr-param-form .fr-param-cancel { max-width:120px; height: 39px; margin-left: 30px; text-align:center; cursor: pointer; font-size: 11pt; color: #ffffff; background-color: transparent; border: none; }

@@ -10372,7 +10372,7 @@ $(function () {
         _submittedParamsList: null,
         _elementWidthCheck: function () {
             var me = this;
-
+            
             var containerWidth = me.options.$appContainer.width();
             var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
             var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;

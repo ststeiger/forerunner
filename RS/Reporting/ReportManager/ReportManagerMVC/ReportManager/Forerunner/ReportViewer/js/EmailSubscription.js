@@ -320,13 +320,13 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
-                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.delete);
                 me.$submitContainer.append(me.$deleteButton);
             }

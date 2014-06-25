@@ -22127,6 +22127,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
 

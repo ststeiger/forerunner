@@ -15443,7 +15443,7 @@ $(function () {
         getDeliveryExtensions: function () {
             var me = this;
             if (me.extensionList) return [me.extensionList];
-            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -15460,9 +15460,9 @@ $(function () {
         _extensionSettingsCount: 0,
         _extensionSettingsJQXHR : {},
         getExtensionSettings: function (extensionName) {
-            if (extensionName == "NULL") return;
+            if (extensionName === "NULL") return;
             var me = this;
-            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",

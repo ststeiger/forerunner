@@ -2,13 +2,10 @@
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
-.fr-param, .fr-param-client { margin: 4px; width: 180px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
-.fr-param-form 
-    .fr-param-dropdown-textbox, 
-    .fr-param-autocomplete-textbox, 
-    .fr-param-tree-input, 
-    .fr-param-client { outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
-.fr-param-dropdown-div { border: 1px solid #1f98c7; margin-left:4px; width:180px; background-color:white; }
+.fr-param, .fr-param-client { margin: 4px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
+.fr-param-width { width:180px; }
+.fr-param-dropdown-input { margin-bottom: 0px;outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
+.fr-param-dropdown-div { border: 1px solid #1f98c7; margin:2px 4px; background-color:white; }
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; font-weight:normal; font-size: medium; }
@@ -16,7 +13,7 @@
 .fr-param-form .fr-param-radio { width: 24px; }
 .fr-param-form .fr-param-radio-label { color: #ffffff; }
 .fr-param-form .fr-param-checkbox { margin-left: 4px; margin-right: 2px; padding: 2px; display:inline-block; }
-.fr-param-form .fr-param-select { width: 180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.fr-param-form .fr-param-select { overflow:hidden; white-space:nowrap; text-overflow:ellipsis;-ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; }
 .fr-param-submit-container { display: inline-block; }
 .fr-param-cancel-container { display: inline-block; }
 .fr-param-form .fr-param-cancel { max-width:120px; height: 39px; margin-left: 30px; text-align:center; cursor: pointer; font-size: 11pt; color: #ffffff; background-color: transparent; border: none; }
@@ -25,11 +22,10 @@
 .fr-param-dropdown { padding: 4px; border: 1px solid DarkGray; color: black; overflow: auto; background-color: window; position: absolute; z-index: 11; display: none; max-height: 180px; }
   .fr-param-dropdown input[type="checkbox"] { padding: 5px; font-size: 1em; margin: 5px 0px 6px 0px; }
   .fr-param-dropdown Label { margin: 4px; }
-.fr-param-dropdown-input { margin-bottom: 0px; }
 .fr-param-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
 .fr-param-dropdown-iconcontainer { position: absolute; right: 0px; top: 0px; border:3px solid transparent; }
 .fr-param-dropdown-textarea { width: 95%; height: 80px; overflow: auto; padding: 2px; }
-.fr-param-checkbox-container { display: inline-block; min-width: 180px; margin: 2px 4px; padding: 1px; }
+.fr-param-checkbox-container { display: inline-block; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-form .fr-param-error { border-width: thin; border-color: red; }
@@ -37,8 +33,8 @@
 .fr-param-nullable { display:inline-block; }
 .fr-param-required{}
 .fr-param-watermark {color:lightgray;}
-.fr-param-tree-hidden { display:none; }
 
+.fr-param-tree-hidden { display:none; }
 .fr-param-tree {
     display:none; 
     position:absolute;
@@ -46,8 +42,7 @@
     overflow:auto;
     padding-right:16px;
     border-bottom: 1px solid black;
-    min-width:178px; 
-    max-width:240px; 
+    min-width:178px;
     background:#fff 50% 50% repeat-x; 
     z-index:5;
     color:black;

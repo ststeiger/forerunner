@@ -40,7 +40,7 @@ $(function () {
             var $label = new $("<LABEL />");
             $label.attr("for", id);
             $label.append(label);
-            $retVal = me._createDropDownForValidValues(validValues);
+            var $retVal = me._createDropDownForValidValues(validValues);
             $retVal.attr("id", id);
             return $retVal;
         },
@@ -105,10 +105,10 @@ $(function () {
         _getSubscriptionInfo: function() {
             var me = this;
             if (!me._subscriptionData) {
-                me._subscriptionData = {}
+                me._subscriptionData = {};
                 me._subscriptionData.SubscriptionID = null;
                 me._subscriptionData.Report = me.options.reportPath;
-                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule = {};
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
                 me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
                 if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
@@ -128,7 +128,7 @@ $(function () {
             } else {
                 me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
-                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule = {};
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
                 me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
                 if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
@@ -157,7 +157,7 @@ $(function () {
             if (me.options.paramList) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
-                for (var i = 0; i < paramListObj.ParamsList.length; i++) {
+                for ( var i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
@@ -174,7 +174,7 @@ $(function () {
             var me = this;
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
-                if (setting.Name == "RenderFormat") {
+                if (setting.Name === "RenderFormat") {
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
                     me.$renderFormat.val(setting.Value);
                     me.$renderFormat.addClass(".fr-email-renderformat");
@@ -196,7 +196,7 @@ $(function () {
             }
             data = forerunner.config.getMobilizerSharedSchedule();
             if (data) {
-                for (var i = 0; i < data.length; i++) {
+                for ( i = 0; i < data.length; i++) {
                     validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                     me._sharedSchedule[data[i].ScheduleID] = data[i];
                 }
@@ -215,7 +215,7 @@ $(function () {
         },
         _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
             var me = this;
-            $input = new $("<INPUT />");
+            var $input = new $("<INPUT />");
             $input.attr("type", type);
             if (placeholder)
                 $input.attr("placeholder", placeholder);
@@ -226,7 +226,7 @@ $(function () {
         },
         _createTextAreaWithPlaceHolder: function (listOfClasses, placeholder) {
             var me = this;
-            $input = new $("<TEXTAREA />");
+            var $input = new $("<TEXTAREA />");
             if (placeholder)
                 $input.attr("placeholder", placeholder);
             for (var i = 0; i < listOfClasses.length; i++) {
@@ -236,13 +236,13 @@ $(function () {
         },
         _createTableRow: function (label, $div2) {
             var me = this;
-            $row = new $("<TR/>");
-            $col1 = new $("<TD/>");
+            var $row = new $("<TR/>");
+            var $col1 = new $("<TD/>");
             $col1.addClass("fr-sub-left-col");
-            $col2 = new $("<TD/>");
+            var $col2 = new $("<TD/>");
             $col2.addClass("fr-sub-right-col");
-            $row.append($col1)
-            $row.append($col2)
+            $row.append($col1);
+            $row.append($col2);
             if (label)
                 $col1.append(label);
             if ($div2)
@@ -311,7 +311,7 @@ $(function () {
                 me.$desc.parent().parent().hide();
                 me.$comment.parent().parent().hide();
             }
-            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
+            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission === true;
             if (!me._canEditComment) {
                 me.$comment.parent().parent().hide();
             }
@@ -320,13 +320,13 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null);
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
-                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null);
                 me.$deleteButton.val(locData.subscription.delete);
                 me.$submitContainer.append(me.$deleteButton);
             }

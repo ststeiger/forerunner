@@ -48,56 +48,68 @@ $(function () {
                 me._onWindowResize.apply(me, arguments);
             });
         },
-        _setWidths: function ($item, $reportViewerEZ, width) {
-            if ($item) {
-                $item.width(width);
-            }
-            if ($reportViewerEZ) {
-                $reportViewerEZ.width(width);
-            }
+        _setWidths: function (width) {
+            var updated = false;
+            $.each(arguments, function (index, item) {
+                if (index > 0 && item.css && item.css("width") !== width) {
+                    updated = true;
+                    item.css("width", width);
+                }
+            });
+            return updated;
         },
-        _onWindowResize: function (e, data) {
+        _timerId: null,
+        _onWindowResize: function () {
             var me = this;
+
+            // If we get back here before the timer fires
+            if (me._timerId) {
+                clearTimeout(me._timerId);
+                me._timerId = null;
+            }
 
             var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
 
-            setTimeout(function () {
+            me._timerId = setTimeout(function () {
                 var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
                     var currentStyle = $item.css("display");
-                    var $reportViewer = null;
-                    if (widgets.hasWidget($item, widgets.reportViewerEZ)) {
-                        $reportViewer = $item.reportViewerEZ("getReportViewer");
-                    }
 
                     if (isResponsive) {
-                        // Set the dispay on the element to inline-block
+                        // Set the dispay on the report container element to inline-block
                         if (currentStyle !== "inline-block") {
                             $item.css("display", "inline-block");
                         }
 
                         if (me.element.width() < $item.width()) {
                             // Set the width of the report <div> to the viewer width
-                            me._setWidths($item, $reportViewer, me.element.width());
+                            me._setWidths(me.element.width(), $item);
                         } else {
                             // Remove any explicit width
-                            me._setWidths($item, $reportViewer, "");
+                            me._setWidths("", $item);
                         }
-                    } else {
+                    } else { // Not responsive
+                        var updated = false;
+
                         // Remove any explicit width
-                        me._setWidths($item, $reportViewer, "");
+                        updated = me._setWidths("", $item);
 
                         if (currentStyle) {
                             // Remove any explicitly set display and default back to whatever the template designer wanted
                             $item.css("display", "");
+                            updated = true;
                         }
-                        // Need this to refresh the viewer to see the changes
-                        me.element.hide().show(0);
+
+                        if (updated) {
+                            // Need this to refresh the viewer to see the changes
+                            me.element.hide().show(0);
+                        }
                     }
                 });
-            }, 1);
+                me._timerId = null;
+            }, 100);
         },
         _init: function () {
             var me = this;
@@ -175,6 +187,7 @@ $(function () {
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
                     data.reportId = reportId;
+                    data.$reportViewer = $reportViewer;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
@@ -195,7 +208,9 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            // Meant to be overridden in the dashboard editor widget
+            if (data.$reportViewer) {
+                data.$reportViewer.reportViewer("reLayout");
+            }
         },
         _loadResource: function (path) {
             var me = this;

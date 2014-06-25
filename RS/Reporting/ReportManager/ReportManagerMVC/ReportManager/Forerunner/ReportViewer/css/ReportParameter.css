@@ -174,7 +174,7 @@
     background: url("../Images/JSTreeThrobber.gif") center center no-repeat;
 }
 .fr-param-tree-container {
-    z-index: inherit;
+    z-index: 5;
 }
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }

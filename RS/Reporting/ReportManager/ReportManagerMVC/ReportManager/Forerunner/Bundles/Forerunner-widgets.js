@@ -7219,10 +7219,14 @@ $(function () {
 
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        _tags: null,
         _getTags: function (path) {
             var me = this;
 
             if (me.path !== path) {
+                me._tags = null;
+                me.path = null;
+
                 forerunner.ajax.ajax({
                     type: "GET",
                     dataType: "JSON",
@@ -7233,23 +7237,22 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     success: function (data) {
+                        me.path = path;
+
                         if (data.Tags !== "NotFound") {
-                            me.tags = data.Tags.join(",");
-                        }
-                        else {
-                            me.tags = null;
+                            me._tags = data.Tags.join(",");
                         }
                     },
                     fail: function (data) {
                     },
                 });
-                me.path = path;
             }
 
-            if (me.tags) {
-                me.tags = me.tags.replace(/"/g, '');
-                me.$tags.val(me.tags);
+            if (me._tags) {
+                me._tags = me._tags.replace(/"/g, '');
             }
+
+            me.$tags.val(me._tags);
         },
         _saveTags: function () {
             var me = this;
@@ -7257,13 +7260,13 @@ $(function () {
             var tags = me.$tags.val(),
                 tagList;
 
-            if (tags.trim() !== "" && tags !== me.tags) {
+            if (tags.trim() !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
                     tagList[i] = '"' + tagList[i].trim() + '"';
                 }
                 tags = tagList.join(",");
-                me.tags = tags;
+                me._tags = tags;
 
                 forerunner.ajax.ajax(
                 {
@@ -10372,7 +10375,7 @@ $(function () {
         _submittedParamsList: null,
         _elementWidthCheck: function () {
             var me = this;
-
+            
             var containerWidth = me.options.$appContainer.width();
             var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
             var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;

@@ -262,6 +262,10 @@
     "includeLink":"Cuir nasc",
     "includeReport":"Cuir an tuarascáil",
     "schedule":"Sceideal ",
-    "format":"Formáid"
+    "format":"Formáid",
+    "saveFailed":"Theip síntiús Shábháil",
+    "addNew":"Cruthaigh",
+    "delete":"Scrios",
+    "deleteFailed":"Theip scriosadh Síntiúis"
   }
 }

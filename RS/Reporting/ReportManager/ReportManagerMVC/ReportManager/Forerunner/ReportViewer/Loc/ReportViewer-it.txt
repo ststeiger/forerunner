@@ -262,6 +262,10 @@
     "includeLink":"Includi collegamento",
     "includeReport":"Includi rapporto",
     "schedule":"piano ",
-    "format":"formato"
+    "format":"formato",
+    "saveFailed":"Salvare l'iscrizione non riuscito",
+    "addNew":"Creare",
+    "delete":"Cancellare ",
+    "deleteFailed":"Eliminazione di abbonamento fallito"
   }
 }

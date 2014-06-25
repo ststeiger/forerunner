@@ -262,6 +262,10 @@
     "includeLink":"Hafa tengil",
     "includeReport":"fela skýrslu",
     "schedule":"Stundaskrá ",
-    "format":"Format"
+    "format":"Format",
+    "saveFailed":"Sparnaður áskrift mistókst",
+    "addNew":"Búa",
+    "delete":"Eyða",
+    "deleteFailed":"Áskrift eyða mistókst"
   }
 }

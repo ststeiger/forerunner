@@ -43,6 +43,31 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
+
+            $(window).on("resize", function (e, data) {
+                me._onWindowResize.apply(me, arguments);
+            });
+        },
+        _onWindowResize: function (e, data) {
+            var me = this;
+
+            var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
+            var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
+
+            setTimeout(function () {
+                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                    var $item = $(item);
+                    var currentStyle = $item.css("display");
+                    if (isResponsive) {
+                        if (currentStyle !== "inline-block") {
+                            $item.css("display", "inline-block");
+                        }
+                    } else {
+                        $item.css("display", "");
+                    }
+                });
+            }, 100);
         },
         _init: function () {
             var me = this;

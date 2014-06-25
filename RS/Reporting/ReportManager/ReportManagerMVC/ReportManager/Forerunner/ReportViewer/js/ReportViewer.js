@@ -75,7 +75,7 @@ $(function () {
             var me = this;
             //This needs to be changed to only remove the view function
             //Baotong update it on 22-05-2014
-            $(window).off("resize", me._ReRenderCall);
+            $(window).off("resize", me._onWindowResize);
         },
 
         // Constructor
@@ -139,7 +139,7 @@ $(function () {
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
             //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", {me: me }, me._ReRenderCall);
+            $(window).on("resize", { me: me }, me._onWindowResize);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -372,14 +372,32 @@ $(function () {
             }
         },
         //Wrapper function, used to resigter window resize event
-        _ReRenderCall: function (event) {
+        _onWindowResize: function (event) {
             var me = event.data.me;
+            me._windowResize.call(me);
+        },
+        _windowResize: function () {
+            var me = this;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
-             
+
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
+        },
+        /**
+         * Relayout the report
+         *
+         * @function $.forerunner.reportViewer#reLayout
+         *
+         * Normally this would not need to be called. It is needed when a
+         * report is rendered into a container (<div>) and the size of the
+         * container is defined by the report itself. In that case call this
+         * function after the report is finished loading.
+         */
+        reLayout: function () {
+            var me = this;
+            me._windowResize();
         },
         _removeCSS: function () {
             var me = this;

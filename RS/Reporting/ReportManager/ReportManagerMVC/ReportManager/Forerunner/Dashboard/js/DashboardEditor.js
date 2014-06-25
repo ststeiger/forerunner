@@ -91,6 +91,7 @@ $(function () {
         },
         _onAfterReportLoaded: function (e, data) {
             var me = this;
+            me._super(e, data);
             me._showUI(me.enableEdit);
         },
         _onClickProperties: function (e) {

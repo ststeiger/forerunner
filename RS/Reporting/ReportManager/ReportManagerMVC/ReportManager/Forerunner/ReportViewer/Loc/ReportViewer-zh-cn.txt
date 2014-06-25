@@ -263,9 +263,9 @@
     "includeReport":"包含报表",
     "schedule":"计划",
     "format":"格式",
-    "saveFailed":"Saving subscription failed",
-    "addNew":"Create",
-    "delete":"Delete",
-    "deleteFailed":"Subscription deletion failed"
+    "saveFailed":"保存订阅失败",
+    "addNew":"创建",
+    "delete":"删除",
+    "deleteFailed":"删除订阅成功"
   }
 }

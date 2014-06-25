@@ -15149,13 +15149,13 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id",  "fr-core-dialog-submit", "fr-core-dialog-button"], locData.subscription.save, null)
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
-                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], locData.subscription.delete, null)
+                me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.delete);
                 me.$submitContainer.append(me.$deleteButton);
             }
@@ -15305,7 +15305,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -15316,7 +15316,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', "Manage Subscription", "fr-managesubscription-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', locData.subscription.manageSubscription, "fr-managesubscription-cancel", "Cancel");
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");

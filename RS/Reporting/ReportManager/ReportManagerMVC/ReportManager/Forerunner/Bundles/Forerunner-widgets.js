@@ -10275,6 +10275,8 @@ $(function () {
                 else
                     me._checkHiddenParam(param);
             });
+            //resize the textbox width when custom right pane width is big
+            me._elementWidthCheck();
 
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
@@ -10368,7 +10370,21 @@ $(function () {
         },
 
         _submittedParamsList: null,
+        _elementWidthCheck: function () {
+            var me = this;
 
+            var containerWidth = me.options.$appContainer.width();
+            var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
+            var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;
+            var elementWidth = parameterPaneWidth - 128;
+
+            //180 is the default element width
+            if (elementWidth > 180) {
+                me.element.find(".fr-param-width").css({ "width": elementWidth });
+                me.element.find(".fr-param-dropdown-input").css({ "width": elementWidth - 24 });
+                me.element.find(".ui-autocomplete").css({ "min-width": elementWidth, "max-width": elementWidth });
+            }
+        },
         /**
          * Set parameters with specify parameter list
          *
@@ -10679,7 +10695,7 @@ $(function () {
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
-            var $control = me._createDiv(["fr-param-checkbox-container"]);
+            var $control = me._createDiv(["fr-param-checkbox-container", "fr-param-width"]);
             $control.attr("ismultiple", param.MultiValue);
             $control.attr("datatype", param.Type);
 
@@ -10712,7 +10728,7 @@ $(function () {
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
+            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
             if (dependenceDisable) {
@@ -10794,8 +10810,8 @@ $(function () {
                 isOpen = false,
                 enterLock = false;
 
-            var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
-            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-autocomplete-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
@@ -10930,7 +10946,7 @@ $(function () {
         _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var $control = new $("<select class='fr-param fr-param-select fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
+            var $control = new $("<select class='fr-param fr-param-select fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
                 param.MultiValue + "' datatype='" + param.Type + "' readonly='true'>");
 
             if (dependenceDisable) {
@@ -10972,9 +10988,9 @@ $(function () {
             var me = this;
             var nodeLevel = 1;
 
-            var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div"]);
+            var $container = me._createDiv(["fr-param-element-container", "fr-param-tree-container", "fr-param-dropdown-div", "fr-param-width"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
-            $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input");
+            $input.attr("cascadingTree", true).attr("readonly", "readonly").addClass("fr-param-tree-input").addClass("fr-param-dropdown-input");
             me._getParameterControlProperty(param, $input);
 
             var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -11009,9 +11025,10 @@ $(function () {
                 $tree.show();
                 //Fixed issue 1056: jquery.ui.position will got an error in IE8 when the panel width change, 
                 //so here I wrote code to got shop up position to popup tree panel
+                var $parent = $input.parent();
                 var left = forerunner.helper.parseCss($input, "marginLeft") + ($input.outerWidth() - $input.innerWidth()) / 2;
-                var top = forerunner.helper.parseCss($input, "marginTop") + $input.parent().outerHeight();
-                $tree.css({ top: top, left: left });
+                var top = forerunner.helper.parseCss($input, "marginTop") + $parent.outerHeight();
+                $tree.css({ "top": top, "left": left, "min-width": $parent.width() });
                 //$tree.position({ my: "left top", at: "left bottom", of: $input });
                 $input.blur();
             }
@@ -11534,9 +11551,9 @@ $(function () {
         },
         _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
 
-            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
@@ -11629,9 +11646,9 @@ $(function () {
         _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
             var me = this;
             //me._getTextAreaValue(predefinedValue);
-            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div"]);
+            var $control = me._createDiv(["fr-param-element-container", "fr-param-dropdown-div", "fr-param-width"]);
 
-            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-textbox", "fr-param-not-close", "fr-paramname-" + param.Name]);
+            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-input", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
             $openDropDown.append($dropdownicon);

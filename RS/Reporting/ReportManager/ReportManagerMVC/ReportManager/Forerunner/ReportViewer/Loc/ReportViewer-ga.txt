@@ -265,7 +265,7 @@
     "format":"Formáid",
     "saveFailed":"Theip síntiús Shábháil",
     "addNew":"Cruthaigh",
-    "delete":"Scrios",
+    "deleteSubscription":"Scrios",
     "deleteFailed":"Theip scriosadh Síntiúis"
   }
 }

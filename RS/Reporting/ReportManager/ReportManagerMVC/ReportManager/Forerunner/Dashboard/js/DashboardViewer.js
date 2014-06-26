@@ -76,23 +76,23 @@ $(function () {
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
                     var currentStyle = $item.css("display");
+                    var updated = false;
 
                     if (isResponsive) {
                         // Set the dispay on the report container element to inline-block
                         if (currentStyle !== "inline-block") {
                             $item.css("display", "inline-block");
+                            updated = true;
                         }
 
                         if (me.element.width() < $item.width()) {
                             // Set the width of the report <div> to the viewer width
-                            me._setWidths(me.element.width(), $item);
+                            updated = me._setWidths(me.element.width(), $item);
                         } else {
                             // Remove any explicit width
-                            me._setWidths("", $item);
+                            updated = me._setWidths("", $item);
                         }
-                    } else { // Not responsive
-                        var updated = false;
-
+                    } else {
                         // Remove any explicit width
                         updated = me._setWidths("", $item);
 
@@ -101,11 +101,10 @@ $(function () {
                             $item.css("display", "");
                             updated = true;
                         }
-
-                        if (updated) {
-                            // Need this to refresh the viewer to see the changes
-                            me.element.hide().show(0);
-                        }
+                    }
+                    if (updated) {
+                        // Need this to refresh the viewer to see the changes
+                        me.element.hide().show(0);
                     }
                 });
                 me._timerId = null;

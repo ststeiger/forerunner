@@ -265,7 +265,7 @@
     "format":"Format",
     "saveFailed":"Att spara abonnemang misslyckades",
     "addNew":"Skapa",
-    "delete":"Radera",
+    "deleteSubscription":"Radera",
     "deleteFailed":"Prenumerations deletion misslyckades"
   }
 }

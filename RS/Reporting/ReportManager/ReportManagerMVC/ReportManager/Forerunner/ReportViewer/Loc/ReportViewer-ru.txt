@@ -265,7 +265,7 @@
     "format":"формат",
     "saveFailed":"Сохранение подписка не удалось",
     "addNew":"создавать",
-    "delete":"удалять",
+    "deleteSubscription":"удалять",
     "deleteFailed":"Подписка Ошибка удаления"
   }
 }

@@ -705,7 +705,7 @@ $(function () {
             var me = this;
             //This needs to be changed to only remove the view function
             //Baotong update it on 22-05-2014
-            $(window).off("resize", me._ReRenderCall);
+            $(window).off("resize", me._onWindowResize);
         },
 
         // Constructor
@@ -769,7 +769,7 @@ $(function () {
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
             //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", {me: me }, me._ReRenderCall);
+            $(window).on("resize", { me: me }, me._onWindowResize);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -1002,14 +1002,32 @@ $(function () {
             }
         },
         //Wrapper function, used to resigter window resize event
-        _ReRenderCall: function (event) {
+        _onWindowResize: function (event) {
             var me = event.data.me;
+            me._windowResize.call(me);
+        },
+        _windowResize: function () {
+            var me = this;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
-             
+
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
+        },
+        /**
+         * Relayout the report
+         *
+         * @function $.forerunner.reportViewer#reLayout
+         *
+         * Normally this would not need to be called. It is needed when a
+         * report is rendered into a container (<div>) and the size of the
+         * container is defined by the report itself. In that case call this
+         * function after the report is finished loading.
+         */
+        reLayout: function () {
+            var me = this;
+            me._windowResize();
         },
         _removeCSS: function () {
             var me = this;
@@ -7515,7 +7533,10 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
             me._maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
-            
+
+            if (me.options.reportViewer)
+                me._currentWidth = me.options.reportViewer.element.width();
+
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -7553,6 +7574,7 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
             me._rectangles = [];
+            me._currentWidth = me.options.reportViewer.element.width();
 
             reportDiv.html("");
 
@@ -7866,7 +7888,7 @@ $(function () {
 
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
-            var renderWidth = me.options.reportViewer.element.width();
+            renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
             if (renderWidth === 0)
@@ -7978,7 +8000,7 @@ $(function () {
         _getResponsiveRectangleLayout: function (Measurements,layout) {           
             var me = this;
 
-            var viewerWidth = me._convertToMM(me.options.reportViewer.element.width()+"px");
+            var viewerWidth = me._convertToMM(me._currentWidth + "px");
             var anyMove = false;
 
             $.each(Measurements, function (Index, Obj) {               
@@ -8875,7 +8897,7 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
-                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var viewerWidth = me._convertToMM(me._currentWidth + "px");
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
@@ -8899,7 +8921,7 @@ $(function () {
                 if (tablixExt.BackgroundColor !== undefined)
                     respCols.BackgroundColor = tablixExt.BackgroundColor;
 
-                if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                if (me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me._currentWidth) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
                     var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;
@@ -15176,7 +15198,7 @@ $(function () {
             
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
-                me.$deleteButton.val(locData.subscription.delete);
+                me.$deleteButton.val(locData.subscription.deleteSubscription);
                 me.$submitContainer.append(me.$deleteButton);
             }
             me.$theForm.append(me.$submitContainer);
@@ -15443,7 +15465,7 @@ $(function () {
         getDeliveryExtensions: function () {
             var me = this;
             if (me.extensionList) return [me.extensionList];
-            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -15460,9 +15482,9 @@ $(function () {
         _extensionSettingsCount: 0,
         _extensionSettingsJQXHR : {},
         getExtensionSettings: function (extensionName) {
-            if (extensionName == "NULL") return;
+            if (extensionName === "NULL") return;
             var me = this;
-            var url = url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
@@ -22028,56 +22050,67 @@ $(function () {
                 me._onWindowResize.apply(me, arguments);
             });
         },
-        _setWidths: function ($item, $reportViewerEZ, width) {
-            if ($item) {
-                $item.width(width);
-            }
-            if ($reportViewerEZ) {
-                $reportViewerEZ.width(width);
-            }
+        _setWidths: function (width) {
+            var updated = false;
+            $.each(arguments, function (index, item) {
+                if (index > 0 && item.css && item.css("width") !== width) {
+                    updated = true;
+                    item.css("width", width);
+                }
+            });
+            return updated;
         },
-        _onWindowResize: function (e, data) {
+        _timerId: null,
+        _onWindowResize: function () {
             var me = this;
+
+            // If we get back here before the timer fires
+            if (me._timerId) {
+                clearTimeout(me._timerId);
+                me._timerId = null;
+            }
 
             var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
 
-            setTimeout(function () {
+            me._timerId = setTimeout(function () {
                 var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
                     var currentStyle = $item.css("display");
-                    var $reportViewer = null;
-                    if (widgets.hasWidget($item, widgets.reportViewerEZ)) {
-                        $reportViewer = $item.reportViewerEZ("getReportViewer");
-                    }
+                    var updated = false;
 
                     if (isResponsive) {
-                        // Set the dispay on the element to inline-block
+                        // Set the dispay on the report container element to inline-block
                         if (currentStyle !== "inline-block") {
                             $item.css("display", "inline-block");
+                            updated = true;
                         }
 
                         if (me.element.width() < $item.width()) {
                             // Set the width of the report <div> to the viewer width
-                            me._setWidths($item, $reportViewer, me.element.width());
+                            updated = me._setWidths(me.element.width(), $item);
                         } else {
                             // Remove any explicit width
-                            me._setWidths($item, $reportViewer, "");
+                            updated = me._setWidths("", $item);
                         }
                     } else {
                         // Remove any explicit width
-                        me._setWidths($item, $reportViewer, "");
+                        updated = me._setWidths("", $item);
 
                         if (currentStyle) {
                             // Remove any explicitly set display and default back to whatever the template designer wanted
                             $item.css("display", "");
+                            updated = true;
                         }
+                    }
+                    if (updated) {
                         // Need this to refresh the viewer to see the changes
                         me.element.hide().show(0);
                     }
                 });
-            }, 1);
+                me._timerId = null;
+            }, 100);
         },
         _init: function () {
             var me = this;
@@ -22155,6 +22188,7 @@ $(function () {
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
                     data.reportId = reportId;
+                    data.$reportViewer = $reportViewer;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
@@ -22175,7 +22209,9 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            // Meant to be overridden in the dashboard editor widget
+            if (data.$reportViewer) {
+                data.$reportViewer.reportViewer("reLayout");
+            }
         },
         _loadResource: function (path) {
             var me = this;
@@ -22293,6 +22329,7 @@ $(function () {
         },
         _onAfterReportLoaded: function (e, data) {
             var me = this;
+            me._super(e, data);
             me._showUI(me.enableEdit);
         },
         _onClickProperties: function (e) {

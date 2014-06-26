@@ -266,7 +266,7 @@
     "format":"Format",
     "saveFailed":"Abonnement sauver échoué ",
     "addNew":"Créer",
-    "delete":"Effacer",
+    "deleteSubscription":"Effacer",
     "deleteFailed":"Suppression abonnement qui a échoué"
   }
 }

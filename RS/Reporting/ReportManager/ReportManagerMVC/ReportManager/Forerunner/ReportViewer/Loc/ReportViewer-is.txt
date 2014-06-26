@@ -265,7 +265,7 @@
     "format":"Format",
     "saveFailed":"Sparnaður áskrift mistókst",
     "addNew":"Búa",
-    "delete":"Eyða",
+    "deleteSubscription":"Eyða",
     "deleteFailed":"Áskrift eyða mistókst"
   }
 }

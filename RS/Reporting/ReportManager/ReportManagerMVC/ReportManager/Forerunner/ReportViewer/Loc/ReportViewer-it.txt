@@ -265,7 +265,7 @@
     "format":"formato",
     "saveFailed":"Salvare l'iscrizione non riuscito",
     "addNew":"Creare",
-    "delete":"Cancellare ",
+    "deleteSubscription":"Cancellare ",
     "deleteFailed":"Eliminazione di abbonamento fallito"
   }
 }

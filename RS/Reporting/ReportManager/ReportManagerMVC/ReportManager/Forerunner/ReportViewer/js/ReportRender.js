@@ -73,7 +73,10 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             me._defaultResponsizeTablix = forerunner.config.getCustomSettingsValue("DefaultResponsiveTablix", "on").toLowerCase();
             me._maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
-            
+
+            if (me.options.reportViewer)
+                me._currentWidth = me.options.reportViewer.element.width();
+
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
@@ -111,6 +114,7 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
             me._rectangles = [];
+            me._currentWidth = me.options.reportViewer.element.width();
 
             reportDiv.html("");
 
@@ -424,7 +428,7 @@ $(function () {
 
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
-            var renderWidth = me.options.reportViewer.element.width();
+            renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
             if (renderWidth === 0)
@@ -536,7 +540,7 @@ $(function () {
         _getResponsiveRectangleLayout: function (Measurements,layout) {           
             var me = this;
 
-            var viewerWidth = me._convertToMM(me.options.reportViewer.element.width()+"px");
+            var viewerWidth = me._convertToMM(me._currentWidth + "px");
             var anyMove = false;
 
             $.each(Measurements, function (Index, Obj) {               
@@ -1433,7 +1437,7 @@ $(function () {
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
-                var viewerWidth = me._convertToMM(me.options.reportViewer.element.width() + "px");
+                var viewerWidth = me._convertToMM(me._currentWidth + "px");
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
@@ -1457,7 +1461,7 @@ $(function () {
                 if (tablixExt.BackgroundColor !== undefined)
                     respCols.BackgroundColor = tablixExt.BackgroundColor;
 
-                if (me.options.responsive && me._defaultResponsizeTablix === "on" &&  me._maxResponsiveRes > me.options.reportViewer.element.width()) {
+                if (me.options.responsive && me._defaultResponsizeTablix === "on" && me._maxResponsiveRes > me._currentWidth) {
                     var notdone = true;
                     var nextColIndex = RIContext.CurrObj.ColumnWidths.ColumnCount;
                     var tablixCols = RIContext.CurrObj.ColumnWidths.Columns;

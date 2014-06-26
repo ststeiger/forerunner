@@ -327,7 +327,7 @@ $(function () {
             
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
-                me.$deleteButton.val(locData.subscription.delete);
+                me.$deleteButton.val(locData.subscription.deleteSubscription);
                 me.$submitContainer.append(me.$deleteButton);
             }
             me.$theForm.append(me.$submitContainer);

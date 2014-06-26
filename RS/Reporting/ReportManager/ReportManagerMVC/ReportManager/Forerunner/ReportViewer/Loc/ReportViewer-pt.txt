@@ -265,7 +265,7 @@
     "format":"formato",
     "saveFailed":"Salvando subscrição falhou",
     "addNew":"criar",
-    "delete":"excluir",
+    "deleteSubscription":"excluir",
     "deleteFailed":"Exclusão Assinatura falhou"
   }
 }

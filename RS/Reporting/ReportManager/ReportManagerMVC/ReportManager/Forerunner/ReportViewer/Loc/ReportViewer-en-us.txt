@@ -265,7 +265,7 @@
 	"format": "Format",
 	"saveFailed": "Saving subscription failed",
 	"addNew": "Create",
-	"delete": "Delete",
+	"deleteSubscription": "Delete",
 	"deleteFailed": "Subscription deletion failed"
   }
 }

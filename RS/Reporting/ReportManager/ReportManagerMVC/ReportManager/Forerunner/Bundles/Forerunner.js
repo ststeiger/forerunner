@@ -187,7 +187,6 @@ jQuery.fn.extend({
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
-    
 });
 $(function () {
     /**

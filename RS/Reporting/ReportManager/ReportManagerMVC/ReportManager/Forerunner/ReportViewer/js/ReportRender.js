@@ -1297,14 +1297,7 @@ $(function () {
 
         _lazyLoadTablix: function (me) {
 
-            //var viewport_left = $(window).scrollLeft();
-            //var viewport_top =$(window).scrollTop();
-            //var viewport_width = $(window).innerWidth();
-            //var viewport_height = $(window).innerHeight();
-
             for (var name in me._tablixStream) {
-                //var offset = me._tablixStream[name].EndRow.offset();
-                //if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
                 if (me._tablixStream[name].EndRow.visible(false, false, "vertical")) {
                     me._tablixStream[name].EndRow.detach();
                     me._writeTablixRowBatch(me._tablixStream[name]);

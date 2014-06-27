@@ -55,6 +55,14 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Pricing()
+        {
+            return View();
+        }
+        public ActionResult Features()
+        {
+            return View();
+        }
         public ActionResult NotFound()
         {
             return View();

@@ -1797,7 +1797,7 @@ namespace Forerunner.SSRS.Manager
                 string[] tagsList = tags.Split(',');
 
                 StringBuilder SQL = new StringBuilder();
-                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
 
                 for (int i = 1; i < tagsList.Length; i++)
                 {
@@ -1828,6 +1828,8 @@ namespace Forerunner.SSRS.Manager
                             item.ModifiedDateSpecified = true;
                             item.Type = (ItemTypeEnum)itemType;
                             item.ID = SQLReader.GetGuid(4).ToString();
+                            item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                            item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
                             list.Add(item);
                         }
                     }

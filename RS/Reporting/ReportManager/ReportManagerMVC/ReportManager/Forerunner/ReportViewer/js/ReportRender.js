@@ -1208,10 +1208,16 @@ $(function () {
         _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
+            var LastColIndex = State.LastColIndex;
             var LastObjType = State.LastObjType;
             var $Row = State.Row;
             var HasFixedCols = false;
             var HasFixedRows = false;
+
+
+            if (LastColIndex === undefined)
+                LastColIndex = 0;
+
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -1229,6 +1235,7 @@ $(function () {
                     $Row = new $("<TR/>");
                 }
                 LastRowIndex = Obj.RowIndex;
+                LastColIndex = 0;
             }
 
             if (Obj.UniqueName)
@@ -1257,13 +1264,19 @@ $(function () {
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell){
+                if (Obj.Cell) {
+                    LastColIndex = Obj.ColumnIndex;
                     $Row.append(me._writeTablixCell(RIContext, Obj, Index));
                     State.CellCount += 1;
-                    }
+                }
+                else if (Obj.Type === "RowHeader") {
+                    //Write empty cell
+                    if (LastColIndex !== Obj.ColumnIndex - 1)
+                        $Row.append($("<TD/>").html("&nbsp;"));
+                }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+            return { "LastRowIndex": LastRowIndex, LastColIndex: LastColIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows, CellCount: State.CellCount };
         },
         _batchSize: function () {
             return forerunner.config.getCustomSettingsValue("BigTablixBatchSize", 3000);

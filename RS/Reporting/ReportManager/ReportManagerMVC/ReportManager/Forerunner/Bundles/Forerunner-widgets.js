@@ -22106,10 +22106,10 @@ $(function () {
 
             me._timerId = setTimeout(function () {
                 var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+                var updated = false;
                 me.element.find(".fr-dashboard-report-id").each(function (index, item) {
                     var $item = $(item);
                     var currentStyle = $item.css("display");
-                    var updated = false;
 
                     if (isResponsive) {
                         // Set the dispay on the report container element to inline-block
@@ -22135,11 +22135,11 @@ $(function () {
                             updated = true;
                         }
                     }
-                    if (updated) {
-                        // Need this to refresh the viewer to see the changes
-                        me.element.hide().show(0);
-                    }
                 });
+                if (updated) {
+                    // Need this to refresh the viewer to see the changes
+                    me.element.hide().show(0);
+                }
                 me._timerId = null;
             }, 100);
         },

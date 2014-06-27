@@ -1214,10 +1214,24 @@ $(function () {
             var HasFixedCols = false;
             var HasFixedRows = false;
 
+            var Colspans = State.Colspans;
+            var Rowspans = State.Rowspans;
 
-            if (LastColIndex === undefined)
-                LastColIndex = 0;
+            if (LastColIndex === undefined){
+                LastColIndex = -1;
+                Colspans = {};
+                Rowspans = {};
+            }
 
+            if (Obj.RowSpan)
+                Rowspans[Obj.ColumnIndex] = Obj.RowSpan;
+            else if (Rowspans[Obj.ColumnIndex] > 0)
+                Rowspans[Obj.ColumnIndex]--;
+            
+            if (Rowspans[Obj.ColumnIndex] === 0)
+                Rowspans[Obj.ColumnIndex] = undefined;
+
+            //TODO: need to do Col spans
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -1235,7 +1249,7 @@ $(function () {
                     $Row = new $("<TR/>");
                 }
                 LastRowIndex = Obj.RowIndex;
-                LastColIndex = 0;
+                LastColIndex = -1;
             }
 
             if (Obj.UniqueName)
@@ -1265,18 +1279,23 @@ $(function () {
             }
             else {
                 if (Obj.Cell) {
+                    if (Obj.Type === "RowHeader") {
+                        //Write empty cell
+                        if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex-1] === undefined)
+                            $Row.append($("<TD/>").html("&nbsp;"));
+                    }
                     LastColIndex = Obj.ColumnIndex;
                     $Row.append(me._writeTablixCell(RIContext, Obj, Index));
                     State.CellCount += 1;
                 }
                 else if (Obj.Type === "RowHeader") {
                     //Write empty cell
-                    if (LastColIndex !== Obj.ColumnIndex - 1)
+                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined)
                         $Row.append($("<TD/>").html("&nbsp;"));
                 }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, LastColIndex: LastColIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows, CellCount: State.CellCount };
+            return { "LastRowIndex": LastRowIndex, LastColIndex: LastColIndex,Colspans:Colspans,Rowspans:Rowspans, LastObjType: LastObjType, Row: $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows, CellCount: State.CellCount };
         },
         _batchSize: function () {
             return forerunner.config.getCustomSettingsValue("BigTablixBatchSize", 3000);

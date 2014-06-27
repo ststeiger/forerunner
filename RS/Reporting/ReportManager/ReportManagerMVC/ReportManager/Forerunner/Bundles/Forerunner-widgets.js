@@ -8928,7 +8928,7 @@ $(function () {
                     var maxPri = -1;
                     var foundCol;
                     
-                    if (tablixExt.Columns && tablixExt.Columns.length < RIContext.CurrObj.ColumnWidths.ColumnCount) {
+                    if (tablixExt.Columns && tablixExt.Columns.length <= RIContext.CurrObj.ColumnWidths.ColumnCount) {
                         for (cols = 0; cols < tablixExt.Columns.length; cols++) {
                             respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
                         }
@@ -8954,7 +8954,7 @@ $(function () {
                             }
                             else {
                                 for (cols = 0; cols < tablixExt.Columns.length; cols++) {
-                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri  && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
                                         nextColIndex = cols;
                                         maxPri = tablixExt.Columns[cols].Pri;
                                     }

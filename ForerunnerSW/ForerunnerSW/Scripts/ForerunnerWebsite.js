@@ -150,7 +150,7 @@ function SetupSlider() {
 
     if (slideLeft && slideRight){
         slideLeft.parent().css("height", "");
-        window.setInterval(function () { NextSlide(slideRight, slideLeft); }, 12000);
+        window.setInterval(function () { NextSlide(slideRight, slideLeft); }, 8000);
     }
 
     //if ($("#Slide").length > 0)

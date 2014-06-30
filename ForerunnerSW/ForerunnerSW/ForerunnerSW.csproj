@@ -312,6 +312,8 @@
     <Content Include="Views\SampleDetail\ReportSelector.cshtml" />
     <Content Include="Views\SampleDetail\Parameters.cshtml" />
     <Content Include="Views\Home\Activation.cshtml" />
+    <Content Include="Views\Home\Pricing.cshtml" />
+    <Content Include="Views\Home\Features.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

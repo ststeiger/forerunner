@@ -18,8 +18,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerPageContent{font-size:14px;}
 
 .ForerunnerTD{ display:table-cell;vertical-align:top}
-.ForerunnerTD50{width:50%;}
-.ForerunnerTD50Left {padding-right: 15px;}
+.TD2{width:50%;}
+.TD2Left {padding-right: 15px;}
 
 .Header{ width:100%;margin-top:20px;padding-bottom:30px;}
 .Footer{background-color:#333333;width:100%;color:white;min-height:100px;}
@@ -46,7 +46,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .ForerunnerImage { width:100%; }
 
-.ContactButton{background-color:#1ba0da;width:300px;height:40px;font-size:18px;color:white;margin-bottom:25px;display:block;vertical-align:middle;}
+.ContactButton{background-color:#1ba0da;width:300px;font-size:18px;color:white;margin-bottom:25px;display:block;vertical-align:middle;}
+.ContactButtonHeight{height:40px;}
 .ContactButton:hover{background-color:#0a87bd;}
 .ContactButton a{color:white;}
 .ContactButtonText{margin:10px;float:left;}
@@ -63,7 +64,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .DownloadButtonSize{width:200px;height:36px;padding-top:7px;text-align:center;display:block;}
 .DownloadButton:hover{background-color:#f38c06;color:white;}
 .DownloadButton a {color:white;}
-.DownloadButton a:hover{color:white;}
+.DownloadButton a:hover{background-color:#f38c06;color:white;}
 
 .DemoPageButtonRight{display:inline;float:right;text-align:center;}
 .DemoPageButtonLeft{display:inline;float:left;text-align:center;}
@@ -78,17 +79,25 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .MobilizerDetailHeader{color:#1ba0da;font-size:20px;}
 .MobilizerDetailContent{padding-bottom:20px;}
 
-.SupportTD{width:20%;}
+.TD5{width:20%;}
 .SupportTDBorder{border-right:1px solid #cccccc;}
 .SupportTR{color:#666666;text-align:center;align-content:center;}
 
-.DeveloperTD{width:25%;}
-.DeveloperBottomTD{width:33%;}
+.TD4{width:25%;}
+.TD3{width:33%;}
 .DeveloperList{text-align:left;}
 .DeveloperCell{padding-left:10px;padding-right:10px;line-height:18px;}
 .DeveloperCheveron{vertical-align:top;}
 .DeveloperSubHeader{padding-bottom:15px;}
 
+.PricingBanner{border:1px solid black;text-align:center;margin:25px;font-size:18pt;min-height:450px;padding:15px;}
+.BuyNowButton{text-align:center;margin:auto;font-size:18pt;padding:15px;width:250px;}
+.PricingAlert{font-weight:bold;color:darkblue;}
+.PricingBanner2{text-align:center;margin-top:0px;font-size:16pt;padding:65px;}
+
+.FeatureHeader{font-weight:bold;color:darkblue;font-size:18pt;padding:15px;}
+.FeatureContent{font-size:14pt;padding:15px;}
+.FeatureImg{width:100%;padding:15px;}
 
 .SamplesItem {color:#1ba0da;font-size:15px;display:block;margin: 0 0 10px 0;}
 .SamplesDescription{min-width: 200px;padding:0 15px 0 0;vertical-align: top;}
@@ -106,16 +115,16 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
  
     .ForerunnerPage{width:1000px;}
     .ForerunnerTD{ display:table-cell;vertical-align:top}
-    .ForerunnerTD50{width:50%;}
-    .ForerunnerTD50Left {padding-right: 15px;}
+    .TD2{width:50%;}
+    .TD2Left {padding-right: 15px;}
 }
 
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
      .ForerunnerPage{width:100%;}
     .ForerunnerTD{ display:inline-block;vertical-align:top}
-    .ForerunnerTD50{width:100%;}
-    .ForerunnerTD50Left {padding-right: 0px;}
+    .TD2{width:100%;}
+    .TD2Left {padding-right: 0px;}
     .SliderFullContainer{width: 450px;}
     .SliderContainer{width: 450px; height: 409px;  }
 
@@ -126,8 +135,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
    .ForerunnerPort{padding-right:10px;padding-left:10px;width:100%;}
    .ForerunnerPage{width:100%;}
     .ForerunnerTD{ display:inline-block;}
-    .ForerunnerTD50{width:100%;}
-    .ForerunnerTD50Left {padding-right: 0px;}
+    .TD2{width:100%;}
+    .TD2Left {padding-right: 0px;}
     .SliderFullContainer{width: 450px;}
     .SliderContainer{width: 450px; height: 409px;  }
    
@@ -141,12 +150,12 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .SliderContainer{width: 450px; height: 409px;  }
    
     .ForerunnerTD{ display:inline-block;}
-    .ForerunnerTD50{width:100%;}
-    .ForerunnerTD50Left {padding-right: 0px;}
+    .TD2{width:100%;}
+    .TD2Left {padding-right: 0px;}
 
-    .SupportTD{width:50%;}
-    .DeveloperTD{width:50%;}
-    .DeveloperBottomTD{width:100%;}
+    .TD5{width:50%;}
+    .TD4{width:50%;}
+    .TD3{width:100%;}
     .SupportTDBorder{border-right:none;}
 
     .DemoPageButtonRight{display:block;float:left;text-align:center;}
@@ -161,14 +170,14 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .SliderContainer{width: 305px; height: 409px; overflow:hidden; }
 
    .ForerunnerTD{ display:inline-block;}
-   .ForerunnerTD50{width:100%;}
-   .ForerunnerTD50Left {padding-right: 0px;}
+   .TD2{width:100%;}
+   .TD2Left {padding-right: 0px;}
    
    .Navbar {display:inline-block; margin-left:0px;}
 
-   .SupportTD{width:100%;}
-   .DeveloperTD{width:100%;}
-   .DeveloperBottomTD{width:100%;}
+   .TD5{width:100%;}
+   .TD4{width:100%;}
+   .TD3{width:100%;}
    .SupportTDBorder{border-right:none;}
    
    .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}

@@ -188,9 +188,6 @@ $(function () {
             $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me._findSection("fr-tag-section");
-            $dlg.forerunnerTags({ $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
-
             if (me.parameterModel) {
                 $dlg = me._findSection("fr-mps-section");
                 $dlg.manageParamSets({

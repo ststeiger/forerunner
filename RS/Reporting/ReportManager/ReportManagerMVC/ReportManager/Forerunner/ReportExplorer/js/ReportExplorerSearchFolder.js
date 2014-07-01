@@ -104,7 +104,11 @@ $(function () {
                     tagsList[i] = '"' + tagsList[i].trim() + '"';
                 }
 
-                var searchfolder = { searchFolderName: name, content: { name: name, tags: tagsList.join(",") } };
+                var searchfolder = {
+                    searchFolderName: name,
+                    overwrite: false,
+                    content: { name: name, tags: tagsList.join(",") }
+                };
 
                 me.options.$reportExplorer.reportExplorer("createSearchFolder", searchfolder);
                 me.closeDialog();
@@ -112,27 +116,6 @@ $(function () {
         },
         openDialog: function () {
             var me = this;
-            var content = me.options.$reportExplorer.reportExplorer("getSearchFolderContent");
-            if (content) {
-                content = JSON.parse(content);//replace(/"/g, '')
-                me.element.find(".fr-sf-foldername").val(content.name)
-                me.element.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
-            }
-            else {
-                me.element.find(".fr-sf-foldername").val("")
-                me.element.find(".fr-sf-foldertags").val("");
-            }
-
-            var path = me.options.$reportExplorer.reportExplorer("getCurrentPath");
-            var location;
-            if (path === "/") {
-                location = locData.searchFolder.homePage;
-            }
-            else {
-                location = path.substring(path.lastIndexOf("/") + 1);
-            }
-            location = locData.searchFolder.createTo + ": " + location;
-            me.element.find(".fr-sf-location").text(location);
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },

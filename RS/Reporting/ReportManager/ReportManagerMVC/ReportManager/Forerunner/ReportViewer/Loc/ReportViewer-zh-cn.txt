@@ -267,5 +267,11 @@
     "addNew":"创建",
     "deleteSubscription":"删除",
     "deleteFailed":"删除订阅成功"
+  },
+  "properties": {
+    "title":"属性",
+    "submit":"提交",
+    "deleteItem":"删除",
+    "description":"描述"
   }
 }

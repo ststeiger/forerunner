@@ -267,5 +267,11 @@
 	"addNew": "Create",
 	"deleteSubscription": "Delete",
 	"deleteFailed": "Subscription deletion failed"
+  },
+  "properties":{
+	"title":"Properties",
+	"submit":"Submit",
+	"deleteItem":"Delete",
+	"description":"Description"
   }
 }

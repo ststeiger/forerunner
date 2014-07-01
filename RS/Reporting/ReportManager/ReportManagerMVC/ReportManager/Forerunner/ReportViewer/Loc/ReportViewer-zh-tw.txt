@@ -267,5 +267,11 @@
     "addNew":"創建",
     "deleteSubscription":"刪除",
     "deleteFailed":"刪除訂閱成功"
+  },
+  "properties": {
+    "title":"屬性",
+    "submit":"提交",
+    "deleteItem":"刪除",
+    "description":"描述"
   }
 }

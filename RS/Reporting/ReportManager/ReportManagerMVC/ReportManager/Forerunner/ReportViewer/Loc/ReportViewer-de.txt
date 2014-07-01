@@ -267,5 +267,11 @@
     "addNew":"Schaffen ",
     "deleteSubscription":"Löschen ",
     "deleteFailed":"Abonnement Löschung gescheitert"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

@@ -811,6 +811,16 @@ namespace Forerunner.SSRS.Manager
             return GetProperty(path,"ID");
 
         }
+        public string GetItemProperty(string path, string propName)
+        {
+            string property = GetProperty(path, propName);
+            if (string.IsNullOrEmpty(property))
+            {
+                property = "{}";
+            }
+
+            return property;
+        }
         public string GetProperty(string path,string propName)
         {
             Property[] props = new Property[1];

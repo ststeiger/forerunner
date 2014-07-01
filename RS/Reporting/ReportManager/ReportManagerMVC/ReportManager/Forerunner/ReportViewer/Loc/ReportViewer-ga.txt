@@ -267,5 +267,11 @@
     "addNew":"Cruthaigh",
     "deleteSubscription":"Scrios",
     "deleteFailed":"Theip scriosadh Síntiúis"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

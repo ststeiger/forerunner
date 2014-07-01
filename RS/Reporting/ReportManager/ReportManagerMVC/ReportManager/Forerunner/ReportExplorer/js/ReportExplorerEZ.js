@@ -13,6 +13,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
@@ -51,11 +52,19 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
+            var propertyList = [];
 
-            if (!path)
+            if (!path) {// root page
                 path = "/";
-            if (!view)
+            }
+            if (!view) {// general catalog page
                 view = "catalog";
+                propertyList.push(propertyEnums.tags, propertyEnums.description);
+            }
+            else if (view === "searchfolder") {
+                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+            }
+            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -378,6 +387,8 @@ $(function () {
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
+            //set properties dialog
+            me._setProperties(path, [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description]);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -420,6 +431,8 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
+            me._setProperties(path, [propertyEnums.tags, propertyEnums.description]);
+
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
@@ -466,11 +479,35 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+            me._initPropertiesDialog();
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
+        },
+        _initPropertiesDialog: function () {
+            var me = this;
+            var layout = me.DefaultAppTemplate;
+
+            var $dlg = layout.$container.find(".fr-tag-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-properties-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerProperties({
+                    $appContainer: layout.$container,
+                    $reportViewer: layout.$mainviewport,
+                    $reportExplorer: layout.$mainsection,
+                    rsInstance: me.options.rsInstance
+                });
+                layout.$container.append($dlg);
+            }
+
+            me._propertiesDialog = $dlg;
+        },
+        _setProperties: function (path, propertyList) {
+            var me = this;
+            me._propertiesDialog.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
          * Get report explorer

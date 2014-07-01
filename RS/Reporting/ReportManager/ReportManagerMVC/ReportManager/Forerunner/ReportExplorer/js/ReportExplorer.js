@@ -197,8 +197,9 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            $captiontext.attr("title", catalogItem.Name);
-            $captiontext.html(catalogItem.Name);
+            var name = forerunner.helper.htmlDecode(catalogItem.Name);
+            $captiontext.attr("title", name);
+            $captiontext.html(name);
             $caption.append($captiontext);
             $item.append($caption);
 
@@ -207,8 +208,9 @@ $(function () {
             //$desc.addClass("fr-explorer-caption");
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            $desctext.attr("title", catalogItem.Description);
-            $desctext.html(catalogItem.Description);
+            var description = forerunner.helper.htmlDecode(catalogItem.Description);
+            $desctext.attr("title", description);
+            $desctext.html(description);
             $desc.append($desctext);
             $item.append($desc);
            
@@ -339,7 +341,7 @@ $(function () {
 
             me.parentPath = null;
             if (view === "searchfolder") {
-                me.parentPath = forerunner.helper.getParentPath(me.options.path);
+                me.parentPath = forerunner.helper.getParentPath(me.options.path) || "/";
             }
 
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -357,8 +359,9 @@ $(function () {
                      if (data.Exception) {
                          forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
                      }
-                     else
+                     else {
                          me._render(data);
+                     }
                  }).fail(
                 function (jqXHR, textStatus, errorThrown) {
                     console.log(textStatus);
@@ -398,7 +401,7 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
 
-            if (me.options.view === "catalog") {
+            if (me.options.view === "catalog" || me.options.view === "searchfolder") {
                 me._checkPermission();
             }
 
@@ -428,17 +431,6 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._searchFolderDialog = $dlg;
-
-            $dlg = me.options.$appContainer.find(".fr-tag-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-tag-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.forerunnerTags({
-                    $appContainer: me.options.$appContainer,
-                    rsInstance: me.options.rsInstance
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._forerunnerTagsDialog = $dlg;
         },
         _checkPermission: function () {
             var me = this;
@@ -492,19 +484,20 @@ $(function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
         },
+        /**
+         * Show the search folder modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showExplorerSearchFolderDialog
+         */
         showExplorerSearchFolderDialog: function () {
             var me = this;
             me._searchFolderDialog.reportExplorerSearchFolder("openDialog");
         },
-        showTags: function () {
+        //this method call by createSearchFolder and search folder property widgets
+        setSearchFolder: function (searchFolder) {
             var me = this;
-            me._forerunnerTagsDialog.forerunnerTags("openDialog", me.options.path);
-        },
-        createSearchFolder: function (searchFolder) {
-            var me = this;
-
             var url = me.options.reportManagerAPI + "/SaveResource";
-
+            
             forerunner.ajax.ajax({
                 url: url,
                 async: false,
@@ -515,7 +508,8 @@ $(function () {
                     parentFolder: me.parentPath || me.options.path,
                     contents: JSON.stringify(searchFolder.content),
                     mimetype: "json/forerunner-searchfolder",
-                    instance: me.options.rsInstance
+                    instance: me.options.rsInstance,
+                    overwrite: searchFolder.overwrite
                 },
                 success: function (data) {
                     //refresh the page if search folder created succeeded
@@ -527,32 +521,6 @@ $(function () {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
                 }
             });
-        },
-        getSearchFolderContent: function () {
-            var me = this;
-            if (me.options.view !== "searchfolder") {
-                return null;
-            }
-
-            var url = me.options.reportManagerAPI + "/Resource";
-            var content = null;
-
-            forerunner.ajax.ajax({
-                url: url,
-                async: false,
-                type: "GET",
-                dataType: "text",
-                data: {
-                    path: me.options.path,
-                    instance: me.options.rsInstance
-                },
-                success: function (data) {
-                    content = data;
-                },
-                error: function (data) { }
-            });
-
-            return content;
         },
         _searchItems: function (keyword) {
             var me = this;

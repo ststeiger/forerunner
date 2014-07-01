@@ -290,6 +290,8 @@ $(function () {
             forerunnerTags: "forerunnerTags",
             /** @constant */
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
+            /** @constant */
+            forerunnerProperties: "forerunnerProperties",
 
             /** @constant */
             namespace: "forerunner",
@@ -600,6 +602,18 @@ $(function () {
             tiff: "IMAGE",
             word: "WORDOPENXML"
         },
+        /**
+        * Forerunner property for report, folder, dashboard
+        *
+        * @readonly
+        * @enum {String}
+        */
+        properties: {
+            description: "description",
+            rdlExtension: "rdlExtension",
+            tags: "tags",
+            searchFolder: "searchFolder"
+        }
     };
 
     /**

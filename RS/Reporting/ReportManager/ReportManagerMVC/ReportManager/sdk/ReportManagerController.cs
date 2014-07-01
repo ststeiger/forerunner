@@ -112,8 +112,8 @@ namespace ReportManager.Controllers
         public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
         {
             try
-            {             
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetProperty(path,propertyName)), "text/JSON");
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetItemProperty(path, propertyName)), "text/JSON");
             }
             catch (Exception e)
             {

@@ -59,11 +59,11 @@ $(function () {
             });
 
             me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (e, data) {
-                me.disableTools([tp.itemTags]);
+                me.disableTools([mi.itemProperty]);
 
                 var permissions = me.options.$reportViewer.reportViewer("getPermissions");
                 if (permissions["Update Properties"] === true) {
-                    me.enableTools([tp.itemTags]);
+                    me.enableTools([mi.itemProperty]);
                 }
 
                 me._checkSubscription();
@@ -179,7 +179,7 @@ $(function () {
             //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
             if (userSettings && userSettings.adminUI && userSettings.adminUI === true) {
-                listOfItems.push(tp.itemTags, tp.itemRDLExt);
+                listOfItems.push(mi.itemProperty);
             }
 
             listOfItems.push(tg.itemFindGroup);

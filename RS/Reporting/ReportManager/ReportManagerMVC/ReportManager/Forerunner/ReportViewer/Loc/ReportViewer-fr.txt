@@ -268,5 +268,11 @@
     "addNew":"Créer",
     "deleteSubscription":"Effacer",
     "deleteFailed":"Suppression abonnement qui a échoué"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

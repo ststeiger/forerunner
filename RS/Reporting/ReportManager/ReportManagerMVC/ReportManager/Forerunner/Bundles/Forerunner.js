@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -291,6 +291,8 @@ $(function () {
             forerunnerTags: "forerunnerTags",
             /** @constant */
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
+            /** @constant */
+            forerunnerProperties: "forerunnerProperties",
 
             /** @constant */
             namespace: "forerunner",
@@ -601,6 +603,18 @@ $(function () {
             tiff: "IMAGE",
             word: "WORDOPENXML"
         },
+        /**
+        * Forerunner property for report, folder, dashboard
+        *
+        * @readonly
+        * @enum {String}
+        */
+        properties: {
+            description: "description",
+            rdlExtension: "rdlExtension",
+            tags: "tags",
+            searchFolder: "searchFolder"
+        }
     };
 
     /**

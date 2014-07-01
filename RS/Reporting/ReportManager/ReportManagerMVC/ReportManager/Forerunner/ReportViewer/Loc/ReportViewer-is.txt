@@ -267,5 +267,11 @@
     "addNew":"Búa",
     "deleteSubscription":"Eyða",
     "deleteFailed":"Áskrift eyða mistókst"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

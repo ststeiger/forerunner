@@ -112,8 +112,8 @@ namespace ReportManager.Controllers
         public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
         {
             try
-            {             
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetProperty(path,propertyName)), "text/JSON");
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetItemProperty(path, propertyName)), "text/JSON");
             }
             catch (Exception e)
             {
@@ -222,8 +222,15 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage CreateSubscription(SubscriptionInfoPostBack info)
         {
-            info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info)), "text/JSON");
+            try
+            {
+                info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]
@@ -236,9 +243,15 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage UpdateSubscription(SubscriptionInfoPostBack info)
         {
-           
-            GetReportManager(info.Instance).SetSubscription(info);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
+            try
+            {
+                GetReportManager(info.Instance).SetSubscription(info);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]

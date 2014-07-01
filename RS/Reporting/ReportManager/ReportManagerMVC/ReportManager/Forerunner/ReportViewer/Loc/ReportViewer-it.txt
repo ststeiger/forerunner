@@ -267,5 +267,11 @@
     "addNew":"Creare",
     "deleteSubscription":"Cancellare ",
     "deleteFailed":"Eliminazione di abbonamento fallito"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

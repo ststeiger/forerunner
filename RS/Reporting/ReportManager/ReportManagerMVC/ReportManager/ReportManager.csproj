@@ -178,6 +178,7 @@
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
+    <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
     <Content Include="Forerunner\Common\css\MessageBox.css" />
     <Content Include="Forerunner\Common\css\Login.css" />
     <Content Include="Forerunner\Common\css\ReportManager.css" />
@@ -192,9 +193,9 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Tags.png" />
     <Content Include="Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png" />
+    <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
-    <Content Include="Forerunner\ReportExplorer\css\ForerunnerTags.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
     <Content Include="Forerunner\Common\js\DashboardModel.js" />
@@ -337,7 +338,6 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\SelectedFolder_Search.png" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
-    <Content Include="Forerunner\ReportExplorer\js\ForerunnerTags.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerSearchFolder.js" />
@@ -349,7 +349,6 @@
     <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageSubscription.css" />
-    <Content Include="Forerunner\ReportViewer\css\RDLExtDialog.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -377,7 +376,6 @@
     <Content Include="Forerunner\ReportViewer\js\EmailSubscription.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageSubscription.js" />
-    <Content Include="Forerunner\ReportViewer\js\RDLExtDialog.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

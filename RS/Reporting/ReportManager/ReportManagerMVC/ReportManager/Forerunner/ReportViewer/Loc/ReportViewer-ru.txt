@@ -267,5 +267,11 @@
     "addNew":"создавать",
     "deleteSubscription":"удалять",
     "deleteFailed":"Подписка Ошибка удаления"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

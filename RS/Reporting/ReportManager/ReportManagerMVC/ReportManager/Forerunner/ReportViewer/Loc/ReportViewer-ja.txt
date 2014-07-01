@@ -267,5 +267,11 @@
     "addNew":"作る",
     "deleteSubscription":"削除",
     "deleteFailed":"サブスクリプションの削除に失敗しました"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

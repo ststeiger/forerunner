@@ -10,6 +10,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var dbtp = forerunner.ssr.tools.dashboardToolPane;
+    var mi = forerunner.ssr.tools.mergedItems;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
@@ -83,12 +84,30 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            me.addTools(2, true, [dbtp.itemEdit, dbtp.itemView]);
+            var toolItemList = [dbtp.itemEdit, dbtp.itemView];
+            if (me._isAdmin()) {
+                toolItemList.push(mi.itemProperty);
+            }
+
+            me.addTools(2, true, toolItemList);
             me.enableEdit(me.options.enableEdit);
             
             var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
             me.element.append($spacerdiv);
+
+            me._updateBtnStates();
+        },
+        _updateBtnStates: function () {
+            var me = this;
+            if (me._isAdmin()) {
+                me.disableTools([mi.itemProperty]);
+                var permissions = me.options.$dashboardEZ.dashboardEZ("getPermission");
+
+                if (permissions["Update Properties"]) {
+                    me.enableTools([mi.itemProperty]);
+                }
+            }
         },
     });  // $.widget
 });  // function()

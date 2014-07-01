@@ -267,5 +267,11 @@
     "addNew":"criar",
     "deleteSubscription":"excluir",
     "deleteFailed":"Exclusão Assinatura falhou"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

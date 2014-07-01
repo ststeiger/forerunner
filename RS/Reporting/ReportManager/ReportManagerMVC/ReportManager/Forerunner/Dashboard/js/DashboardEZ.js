@@ -141,7 +141,7 @@ $(function () {
             var me = this;
             //Update Content: update resource content (dashboard)
             //for more properties, add to the list
-            var permissionList = ["Update Content"];
+            var permissionList = ["Update Content", "Update Properties"];
             me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
         },
         /**

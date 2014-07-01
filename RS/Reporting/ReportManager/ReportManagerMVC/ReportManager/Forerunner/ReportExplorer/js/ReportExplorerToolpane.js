@@ -15,6 +15,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tp = forerunner.ssr.tools.reportExplorerToolpane;
     var tg = forerunner.ssr.tools.groups;
+    var mi = forerunner.ssr.tools.mergedItems;
     var itemActiveClass = "fr-toolbase-persistent-active-state";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
@@ -104,7 +105,17 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemTags, tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemSetup, tg.explorerItemFindGroup];
+            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            if (me._isAdmin()) {
+                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard);
+                if (lastFetched.path !== "/") {
+                    toolpaneItems.push(mi.itemProperty);
+                }
+            }
+
+            toolpaneItems.push(tg.explorerItemFindGroup);
+
             // Only show the log off is we are configured for forms authentication
             if (forerunner.ajax.isFormsAuth()) {
                 toolpaneItems.push(tp.itemLogOff);
@@ -131,29 +142,18 @@ $(function () {
         updateBtnStates: function () {
             var me = this;
 
-            if (!me._isAdmin()) {
-                me.hideTool(tp.itemSearchFolder.selectorClass);
-                me.hideTool(tp.itemCreateDashboard.selectorClass);
-                me.hideTool(tp.itemTags.selectorClass);
-            } else {
-                // If we are in admin mode we show the buttons
-                me.showTool(tp.itemSearchFolder.selectorClass);
-                me.showTool(tp.itemCreateDashboard.selectorClass);
-                me.showTool(tp.itemTags.selectorClass);
-
+            if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+                var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
                 // Then we start out disabled and enable if needed
-                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemTags]);
+                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
 
-                if (lastFetched.view === "catalog") {
-                    var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
-                    if (permissions["Create Resource"]) {
-                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
-                    }
+                if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
+                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                }
 
-                    if (lastFetched.path !== "/" && permissions["Update Properties"]) {
-                        me.enableTools([tp.itemTags]);
-                    }
+                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
+                    me.enableTools([mi.itemProperty]);
                 }
             }
         },

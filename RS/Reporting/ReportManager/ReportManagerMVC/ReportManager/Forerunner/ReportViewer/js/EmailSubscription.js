@@ -280,8 +280,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel, "fr-email-create-id fr-core-dialog-button", locData.subscription.addNew) :
-                forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", "", "fr-core-dialog-button fr-email-create-id", "") :
+                forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", "");
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");

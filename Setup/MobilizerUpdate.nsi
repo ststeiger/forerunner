@@ -135,6 +135,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ForerunnerLogo.png"
   File "${LOCALROOT}\Forerunner\Common\Images\search.png"
   File "${LOCALROOT}\Forerunner\Common\Images\OpenDropDown.png"
+  File "${LOCALROOT}\Forerunner\Common\Images\Close_btn.png"
   SetOutPath "$INSTDIR\Forerunner\Common\images\ToolbarIcons"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\align_just_icon.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\BackOff.png"
@@ -271,6 +272,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\EditSubscription.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DeleteSubscription.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\NewEmail_btn.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
@@ -690,6 +692,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Drilldown_Expand.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\EditSubscription.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DeleteSubscription.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\NewEmail_btn.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\EmptyIndent.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\NotSorted.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Parameter_Collapse.png"
@@ -813,7 +816,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   Delete "$INSTDIR\Forerunner\Common\images\search.png"
-  Delete "$INSTDIR\Forerunner\Common\images\OpenDropDown.png"  
+  Delete "$INSTDIR\Forerunner\Common\images\OpenDropDown.png"
+  Delete "$INSTDIR\Forerunner\Common\images\Close_btn.png"  
   
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\align_just_icon.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\BackOff.png"

@@ -152,6 +152,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ForerunnerLogo.png"
   File "${LOCALROOT}\Forerunner\Common\Images\search.png"
   File "${LOCALROOT}\Forerunner\Common\Images\OpenDropDown.png"
+  File "${LOCALROOT}\Forerunner\Common\Images\Close_btn.png"
   SetOutPath "$INSTDIR\Forerunner\Common\images\ToolbarIcons"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\align_just_icon.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\BackOff.png"
@@ -338,6 +339,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\EditSubscription.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DeleteSubscription.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\NewEmail_btn.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
@@ -778,6 +780,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Collapse.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\EditSubscription.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DeleteSubscription.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\NewEmail_btn.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportParameter.css"
@@ -883,6 +886,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   Delete "$INSTDIR\Forerunner\Common\images\search.png"
   Delete "$INSTDIR\Forerunner\Common\Images\OpenDropDown.png"
+  Delete "$INSTDIR\Forerunner\Common\Images\Close_btn.png"
   
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\align_just_icon.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\BackOff.png"

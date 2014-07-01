@@ -1681,15 +1681,17 @@ $(function () {
                                    title +
                                 "</div>" +
                             "</div>";
+
+            html += "<div class='fr-core-dialog-cancel-container'>" +
+                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                            "</div>";
+
             if (actionClass) {
                 html += "<div class='fr-core-dialog-action-container'>" +
                                 "<input type='button' class='fr-core-dialog-action " + actionClass + "' value='" + actionWord + "' />" +
                         "</div>";
             }
-            html +=    "<div class='fr-core-dialog-cancel-container'>" +
-                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
-                            "</div>" +
-                       "</div>";
+            html += "</div>";
             return html;
         },
         _timer: null,

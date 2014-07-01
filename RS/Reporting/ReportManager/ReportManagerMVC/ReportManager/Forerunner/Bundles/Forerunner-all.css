@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -101,10 +101,10 @@ div.fr-layout-position-absolute { position: absolute; }
     .fr-core-dialog-header .fr-core-dialog-align-middle{ vertical-align:middle; }
     .fr-core-dialog-header .fr-core-dialog-title-container{ height: 100%; vertical-align: top; display: inline-block; }
     .fr-core-dialog-header .fr-core-dialog-title{ height: 45px; vertical-align: middle; display: table-cell; }
-    .fr-core-dialog-header .fr-core-dialog-cancel-container{ display: inline-block; margin: 0 11px 0 17px; float: right; }
-    .fr-core-dialog-header .fr-core-dialog-cancel{ height: 45px; padding: 0; margin: 0; font-size: 13pt; color: #ffffff; background-color: transparent; border: none; cursor: pointer; }
-    .fr-core-dialog-header .fr-core-dialog-action-container{ display: inline-block; margin: 0 11px 0 17px; }
-    .fr-core-dialog-header .fr-core-dialog-action{ height: 37px; padding: 0px; margin: 3px; font-size: 13pt; color: #ffffff; background-color: transparent; border: 1px solid white; cursor: pointer; }
+    .fr-core-dialog-header .fr-core-dialog-cancel-container{ display: inline-block; margin: 0px 11px 0 17px; float: right; }
+    .fr-core-dialog-header .fr-core-dialog-cancel{ height: 45px; padding: 0; margin: 5px 0 0 0; font-size: 13pt; color: #ffffff; background-repeat: no-repeat;background-image:url(../images/Close_btn.png); background-color: transparent; border: none; cursor: pointer; width:30px; height: 30px; background-position: 3px 3px; border: 1px solid #6687b8; }
+    .fr-core-dialog-header .fr-core-dialog-action-container{ display: inline-block; margin: 0px 11px 0 17px; float: right;}
+    .fr-core-dialog-header .fr-core-dialog-action{ height: 37px; padding: 0px; margin: 5px 0 0 0; font-size: 13pt; color: #ffffff; background-color: transparent; border: 1px solid #6687b8; cursor: pointer; width: 54px; height: 30px; background-repeat: no-repeat; background-position: 8px 3px;}
 
 .fr-core-dialog-delete{ height: 45px; width: 100px; padding: 0; padding-left: 10px; margin: 0; font-size: 13pt; color: #000000; background-color: transparent; border: none; cursor: pointer; }
     
@@ -982,6 +982,7 @@ table, td, tr div {
 .fr-email-renderformat { width: 200px; }
 .fr-email-schedule { width: 200px;}
 .fr-email-submit-container { display: table; margin: 10px auto;}
+.fr-core-dialog-header .fr-email-create-id {background-image:url(../images/NewEmail_btn.png); cursor: pointer;}
 .fr-email-submit-id {display: inline-block;}
 .fr-email-delete-id {display: inline-block;}
 .fr-emailsubscription-section { display: none; }

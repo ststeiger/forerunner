@@ -39,7 +39,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-rdlextension", locData.title, "fr-rdl-cancel", locData.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-rdlextension", locData.title, "fr-rdl-cancel", "");
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +

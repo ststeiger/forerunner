@@ -45,7 +45,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", "");
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +

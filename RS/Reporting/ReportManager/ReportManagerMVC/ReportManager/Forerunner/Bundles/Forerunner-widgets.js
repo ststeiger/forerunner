@@ -15272,7 +15272,9 @@ $(function () {
                 me._subscriptionID ? "updateSubscription" : "createSubscription",
                 subscriptionInfo,
                 function () { me.closeDialog(); },
-                function () { forerunner.dialog.showMessageBox(me.options.$appContainer,  locData.subscription.saveFailed); });
+                function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                });
         },
 
         _createNew: function () {
@@ -15584,13 +15586,25 @@ $(function () {
                 url,
                 subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    if (success && typeof (success) === "function") {
+                    var is_exception = true;
+                    try {
+                        var exception = JSON.parse(data);
+                        if (exception.Exception) {
+                            data = exception;
+                        }
+                    } catch(e) {
+                        is_exception = false;
+                    }
+                    if (!is_exception && success && typeof (success) === "function") {
                         success(data);
+                    }
+                    if (is_exception && error && typeof (error) === "function") {
+                        error(data);
                     }
                 },
                 function (data, textStatus, jqXHR) {
                     if (error && typeof (error) === "function") {
-                        error();
+                        error(data);
                     }
                 });
         },

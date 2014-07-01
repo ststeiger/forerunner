@@ -370,7 +370,9 @@ $(function () {
                 me._subscriptionID ? "updateSubscription" : "createSubscription",
                 subscriptionInfo,
                 function () { me.closeDialog(); },
-                function () { forerunner.dialog.showMessageBox(me.options.$appContainer,  locData.subscription.saveFailed); });
+                function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                });
         },
 
         _createNew: function () {

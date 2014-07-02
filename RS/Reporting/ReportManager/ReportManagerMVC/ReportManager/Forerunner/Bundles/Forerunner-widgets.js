@@ -6916,7 +6916,7 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            var name = forerunner.helper.htmlDecode(catalogItem.Name);
+            var name = catalogItem.Name && forerunner.helper.htmlDecode(catalogItem.Name);
             $captiontext.attr("title", name);
             $captiontext.html(name);
             $caption.append($captiontext);
@@ -6927,7 +6927,7 @@ $(function () {
             //$desc.addClass("fr-explorer-caption");
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            var description = forerunner.helper.htmlDecode(catalogItem.Description);
+            var description = catalogItem.Description && forerunner.helper.htmlDecode(catalogItem.Description);
             $desctext.attr("title", description);
             $desctext.html(description);
             $desc.append($desctext);

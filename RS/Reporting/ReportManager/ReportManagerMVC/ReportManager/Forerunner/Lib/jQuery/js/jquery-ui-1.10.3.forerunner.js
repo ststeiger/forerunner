@@ -9033,7 +9033,8 @@ $.widget( "ui.dialog", {
 	},
 
 	open: function() {
-		var that = this;
+	    var that = this;
+
 		if ( this._isOpen ) {
 			if ( this._moveToTop() ) {
 				this._focusTabbable();
@@ -9054,6 +9055,10 @@ $.widget( "ui.dialog", {
 		});
 
 		this._trigger("open");
+	},
+
+	resetPosition: function(){
+	    this._position();
 	},
 
 	_focusTabbable: function() {
@@ -9350,6 +9355,7 @@ $.widget( "ui.dialog", {
 		if ( !isVisible ) {
 			this.uiDialog.show();
 		}
+
 		this.uiDialog.position( this.options.position );
 		if ( !isVisible ) {
 			this.uiDialog.hide();
@@ -9623,6 +9629,7 @@ if ( $.uiBackCompat !== false ) {
 			if ( !isVisible ) {
 				this.uiDialog.show();
 			}
+
 			this.uiDialog.position( position );
 			if ( !isVisible ) {
 				this.uiDialog.hide();

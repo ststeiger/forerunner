@@ -1941,8 +1941,8 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" && data.RDLExtension) {
-                           me.RDLExtProperty = data.RDLExtension;
+                       if (data && data !== "{}" ) {
+                           me.RDLExtProperty = data;
                        }
                    },
                    async: false

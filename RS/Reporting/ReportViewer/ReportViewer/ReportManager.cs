@@ -926,7 +926,7 @@ namespace Forerunner.SSRS.Manager
 
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -942,6 +942,8 @@ namespace Forerunner.SSRS.Manager
                             c.ModifiedDateSpecified = true;
                             c.Type = ItemTypeEnum.Report;
                             c.ID = SQLReader.GetGuid(3).ToString();
+                            c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                            c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                             list.Add(c);
                         }
                     }
@@ -968,7 +970,7 @@ namespace Forerunner.SSRS.Manager
                 List<CatalogItem> list = new List<CatalogItem>();
                 CatalogItem c;
 
-                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID  
+                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID,Description,MimeType  
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
@@ -996,6 +998,8 @@ namespace Forerunner.SSRS.Manager
                     c.ModifiedDateSpecified = true;
                     c.Type = ItemTypeEnum.Report;
                     c.ID = SQLReader.GetGuid(3).ToString();
+                    c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                    c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                     list.Add(c);
 
                 }

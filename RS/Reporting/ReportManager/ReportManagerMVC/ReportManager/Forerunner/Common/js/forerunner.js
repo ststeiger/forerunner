@@ -1592,6 +1592,7 @@ $(function () {
        */
         showModalDialog: function ($appContainer, target) {
             var me = this;
+
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
@@ -1716,18 +1717,9 @@ $(function () {
                 clearTimeout(me._timer);
                 me._timer = null;
             }
-            me._timer = setTimeout(function () {
-                var target = event.data.target;
-                if (target && target.element.is(":visible")) {
-                    var uiDialog = target.element.parent();
-                    if (uiDialog.is(":visible")) {
-                        var clone = uiDialog.clone().appendTo(uiDialog.parent());
-                        var newTop = clone.css("position", "static").offset().top * -1;
-                        uiDialog.css("top", newTop);
-                        clone.remove();
-                    }
-                }
 
+            me._timer = setTimeout(function () {
+                event.data.target.element.dialog("resetPosition");
                 me._timer = null;
             }, 100);
         },

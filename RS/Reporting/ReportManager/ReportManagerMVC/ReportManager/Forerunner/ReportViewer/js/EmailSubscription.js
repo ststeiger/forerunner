@@ -94,10 +94,9 @@ $(function () {
                     
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
-                    if (me.options.userSettings) {
-                        me.$to.attr("value", me.options.userSettings.email );
-                        me.$desc.val(locData.subscription.description.format(me.options.userSettings.email));
-                    }
+                    var userName = forerunner.ajax.getUserName();
+                    me.$to.attr("value", userName );
+                    me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
             }); 
@@ -307,6 +306,7 @@ $(function () {
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder);
             me.$theTable.append(me._createTableRow(locData.subscription.comment_placeholder, me.$comment));
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
+                me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();
                 me.$desc.parent().parent().hide();
                 me.$comment.parent().parent().hide();

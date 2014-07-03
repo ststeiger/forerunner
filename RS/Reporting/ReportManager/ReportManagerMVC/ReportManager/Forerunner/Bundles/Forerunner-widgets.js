@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -7481,16 +7481,6 @@ $(function () {
                                 "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                             "</td>" +
                         "</tr>" +
-                        "<tr>" +
-                            "<td colspan='2'>" +
-                                "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
-                            "</td>" +
-                        "</tr>" +
-                        "<tr>" +
-                            "<td colspan='2'>" +
-                                "<input class='fr-us-email-id fr-us-textbox' autofocus='autofocus' name='Email' type='email'/>" +
-                            "</td>" +
-                        "</tr>" +
                     "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -7551,10 +7541,8 @@ $(function () {
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
 
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
-            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
-            me.$email.val(me.settings.email);
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
@@ -7583,7 +7571,6 @@ $(function () {
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);
@@ -15181,10 +15168,9 @@ $(function () {
                     
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
-                    if (me.options.userSettings) {
-                        me.$to.attr("value", me.options.userSettings.email );
-                        me.$desc.val(locData.subscription.description.format(me.options.userSettings.email));
-                    }
+                    var userName = forerunner.ajax.getUserName();
+                    me.$to.attr("value", userName );
+                    me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
             }); 
@@ -15394,6 +15380,7 @@ $(function () {
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder);
             me.$theTable.append(me._createTableRow(locData.subscription.comment_placeholder, me.$comment));
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
+                me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();
                 me.$desc.parent().parent().hide();
                 me.$comment.parent().parent().hide();

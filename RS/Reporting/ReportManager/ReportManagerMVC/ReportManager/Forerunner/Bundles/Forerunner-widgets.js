@@ -2571,7 +2571,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" ) {
+                       if (data && JSON.stringify(data) !== "{}" ) {
                            me.RDLExtProperty = data; 
                        }
                    },
@@ -3107,12 +3107,10 @@ $(function () {
         },
         saveRDLExt: function (RDL) {
             var me = this;
-            var RDLObj = { RDLExtension: "" };
 
             try {
                 if (RDL.trim() !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
-                    RDLObj.RDLExtension = RDL;
                 }
                 else {
                     me.RDLExtProperty = {};
@@ -3129,7 +3127,7 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value: JSON.stringify(RDLObj),
+                       value: RDL,
                        path: me.reportPath,
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,
@@ -5523,8 +5521,9 @@ $(function () {
 
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
-            
-            me.$rdlInput.val(RDLExtension);
+
+            var RDL = JSON.stringify(RDLExtension);
+            me.$rdlInput.val(RDL);
         },
         _setRDLExtension: function () {
             var me = this;

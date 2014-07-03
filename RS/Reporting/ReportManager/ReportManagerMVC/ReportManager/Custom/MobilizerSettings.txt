@@ -7,5 +7,6 @@
 	"DefaultResponsiveTablix" : "on",
 	"FirefoxPDFbug":"on",
 	"ParameterPaneWidth":"350",
-	"showHomeButton":"off"
+	"showHomeButton":"off",
+	"showBreadCrumbInViewer":"off"
 }

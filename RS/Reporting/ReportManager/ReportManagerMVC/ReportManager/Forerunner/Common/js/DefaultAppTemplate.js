@@ -294,9 +294,10 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-
+            
             var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
             if (me.$leftpane.is(":visible")) {
                 me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
             } else if (me.$rightpane.is(":visible")) {
@@ -349,7 +350,8 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+            
             values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
 
@@ -678,13 +680,14 @@ $(function () {
             var delay = Number(200);
             
             if (!slideoutPane.is(":visible")) {
-                var routeLinkPaneOffset = me.$linksection.outerHeight();
+                var routeLinkPaneOffset = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+                
                 slideoutPane.css({ height: Math.max($(window).height() - routeLinkPaneOffset, mainViewPort.height()) - routeLinkPaneOffset });
                 if (isLeftPane) {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideLeftShow(delay);
                 } else {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideRightShow(delay);
                 }
                 

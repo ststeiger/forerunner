@@ -4529,9 +4529,10 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-
+            
             var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
             if (me.$leftpane.is(":visible")) {
                 me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
             } else if (me.$rightpane.is(":visible")) {
@@ -4584,7 +4585,8 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+            
             values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
 
@@ -4913,13 +4915,14 @@ $(function () {
             var delay = Number(200);
             
             if (!slideoutPane.is(":visible")) {
-                var routeLinkPaneOffset = me.$linksection.outerHeight();
+                var routeLinkPaneOffset = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+                
                 slideoutPane.css({ height: Math.max($(window).height() - routeLinkPaneOffset, mainViewPort.height()) - routeLinkPaneOffset });
                 if (isLeftPane) {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideLeftShow(delay);
                 } else {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideRightShow(delay);
                 }
                 
@@ -13432,7 +13435,9 @@ $(function () {
                     $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
-                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
+                var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
+
+                $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
@@ -13861,10 +13866,15 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            me._render();
             
-            if (me.options.isFullScreen &&
-                (forerunner.device.isWindowsPhone() )) {
+            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
+            if (showBreadcrumb === "off") {
+                me.hideRouteLink();
+            }
+
+            me._render();
+
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() )) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.
@@ -13889,6 +13899,15 @@ $(function () {
                     }
                 }
             }
+        },
+        /**
+         * Hide the breadcrumb section
+         *
+         * @function $.forerunner.reportViewerEZ#hideRouteLink
+         */
+        hideRouteLink: function(){
+            var me = this;
+            me.DefaultAppTemplate.$linksection.hide();
         },
         /**
          * Get report viewer page navigation
@@ -14419,8 +14438,8 @@ $(function () {
 
             // Hook the router route event
             me.router.on(events.routerRoute(), function (event, data) {
-                me._onRoute.apply(me, arguments);
                 me._generateRouteLink.apply(me, arguments);
+                me._onRoute.apply(me, arguments);
             });
 
             if (!me.options.historyBack) {
@@ -14505,6 +14524,8 @@ $(function () {
             me._getLink(path, $linksection, 0);
 
             me._linkResize($linksection);
+
+            $linksection.show();
         },
         _getLink: function (path, $container, index) {
             var me = this,
@@ -14658,15 +14679,26 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
-            var routeLinkSectionHeight = layout.$linksection.outerHeight();//default to 18px
-            var toolpaneheaderheight = layout.$topdiv.height() - routeLinkSectionHeight; //equal toolbar height
+            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
+            
+            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
 
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;// window phone 7 get top property wrong
+            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
+
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$rightheaderspacer.height(toolpaneheaderheight);
-            layout.$leftheaderspacer.height(toolpaneheaderheight);
+
+            layout.$leftpanecontent.css({ top: topDivHeight });
+            layout.$rightpanecontent.css({ top: topDivHeight });
+
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             if (forerunner.device.isWindowsPhone()) {
                 layout.$leftpanecontent.css({ top: toolpaneheaderheight });
@@ -14718,7 +14750,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-
+                
                 me._setLeftRightPaneStyle();
 
             }, timeout);

@@ -1665,7 +1665,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-property",
             imageClass: "fr-icons24x24-tags",
-            text: "Properties",
+            text: locData.properties.title,
             events: {
                 click: function (e) {
                     var $propertyDlg = e.data.me.options.$appContainer.find(".fr-properties-section");

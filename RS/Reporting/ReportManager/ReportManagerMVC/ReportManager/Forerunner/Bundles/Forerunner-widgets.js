@@ -15379,6 +15379,8 @@ $(function () {
             me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder);
             me.$theTable.append(me._createTableRow(locData.subscription.comment_placeholder, me.$comment));
+            me.$to.prop("required", true);
+            me.$subject.prop("required", true);
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
                 me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();

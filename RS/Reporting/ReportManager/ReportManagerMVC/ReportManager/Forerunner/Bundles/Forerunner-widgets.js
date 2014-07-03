@@ -9431,7 +9431,7 @@ $(function () {
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true && BRObj.Cell) {
                             //If responsive table add the show hide image and hook up
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
@@ -9447,16 +9447,22 @@ $(function () {
                                 respCols.Columns[BRObj.ColumnIndex].HeaderName = me._getElements(BRObj.Cell.ReportItem).NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
+
+                            //Undo rotate if needed
+                            me._unRotate(respCols.Columns[BRObj.ColumnIndex].Header.children(0).children(0));
+                            
                             $ExtRow = null;
                         }
                         else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
                                 $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("data-uniqName", respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
-                            var ric;
-                            ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
-                            ric.css("width", CellWidth+"mm");
-                            ric.css("height", CellHeight+"mm");
-                            $ExtCell.append(ric);
+                            if (BRObj.Cell) {
+                                var ric;
+                                ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
+                                ric.css("width", CellWidth + "mm");
+                                ric.css("height", CellHeight + "mm");
+                                $ExtCell.append(ric);
+                            }
 
                         }
                     }
@@ -9486,6 +9492,8 @@ $(function () {
                             respCols.Columns[Obj.ColumnIndex].HeaderName = me._getElements(Obj.Cell.ReportItem).NonSharedElements.UniqueName;
                         respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
+
+                        me._unRotate(respCols.Columns[Obj.ColumnIndex].Header.children(0).children(0));
                         $ExtRow = null;
                     }
                     else {
@@ -9517,10 +9525,24 @@ $(function () {
             LastObjType = Obj.Type;
             return { LastRowIndex: LastRowIndex,LastColIndex:LastColIndex,Colspans:Colspans,Rowspans:Rowspans, LastObjType: LastObjType, Row: $Row, ExtRow : $ExtRow, ExtCell : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
+        _unRotate:function(header){
 
+            //Undo rotate if needed    
+            $.each(header, function (i, obj) {
+                obj = $(obj);
+                if (obj.hasClass("fr-rotate-90") || obj.hasClass("fr-rotate-270")) {
+                    obj.removeClass("fr-rotate-90").removeClass("fr-rotate-270");                    
+                    obj.css("left", "").css("top", "").css("width", "").css("height", "").css("position", "");
+                }
+            });
+
+        },
         _isHeader: function(respCols,cell){
             var me = this;
             var cellDefName;
+
+            if (cell === undefined)
+                return false;
 
             cellDefName = (me._getSharedElements(me._getElements(cell.ReportItem).SharedElements)).Name;
 

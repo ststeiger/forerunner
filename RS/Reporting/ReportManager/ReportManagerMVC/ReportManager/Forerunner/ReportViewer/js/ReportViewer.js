@@ -1942,7 +1942,7 @@ $(function () {
                    },
                    success: function (data) {
                        if (data && data !== "{}" ) {
-                           me.RDLExtProperty = data;
+                           me.RDLExtProperty = data; 
                        }
                    },
                    async: false

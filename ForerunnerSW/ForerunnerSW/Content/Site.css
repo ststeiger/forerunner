@@ -167,7 +167,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .ForerunnerPort{padding-right:0px;padding-left:0px;width:100%;}
     .ForerunnerPage{width:305px;}
     .SliderFullContainer{width: 305px;}
-    .SliderContainer{width: 305px; height: 409px; overflow:hidden; }
+    .SliderContainer{width: 305px; height:auto; }
+    .SliderFrame{padding:0}
 
    .ForerunnerTD{ display:inline-block;}
    .TD2{width:100%;}

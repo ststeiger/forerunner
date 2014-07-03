@@ -263,7 +263,7 @@ namespace Forerunner.SSRS.Manager
         }
 
         // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
-        private String GetUserName()
+        private String GetDomainUserName()
         {
             if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
             {
@@ -552,7 +552,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -610,7 +610,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -646,7 +646,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -680,11 +680,17 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public string GetUserName()
+        {
+            string userNameWithDomain = GetDomainUserName();
+            string[] stringTokens = userNameWithDomain.Split('\\');
+            return stringTokens[stringTokens.Length - 1];
+        }
         public string GetUserParameters(string path)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -735,7 +741,7 @@ namespace Forerunner.SSRS.Manager
         public string SaveUserSettings(string settings)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -770,7 +776,7 @@ namespace Forerunner.SSRS.Manager
         public string GetUserSettings()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -850,7 +856,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -917,7 +923,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -963,7 +969,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetRecentReports()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1020,7 +1026,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1170,7 +1176,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1488,7 +1494,7 @@ namespace Forerunner.SSRS.Manager
         private void SaveMobilizerSubscription(string path, string subscriptionID, string scheduleID)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 string IID = GetItemID(path);
@@ -1629,7 +1635,7 @@ namespace Forerunner.SSRS.Manager
         private void DeleteMoblizerSubscription(string subscriptionID)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1662,7 +1668,7 @@ namespace Forerunner.SSRS.Manager
             string IID = GetItemID(report);
 
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();

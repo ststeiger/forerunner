@@ -150,19 +150,19 @@ $(function () {
                 url,
                 subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    var is_exception = true;
+                    var isException = true;
                     try {
                         var exception = JSON.parse(data);
                         if (exception.Exception) {
                             data = exception;
                         }
                     } catch(e) {
-                        is_exception = false;
+                        isException = false;
                     }
-                    if (!is_exception && success && typeof (success) === "function") {
+                    if (!isException && success && typeof (success) === "function") {
                         success(data);
                     }
-                    if (is_exception && error && typeof (error) === "function") {
+                    if (isException && error && typeof (error) === "function") {
                         error(data);
                     }
                 },

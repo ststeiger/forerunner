@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2233,7 +2233,7 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
                     .done(function (data) {
-                        if (data.length == 0) {
+                        if (data.length === 0) {
                             me.editEmailSubscription(null);
                         } else if (data.length == 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
@@ -2571,8 +2571,8 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" && data.RDLExtension) {
-                           me.RDLExtProperty = data.RDLExtension;
+                       if (data && data !== "{}" ) {
+                           me.RDLExtProperty = data; 
                        }
                    },
                    async: false
@@ -7485,16 +7485,6 @@ $(function () {
                                 "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                             "</td>" +
                         "</tr>" +
-                        "<tr>" +
-                            "<td colspan='2'>" +
-                                "<label class='fr-us-label fr-us-separator'>" + userSettings.Email + "</label>" +
-                            "</td>" +
-                        "</tr>" +
-                        "<tr>" +
-                            "<td colspan='2'>" +
-                                "<input class='fr-us-email-id fr-us-textbox' autofocus='autofocus' name='Email' type='email'/>" +
-                            "</td>" +
-                        "</tr>" +
                     "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -7555,10 +7545,8 @@ $(function () {
             me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
 
             me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
-            me.$email = me.element.find(".fr-us-email-id");
             var responsiveUI = me.settings.responsiveUI;
             me.$resposiveUI.prop("checked", responsiveUI);
-            me.$email.val(me.settings.email);
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
@@ -7587,7 +7575,6 @@ $(function () {
         _saveSettings: function () {
             var me = this;
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.email = me.$email.val();
             me.settings.adminUI = me.$adminUI.prop("checked");
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);
@@ -15131,7 +15118,7 @@ $(function () {
             var $label = new $("<LABEL />");
             $label.attr("for", id);
             $label.append(label);
-            $retVal = me._createDropDownForValidValues(validValues);
+            var $retVal = me._createDropDownForValidValues(validValues);
             $retVal.attr("id", id);
             return $retVal;
         },
@@ -15145,8 +15132,8 @@ $(function () {
                 me._extensionSettings = data1;
                 me._initRenderFormat(data1[0]);
                 me._initSharedSchedule(data2[0]);
-                me.$includeReport.prop('checked', true);
-                me.$includeLink.prop('checked', true);
+                me.$includeReport.prop("checked", true);
+                me.$includeLink.prop("checked", true);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
@@ -15166,16 +15153,16 @@ $(function () {
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeReport.prop('checked', true);
+                                me.$includeReport.prop("checked", true);
                             } else {
-                                me.$includeReport.prop('checked', false);
+                                me.$includeReport.prop("checked", false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
                             if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.prop('checked', true);
+                                me.$includeLink.prop("checked", true);
                             } else {
-                                me.$includeLink.prop('checked', false);
+                                me.$includeLink.prop("checked", false);
                             }
                         }
                         if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
@@ -15185,21 +15172,21 @@ $(function () {
                     
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
-                    if (me.options.userSettings) {
-                        me.$to.attr("value", me.options.userSettings.email );
-                        me.$desc.val(locData.subscription.description.format(me.options.userSettings.email));
-                    }
+                    var userName = forerunner.ajax.getUserName();
+                    me.$to.attr("value", userName );
+                    me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
             }); 
         },
         _getSubscriptionInfo: function() {
             var me = this;
+            var i;
             if (!me._subscriptionData) {
-                me._subscriptionData = {}
+                me._subscriptionData = {};
                 me._subscriptionData.SubscriptionID = null;
                 me._subscriptionData.Report = me.options.reportPath;
-                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule = {};
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
                 me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
                 if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
@@ -15213,18 +15200,18 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(':checked') ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(':checked') ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(":checked") ? "True" : "False" });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(":checked") ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
                 me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
-                me._subscriptionData.SubscriptionSchedule = {}
+                me._subscriptionData.SubscriptionSchedule = {};
                 me._subscriptionData.SubscriptionSchedule.ScheduleID = me.$sharedSchedule.val();
                 me._subscriptionData.SubscriptionSchedule.MatchData = me._sharedSchedule[me.$sharedSchedule.val()].MatchData;
                 if (me._sharedSchedule[me.$sharedSchedule.val()].IsMobilizerSchedule)
                     me._subscriptionData.SubscriptionSchedule.IsMobilizerSchedule = true;
-                for (var i = 0; i < me._subscriptionData.ExtensionSettings.ParameterValues.length; i++) {
+                for (i = 0; i < me._subscriptionData.ExtensionSettings.ParameterValues.length; i++) {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
                     }
@@ -15235,10 +15222,10 @@ $(function () {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(':checked') ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(":checked") ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.is(':checked') ? "True" : "False";
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeReport.is(":checked") ? "True" : "False";
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "RenderFormat") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$renderFormat.val();
@@ -15248,7 +15235,7 @@ $(function () {
             if (me.options.paramList) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
-                for (var i = 0; i < paramListObj.ParamsList.length; i++) {
+                for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
@@ -15265,7 +15252,7 @@ $(function () {
             var me = this;
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
-                if (setting.Name == "RenderFormat") {
+                if (setting.Name === "RenderFormat") {
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
                     me.$renderFormat.val(setting.Value);
                     me.$renderFormat.addClass(".fr-email-renderformat");
@@ -15281,13 +15268,14 @@ $(function () {
         _initSharedSchedule:function(data) {
             var me = this;
             var validValues = [];
-            for (var i = 0; i < data.length; i++) {
+            var i;
+            for (i = 0; i < data.length; i++) {
                 validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                 me._sharedSchedule[data[i].ScheduleID] = data[i];
             }
             data = forerunner.config.getMobilizerSharedSchedule();
             if (data) {
-                for (var i = 0; i < data.length; i++) {
+                for (i = 0; i < data.length; i++) {
                     validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                     me._sharedSchedule[data[i].ScheduleID] = data[i];
                 }
@@ -15306,7 +15294,7 @@ $(function () {
         },
         _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
             var me = this;
-            $input = new $("<INPUT />");
+            var $input = new $("<INPUT />");
             $input.attr("type", type);
             if (placeholder)
                 $input.attr("placeholder", placeholder);
@@ -15317,7 +15305,7 @@ $(function () {
         },
         _createTextAreaWithPlaceHolder: function (listOfClasses, placeholder) {
             var me = this;
-            $input = new $("<TEXTAREA />");
+            var $input = new $("<TEXTAREA />");
             if (placeholder)
                 $input.attr("placeholder", placeholder);
             for (var i = 0; i < listOfClasses.length; i++) {
@@ -15327,13 +15315,13 @@ $(function () {
         },
         _createTableRow: function (label, $div2) {
             var me = this;
-            $row = new $("<TR/>");
-            $col1 = new $("<TD/>");
+            var $row = new $("<TR/>");
+            var $col1 = new $("<TD/>");
             $col1.addClass("fr-sub-left-col");
-            $col2 = new $("<TD/>");
+            var $col2 = new $("<TD/>");
             $col2.addClass("fr-sub-right-col");
-            $row.append($col1)
-            $row.append($col2)
+            $row.append($col1);
+            $row.append($col2);
             if (label)
                 $col1.append(label);
             if ($div2)
@@ -15371,8 +15359,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", "", "fr-core-dialog-button fr-email-create-id", "") :
-                forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-emailsubscription', locData.subscription.email, "fr-email-cancel", "");
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", "", "fr-core-dialog-button fr-email-create-id", "") :
+                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", "");
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -15383,26 +15371,29 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.description_placeholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.description_placeholder, me.$desc));
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.to_placeholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.to_placeholder, me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subject_placeholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.subject_placeholder, me.$subject));
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.descriptionPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.toPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subjectPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
             me.$includeReport = me._createCheckBox();
             me.$includeReport.addClass("fr-email-include");
             me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
             me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.comment_placeholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.comment_placeholder, me.$comment));
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
+            me.$to.prop("required", true);
+            me.$subject.prop("required", true);
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
+                me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();
                 me.$desc.parent().parent().hide();
                 me.$comment.parent().parent().hide();
             }
-            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission == true;
+            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission === true;
             if (!me._canEditComment) {
                 me.$comment.parent().parent().hide();
             }
@@ -15580,7 +15571,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', locData.subscription.manageSubscription, "fr-managesubscription-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", "");
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -15775,19 +15766,19 @@ $(function () {
                 url,
                 subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    var is_exception = true;
+                    var isException = true;
                     try {
                         var exception = JSON.parse(data);
                         if (exception.Exception) {
                             data = exception;
                         }
                     } catch(e) {
-                        is_exception = false;
+                        isException = false;
                     }
-                    if (!is_exception && success && typeof (success) === "function") {
+                    if (!isException && success && typeof (success) === "function") {
                         success(data);
                     }
-                    if (is_exception && error && typeof (error) === "function") {
+                    if (isException && error && typeof (error) === "function") {
                         error(data);
                     }
                 },

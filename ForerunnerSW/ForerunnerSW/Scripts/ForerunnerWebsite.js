@@ -162,6 +162,7 @@ function NextSlide(right,left) {
     left.goToNextSlide();
 
     $(left).parent().css("height", "");
+    $(left).css("height", "");
 }
 
 //var page = $(document).attr("title");

@@ -110,7 +110,7 @@ $(function () {
                     content: { name: name, tags: tagsList.join(",") }
                 };
 
-                me.options.$reportExplorer.reportExplorer("createSearchFolder", searchfolder);
+                me.options.$reportExplorer.reportExplorer("setSearchFolder", searchfolder);
                 me.closeDialog();
             }
         },

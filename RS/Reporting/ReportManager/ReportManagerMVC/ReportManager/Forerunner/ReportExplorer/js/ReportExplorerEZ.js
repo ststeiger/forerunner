@@ -117,8 +117,8 @@ $(function () {
 
             // Hook the router route event
             me.router.on(events.routerRoute(), function (event, data) {
-                me._onRoute.apply(me, arguments);
                 me._generateRouteLink.apply(me, arguments);
+                me._onRoute.apply(me, arguments);
             });
 
             if (!me.options.historyBack) {
@@ -203,6 +203,8 @@ $(function () {
             me._getLink(path, $linksection, 0);
 
             me._linkResize($linksection);
+
+            $linksection.show();
         },
         _getLink: function (path, $container, index) {
             var me = this,
@@ -356,15 +358,26 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
-            var routeLinkSectionHeight = layout.$linksection.outerHeight();//default to 18px
-            var toolpaneheaderheight = layout.$topdiv.height() - routeLinkSectionHeight; //equal toolbar height
+            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
+            
+            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
 
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;// window phone 7 get top property wrong
+            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
+
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$rightheaderspacer.height(toolpaneheaderheight);
-            layout.$leftheaderspacer.height(toolpaneheaderheight);
+
+            layout.$leftpanecontent.css({ top: topDivHeight });
+            layout.$rightpanecontent.css({ top: topDivHeight });
+
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             if (forerunner.device.isWindowsPhone()) {
                 layout.$leftpanecontent.css({ top: toolpaneheaderheight });
@@ -416,7 +429,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-
+                
                 me._setLeftRightPaneStyle();
 
             }, timeout);

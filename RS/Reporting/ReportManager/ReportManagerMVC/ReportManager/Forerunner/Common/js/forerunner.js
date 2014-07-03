@@ -1372,6 +1372,7 @@ $(function () {
             return permissionData;
         },
         _userSetting: null,
+        _userName: null,
         /**
          * Set user settings object
          *
@@ -1379,6 +1380,28 @@ $(function () {
          */
         setUserSetting: function (usetSetting) {
             this._userSetting = usetSetting;
+        },
+        /**
+        * Get user name.
+        */
+        getUserName: function (rsInstance) {
+            if (this._userName === null) {
+                var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetUserName";
+
+                if (rsInstance) {
+                    url += "?instance=" + rsInstance;
+                }
+
+                forerunner.ajax.ajax({
+                    url: url,
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+                        forerunner.ajax._userName = data;
+                    }
+                });
+            }
+            return this._userName;
         },
         /**
         * Get user settings object, will retrieve from database if not set.

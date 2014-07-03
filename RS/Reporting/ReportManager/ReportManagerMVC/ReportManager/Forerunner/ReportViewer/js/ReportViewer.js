@@ -1603,7 +1603,7 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
                     .done(function (data) {
-                        if (data.length == 0) {
+                        if (data.length === 0) {
                             me.editEmailSubscription(null);
                         } else if (data.length == 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
@@ -1941,8 +1941,8 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" && data.RDLExtension) {
-                           me.RDLExtProperty = data.RDLExtension;
+                       if (data && JSON.stringify(data) !== "{}" ) {
+                           me.RDLExtProperty = data; 
                        }
                    },
                    async: false
@@ -2477,12 +2477,10 @@ $(function () {
         },
         saveRDLExt: function (RDL) {
             var me = this;
-            var RDLObj = { RDLExtension: "" };
 
             try {
                 if (RDL.trim() !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
-                    RDLObj.RDLExtension = RDL;
                 }
                 else {
                     me.RDLExtProperty = {};
@@ -2499,7 +2497,7 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value: JSON.stringify(RDLObj),
+                       value: RDL,
                        path: me.reportPath,
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,

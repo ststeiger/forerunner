@@ -434,8 +434,9 @@ $(function () {
 
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
-            
-            me.$rdlInput.val(RDLExtension);
+
+            var RDL = JSON.stringify(RDLExtension);
+            me.$rdlInput.val(RDL);
         },
         _setRDLExtension: function () {
             var me = this;

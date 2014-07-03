@@ -213,6 +213,12 @@ namespace ReportManager.Controllers
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings()), "text/JSON");
         }
+
+        public HttpResponseMessage GetUserName(string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserName()), "text/JSON");
+        }
+
         [HttpGet]
         public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
         {

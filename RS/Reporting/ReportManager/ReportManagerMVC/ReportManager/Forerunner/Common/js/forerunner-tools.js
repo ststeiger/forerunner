@@ -1067,32 +1067,6 @@ $(function () {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
                 }
             }
-        },
-        /** @member */
-        itemRDLExt: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-button-RDLExt",
-            imageClass: "fr-icons24x24-rdlextension",
-            text: locData.toolPane.RDLExt,
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showRDLExtDialog");
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-button-RDLExt"]);
-                }
-            }
-        },
-        /** @member */
-        itemTags: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-tags",
-            imageClass: "fr-icons24x24-tags",
-            text: locData.toolPane.tags,
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showTags");
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-tags"]);
-                }
-            }
         }
     };
 
@@ -1540,19 +1514,6 @@ $(function () {
             }
         },
         /** @member */
-        itemTags: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-rm-item-tags",
-            imageClass: "fr-icons24x24-tags",
-            text: locData.toolPane.tags,
-            events: {
-                click: function (e) {
-                    e.data.$reportExplorer.reportExplorer("showTags");
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
-                }
-            }
-        },
-        /** @member */
         itemSearchFolder: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-searchfolder",
@@ -1697,6 +1658,19 @@ $(function () {
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                }
+            }
+        },
+        itemProperty: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-property",
+            imageClass: "fr-icons24x24-tags",
+            text: locData.properties.title,
+            events: {
+                click: function (e) {
+                    var $propertyDlg = e.data.me.options.$appContainer.find(".fr-properties-section");
+                    $propertyDlg.forerunnerProperties("openDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
                 }
             }
         }

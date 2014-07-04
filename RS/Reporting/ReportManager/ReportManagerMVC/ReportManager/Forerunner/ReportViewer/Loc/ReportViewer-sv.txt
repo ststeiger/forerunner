@@ -253,10 +253,10 @@
     "cancel":"Avbryt",
     "save":"Spara",
     "manageSubscription":"Hantera prenumeration",
-    "to_placeholder":"Till",
-    "subject_placeholder":"Ämne",
-    "description_placeholder":"Beskrivning",
-    "comment_placeholder":"Kommentar",
+    "toPlaceholder":"Till",
+    "subjectPlaceholder":"Ämne",
+    "descriptionPlaceholder":"Beskrivning",
+    "commentPlaceholder":"Kommentar",
     "subject":"@ REPORT avrättades på @ ExecutionTime",
     "description":"Skicka e-post till {0}",
     "includeLink":"Inkludera länk",
@@ -267,5 +267,11 @@
     "addNew":"Skapa",
     "deleteSubscription":"Radera",
     "deleteFailed":"Prenumerations deletion misslyckades"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

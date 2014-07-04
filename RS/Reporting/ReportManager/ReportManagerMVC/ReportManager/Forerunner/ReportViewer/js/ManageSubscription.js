@@ -80,7 +80,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-managesubscription', locData.subscription.manageSubscription, "fr-managesubscription-cancel", "Cancel");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", "");
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");

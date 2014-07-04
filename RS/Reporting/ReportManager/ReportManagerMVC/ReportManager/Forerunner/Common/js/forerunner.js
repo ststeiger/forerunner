@@ -143,6 +143,61 @@ jQuery.fn.extend({
             }
         });
     },
+    visible:function(partial,hidden,direction){
+        var $w = $(window);
+        if (this.length < 1)
+            return;
+
+        var $t        = this.length > 1 ? this.eq(0) : this,
+            t         = $t.get(0),
+            vpWidth   = $w.width(),
+            vpHeight  = $w.height(),
+            direction = (direction) ? direction : 'both',
+            clientSize = hidden === true ? t.offsetWidth * t.offsetHeight : true;
+
+        if (typeof t.getBoundingClientRect === 'function'){
+
+            // Use this native browser method, if available.
+            var rec = t.getBoundingClientRect(),
+                tViz = rec.top    >= 0 && rec.top    <  vpHeight,
+                bViz = rec.bottom >  0 && rec.bottom <= vpHeight,
+                lViz = rec.left   >= 0 && rec.left   <  vpWidth,
+                rViz = rec.right  >  0 && rec.right  <= vpWidth,
+                vVisible   = partial ? tViz || bViz : tViz && bViz,
+                hVisible   = partial ? lViz || lViz : lViz && rViz;
+
+            if(direction === 'both')
+                return clientSize && vVisible && hVisible;
+            else if(direction === 'vertical')
+                return clientSize && vVisible;
+            else if(direction === 'horizontal')
+                return clientSize && hVisible;
+        } else {
+
+            var viewTop         = $w.scrollTop(),
+                viewBottom      = viewTop + vpHeight,
+                viewLeft        = $w.scrollLeft(),
+                viewRight       = viewLeft + vpWidth,
+                offset          = $t.offset(),
+                _top            = offset.top,
+                _bottom         = _top + $t.height(),
+                _left           = offset.left,
+                _right          = _left + $t.width(),
+                compareTop      = partial === true ? _bottom : _top,
+                compareBottom   = partial === true ? _top : _bottom,
+                compareLeft     = partial === true ? _right : _left,
+                compareRight    = partial === true ? _left : _right;
+
+            if(direction === 'both')
+                return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop)) && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
+            else if(direction === 'vertical')
+                return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop));
+            else if(direction === 'horizontal')
+                return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
+        }
+    },
+
+
 });
 $(function () {
     /**
@@ -235,6 +290,8 @@ $(function () {
             forerunnerTags: "forerunnerTags",
             /** @constant */
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
+            /** @constant */
+            forerunnerProperties: "forerunnerProperties",
 
             /** @constant */
             namespace: "forerunner",
@@ -545,6 +602,18 @@ $(function () {
             tiff: "IMAGE",
             word: "WORDOPENXML"
         },
+        /**
+        * Forerunner property for report, folder, dashboard
+        *
+        * @readonly
+        * @enum {String}
+        */
+        properties: {
+            description: "description",
+            rdlExtension: "rdlExtension",
+            tags: "tags",
+            searchFolder: "searchFolder"
+        }
     };
 
     /**
@@ -1327,6 +1396,7 @@ $(function () {
             return permissionData;
         },
         _userSetting: null,
+        _userName: null,
         /**
          * Set user settings object
          *
@@ -1334,6 +1404,28 @@ $(function () {
          */
         setUserSetting: function (usetSetting) {
             this._userSetting = usetSetting;
+        },
+        /**
+        * Get user name.
+        */
+        getUserName: function (rsInstance) {
+            if (this._userName === null) {
+                var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetUserName";
+
+                if (rsInstance) {
+                    url += "?instance=" + rsInstance;
+                }
+
+                forerunner.ajax.ajax({
+                    url: url,
+                    dataType: "text",
+                    async: false,
+                    success: function (data) {
+                        forerunner.ajax._userName = data;
+                    }
+                });
+            }
+            return this._userName;
         },
         /**
         * Get user settings object, will retrieve from database if not set.
@@ -1547,6 +1639,7 @@ $(function () {
        */
         showModalDialog: function ($appContainer, target) {
             var me = this;
+
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
@@ -1650,15 +1743,17 @@ $(function () {
                                    title +
                                 "</div>" +
                             "</div>";
+
+            html += "<div class='fr-core-dialog-cancel-container'>" +
+                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                            "</div>";
+
             if (actionClass) {
                 html += "<div class='fr-core-dialog-action-container'>" +
                                 "<input type='button' class='fr-core-dialog-action " + actionClass + "' value='" + actionWord + "' />" +
                         "</div>";
             }
-            html +=    "<div class='fr-core-dialog-cancel-container'>" +
-                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
-                            "</div>" +
-                       "</div>";
+            html += "</div>";
             return html;
         },
         _timer: null,
@@ -1669,18 +1764,9 @@ $(function () {
                 clearTimeout(me._timer);
                 me._timer = null;
             }
-            me._timer = setTimeout(function () {
-                var target = event.data.target;
-                if (target && target.element.is(":visible")) {
-                    var uiDialog = target.element.parent();
-                    if (uiDialog.is(":visible")) {
-                        var clone = uiDialog.clone().appendTo(uiDialog.parent());
-                        var newTop = clone.css("position", "static").offset().top * -1;
-                        uiDialog.css("top", newTop);
-                        clone.remove();
-                    }
-                }
 
+            me._timer = setTimeout(function () {
+                event.data.target.element.dialog("resetPosition");
                 me._timer = null;
             }, 100);
         },

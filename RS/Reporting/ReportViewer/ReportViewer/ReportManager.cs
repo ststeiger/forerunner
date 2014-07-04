@@ -263,7 +263,7 @@ namespace Forerunner.SSRS.Manager
         }
 
         // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
-        private String GetUserName()
+        private String GetDomainUserName()
         {
             if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
             {
@@ -552,7 +552,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -610,7 +610,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -646,7 +646,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -680,11 +680,17 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public string GetUserName()
+        {
+            string userNameWithDomain = GetDomainUserName();
+            string[] stringTokens = userNameWithDomain.Split('\\');
+            return stringTokens[stringTokens.Length - 1];
+        }
         public string GetUserParameters(string path)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -735,7 +741,7 @@ namespace Forerunner.SSRS.Manager
         public string SaveUserSettings(string settings)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -770,7 +776,7 @@ namespace Forerunner.SSRS.Manager
         public string GetUserSettings()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -811,6 +817,16 @@ namespace Forerunner.SSRS.Manager
             return GetProperty(path,"ID");
 
         }
+        public string GetItemProperty(string path, string propName)
+        {
+            string property = GetProperty(path, propName);
+            if (string.IsNullOrEmpty(property))
+            {
+                property = "{}";
+            }
+
+            return property;
+        }
         public string GetProperty(string path,string propName)
         {
             Property[] props = new Property[1];
@@ -840,7 +856,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -907,7 +923,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -916,7 +932,7 @@ namespace Forerunner.SSRS.Manager
 
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -932,6 +948,8 @@ namespace Forerunner.SSRS.Manager
                             c.ModifiedDateSpecified = true;
                             c.Type = ItemTypeEnum.Report;
                             c.ID = SQLReader.GetGuid(3).ToString();
+                            c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                            c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                             list.Add(c);
                         }
                     }
@@ -951,14 +969,14 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetRecentReports()
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
                 List<CatalogItem> list = new List<CatalogItem>();
                 CatalogItem c;
 
-                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID  
+                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID,Description,MimeType  
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
@@ -986,6 +1004,8 @@ namespace Forerunner.SSRS.Manager
                     c.ModifiedDateSpecified = true;
                     c.Type = ItemTypeEnum.Report;
                     c.ID = SQLReader.GetGuid(3).ToString();
+                    c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                    c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                     list.Add(c);
 
                 }
@@ -1006,7 +1026,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1156,7 +1176,7 @@ namespace Forerunner.SSRS.Manager
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1474,7 +1494,7 @@ namespace Forerunner.SSRS.Manager
         private void SaveMobilizerSubscription(string path, string subscriptionID, string scheduleID)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 string IID = GetItemID(path);
@@ -1615,7 +1635,7 @@ namespace Forerunner.SSRS.Manager
         private void DeleteMoblizerSubscription(string subscriptionID)
         {
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1648,7 +1668,7 @@ namespace Forerunner.SSRS.Manager
             string IID = GetItemID(report);
 
             Impersonator impersonator = null;
-            string userName = GetUserName();
+            string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
@@ -1797,7 +1817,7 @@ namespace Forerunner.SSRS.Manager
                 string[] tagsList = tags.Split(',');
 
                 StringBuilder SQL = new StringBuilder();
-                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
 
                 for (int i = 1; i < tagsList.Length; i++)
                 {
@@ -1828,6 +1848,8 @@ namespace Forerunner.SSRS.Manager
                             item.ModifiedDateSpecified = true;
                             item.Type = (ItemTypeEnum)itemType;
                             item.ID = SQLReader.GetGuid(4).ToString();
+                            item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                            item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
                             list.Add(item);
                         }
                     }

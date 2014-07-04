@@ -113,7 +113,9 @@ $(function () {
                     $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
-                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
+                var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
+
+                $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
@@ -187,9 +189,6 @@ $(function () {
 
             $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
-
-            $dlg = me._findSection("fr-tag-section");
-            $dlg.forerunnerTags({ $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
 
             if (me.parameterModel) {
                 $dlg = me._findSection("fr-mps-section");

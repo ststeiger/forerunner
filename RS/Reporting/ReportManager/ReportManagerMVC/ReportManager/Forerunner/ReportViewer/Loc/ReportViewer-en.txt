@@ -128,10 +128,10 @@
 	"cancel": "Cancel",
 	"save": "Save",
 	"manageSubscription": "Manage Subscription",
-	"to_placeholder": "To",
-	"subject_placeholder": "Subject",
-	"description_placeholder": "Description",
-	"comment_placeholder": "Comment",
+	"toPlaceholder": "To",
+	"subjectPlaceholder": "Subject",
+	"descriptionPlaceholder": "Description",
+	"commentPlaceholder": "Comment",
 	"subject": "@ReportName was executed at @ExecutionTime",
 	"description": "Send email to {0}",
 	"includeLink": "Include link",
@@ -267,5 +267,11 @@
 	"prompt":"Separate tags with commas.",
 	"homePage":"Home Page",
 	"createTo":"Created under"
+  },
+  "properties":{
+	"title":"Properties",
+	"submit":"Submit",
+	"deleteItem":"Delete",
+	"description":"Description"
   }
 }

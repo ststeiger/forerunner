@@ -1582,7 +1582,7 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
                     .done(function (data) {
-                        if (data.length == 0) {
+                        if (data.length === 0) {
                             me.editEmailSubscription(null);
                         } else if (data.length == 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
@@ -1903,7 +1903,7 @@ $(function () {
 
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
             });
         },
         _getRDLExtProp: function () {
@@ -1920,7 +1920,9 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       me.RDLExtProperty = data;
+                       if (data && JSON.stringify(data) !== "{}" ) {
+                           me.RDLExtProperty = data; 
+                       }
                    },
                    async: false
                });
@@ -2446,19 +2448,6 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
-        showRDLExtDialog: function () {
-            var me = this;
-
-            var dlg = $(".fr-rdl-section",me.element).first();
-
-            if (dlg.length ===0) {
-                dlg = $("<div class='fr-rdl-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                me.options.$appContainer.append(dlg);
-                dlg.reportRDLExt({ reportViewer: me });
-            }
-            dlg.reportRDLExt("openDialog");
-            
-        },
         getRDLExt: function () {
             var me = this;
 
@@ -2469,13 +2458,15 @@ $(function () {
             var me = this;
 
             try {
-                if (RDL.trim() !== "")
+                if ($.trim(RDL) !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
-                else
+                }
+                else {
                     me.RDLExtProperty = {};
+                }
             }
             catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message,"Error Saving");                
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
                 return false;
             }
 
@@ -2485,7 +2476,7 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value:RDL,
+                       value: RDL,
                        path: me.reportPath,
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,
@@ -2494,12 +2485,12 @@ $(function () {
                        me._ReRender(true);
                        return true;
                    },
-                   fail: function (data){
+                   fail: function (data) {
                        return false;
                    },
                    async: false
                });
-            
+
 
         },
 
@@ -2511,17 +2502,7 @@ $(function () {
                 //console.log('remove settimeout');
             }
             me.autoRefreshID = null;
-        },
-        /**
-         * Show report tags dialog
-         *
-         * @function $.forerunner.reportViewer#showTags
-         */
-        showTags: function () {
-            var me = this;
-            me.$tagsDialog = me.options.$appContainer.find(".fr-tag-section");
-            me.$tagsDialog.forerunnerTags("openDialog", me.getReportPath());
-        },
+        },        
         /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
          *
@@ -2543,9 +2524,6 @@ $(function () {
                 me.$emailSub.emailSubscription("destroy");
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
-            }
-            if (me.$RDLExtDialog) {
-                me.$RDLExtDialog.reportRDLExt("destroy");
             }
             
             //console.log('report viewer destory is invoked')

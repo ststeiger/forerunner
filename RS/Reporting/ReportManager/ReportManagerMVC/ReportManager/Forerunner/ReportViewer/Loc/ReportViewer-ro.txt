@@ -253,10 +253,10 @@
     "cancel":"Anula",
     "save":"salva",
     "manageSubscription":"Gestionați abonament",
-    "to_placeholder":"la",
-    "subject_placeholder":"subiect",
-    "description_placeholder":"descriere",
-    "comment_placeholder":"comentariu",
+    "toPlaceholder":"la",
+    "subjectPlaceholder":"subiect",
+    "descriptionPlaceholder":"descriere",
+    "commentPlaceholder":"comentariu",
     "subject":"@ ReportName a fost executat la @ ExecutionTime",
     "description":"Trimite un email la {0}",
     "includeLink":"include link-",
@@ -267,5 +267,11 @@
     "addNew":"crea",
     "deleteSubscription":"șterge",
     "deleteFailed":"Ștergerea abonament eșuat"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

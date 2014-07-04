@@ -28,7 +28,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", "");
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -96,43 +96,26 @@ $(function () {
             var me = this;
 
             if (me.$form.valid()) {
-                var name = me.element.find(".fr-sf-foldername").val().trim();
-                var tags = me.element.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.element.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.element.find(".fr-sf-foldertags").val());
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = '"' + tagsList[i].trim() + '"';
+                    tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                 }
 
-                var searchfolder = { searchFolderName: name, content: { name: name, tags: tagsList.join(",") } };
+                var searchfolder = {
+                    searchFolderName: name,
+                    overwrite: false,
+                    content: { name: name, tags: tagsList.join(",") }
+                };
 
-                me.options.$reportExplorer.reportExplorer("createSearchFolder", searchfolder);
+                me.options.$reportExplorer.reportExplorer("setSearchFolder", searchfolder);
                 me.closeDialog();
             }
         },
         openDialog: function () {
             var me = this;
-            var content = me.options.$reportExplorer.reportExplorer("getSearchFolderContent");
-            if (content) {
-                content = JSON.parse(content);//replace(/"/g, '')
-                me.element.find(".fr-sf-foldername").val(content.name)
-                me.element.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
-            }
-            else {
-                me.element.find(".fr-sf-foldername").val("")
-                me.element.find(".fr-sf-foldertags").val("");
-            }
-
-            var path = me.options.$reportExplorer.reportExplorer("getCurrentPath");
-            var location;
-            if (path === "/") {
-                location = locData.searchFolder.homePage;
-            }
-            else {
-                location = path.substring(path.lastIndexOf("/") + 1);
-            }
-            location = locData.searchFolder.createTo + ": " + location;
-            me.element.find(".fr-sf-location").text(location);
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },

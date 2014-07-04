@@ -67,6 +67,10 @@
       <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Dynamic hidden cells.rdl</Name>
+      <FullPath>Dynamic hidden cells.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
       <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
     </ProjectItem>
@@ -242,7 +246,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

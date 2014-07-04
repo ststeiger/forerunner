@@ -150,13 +150,25 @@ $(function () {
                 url,
                 subscriptionInfo,
                 function (data, textStatus, jqXHR) {
-                    if (success && typeof (success) === "function") {
+                    var isException = true;
+                    try {
+                        var exception = JSON.parse(data);
+                        if (exception.Exception) {
+                            data = exception;
+                        }
+                    } catch(e) {
+                        isException = false;
+                    }
+                    if (!isException && success && typeof (success) === "function") {
                         success(data);
+                    }
+                    if (isException && error && typeof (error) === "function") {
+                        error(data);
                     }
                 },
                 function (data, textStatus, jqXHR) {
                     if (error && typeof (error) === "function") {
-                        error();
+                        error(data);
                     }
                 });
         },

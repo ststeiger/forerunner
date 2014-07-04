@@ -136,10 +136,15 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            me._render();
             
-            if (me.options.isFullScreen &&
-                (forerunner.device.isWindowsPhone() )) {
+            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
+            if (showBreadcrumb === "off") {
+                me.hideRouteLink();
+            }
+
+            me._render();
+
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() )) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.
@@ -178,6 +183,15 @@ $(function () {
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
+        },
+        /**
+         * Hide the breadcrumb section
+         *
+         * @function $.forerunner.reportViewerEZ#hideRouteLink
+         */
+        hideRouteLink: function(){
+            var me = this;
+            me.DefaultAppTemplate.$linksection.hide();
         },
         /**
          * Get report viewer page navigation

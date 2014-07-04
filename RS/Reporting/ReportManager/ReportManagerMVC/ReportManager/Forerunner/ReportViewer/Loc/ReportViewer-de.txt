@@ -253,10 +253,10 @@
     "cancel":"stornieren",
     "save":"sparen",
     "manageSubscription":"Abonnement verwalten",
-    "to_placeholder":"zu",
-    "subject_placeholder":"Thema",
-    "description_placeholder":"Beschreibung",
-    "comment_placeholder":"Kommentar",
+    "toPlaceholder":"zu",
+    "subjectPlaceholder":"Thema",
+    "descriptionPlaceholder":"Beschreibung",
+    "commentPlaceholder":"Kommentar",
     "subject":"@ Report wurde unter @ ExecutionTime ausgeführt",
     "description":"E-Mail an {0}",
     "includeLink":"Fügen Link",
@@ -267,5 +267,11 @@
     "addNew":"Schaffen ",
     "deleteSubscription":"Löschen ",
     "deleteFailed":"Abonnement Löschung gescheitert"
+  },
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   }
 }

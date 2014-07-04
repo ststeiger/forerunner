@@ -135,8 +135,6 @@ $(function () {
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
 
-            me._routeAction = null;
-            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -156,13 +154,10 @@ $(function () {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
                 me.transitionToReportManager(keyword, "search");
-                me._routeAction = "search";
             } else if (data.name === "transitionToFavorites") {
                 me.transitionToReportManager(null, "favorites");
-                me._routeAction = "favorite";
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
-                me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
@@ -200,13 +195,13 @@ $(function () {
             //clear prior route link
             $linksection.html("");
             var path = data.args[0];
-            me._getLink(path, $linksection, 0);
+            me._getLink(path, $linksection, 0, data.name);
 
             me._linkResize($linksection);
 
             $linksection.show();
         },
-        _getLink: function (path, $container, index) {
+        _getLink: function (path, $container, index, transitionName) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
@@ -222,25 +217,26 @@ $(function () {
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
 
-                if (me._routeAction) {
+                //show forerunner view name in breadcrumb, search/favorite/recent
+                switch (transitionName) {
+                    case "transitionToSearch":
+                        forerunerViewText = locData.toolbar.search;
+                        break;
+                    case "transitionToFavorites":
+                        forerunerViewText = locData.toolbar.favorites;
+                        break;
+                    case "transitionToRecent":
+                        forerunerViewText = locData.toolbar.recent;
+                        break;
+                }
+
+                if (forerunerViewText) {
                     $arrowTag = new $("<span/>");
                     $arrowTag.text(" > ");
                     $container.append($arrowTag);
                     //Add special handle for search, favorite, recent views
                     $forerunnerViewLink = new $("<span />");
                     $forerunnerViewLink.addClass("fr-location-link-last");
-
-                    switch (me._routeAction) {
-                        case "search":
-                            forerunerViewText = locData.toolbar.search;
-                            break;
-                        case "favorite":
-                            forerunerViewText = locData.toolbar.favorites;
-                            break;
-                        case "recent":
-                            forerunerViewText = locData.toolbar.recent;
-                            break;
-                    }
 
                     $forerunnerViewLink.text(forerunerViewText);
                     $container.append($forerunnerViewLink);
@@ -249,7 +245,7 @@ $(function () {
                 return;
             }
             else {
-                me._getLink(parentPath, $container);
+                me._getLink(parentPath, $container, index, transitionName);
             }
 
             $arrowTag = new $("<span/>");

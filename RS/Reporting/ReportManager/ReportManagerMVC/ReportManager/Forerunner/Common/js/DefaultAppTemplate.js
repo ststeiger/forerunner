@@ -703,13 +703,29 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
             }
         },
+        _isReportViewer: function () {
+            var me = this;
+            if (widgets.hasWidget(me.$container, widgets.reportViewerEZ)) {
+                var reportArea = me.$container.find(".fr-report-areacontainer");
+                if (reportArea.length === 1) {
+                    return true;
+                }
+            }
+            return false;
+        },
         setBackgroundLayout: function (e, data) {
             var me = this;
+            if (!me._isReportViewer()) {
+                // This is needed for the dashboard case. We cannot have the fr-render-bglayer set for
+                // the dashboard viewer. Each report will already be handled.
+                return;
+            }
+
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
             var containerWidth = me.$container.width();
             var topDivHeight = me.$topdiv.outerHeight();
-            
+
             if (reportArea.height() > (containerHeight - topDivHeight) || reportArea.width() > containerWidth) {
                 $(".fr-render-bglayer", me.$container).css("position", "absolute").
                     css("height", Math.max(reportArea.height(), (containerHeight - topDivHeight)))

@@ -6376,12 +6376,14 @@ $(function () {
                 //if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
                 //we should used visible area to indicate full screen mode
                 if (forerunner.device.isSmall(me.options.$appContainer)) {
+                    me.element.addClass("fr-nav-container-full");
                     $container.addClass("fr-nav-container-full");
                     $items.addClass("fr-nav-item-full");
                     $spacer.addClass("fr-nav-li-spacer-full");
                     $closeButton.addClass("fr-nav-close-container-full");
                 }
                 else {
+                    me.element.removeClass("fr-nav-container-full");
                     $container.removeClass("fr-nav-container-full");
                     $items.removeClass("fr-nav-item-full");
                     $spacer.removeClass("fr-nav-li-spacer-full");

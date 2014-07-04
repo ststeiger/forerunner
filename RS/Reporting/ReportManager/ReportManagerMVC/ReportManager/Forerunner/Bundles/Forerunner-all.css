@@ -916,13 +916,13 @@ table, td, tr div {
 
 @media only screen and (max-width : 479px) {
     .fr-properties-container {
-        width:350px;
+        width:320px;
     }
     .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text {
-        width:330px;
+        width:300px;
     }
     .fr-properties-container .fr-tag-text, .fr-properties-container .fr-sf-text {
-        width:240px;
+        width:210px;
     }
     .fr-properties-section .fr-properties-container .fr-property-container {
         padding:12px 4px;

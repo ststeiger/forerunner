@@ -2479,7 +2479,7 @@ $(function () {
             var me = this;
 
             try {
-                if (RDL.trim() !== "") {
+                if ($.trim(RDL) !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
                 }
                 else {

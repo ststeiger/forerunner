@@ -3109,7 +3109,7 @@ $(function () {
             var me = this;
 
             try {
-                if (RDL.trim() !== "") {
+                if ($.trim(RDL) !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
                 }
                 else {
@@ -5416,13 +5416,13 @@ $(function () {
         _saveTags: function () {
             var me = this;
 
-            var tags = me.$tagInput.val().trim(),
+            var tags = $.trim(me.$tagInput.val()),
                 tagList;
 
             if (tags !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
-                    tagList[i] = '"' + tagList[i].trim() + '"';
+                    tagList[i] = '"' + $.trim(tagList[i]) + '"';
                 }
                 tags = tagList.join(",");
                 me._tags = tags;
@@ -5461,7 +5461,7 @@ $(function () {
         _setDescription: function () {
             var me = this;
             try {
-                var descriptionInput = me.$desInput.val().trim();
+                var descriptionInput = $.trim(me.$desInput.val());
 
                 if (descriptionInput !== me._description) {
                     var description = forerunner.helper.htmlEncode(descriptionInput);
@@ -5574,15 +5574,15 @@ $(function () {
             var me = this;
 
             if (me.$sfForm.valid()) {
-                var name = me.$sfForm.find(".fr-sf-foldername").val().trim();
-                var tags = me.$sfForm.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.$sfForm.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
                 var priorSearchFolder = JSON.parse(me._searchFolder);
 
                 if (name !== priorSearchFolder.name || tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");
 
                     for (var i = 0; i < tagsList.length; i++) {
-                        tagsList[i] = '"' + tagsList[i].trim() + '"';
+                        tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                     }
 
                     var searchfolder = {
@@ -7693,12 +7693,12 @@ $(function () {
             var me = this;
 
             if (me.$form.valid()) {
-                var name = me.element.find(".fr-sf-foldername").val().trim();
-                var tags = me.element.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.element.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.element.find(".fr-sf-foldertags").val());
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = '"' + tagsList[i].trim() + '"';
+                    tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                 }
 
                 var searchfolder = {

@@ -702,10 +702,6 @@ $(function () {
         },
 
         _destroy: function () {
-            var me = this;
-            //This needs to be changed to only remove the view function
-            //Baotong update it on 22-05-2014
-            $(window).off("resize", me._onWindowResize);
         },
 
         // Constructor
@@ -767,9 +763,6 @@ $(function () {
             //setup orientation change
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
-
-            //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", { me: me }, me._onWindowResize);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -1001,12 +994,12 @@ $(function () {
                 
             }
         },
-        //Wrapper function, used to resigter window resize event
-        _onWindowResize: function (event) {
-            var me = event.data.me;
-            me._windowResize.call(me);
-        },
-        _windowResize: function () {
+        /**
+         * windowResize will relayout the report
+         *
+         * @function $.forerunner.reportViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
@@ -1014,20 +1007,6 @@ $(function () {
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-        },
-        /**
-         * Relayout the report
-         *
-         * @function $.forerunner.reportViewer#reLayout
-         *
-         * Normally this would not need to be called. It is needed when a
-         * report is rendered into a container (<div>) and the size of the
-         * container is defined by the report itself. In that case call this
-         * function after the report is finished loading.
-         */
-        reLayout: function () {
-            var me = this;
-            me._windowResize();
         },
         _removeCSS: function () {
             var me = this;
@@ -4272,7 +4251,7 @@ $(function () {
         var me = this;
         me.options = {
             $container: null,
-            isFullScreen: true,
+            isFullScreen: true
         };
 
         // Merge options with the default settings
@@ -4503,10 +4482,6 @@ $(function () {
                 }
             });
 
-            $(window).on("resize", function () {
-                me._windowResizeHandler.call(me)
-            });
-
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on("scroll", function () {
                     me._updateTopDiv(me);
@@ -4530,21 +4505,11 @@ $(function () {
                 });
             }
         },
-        _windowResizeTimer: null,
-        _windowResizeHandler: function () {
+        windowResize: function () {
             var me = this;
-            //handle window resize event when the call interval is more than 100 milliseconds
-            //this will optimize performance when resize action rapid succession to make it only execute one time
-            if (me._windowResizeTimer) {
-                clearTimeout(me._windowResizeTimer);
-                me._windowResizeTimer = null;
-            }
-            
-            me._windowResizeTimer = setTimeout(function () {
-                me.ResetSize();
-                me._updateTopDiv(me);
-                me.setBackgroundLayout();
-            }, 100);
+            me.ResetSize();
+            me._updateTopDiv(me);
+            me.setBackgroundLayout();
         },
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
@@ -4733,7 +4698,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                me.setBackgroundLayout();
+                me.setBackgroundLayout.apply(me, arguments);
             });
 
             //  Just in case it is hidden
@@ -4969,7 +4934,7 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
             }
         },
-        setBackgroundLayout: function () {
+        setBackgroundLayout: function (e, data) {
             var me = this;
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
@@ -13578,6 +13543,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var helper = forerunner.helper;
     
      /**
      * Widget used to view a report
@@ -13593,6 +13559,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13614,7 +13581,8 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            toolbarConfigOption: constants.toolbarConfigOption.full
+            toolbarConfigOption: constants.toolbarConfigOption.full,
+            handleWindowResize: true
         },
         _render: function () {
             var me = this;
@@ -13682,12 +13650,25 @@ $(function () {
 
             me.DefaultAppTemplate.bindViewerEvents();
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
@@ -13718,6 +13699,20 @@ $(function () {
                         me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
                     }
                 }
+            }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to true. It
+         * handles the updating of the viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.reportViewerEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            var $reportViewer = me.getReportViewer();
+            $reportViewer.reportViewer("windowResize");
+            if (me.options.DefaultAppTemplate === null) {
+                me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
         },
         /**
@@ -14145,6 +14140,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
@@ -14528,7 +14524,8 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -14556,7 +14553,7 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                var $dashboardEZ = layout.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -14564,7 +14561,8 @@ $(function () {
                     enableEdit: enableEdit,
                     path: path,
                     rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -14596,9 +14594,28 @@ $(function () {
             var me = this;
             me._transitionToDashboard(path, true);
         },
+        _create: function () {
+            var me = this;
+            $(window).on("resize", function (event, data) {
+                helper.delay(me, function () {
+                    var layout = me.DefaultAppTemplate;
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
+                        layout.$mainviewport.dashboardEZ("windowResize");
+                    }
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
+                        layout.$mainviewport.reportViewerEZ("windowResize");
+                    }
+
+                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+                });
+            });
+        },
         _init: function () {
             var me = this;
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                $container: me.element,
+                isFullScreen: me.isFullScreen
+            }).render();
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
@@ -21593,6 +21610,7 @@ $(function () {
     var dtb = forerunner.ssr.tools.dashboardToolbar;
     var dtp = forerunner.ssr.tools.dashboardToolPane;
     var tg = forerunner.ssr.tools.groups;
+    var helper = forerunner.helper;
 
     /**
     * Widget used to create and edit dashboards
@@ -21623,7 +21641,8 @@ $(function () {
             enableEdit: true,
             rsInstance: null,
             userSettings: null,
-            path: null
+            path: null,
+            handleWindowResize: true
         },
         /**
          * Returns the user settings
@@ -21651,12 +21670,40 @@ $(function () {
             var $dashboardEditor = me.getDashboardEditor();
             $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to false. It
+         * handles the updating of the dashboard viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.dashboardEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            var $dashboardEditor = me.getDashboardEditor();
+            $dashboardEditor.dashboardEditor("windowResize");
+
+            if (me.options.DefaultAppTemplate === null) {
+                me.layout.windowResize.call(me.layout);
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.layout = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.layout = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
@@ -21672,7 +21719,8 @@ $(function () {
                 $appContainer: me.layout.$container,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                handleWindowResize: false
             });
 
             me.$toolbar = me.layout.$mainheadersection;
@@ -22045,10 +22093,6 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
-
-            $(window).on("resize", function (e, data) {
-                me._onWindowResize.apply(me, arguments);
-            });
         },
         _setWidths: function (width) {
             var updated = false;
@@ -22058,59 +22102,61 @@ $(function () {
                     item.css("width", width);
                 }
             });
+
             return updated;
         },
-        _timerId: null,
-        _onWindowResize: function () {
+        /**
+         * windowResize will change the report containers to: 1) be responsive
+         * (I.e., inline-block) as well as 2) resize the containers if the window
+         * width is less than the container width,
+         *
+         * @function $.forerunner.dashboardViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
-
-            // If we get back here before the timer fires
-            if (me._timerId) {
-                clearTimeout(me._timerId);
-                me._timerId = null;
-            }
-
             var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
 
-            me._timerId = setTimeout(function () {
-                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
-                var updated = false;
-                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                    var $item = $(item);
-                    var currentStyle = $item.css("display");
+            var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+            var updated = false;
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+                var currentStyle = $item.css("display");
 
-                    if (isResponsive) {
-                        // Set the dispay on the report container element to inline-block
-                        if (currentStyle !== "inline-block") {
-                            $item.css("display", "inline-block");
-                            updated = true;
-                        }
+                if (isResponsive) {
+                    // Set the dispay on the report container element to inline-block
+                    if (currentStyle !== "inline-block") {
+                        $item.css("display", "inline-block");
+                        updated = true;
+                    }
 
-                        if (me.element.width() < $item.width()) {
-                            // Set the width of the report <div> to the viewer width
-                            updated = me._setWidths(me.element.width(), $item);
-                        } else {
-                            // Remove any explicit width
-                            updated = me._setWidths("", $item);
-                        }
+                    if (me.element.width() < $item.width()) {
+                        // Set the width of the report <div> to the viewer width
+                        updated = me._setWidths(me.element.width(), $item);
                     } else {
                         // Remove any explicit width
                         updated = me._setWidths("", $item);
-
-                        if (currentStyle) {
-                            // Remove any explicitly set display and default back to whatever the template designer wanted
-                            $item.css("display", "");
-                            updated = true;
-                        }
                     }
-                });
-                if (updated) {
-                    // Need this to refresh the viewer to see the changes
-                    me.element.hide().show(0);
+                } else {
+                    if (currentStyle) {
+                        // Remove any explicitly set display and default back to whatever the template designer wanted
+                        $item.css("display", "");
+                        updated = true;
+                    }
+
+                    // Remove any explicit width
+                    updated = me._setWidths("", $item);
                 }
-                me._timerId = null;
-            }, 100);
+
+                if (updated && widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                    // Update the viewer size
+                    $item.reportViewerEZ("windowResize");
+                }
+            });
+            if (updated) {
+                // Need the hide and show to refresh the viewer to see the changes
+                me.element.hide().show(0);
+            }
         },
         _init: function () {
             var me = this;
@@ -22180,6 +22226,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    handleWindowResize: false,
                     userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
@@ -22210,7 +22257,7 @@ $(function () {
         },
         _onAfterReportLoaded: function (e, data) {
             if (data.$reportViewer) {
-                data.$reportViewer.reportViewer("reLayout");
+                data.$reportViewer.reportViewer("windowResize");
             }
         },
         _loadResource: function (path) {

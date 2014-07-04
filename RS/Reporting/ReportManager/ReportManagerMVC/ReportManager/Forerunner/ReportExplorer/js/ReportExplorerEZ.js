@@ -13,6 +13,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
@@ -396,7 +397,8 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -424,7 +426,7 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                var $dashboardEZ = layout.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -432,7 +434,8 @@ $(function () {
                     enableEdit: enableEdit,
                     path: path,
                     rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -464,9 +467,28 @@ $(function () {
             var me = this;
             me._transitionToDashboard(path, true);
         },
+        _create: function () {
+            var me = this;
+            $(window).on("resize", function (event, data) {
+                helper.delay(me, function () {
+                    var layout = me.DefaultAppTemplate;
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
+                        layout.$mainviewport.dashboardEZ("windowResize");
+                    }
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
+                        layout.$mainviewport.reportViewerEZ("windowResize");
+                    }
+
+                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+                });
+            });
+        },
         _init: function () {
             var me = this;
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                $container: me.element,
+                isFullScreen: me.isFullScreen
+            }).render();
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();

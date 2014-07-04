@@ -17,7 +17,7 @@ $(function () {
         var me = this;
         me.options = {
             $container: null,
-            isFullScreen: true,
+            isFullScreen: true
         };
 
         // Merge options with the default settings
@@ -248,10 +248,6 @@ $(function () {
                 }
             });
 
-            $(window).on("resize", function () {
-                me._windowResizeHandler.call(me)
-            });
-
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on("scroll", function () {
                     me._updateTopDiv(me);
@@ -275,21 +271,11 @@ $(function () {
                 });
             }
         },
-        _windowResizeTimer: null,
-        _windowResizeHandler: function () {
+        windowResize: function () {
             var me = this;
-            //handle window resize event when the call interval is more than 100 milliseconds
-            //this will optimize performance when resize action rapid succession to make it only execute one time
-            if (me._windowResizeTimer) {
-                clearTimeout(me._windowResizeTimer);
-                me._windowResizeTimer = null;
-            }
-            
-            me._windowResizeTimer = setTimeout(function () {
-                me.ResetSize();
-                me._updateTopDiv(me);
-                me.setBackgroundLayout();
-            }, 100);
+            me.ResetSize();
+            me._updateTopDiv(me);
+            me.setBackgroundLayout();
         },
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
@@ -478,7 +464,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                me.setBackgroundLayout();
+                me.setBackgroundLayout.apply(me, arguments);
             });
 
             //  Just in case it is hidden
@@ -714,7 +700,7 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
             }
         },
-        setBackgroundLayout: function () {
+        setBackgroundLayout: function (e, data) {
             var me = this;
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();

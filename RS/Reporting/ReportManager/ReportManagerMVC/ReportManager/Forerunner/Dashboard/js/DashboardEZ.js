@@ -9,6 +9,7 @@ $(function () {
     var dtb = forerunner.ssr.tools.dashboardToolbar;
     var dtp = forerunner.ssr.tools.dashboardToolPane;
     var tg = forerunner.ssr.tools.groups;
+    var helper = forerunner.helper;
 
     /**
     * Widget used to create and edit dashboards
@@ -39,7 +40,8 @@ $(function () {
             enableEdit: true,
             rsInstance: null,
             userSettings: null,
-            path: null
+            path: null,
+            handleWindowResize: true
         },
         /**
          * Returns the user settings
@@ -67,12 +69,40 @@ $(function () {
             var $dashboardEditor = me.getDashboardEditor();
             $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to false. It
+         * handles the updating of the dashboard viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.dashboardEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            var $dashboardEditor = me.getDashboardEditor();
+            $dashboardEditor.dashboardEditor("windowResize");
+
+            if (me.options.DefaultAppTemplate === null) {
+                me.layout.windowResize.call(me.layout);
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.layout = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.layout = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
@@ -88,7 +118,8 @@ $(function () {
                 $appContainer: me.layout.$container,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                handleWindowResize: false
             });
 
             me.$toolbar = me.layout.$mainheadersection;

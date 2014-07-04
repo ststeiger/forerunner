@@ -938,6 +938,30 @@ $(function () {
 
             return path.slice(lastIndex + 1);
         },
+        /**
+         * Delayes the execution of the given function by n
+         * milliseconds.
+         *
+         * @param {Object} me - this pointer of the calling object
+         * @param {Function} func - Function to call when time expires
+         * @param {integer} n - Optional, Default 100, timeout milliseconds
+         */
+        delay: function (me, func, n) {
+            if (!n) {
+                n = 100;
+            }
+
+            // If we get back here before the timer fires
+            if (me._delayTimerId) {
+                clearTimeout(me._delayTimerId);
+                me._delayTimerId = null;
+            }
+
+            me._delayTimerId = setTimeout(function () {
+                func();
+                me._delayTimerId = null;
+            }, n);
+        }
     },
         
 

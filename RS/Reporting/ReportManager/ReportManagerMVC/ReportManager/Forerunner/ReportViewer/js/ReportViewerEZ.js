@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var helper = forerunner.helper;
     
      /**
      * Widget used to view a report
@@ -22,6 +23,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -43,7 +45,8 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            toolbarConfigOption: constants.toolbarConfigOption.full
+            toolbarConfigOption: constants.toolbarConfigOption.full,
+            handleWindowResize: true
         },
         _render: function () {
             var me = this;
@@ -111,12 +114,25 @@ $(function () {
 
             me.DefaultAppTemplate.bindViewerEvents();
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
@@ -152,6 +168,20 @@ $(function () {
                         me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
                     }
                 }
+            }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to true. It
+         * handles the updating of the viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.reportViewerEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            var $reportViewer = me.getReportViewer();
+            $reportViewer.reportViewer("windowResize");
+            if (me.options.DefaultAppTemplate === null) {
+                me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
         },
         /**

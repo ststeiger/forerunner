@@ -43,10 +43,6 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
-
-            $(window).on("resize", function (e, data) {
-                me._onWindowResize.apply(me, arguments);
-            });
         },
         _setWidths: function (width) {
             var updated = false;
@@ -56,59 +52,61 @@ $(function () {
                     item.css("width", width);
                 }
             });
+
             return updated;
         },
-        _timerId: null,
-        _onWindowResize: function () {
+        /**
+         * windowResize will change the report containers to: 1) be responsive
+         * (I.e., inline-block) as well as 2) resize the containers if the window
+         * width is less than the container width,
+         *
+         * @function $.forerunner.dashboardViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
-
-            // If we get back here before the timer fires
-            if (me._timerId) {
-                clearTimeout(me._timerId);
-                me._timerId = null;
-            }
-
             var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
 
-            me._timerId = setTimeout(function () {
-                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
-                var updated = false;
-                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                    var $item = $(item);
-                    var currentStyle = $item.css("display");
+            var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+            var updated = false;
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+                var currentStyle = $item.css("display");
 
-                    if (isResponsive) {
-                        // Set the dispay on the report container element to inline-block
-                        if (currentStyle !== "inline-block") {
-                            $item.css("display", "inline-block");
-                            updated = true;
-                        }
+                if (isResponsive) {
+                    // Set the dispay on the report container element to inline-block
+                    if (currentStyle !== "inline-block") {
+                        $item.css("display", "inline-block");
+                        updated = true;
+                    }
 
-                        if (me.element.width() < $item.width()) {
-                            // Set the width of the report <div> to the viewer width
-                            updated = me._setWidths(me.element.width(), $item);
-                        } else {
-                            // Remove any explicit width
-                            updated = me._setWidths("", $item);
-                        }
+                    if (me.element.width() < $item.width()) {
+                        // Set the width of the report <div> to the viewer width
+                        updated = me._setWidths(me.element.width(), $item);
                     } else {
                         // Remove any explicit width
                         updated = me._setWidths("", $item);
-
-                        if (currentStyle) {
-                            // Remove any explicitly set display and default back to whatever the template designer wanted
-                            $item.css("display", "");
-                            updated = true;
-                        }
                     }
-                });
-                if (updated) {
-                    // Need this to refresh the viewer to see the changes
-                    me.element.hide().show(0);
+                } else {
+                    if (currentStyle) {
+                        // Remove any explicitly set display and default back to whatever the template designer wanted
+                        $item.css("display", "");
+                        updated = true;
+                    }
+
+                    // Remove any explicit width
+                    updated = me._setWidths("", $item);
                 }
-                me._timerId = null;
-            }, 100);
+
+                if (updated && widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                    // Update the viewer size
+                    $item.reportViewerEZ("windowResize");
+                }
+            });
+            if (updated) {
+                // Need the hide and show to refresh the viewer to see the changes
+                me.element.hide().show(0);
+            }
         },
         _init: function () {
             var me = this;
@@ -178,6 +176,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    handleWindowResize: false,
                     userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
@@ -208,7 +207,7 @@ $(function () {
         },
         _onAfterReportLoaded: function (e, data) {
             if (data.$reportViewer) {
-                data.$reportViewer.reportViewer("reLayout");
+                data.$reportViewer.reportViewer("windowResize");
             }
         },
         _loadResource: function (path) {

@@ -3305,7 +3305,7 @@ $(function () {
 
 
             // Set the current set and trigger the model changed event
-            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+            if (lastAddedSetId && lastAddedSetId !== me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
 
@@ -7601,7 +7601,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", "");
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -14515,7 +14515,7 @@ $(function () {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
                 me.transitionToEditDashboard(path);
-            } else if (data.name == "transitionToOpenDashboard") {
+            } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
         },
@@ -14987,7 +14987,7 @@ $(function () {
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-template-name")
+            me.$select = me.element.find(".fr-cdb-template-name");
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
@@ -22748,7 +22748,7 @@ $(function () {
                 $item.height("");
             } else {
                 // Put in a default height until a report is loaded
-                $item.height("480px");
+                $item.height("320px");
             }
 
             // Create the button

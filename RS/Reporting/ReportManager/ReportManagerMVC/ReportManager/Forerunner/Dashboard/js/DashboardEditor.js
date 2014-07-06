@@ -155,7 +155,7 @@ $(function () {
                 $item.height("");
             } else {
                 // Put in a default height until a report is loaded
-                $item.height("480px");
+                $item.height("320px");
             }
 
             // Create the button

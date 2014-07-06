@@ -45,7 +45,7 @@ $(function () {
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-template-name")
+            me.$select = me.element.find(".fr-cdb-template-name");
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;

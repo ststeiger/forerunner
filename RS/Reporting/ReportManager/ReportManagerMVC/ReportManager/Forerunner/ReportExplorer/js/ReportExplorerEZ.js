@@ -163,7 +163,7 @@ $(function () {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
                 me.transitionToEditDashboard(path);
-            } else if (data.name == "transitionToOpenDashboard") {
+            } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
         },

@@ -14954,6 +14954,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
     var ssr = forerunner.ssr;
@@ -15106,7 +15107,7 @@ $(function () {
             if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = me.options.parentFolder + dashboardName;
+                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();

@@ -990,8 +990,34 @@ $(function () {
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
-            
+
             return path.slice(0, lastIndex);
+        },
+        /**
+         * Returns true if str ends with suffix
+         *
+         * @member
+         */
+        endsWith: function (str, suffix) {
+            return !(str.indexOf(suffix, str.length - suffix.length));
+        },
+        /**
+         * Combines the give folder and name infor a forward slash separated
+         * path. Note that this function can combine multiple path parts.
+         *
+         * @member
+         */
+        combinePaths: function (folder, name) {
+            var path = folder;
+            for (var index = 1; index < arguments.length; index++) {
+                if (this.endsWith(path, "/")) {
+                    path = path + arguments[index];
+                } else {
+                    path = path + "/" + arguments[index];
+                }
+            }
+            path = path.replace("//", "/");
+            return path;
         },
         /**
          * Get current item name by the given path

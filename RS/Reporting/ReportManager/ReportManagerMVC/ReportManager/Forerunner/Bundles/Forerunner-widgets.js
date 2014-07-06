@@ -22717,9 +22717,8 @@ $(function () {
                 me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
+                me._save(true);
             }, timeout);
-
-            me._save(true);
         },
         _showUI: function (show) {
             var me = this;

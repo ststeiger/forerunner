@@ -22543,7 +22543,7 @@ $(function () {
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
                     data.reportId = reportId;
-                    data.$reportViewer = $reportViewer;
+                    data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
@@ -22564,8 +22564,8 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            if (data.$reportViewer) {
-                data.$reportViewer.reportViewer("windowResize");
+            if (data.$reportViewerEZ) {
+                data.$reportViewerEZ.reportViewerEZ("windowResize");
             }
         },
         _loadResource: function (path) {

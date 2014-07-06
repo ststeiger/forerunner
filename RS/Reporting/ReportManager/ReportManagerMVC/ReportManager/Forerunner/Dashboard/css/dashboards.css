@@ -1,4 +1,4 @@
-﻿.fr-dashboard { width: 100%; }
+﻿.fr-dashboard { width: 100%; background-color: rgb(210, 223, 237); }
 .fr-dashboard-full-width-table { width: 100%; }
 
 .fr-dashboard-report-container { display: table-cell; vertical-align: top; min-width:320px; min-height:320px; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
@@ -8,16 +8,16 @@
 /* Add this style if you want to remove the UI for changing the size of a dashboard report slot */
 .fr-dashboard-size-not-user-changable { }
 
-.fr-2up1down { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-2up1down { width: 100%; }
   .fr-2up1down #Report1 { }
   .fr-2up1down #Report2 { }
   .fr-2up1down #Report3 { }
 
-.fr-sidebyside { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-sidebyside { width: 100%; }
   .fr-sidebyside #Report1 { }
   .fr-sidebyside #Report2 { }
 
-.fr-2up2down { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-2up2down { width: 100%; }
   .fr-2up2down #Report1 { }
   .fr-2up2down #Report2 { }
   .fr-2up2down #Report3 { }

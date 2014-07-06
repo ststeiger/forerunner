@@ -3888,7 +3888,7 @@ $(function () {
                 }
             });
         },
-        onWindowResize: function () {
+        windowResize: function () {
             var me = this;
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
             var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
@@ -5741,6 +5741,9 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -5828,11 +5831,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()
@@ -6529,11 +6527,6 @@ $(function () {
         },
 
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         }
     });  // $.widget
 });  // function()
@@ -13928,11 +13921,15 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $reportViewer = me.getReportViewer();
-            $reportViewer.reportViewer("windowResize");
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
+            me.getReportViewer().reportViewer("windowResize");
+            helper.delay(me, function () {
+                // This needs to be delayed for the dashboard case where the size of the report
+                // will dictate the size of the report area and therefore the size of the toolbar
+                me.getToolbar().toolbar("windowResize");
+            }, 100, "_toolbarDelayId");
         },
         /**
          * Hide the breadcrumb section
@@ -14857,6 +14854,11 @@ $(function () {
                     }
 
                     me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+
+                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                    }
                 });
             });
         },
@@ -21979,12 +21981,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $dashboardEditor = me.getDashboardEditor();
-            $dashboardEditor.dashboardEditor("windowResize");
-
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
+
+            me.getDashboardEditor().dashboardEditor("windowResize");
+            me.getDashboardToolbar().dashboardToolbar("windowResize");
         },
         _init: function () {
             var me = this;
@@ -22100,11 +22102,11 @@ $(function () {
         /**
          * Get report viewer toolbar
          *
-         * @function $.forerunner.dashboardEZ#getToolbar
+         * @function $.forerunner.dashboardEZ#getDashboardToolbar
          * 
          * @return {Object} - toolbar jQuery object
          */
-        getToolbar: function () {
+        getDashboardToolbar: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$mainheadersection;
@@ -22115,11 +22117,11 @@ $(function () {
         /**
          * Get report viewer toolpane
          *
-         * @function $.forerunner.dashboardEZ#getToolPane
+         * @function $.forerunner.dashboardEZ#getDashboardToolPane
          * 
          * @return {Object} - toolpane jQuery object
          */
-        getToolPane: function () {
+        getDashboardToolPane: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$leftpanecontent;
@@ -22234,10 +22236,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()

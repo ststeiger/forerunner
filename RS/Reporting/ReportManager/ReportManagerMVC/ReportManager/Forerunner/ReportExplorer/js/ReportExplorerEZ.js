@@ -502,6 +502,11 @@ $(function () {
                     }
 
                     me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+
+                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                    }
                 });
             });
         },

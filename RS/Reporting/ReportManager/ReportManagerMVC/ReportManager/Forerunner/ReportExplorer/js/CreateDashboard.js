@@ -49,8 +49,8 @@ $(function () {
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
-            for (item in templates) {
-                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+            for (var key in templates) {
+                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
                 me.$select.append($option);
             }
         },

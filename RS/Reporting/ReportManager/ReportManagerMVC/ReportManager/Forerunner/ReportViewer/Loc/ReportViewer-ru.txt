@@ -269,9 +269,9 @@
     "deleteFailed":"Подписка Ошибка удаления"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"свойства",
+    "submit":"представлять",
+    "deleteItem":"удалять",
+    "description":"описание"
   }
 }

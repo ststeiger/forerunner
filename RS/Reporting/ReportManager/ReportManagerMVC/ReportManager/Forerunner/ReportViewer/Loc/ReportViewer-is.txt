@@ -269,9 +269,9 @@
     "deleteFailed":"Áskrift eyða mistókst"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"eiginleikar ",
+    "submit":"leggja",
+    "deleteItem":"eyða",
+    "description":"Lýsing"
   }
 }

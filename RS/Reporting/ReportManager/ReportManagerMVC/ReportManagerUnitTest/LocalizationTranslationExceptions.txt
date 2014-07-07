@@ -165,7 +165,9 @@
   "RDLExt": {
       "title":["ro", "sv", "it"],
       "dialogTitle":["fr", "ro"]
-      
+  },
+  "properties": {
+    "description":["fr"]
   }
 }
 

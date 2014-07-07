@@ -270,9 +270,9 @@
     "deleteFailed":"Eliminación Suscripción fallado"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"Propiedades",
+    "submit":"presentar",
+    "deleteItem":"borrar",
+    "description":"descripción"
   }
 }

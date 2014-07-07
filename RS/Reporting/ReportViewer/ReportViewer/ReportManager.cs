@@ -327,6 +327,12 @@ namespace Forerunner.SSRS.Manager
             rs.Credentials = GetCredentials();
             return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
         }
+        public String DeleteCatalogItem(string path)
+        {
+            // If we were not told to overwrite then try and create the resource here
+            rs.DeleteItem(path);
+            return getReturnSuccess();
+        }
         public String SaveCatalogResource(SetResource setResource)
         {
             bool notFound = false;

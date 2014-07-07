@@ -269,9 +269,9 @@
     "deleteFailed":"Abonnement Löschung gescheitert"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"Eigenschaften",
+    "submit":"einreichen",
+    "deleteItem":"löschen",
+    "description":"Beschreibung"
   }
 }

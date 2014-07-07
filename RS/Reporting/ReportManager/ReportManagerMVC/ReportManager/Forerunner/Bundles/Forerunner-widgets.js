@@ -4972,6 +4972,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var messages = locData.messages;
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -5004,9 +5006,8 @@ $(function () {
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
             if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
+                url += "&instance=" + me.options.rsInstance;
             }
 
             forerunner.ajax.ajax({
@@ -5014,7 +5015,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
-                    me.dashboardDef = data
+                    me.dashboardDef = data;
                     status = true;
                 },
                 fail: function (jqXHR) {
@@ -15038,11 +15039,17 @@ $(function () {
             rsInstance: null,
             catalogItem: null
         },
+        _getPermissions: function () {
+            var me = this;
+            var permissionList = ["Delete"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
+        },
         _init: function () {
             var me = this;
+            me._getPermissions();
 
             // Delete item
-            if (me.options.catalogItem.MimeType !== "json/forerunner-dashboard") {
+            if (!me.permissions.Delete) {
                 me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
@@ -15099,7 +15106,25 @@ $(function () {
             });
         },
         _onClickDelete: function (event, data) {
-            alert("_onClickDelete");
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                },
+                fail: function (jqXHR) {
+                    console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
         },
         _onClickProperties: function (event, data) {
             alert("_onClickProperties");

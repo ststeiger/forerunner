@@ -197,7 +197,24 @@ jQuery.fn.extend({
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
+    findUntil: function (selector, until) {
+        
+        var coll = $(this);
+        this.addUntil(until, coll);
 
+        return coll.filter(selector);
+
+    },
+
+    addUntil: function (until, collection) {
+
+        var children = this.children().filter(":not( " + until + ")");
+        collection.add(children);
+
+        $.each(children, function (Index, Obj) {
+            $(Obj).addUntil(until, collection);
+        });
+    }
 
 });
 $(function () {

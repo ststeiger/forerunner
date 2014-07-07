@@ -8752,7 +8752,7 @@ $(function () {
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
-            Style = imageStyle ? imageStyle : "display:block;";
+            Style = imageStyle ? imageStyle : "display:table-cell;";
             NewImage.attr("style", Style);
 
             //Remove the blue border on ie 8,9,10
@@ -9354,7 +9354,8 @@ $(function () {
                 if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
                     $Tablix.append($ExtRow);
                 else
-                    $Row.find(".fr-render-respIcon").hide();
+                    $Row.findUntil(".fr-render-respIcon", ".fr-render-tablix").hide();
+                
 
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
@@ -9647,7 +9648,7 @@ $(function () {
                     Tablix.State.ExtRow.hide();
                 }
                 else
-                    Tablix.State.Row.find(".fr-render-respIcon").hide();
+                    Tablix.State.Row.findUntil(".fr-render-respIcon",".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
             }

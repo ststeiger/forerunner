@@ -35,6 +35,7 @@ namespace ReportManager
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
+                "~/Forerunner/ReportExplorer/css/ContextMenu.css",
                 "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
                 "~/Forerunner/ReportExplorer/css/icons128x128.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",

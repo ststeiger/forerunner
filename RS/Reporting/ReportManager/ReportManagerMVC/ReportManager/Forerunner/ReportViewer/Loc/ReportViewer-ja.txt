@@ -269,9 +269,9 @@
     "deleteFailed":"サブスクリプションの削除に失敗しました"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"プロパティ",
+    "submit":"提出する",
+    "deleteItem":"削除",
+    "description":"説明"
   }
 }

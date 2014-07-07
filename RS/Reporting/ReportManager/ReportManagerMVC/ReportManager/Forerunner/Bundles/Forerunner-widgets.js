@@ -4972,6 +4972,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var messages = locData.messages;
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -5004,9 +5006,8 @@ $(function () {
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
             if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
+                url += "&instance=" + me.options.rsInstance;
             }
 
             forerunner.ajax.ajax({
@@ -5014,7 +5015,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
-                    me.dashboardDef = data
+                    me.dashboardDef = data;
                     status = true;
                 },
                 fail: function (jqXHR) {
@@ -5139,6 +5140,15 @@ $(function () {
             
         },
         /**
+         * Returns the current path and propertyList
+         */
+        getProperties: function () {
+            return {
+                path: me.curPath,
+                propertyList: me._propertyList
+            };
+        },
+        /**
          * Set the properties the dialog need to show up
          *
          * @function $.forerunner.forerunnerProperties#setProperties
@@ -5149,6 +5159,7 @@ $(function () {
         setProperties: function (path, propertyList) {
             var me = this;
             me.curPath = path;
+            me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
             for (key in me.$tabs.data()) {
@@ -5162,8 +5173,8 @@ $(function () {
             me.$tabsUL.empty();
             me._preprocess = null;
 
-            for (var i = 0; i < propertyList.length; i++) {
-                switch (propertyList[i]) {
+            for (var i = 0; i < me._propertyList.length; i++) {
+                switch (me._propertyList[i]) {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(me._descriptionPreloading());
@@ -6820,10 +6831,31 @@ $(function () {
             }
 
             $anchor.on("click", function (event) {
-                if (me.options.navigateTo) {
+                if (event.altKey) {
+                    data = {
+                        catalogItem: catalogItem
+                    };
+                    me._onContextMenu.call(me, event, data);
+                } else if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
+
+            if (forerunner.device.isTouch()) {
+                $anchor.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch hold",
+                function (ev) {
+                    if (!ev.gesture) return;
+                    switch (ev.type) {
+                        case "hold":
+                            data = {
+                                catalogItem: catalogItem
+                            };
+                            me._onContextMenu.call(me, event, data);
+                            break;
+                    }
+                });
+            }
+
             $item.append($anchor);
 
 
@@ -6916,6 +6948,30 @@ $(function () {
             $item.append($desc);
            
             return $item;
+        },
+        _onContextMenu: function (e, data) {
+            var me = this;
+
+            if (!me.getUserSettings().adminUI) {
+                return;
+            }
+
+            var $dlg = me.options.$appContainer.find(".fr-ctx-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+                me._contextMenu = $dlg;
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.contextMenu({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance,
+                catalogItem: data.catalogItem
+            });
+            me._contextMenu.contextMenu("openDialog");
         },
         _renderPCView: function (catalogItems) {
             var me = this;
@@ -14940,9 +14996,163 @@ $(function () {
         }
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportExplorer/js/ContextMenu.js
+/**
+ * @file Contains the context menu widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var contextMenu = locData.contextMenu;
+
+    /**
+     * Widget used to create the context menu
+     *
+     * @namespace $.forerunner.createDashboard
+     * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {String} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
+     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
+     *
+     * @example
+     * $("#contextMenuId").contextMenu({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     catalogItem: me.catalogItem
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.contextMenu), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null,
+            catalogItem: null
+        },
+        _getPermissions: function () {
+            var me = this;
+            var permissionList = ["Delete"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
+        },
+        _init: function () {
+            var me = this;
+            me._getPermissions();
+
+            // Delete item
+            if (!me.permissions.Delete) {
+                me._$delete.off("click");
+                me._$delete.addClass("fr-toolbase-disabled");
+                me._$delete.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$delete.on("click", function (event, data) {
+                    me._onClickDelete.apply(me, arguments);
+                });
+                me._$delete.removeClass("fr-toolbase-disabled");
+                me._$delete.addClass("fr-core-cursorpointer");
+            }
+
+            // Close dialog event
+            setTimeout(function () {
+                $("body").one("click", function () {
+                    me.closeDialog();
+                });
+            }, 10);
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("", contextMenu.title, "", "");
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    // Delete
+                    "<div class='fr-ctx-container'>" +
+                        "<div class='fr-ctx-delete-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
+                            "<div class='fr-ctx-item-text-container'>" +
+                                "<div class='fr-ctx-item-text'>" + contextMenu.delete + "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                    // Properties
+                    "<div class='fr-ctx-container'>" +
+                        "<div class='fr-ctx-properties-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
+                            "<div class='fr-ctx-item-text-container'>" +
+                                "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            // Delete
+            me._$delete = me.element.find(".fr-ctx-delete-id");
+
+            // Properties
+            me.element.find(".fr-ctx-properties-id").on("click", function (event, data) {
+                me._onClickProperties.apply(me, arguments);
+            });
+        },
+        _onClickDelete: function (event, data) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                },
+                fail: function (jqXHR) {
+                    console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+        },
+        _onClickProperties: function (event, data) {
+            alert("_onClickProperties");
+        },
+        /**
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.createDashboard#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
 /**
- * @file Contains the print widget.
+ * @file Contains the create dashboard widget.
  *
  */
 

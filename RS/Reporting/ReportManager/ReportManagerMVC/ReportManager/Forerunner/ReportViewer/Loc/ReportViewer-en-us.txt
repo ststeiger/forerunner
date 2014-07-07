@@ -273,5 +273,10 @@
 	"submit":"Submit",
 	"deleteItem":"Delete",
 	"description":"Description"
+  },
+  "contextMenu":{
+    "title":"Context Menu",
+    "delete": "Delete",
+    "properties": "Properties"
   }
 }

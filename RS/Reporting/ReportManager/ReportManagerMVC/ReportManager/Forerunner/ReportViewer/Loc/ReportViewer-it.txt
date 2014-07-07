@@ -269,9 +269,9 @@
     "deleteFailed":"Eliminazione di abbonamento fallito"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"proprietà",
+    "submit":"presentare",
+    "deleteItem":"cancellare",
+    "description":"descrizione"
   }
 }

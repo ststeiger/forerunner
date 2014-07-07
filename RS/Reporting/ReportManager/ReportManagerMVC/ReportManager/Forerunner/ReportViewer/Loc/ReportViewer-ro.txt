@@ -269,9 +269,9 @@
     "deleteFailed":"Ștergerea abonament eșuat"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"Proprietăți",
+    "submit":"prezenta",
+    "deleteItem":"șterge",
+    "description":"descriere"
   }
 }

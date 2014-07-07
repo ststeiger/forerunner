@@ -71,6 +71,15 @@ $(function () {
             
         },
         /**
+         * Returns the current path and propertyList
+         */
+        getProperties: function () {
+            return {
+                path: me.curPath,
+                propertyList: me._propertyList
+            };
+        },
+        /**
          * Set the properties the dialog need to show up
          *
          * @function $.forerunner.forerunnerProperties#setProperties
@@ -81,6 +90,7 @@ $(function () {
         setProperties: function (path, propertyList) {
             var me = this;
             me.curPath = path;
+            me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
             for (key in me.$tabs.data()) {
@@ -94,8 +104,8 @@ $(function () {
             me.$tabsUL.empty();
             me._preprocess = null;
 
-            for (var i = 0; i < propertyList.length; i++) {
-                switch (propertyList[i]) {
+            for (var i = 0; i < me._propertyList.length; i++) {
+                switch (me._propertyList[i]) {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(me._descriptionPreloading());

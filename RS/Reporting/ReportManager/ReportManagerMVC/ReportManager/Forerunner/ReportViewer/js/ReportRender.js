@@ -106,8 +106,9 @@ $(function () {
             me._createStyles(me.options.reportViewer);
             me._reRender();
             
-            if (delayLayout !== true)
-                me.layoutReport();
+            if (delayLayout !== true) {
+                me.layoutReport();                
+            }
         },
         _reRender: function(){
             var me = this;
@@ -426,6 +427,7 @@ $(function () {
             return rec;
         },
 
+      
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
             var renderWidth = me.options.reportViewer.element.width();

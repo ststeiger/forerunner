@@ -293,6 +293,8 @@ $(function () {
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
             /** @constant */
             forerunnerProperties: "forerunnerProperties",
+            /** @constant */
+            contextMenu: "contextMenu",
 
             /** @constant */
             namespace: "forerunner",

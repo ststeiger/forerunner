@@ -12,6 +12,7 @@
   <file>/Forerunner/Common/css/ForerunnerProperties.css</file>
   <file>/Forerunner/ReportExplorer/css/ReportExplorer.css</file>
   <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
+  <file>/Forerunner/ReportExplorer/css/ContextMenu.css</file>
   <file>/Forerunner/ReportExplorer/css/CreateDashboard.css</file>
   <file>/Forerunner/ReportViewer/css/ManageSubscription.css</file>
   <file>/Forerunner/ReportExplorer/css/icons128x128.css</file>

@@ -8186,7 +8186,7 @@ $(function () {
 
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
-            renderWidth = me.options.reportViewer.element.width();
+            var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
             if (renderWidth === 0)
@@ -8466,7 +8466,7 @@ $(function () {
             if (textExt.InputType) {
                 if (textExt.InputType === "textarea") {
                     $TextObj = $("<textarea name='" + textExt.InputName + "'/>");
-                    Style += "resize:none;" 
+                    Style += "resize:none;";
                 }
                 else
                     $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
@@ -8944,7 +8944,7 @@ $(function () {
                             newFunc = new Function("e", action.Code);
                         }
                         catch (e) { }
-                        action.JavaFunc = newFunc
+                        action.JavaFunc = newFunc;
                         if (action.On === undefined)
                             action.On = "click";
                     }
@@ -9199,7 +9199,7 @@ $(function () {
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
-                var tablixExt = me._getRDLExt(RIContext);;                
+                var tablixExt = me._getRDLExt(RIContext);                
 
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
@@ -9228,7 +9228,7 @@ $(function () {
                     
                     if (tablixExt.Columns && tablixExt.Columns.length <= RIContext.CurrObj.ColumnWidths.ColumnCount) {
                         for (cols = 0; cols < tablixExt.Columns.length; cols++) {
-                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col,10) - 1] = { show: true};
                         }
                     }
                      
@@ -9252,12 +9252,12 @@ $(function () {
                             }
                             else {
                                 for (cols = 0; cols < tablixExt.Columns.length; cols++) {
-                                    if (tablixExt.Columns[cols].Pri >= maxPri  && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col, 10) - 1].show === true) {
                                         nextColIndex = cols;
                                         maxPri = tablixExt.Columns[cols].Pri;
                                     }
                                 }
-                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col, 10) - 1;
                                 respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
                                 respCols.Columns[foundCol] = { show: false };
                             }
@@ -9279,7 +9279,7 @@ $(function () {
                         if (tablixwidth < viewerWidth || respCols.ColumnCount ===0) {
                             notdone = false;
                             //Show if more then half is visible
-                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * .9 || respCols.ColumnCount===0) {
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * 0.9 || respCols.ColumnCount===0) {
                                 respCols.Columns[foundCol].show = true;
                                 respCols.ColumnCount++;
                             }
@@ -9652,7 +9652,7 @@ $(function () {
 
                     $.each($(tr).children("[rowspan]"), function (c, td) {
                         if ($(td).height() > 0)
-                            $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + delta);
+                            $(td).attr("rowspan", parseInt($(td).attr("rowspan"), 10) + delta);
                     });
                     if ($(tr).hasClass("fr-resp-rowspan"))
                         return false;
@@ -9832,7 +9832,7 @@ $(function () {
             if (CurrObj.Elements)
                 return CurrObj.Elements;
             if (CurrObj.SubReportProperties)
-                return CurrObj.SubReportProperties
+                return CurrObj.SubReportProperties;
         },
 
         _getElementsStyle: function (RS, CurrObj) {

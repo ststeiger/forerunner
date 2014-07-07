@@ -330,6 +330,7 @@ namespace Forerunner.SSRS.Manager
         public String DeleteCatalogItem(string path)
         {
             // If we were not told to overwrite then try and create the resource here
+            rs.Credentials = GetCredentials();
             rs.DeleteItem(path);
             return getReturnSuccess();
         }

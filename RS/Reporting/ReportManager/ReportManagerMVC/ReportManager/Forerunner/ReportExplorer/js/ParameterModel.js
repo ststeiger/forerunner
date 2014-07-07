@@ -132,7 +132,7 @@ $(function () {
 
 
             // Set the current set and trigger the model changed event
-            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+            if (lastAddedSetId && lastAddedSetId !== me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
 

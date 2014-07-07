@@ -990,8 +990,34 @@ $(function () {
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
-            
+
             return path.slice(0, lastIndex);
+        },
+        /**
+         * Returns true if str ends with suffix
+         *
+         * @member
+         */
+        endsWith: function (str, suffix) {
+            return !(str.indexOf(suffix, str.length - suffix.length));
+        },
+        /**
+         * Combines the give folder and name infor a forward slash separated
+         * path. Note that this function can combine multiple path parts.
+         *
+         * @member
+         */
+        combinePaths: function (folder, name) {
+            var path = folder;
+            for (var index = 1; index < arguments.length; index++) {
+                if (this.endsWith(path, "/")) {
+                    path = path + arguments[index];
+                } else {
+                    path = path + "/" + arguments[index];
+                }
+            }
+            path = path.replace("//", "/");
+            return path;
         },
         /**
          * Get current item name by the given path
@@ -1013,21 +1039,26 @@ $(function () {
          * @param {Object} me - this pointer of the calling object
          * @param {Function} func - Function to call when time expires
          * @param {integer} n - Optional, Default 100, timeout milliseconds
+         * @param {String} id - Optional, timer id
          */
-        delay: function (me, func, n) {
+        delay: function (me, func, n, id) {
             if (!n) {
                 n = 100;
             }
 
-            // If we get back here before the timer fires
-            if (me._delayTimerId) {
-                clearTimeout(me._delayTimerId);
-                me._delayTimerId = null;
+            if (!id) {
+                id = "_delayTimerId";
             }
 
-            me._delayTimerId = setTimeout(function () {
+            // If we get back here before the timer fires
+            if (me[id]) {
+                clearTimeout(me[id]);
+                me[id] = null;
+            }
+
+            me[id] = setTimeout(function () {
                 func();
-                me._delayTimerId = null;
+                me[id] = null;
             }, n);
         }
     },

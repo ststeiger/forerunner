@@ -87,12 +87,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $dashboardEditor = me.getDashboardEditor();
-            $dashboardEditor.dashboardEditor("windowResize");
-
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
+
+            me.getDashboardEditor().dashboardEditor("windowResize");
+            me.getDashboardToolbar().dashboardToolbar("windowResize");
         },
         _init: function () {
             var me = this;
@@ -208,11 +208,11 @@ $(function () {
         /**
          * Get report viewer toolbar
          *
-         * @function $.forerunner.dashboardEZ#getToolbar
+         * @function $.forerunner.dashboardEZ#getDashboardToolbar
          * 
          * @return {Object} - toolbar jQuery object
          */
-        getToolbar: function () {
+        getDashboardToolbar: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$mainheadersection;
@@ -223,11 +223,11 @@ $(function () {
         /**
          * Get report viewer toolpane
          *
-         * @function $.forerunner.dashboardEZ#getToolPane
+         * @function $.forerunner.dashboardEZ#getDashboardToolPane
          * 
          * @return {Object} - toolpane jQuery object
          */
-        getToolPane: function () {
+        getDashboardToolPane: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$leftpanecontent;

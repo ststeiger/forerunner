@@ -393,7 +393,7 @@ $(function () {
                 }
             });
         },
-        onWindowResize: function () {
+        windowResize: function () {
             var me = this;
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
             var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";

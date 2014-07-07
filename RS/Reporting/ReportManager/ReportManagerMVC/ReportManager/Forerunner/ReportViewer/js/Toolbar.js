@@ -160,6 +160,9 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -247,11 +250,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()

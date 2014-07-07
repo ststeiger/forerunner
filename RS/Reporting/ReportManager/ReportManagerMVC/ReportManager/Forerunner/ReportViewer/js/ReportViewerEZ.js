@@ -178,11 +178,15 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $reportViewer = me.getReportViewer();
-            $reportViewer.reportViewer("windowResize");
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
+            me.getReportViewer().reportViewer("windowResize");
+            helper.delay(me, function () {
+                // This needs to be delayed for the dashboard case where the size of the report
+                // will dictate the size of the report area and therefore the size of the toolbar
+                me.getToolbar().toolbar("windowResize");
+            }, 100, "_toolbarDelayId");
         },
         /**
          * Hide the breadcrumb section

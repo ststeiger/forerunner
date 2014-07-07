@@ -939,11 +939,11 @@ table, td, tr div {
 
 .fr-explorer-item-selected { border: 2px solid darkblue; }
 
-.fr-explorer-caption { width: 200px; display: table-caption; margin-left: auto; margin-right: auto; }
+.fr-explorer-caption { width: 200px; /*display: table-caption;*/ margin-left: auto; margin-right: auto; }
 
 .fr-explorer-item-title { text-align: center; font-size:13pt; width:200px; height:45px; display: block; color: #212729; font-weight: 700; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
 
-.fr-explorer-desc-container { display:table-row; }
+/*.fr-explorer-desc-container { display:table-row; }*/
 
 .fr-explorer-item-desc { text-align: center; font-size: 9pt; width:200px; height:60px; display:block; color: #212729; font-weight: 500; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
 
@@ -1901,26 +1901,26 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-dsc-item-container .fr-dsc-error { border-width: thin; border-color: red; }
 
 .fr-dsc-input-container{ display:inline-block; }
-.fr-dashboard { width: 100%; }
+.fr-dashboard { width: 100%; background-color: rgb(210, 223, 237); }
 .fr-dashboard-full-width-table { width: 100%; }
 
 .fr-dashboard-report-container { display: table-cell; vertical-align: top; min-width:320px; min-height:320px; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
-.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; }
+.fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
 /* Add this style if you want to remove the UI for changing the size of a dashboard report slot */
 .fr-dashboard-size-not-user-changable { }
 
-.fr-2up1down { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-2up1down { width: 100%; }
   .fr-2up1down #Report1 { }
   .fr-2up1down #Report2 { }
   .fr-2up1down #Report3 { }
 
-.fr-sidebyside { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-sidebyside { width: 100%; }
   .fr-sidebyside #Report1 { }
   .fr-sidebyside #Report2 { }
 
-.fr-2up2down { background-color: rgb(210, 223, 237); width: 100%; }
+.fr-2up2down { width: 100%; }
   .fr-2up2down #Report1 { }
   .fr-2up2down #Report2 { }
   .fr-2up2down #Report3 { }

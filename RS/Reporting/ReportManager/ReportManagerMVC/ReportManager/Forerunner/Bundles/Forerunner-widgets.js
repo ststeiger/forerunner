@@ -3305,7 +3305,7 @@ $(function () {
 
 
             // Set the current set and trigger the model changed event
-            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+            if (lastAddedSetId && lastAddedSetId !== me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
 
@@ -3888,7 +3888,7 @@ $(function () {
                 }
             });
         },
-        onWindowResize: function () {
+        windowResize: function () {
             var me = this;
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
             var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
@@ -5741,6 +5741,9 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -5828,11 +5831,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()
@@ -6529,11 +6527,6 @@ $(function () {
         },
 
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         }
     });  // $.widget
 });  // function()
@@ -7608,7 +7601,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", "");
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -13928,11 +13921,15 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $reportViewer = me.getReportViewer();
-            $reportViewer.reportViewer("windowResize");
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
+            me.getReportViewer().reportViewer("windowResize");
+            helper.delay(me, function () {
+                // This needs to be delayed for the dashboard case where the size of the report
+                // will dictate the size of the report area and therefore the size of the toolbar
+                me.getToolbar().toolbar("windowResize");
+            }, 100, "_toolbarDelayId");
         },
         /**
          * Hide the breadcrumb section
@@ -14518,7 +14515,7 @@ $(function () {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
                 me.transitionToEditDashboard(path);
-            } else if (data.name == "transitionToOpenDashboard") {
+            } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
         },
@@ -14857,6 +14854,11 @@ $(function () {
                     }
 
                     me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+
+                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                    }
                 });
             });
         },
@@ -14952,6 +14954,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
     var ssr = forerunner.ssr;
@@ -14985,12 +14988,12 @@ $(function () {
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-template-name")
+            me.$select = me.element.find(".fr-cdb-template-name");
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
-            for (item in templates) {
-                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+            for (var key in templates) {
+                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
                 me.$select.append($option);
             }
         },
@@ -15104,7 +15107,7 @@ $(function () {
             if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = me.options.parentFolder + dashboardName;
+                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();
@@ -21979,12 +21982,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            var $dashboardEditor = me.getDashboardEditor();
-            $dashboardEditor.dashboardEditor("windowResize");
-
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
+
+            me.getDashboardEditor().dashboardEditor("windowResize");
+            me.getDashboardToolbar().dashboardToolbar("windowResize");
         },
         _init: function () {
             var me = this;
@@ -22100,11 +22103,11 @@ $(function () {
         /**
          * Get report viewer toolbar
          *
-         * @function $.forerunner.dashboardEZ#getToolbar
+         * @function $.forerunner.dashboardEZ#getDashboardToolbar
          * 
          * @return {Object} - toolbar jQuery object
          */
-        getToolbar: function () {
+        getDashboardToolbar: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$mainheadersection;
@@ -22115,11 +22118,11 @@ $(function () {
         /**
          * Get report viewer toolpane
          *
-         * @function $.forerunner.dashboardEZ#getToolPane
+         * @function $.forerunner.dashboardEZ#getDashboardToolPane
          * 
          * @return {Object} - toolpane jQuery object
          */
-        getToolPane: function () {
+        getDashboardToolPane: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$leftpanecontent;
@@ -22234,10 +22237,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()
@@ -22545,7 +22544,7 @@ $(function () {
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
                     data.reportId = reportId;
-                    data.$reportViewer = $reportViewer;
+                    data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
@@ -22566,8 +22565,8 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            if (data.$reportViewer) {
-                data.$reportViewer.reportViewer("windowResize");
+            if (data.$reportViewerEZ) {
+                data.$reportViewerEZ.reportViewerEZ("windowResize");
             }
         },
         _loadResource: function (path) {
@@ -22719,9 +22718,8 @@ $(function () {
                 me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
+                me._save(true);
             }, timeout);
-
-            me._save(true);
         },
         _showUI: function (show) {
             var me = this;
@@ -22751,7 +22749,7 @@ $(function () {
                 $item.height("");
             } else {
                 // Put in a default height until a report is loaded
-                $item.height("480px");
+                $item.height("320px");
             }
 
             // Create the button

@@ -106,11 +106,6 @@ $(function () {
         },
 
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         }
     });  // $.widget
 });  // function()

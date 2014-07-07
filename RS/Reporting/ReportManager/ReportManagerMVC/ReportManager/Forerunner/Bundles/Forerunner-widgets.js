@@ -8126,8 +8126,7 @@ $(function () {
                 rec.html(RecExt.CustomHTML);
                 RIContext.$HTMLParent = rec;
             }
-            if(RecExt.ID)
-                rec.attr("id", RecExt.ID);
+         
 
             else {
 
@@ -8191,6 +8190,10 @@ $(function () {
                 Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
             if (RecExt.FixedWidth)
                 Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
+            if (RecExt.ID)
+                rec.attr("id", RecExt.ID);
+            
+            me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
@@ -8954,7 +8957,7 @@ $(function () {
             var ActionExt = me._getRDLExt(RIContext);
 
             if (ActionExt.JavaScriptActions) {
-                $Control.addClass("fr-core-cursorpointer");
+                
 
                 for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
                     var action = ActionExt.JavaScriptActions[a];
@@ -8968,6 +8971,8 @@ $(function () {
                         action.JavaFunc = newFunc;
                         if (action.On === undefined)
                             action.On = "click";
+                        if (action.Obj === "click")
+                            $Control.addClass("fr-core-cursorpointer");
                     }
 
                     $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
@@ -9368,6 +9373,7 @@ $(function () {
 
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
+            me._writeActions(RIContext, {}, $Tablix);
 
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));

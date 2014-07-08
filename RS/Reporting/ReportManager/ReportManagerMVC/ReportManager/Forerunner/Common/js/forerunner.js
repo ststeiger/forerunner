@@ -1796,12 +1796,12 @@ $(function () {
                             "</div>";
 
             html += "<div class='fr-core-dialog-cancel-container'>" +
-                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' title='" + cancelWord + "' />" +
                             "</div>";
 
             if (actionClass) {
                 html += "<div class='fr-core-dialog-action-container'>" +
-                                "<input type='button' class='fr-core-dialog-action " + actionClass + "' value='" + actionWord + "' />" +
+                                "<input type='button' class='fr-core-dialog-action " + actionClass + "' title='" + actionWord + "' />" +
                         "</div>";
             }
             html += "</div>";

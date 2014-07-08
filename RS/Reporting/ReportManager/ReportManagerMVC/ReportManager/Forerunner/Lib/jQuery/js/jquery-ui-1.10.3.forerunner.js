@@ -7201,10 +7201,12 @@ $.extend(Datepicker.prototype, {
 
 		nodeName = target.nodeName.toLowerCase();
 		if (nodeName === "input") {
-			target.disabled = true;
-			inst.trigger.filter("button").
-				each(function() { this.disabled = true; }).end().
-				filter("img").css({opacity: "0.5", cursor: "default"});
+		    target.disabled = true;
+		    if (inst) {
+		        inst.trigger.filter("button").
+                    each(function () { this.disabled = true; }).end().
+                    filter("img").css({ opacity: "0.5", cursor: "default" });
+		    }
 		} else if (nodeName === "div" || nodeName === "span") {
 			inline = $target.children("." + this._inlineClass);
 			inline.children().addClass("ui-state-disabled");

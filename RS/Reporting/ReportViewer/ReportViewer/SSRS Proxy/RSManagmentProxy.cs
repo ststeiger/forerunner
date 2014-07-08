@@ -91,6 +91,15 @@ namespace Forerunner.SSRS.Management
 
             return;
         }
+        public void DeleteItem(string path)
+        {
+            if (IsNative)
+                RSNative.DeleteItem(path);
+            else
+                RSSPS.DeleteItem(path);
+
+            return;
+        }
         public void CreateResource(string Resource, string Parent, bool Overwrite, byte[] Contents, string MimeType, Property[] Properties)
         {
             if (IsNative)

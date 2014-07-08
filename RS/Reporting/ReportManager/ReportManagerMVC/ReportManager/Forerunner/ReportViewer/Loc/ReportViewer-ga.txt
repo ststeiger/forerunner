@@ -269,9 +269,9 @@
     "deleteFailed":"Theip scriosadh Síntiúis"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"airíonna",
+    "submit":"Cuir",
+    "deleteItem":"Scrios",
+    "description":"Cur síos"
   }
 }

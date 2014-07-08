@@ -663,3 +663,43 @@ Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Simple Table with groups a
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/SingleGuage.rdl
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Table with embedded Subreport.rdl
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Northwind Test Suite/bin/Debug/build.obj
+.gitignore
+build.txt
+ForerunnerRegister/RegisterWebService/ServerLicense.cs
+ForerunnerSW/ForerunnerSW/Content/img/Compete.jpg
+ForerunnerSW/ForerunnerSW/Content/img/costEffective.jpg
+ForerunnerSW/ForerunnerSW/Content/img/M_SAforPS.png
+ForerunnerSW/ForerunnerSW/Content/img/NoTraining.jpg
+ForerunnerSW/ForerunnerSW/Content/img/Responsive.jpg
+ForerunnerSW/ForerunnerSW/Content/prettify.css
+ForerunnerSW/ForerunnerSW/Content/Site.css
+ForerunnerSW/ForerunnerSW/Controllers/HomeController.cs
+ForerunnerSW/ForerunnerSW/ForerunnerSW.csproj
+ForerunnerSW/ForerunnerSW/Scripts/ForerunnerWebsite.js
+ForerunnerSW/ForerunnerSW/Views/Home/About.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Activation.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Contact.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Demo.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Developers.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Features.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Index.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/PASS.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Pricing.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Register.cshtml
+ForerunnerSW/ForerunnerSW/Views/Home/Support.cshtml
+ForerunnerSW/ForerunnerSW/Views/Shared/_Layout.cshtml
+ForerunnerSW/ForerunnerSW/Views/Shared/Error.cshtml
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.min.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.min.js.map
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.min.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.min.js.map
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Common/js/forerunner.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/js/ReportRender.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Web.config
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj

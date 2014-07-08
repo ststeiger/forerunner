@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the print widget.
+ * @file Contains the create dashboard widget.
  *
  */
 
@@ -12,6 +12,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
     var ssr = forerunner.ssr;
@@ -45,12 +46,12 @@ $(function () {
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-template-name")
+            me.$select = me.element.find(".fr-cdb-template-name");
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
-            for (item in templates) {
-                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+            for (var key in templates) {
+                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
                 me.$select.append($option);
             }
         },
@@ -164,7 +165,7 @@ $(function () {
             if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = me.options.parentFolder + dashboardName;
+                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();

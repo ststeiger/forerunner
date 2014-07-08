@@ -270,9 +270,9 @@
     "deleteFailed":"Suppression abonnement qui a échoué"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"propriétés",
+    "submit":"soumettre ",
+    "deleteItem":"soumettre",
+    "description":"description"
   }
 }

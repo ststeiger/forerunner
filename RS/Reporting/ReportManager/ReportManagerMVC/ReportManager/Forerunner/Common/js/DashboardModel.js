@@ -6,6 +6,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var messages = locData.messages;
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -38,9 +40,8 @@ $(function () {
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
             if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
+                url += "&instance=" + me.options.rsInstance;
             }
 
             forerunner.ajax.ajax({
@@ -48,7 +49,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
-                    me.dashboardDef = data
+                    me.dashboardDef = data;
                     status = true;
                 },
                 fail: function (jqXHR) {

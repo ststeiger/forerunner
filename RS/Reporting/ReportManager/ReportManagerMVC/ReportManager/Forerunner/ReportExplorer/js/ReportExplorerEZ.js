@@ -13,6 +13,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var helper = forerunner.helper;
     var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
@@ -117,8 +118,8 @@ $(function () {
 
             // Hook the router route event
             me.router.on(events.routerRoute(), function (event, data) {
-                me._onRoute.apply(me, arguments);
                 me._generateRouteLink.apply(me, arguments);
+                me._onRoute.apply(me, arguments);
             });
 
             if (!me.options.historyBack) {
@@ -135,8 +136,6 @@ $(function () {
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
 
-            me._routeAction = null;
-            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -156,18 +155,15 @@ $(function () {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
                 me.transitionToReportManager(keyword, "search");
-                me._routeAction = "search";
             } else if (data.name === "transitionToFavorites") {
                 me.transitionToReportManager(null, "favorites");
-                me._routeAction = "favorite";
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
-                me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
                 me.transitionToEditDashboard(path);
-            } else if (data.name == "transitionToOpenDashboard") {
+            } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
         },
@@ -200,11 +196,13 @@ $(function () {
             //clear prior route link
             $linksection.html("");
             var path = data.args[0];
-            me._getLink(path, $linksection, 0);
+            me._getLink(path, $linksection, 0, data.name);
 
             me._linkResize($linksection);
+
+            $linksection.show();
         },
-        _getLink: function (path, $container, index) {
+        _getLink: function (path, $container, index, transitionName) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
@@ -220,25 +218,26 @@ $(function () {
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
 
-                if (me._routeAction) {
+                //show forerunner view name in breadcrumb, search/favorite/recent
+                switch (transitionName) {
+                    case "transitionToSearch":
+                        forerunerViewText = locData.toolbar.search;
+                        break;
+                    case "transitionToFavorites":
+                        forerunerViewText = locData.toolbar.favorites;
+                        break;
+                    case "transitionToRecent":
+                        forerunerViewText = locData.toolbar.recent;
+                        break;
+                }
+
+                if (forerunerViewText) {
                     $arrowTag = new $("<span/>");
                     $arrowTag.text(" > ");
                     $container.append($arrowTag);
                     //Add special handle for search, favorite, recent views
                     $forerunnerViewLink = new $("<span />");
                     $forerunnerViewLink.addClass("fr-location-link-last");
-
-                    switch (me._routeAction) {
-                        case "search":
-                            forerunerViewText = locData.toolbar.search;
-                            break;
-                        case "favorite":
-                            forerunerViewText = locData.toolbar.favorites;
-                            break;
-                        case "recent":
-                            forerunerViewText = locData.toolbar.recent;
-                            break;
-                    }
 
                     $forerunnerViewLink.text(forerunerViewText);
                     $container.append($forerunnerViewLink);
@@ -247,7 +246,7 @@ $(function () {
                 return;
             }
             else {
-                me._getLink(parentPath, $container);
+                me._getLink(parentPath, $container, index, transitionName);
             }
 
             $arrowTag = new $("<span/>");
@@ -356,15 +355,26 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
-            var routeLinkSectionHeight = layout.$linksection.outerHeight();//default to 18px
-            var toolpaneheaderheight = layout.$topdiv.height() - routeLinkSectionHeight; //equal toolbar height
+            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
+            
+            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
 
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;// window phone 7 get top property wrong
+            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
+
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$rightheaderspacer.height(toolpaneheaderheight);
-            layout.$leftheaderspacer.height(toolpaneheaderheight);
+
+            layout.$leftpanecontent.css({ top: topDivHeight });
+            layout.$rightpanecontent.css({ top: topDivHeight });
+
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             if (forerunner.device.isWindowsPhone()) {
                 layout.$leftpanecontent.css({ top: toolpaneheaderheight });
@@ -407,7 +417,8 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -416,7 +427,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-
+                
                 me._setLeftRightPaneStyle();
 
             }, timeout);
@@ -437,7 +448,7 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                var $dashboardEZ = layout.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -445,7 +456,8 @@ $(function () {
                     enableEdit: enableEdit,
                     path: path,
                     rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -477,10 +489,33 @@ $(function () {
             var me = this;
             me._transitionToDashboard(path, true);
         },
+        _create: function () {
+            var me = this;
+            $(window).on("resize", function (event, data) {
+                helper.delay(me, function () {
+                    var layout = me.DefaultAppTemplate;
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
+                        layout.$mainviewport.dashboardEZ("windowResize");
+                    }
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
+                        layout.$mainviewport.reportViewerEZ("windowResize");
+                    }
+
+                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+
+                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                    }
+                });
+            });
+        },
         _init: function () {
             var me = this;
-            
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                $container: me.element,
+                isFullScreen: me.isFullScreen
+            }).render();
             me._initPropertiesDialog();
 
             if (!me.options.navigateTo) {

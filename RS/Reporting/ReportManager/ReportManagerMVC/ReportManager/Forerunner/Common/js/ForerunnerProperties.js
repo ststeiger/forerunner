@@ -71,6 +71,16 @@ $(function () {
             
         },
         /**
+         * Returns the current path and propertyList
+         */
+        getProperties: function () {
+            var me = this;
+            return {
+                path: me.curPath,
+                propertyList: me._propertyList
+            };
+        },
+        /**
          * Set the properties the dialog need to show up
          *
          * @function $.forerunner.forerunnerProperties#setProperties
@@ -81,6 +91,7 @@ $(function () {
         setProperties: function (path, propertyList) {
             var me = this;
             me.curPath = path;
+            me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
             for (key in me.$tabs.data()) {
@@ -94,8 +105,8 @@ $(function () {
             me.$tabsUL.empty();
             me._preprocess = null;
 
-            for (var i = 0; i < propertyList.length; i++) {
-                switch (propertyList[i]) {
+            for (var i = 0; i < me._propertyList.length; i++) {
+                switch (me._propertyList[i]) {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(me._descriptionPreloading());
@@ -329,13 +340,13 @@ $(function () {
         _saveTags: function () {
             var me = this;
 
-            var tags = me.$tagInput.val().trim(),
+            var tags = $.trim(me.$tagInput.val()),
                 tagList;
 
             if (tags !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
-                    tagList[i] = '"' + tagList[i].trim() + '"';
+                    tagList[i] = '"' + $.trim(tagList[i]) + '"';
                 }
                 tags = tagList.join(",");
                 me._tags = tags;
@@ -374,7 +385,7 @@ $(function () {
         _setDescription: function () {
             var me = this;
             try {
-                var descriptionInput = me.$desInput.val().trim();
+                var descriptionInput = $.trim(me.$desInput.val());
 
                 if (descriptionInput !== me._description) {
                     var description = forerunner.helper.htmlEncode(descriptionInput);
@@ -434,8 +445,9 @@ $(function () {
 
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
-            
-            me.$rdlInput.val(RDLExtension);
+
+            var RDL = JSON.stringify(RDLExtension);
+            me.$rdlInput.val(RDL);
         },
         _setRDLExtension: function () {
             var me = this;
@@ -486,15 +498,15 @@ $(function () {
             var me = this;
 
             if (me.$sfForm.valid()) {
-                var name = me.$sfForm.find(".fr-sf-foldername").val().trim();
-                var tags = me.$sfForm.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.$sfForm.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
                 var priorSearchFolder = JSON.parse(me._searchFolder);
 
                 if (name !== priorSearchFolder.name || tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");
 
                     for (var i = 0; i < tagsList.length; i++) {
-                        tagsList[i] = '"' + tagsList[i].trim() + '"';
+                        tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                     }
 
                     var searchfolder = {

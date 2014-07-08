@@ -20,9 +20,9 @@
 
 /* Use higher contrast and text-weight for printable form. */
 @media print, projection {
-  .str { color: #060 }
+  .str { color: #800 }
   .kwd { color: #006; font-weight: bold }
-  .com { color: #600; font-style: italic }
+  .com { color: #060; font-style: italic }
   .typ { color: #404; font-weight: bold }
   .lit { color: #044 }
   .pun, .opn, .clo { color: #440 }

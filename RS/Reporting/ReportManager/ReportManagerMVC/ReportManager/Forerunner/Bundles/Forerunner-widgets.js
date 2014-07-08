@@ -702,10 +702,6 @@ $(function () {
         },
 
         _destroy: function () {
-            var me = this;
-            //This needs to be changed to only remove the view function
-            //Baotong update it on 22-05-2014
-            $(window).off("resize", me._onWindowResize);
         },
 
         // Constructor
@@ -767,9 +763,6 @@ $(function () {
             //setup orientation change
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
-
-            //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", { me: me }, me._onWindowResize);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -1001,12 +994,12 @@ $(function () {
                 
             }
         },
-        //Wrapper function, used to resigter window resize event
-        _onWindowResize: function (event) {
-            var me = event.data.me;
-            me._windowResize.call(me);
-        },
-        _windowResize: function () {
+        /**
+         * windowResize will relayout the report
+         *
+         * @function $.forerunner.reportViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
@@ -1014,20 +1007,6 @@ $(function () {
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-        },
-        /**
-         * Relayout the report
-         *
-         * @function $.forerunner.reportViewer#reLayout
-         *
-         * Normally this would not need to be called. It is needed when a
-         * report is rendered into a container (<div>) and the size of the
-         * container is defined by the report itself. In that case call this
-         * function after the report is finished loading.
-         */
-        reLayout: function () {
-            var me = this;
-            me._windowResize();
         },
         _removeCSS: function () {
             var me = this;
@@ -1087,8 +1066,27 @@ $(function () {
                 me._setPageCallback = null;
             }
             
+
+            me.zoomPageWidth();
+
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+        },
+        zoomPageWidth: function (unZoom) {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            var zoom;
+
+            if (unZoom === true || unZoom === undefined)
+                zoom = 0;
+            else
+                zoom = (me.element.width() / page.width()) * 100;
+
+            if (forerunner.device.isFirefox === true) {
+                page.css('MozTransform', 'scale(' + zoom + ')');
+            } else {
+                page.css('zoom', ' ' + zoom + '%');
+            }
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -2571,7 +2569,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" ) {
+                       if (data && JSON.stringify(data) !== "{}" ) {
                            me.RDLExtProperty = data; 
                        }
                    },
@@ -3107,12 +3105,10 @@ $(function () {
         },
         saveRDLExt: function (RDL) {
             var me = this;
-            var RDLObj = { RDLExtension: "" };
 
             try {
-                if (RDL.trim() !== "") {
+                if ($.trim(RDL) !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
-                    RDLObj.RDLExtension = RDL;
                 }
                 else {
                     me.RDLExtProperty = {};
@@ -3129,7 +3125,7 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value: JSON.stringify(RDLObj),
+                       value: RDL,
                        path: me.reportPath,
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,
@@ -3328,7 +3324,7 @@ $(function () {
 
 
             // Set the current set and trigger the model changed event
-            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+            if (lastAddedSetId && lastAddedSetId !== me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
 
@@ -3911,7 +3907,7 @@ $(function () {
                 }
             });
         },
-        onWindowResize: function () {
+        windowResize: function () {
             var me = this;
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
             var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
@@ -4252,7 +4248,7 @@ $(function () {
         var me = this;
         me.options = {
             $container: null,
-            isFullScreen: true,
+            isFullScreen: true
         };
 
         // Merge options with the default settings
@@ -4483,10 +4479,6 @@ $(function () {
                 }
             });
 
-            $(window).on("resize", function () {
-                me._windowResizeHandler.call(me)
-            });
-
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on("scroll", function () {
                     me._updateTopDiv(me);
@@ -4510,28 +4502,19 @@ $(function () {
                 });
             }
         },
-        _windowResizeTimer: null,
-        _windowResizeHandler: function () {
+        windowResize: function () {
             var me = this;
-            //handle window resize event when the call interval is more than 100 milliseconds
-            //this will optimize performance when resize action rapid succession to make it only execute one time
-            if (me._windowResizeTimer) {
-                clearTimeout(me._windowResizeTimer);
-                me._windowResizeTimer = null;
-            }
-            
-            me._windowResizeTimer = setTimeout(function () {
-                me.ResetSize();
-                me._updateTopDiv(me);
-                me.setBackgroundLayout();
-            }, 100);
+            me.ResetSize();
+            me._updateTopDiv(me);
+            me.setBackgroundLayout();
         },
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-
+            
             var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
             if (me.$leftpane.is(":visible")) {
                 me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
             } else if (me.$rightpane.is(":visible")) {
@@ -4584,7 +4567,8 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
-            var linkSectionHeight = me.$linksection.outerHeight();
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+            
             values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
 
@@ -4713,7 +4697,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                me.setBackgroundLayout();
+                me.setBackgroundLayout.apply(me, arguments);
             });
 
             //  Just in case it is hidden
@@ -4913,13 +4897,14 @@ $(function () {
             var delay = Number(200);
             
             if (!slideoutPane.is(":visible")) {
-                var routeLinkPaneOffset = me.$linksection.outerHeight();
+                var routeLinkPaneOffset = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+                
                 slideoutPane.css({ height: Math.max($(window).height() - routeLinkPaneOffset, mainViewPort.height()) - routeLinkPaneOffset });
                 if (isLeftPane) {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideLeftShow(delay);
                 } else {
-                    slideoutPane.css({ top: me.$container.scrollTop() + routeLinkPaneOffset });
+                    slideoutPane.css({ top: routeLinkPaneOffset });
                     slideoutPane.slideRightShow(delay);
                 }
                 
@@ -4949,13 +4934,29 @@ $(function () {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
             }
         },
-        setBackgroundLayout: function () {
+        _isReportViewer: function () {
             var me = this;
+            if (widgets.hasWidget(me.$container, widgets.reportViewerEZ)) {
+                var reportArea = me.$container.find(".fr-report-areacontainer");
+                if (reportArea.length === 1) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        setBackgroundLayout: function (e, data) {
+            var me = this;
+            if (!me._isReportViewer()) {
+                // This is needed for the dashboard case. We cannot have the fr-render-bglayer set for
+                // the dashboard viewer. Each report will already be handled.
+                return;
+            }
+
             var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
             var containerWidth = me.$container.width();
             var topDivHeight = me.$topdiv.outerHeight();
-            
+
             if (reportArea.height() > (containerHeight - topDivHeight) || reportArea.width() > containerWidth) {
                 $(".fr-render-bglayer", me.$container).css("position", "absolute").
                     css("height", Math.max(reportArea.height(), (containerHeight - topDivHeight)))
@@ -4990,6 +4991,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var messages = locData.messages;
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -5022,9 +5025,8 @@ $(function () {
 
             var url = me.options.reportManagerAPI + "/Resource";
             url += "?path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
             if (me.options.rsInstance) {
-                url += "?instance=" + me.options.rsInstance;
+                url += "&instance=" + me.options.rsInstance;
             }
 
             forerunner.ajax.ajax({
@@ -5032,7 +5034,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
-                    me.dashboardDef = data
+                    me.dashboardDef = data;
                     status = true;
                 },
                 fail: function (jqXHR) {
@@ -5157,6 +5159,16 @@ $(function () {
             
         },
         /**
+         * Returns the current path and propertyList
+         */
+        getProperties: function () {
+            var me = this;
+            return {
+                path: me.curPath,
+                propertyList: me._propertyList
+            };
+        },
+        /**
          * Set the properties the dialog need to show up
          *
          * @function $.forerunner.forerunnerProperties#setProperties
@@ -5167,6 +5179,7 @@ $(function () {
         setProperties: function (path, propertyList) {
             var me = this;
             me.curPath = path;
+            me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
             for (key in me.$tabs.data()) {
@@ -5180,8 +5193,8 @@ $(function () {
             me.$tabsUL.empty();
             me._preprocess = null;
 
-            for (var i = 0; i < propertyList.length; i++) {
-                switch (propertyList[i]) {
+            for (var i = 0; i < me._propertyList.length; i++) {
+                switch (me._propertyList[i]) {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(me._descriptionPreloading());
@@ -5415,13 +5428,13 @@ $(function () {
         _saveTags: function () {
             var me = this;
 
-            var tags = me.$tagInput.val().trim(),
+            var tags = $.trim(me.$tagInput.val()),
                 tagList;
 
             if (tags !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
-                    tagList[i] = '"' + tagList[i].trim() + '"';
+                    tagList[i] = '"' + $.trim(tagList[i]) + '"';
                 }
                 tags = tagList.join(",");
                 me._tags = tags;
@@ -5460,7 +5473,7 @@ $(function () {
         _setDescription: function () {
             var me = this;
             try {
-                var descriptionInput = me.$desInput.val().trim();
+                var descriptionInput = $.trim(me.$desInput.val());
 
                 if (descriptionInput !== me._description) {
                     var description = forerunner.helper.htmlEncode(descriptionInput);
@@ -5520,8 +5533,9 @@ $(function () {
 
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
-            
-            me.$rdlInput.val(RDLExtension);
+
+            var RDL = JSON.stringify(RDLExtension);
+            me.$rdlInput.val(RDL);
         },
         _setRDLExtension: function () {
             var me = this;
@@ -5572,15 +5586,15 @@ $(function () {
             var me = this;
 
             if (me.$sfForm.valid()) {
-                var name = me.$sfForm.find(".fr-sf-foldername").val().trim();
-                var tags = me.$sfForm.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.$sfForm.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
                 var priorSearchFolder = JSON.parse(me._searchFolder);
 
                 if (name !== priorSearchFolder.name || tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");
 
                     for (var i = 0; i < tagsList.length; i++) {
-                        tagsList[i] = '"' + tagsList[i].trim() + '"';
+                        tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                     }
 
                     var searchfolder = {
@@ -5758,6 +5772,9 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+
+            //trigger window resize event to regulate toolbar buttons visibility
+            $(window).resize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -5845,11 +5862,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()
@@ -6374,12 +6386,14 @@ $(function () {
                 //if (forerunner.device.isSmall(me.$slider.is(":visible") ? me.$slider : me.options.$reportViewer)) {
                 //we should used visible area to indicate full screen mode
                 if (forerunner.device.isSmall(me.options.$appContainer)) {
+                    me.element.addClass("fr-nav-container-full");
                     $container.addClass("fr-nav-container-full");
                     $items.addClass("fr-nav-item-full");
                     $spacer.addClass("fr-nav-li-spacer-full");
                     $closeButton.addClass("fr-nav-close-container-full");
                 }
                 else {
+                    me.element.removeClass("fr-nav-container-full");
                     $container.removeClass("fr-nav-container-full");
                     $items.removeClass("fr-nav-item-full");
                     $spacer.removeClass("fr-nav-li-spacer-full");
@@ -6544,11 +6558,6 @@ $(function () {
         },
 
         _create: function () {
-            var me = this;
-
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         }
     });  // $.widget
 });  // function()
@@ -6842,10 +6851,31 @@ $(function () {
             }
 
             $anchor.on("click", function (event) {
-                if (me.options.navigateTo) {
+                if (event.altKey) {
+                    data = {
+                        catalogItem: catalogItem
+                    };
+                    me._onContextMenu.call(me, event, data);
+                } else if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
+
+            if (forerunner.device.isTouch()) {
+                $anchor.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch hold",
+                function (ev) {
+                    if (!ev.gesture) return;
+                    switch (ev.type) {
+                        case "hold":
+                            data = {
+                                catalogItem: catalogItem
+                            };
+                            me._onContextMenu.call(me, event, data);
+                            break;
+                    }
+                });
+            }
+
             $item.append($anchor);
 
 
@@ -6916,7 +6946,8 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            var name = catalogItem.Name && forerunner.helper.htmlDecode(catalogItem.Name);
+
+            var name = catalogItem.Name;
             $captiontext.attr("title", name);
             $captiontext.html(name);
             $caption.append($captiontext);
@@ -6924,16 +6955,43 @@ $(function () {
 
             //Description
             var $desc = new $("<div />");
-            //$desc.addClass("fr-explorer-caption");
+            $desc.addClass("fr-explorer-desc-container");
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            var description = catalogItem.Description && forerunner.helper.htmlDecode(catalogItem.Description);
-            $desctext.attr("title", description);
-            $desctext.html(description);
+
+            var description = catalogItem.Description;
+            if (description) {
+                $desctext.attr("title", forerunner.helper.htmlDecode(description));
+                $desctext.html(description);
+            }
             $desc.append($desctext);
             $item.append($desc);
            
             return $item;
+        },
+        _onContextMenu: function (e, data) {
+            var me = this;
+
+            if (!me.getUserSettings().adminUI) {
+                return;
+            }
+
+            var $dlg = me.options.$appContainer.find(".fr-ctx-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+                me._contextMenu = $dlg;
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.contextMenu({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance,
+                catalogItem: data.catalogItem
+            });
+            me._contextMenu.contextMenu("openDialog");
         },
         _renderPCView: function (catalogItems) {
             var me = this;
@@ -7619,7 +7677,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-searchfolder', locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -7687,12 +7746,12 @@ $(function () {
             var me = this;
 
             if (me.$form.valid()) {
-                var name = me.element.find(".fr-sf-foldername").val().trim();
-                var tags = me.element.find(".fr-sf-foldertags").val().trim();
+                var name = $.trim(me.element.find(".fr-sf-foldername").val());
+                var tags = $.trim(me.element.find(".fr-sf-foldertags").val());
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = '"' + tagsList[i].trim() + '"';
+                    tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
                 }
 
                 var searchfolder = {
@@ -7826,8 +7885,9 @@ $(function () {
             me._createStyles(me.options.reportViewer);
             me._reRender();
             
-            if (delayLayout !== true)
-                me.layoutReport();
+            if (delayLayout !== true) {
+                me.layoutReport();                
+            }
         },
         _reRender: function(){
             var me = this;
@@ -8068,8 +8128,7 @@ $(function () {
                 rec.html(RecExt.CustomHTML);
                 RIContext.$HTMLParent = rec;
             }
-            if(RecExt.ID)
-                rec.attr("id", RecExt.ID);
+         
 
             else {
 
@@ -8133,6 +8192,10 @@ $(function () {
                 Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
             if (RecExt.FixedWidth)
                 Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
+            if (RecExt.ID)
+                rec.attr("id", RecExt.ID);
+            
+            me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
@@ -8146,9 +8209,10 @@ $(function () {
             return rec;
         },
 
+      
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
-            renderWidth = me.options.reportViewer.element.width();
+            var renderWidth = me.options.reportViewer.element.width();
             if (RDLExt)
                 me.RDLExt = RDLExt;
             if (renderWidth === 0)
@@ -8397,6 +8461,18 @@ $(function () {
             return rdlExt;
 
         },
+        _getRDLExtShared: function () {
+            var me = this;
+
+            var rdlExt = {};
+            if (me.RDLExt) {
+                rdlExt = me.RDLExt["SharedActions"];
+                if (!rdlExt)
+                    rdlExt = {};
+            }
+            return rdlExt;
+
+        },
         _writeRichText: function (RIContext) {
             var Style = RIContext.Style;
             var $TextObj = $("<div/>");
@@ -8428,7 +8504,7 @@ $(function () {
             if (textExt.InputType) {
                 if (textExt.InputType === "textarea") {
                     $TextObj = $("<textarea name='" + textExt.InputName + "'/>");
-                    Style += "resize:none;" 
+                    Style += "resize:none;";
                 }
                 else
                     $TextObj = $("<input type='" + textExt.InputType + "' name='" + textExt.InputName + "'/>");
@@ -8770,7 +8846,7 @@ $(function () {
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
-            Style = imageStyle ? imageStyle : "display:block;";
+            Style = imageStyle ? imageStyle : "display:table-cell;";
             NewImage.attr("style", Style);
 
             //Remove the blue border on ie 8,9,10
@@ -8893,25 +8969,46 @@ $(function () {
                 }
 
             var ActionExt = me._getRDLExt(RIContext);
+            var SharedActions = me._getRDLExtShared();
 
             if (ActionExt.JavaScriptActions) {
-                $Control.addClass("fr-core-cursorpointer");
+                
 
                 for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
                     var action = ActionExt.JavaScriptActions[a];
+                    var actions;
 
-                    if (action.JavaFunc === undefined && action.Code !==undefined) {
-                        var newFunc;
-                        try {
-                            newFunc = new Function("e", action.Code);
+                    if (action.SharedAction && SharedActions[action.SharedAction]) {
+                        actions = SharedActions[action.SharedAction].JavaScriptActions;
+                    }                    
+                    var sa = 0;
+                    // if shared there can be many actions per share
+                    while (true) {
+
+                        if (actions !== undefined && actions[sa]) {
+                            action = actions[sa++];
                         }
-                        catch (e) { }
-                        action.JavaFunc = newFunc
-                        if (action.On === undefined)
-                            action.On = "click";
-                    }
 
-                    $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+
+                        if (action.JavaFunc === undefined && action.Code !== undefined) {
+                            var newFunc;
+                            try {
+                                newFunc = new Function("e", action.Code);
+                            }
+                            catch (e) { }
+                            action.JavaFunc = newFunc;
+                            if (action.On === undefined)
+                                action.On = "click";
+                            if (action.Obj === "click")
+                                $Control.addClass("fr-core-cursorpointer");
+                        }
+
+                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+
+                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
+                            break;
+
+                    }
                 }
             }
 
@@ -9161,7 +9258,7 @@ $(function () {
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
-                var tablixExt = me._getRDLExt(RIContext);;                
+                var tablixExt = me._getRDLExt(RIContext);                
 
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);
@@ -9190,7 +9287,7 @@ $(function () {
                     
                     if (tablixExt.Columns && tablixExt.Columns.length <= RIContext.CurrObj.ColumnWidths.ColumnCount) {
                         for (cols = 0; cols < tablixExt.Columns.length; cols++) {
-                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1] = { show: true};
+                            respCols.Columns[parseInt(tablixExt.Columns[cols].Col,10) - 1] = { show: true};
                         }
                     }
                      
@@ -9214,12 +9311,12 @@ $(function () {
                             }
                             else {
                                 for (cols = 0; cols < tablixExt.Columns.length; cols++) {
-                                    if (tablixExt.Columns[cols].Pri >= maxPri  && respCols.Columns[parseInt(tablixExt.Columns[cols].Col) - 1].show === true) {
+                                    if (tablixExt.Columns[cols].Pri >= maxPri && respCols.Columns[parseInt(tablixExt.Columns[cols].Col, 10) - 1].show === true) {
                                         nextColIndex = cols;
                                         maxPri = tablixExt.Columns[cols].Pri;
                                     }
                                 }
-                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col) - 1;                                
+                                foundCol = parseInt(tablixExt.Columns[nextColIndex].Col, 10) - 1;
                                 respCols.Columns[foundCol].Ext = tablixExt.Columns[nextColIndex];
                                 respCols.Columns[foundCol] = { show: false };
                             }
@@ -9241,7 +9338,7 @@ $(function () {
                         if (tablixwidth < viewerWidth || respCols.ColumnCount ===0) {
                             notdone = false;
                             //Show if more then half is visible
-                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * .9 || respCols.ColumnCount===0) {
+                            if (viewerWidth - tablixwidth > tablixCols[foundCol].Width * 0.9 || respCols.ColumnCount===0) {
                                 respCols.Columns[foundCol].show = true;
                                 respCols.ColumnCount++;
                             }
@@ -9309,6 +9406,7 @@ $(function () {
 
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
+            me._writeActions(RIContext, {}, $Tablix);
 
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
@@ -9372,7 +9470,8 @@ $(function () {
                 if (respCols.isResp && $ExtRow && $ExtRow.children()[0].children.length > 0)
                     $Tablix.append($ExtRow);
                 else
-                    $Row.find(".fr-render-respIcon").hide();
+                    $Row.findUntil(".fr-render-respIcon", ".fr-render-tablix").hide();
+                
 
                 //Handle fixed col header
                 if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
@@ -9425,7 +9524,7 @@ $(function () {
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
-                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true) {
+                        if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true && BRObj.Cell) {
                             //If responsive table add the show hide image and hook up
                             $Drilldown = me._addTablixRespDrill($ExtRow, BRObj.ColumnIndex, $Tablix, BRObj.Cell);
                             $ExtRow.HasDrill = true;
@@ -9441,16 +9540,22 @@ $(function () {
                                 respCols.Columns[BRObj.ColumnIndex].HeaderName = me._getElements(BRObj.Cell.ReportItem).NonSharedElements.UniqueName;
                             respCols.Columns[BRObj.ColumnIndex].Header = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                             respCols.Columns[BRObj.ColumnIndex].Header.children().removeClass("fr-r-fS");
+
+                            //Undo rotate if needed
+                            me._unRotate(respCols.Columns[BRObj.ColumnIndex].Header.children(0).children(0));
+                            
                             $ExtRow = null;
                         }
                         else {
                             if (respCols.Columns[BRObj.ColumnIndex].Header)
                                 $ExtCell.append(respCols.Columns[BRObj.ColumnIndex].Header.clone(true, true).attr("data-uniqName", respCols.Columns[BRObj.ColumnIndex].HeaderName + "-" + respCols.Columns[BRObj.ColumnIndex].HeaderIndex++));
-                            var ric;
-                            ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
-                            ric.css("width", CellWidth+"mm");
-                            ric.css("height", CellHeight+"mm");
-                            $ExtCell.append(ric);
+                            if (BRObj.Cell) {
+                                var ric;
+                                ric = me._writeReportItems(new reportItemContext(RIContext.RS, BRObj.Cell.ReportItem, BRIndex, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth)));
+                                ric.css("width", CellWidth + "mm");
+                                ric.css("height", CellHeight + "mm");
+                                $ExtCell.append(ric);
+                            }
 
                         }
                     }
@@ -9480,6 +9585,8 @@ $(function () {
                             respCols.Columns[Obj.ColumnIndex].HeaderName = me._getElements(Obj.Cell.ReportItem).NonSharedElements.UniqueName;
                         respCols.Columns[Obj.ColumnIndex].Header.append(h);
                         respCols.Columns[Obj.ColumnIndex].Header.children().children().removeClass("fr-r-fS");
+
+                        me._unRotate(respCols.Columns[Obj.ColumnIndex].Header.children(0).children(0));
                         $ExtRow = null;
                     }
                     else {
@@ -9511,10 +9618,24 @@ $(function () {
             LastObjType = Obj.Type;
             return { LastRowIndex: LastRowIndex,LastColIndex:LastColIndex,Colspans:Colspans,Rowspans:Rowspans, LastObjType: LastObjType, Row: $Row, ExtRow : $ExtRow, ExtCell : $ExtCell, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };          
         },
+        _unRotate:function(header){
 
+            //Undo rotate if needed    
+            $.each(header, function (i, obj) {
+                obj = $(obj);
+                if (obj.hasClass("fr-rotate-90") || obj.hasClass("fr-rotate-270")) {
+                    obj.removeClass("fr-rotate-90").removeClass("fr-rotate-270");                    
+                    obj.css("left", "").css("top", "").css("width", "").css("height", "").css("position", "");
+                }
+            });
+
+        },
         _isHeader: function(respCols,cell){
             var me = this;
             var cellDefName;
+
+            if (cell === undefined)
+                return false;
 
             cellDefName = (me._getSharedElements(me._getElements(cell.ReportItem).SharedElements)).Name;
 
@@ -9591,7 +9712,7 @@ $(function () {
 
                     $.each($(tr).children("[rowspan]"), function (c, td) {
                         if ($(td).height() > 0)
-                            $(td).attr("rowspan", parseInt($(td).attr("rowspan")) + delta);
+                            $(td).attr("rowspan", parseInt($(td).attr("rowspan"), 10) + delta);
                     });
                     if ($(tr).hasClass("fr-resp-rowspan"))
                         return false;
@@ -9643,7 +9764,7 @@ $(function () {
                     Tablix.State.ExtRow.hide();
                 }
                 else
-                    Tablix.State.Row.find(".fr-render-respIcon").hide();
+                    Tablix.State.Row.findUntil(".fr-render-respIcon",".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
             }
@@ -9771,7 +9892,7 @@ $(function () {
             if (CurrObj.Elements)
                 return CurrObj.Elements;
             if (CurrObj.SubReportProperties)
-                return CurrObj.SubReportProperties
+                return CurrObj.SubReportProperties;
         },
 
         _getElementsStyle: function (RS, CurrObj) {
@@ -13428,7 +13549,9 @@ $(function () {
                     $toolbar.toolbar("configure", me.options.toolbarConfigOption);
                 }
                 // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
-                $viewer.reportViewer("option", "toolbarHeight", $toolbar.outerHeight() + me.options.$routeLink.outerHeight());
+                var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
+
+                $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
@@ -13744,6 +13867,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var helper = forerunner.helper;
     
      /**
      * Widget used to view a report
@@ -13759,6 +13883,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13780,7 +13905,8 @@ $(function () {
             userSettings: null,
             rsInstance: null,
             useReportManagerSettings: false,
-            toolbarConfigOption: constants.toolbarConfigOption.full
+            toolbarConfigOption: constants.toolbarConfigOption.full,
+            handleWindowResize: true
         },
         _render: function () {
             var me = this;
@@ -13848,19 +13974,37 @@ $(function () {
 
             me.DefaultAppTemplate.bindViewerEvents();
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            me._render();
             
-            if (me.options.isFullScreen &&
-                (forerunner.device.isWindowsPhone() )) {
+            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
+            if (showBreadcrumb === "off") {
+                me.hideRouteLink();
+            }
+
+            me._render();
+
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() )) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.
@@ -13885,6 +14029,39 @@ $(function () {
                     }
                 }
             }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to true. It
+         * handles the updating of the viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.reportViewerEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            if (me.options.DefaultAppTemplate === null) {
+                me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+            }
+            var $reportViewer = me.getReportViewer();
+            if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                $reportViewer.reportViewer("windowResize");
+            }
+            var $toolbar = me.getToolbar();
+            if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                helper.delay(me, function () {
+                // This needs to be delayed for the dashboard case where the size of the report
+                // will dictate the size of the report area and therefore the size of the toolbar
+                me.getToolbar().toolbar("windowResize");
+                }, 100, "_toolbarDelayId");
+            }
+        },
+        /**
+         * Hide the breadcrumb section
+         *
+         * @function $.forerunner.reportViewerEZ#hideRouteLink
+         */
+        hideRouteLink: function(){
+            var me = this;
+            me.DefaultAppTemplate.$linksection.hide();
         },
         /**
          * Get report viewer page navigation
@@ -14311,6 +14488,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
+    var helper = forerunner.helper;
     var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
@@ -14415,8 +14593,8 @@ $(function () {
 
             // Hook the router route event
             me.router.on(events.routerRoute(), function (event, data) {
-                me._onRoute.apply(me, arguments);
                 me._generateRouteLink.apply(me, arguments);
+                me._onRoute.apply(me, arguments);
             });
 
             if (!me.options.historyBack) {
@@ -14433,8 +14611,6 @@ $(function () {
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
 
-            me._routeAction = null;
-            
             if (data.name === "transitionToReportManager") {
                 me.transitionToReportManager(path, null);
             } else if (data.name === "transitionToReportViewer") {
@@ -14454,18 +14630,15 @@ $(function () {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
                 me.transitionToReportManager(keyword, "search");
-                me._routeAction = "search";
             } else if (data.name === "transitionToFavorites") {
                 me.transitionToReportManager(null, "favorites");
-                me._routeAction = "favorite";
             } else if (data.name === "transitionToRecent") {
                 me.transitionToReportManager(null, "recent");
-                me._routeAction = "recent";
             } else if (data.name === "transitionToSearchFolder") {
                 me.transitionToReportManager(path, "searchfolder");
             } else if (data.name === "transitionToEditDashboard") {
                 me.transitionToEditDashboard(path);
-            } else if (data.name == "transitionToOpenDashboard") {
+            } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
         },
@@ -14498,11 +14671,13 @@ $(function () {
             //clear prior route link
             $linksection.html("");
             var path = data.args[0];
-            me._getLink(path, $linksection, 0);
+            me._getLink(path, $linksection, 0, data.name);
 
             me._linkResize($linksection);
+
+            $linksection.show();
         },
-        _getLink: function (path, $container, index) {
+        _getLink: function (path, $container, index, transitionName) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
                 name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
@@ -14518,25 +14693,26 @@ $(function () {
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
 
-                if (me._routeAction) {
+                //show forerunner view name in breadcrumb, search/favorite/recent
+                switch (transitionName) {
+                    case "transitionToSearch":
+                        forerunerViewText = locData.toolbar.search;
+                        break;
+                    case "transitionToFavorites":
+                        forerunerViewText = locData.toolbar.favorites;
+                        break;
+                    case "transitionToRecent":
+                        forerunerViewText = locData.toolbar.recent;
+                        break;
+                }
+
+                if (forerunerViewText) {
                     $arrowTag = new $("<span/>");
                     $arrowTag.text(" > ");
                     $container.append($arrowTag);
                     //Add special handle for search, favorite, recent views
                     $forerunnerViewLink = new $("<span />");
                     $forerunnerViewLink.addClass("fr-location-link-last");
-
-                    switch (me._routeAction) {
-                        case "search":
-                            forerunerViewText = locData.toolbar.search;
-                            break;
-                        case "favorite":
-                            forerunerViewText = locData.toolbar.favorites;
-                            break;
-                        case "recent":
-                            forerunerViewText = locData.toolbar.recent;
-                            break;
-                    }
 
                     $forerunnerViewLink.text(forerunerViewText);
                     $container.append($forerunnerViewLink);
@@ -14545,7 +14721,7 @@ $(function () {
                 return;
             }
             else {
-                me._getLink(parentPath, $container);
+                me._getLink(parentPath, $container, index, transitionName);
             }
 
             $arrowTag = new $("<span/>");
@@ -14654,15 +14830,26 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
 
-            var routeLinkSectionHeight = layout.$linksection.outerHeight();//default to 18px
-            var toolpaneheaderheight = layout.$topdiv.height() - routeLinkSectionHeight; //equal toolbar height
+            var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
+            
+            var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
 
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;// window phone 7 get top property wrong
+            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+
+            // window phone 7 get top property wrong
+            var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
+
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$rightheaderspacer.height(toolpaneheaderheight);
-            layout.$leftheaderspacer.height(toolpaneheaderheight);
+
+            layout.$leftpanecontent.css({ top: topDivHeight });
+            layout.$rightpanecontent.css({ top: topDivHeight });
+
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             if (forerunner.device.isWindowsPhone()) {
                 layout.$leftpanecontent.css({ top: toolpaneheaderheight });
@@ -14705,7 +14892,8 @@ $(function () {
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -14714,7 +14902,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-
+                
                 me._setLeftRightPaneStyle();
 
             }, timeout);
@@ -14735,7 +14923,7 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var $dashboardEZ = me.DefaultAppTemplate.$mainviewport.dashboardEZ({
+                var $dashboardEZ = layout.$mainviewport.dashboardEZ({
                     DefaultAppTemplate: layout,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
@@ -14743,7 +14931,8 @@ $(function () {
                     enableEdit: enableEdit,
                     path: path,
                     rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings()
+                    userSettings: me._getUserSettings(),
+                    handleWindowResize: false
                 });
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
@@ -14775,10 +14964,33 @@ $(function () {
             var me = this;
             me._transitionToDashboard(path, true);
         },
+        _create: function () {
+            var me = this;
+            $(window).on("resize", function (event, data) {
+                helper.delay(me, function () {
+                    var layout = me.DefaultAppTemplate;
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
+                        layout.$mainviewport.dashboardEZ("windowResize");
+                    }
+                    if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
+                        layout.$mainviewport.reportViewerEZ("windowResize");
+                    }
+
+                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+
+                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                    }
+                });
+            });
+        },
         _init: function () {
             var me = this;
-            
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                $container: me.element,
+                isFullScreen: me.isFullScreen
+            }).render();
             me._initPropertiesDialog();
 
             if (!me.options.navigateTo) {
@@ -14850,9 +15062,9 @@ $(function () {
         }
     });  // $.widget
 });  // function()
-///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
+///#source 1 1 /Forerunner/ReportExplorer/js/ContextMenu.js
 /**
- * @file Contains the print widget.
+ * @file Contains the context menu widget.
  *
  */
 
@@ -14865,6 +15077,203 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var contextMenu = locData.contextMenu;
+
+    // folder properties data
+    var propertyEnums = forerunner.ssr.constants.properties;
+    var propertyListMap = {
+        // Folder
+        1: [propertyEnums.tags, propertyEnums.description],
+        // Report
+        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        // Resource
+        3: [propertyEnums.tags, propertyEnums.description],
+        // LinkedReport
+        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+    };
+
+    /**
+     * Widget used to create the context menu
+     *
+     * @namespace $.forerunner.createDashboard
+     * @prop {Object} options - The options for the create dashboard dialog
+     * @prop {String} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
+     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
+     *
+     * @example
+     * $("#contextMenuId").contextMenu({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     catalogItem: me.catalogItem
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.contextMenu), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null,
+            catalogItem: null
+        },
+        _getPermissions: function () {
+            var me = this;
+            var permissionList = ["Delete", "Update Properties"];
+            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
+        },
+        _init: function () {
+            var me = this;
+            me._getPermissions();
+
+            // Delete item
+            if (!me.permissions["Delete"]) {
+                me._$delete.off("click");
+                me._$delete.addClass("fr-toolbase-disabled");
+                me._$delete.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$delete.on("click", function (event, data) {
+                    me._onClickDelete.apply(me, arguments);
+                });
+                me._$delete.removeClass("fr-toolbase-disabled");
+                me._$delete.addClass("fr-core-cursorpointer");
+            }
+
+            // Properties
+            if (!me.permissions["Update Properties"] &&
+                propertyListMap[me.options.catalogItem.Type]) {
+                me._$properties.off("click");
+                me._$properties.addClass("fr-toolbase-disabled");
+                me._$properties.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$properties.on("click", function (event, data) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+                me._$properties.removeClass("fr-toolbase-disabled");
+                me._$properties.addClass("fr-core-cursorpointer");
+            }
+
+            // Close dialog event
+            setTimeout(function () {
+                $("body").one("click", function () {
+                    me.closeDialog();
+                });
+            }, 10);
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("", contextMenu.title, "", "");
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    // Delete
+                    "<div class='fr-ctx-container'>" +
+                        "<div class='fr-ctx-delete-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
+                            "<div class='fr-ctx-item-text-container'>" +
+                                "<div class='fr-ctx-item-text'>" + contextMenu.delete + "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                    // Properties
+                    "<div class='fr-ctx-container'>" +
+                        "<div class='fr-ctx-properties-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
+                            "<div class='fr-ctx-item-text-container'>" +
+                                "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            // Delete
+            me._$delete = me.element.find(".fr-ctx-delete-id");
+
+            // Properties
+            me._$properties = me.element.find(".fr-ctx-properties-id");
+        },
+        _onClickDelete: function (event, data) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                },
+                fail: function (jqXHR) {
+                    console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+        },
+        _onClickProperties: function (event, data) {
+            var me = this;
+            var $propertyDlg = me.options.$appContainer.find(".fr-properties-section");
+            if (!$propertyDlg || $propertyDlg.length === 0) {
+                console.log("Error - fr-properties-section not found");
+                return;
+            }
+
+            // Save the current settings
+            var previous = $propertyDlg.forerunnerProperties("getProperties");
+
+            // Set the new settings based upon the catalogItem and show the dialog
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            $propertyDlg.forerunnerProperties("openDialog");
+
+            // Retore the previous settings
+            if (previous && previous.path && previous.propertyList) {
+                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+            }
+        },
+        /**
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.createDashboard#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
+/**
+ * @file Contains the create dashboard widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var createDashboard = locData.createDashboard;
     var ssr = forerunner.ssr;
@@ -14898,12 +15307,12 @@ $(function () {
         _createOptions: function() {
             var me = this;
 
-            me.$select = me.element.find(".fr-cdb-template-name")
+            me.$select = me.element.find(".fr-cdb-template-name");
 
             var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var templates = dashboards.templates;
-            for (item in templates) {
-                var $option = $("<option value=" + item + ">" + templates[item] + "</option>");
+            for (var key in templates) {
+                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
                 me.$select.append($option);
             }
         },
@@ -15017,7 +15426,7 @@ $(function () {
             if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = me.options.parentFolder + dashboardName;
+                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();
@@ -21814,6 +22223,7 @@ $(function () {
     var dtb = forerunner.ssr.tools.dashboardToolbar;
     var dtp = forerunner.ssr.tools.dashboardToolPane;
     var tg = forerunner.ssr.tools.groups;
+    var helper = forerunner.helper;
 
     /**
     * Widget used to create and edit dashboards
@@ -21844,7 +22254,8 @@ $(function () {
             enableEdit: true,
             rsInstance: null,
             userSettings: null,
-            path: null
+            path: null,
+            handleWindowResize: true
         },
         /**
          * Returns the user settings
@@ -21872,12 +22283,47 @@ $(function () {
             var $dashboardEditor = me.getDashboardEditor();
             $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);
         },
+        _create: function () {
+            var me = this;
+            if (me.options.handleWindowResize) {
+                $(window).on("resize", function (e, data) {
+                    helper.delay(me, function () {
+                        me.windowResize.call(me);
+                    });
+                });
+            }
+        },
+        /**
+         * Call this function when the handleWindowResize is set to false. It
+         * handles the updating of the dashboard viewer, and associated widget, sizes.
+         *
+         * @function $.forerunner.dashboardEZ#windowResize
+         */
+        windowResize: function () {
+            var me = this;
+            if (me.options.DefaultAppTemplate === null) {
+                me.layout.windowResize.call(me.layout);
+            }
+
+            var $dashboardEditor = me.getDashboardEditor();
+            if (widgets.hasWidget($dashboardEditor, widgets.dashboardEditor)) {
+                $dashboardEditor.dashboardEditor("windowResize");
+            }
+
+            var $dashboardToolbar = me.getDashboardToolbar();
+            if (widgets.hasWidget($dashboardToolbar, widgets.dashboardToolbar)) {
+                $dashboardToolbar.dashboardToolbar("windowResize");
+            }
+        },
         _init: function () {
             var me = this;
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
-                me.layout = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
+                me.layout = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
             } else {
                 me.layout = me.options.DefaultAppTemplate;
             }
@@ -21893,7 +22339,8 @@ $(function () {
                 $appContainer: me.layout.$container,
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
-                rsInstance: me.options.rsInstance
+                rsInstance: me.options.rsInstance,
+                handleWindowResize: false
             });
 
             me.$toolbar = me.layout.$mainheadersection;
@@ -21982,11 +22429,11 @@ $(function () {
         /**
          * Get report viewer toolbar
          *
-         * @function $.forerunner.dashboardEZ#getToolbar
+         * @function $.forerunner.dashboardEZ#getDashboardToolbar
          * 
          * @return {Object} - toolbar jQuery object
          */
-        getToolbar: function () {
+        getDashboardToolbar: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$mainheadersection;
@@ -21997,11 +22444,11 @@ $(function () {
         /**
          * Get report viewer toolpane
          *
-         * @function $.forerunner.dashboardEZ#getToolPane
+         * @function $.forerunner.dashboardEZ#getDashboardToolPane
          * 
          * @return {Object} - toolpane jQuery object
          */
-        getToolPane: function () {
+        getDashboardToolPane: function () {
             var me = this;
             if (me.layout) {
                 return me.layout.$leftpanecontent;
@@ -22116,10 +22563,6 @@ $(function () {
         _destroy: function () {
         },
         _create: function () {
-            var me = this;
-            $(window).resize(function () {
-                me.onWindowResize.call(me);
-            });
         },
     });  // $.widget
 });  // function()
@@ -22285,10 +22728,6 @@ $(function () {
 
             // For the viewer widget alone, this will always stay false
             me.enableEdit = false;
-
-            $(window).on("resize", function (e, data) {
-                me._onWindowResize.apply(me, arguments);
-            });
         },
         _setWidths: function (width) {
             var updated = false;
@@ -22298,59 +22737,61 @@ $(function () {
                     item.css("width", width);
                 }
             });
+
             return updated;
         },
-        _timerId: null,
-        _onWindowResize: function () {
+        /**
+         * windowResize will change the report containers to: 1) be responsive
+         * (I.e., inline-block) as well as 2) resize the containers if the window
+         * width is less than the container width,
+         *
+         * @function $.forerunner.dashboardViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
-
-            // If we get back here before the timer fires
-            if (me._timerId) {
-                clearTimeout(me._timerId);
-                me._timerId = null;
-            }
-
             var maxResponsiveRes = forerunner.config.getCustomSettingsValue("MaxResponsiveResolution", 1280);
             var userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
 
-            me._timerId = setTimeout(function () {
-                var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
-                var updated = false;
-                me.element.find(".fr-dashboard-report-id").each(function (index, item) {
-                    var $item = $(item);
-                    var currentStyle = $item.css("display");
+            var isResponsive = userSettings.responsiveUI && $(window).width() < maxResponsiveRes && !me.enableEdit;
+            var updated = false;
+            me.element.find(".fr-dashboard-report-id").each(function (index, item) {
+                var $item = $(item);
+                var currentStyle = $item.css("display");
 
-                    if (isResponsive) {
-                        // Set the dispay on the report container element to inline-block
-                        if (currentStyle !== "inline-block") {
-                            $item.css("display", "inline-block");
-                            updated = true;
-                        }
+                if (isResponsive) {
+                    // Set the dispay on the report container element to inline-block
+                    if (currentStyle !== "inline-block") {
+                        $item.css("display", "inline-block");
+                        updated = true;
+                    }
 
-                        if (me.element.width() < $item.width()) {
-                            // Set the width of the report <div> to the viewer width
-                            updated = me._setWidths(me.element.width(), $item);
-                        } else {
-                            // Remove any explicit width
-                            updated = me._setWidths("", $item);
-                        }
+                    if (me.element.width() < $item.width()) {
+                        // Set the width of the report <div> to the viewer width
+                        updated = me._setWidths(me.element.width(), $item);
                     } else {
                         // Remove any explicit width
                         updated = me._setWidths("", $item);
-
-                        if (currentStyle) {
-                            // Remove any explicitly set display and default back to whatever the template designer wanted
-                            $item.css("display", "");
-                            updated = true;
-                        }
                     }
-                });
-                if (updated) {
-                    // Need this to refresh the viewer to see the changes
-                    me.element.hide().show(0);
+                } else {
+                    if (currentStyle) {
+                        // Remove any explicitly set display and default back to whatever the template designer wanted
+                        $item.css("display", "");
+                        updated = true;
+                    }
+
+                    // Remove any explicit width
+                    updated = me._setWidths("", $item);
                 }
-                me._timerId = null;
-            }, 100);
+
+                if (updated && widgets.hasWidget($item, widgets.reportViewerEZ)) {
+                    // Update the viewer size
+                    $item.reportViewerEZ("windowResize");
+                }
+            });
+            if (updated) {
+                // Need the hide and show to refresh the viewer to see the changes
+                me.element.hide().show(0);
+            }
         },
         _init: function () {
             var me = this;
@@ -22420,6 +22861,7 @@ $(function () {
                     historyBack: null,
                     isReportManager: false,
                     isFullScreen: false,
+                    handleWindowResize: false,
                     userSettings: forerunner.ajax.getUserSetting(),
                     toolbarConfigOption: me.enableEdit ? constants.toolbarConfigOption.dashboardEdit : reportProperties.toolbarConfigOption
                 });
@@ -22428,7 +22870,7 @@ $(function () {
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
                     data.reportId = reportId;
-                    data.$reportViewer = $reportViewer;
+                    data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
@@ -22449,8 +22891,8 @@ $(function () {
             // Meant to be overridden in the dashboard editor widget
         },
         _onAfterReportLoaded: function (e, data) {
-            if (data.$reportViewer) {
-                data.$reportViewer.reportViewer("reLayout");
+            if (data.$reportViewerEZ) {
+                data.$reportViewerEZ.reportViewerEZ("windowResize");
             }
         },
         _loadResource: function (path) {
@@ -22602,9 +23044,8 @@ $(function () {
                 me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
+                me._save(true);
             }, timeout);
-
-            me._save(true);
         },
         _showUI: function (show) {
             var me = this;
@@ -22634,7 +23075,7 @@ $(function () {
                 $item.height("");
             } else {
                 // Put in a default height until a report is loaded
-                $item.height("480px");
+                $item.height("320px");
             }
 
             // Create the button

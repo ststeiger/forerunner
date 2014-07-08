@@ -186,6 +186,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("DeleteCatalogItem")]
+        public HttpResponseMessage DeleteCatalogItem(string path, string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path)), "text/JSON");
+        }
+
+        [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");

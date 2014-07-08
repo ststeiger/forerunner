@@ -124,9 +124,8 @@ $(function () {
                 me._loadReport(data.reportId, false);
                 me._renderButtons();
                 me._makeOpaque(true);
+                me._save(true);
             }, timeout);
-
-            me._save(true);
         },
         _showUI: function (show) {
             var me = this;
@@ -156,7 +155,7 @@ $(function () {
                 $item.height("");
             } else {
                 // Put in a default height until a report is loaded
-                $item.height("480px");
+                $item.height("320px");
             }
 
             // Create the button

@@ -18,27 +18,29 @@ namespace ReportManager
             bundles.Add(new StyleBundle("~/Forerunner/Common/css/bundle").Include(
                   "~/Forerunner/Common/css/DefaultAppTemplate.css",
                   "~/Forerunner/Common/css/Forerunner-core.css",
-                  "~/Forerunner/Common/css/icons24x24.css",
-                  "~/Forerunner/Common/css/icons25x31.css",
+                  "~/Forerunner/Common/css/ForerunnerProperties.css",
                   "~/Forerunner/Common/css/Login.css",
                   "~/Forerunner/Common/css/MessageBox.css",
                   "~/Forerunner/Common/css/ReportManager.css",
                   "~/Forerunner/Common/css/ToolBase.css",
-                  "~/Forerunner/Common/css/ForerunnerProperties.css"));
-
-            bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
-                "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
-                "~/Forerunner/ReportExplorer/css/UserSettings.css",
-                "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
-                "~/Forerunner/ReportExplorer/css/icons128x128.css",
-                "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css"
-                ));
+                  "~/Forerunner/Common/css/icons24x24.css",
+                  "~/Forerunner/Common/css/icons25x31.css"
+                  ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Dashboard/css/bundle").Include(
                 "~/Forerunner/Dashboard/css/dashboards.css",
-                "~/Forerunner/Dashboard/css/ReportProperties.css",
                 "~/Forerunner/Dashboard/css/DashboardToolbar.css",
-                "~/Forerunner/Dashboard/css/DashboardToolPane.css"
+                "~/Forerunner/Dashboard/css/DashboardToolPane.css",
+                "~/Forerunner/Dashboard/css/ReportProperties.css"
+                ));
+
+            bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
+                "~/Forerunner/ReportExplorer/css/ContextMenu.css",
+                "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
+                "~/Forerunner/ReportExplorer/css/icons128x128.css",
+                "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
+                "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css",
+                "~/Forerunner/ReportExplorer/css/UserSettings.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Lib/jsTree/themes/default/bundle").Include(
@@ -46,7 +48,9 @@ namespace ReportManager
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(
+                  "~/Forerunner/ReportViewer/css/DSCredential.css",
                   "~/Forerunner/ReportViewer/css/ManageParamSets.css",
+                  "~/Forerunner/ReportViewer/css/ManageSubscription.css",
                   "~/Forerunner/ReportViewer/css/PageNav.css",
                   "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
                   "~/Forerunner/ReportViewer/css/ReportParameter.css",
@@ -54,10 +58,8 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ReportRender.css",
                   "~/Forerunner/ReportViewer/css/ReportViewer.css",
                   "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",
-                  "~/Forerunner/ReportViewer/css/ManageSubscription.css",
-                  "~/Forerunner/ReportViewer/css/Toolbar.css",
                   "~/Forerunner/ReportViewer/css/ToolPane.css",
-                  "~/Forerunner/ReportViewer/css/DSCredential.css"
+                  "~/Forerunner/ReportViewer/css/Toolbar.css"
                 ));
 
             BundleTable.EnableOptimizations = true;

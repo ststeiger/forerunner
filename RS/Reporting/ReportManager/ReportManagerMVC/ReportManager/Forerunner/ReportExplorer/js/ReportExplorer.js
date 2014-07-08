@@ -123,10 +123,31 @@ $(function () {
             }
 
             $anchor.on("click", function (event) {
-                if (me.options.navigateTo) {
+                if (event.altKey) {
+                    data = {
+                        catalogItem: catalogItem
+                    };
+                    me._onContextMenu.call(me, event, data);
+                } else if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
+
+            if (forerunner.device.isTouch()) {
+                $anchor.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch hold",
+                function (ev) {
+                    if (!ev.gesture) return;
+                    switch (ev.type) {
+                        case "hold":
+                            data = {
+                                catalogItem: catalogItem
+                            };
+                            me._onContextMenu.call(me, event, data);
+                            break;
+                    }
+                });
+            }
+
             $item.append($anchor);
 
 
@@ -197,7 +218,8 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            var name = catalogItem.Name && forerunner.helper.htmlDecode(catalogItem.Name);
+
+            var name = catalogItem.Name;
             $captiontext.attr("title", name);
             $captiontext.html(name);
             $caption.append($captiontext);
@@ -205,16 +227,43 @@ $(function () {
 
             //Description
             var $desc = new $("<div />");
-            //$desc.addClass("fr-explorer-caption");
+            $desc.addClass("fr-explorer-desc-container");
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            var description = catalogItem.Description && forerunner.helper.htmlDecode(catalogItem.Description);
-            $desctext.attr("title", description);
-            $desctext.html(description);
+
+            var description = catalogItem.Description;
+            if (description) {
+                $desctext.attr("title", forerunner.helper.htmlDecode(description));
+                $desctext.html(description);
+            }
             $desc.append($desctext);
             $item.append($desc);
            
             return $item;
+        },
+        _onContextMenu: function (e, data) {
+            var me = this;
+
+            if (!me.getUserSettings().adminUI) {
+                return;
+            }
+
+            var $dlg = me.options.$appContainer.find(".fr-ctx-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+                me._contextMenu = $dlg;
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.contextMenu({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                reportManagerAPI: me.options.reportManagerAPI,
+                rsInstance: me.options.rsInstance,
+                catalogItem: data.catalogItem
+            });
+            me._contextMenu.contextMenu("openDialog");
         },
         _renderPCView: function (catalogItems) {
             var me = this;

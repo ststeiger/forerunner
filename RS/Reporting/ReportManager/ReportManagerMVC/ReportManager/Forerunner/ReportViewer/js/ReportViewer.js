@@ -72,10 +72,6 @@ $(function () {
         },
 
         _destroy: function () {
-            var me = this;
-            //This needs to be changed to only remove the view function
-            //Baotong update it on 22-05-2014
-            $(window).off("resize", me._onWindowResize);
         },
 
         // Constructor
@@ -137,9 +133,6 @@ $(function () {
             //setup orientation change
             if (!forerunner.device.isMSIE8())
                 window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
-
-            //$(window).resize(function () { me._ReRender.call(me); });
-            $(window).on("resize", { me: me }, me._onWindowResize);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -371,12 +364,12 @@ $(function () {
                 
             }
         },
-        //Wrapper function, used to resigter window resize event
-        _onWindowResize: function (event) {
-            var me = event.data.me;
-            me._windowResize.call(me);
-        },
-        _windowResize: function () {
+        /**
+         * windowResize will relayout the report
+         *
+         * @function $.forerunner.reportViewer#windowResize
+         */
+        windowResize: function () {
             var me = this;
             me.scrollLeft = $(window).scrollLeft();
             me.scrollTop = $(window).scrollTop();
@@ -384,20 +377,6 @@ $(function () {
             me._ReRender.call(me);
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-        },
-        /**
-         * Relayout the report
-         *
-         * @function $.forerunner.reportViewer#reLayout
-         *
-         * Normally this would not need to be called. It is needed when a
-         * report is rendered into a container (<div>) and the size of the
-         * container is defined by the report itself. In that case call this
-         * function after the report is finished loading.
-         */
-        reLayout: function () {
-            var me = this;
-            me._windowResize();
         },
         _removeCSS: function () {
             var me = this;
@@ -457,8 +436,27 @@ $(function () {
                 me._setPageCallback = null;
             }
             
+
+            me.zoomPageWidth();
+
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+        },
+        zoomPageWidth: function (unZoom) {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            var zoom;
+
+            if (unZoom === true || unZoom === undefined)
+                zoom = 0;
+            else
+                zoom = (me.element.width() / page.width()) * 100;
+
+            if (forerunner.device.isFirefox === true) {
+                page.css('MozTransform', 'scale(' + zoom + ')');
+            } else {
+                page.css('zoom', ' ' + zoom + '%');
+            }
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -1941,7 +1939,7 @@ $(function () {
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {
-                       if (data && data !== "{}" ) {
+                       if (data && JSON.stringify(data) !== "{}" ) {
                            me.RDLExtProperty = data; 
                        }
                    },
@@ -2477,12 +2475,10 @@ $(function () {
         },
         saveRDLExt: function (RDL) {
             var me = this;
-            var RDLObj = { RDLExtension: "" };
 
             try {
-                if (RDL.trim() !== "") {
+                if ($.trim(RDL) !== "") {
                     me.RDLExtProperty = jQuery.parseJSON(RDL);
-                    RDLObj.RDLExtension = RDL;
                 }
                 else {
                     me.RDLExtProperty = {};
@@ -2499,7 +2495,7 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value: JSON.stringify(RDLObj),
+                       value: RDL,
                        path: me.reportPath,
                        propertyName: "ForerunnerRDLExt",
                        instance: me.options.rsInstance,

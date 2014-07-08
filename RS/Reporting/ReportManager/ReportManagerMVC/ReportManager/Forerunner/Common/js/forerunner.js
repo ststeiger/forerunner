@@ -32,7 +32,7 @@ if (!String.prototype.format) {
     String.prototype.format = function () {
         var args = arguments;
         return this.replace(/{(\d+)}/g, function (match, number) {
-            return typeof args[number] != 'undefined'
+            return typeof args[number] !== "undefined"
               ? args[number]
               : match
             ;
@@ -151,11 +151,12 @@ jQuery.fn.extend({
         var $t        = this.length > 1 ? this.eq(0) : this,
             t         = $t.get(0),
             vpWidth   = $w.width(),
-            vpHeight  = $w.height(),
-            direction = (direction) ? direction : 'both',
+            vpHeight  = $w.height(),            
             clientSize = hidden === true ? t.offsetWidth * t.offsetHeight : true;
 
-        if (typeof t.getBoundingClientRect === 'function'){
+        direction = (direction) ? direction : "both";
+
+        if (typeof t.getBoundingClientRect === "function"){
 
             // Use this native browser method, if available.
             var rec = t.getBoundingClientRect(),
@@ -166,11 +167,11 @@ jQuery.fn.extend({
                 vVisible   = partial ? tViz || bViz : tViz && bViz,
                 hVisible   = partial ? lViz || lViz : lViz && rViz;
 
-            if(direction === 'both')
+            if(direction === "both")
                 return clientSize && vVisible && hVisible;
-            else if(direction === 'vertical')
+            else if(direction === "vertical")
                 return clientSize && vVisible;
-            else if(direction === 'horizontal')
+            else if(direction === "horizontal")
                 return clientSize && hVisible;
         } else {
 
@@ -188,15 +189,32 @@ jQuery.fn.extend({
                 compareLeft     = partial === true ? _right : _left,
                 compareRight    = partial === true ? _left : _right;
 
-            if(direction === 'both')
+            if(direction === "both")
                 return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop)) && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
-            else if(direction === 'vertical')
+            else if(direction === "vertical")
                 return !!clientSize && ((compareBottom <= viewBottom) && (compareTop >= viewTop));
-            else if(direction === 'horizontal')
+            else if(direction === "horizontal")
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
+    findUntil: function (selector, until) {
+        
+        var coll = $(this);
+        this.addUntil(until, coll);
 
+        return coll.filter(selector);
+
+    },
+
+    addUntil: function (until, collection) {
+
+        var children = this.children().filter(":not( " + until + ")");
+        collection.add(children);
+
+        $.each(children, function (Index, Obj) {
+            $(Obj).addUntil(until, collection);
+        });
+    }
 
 });
 $(function () {
@@ -292,6 +310,8 @@ $(function () {
             reportExplorerSearchFolder: "reportExplorerSearchFolder",
             /** @constant */
             forerunnerProperties: "forerunnerProperties",
+            /** @constant */
+            contextMenu: "contextMenu",
 
             /** @constant */
             namespace: "forerunner",
@@ -314,9 +334,9 @@ $(function () {
              */
             hasWidget: function ($element, name) {
                 var dataName = this._getDataName(name);
-                if ($element.data() && $element.data()[dataName]) {
+                if ($element && $element.data() && $element.data()[dataName]) {
                     return true;
-                };
+                }
                 return false;
             },
         },
@@ -990,8 +1010,34 @@ $(function () {
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
-            
+
             return path.slice(0, lastIndex);
+        },
+        /**
+         * Returns true if str ends with suffix
+         *
+         * @member
+         */
+        endsWith: function (str, suffix) {
+            return !(str.indexOf(suffix, str.length - suffix.length));
+        },
+        /**
+         * Combines the give folder and name infor a forward slash separated
+         * path. Note that this function can combine multiple path parts.
+         *
+         * @member
+         */
+        combinePaths: function (folder, name) {
+            var path = folder;
+            for (var index = 1; index < arguments.length; index++) {
+                if (this.endsWith(path, "/")) {
+                    path = path + arguments[index];
+                } else {
+                    path = path + "/" + arguments[index];
+                }
+            }
+            path = path.replace("//", "/");
+            return path;
         },
         /**
          * Get current item name by the given path
@@ -1006,6 +1052,35 @@ $(function () {
 
             return path.slice(lastIndex + 1);
         },
+        /**
+         * Delayes the execution of the given function by n
+         * milliseconds.
+         *
+         * @param {Object} me - this pointer of the calling object
+         * @param {Function} func - Function to call when time expires
+         * @param {integer} n - Optional, Default 100, timeout milliseconds
+         * @param {String} id - Optional, timer id
+         */
+        delay: function (me, func, n, id) {
+            if (!n) {
+                n = 100;
+            }
+
+            if (!id) {
+                id = "_delayTimerId";
+            }
+
+            // If we get back here before the timer fires
+            if (me[id]) {
+                clearTimeout(me[id]);
+                me[id] = null;
+            }
+
+            me[id] = setTimeout(function () {
+                func();
+                me[id] = null;
+            }, n);
+        }
     },
         
 

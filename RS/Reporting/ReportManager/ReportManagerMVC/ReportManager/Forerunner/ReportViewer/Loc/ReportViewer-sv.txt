@@ -269,9 +269,9 @@
     "deleteFailed":"Prenumerations deletion misslyckades"
   },
   "properties": {
-    "title":"Properties",
-    "submit":"Submit",
-    "deleteItem":"Delete",
-    "description":"Description"
+    "title":"Egenskaper",
+    "submit":"Skicka in",
+    "deleteItem":"Radera",
+    "description":"Beskrivning"
   }
 }

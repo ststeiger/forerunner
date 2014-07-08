@@ -63,7 +63,10 @@
     "saveDashboard":"Salve o Dashboard",
     "editDashboard":"Editar o Dashboard",
     "tags":"Marcações",
-    "viewDashboard":"Ver o Dashboard"
+    "viewDashboard":"Ver o Dashboard",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Volta",
@@ -273,5 +276,10 @@
     "submit":"submeter",
     "deleteItem":"excluir",
     "description":"descrição"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

@@ -64,9 +64,9 @@
     "editDashboard":"编辑指示板",
     "tags":"标签",
     "viewDashboard":"查看指示板",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
-    "zoomDropdown":"Zoom"
+    "zoomPageWidth":"切换页面宽度",
+    "zoomPercent":"缩放百分比",
+    "zoomDropdown":"缩放"
   },
   "toolbar": {
     "back":"返回",
@@ -278,8 +278,8 @@
     "description":"描述"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "title":"右键菜单",
+    "delete":"删除",
+    "properties":"属性"
   }
 }

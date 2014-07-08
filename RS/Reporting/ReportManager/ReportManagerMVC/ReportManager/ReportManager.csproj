@@ -197,7 +197,6 @@
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
-    <Content Include="Forerunner\ReportExplorer\css\ContextMenu.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
     <Content Include="Forerunner\Common\js\DashboardModel.js" />
@@ -339,7 +338,6 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\SelectedFolder_Search.png" />
-    <Content Include="Forerunner\ReportExplorer\js\ContextMenu.js" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
@@ -360,6 +358,7 @@
     <Content Include="Forerunner\ReportViewer\css\ReportViewerEZ.css" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
+    <Content Include="Forerunner\ReportViewer\css\tooltips.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
     <Content Include="Forerunner\ReportViewer\images\Collapse.png" />
     <Content Include="Forerunner\ReportViewer\images\Expand.png" />

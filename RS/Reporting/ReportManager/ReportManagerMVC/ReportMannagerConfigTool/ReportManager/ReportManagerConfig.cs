@@ -321,7 +321,42 @@ namespace ReportMannagerConfigTool
         private static XmlElement GetAppSettingNode(XmlDocument doc, string name)
         {
             string xpath = string.Format("/configuration/appSettings/add[@key='{0}']", name);
-            return doc.SelectSingleNode(xpath) as XmlElement;
+
+            XmlNode node = doc.SelectSingleNode(xpath);
+            if (node == null)
+            {
+                node = AddAppSettingNode(doc, name);
+            }
+
+            return node as XmlElement;
+        }
+
+        /// <summary>
+        /// Add new appSetting node if it not exist in old web.config file
+        /// </summary>
+        /// <param name="doc">xml document object</param>
+        /// <param name="name">node key name</param>
+        /// <returns>new create appSetting node</returns>
+        private static XmlNode AddAppSettingNode(XmlDocument doc, string name)
+        {
+            XmlNode node = doc.CreateNode(XmlNodeType.Element, "add", null);
+
+            XmlAttribute key = doc.CreateAttribute("key");
+            key.InnerText = name;
+
+            XmlAttribute value = doc.CreateAttribute("value");
+            value.InnerText = String.Empty;
+
+            node.Attributes.Append(key);
+            node.Attributes.Append(value);
+
+            string xpath = "/configuration/appSettings";
+            XmlNode appSetting = doc.SelectSingleNode(xpath);
+
+            appSetting.AppendChild(node);
+            doc.Save(filePath);
+
+            return node;
         }
 
         /// <summary>
@@ -360,7 +395,7 @@ namespace ReportMannagerConfigTool
                 XmlNode authNode = GetAuthNode() as XmlNode;
                 if (authNode.SelectSingleNode("forms") == null)
                 {
-                    authNode.AppendChild(FormsNode(xmlDoc));
+                    authNode.AppendChild(FormValidateNode(xmlDoc));
                 }
             }
             else if (authtype.Equals(StaticMessages.windowsAuth))
@@ -399,7 +434,7 @@ namespace ReportMannagerConfigTool
             xmlDoc.Save(filePath);
         }
 
-        private static XmlNode FormsNode(XmlDocument doc)
+        private static XmlNode FormValidateNode(XmlDocument doc)
         {
             XmlNode node = doc.CreateNode(XmlNodeType.Element, "forms", doc.NamespaceURI);
 

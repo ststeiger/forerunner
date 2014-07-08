@@ -437,8 +437,6 @@ $(function () {
             }
             
 
-            me._unzoomPageWidth();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -1083,7 +1081,7 @@ $(function () {
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
-                    var replay = me.pages[me.curPage].Replay
+                    var replay = me.pages[me.curPage].Replay;
 
                     me._loadPage(data.NewPage, false, null, null, true,replay);
 
@@ -1195,7 +1193,7 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
-                        var replay = me.pages[me.curPage].Replay
+                        var replay = me.pages[me.curPage].Replay;
 
                         me.pages[me.curPage] = null;
                         me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
@@ -1638,7 +1636,7 @@ $(function () {
                     .done(function (data) {
                         if (data.length === 0) {
                             me.editEmailSubscription(null);
-                        } else if (data.length == 1) {
+                        } else if (data.length === 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
                         } else {
                             me.manageSubscription();
@@ -1677,7 +1675,7 @@ $(function () {
                 var pif = me.element.find(".fr-print-iframe");
                 if (pif.length === 1) pif.detach();
 
-                var pif = $("<iframe/>");
+                pif = $("<iframe/>");
                 pif.addClass("fr-print-iframe");
                 pif.attr("name", me.viewerID);
                 pif.attr("src", url);
@@ -2086,9 +2084,9 @@ $(function () {
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                         if (scrollID) {
-                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                            var el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                             if (el.length ===1)
-                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                                $("html, body").animate({ scrollTop: el.offset().top }, 500);
                         }
 
                     }
@@ -2133,9 +2131,9 @@ $(function () {
                             //$(window).scrollLeft(me.scrollLeft);
                             //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
-                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                 if (el.length === 1)
-                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                                    $("html, body").animate({ scrollTop: el.offset().top-50 }, 500);
                             }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -2242,7 +2240,8 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum], false, me.RDLExtProperty);
+               
                 me.pages[pageNum].needsLayout= true;
             }
 

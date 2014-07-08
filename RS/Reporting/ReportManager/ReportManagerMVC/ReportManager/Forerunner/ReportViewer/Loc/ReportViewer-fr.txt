@@ -64,7 +64,10 @@
     "saveDashboard":"enregistrer du tableau de bord",
     "editDashboard":"Modifier Dashboard",
     "viewDashboard":"Voir Tableau de bord",
-    "tags":"Mots clés"
+    "tags":"Mots clés",
+    "zoomPageWidth":"Toggle Ancho de página",
+    "zoomPercent":"Zoom al porcentaje",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Retour",
@@ -274,5 +277,10 @@
     "submit":"soumettre ",
     "deleteItem":"soumettre",
     "description":"description"
+  },
+  "contextMenu": {
+    "title":"Menu contextuel",
+    "delete":"effacer",
+    "properties":"propriétés"
   }
 }

@@ -24,6 +24,7 @@ $(function () {
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
+     * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -46,7 +47,8 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            handleWindowResize: true
+            handleWindowResize: true,
+            showBreadCrumb: false
         },
         _render: function () {
             var me = this;
@@ -136,10 +138,9 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            
-            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
-            if (showBreadcrumb === "off") {
-                me.hideRouteLink();
+
+            if (me.options.showBreadCrumb === false) {
+                me.DefaultAppTemplate.$linksection.hide();
             }
 
             me._render();
@@ -181,21 +182,18 @@ $(function () {
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
-            me.getReportViewer().reportViewer("windowResize");
-            helper.delay(me, function () {
+            var $reportViewer = me.getReportViewer();
+            if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                $reportViewer.reportViewer("windowResize");
+            }
+            var $toolbar = me.getToolbar();
+            if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                helper.delay(me, function () {
                 // This needs to be delayed for the dashboard case where the size of the report
                 // will dictate the size of the report area and therefore the size of the toolbar
                 me.getToolbar().toolbar("windowResize");
-            }, 100, "_toolbarDelayId");
-        },
-        /**
-         * Hide the breadcrumb section
-         *
-         * @function $.forerunner.reportViewerEZ#hideRouteLink
-         */
-        hideRouteLink: function(){
-            var me = this;
-            me.DefaultAppTemplate.$linksection.hide();
+                }, 100, "_toolbarDelayId");
+            }
         },
         /**
          * Get report viewer page navigation

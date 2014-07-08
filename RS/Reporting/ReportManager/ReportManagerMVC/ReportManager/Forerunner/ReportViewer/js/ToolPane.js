@@ -167,7 +167,7 @@ $(function () {
                 listOfItems.push(tp.itemReportBack);
             }
 
-            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown, tg.itemZoomGroup);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {

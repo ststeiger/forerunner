@@ -29,20 +29,10 @@
     padding:6px 10px;
 }
 
-.fr-tag-label {
-    margin-right:6px;
-    white-space:nowrap;
+.fr-tag-input-div, .fr-tag-prompt-div {
+    display: table-row;
 }
-.fr-tag-text {
-    width:280px;
-    margin-right:4px;
-}
-.fr-tag-table td {
-    padding:2px;
-}
-.fr-tag-prompt td {
-    padding:0px 2px;
-}
+
 .fr-tag-label-prompt {
     font-style:italic;
     font-size:12px;
@@ -50,11 +40,11 @@
     margin-top:2px;
 }
 
-.fr-rdl-label, .fr-description-label {
+.fr-rdl-label, .fr-description-label, .fr-tag-label {
     margin: 0 11px 16px 0; 
     display: block;
 }
-.fr-rdl-text, .fr-description-text { 
+.fr-rdl-text, .fr-description-text, .fr-tag-text { 
     width: 350px; 
     display: block;
 } 
@@ -70,10 +60,10 @@
     .fr-properties-container {
         width:320px;
     }
-    .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text {
+    .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text {
         width:300px;
     }
-    .fr-properties-container .fr-tag-text, .fr-properties-container .fr-sf-text {
+    .fr-properties-container .fr-sf-text {
         width:210px;
     }
     .fr-properties-section .fr-properties-container .fr-property-container {
@@ -81,6 +71,9 @@
     }
     .fr-properties-container .fr-properties-tabs li.ui-state-default a {
         padding:4px;
+        font-size:small;
+    }
+    .fr-rdl-label, .fr-description-label, .fr-tag-label{
         font-size:small;
     }
 

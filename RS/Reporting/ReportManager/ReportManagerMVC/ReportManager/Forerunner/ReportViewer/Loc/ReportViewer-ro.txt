@@ -63,7 +63,10 @@
     "saveDashboard":"Salvați Tablou de bord",
     "editDashboard":"Edit Tablou de bord",
     "tags":"Tag-uri",
-    "viewDashboard":"Vezi Tablou de bord"
+    "viewDashboard":"Vezi Tablou de bord",
+    "zoomPageWidth":"Toggle Page Lățime",
+    "zoomPercent":"Zoom la Procent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -273,5 +276,10 @@
     "submit":"prezenta",
     "deleteItem":"șterge",
     "description":"descriere"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"șterge",
+    "properties":"Proprietăți"
   }
 }

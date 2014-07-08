@@ -100,6 +100,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selcted");
 
             var $anchor = new $("<a />");
+            $anchor.addClass("fr-explorer-item-image-link");
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {

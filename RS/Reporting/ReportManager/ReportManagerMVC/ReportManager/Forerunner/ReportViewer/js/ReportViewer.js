@@ -440,21 +440,56 @@ $(function () {
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
-        zoomPageWidth: function (unZoom) {
+        /**
+         * Get the current zoom factor
+         *
+         * @function $.forerunner.reportViewer#getZoomFactor
+         */
+        getZoomFactor: function () {
             var me = this;
+            return me._zoomFactor;
+        },
+        /**
+         * Zoom to the specified percent value
+         *
+         * @function $.forerunner.reportViewer#zoomToPercent
+         *
+         * @param {number} percent - percentage (I.e., 100 = 100%)
+         */
+        zoomToPercent: function (percent) {
+            var me = this;
+            me._zoomFactor = percent;
             var page = me.$reportAreaContainer.find(".Page");
-            var zoom;
-
-            if (unZoom === true || unZoom === undefined)
-                zoom = 0;
-            else
-                zoom = (me.element.width() / page.width()) * 100;
 
             if (forerunner.device.isFirefox === true) {
-                page.css("MozTransform", "scale(" + zoom + ")");
+                page.css('MozTransform', 'scale(' + me._zoomFactor + ')');
             } else {
-                page.css("zoom", " " + zoom + "%");
+                page.css('zoom', ' ' + me._zoomFactor + '%');
             }
+        },
+        /**
+         * Toggles the Zoom To Page width on or off
+         *
+         * @function $.forerunner.reportViewer#toggleZoomPageWidth
+         */
+        toggleZoomPageWidth: function () {
+            var me = this;
+            if (me._zoomFactor && me._zoomFactor !== 0) {
+                me._unzoomPageWidth(true);
+            } else {
+                me._unzoomPageWidth(false);
+            }
+        },
+        _unzoomPageWidth: function (unZoom) {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+
+            if (unZoom === true || unZoom === undefined)
+                me._zoomFactor = 0;
+            else
+                me._zoomFactor = (me.element.width() / page.width()) * 100;
+
+            me.zoomToPercent(me._zoomFactor);
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;

@@ -61,9 +61,12 @@
     "addToFavorites":"Zu Favoriten",
     "RDLExt":"RDL-Erweiterung",
     "editDashboard":"Dashboard-Bearbeiten",
-    "saveDashboard":"Save-Dashboard",
+    "saveDashboard":"Save-Übersicht",
     "tags":"Schlagworte",
-    "viewDashboard":"Dashboard-Ansicht"
+    "viewDashboard":"Dashboard-Ansicht",
+    "zoomPageWidth":"Toggle Seitenbreite",
+    "zoomPercent":"Zoom auf Prozent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Zurück",
@@ -97,7 +100,7 @@
     "search":"Suche",
     "createDashboard":"Dashboard erstellen",
     "editDashboard":"Dashboard-Bearbeiten",
-    "saveDashboard":"Save-Dashboard",
+    "saveDashboard":"Save-Übersicht",
     "searchFolder":"Suchordner",
     "viewDashboard":"Dashboard-Ansicht"
   },
@@ -273,5 +276,10 @@
     "submit":"einreichen",
     "deleteItem":"löschen",
     "description":"Beschreibung"
+  },
+  "contextMenu": {
+    "title":"Kontextmenü",
+    "delete":"löschen",
+    "properties":"Eigenschaften"
   }
 }

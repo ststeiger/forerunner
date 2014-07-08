@@ -63,7 +63,10 @@
     "saveDashboard":"Ahorra Dashboard",
     "editDashboard":"Editar Dashboard",
     "tags":"Etiquetas",
-    "viewDashboard":"Ver tablero"
+    "viewDashboard":"Ver tablero",
+    "zoomPageWidth":"Toggle Ancho de página",
+    "zoomPercent":"Zoom al porcentaje",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -274,5 +277,10 @@
     "submit":"presentar",
     "deleteItem":"borrar",
     "description":"descripción"
+  },
+  "contextMenu": {
+    "title":"Menú contextual",
+    "delete":"borrar",
+    "properties":"Propiedades"
   }
 }

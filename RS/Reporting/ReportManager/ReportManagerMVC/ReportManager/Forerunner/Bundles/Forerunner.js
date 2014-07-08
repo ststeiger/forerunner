@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -336,7 +336,7 @@ $(function () {
              */
             hasWidget: function ($element, name) {
                 var dataName = this._getDataName(name);
-                if ($element.data() && $element.data()[dataName]) {
+                if ($element && $element.data() && $element.data()[dataName]) {
                     return true;
                 }
                 return false;
@@ -1798,12 +1798,12 @@ $(function () {
                             "</div>";
 
             html += "<div class='fr-core-dialog-cancel-container'>" +
-                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' title='" + cancelWord + "' />" +
                             "</div>";
 
             if (actionClass) {
                 html += "<div class='fr-core-dialog-action-container'>" +
-                                "<input type='button' class='fr-core-dialog-action " + actionClass + "' value='" + actionWord + "' />" +
+                                "<input type='button' class='fr-core-dialog-action " + actionClass + "' title='" + actionWord + "' />" +
                         "</div>";
             }
             html += "</div>";

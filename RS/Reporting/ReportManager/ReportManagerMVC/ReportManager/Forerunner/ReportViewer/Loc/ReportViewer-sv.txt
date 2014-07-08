@@ -63,7 +63,10 @@
     "saveDashboard":"Spara Dashboard",
     "editDashboard":"Redigera Instrumentbräda",
     "tags":"Taggar",
-    "viewDashboard":"Se instrumentpanel"
+    "viewDashboard":"Se instrumentpanel",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"bakåt",
@@ -273,5 +276,10 @@
     "submit":"Skicka in",
     "deleteItem":"Radera",
     "description":"Beskrivning"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

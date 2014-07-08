@@ -63,7 +63,10 @@
     "saveDashboard":"ダッシュボードを保存",
     "editDashboard":"編集ダッシュボード",
     "tags":"タグ",
-    "viewDashboard":"ビューダッシュボード"
+    "viewDashboard":"ビューダッシュボード",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"裏面",
@@ -273,5 +276,10 @@
     "submit":"提出する",
     "deleteItem":"削除",
     "description":"説明"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

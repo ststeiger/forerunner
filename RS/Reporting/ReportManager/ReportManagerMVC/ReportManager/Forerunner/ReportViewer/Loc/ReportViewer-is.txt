@@ -63,7 +63,10 @@
     "saveDashboard":"vista Mælaborð",
     "editDashboard":"breyta Mælaborð",
     "tags":"Tags",
-    "viewDashboard":"Skoða Mælaborð"
+    "viewDashboard":"Skoða Mælaborð",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Til baka",
@@ -273,5 +276,10 @@
     "submit":"leggja",
     "deleteItem":"eyða",
     "description":"Lýsing"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

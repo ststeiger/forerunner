@@ -63,7 +63,10 @@
     "saveDashboard":"Sábháil Ar Phainéal",
     "viewDashboard":"Féach ar Phainéil",
     "editDashboard":"Painéal na Eagar",
-    "tags":"Clibeanna"
+    "tags":"Clibeanna",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"ar ais",
@@ -273,5 +276,10 @@
     "submit":"Cuir",
     "deleteItem":"Scrios",
     "description":"Cur síos"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

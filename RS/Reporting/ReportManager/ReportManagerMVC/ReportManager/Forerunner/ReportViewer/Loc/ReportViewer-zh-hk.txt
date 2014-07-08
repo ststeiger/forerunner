@@ -63,7 +63,10 @@
     "saveDashboard":"保存指示板",
     "editDashboard":"編輯指示板",
     "tags":"標籤",
-    "viewDashboard":"查看指示板"
+    "viewDashboard":"查看指示板",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"返回",
@@ -273,5 +276,10 @@
     "submit":"提交",
     "deleteItem":"刪除",
     "description":"描述"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

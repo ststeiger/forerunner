@@ -5266,16 +5266,13 @@ $(function () {
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
-                    "<table class='fr-tag-table'>" +
-                        "<tr>" +
-                            "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                            "<td><input type='text' class='fr-tag-text' /></td>" +
-                        "</tr>" +
-                        "<tr class='fr-tag-prompt'>" +
-                            "<td></td>" +
-                            "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
-                        "<tr>" +
-                    "</table>" +
+                    "<div class='fr-tag-input-div'>" +
+                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<textarea class='fr-tag-text' rows='5' name='tags' />" +
+                    "</div>" +
+                    "<div class='fr-tag-prompt-div'>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                    "<div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");
@@ -6828,6 +6825,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selcted");
 
             var $anchor = new $("<a />");
+            $anchor.addClass("fr-explorer-item-image-link");
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -13883,6 +13881,7 @@ $(function () {
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
+     * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13905,7 +13904,8 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            handleWindowResize: true
+            handleWindowResize: true,
+            showBreadCrumb: false
         },
         _render: function () {
             var me = this;
@@ -13995,10 +13995,9 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            
-            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
-            if (showBreadcrumb === "off") {
-                me.hideRouteLink();
+
+            if (me.options.showBreadCrumb === false) {
+                me.DefaultAppTemplate.$linksection.hide();
             }
 
             me._render();
@@ -14052,15 +14051,6 @@ $(function () {
                 me.getToolbar().toolbar("windowResize");
                 }, 100, "_toolbarDelayId");
             }
-        },
-        /**
-         * Hide the breadcrumb section
-         *
-         * @function $.forerunner.reportViewerEZ#hideRouteLink
-         */
-        hideRouteLink: function(){
-            var me = this;
-            me.DefaultAppTemplate.$linksection.hide();
         },
         /**
          * Get report viewer page navigation
@@ -14892,7 +14882,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    showBreadCrumb: true
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

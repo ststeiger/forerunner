@@ -178,16 +178,13 @@ $(function () {
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
-                    "<table class='fr-tag-table'>" +
-                        "<tr>" +
-                            "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                            "<td><input type='text' class='fr-tag-text' /></td>" +
-                        "</tr>" +
-                        "<tr class='fr-tag-prompt'>" +
-                            "<td></td>" +
-                            "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
-                        "<tr>" +
-                    "</table>" +
+                    "<div class='fr-tag-input-div'>" +
+                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<textarea class='fr-tag-text' rows='5' name='tags' />" +
+                    "</div>" +
+                    "<div class='fr-tag-prompt-div'>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                    "<div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");

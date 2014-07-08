@@ -64,9 +64,9 @@
     "editDashboard":"Редактировать Dashboard",
     "tags":"Метки",
     "viewDashboard":"Посмотреть Dashboard",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
-    "zoomDropdown":"Zoom"
+    "zoomPageWidth":"Переключить Ширина страницы",
+    "zoomPercent":"Увеличить до Процент",
+    "zoomDropdown":"Увеличить"
   },
   "toolbar": {
     "back":"Назад",
@@ -278,8 +278,8 @@
     "description":"описание"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delLabel":"Delete",
-    "properties":"Properties"
+    "title":"Контекстное меню",
+    "delLabel":"удалять",
+    "properties":"свойства"
   }
 }

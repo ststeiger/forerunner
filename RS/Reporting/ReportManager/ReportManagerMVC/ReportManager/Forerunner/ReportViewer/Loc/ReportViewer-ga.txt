@@ -64,9 +64,9 @@
     "viewDashboard":"Féach ar Phainéil",
     "editDashboard":"Painéal na Eagar",
     "tags":"Clibeanna",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
-    "zoomDropdown":"Zoom"
+    "zoomPageWidth":"Scoránaigh Leathanach Leithead",
+    "zoomPercent":"Súmáil go Céatadán",
+    "zoomDropdown":"Zúmáil"
   },
   "toolbar": {
     "back":"ar ais",
@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"Context Menu",
-    "delLabel":"Delete",
-    "properties":"Properties"
+    "delLabel":"Scrios",
+    "properties":"airíonna"
   }
 }

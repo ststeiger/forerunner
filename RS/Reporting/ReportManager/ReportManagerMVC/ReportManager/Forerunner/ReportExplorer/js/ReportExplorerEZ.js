@@ -418,7 +418,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    showBreadCrumb: true
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

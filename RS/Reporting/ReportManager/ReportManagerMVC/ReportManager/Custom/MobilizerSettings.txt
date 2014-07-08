@@ -8,5 +8,6 @@
 	"FirefoxPDFbug":"on",
 	"ParameterPaneWidth":"350",
 	"showHomeButton":"off",
-	"showBreadCrumbInViewer":"off"
+	"showSubscriptionUI":"on",
+	"FancyTooltips":"on"
 }

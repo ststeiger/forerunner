@@ -821,6 +821,7 @@ FROM            Categories</CommandText>
                           </ChartNoDataMessage>
                           <rd:DesignerMode>DataBar</rd:DesignerMode>
                           <DataSetName>Order</DataSetName>
+                          <ToolTip>=Fields!CategoryName.Value</ToolTip>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>

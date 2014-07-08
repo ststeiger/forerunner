@@ -42,7 +42,7 @@
 .fr-r-rT{display:table;table-layout: fixed;position:relative;}
 .fr-r-t{white-space:pre-wrap;margin:0;display: table-cell;overflow:hidden; -ms-word-wrap:break-word;word-wrap:break-word;} 
 .fr-r-pL{width:100%;height:100%;}
-.fr-render-image{display:table;max-height:100%;max-width:100%;overflow:hidden;}
+.fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;}
 .fr-r-tC{vertical-align:top;padding:0;margin:0;}
 .fr-r-tCI{margin:0;width:100%;height:100%;}
 .fr-render-tablix{border-collapse:collapse;padding:0;margin:0;table-layout:fixed;}
@@ -52,4 +52,3 @@
 .fr-input-text {border:none;}
 .fr-input-button {}
 .fr-input--textarea{}
-

@@ -1067,8 +1067,6 @@ $(function () {
             }
             
 
-            me._unzoomPageWidth();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -1713,7 +1711,7 @@ $(function () {
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
-                    var replay = me.pages[me.curPage].Replay
+                    var replay = me.pages[me.curPage].Replay;
 
                     me._loadPage(data.NewPage, false, null, null, true,replay);
 
@@ -1825,7 +1823,7 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
-                        var replay = me.pages[me.curPage].Replay
+                        var replay = me.pages[me.curPage].Replay;
 
                         me.pages[me.curPage] = null;
                         me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
@@ -2268,7 +2266,7 @@ $(function () {
                     .done(function (data) {
                         if (data.length === 0) {
                             me.editEmailSubscription(null);
-                        } else if (data.length == 1) {
+                        } else if (data.length === 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
                         } else {
                             me.manageSubscription();
@@ -2307,7 +2305,7 @@ $(function () {
                 var pif = me.element.find(".fr-print-iframe");
                 if (pif.length === 1) pif.detach();
 
-                var pif = $("<iframe/>");
+                pif = $("<iframe/>");
                 pif.addClass("fr-print-iframe");
                 pif.attr("name", me.viewerID);
                 pif.attr("src", url);
@@ -2716,9 +2714,9 @@ $(function () {
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                         if (scrollID) {
-                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                            var el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                             if (el.length ===1)
-                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                                $("html, body").animate({ scrollTop: el.offset().top }, 500);
                         }
 
                     }
@@ -2763,9 +2761,9 @@ $(function () {
                             //$(window).scrollLeft(me.scrollLeft);
                             //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
-                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                 if (el.length === 1)
-                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                                    $("html, body").animate({ scrollTop: el.offset().top-50 }, 500);
                             }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -2872,7 +2870,8 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum], false, me.RDLExtProperty);
+               
                 me.pages[pageNum].needsLayout= true;
             }
 
@@ -5301,16 +5300,13 @@ $(function () {
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
-                    "<table class='fr-tag-table'>" +
-                        "<tr>" +
-                            "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                            "<td><input type='text' class='fr-tag-text' /></td>" +
-                        "</tr>" +
-                        "<tr class='fr-tag-prompt'>" +
-                            "<td></td>" +
-                            "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
-                        "<tr>" +
-                    "</table>" +
+                    "<div class='fr-tag-input-div'>" +
+                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<textarea class='fr-tag-text' rows='5' name='tags' />" +
+                    "</div>" +
+                    "<div class='fr-tag-prompt-div'>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                    "<div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");
@@ -6863,6 +6859,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selcted");
 
             var $anchor = new $("<a />");
+            $anchor.addClass("fr-explorer-item-image-link");
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -8200,8 +8197,8 @@ $(function () {
 
                     Style += "position:absolute;";
 
-                    if (Measurements[Index].zIndex)
-                        Style += "z-index:" + Measurements[Index].zIndex + ";";
+                    //if (Measurements[Index].zIndex)
+                    //    Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                     //Background color goes on container
                     if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
@@ -8501,7 +8498,7 @@ $(function () {
 
             var rdlExt = {};
             if (me.RDLExt) {
-                rdlExt = me.RDLExt["SharedActions"];
+                rdlExt = me.RDLExt.SharedActions;
                 if (!rdlExt)
                     rdlExt = {};
             }
@@ -8884,6 +8881,9 @@ $(function () {
             Style = imageStyle ? imageStyle : "display:table-cell;";
             NewImage.attr("style", Style);
 
+            //Add Highlighting
+            //$(NewImage).maphilight();
+
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
             switch (sizingType) {
@@ -9002,7 +9002,11 @@ $(function () {
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
-
+            me._writeRDLExtActions(RIContext, $Control);
+        },
+        
+        _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
+            var me = this;
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 
@@ -9026,16 +9030,18 @@ $(function () {
 
 
                         if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            var newFunc;
-                            try {
-                                newFunc = new Function("e", action.Code);
+                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
+                                var newFunc;
+                                try {
+                                    newFunc = new Function("e", action.Code);
+                                }
+                                catch (e) { }
+                                action.JavaFunc = newFunc;
+                                if (action.On === undefined)
+                                    action.On = "click";
+                                if (action.Obj === "click")
+                                    $Control.addClass("fr-core-cursorpointer");
                             }
-                            catch (e) { }
-                            action.JavaFunc = newFunc;
-                            if (action.On === undefined)
-                                action.On = "click";
-                            if (action.Obj === "click")
-                                $Control.addClass("fr-core-cursorpointer");
                         }
 
                         $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
@@ -9101,10 +9107,14 @@ $(function () {
                         var $area = $("<AREA />");
                         $area.attr("tabindex", i + 1);
                         $area.attr("style", "text-decoration:none");
-                        $area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        //$area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        //$area.attr("title", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        me._writeTooltipInternal(element.ImageMapAreas.ImageMapArea[j].Tooltip, RIContext.$HTMLParent, $area, offsetLeft, offsetTop);
+
                         if (element.Actions) {
-                            this._writeAction(RIContext, element.Actions[0], $area);
+                            me._writeAction(RIContext, element.Actions[0], $area);
                         }
+                        me._writeRDLExtActions(RIContext, $area,true);
 
                         var shape;
                         var coords = "";
@@ -9886,24 +9896,62 @@ $(function () {
                 RIContext.$HTMLParent.append($node);
             }   
         },
+        _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
+            var me = this;
+            
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on") {
+                // Make DIV and append to page 
+                var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
+
+                element.append($tooltip);
+
+                // Mouseenter
+                actionElement.hover(function (e) {
+
+                    $el = $(this);
+                    var top = 0;
+                    var left = 0;
+
+                    // Reposition tooltip, in case of page movement e.g. screen resize           
+                    var parentOffset = $(this).parent().offset();
+                    top = e.pageY -  parentOffset.top;
+                    left = e.pageX - parentOffset.left;
+                  
+
+                    $tooltip.css({
+                        top: top - $tooltip.outerHeight() - 13,
+                        left: left - ($tooltip.outerWidth() / 2)
+                    });
+
+
+                    // Adding class handles animation through CSS
+                    $tooltip.addClass("active");
+
+                    // Mouseleave
+                }, function (e) {
+
+                    $el = $(this);
+
+                    // Remove all classes
+                    setTimeout(function () {
+                        $tooltip.removeClass("active").removeClass("out");
+                    }, 300);
+
+                });
+                
+            }
+            else if (tooltip) {
+                actionElement.attr("alt", tooltip);
+                actionElement.attr("title", tooltip);
+            }
+        },
         _writeTooltip: function (RIContext) {
             var me = this;
 
-            var CurrObj = RIContext.CurrObj.Elements,
-                tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
+            var CurrObj = RIContext.CurrObj.Elements;
+            var tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
 
-            if (tooltip) {
-                if (RIContext.CurrObjParent.Type === "Image")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Chart")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Gauge")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Map")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else
-                    RIContext.$HTMLParent.attr("title", tooltip);
-            }
+            me._writeTooltipInternal(tooltip, RIContext.$HTMLParent, RIContext.$HTMLParent,0,0);
         },
         //Helper fucntions
         _getHeight: function ($obj) {
@@ -10070,8 +10118,8 @@ $(function () {
                 Style += "max-width:" + (CurrObj.Height) + "mm;";
             }
 
-            if (CurrObj.zIndex)
-                Style += "z-index:" + CurrObj.zIndex + ";";
+            //if (CurrObj.zIndex)
+            //    Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },
@@ -10096,8 +10144,8 @@ $(function () {
                 Style += "max-height:" + (CurrObj.Height) + "mm;";
             }
 
-            if (CurrObj.zIndex)
-                Style += "z-index:" + CurrObj.zIndex + ";";
+            //if (CurrObj.zIndex)
+            //    Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },
@@ -13551,7 +13599,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on"
             });
 
             // Create / render the toolbar
@@ -13919,6 +13967,7 @@ $(function () {
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
+     * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13941,7 +13990,8 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            handleWindowResize: true
+            handleWindowResize: true,
+            showBreadCrumb: false
         },
         _render: function () {
             var me = this;
@@ -14031,10 +14081,9 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            
-            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
-            if (showBreadcrumb === "off") {
-                me.hideRouteLink();
+
+            if (me.options.showBreadCrumb === false) {
+                me.DefaultAppTemplate.$linksection.hide();
             }
 
             me._render();
@@ -14088,15 +14137,6 @@ $(function () {
                 me.getToolbar().toolbar("windowResize");
                 }, 100, "_toolbarDelayId");
             }
-        },
-        /**
-         * Hide the breadcrumb section
-         *
-         * @function $.forerunner.reportViewerEZ#hideRouteLink
-         */
-        hideRouteLink: function(){
-            var me = this;
-            me.DefaultAppTemplate.$linksection.hide();
         },
         /**
          * Get report viewer page navigation
@@ -14928,7 +14968,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    showBreadCrumb: true
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

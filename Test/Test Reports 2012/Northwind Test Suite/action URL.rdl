@@ -272,7 +272,7 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>0.86333in</Top>
+        <Top>0.72444in</Top>
         <Height>3.51042in</Height>
         <Width>8.85543in</Width>
         <Style>
@@ -306,6 +306,7 @@
             </Action>
           </Actions>
         </ActionInfo>
+        <Left>0.25in</Left>
         <Height>0.25in</Height>
         <Width>5.80208in</Width>
         <ZIndex>1</ZIndex>
@@ -562,6 +563,7 @@
         <rd:DesignerMode>Sparkline</rd:DesignerMode>
         <DataSetName>DataSet1</DataSetName>
         <Top>5.19667in</Top>
+        <Left>0.25in</Left>
         <Height>2.11458in</Height>
         <Width>8.85543in</Width>
         <ZIndex>2</ZIndex>
@@ -590,10 +592,11 @@
         </Paragraphs>
         <rd:DefaultName>Textbox2</rd:DefaultName>
         <Top>0.405in</Top>
-        <Left>0.29042in</Left>
+        <Left>0.54042in</Left>
         <Height>0.25in</Height>
         <Width>1.89583in</Width>
         <ZIndex>3</ZIndex>
+        <ToolTip>=Globals!ExecutionTime</ToolTip>
         <Style>
           <Border>
             <Style>None</Style>
@@ -619,7 +622,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox3</rd:DefaultName>
-        <Left>2.10292in</Left>
+        <Left>2.35292in</Left>
         <Height>0.25in</Height>
         <Width>5.15625in</Width>
         <ZIndex>4</ZIndex>
@@ -637,7 +640,7 @@
     <Height>8.93625in</Height>
     <Style />
   </Body>
-  <Width>8.85543in</Width>
+  <Width>9.10543in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -645,7 +648,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>5</AutoRefresh>
+  <AutoRefresh>10</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

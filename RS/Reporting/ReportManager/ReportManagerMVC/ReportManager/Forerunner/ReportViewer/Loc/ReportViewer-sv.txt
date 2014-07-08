@@ -64,8 +64,8 @@
     "editDashboard":"Redigera Instrumentbräda",
     "tags":"Taggar",
     "viewDashboard":"Se instrumentpanel",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Växla Sidan Bredd",
+    "zoomPercent":"Zooma till Procent",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"Context Menu",
-    "delLabel":"Delete",
-    "properties":"Properties"
+    "delLabel":"Radera",
+    "properties":"Egenskaper"
   }
 }

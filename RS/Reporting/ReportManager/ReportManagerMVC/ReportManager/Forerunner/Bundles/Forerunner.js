@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -198,6 +198,7 @@ jQuery.fn.extend({
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
+    
     findUntil: function (selector, until) {
         
         var coll = $(this);

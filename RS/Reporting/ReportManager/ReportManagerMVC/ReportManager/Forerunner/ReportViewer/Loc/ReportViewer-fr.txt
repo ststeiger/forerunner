@@ -65,8 +65,8 @@
     "editDashboard":"Modifier Dashboard",
     "viewDashboard":"Voir Tableau de bord",
     "tags":"Mots clés",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Toggle Ancho de página",
+    "zoomPercent":"Zoom al porcentaje",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -279,8 +279,8 @@
     "description":"description"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delLabel":"Delete",
-    "properties":"Properties"
+    "title":"Menu contextuel",
+    "delLabel":"effacer",
+    "properties":"propriétés"
   }
 }

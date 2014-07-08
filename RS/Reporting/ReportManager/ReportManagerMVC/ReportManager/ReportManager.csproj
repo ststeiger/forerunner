@@ -189,6 +189,7 @@
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\images\OpenDropDown.png" />
+    <Content Include="Forerunner\Common\images\ToolbarIcons\ZoomToPageWidth.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\RDLExtension.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Tags.png" />

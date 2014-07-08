@@ -63,7 +63,10 @@
     "editDashboard":"Dashboard-Bearbeiten",
     "saveDashboard":"Save-Dashboard",
     "tags":"Schlagworte",
-    "viewDashboard":"Dashboard-Ansicht"
+    "viewDashboard":"Dashboard-Ansicht",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Zurück",
@@ -273,5 +276,10 @@
     "submit":"einreichen",
     "deleteItem":"löschen",
     "description":"Beschreibung"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

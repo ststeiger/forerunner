@@ -648,17 +648,54 @@ $(function () {
         itemZoom: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-zoom",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            toolStateClass: null,
             imageClass: "fr-icons24x24-zoom",
             sharedClass: "fr-toolbase-show-if-touch",
             text: locData.toolPane.zoom,
             events: {
-                click: function (e) {                
-                    e.data.$reportViewer.reportViewer("allowZoom",true);
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("allowZoom", true);
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
-                    //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
                 }
             }
         },
+        /** @member */
+        itemZoomPageWidth: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-zoom-page-width",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            toolStateClass: null,
+            imageClass: "fr-icons24x24-zoom-to-page-width",
+            text: locData.toolPane.zoomPageWidth,
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("toggleZoomPageWidth");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom-page-width"]);
+                }
+            }
+        },
+        /** @member */
+        itemZoomDropDown: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-zoom-drop-down",
+            imageClass: "fr-icons24x24-zoom",
+            text: locData.toolPane.zoomDropdown,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            events: {
+                click: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-item-zoom-drop-down"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
+                }
+            }
+        },
+
         /** @member */
         itemReportBack: {
             toolType: toolTypes.containerItem,
@@ -1747,6 +1784,14 @@ $(function () {
                     tp.itemExportWord]
         },
         /** @member */
+        itemZoomGroup: {
+            toolType: toolTypes.toolGroup,
+            visible: false,
+            selectorClass: "fr-item-zoom-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
+            tools: [tp.itemZoom, tp.itemZoomPageWidth]
+        },
+        /** @member */
         itemFindCompositeGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-item-find-composite-group",
@@ -1804,6 +1849,7 @@ $(function () {
     }
     // Dynamically add in any / all accordionGroup definitions into the associate items
     tp.itemExport.accordionGroup = tg.itemExportGroup;
+    tp.itemZoomDropDown.accordionGroup = tg.itemZoomGroup;
     mi.itemFolders.accordionGroup = tg.itemFolderGroup;
     rep.itemFolders.accordionGroup = tg.explorerItemFolderGroup;
     dbtp.itemFolders.accordionGroup = tg.dashboardItemFolderGroup;

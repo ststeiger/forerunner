@@ -63,7 +63,10 @@
     "saveDashboard":"Сохранить Dashboard",
     "editDashboard":"Редактировать Dashboard",
     "tags":"Метки",
-    "viewDashboard":"Посмотреть Dashboard"
+    "viewDashboard":"Посмотреть Dashboard",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Назад",
@@ -273,5 +276,10 @@
     "submit":"представлять",
     "deleteItem":"удалять",
     "description":"описание"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

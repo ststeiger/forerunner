@@ -54,7 +54,7 @@
     "docMap":"Document Map",
     "find":"Find",
     "next":"Next",
-    "zoom":"Enable Zoom",
+    "zoom":"Enable Pinch Zoom",
     "print":"Print",
     "dsCredential":"Credential",
     "views":"Views",
@@ -63,7 +63,10 @@
     "saveDashboard":"Save Dashboard",
     "editDashboard":"Edit Dashboard",
     "tags":"Tags",
-    "viewDashboard":"View Dashboard"
+    "viewDashboard":"View Dashboard",
+    "zoomPageWidth":"Toggle Page Width",
+    "zoomPercent":"Zoom to Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Back",
@@ -261,22 +264,22 @@
     "description":"Send email to {0}",
     "includeLink":"Include link",
     "includeReport":"Include report",
-	"schedule": "Schedule",
-	"format": "Format",
-	"saveFailed": "Saving subscription failed",
-	"addNew": "Create",
-	"deleteSubscription": "Delete",
-	"deleteFailed": "Subscription deletion failed"
+    "schedule":"Schedule",
+    "format":"Format",
+    "saveFailed":"Saving subscription failed",
+    "addNew":"Create",
+    "deleteSubscription":"Delete",
+    "deleteFailed":"Subscription deletion failed"
   },
-  "properties":{
-	"title":"Properties",
-	"submit":"Submit",
-	"deleteItem":"Delete",
-	"description":"Description"
+  "properties": {
+    "title":"Properties",
+    "submit":"Submit",
+    "deleteItem":"Delete",
+    "description":"Description"
   },
-  "contextMenu":{
+  "contextMenu": {
     "title":"Context Menu",
-    "delete": "Delete",
-    "properties": "Properties"
+    "delete":"Delete",
+    "properties":"Properties"
   }
 }

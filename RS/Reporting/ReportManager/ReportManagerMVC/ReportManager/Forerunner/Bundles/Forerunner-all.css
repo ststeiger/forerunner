@@ -1685,7 +1685,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-input-button {}
 .fr-input--textarea{}
 
-
 .fr-tooltip, .fr-arrow:after {
     background: navy;
     border: 2px solid white;

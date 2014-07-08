@@ -8999,7 +8999,11 @@ $(function () {
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
-
+            me._writeRDLExtActions(RIContext, $Control);
+        },
+        
+        _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
+            var me = this;
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 
@@ -9023,16 +9027,18 @@ $(function () {
 
 
                         if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            var newFunc;
-                            try {
-                                newFunc = new Function("e", action.Code);
+                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
+                                var newFunc;
+                                try {
+                                    newFunc = new Function("e", action.Code);
+                                }
+                                catch (e) { }
+                                action.JavaFunc = newFunc;
+                                if (action.On === undefined)
+                                    action.On = "click";
+                                if (action.Obj === "click")
+                                    $Control.addClass("fr-core-cursorpointer");
                             }
-                            catch (e) { }
-                            action.JavaFunc = newFunc;
-                            if (action.On === undefined)
-                                action.On = "click";
-                            if (action.Obj === "click")
-                                $Control.addClass("fr-core-cursorpointer");
                         }
 
                         $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
@@ -9103,8 +9109,9 @@ $(function () {
                         me._writeTooltipInternal(element.ImageMapAreas.ImageMapArea[j].Tooltip, RIContext.$HTMLParent, $area, offsetLeft, offsetTop);
 
                         if (element.Actions) {
-                            this._writeAction(RIContext, element.Actions[0], $area);
+                            me._writeAction(RIContext, element.Actions[0], $area);
                         }
+                        me._writeRDLExtActions(RIContext, $area,true);
 
                         var shape;
                         var coords = "";
@@ -9889,7 +9896,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
             
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "on").toLowerCase() == "on") {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "on").toLowerCase() === "on") {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 

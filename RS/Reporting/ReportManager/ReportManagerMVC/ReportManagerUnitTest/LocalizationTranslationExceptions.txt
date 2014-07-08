@@ -28,7 +28,8 @@
     "addToFavorites": ["ga"],
     "editDashboard":["fr"],
     "tags":["is"],
-    "RDLExt":["fr","it","ro", "sv"]
+    "RDLExt":["fr","it","ro", "sv"],
+    "zoomDropdown":["de", "es", "fr", "is", "it", "pt", "ro", "sv"]
   },
   "toolbar": {
     "exportMenu": ["ro", "sv"],
@@ -168,6 +169,9 @@
   },
   "properties": {
     "description":["fr"]
+  },
+  "contextMenu": {
+    "title":["ga", "it", "pt", "ro", "sv"]
   }
 }
 

@@ -64,8 +64,8 @@
     "editDashboard":"Editar Dashboard",
     "tags":"Etiquetas",
     "viewDashboard":"Ver tablero",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Toggle Ancho de página",
+    "zoomPercent":"Zoom al porcentaje",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -279,8 +279,8 @@
     "description":"descripción"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "title":"Menú contextual",
+    "delete":"borrar",
+    "properties":"Propiedades"
   }
 }

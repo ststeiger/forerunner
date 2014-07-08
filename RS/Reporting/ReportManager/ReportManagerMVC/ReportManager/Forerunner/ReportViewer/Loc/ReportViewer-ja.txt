@@ -64,9 +64,9 @@
     "editDashboard":"編集ダッシュボード",
     "tags":"タグ",
     "viewDashboard":"ビューダッシュボード",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
-    "zoomDropdown":"Zoom"
+    "zoomPageWidth":"トグルページ幅",
+    "zoomPercent":"パーセントにズーム",
+    "zoomDropdown":"ズーム"
   },
   "toolbar": {
     "back":"裏面",
@@ -278,8 +278,8 @@
     "description":"説明"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "title":"コンテキストメニュー",
+    "delete":"削除",
+    "properties":"プロパティ"
   }
 }

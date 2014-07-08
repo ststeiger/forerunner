@@ -9,5 +9,5 @@
 	"ParameterPaneWidth":"350",
 	"showHomeButton":"off",
 	"showSubscriptionUI":"on",
-	"FancyTooltips":"off"
+	"FancyTooltips":"on"
 }

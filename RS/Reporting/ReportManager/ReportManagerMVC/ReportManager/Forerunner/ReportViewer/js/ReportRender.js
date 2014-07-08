@@ -1070,6 +1070,9 @@ $(function () {
             Style = imageStyle ? imageStyle : "display:table-cell;";
             NewImage.attr("style", Style);
 
+            //Add Highlighting
+            //$(NewImage).maphilight();
+
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
             switch (sizingType) {
@@ -2085,7 +2088,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
             
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "on").toLowerCase() === "on") {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on") {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 

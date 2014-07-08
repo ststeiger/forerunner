@@ -254,6 +254,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer-all.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportRender.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\tooltips.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportPrint.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ManageParamSets.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"

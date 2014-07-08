@@ -8459,6 +8459,18 @@ $(function () {
             return rdlExt;
 
         },
+        _getRDLExtShared: function () {
+            var me = this;
+
+            var rdlExt = {};
+            if (me.RDLExt) {
+                rdlExt = me.RDLExt["SharedActions"];
+                if (!rdlExt)
+                    rdlExt = {};
+            }
+            return rdlExt;
+
+        },
         _writeRichText: function (RIContext) {
             var Style = RIContext.Style;
             var $TextObj = $("<div/>");
@@ -8955,27 +8967,46 @@ $(function () {
                 }
 
             var ActionExt = me._getRDLExt(RIContext);
+            var SharedActions = me._getRDLExtShared();
 
             if (ActionExt.JavaScriptActions) {
                 
 
                 for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
                     var action = ActionExt.JavaScriptActions[a];
+                    var actions;
 
-                    if (action.JavaFunc === undefined && action.Code !==undefined) {
-                        var newFunc;
-                        try {
-                            newFunc = new Function("e", action.Code);
+                    if (action.SharedAction && SharedActions[action.SharedAction]) {
+                        actions = SharedActions[action.SharedAction].JavaScriptActions;
+                    }                    
+                    var sa = 0;
+                    // if shared there can be many actions per share
+                    while (true) {
+
+                        if (actions !== undefined && actions[sa]) {
+                            action = actions[sa++];
                         }
-                        catch (e) { }
-                        action.JavaFunc = newFunc;
-                        if (action.On === undefined)
-                            action.On = "click";
-                        if (action.Obj === "click")
-                            $Control.addClass("fr-core-cursorpointer");
-                    }
 
-                    $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+
+                        if (action.JavaFunc === undefined && action.Code !== undefined) {
+                            var newFunc;
+                            try {
+                                newFunc = new Function("e", action.Code);
+                            }
+                            catch (e) { }
+                            action.JavaFunc = newFunc;
+                            if (action.On === undefined)
+                                action.On = "click";
+                            if (action.Obj === "click")
+                                $Control.addClass("fr-core-cursorpointer");
+                        }
+
+                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+
+                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
+                            break;
+
+                    }
                 }
             }
 

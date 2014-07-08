@@ -436,8 +436,27 @@ $(function () {
                 me._setPageCallback = null;
             }
             
+
+            me.zoomPageWidth();
+
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+        },
+        zoomPageWidth: function (unZoom) {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            var zoom;
+
+            if (unZoom === true || unZoom === undefined)
+                zoom = 0;
+            else
+                zoom = (me.element.width() / page.width()) * 100;
+
+            if (forerunner.device.isFirefox === true) {
+                page.css('MozTransform', 'scale(' + zoom + ')');
+            } else {
+                page.css('zoom', ' ' + zoom + '%');
+            }
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;

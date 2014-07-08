@@ -74,6 +74,7 @@ $(function () {
          * Returns the current path and propertyList
          */
         getProperties: function () {
+            var me = this;
             return {
                 path: me.curPath,
                 propertyList: me._propertyList

@@ -15,6 +15,19 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
+    // folder properties data
+    var propertyEnums = forerunner.ssr.constants.properties;
+    var propertyListMap = {
+        // Folder
+        1: [propertyEnums.tags, propertyEnums.description],
+        // Report
+        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        // Resource
+        3: [propertyEnums.tags, propertyEnums.description],
+        // LinkedReport
+        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+    };
+
     /**
      * Widget used to create the context menu
      *
@@ -43,7 +56,7 @@ $(function () {
         },
         _getPermissions: function () {
             var me = this;
-            var permissionList = ["Delete"];
+            var permissionList = ["Delete", "Update Properties"];
             me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
         },
         _init: function () {
@@ -51,7 +64,7 @@ $(function () {
             me._getPermissions();
 
             // Delete item
-            if (!me.permissions.Delete) {
+            if (!me.permissions["Delete"]) {
                 me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
@@ -61,6 +74,20 @@ $(function () {
                 });
                 me._$delete.removeClass("fr-toolbase-disabled");
                 me._$delete.addClass("fr-core-cursorpointer");
+            }
+
+            // Properties
+            if (!me.permissions["Update Properties"] &&
+                propertyListMap[me.options.catalogItem.Type]) {
+                me._$properties.off("click");
+                me._$properties.addClass("fr-toolbase-disabled");
+                me._$properties.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$properties.on("click", function (event, data) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+                me._$properties.removeClass("fr-toolbase-disabled");
+                me._$properties.addClass("fr-core-cursorpointer");
             }
 
             // Close dialog event
@@ -103,9 +130,7 @@ $(function () {
             me._$delete = me.element.find(".fr-ctx-delete-id");
 
             // Properties
-            me.element.find(".fr-ctx-properties-id").on("click", function (event, data) {
-                me._onClickProperties.apply(me, arguments);
-            });
+            me._$properties = me.element.find(".fr-ctx-properties-id");
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -129,7 +154,24 @@ $(function () {
             });
         },
         _onClickProperties: function (event, data) {
-            alert("_onClickProperties");
+            var me = this;
+            var $propertyDlg = me.options.$appContainer.find(".fr-properties-section");
+            if (!$propertyDlg || $propertyDlg.length === 0) {
+                console.log("Error - fr-properties-section not found");
+                return;
+            }
+
+            // Save the current settings
+            var previous = $propertyDlg.forerunnerProperties("getProperties");
+
+            // Set the new settings based upon the catalogItem and show the dialog
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            $propertyDlg.forerunnerProperties("openDialog");
+
+            // Retore the previous settings
+            if (previous && previous.path && previous.propertyList) {
+                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+            }
         },
         /**
          * Open parameter set dialog

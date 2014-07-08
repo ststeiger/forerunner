@@ -335,7 +335,7 @@ $(function () {
              */
             hasWidget: function ($element, name) {
                 var dataName = this._getDataName(name);
-                if ($element.data() && $element.data()[dataName]) {
+                if ($element && $element.data() && $element.data()[dataName]) {
                     return true;
                 }
                 return false;

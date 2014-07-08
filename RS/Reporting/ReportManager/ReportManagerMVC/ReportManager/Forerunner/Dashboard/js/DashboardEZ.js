@@ -91,8 +91,15 @@ $(function () {
                 me.layout.windowResize.call(me.layout);
             }
 
-            me.getDashboardEditor().dashboardEditor("windowResize");
-            me.getDashboardToolbar().dashboardToolbar("windowResize");
+            var $dashboardEditor = me.getDashboardEditor();
+            if (widgets.hasWidget($dashboardEditor, widgets.dashboardEditor)) {
+                $dashboardEditor.dashboardEditor("windowResize");
+            }
+
+            var $dashboardToolbar = me.getDashboardToolbar();
+            if (widgets.hasWidget($dashboardToolbar, widgets.dashboardToolbar)) {
+                $dashboardToolbar.dashboardToolbar("windowResize");
+            }
         },
         _init: function () {
             var me = this;

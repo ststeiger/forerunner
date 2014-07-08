@@ -14040,12 +14040,18 @@ $(function () {
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
-            me.getReportViewer().reportViewer("windowResize");
-            helper.delay(me, function () {
+            var $reportViewer = me.getReportViewer();
+            if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                $reportViewer.reportViewer("windowResize");
+            }
+            var $toolbar = me.getToolbar();
+            if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                helper.delay(me, function () {
                 // This needs to be delayed for the dashboard case where the size of the report
                 // will dictate the size of the report area and therefore the size of the toolbar
                 me.getToolbar().toolbar("windowResize");
-            }, 100, "_toolbarDelayId");
+                }, 100, "_toolbarDelayId");
+            }
         },
         /**
          * Hide the breadcrumb section
@@ -22298,8 +22304,15 @@ $(function () {
                 me.layout.windowResize.call(me.layout);
             }
 
-            me.getDashboardEditor().dashboardEditor("windowResize");
-            me.getDashboardToolbar().dashboardToolbar("windowResize");
+            var $dashboardEditor = me.getDashboardEditor();
+            if (widgets.hasWidget($dashboardEditor, widgets.dashboardEditor)) {
+                $dashboardEditor.dashboardEditor("windowResize");
+            }
+
+            var $dashboardToolbar = me.getDashboardToolbar();
+            if (widgets.hasWidget($dashboardToolbar, widgets.dashboardToolbar)) {
+                $dashboardToolbar.dashboardToolbar("windowResize");
+            }
         },
         _init: function () {
             var me = this;

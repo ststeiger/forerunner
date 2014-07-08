@@ -14,7 +14,7 @@
 .fr-email-renderformat { width: 200px; }
 .fr-email-schedule { width: 200px;}
 .fr-email-submit-container { display: table; margin: 10px auto;}
-.fr-core-dialog-header .fr-email-create-id {background-image:url(../images/NewEmail_btn.png); cursor: pointer;}
+.fr-core-dialog-header .fr-email-create-id {background-image:url(../images/NewEmail_btn.png); cursor: pointer; filter: none;}
 .fr-email-submit-id {display: inline-block;}
 .fr-email-delete-id {display: inline-block;}
 .fr-emailsubscription-section { display: none; }

@@ -198,6 +198,7 @@ jQuery.fn.extend({
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
+    
     findUntil: function (selector, until) {
         
         var coll = $(this);

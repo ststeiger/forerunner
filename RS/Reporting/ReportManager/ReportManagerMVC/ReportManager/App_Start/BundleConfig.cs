@@ -59,7 +59,8 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ReportViewer.css",
                   "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",
                   "~/Forerunner/ReportViewer/css/ToolPane.css",
-                  "~/Forerunner/ReportViewer/css/Toolbar.css"
+                  "~/Forerunner/ReportViewer/css/Toolbar.css",
+                  "~/Forerunner/ReportViewer/css/tooltips.css"
                 ));
 
             BundleTable.EnableOptimizations = true;

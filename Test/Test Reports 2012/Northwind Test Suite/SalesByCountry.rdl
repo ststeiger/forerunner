@@ -38,6 +38,7 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ToolTip>= first(Fields!Country.Value) + " " +  format(sum(Fields!Sales.Value),"$#,###.##")</ToolTip>
                   <Style>
                     <Color>MidnightBlue</Color>
                     <BackgroundGradientType>HorizontalCenter</BackgroundGradientType>

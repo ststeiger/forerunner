@@ -1070,21 +1070,56 @@ $(function () {
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
-        zoomPageWidth: function (unZoom) {
+        /**
+         * Get the current zoom factor
+         *
+         * @function $.forerunner.reportViewer#getZoomFactor
+         */
+        getZoomFactor: function () {
             var me = this;
+            return me._zoomFactor;
+        },
+        /**
+         * Zoom to the specified percent value
+         *
+         * @function $.forerunner.reportViewer#zoomToPercent
+         *
+         * @param {number} percent - percentage (I.e., 100 = 100%)
+         */
+        zoomToPercent: function (percent) {
+            var me = this;
+            me._zoomFactor = percent;
             var page = me.$reportAreaContainer.find(".Page");
-            var zoom;
-
-            if (unZoom === true || unZoom === undefined)
-                zoom = 0;
-            else
-                zoom = (me.element.width() / page.width()) * 100;
 
             if (forerunner.device.isFirefox === true) {
-                page.css("MozTransform", "scale(" + zoom + ")");
+                page.css('MozTransform', 'scale(' + me._zoomFactor + ')');
             } else {
-                page.css("zoom", " " + zoom + "%");
+                page.css('zoom', ' ' + me._zoomFactor + '%');
             }
+        },
+        /**
+         * Toggles the Zoom To Page width on or off
+         *
+         * @function $.forerunner.reportViewer#toggleZoomPageWidth
+         */
+        toggleZoomPageWidth: function () {
+            var me = this;
+            if (me._zoomFactor && me._zoomFactor !== 0) {
+                me._unzoomPageWidth(true);
+            } else {
+                me._unzoomPageWidth(false);
+            }
+        },
+        _unzoomPageWidth: function (unZoom) {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+
+            if (unZoom === true || unZoom === undefined)
+                me._zoomFactor = 0;
+            else
+                me._zoomFactor = (me.element.width() / page.width()) * 100;
+
+            me.zoomToPercent(me._zoomFactor);
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -5117,7 +5152,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", locData.properties.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -5161,6 +5196,7 @@ $(function () {
          * Returns the current path and propertyList
          */
         getProperties: function () {
+            var me = this;
             return {
                 path: me.curPath,
                 propertyList: me._propertyList
@@ -5264,16 +5300,13 @@ $(function () {
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
-                    "<table class='fr-tag-table'>" +
-                        "<tr>" +
-                            "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                            "<td><input type='text' class='fr-tag-text' /></td>" +
-                        "</tr>" +
-                        "<tr class='fr-tag-prompt'>" +
-                            "<td></td>" +
-                            "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
-                        "<tr>" +
-                    "</table>" +
+                    "<div class='fr-tag-input-div'>" +
+                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<textarea class='fr-tag-text' rows='5' name='tags' />" +
+                    "</div>" +
+                    "<div class='fr-tag-prompt-div'>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                    "<div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");
@@ -6034,7 +6067,7 @@ $(function () {
                 listOfItems.push(tp.itemReportBack);
             }
 
-            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom);
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown, tg.itemZoomGroup);
 
             //remove zoom on android browser
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
@@ -6826,6 +6859,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selcted");
 
             var $anchor = new $("<a />");
+            $anchor.addClass("fr-explorer-item-image-link");
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -7514,7 +7548,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -7675,7 +7709,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -9853,7 +9888,6 @@ $(function () {
         },
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
-
             
             if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "on").toLowerCase() == "on") {
                 // Make DIV and append to page 
@@ -9865,8 +9899,6 @@ $(function () {
                 actionElement.hover(function (e) {
 
                     $el = $(this);
-
-                    //$tooltip = element.find(".tooltip");
                     var top = 0;
                     var left = 0;
 
@@ -9889,9 +9921,6 @@ $(function () {
                 }, function (e) {
 
                     $el = $(this);
-
-                    // Temporary class for same-direction fadeout
-                    //$tooltip = element.find(".tooltip").addClass("out");
 
                     // Remove all classes
                     setTimeout(function () {
@@ -12791,7 +12820,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -13255,7 +13284,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -13560,7 +13589,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings)
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on"
             });
 
             // Create / render the toolbar
@@ -13928,6 +13957,7 @@ $(function () {
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
+     * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -13950,7 +13980,8 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            handleWindowResize: true
+            handleWindowResize: true,
+            showBreadCrumb: false
         },
         _render: function () {
             var me = this;
@@ -14040,10 +14071,9 @@ $(function () {
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }
-            
-            var showBreadcrumb = forerunner.config.getCustomSettingsValue("showBreadCrumbInViewer", "off");
-            if (showBreadcrumb === "off") {
-                me.hideRouteLink();
+
+            if (me.options.showBreadCrumb === false) {
+                me.DefaultAppTemplate.$linksection.hide();
             }
 
             me._render();
@@ -14085,21 +14115,18 @@ $(function () {
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
-            me.getReportViewer().reportViewer("windowResize");
-            helper.delay(me, function () {
+            var $reportViewer = me.getReportViewer();
+            if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                $reportViewer.reportViewer("windowResize");
+            }
+            var $toolbar = me.getToolbar();
+            if (widgets.hasWidget($toolbar, widgets.toolbar)) {
+                helper.delay(me, function () {
                 // This needs to be delayed for the dashboard case where the size of the report
                 // will dictate the size of the report area and therefore the size of the toolbar
                 me.getToolbar().toolbar("windowResize");
-            }, 100, "_toolbarDelayId");
-        },
-        /**
-         * Hide the breadcrumb section
-         *
-         * @function $.forerunner.reportViewerEZ#hideRouteLink
-         */
-        hideRouteLink: function(){
-            var me = this;
-            me.DefaultAppTemplate.$linksection.hide();
+                }, 100, "_toolbarDelayId");
+            }
         },
         /**
          * Get report viewer page navigation
@@ -14275,7 +14302,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +
@@ -14931,7 +14958,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    showBreadCrumb: true
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
@@ -15118,6 +15146,19 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
+    // folder properties data
+    var propertyEnums = forerunner.ssr.constants.properties;
+    var propertyListMap = {
+        // Folder
+        1: [propertyEnums.tags, propertyEnums.description],
+        // Report
+        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        // Resource
+        3: [propertyEnums.tags, propertyEnums.description],
+        // LinkedReport
+        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+    };
+
     /**
      * Widget used to create the context menu
      *
@@ -15146,7 +15187,7 @@ $(function () {
         },
         _getPermissions: function () {
             var me = this;
-            var permissionList = ["Delete"];
+            var permissionList = ["Delete", "Update Properties"];
             me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
         },
         _init: function () {
@@ -15154,7 +15195,7 @@ $(function () {
             me._getPermissions();
 
             // Delete item
-            if (!me.permissions.Delete) {
+            if (!me.permissions["Delete"]) {
                 me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
@@ -15164,6 +15205,20 @@ $(function () {
                 });
                 me._$delete.removeClass("fr-toolbase-disabled");
                 me._$delete.addClass("fr-core-cursorpointer");
+            }
+
+            // Properties
+            if (!me.permissions["Update Properties"] &&
+                propertyListMap[me.options.catalogItem.Type]) {
+                me._$properties.off("click");
+                me._$properties.addClass("fr-toolbase-disabled");
+                me._$properties.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$properties.on("click", function (event, data) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+                me._$properties.removeClass("fr-toolbase-disabled");
+                me._$properties.addClass("fr-core-cursorpointer");
             }
 
             // Close dialog event
@@ -15206,9 +15261,7 @@ $(function () {
             me._$delete = me.element.find(".fr-ctx-delete-id");
 
             // Properties
-            me.element.find(".fr-ctx-properties-id").on("click", function (event, data) {
-                me._onClickProperties.apply(me, arguments);
-            });
+            me._$properties = me.element.find(".fr-ctx-properties-id");
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -15232,7 +15285,24 @@ $(function () {
             });
         },
         _onClickProperties: function (event, data) {
-            alert("_onClickProperties");
+            var me = this;
+            var $propertyDlg = me.options.$appContainer.find(".fr-properties-section");
+            if (!$propertyDlg || $propertyDlg.length === 0) {
+                console.log("Error - fr-properties-section not found");
+                return;
+            }
+
+            // Save the current settings
+            var previous = $propertyDlg.forerunnerProperties("getProperties");
+
+            // Set the new settings based upon the catalogItem and show the dialog
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            $propertyDlg.forerunnerProperties("openDialog");
+
+            // Retore the previous settings
+            if (previous && previous.path && previous.propertyList) {
+                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+            }
         },
         /**
          * Open parameter set dialog
@@ -15325,7 +15395,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -15760,8 +15830,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", "", "fr-core-dialog-button fr-email-create-id", "") :
-                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", "");
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew) :
+                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -15972,7 +16042,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -22301,8 +22371,15 @@ $(function () {
                 me.layout.windowResize.call(me.layout);
             }
 
-            me.getDashboardEditor().dashboardEditor("windowResize");
-            me.getDashboardToolbar().dashboardToolbar("windowResize");
+            var $dashboardEditor = me.getDashboardEditor();
+            if (widgets.hasWidget($dashboardEditor, widgets.dashboardEditor)) {
+                $dashboardEditor.dashboardEditor("windowResize");
+            }
+
+            var $dashboardToolbar = me.getDashboardToolbar();
+            if (widgets.hasWidget($dashboardToolbar, widgets.dashboardToolbar)) {
+                $dashboardToolbar.dashboardToolbar("windowResize");
+            }
         },
         _init: function () {
             var me = this;
@@ -23245,7 +23322,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", "");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +

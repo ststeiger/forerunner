@@ -2077,7 +2077,6 @@ $(function () {
         },
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
-
             
             if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "on").toLowerCase() == "on") {
                 // Make DIV and append to page 
@@ -2089,8 +2088,6 @@ $(function () {
                 actionElement.hover(function (e) {
 
                     $el = $(this);
-
-                    //$tooltip = element.find(".tooltip");
                     var top = 0;
                     var left = 0;
 
@@ -2113,9 +2110,6 @@ $(function () {
                 }, function (e) {
 
                     $el = $(this);
-
-                    // Temporary class for same-direction fadeout
-                    //$tooltip = element.find(".tooltip").addClass("out");
 
                     // Remove all classes
                     setTimeout(function () {

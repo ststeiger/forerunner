@@ -7156,6 +7156,15 @@ $(function () {
 
             return null;
         },
+        /*
+         * Will refresh the current report explorer view from the server
+         *
+         * @function $.forerunner.reportExplorer#refresh
+         */
+        refresh: function() {
+            var me = this;
+            me._fetch(me.lastFetched.view, me.lastFetched.path);
+        },
         _fetch: function (view, path) {
             var me = this;
             me.lastFetched = {
@@ -15343,6 +15352,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
+                    me.options.$reportExplorer.reportExplorer("refresh");
                 },
                 fail: function (jqXHR) {
                     console.log("DeleteCatalogItem failed - " + jqXHR.statusText);

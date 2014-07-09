@@ -146,6 +146,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
+                    me.options.$reportExplorer.reportExplorer("refresh");
                 },
                 fail: function (jqXHR) {
                     console.log("DeleteCatalogItem failed - " + jqXHR.statusText);

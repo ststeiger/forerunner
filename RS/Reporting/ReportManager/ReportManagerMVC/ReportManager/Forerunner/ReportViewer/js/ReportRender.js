@@ -797,9 +797,13 @@ $(function () {
             if (dirClass !== "") {
                 Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 Style += "position:absolute;";
-                var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
-                var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
-                Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+
+                if (!forerunner.device.isMSIE8()) {
+                   
+                    var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
+                    var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
+                    Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+                }
                 $TextObj.addClass(dirClass);
             }
             else {
@@ -1074,7 +1078,7 @@ $(function () {
             
 
             //Add Highlighting
-            //$(NewImage).maphilight();
+            //$(imageContainerto).maphilight();
 
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
@@ -2094,7 +2098,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
             
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on") {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && forerunner.device.isMSIE8() === false) {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 
@@ -2403,7 +2407,7 @@ $(function () {
                 if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 1)
                     Dirclass = "fr-rotate-90";
             if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 2)
-                    Dirclass = "fr-rotate-270";
+                Dirclass = "fr-rotate-270";
             }
             if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 1)
@@ -2411,6 +2415,10 @@ $(function () {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 2)
                     Dirclass = "fr-rotate-270";
             }
+
+            if (Dirclass !=="" && forerunner.device.isMSIE8())
+                Dirclass += "-IE8"
+
             return Dirclass;
 
           

@@ -1639,6 +1639,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-rotate-90 { -webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -o-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg);}
 .fr-rotate-270 { -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -ms-transform: rotate(270deg); -o-transform: rotate(270deg); transform: rotate(270deg); }
+.fr-rotate-90-IE8{-ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";}
+.fr-rotate-270-IE8{-ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";}
+
 .fr-render-error-details { cursor: pointer; color: blue; }
 
 .fr-render-drilldown-collapse { background-image: url('../../reportviewer/Images/Drilldown_Collapse.gif'); display: table-cell;width:17px; background-repeat: no-repeat; cursor: pointer;background-position:2px 3px; }

@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"右鍵菜單",
-    "delete":"刪除",
+    "delLabel":"刪除",
     "properties":"屬性"
   }
 }

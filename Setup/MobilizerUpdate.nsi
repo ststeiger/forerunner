@@ -135,6 +135,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
   File "${LOCALROOT}\Forerunner\Common\images\ForerunnerLogo.png"
   File "${LOCALROOT}\Forerunner\Common\Images\search.png"
+  File "${LOCALROOT}\Forerunner\Common\Images\ZoomIcon.png"
   File "${LOCALROOT}\Forerunner\Common\Images\OpenDropDown.png"
   File "${LOCALROOT}\Forerunner\Common\Images\Close_btn.png"
   SetOutPath "$INSTDIR\Forerunner\Common\images\ToolbarIcons"
@@ -816,6 +817,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   Delete "$INSTDIR\Forerunner\Common\images\search.png"
+  Delete "$INSTDIR\Forerunner\Common\images\ZoomIcon.png"
   Delete "$INSTDIR\Forerunner\Common\images\OpenDropDown.png"
   Delete "$INSTDIR\Forerunner\Common\images\Close_btn.png"  
   

@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"Kontextmenü",
-    "delete":"löschen",
-    "properties":"Eigenschaften"
+    "delLabel":"löschen",
+   "properties":"Eigenschaften"
   }
 }

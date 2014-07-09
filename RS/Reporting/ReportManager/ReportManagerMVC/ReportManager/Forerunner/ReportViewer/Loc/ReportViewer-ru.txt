@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"Контекстное меню",
-    "delete":"удалять",
+    "delLabel":"удалять",
     "properties":"свойства"
   }
 }

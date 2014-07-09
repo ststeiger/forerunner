@@ -279,7 +279,7 @@
   },
   "contextMenu":{
     "title":"Context Menu",
-    "delete": "Delete",
+    "delLabel": "Delete",
     "properties": "Properties"
   }
 }

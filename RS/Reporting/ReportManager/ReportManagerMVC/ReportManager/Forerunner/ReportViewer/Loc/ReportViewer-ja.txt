@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"コンテキストメニュー",
-    "delete":"削除",
+    "delLabel":"削除",
     "properties":"プロパティ"
   }
 }

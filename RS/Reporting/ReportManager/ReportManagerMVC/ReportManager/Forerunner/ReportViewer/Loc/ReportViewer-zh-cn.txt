@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"右键菜单",
-    "delete":"删除",
+    "delLabel":"删除",
     "properties":"属性"
   }
 }

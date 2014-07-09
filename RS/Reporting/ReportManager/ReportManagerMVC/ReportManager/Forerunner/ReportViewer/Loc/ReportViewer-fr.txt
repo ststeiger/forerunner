@@ -280,7 +280,7 @@
   },
   "contextMenu": {
     "title":"Menu contextuel",
-    "delete":"effacer",
+    "delLabel":"effacer",
     "properties":"propriétés"
   }
 }

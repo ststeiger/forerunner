@@ -124,6 +124,10 @@ $(function () {
                 me.enableTools([tp.itemCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerZoomChange(), function (e, data) {
+                me._$itemPercentage.val(data.zoomFactor.toFixed(0));
+            });
+
             me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
@@ -145,6 +149,16 @@ $(function () {
             me.addTools(1, false, me._viewerItems());
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
+
+            // Keep the itemPercent for later
+            me._$itemPercentage = me.element.find("." + tp.itemPercent.selectorClass);
+            var zoomFactor = me.options.$reportViewer.reportViewer("getZoomFactor").toFixed(0);
+            me._$itemPercentage.val(zoomFactor);
+
+            //remove pinch zoom on android browser
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                me.hideTool(tp.itemZoom.selectorClass);
             }
             
             //me.enableTools([tp.itemReportBack]);
@@ -168,12 +182,6 @@ $(function () {
             }
 
             listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown, tg.itemZoomGroup);
-
-            //remove zoom on android browser
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfItems.pop();
-            }
-
             listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription);
 
             //check admin functions

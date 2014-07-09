@@ -27,6 +27,8 @@
 
 .fr-item-find-composite-group { display: inline-block; position: relative; padding-left: 12px; }
 
+.fr-item-zoom-percent-composite-group { display: inline-block; position: relative; padding-left: 12px; }
+
 .fr-toolpane-icon16x16 { width: 16px; height: 16px; display: inline-block; margin-top: 10px; margin-right: 5px; }
 
 .fr-toolpane-down-icon { background-image: url(../Images/toolpane/sq_br_down_icon16.png); }

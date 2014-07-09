@@ -110,7 +110,7 @@ $(function () {
                     "<div class='fr-ctx-container'>" +
                         "<div class='fr-ctx-delete-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
                             "<div class='fr-ctx-item-text-container'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.delete + "</div>" +
+                                "<div class='fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
                             "</div>" +
                         "</div>" +
                     "</div>" +

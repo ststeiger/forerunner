@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"samhengi Matseðill",
-    "delete":"eyða",
+    "delLabel":"eyða",
     "properties":"eiginleikar"
   }
 }

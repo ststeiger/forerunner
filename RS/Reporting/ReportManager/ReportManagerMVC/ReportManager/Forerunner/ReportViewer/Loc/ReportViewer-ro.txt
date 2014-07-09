@@ -279,7 +279,7 @@
   },
   "contextMenu": {
     "title":"Context Menu",
-    "delete":"șterge",
+    "delLabel":"șterge",
     "properties":"Proprietăți"
   }
 }

@@ -64,8 +64,8 @@ $(function () {
             me._getPermissions();
 
             // Delete item
+            me._$delete.off("click");
             if (!me.permissions["Delete"]) {
-                me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
             } else {
@@ -77,9 +77,9 @@ $(function () {
             }
 
             // Properties
+            me._$properties.off("click");
             if (!me.permissions["Update Properties"] &&
                 propertyListMap[me.options.catalogItem.Type]) {
-                me._$properties.off("click");
                 me._$properties.addClass("fr-toolbase-disabled");
                 me._$properties.removeClass("fr-core-cursorpointer");
             } else {
@@ -169,10 +169,13 @@ $(function () {
             $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
             $propertyDlg.forerunnerProperties("openDialog");
 
-            // Retore the previous settings
-            if (previous && previous.path && previous.propertyList) {
-                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
-            }
+            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
+                // Retore the previous settings
+                if (previous && previous.path && previous.propertyList) {
+                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                }
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
         },
         /**
          * Open parameter set dialog

@@ -9949,38 +9949,41 @@ $(function () {
                 var timer;
 
                 // Mouseenter
-                actionElement.hover(function (e) {
+                actionElement.on("mouseenter",function (e) {
 
                     if (timer) {
                         clearTimeout(timer);
                         timer = null
                     }
                    
-                        $el = $(this);
-                        var top = 0;
-                        var left = 0;
+                    $el = $(this);
+                    var top = 0;
+                    var left = 0;
 
-                        // Reposition tooltip, in case of page movement e.g. screen resize           
-                        var parentOffset = $(this).parent().offset();
-                        if ($(this).parent().is("map")) {
-                            parentOffset = $(this).parent().parent().offset();
-                        }
+                    // Reposition tooltip, in case of page movement e.g. screen resize           
+                    var parentOffset = $(this).parent().offset();
+                    if ($(this).parent().is("map")) {
+                        parentOffset = $(this).parent().parent().offset();
+                    }
 
 
-                        top = e.pageY - parentOffset.top;
-                        left = e.pageX - parentOffset.left;
+                    top = e.pageY - parentOffset.top;
+                    left = e.pageX - parentOffset.left;
 
-                        $tooltip.css({
-                            top: top - $tooltip.outerHeight() - 13,
-                            left: left - ($tooltip.outerWidth() / 2)
-                        });
+                    $tooltip.css({
+                        top: top - $tooltip.outerHeight() - 13,
+                        left: left - ($tooltip.outerWidth() / 2)
+                    });
 
-                        timer = setTimeout(function () {
+                    timer = setTimeout(function () {
                         // Adding class handles animation through CSS
                         $tooltip.addClass("active");
                     }, 1000)
-                    // Mouseleave
-                }, function (e) {
+                }
+                );
+                    
+                // Mouseleave
+                actionElement.on("mouseleave", function (e) {
                     clearTimeout(timer);
                     $el = $(this);
 

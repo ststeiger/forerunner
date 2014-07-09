@@ -14,7 +14,7 @@
     })();
 
     if (!(has_canvas || has_VML)) {
-        $.fn.maphilight = function () { return this; };
+        $.fn.FRmaphilight = function () { return this; };
         return;
     }
 
@@ -49,7 +49,7 @@
             }
             context.closePath();
         }
-        add_shape_to = function (canvas, shape, coords, options, name) {
+        add_shape_to = function (canvas, shape, coords, options, name,shiftPosition) {
             var i, context = canvas.getContext('2d');
 
             // Because I don't want to worry about setting things back to a base state
@@ -67,8 +67,8 @@
                 // Redraw the shape shifted off the canvas massively so we can cast a shadow
                 // onto the canvas without having to worry about the stroke or fill (which
                 // cannot have 0 opacity or width, since they're what cast the shadow).
-                var x_shift = canvas.width * 100;
-                var y_shift = canvas.height * 100;
+                var x_shift = (canvas.width * 100) - shiftPosition.left;
+                var y_shift = (canvas.height * 100 ) - shiftPosition.top;
                 draw_shape(context, shape, coords, x_shift, y_shift);
 
                 context.shadowOffsetX = options.shadowX - x_shift;
@@ -110,7 +110,7 @@
 
             context.save();
 
-            draw_shape(context, shape, coords);
+            draw_shape(context, shape, coords,shiftPosition.left,shiftPosition.top);
 
             // fill has to come after shadow, otherwise the shadow will be drawn over the fill,
             // which mostly looks weird when the shadow has a high opacity
@@ -189,8 +189,8 @@
     };
 
     var ie_hax_done = false;
-    $.fn.maphilight = function (opts) {
-        opts = $.extend({}, $.fn.maphilight.defaults, opts);
+    $.fn.FRmaphilight = function (opts) {
+        opts = $.extend({}, $.fn.FRmaphilight.defaults, opts);
 
         if (!has_canvas && !ie_hax_done) {
             $(window).ready(function () {
@@ -217,7 +217,7 @@
             if (!is_image_loaded(img[0])) {
                 // If the image isn't fully loaded, this won't work right.  Try again later.
                 return window.setTimeout(function () {
-                    me.maphilight(opts);
+                    me.FRmaphilight(opts);
                 }, 200);
             }
 
@@ -253,8 +253,8 @@
                 padding: 0,
                 width: me.width(),
                 height: me.height(),
-                top: img[0].top,
-                left: img[0].left
+                "background-position-y": img.position().top,
+                "background-position-x": img.position().left
             });
             if (options.wrapClass) {
                 if (options.wrapClass === true) {
@@ -282,7 +282,7 @@
 					!area_options.alwaysOn
 				) {
                     shape = shape_from_area(this);
-                    add_shape_to(canvas, shape[0], shape[1], area_options, "highlighted");
+                    add_shape_to(canvas, shape[0], shape[1], area_options, "highlighted", img.position());
                     if (area_options.groupBy) {
                         var areas;
                         // two ways groupBy might work; attribute and selector
@@ -297,7 +297,7 @@
                                 var subarea_options = options_from_area(this, options);
                                 if (!subarea_options.neverOn && !subarea_options.alwaysOn) {
                                     var shape = shape_from_area(this);
-                                    add_shape_to(canvas, shape[0], shape[1], subarea_options, "highlighted");
+                                    add_shape_to(canvas, shape[0], shape[1], subarea_options, "highlighted", img.position());
                                 }
                             }
                         });
@@ -349,7 +349,7 @@
             img.addClass('maphilighted');
         });
     };
-    $.fn.maphilight.defaults = {
+    $.fn.FRmaphilight.defaults = {
         fill: true,
         fillColor: '000000',
         fillOpacity: 0.2,

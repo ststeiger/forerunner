@@ -1077,8 +1077,13 @@ $(function () {
             NewImage.attr("style", Style);
             
 
-            //Add Highlighting
-            //$(imageContainerto).maphilight();
+            //Add Highlighting            
+            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on") {
+                var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
+                var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
+
+                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+            }
 
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
@@ -2098,7 +2103,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
             
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && forerunner.device.isMSIE8() === false) {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && !forerunner.device.isMSIE8()) {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 

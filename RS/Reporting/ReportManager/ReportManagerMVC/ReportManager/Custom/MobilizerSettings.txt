@@ -9,5 +9,8 @@
 	"ParameterPaneWidth":"350",
 	"showHomeButton":"off",
 	"showSubscriptionUI":"on",
-	"FancyTooltips":"on"
+	"FancyTooltips":"on",
+	"ImageAreaHighligh": "on",
+	"ImageAreaHighlighBorderColor": "0000ff",
+	"ImageAreaHighlighBorderWidth": "2"
 }

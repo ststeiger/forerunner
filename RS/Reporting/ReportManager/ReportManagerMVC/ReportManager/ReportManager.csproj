@@ -198,7 +198,7 @@
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
-    <Content Include="Forerunner\Lib\Misc\js\jquery.maphilight.min.js" />
+    <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />
     <Content Include="Forerunner\ReportExplorer\css\ContextMenu.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />

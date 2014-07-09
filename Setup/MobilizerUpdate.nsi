@@ -208,6 +208,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\moment.min.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.FRmaphilight.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jsTree"
   File "${LOCALROOT}\Forerunner\Lib\jsTree\jstree.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jsTree\themes\default"

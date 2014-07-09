@@ -2204,7 +2204,7 @@ $(function () {
             }
             else {
                 me.pages[newPageNum].reportObj = data;
-            }
+            } 
 
             if (!data.SessionID)
                 me.sessionID = "";

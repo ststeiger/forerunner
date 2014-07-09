@@ -2834,7 +2834,7 @@ $(function () {
             }
             else {
                 me.pages[newPageNum].reportObj = data;
-            }
+            } 
 
             if (!data.SessionID)
                 me.sessionID = "";
@@ -8369,7 +8369,7 @@ $(function () {
                
             });
     
-            if (me.options.responsive)
+            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth)
                 return me._getResponsiveRectangleLayout(Measurements,l);
             return l;
         },
@@ -8816,20 +8816,20 @@ $(function () {
         _writeImage: function (RIContext) {
             var NewImage = $("<img/>"); //new Image();
             var me = this; 
-
+            var imageContainer = $("<div/>").addClass("fr-render-image");
             
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style ;
-            RIContext.$HTMLParent.addClass("fr-render-image");
+            
 
             //Get padding
             Style += me._getTextStyle(RIContext.CurrObj.Elements);
-            RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            imageContainer.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
 
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
                 Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
-                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                imageContainer.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
             
             Style += me._getMeasurements(measurement, true);
@@ -8894,12 +8894,15 @@ $(function () {
                 imageHeight = RIContext.CurrLocation.Height * 3.78;
             }
 
-            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
+            imageContainer.append(NewImage);
+            imageContainer.attr("style", Style);
+            RIContext.$HTMLParent.append(imageContainer);
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
-            Style = imageStyle ? imageStyle : "display:table-cell;";
+            Style = imageStyle ? imageStyle : "display:table-cell";
             NewImage.attr("style", Style);
+            
 
             //Add Highlighting
             //$(NewImage).maphilight();
@@ -9298,8 +9301,8 @@ $(function () {
             var Style = "";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
-            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedColHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
+            var $FixedRowHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
@@ -9437,6 +9440,7 @@ $(function () {
                 $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
                 $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                $FixedColHeader.attr("Style", Style);
                 
             }
 
@@ -9496,6 +9500,7 @@ $(function () {
             if (State.ExtRow === undefined && respCols.isResp) {
                 $ExtRow = new $("<TR/>");                
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                $ExtCell.css("position", "relative");
                 $ExtRow.addClass("fr-render-respRow");
                 $ExtRow.append($ExtCell);
                 $ExtRow.hide();
@@ -9547,6 +9552,7 @@ $(function () {
                 if (respCols.isResp) {
                     $ExtRow = new $("<TR/>");
                     $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtCell.css("position", "relative");
                     $ExtRow.addClass("fr-render-respRow");
                     $ExtRow.append($ExtCell);
                     $ExtRow.hide();
@@ -9923,33 +9929,44 @@ $(function () {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 
+
                 element.append($tooltip);
+                var timer;
 
                 // Mouseenter
                 actionElement.hover(function (e) {
 
-                    $el = $(this);
-                    var top = 0;
-                    var left = 0;
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null
+                    }
+                   
+                        $el = $(this);
+                        var top = 0;
+                        var left = 0;
 
-                    // Reposition tooltip, in case of page movement e.g. screen resize           
-                    var parentOffset = $(this).parent().offset();
-                    top = e.pageY -  parentOffset.top;
-                    left = e.pageX - parentOffset.left;
-                  
-
-                    $tooltip.css({
-                        top: top - $tooltip.outerHeight() - 13,
-                        left: left - ($tooltip.outerWidth() / 2)
-                    });
+                        // Reposition tooltip, in case of page movement e.g. screen resize           
+                        var parentOffset = $(this).parent().offset();
+                        if ($(this).parent().is("map")) {
+                            parentOffset = $(this).parent().parent().offset();
+                        }
 
 
-                    // Adding class handles animation through CSS
-                    $tooltip.addClass("active");
+                        top = e.pageY - parentOffset.top;
+                        left = e.pageX - parentOffset.left;
 
+                        $tooltip.css({
+                            top: top - $tooltip.outerHeight() - 13,
+                            left: left - ($tooltip.outerWidth() / 2)
+                        });
+
+                        timer = setTimeout(function () {
+                        // Adding class handles animation through CSS
+                        $tooltip.addClass("active");
+                    }, 1000)
                     // Mouseleave
                 }, function (e) {
-
+                    clearTimeout(timer);
                     $el = $(this);
 
                     // Remove all classes

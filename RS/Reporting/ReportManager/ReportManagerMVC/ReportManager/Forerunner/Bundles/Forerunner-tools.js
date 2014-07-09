@@ -653,6 +653,7 @@ $(function () {
             imageClass: "fr-icons24x24-zoom",
             sharedClass: "fr-toolbase-show-if-touch",
             text: locData.toolPane.zoom,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("allowZoom", true);
@@ -668,6 +669,7 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom-to-page-width",
             text: locData.toolPane.zoomPageWidth,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleZoomPageWidth");
@@ -1123,6 +1125,7 @@ $(function () {
             selectorClass: "fr-item-recent",
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolbar.recent,
             toolStateClass: null,
             events: {
@@ -1137,6 +1140,7 @@ $(function () {
             selectorClass: "fr-item-favorite",
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolPane.favorites,
             toolStateClass: null,
             events: {

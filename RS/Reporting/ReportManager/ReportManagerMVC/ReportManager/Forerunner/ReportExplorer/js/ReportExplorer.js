@@ -251,7 +251,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-ctx-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg = $("<div class='fr-ctx-section'/>");
                 me.options.$appContainer.append($dlg);
                 me._contextMenu = $dlg;
             }
@@ -264,7 +264,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.contextMenu("openDialog");
+            me._contextMenu.contextMenu("openMenu", e);
         },
         _renderPCView: function (catalogItems) {
             var me = this;

@@ -12,6 +12,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
@@ -63,6 +64,10 @@ $(function () {
             var me = this;
             me._getPermissions();
 
+            // Title
+            var title = helper.getCurrentItemName(me.options.catalogItem.Path);
+            me.$title.text(title);
+
             // Delete item
             me._$delete.off("click");
             if (!me.permissions["Delete"]) {
@@ -93,7 +98,7 @@ $(function () {
             // Close dialog event
             setTimeout(function () {
                 $("body").one("click", function () {
-                    me.closeDialog();
+                    me.closeMenu();
                 });
             }, 10);
         },
@@ -102,29 +107,38 @@ $(function () {
 
             me.element.html("");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("", contextMenu.title, "", "");
             var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                    headerHtml +
-                    // Delete
-                    "<div class='fr-ctx-container'>" +
-                        "<div class='fr-ctx-delete-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
-                            "<div class='fr-ctx-item-text-container'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
+                "<table class='fr-ctx-table'>" +
+                    // Header
+                    "<tr>" +
+                        "<td class='fr-ctx-header'>" +
+                            "<div class='fr-ctx-title'>" +
                             "</div>" +
-                        "</div>" +
-                    "</div>" +
+                        "</td>" +
+                    "</tr>" +
+                    // Delete
+                    "<tr>" +
+                        "<td class='fr-ctx-delete-id fr-ctx-container'>" +
+                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
+                                "<div class='fr-ctx-delete-id fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
+                            "</div>" +
+                        "</td>" +
+                    "</tr>" +
                     // Properties
-                    "<div class='fr-ctx-container'>" +
-                        "<div class='fr-ctx-properties-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
-                            "<div class='fr-ctx-item-text-container'>" +
+                    "<tr>" +
+                        "<td class='fr-ctx-properties-id fr-ctx-container'>" +
+                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
                                 "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
                             "</div>" +
-                        "</div>" +
-                    "</div>" +
-                "</div>");
+                        "</td>" +
+                    "</tr>" +
+                "</table>"
+            );
 
             me.element.append($dialog);
+
+            // Title
+            me.$title = me.element.find(".fr-ctx-title");
 
             // Delete
             me._$delete = me.element.find(".fr-ctx-delete-id");
@@ -178,22 +192,29 @@ $(function () {
             });
         },
         /**
-         * Open parameter set dialog
+         * Open menu
          *
-         * @function $.forerunner.createDashboard#openDialog
+         * @function $.forerunner.createDashboard#openMenu
+         *
+         * @param {object} jQuery event object of the click event
          */
-        openDialog: function () {
+        openMenu: function (event) {
             var me = this;
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me.element.css({
+                left: event.clientX + "px",
+                top: event.clientY + "px",
+                position: "absolute"
+            });
+            me.element.show();
         },
         /**
-         * Close parameter set dialog
+         * Close menu
          *
-         * @function $.forerunner.manageParamSets#closeDialog
+         * @function $.forerunner.manageParamSets#closeMenu
          */
-        closeDialog: function () {
+        closeMenu: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            me.element.hide();
         },
     }); //$.widget
 });

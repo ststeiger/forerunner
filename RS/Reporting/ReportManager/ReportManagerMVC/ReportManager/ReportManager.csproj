@@ -185,6 +185,7 @@
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
     <Content Include="Forerunner\Common\css\icons25x31.css" />
+    <Content Include="Forerunner\Common\images\ZoomIcon.png" />
     <Content Include="Forerunner\Common\images\ForerunnerLogo.png" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />

@@ -1077,6 +1077,9 @@ $(function () {
          */
         getZoomFactor: function () {
             var me = this;
+            if (!me._zoomFactor) {
+                me._zoomFactor = 100;
+            }
             return me._zoomFactor;
         },
         /**
@@ -1085,10 +1088,18 @@ $(function () {
          * @function $.forerunner.reportViewer#zoomToPercent
          *
          * @param {number} percent - percentage (I.e., 100 = 100%)
+         *
+         * @return {bool} - true = zoom factor change, false = percent not a number
          */
         zoomToPercent: function (percent) {
             var me = this;
-            me._zoomFactor = percent;
+            var zoomFactor = parseFloat(percent);
+            if (isNaN(zoomFactor)) {
+                me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                return false;
+            }
+
+            me._zoomFactor = zoomFactor;
             var page = me.$reportAreaContainer.find(".Page");
 
             if (forerunner.device.isFirefox === true) {
@@ -1096,6 +1107,10 @@ $(function () {
             } else {
                 page.css('zoom', ' ' + me._zoomFactor + '%');
             }
+
+            me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+
+            return true;
         },
         /**
          * Toggles the Zoom To Page width on or off
@@ -1104,22 +1119,19 @@ $(function () {
          */
         toggleZoomPageWidth: function () {
             var me = this;
-            if (me._zoomFactor && me._zoomFactor !== 0) {
-                me._unzoomPageWidth(true);
-            } else {
-                me._unzoomPageWidth(false);
+            if (!me._zoomFactor) {
+                me._zoomFactor = 100;
             }
-        },
-        _unzoomPageWidth: function (unZoom) {
-            var me = this;
+
             var page = me.$reportAreaContainer.find(".Page");
+            var pageWidthZoom = (me.element.width() / page.width()) * 100;
+            var isPageWidth = Math.abs(pageWidthZoom - me._zoomFactor) < 1;  // To the nearest int is equal here
 
-            if (unZoom === true || unZoom === undefined)
-                me._zoomFactor = 0;
-            else
-                me._zoomFactor = (me.element.width() / page.width()) * 100;
-
-            me.zoomToPercent(me._zoomFactor);
+            if (isPageWidth) {
+                me.zoomToPercent(100);
+            } else {
+                me.zoomToPercent(pageWidthZoom);
+            }
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -6024,6 +6036,10 @@ $(function () {
                 me.enableTools([tp.itemCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerZoomChange(), function (e, data) {
+                me._$itemPercentage.val(data.zoomFactor.toFixed(0));
+            });
+
             me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
@@ -6045,6 +6061,16 @@ $(function () {
             me.addTools(1, false, me._viewerItems());
             if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
+            }
+
+            // Keep the itemPercent for later
+            me._$itemPercentage = me.element.find("." + tp.itemPercent.selectorClass);
+            var zoomFactor = me.options.$reportViewer.reportViewer("getZoomFactor").toFixed(0);
+            me._$itemPercentage.val(zoomFactor);
+
+            //remove pinch zoom on android browser
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
+                me.hideTool(tp.itemZoom.selectorClass);
             }
             
             //me.enableTools([tp.itemReportBack]);
@@ -6068,12 +6094,6 @@ $(function () {
             }
 
             listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown, tg.itemZoomGroup);
-
-            //remove zoom on android browser
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfItems.pop();
-            }
-
             listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription);
 
             //check admin functions

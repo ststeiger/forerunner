@@ -233,6 +233,15 @@
 
             map = $('map[name="' + usemap.substr(1) + '"]');
 
+            //issue with IE11
+            if (map.size() === 0) {
+                    // If the image isn't fully loaded, this won't work right.  Try again later.
+                    return window.setTimeout(function () {
+                        me.FRmaphilight(opts);
+                    }, 200);
+                }
+           
+
             if (!(img.is('img,input[type="image"]') && usemap && map.size() > 0)) {
                 return;
             }
@@ -253,8 +262,7 @@
                 padding: 0,
                 width: me.width(),
                 height: me.height(),
-                "background-position-y": img.position().top,
-                "background-position-x": img.position().left
+                "background-position": img.position().left + "px " + img.position().top + "px"
             });
             if (options.wrapClass) {
                 if (options.wrapClass === true) {
@@ -341,8 +349,8 @@
             });
 
             $(map).trigger('alwaysOn.maphilight').find('area[coords]')
-				.bind('mouseover.maphilight', mouseover)
-				.bind('mouseout.maphilight', function (e) { clear_canvas(canvas); });
+				.bind('mouseenter.maphilight', mouseover)
+				.bind('mouseleave.maphilight', function (e) { clear_canvas(canvas); });
 
             me.before(canvas); // if we put this after, the mouseover events wouldn't fire.
 

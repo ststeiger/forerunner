@@ -1712,7 +1712,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     text-decoration: none;
     text-transform: uppercase;
     box-shadow: 0 0 7px black;
-    z-index:99999;
+    z-index:-1;
 }
 
 .fr-arrow {
@@ -1750,6 +1750,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     -ms-transition: all 0.2s ease;
     -o-transition: all 0.2s ease;
     transition: all 0.2s ease;
+    z-index:1;
 }
 
 .fr-tooltip.out {

@@ -1671,13 +1671,13 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-render-error-license-link { width: 200px; margin: 8px; padding: 6px 0px 6px 18px; }
 .fr-render-error-license-link a { text-decoration: none; color: white; font-size: 1.2em; }
 
-.fr-render-rec {display:table;border-collapse:collapse;}
-.fr-r-rT{display:table;table-layout: fixed;position:relative;}
+.fr-render-rec {border-collapse:collapse;}
+.fr-r-rT{display:table;table-layout: fixed;}
 .fr-r-t{white-space:pre-wrap;margin:0;display: table-cell;overflow:hidden; -ms-word-wrap:break-word;word-wrap:break-word;} 
 .fr-r-pL{width:100%;height:100%;}
-.fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;}
+.fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;position:relative;}
 .fr-r-tC{vertical-align:top;padding:0;margin:0;}
-.fr-r-tCI{margin:0;width:100%;height:100%;}
+.fr-r-tCI{margin:0;width:100%;height:100%;position:relative;}
 .fr-render-tablix{border-collapse:collapse;padding:0;margin:0;table-layout:fixed;}
 .fr-render-tablix-header{ display: table; position: absolute; top: 0px; left: 0px; padding: 0; margin: 0; border-collapse: collapse;}
 .fr-r-fS{width:100%;height:100%;}

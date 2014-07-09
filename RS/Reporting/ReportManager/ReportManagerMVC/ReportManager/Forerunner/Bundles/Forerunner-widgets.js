@@ -6344,8 +6344,8 @@ $(function () {
             var Style = "";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
-            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedColHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
+            var $FixedRowHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
@@ -6374,11 +6374,13 @@ $(function () {
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
                 }
                 $FixedColHeader.append(colgroup.clone(true, true));  
-                $FixedRowHeader.addClass("fr-render-tablix");
                 $FixedColHeader.addClass("fr-render-tablix");
                 $FixedColHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
-                $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
                 $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                $FixedColHeader.attr("Style", Style);
+
+                $FixedRowHeader.addClass("fr-render-tablix");
+                $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
                 $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 
             }

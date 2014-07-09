@@ -232,6 +232,9 @@ namespace Forerunner.SSRS.Viewer
 
         public string pingSession(string SessionID)
         {
+            if (SessionID == "DebugPlaceholderSession")
+                return "";
+
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
             rs.Credentials = GetCredentials();

@@ -371,6 +371,15 @@ $(function () {
 
             return null;
         },
+        /*
+         * Will refresh the current report explorer view from the server
+         *
+         * @function $.forerunner.reportExplorer#refresh
+         */
+        refresh: function() {
+            var me = this;
+            me._fetch(me.lastFetched.view, me.lastFetched.path);
+        },
         _fetch: function (view, path) {
             var me = this;
             me.lastFetched = {

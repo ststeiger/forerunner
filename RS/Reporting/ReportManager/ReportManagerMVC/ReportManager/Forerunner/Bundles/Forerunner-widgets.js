@@ -5393,6 +5393,7 @@ $(function () {
                     break;
             }
 
+            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
             me.closeDialog();
         },
         /**
@@ -5413,7 +5414,6 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _preprocess: null,
@@ -7155,6 +7155,15 @@ $(function () {
             }
 
             return null;
+        },
+        /*
+         * Will refresh the current report explorer view from the server
+         *
+         * @function $.forerunner.reportExplorer#refresh
+         */
+        refresh: function() {
+            var me = this;
+            me._fetch(me.lastFetched.view, me.lastFetched.path);
         },
         _fetch: function (view, path) {
             var me = this;
@@ -15264,8 +15273,8 @@ $(function () {
             me._getPermissions();
 
             // Delete item
+            me._$delete.off("click");
             if (!me.permissions["Delete"]) {
-                me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
             } else {
@@ -15277,9 +15286,9 @@ $(function () {
             }
 
             // Properties
+            me._$properties.off("click");
             if (!me.permissions["Update Properties"] &&
                 propertyListMap[me.options.catalogItem.Type]) {
-                me._$properties.off("click");
                 me._$properties.addClass("fr-toolbase-disabled");
                 me._$properties.removeClass("fr-core-cursorpointer");
             } else {
@@ -15346,6 +15355,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
+                    me.options.$reportExplorer.reportExplorer("refresh");
                 },
                 fail: function (jqXHR) {
                     console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
@@ -15368,10 +15378,13 @@ $(function () {
             $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
             $propertyDlg.forerunnerProperties("openDialog");
 
-            // Retore the previous settings
-            if (previous && previous.path && previous.propertyList) {
-                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
-            }
+            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
+                // Retore the previous settings
+                if (previous && previous.path && previous.propertyList) {
+                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                }
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
         },
         /**
          * Open parameter set dialog

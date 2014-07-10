@@ -200,9 +200,11 @@ $(function () {
          */
         openMenu: function (event) {
             var me = this;
+            var left = event.clientX + me.options.$appContainer.scrollLeft();
+            var top = event.clientY + me.options.$appContainer.scrollTop();
             me.element.css({
-                left: event.clientX + "px",
-                top: event.clientY + "px",
+                left: left + "px",
+                top: top + "px",
                 position: "absolute"
             });
             me.element.show();

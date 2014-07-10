@@ -30,6 +30,13 @@
     <add key="Forerunner.ReportServerDBDomain" value="" />
     <add key="Forerunner.ReportServerTimeout" value="100000" />
   </appSettings>
+  <system.net>
+    <defaultProxy enabled="true" useDefaultCredentials="true" >
+      <proxy bypassonlocal="True" usesystemdefault="True"/>
+      <!--<proxy proxyaddress="[proxy.address:port]" bypassonlocal="True" usesystemdefault="true"/>-->
+    </defaultProxy>
+  </system.net>
+  
   <!--
     For a description of web.config changes for .NET 4.5 see http://go.microsoft.com/fwlink/?LinkId=235367.
 

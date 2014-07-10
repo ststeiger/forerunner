@@ -312,7 +312,9 @@ $(function () {
             /** @constant */
             forerunnerProperties: "forerunnerProperties",
             /** @constant */
-            contextMenu: "contextMenu",
+            contextMenuBase: "contextMenuBase",
+            /** @constant */
+            reportExplorerContextMenu: "reportExplorerContextMenu",
 
             /** @constant */
             namespace: "forerunner",

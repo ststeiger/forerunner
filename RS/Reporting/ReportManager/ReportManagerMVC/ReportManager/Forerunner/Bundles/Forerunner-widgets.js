@@ -15059,7 +15059,7 @@ $(function () {
                     "": "transitionToReportManager",
                     "explore/:path": "transitionToReportManager",
                     "browse/:path": "transitionToReportViewer",
-                    "view/:args": "transitionToReportViewerWithRSURLAccess",
+                    "view/?:args": "transitionToReportViewerWithRSURLAccess",
                     "open/:path": "transitionToOpenResource",
                     "openDashboard/:path": "transitionToOpenDashboard",
                     "search/:keyword": "transitionToSearch",
@@ -15084,6 +15084,8 @@ $(function () {
             }
 
             forerunner.history.history("start");
+
+
         },
         _onRoute: function (event, data) {
             var me = this;
@@ -15100,7 +15102,7 @@ $(function () {
                 me.transitionToReportViewer(path, params);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
-                var reportPath = startParam > 0 ? args.substring(1, startParam) : args;
+                var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });

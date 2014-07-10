@@ -97,7 +97,7 @@ $(function () {
 
             // Close dialog event
             setTimeout(function () {
-                $("body").one("click", function () {
+                $("body").one("mouseup", function () {
                     me.closeMenu();
                 });
             }, 10);

@@ -123,13 +123,22 @@ $(function () {
                 action = "browse";
             }
 
+            // Steal the bowser context menu if we click on a report explorer item
+            $anchor.on("contextmenu", function () {
+                // Handle the right click
+                data = {
+                    catalogItem: catalogItem
+                };
+                me._onContextMenu.call(me, event, data);
+
+                // Return false here so as to steal the right click from
+                // the browser. We will show the context menu for report
+                // explorer items
+                return false;
+            });
+
             $anchor.on("click", function (event) {
-                if (event.altKey) {
-                    data = {
-                        catalogItem: catalogItem
-                    };
-                    me._onContextMenu.call(me, event, data);
-                } else if (me.options.navigateTo) {
+                if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });

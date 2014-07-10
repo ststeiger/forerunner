@@ -5658,6 +5658,191 @@ $(function () {
         }
     });
 });
+///#source 1 1 /Forerunner/Common/js/ContextMenuBase.js
+/**
+ * @file Contains the context menu base widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var contextMenu = locData.contextMenu;
+
+    // folder properties data
+    var propertyEnums = forerunner.ssr.constants.properties;
+    var propertyListMap = {
+        // Folder
+        1: [propertyEnums.tags, propertyEnums.description],
+        // Report
+        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        // Resource
+        3: [propertyEnums.tags, propertyEnums.description],
+        // LinkedReport
+        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+    };
+
+    /**
+     * Widget used to create the context menu
+     *
+     * @namespace $.forerunner.contextMenuBase
+     * @prop {Object} options - The options for the context menu base widget
+     * @prop {String} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
+     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
+     *
+     * @example
+     * $("#contextMenuId").contextMenuBase({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     catalogItem: me.catalogItem
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.contextMenuBase), {
+        options: {
+            $reportExplorer: null,
+            $appContainer: null,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null,
+            catalogItem: null
+        },
+        /*
+         * Sets the permissions list
+         *
+         * @param {array} list - Array of permission strings to query the server for
+         */
+        setPermissionsList: function (list) {
+            var me = this;
+            me.permissionList = list;
+        },
+        _getPermissionsList: function () {
+            var me = this;
+            if (me.permissionList) {
+                return me.permissionList;
+            }
+
+            return ["Delete", "Update Properties"];
+        },
+        /*
+         * Gets the permissions defined by the call to setPermissionsList
+         */
+        fetchPermissions: function () {
+            var me = this;
+            var permissionList = me._getPermissionsList();
+            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
+        },
+        /*
+         * Sets the title. Used in the _init call to dymanicaaly set the title
+         *
+         * @param {string} title - title to set dynamically
+         */
+        setTitle: function (title) {
+            var me = this;
+            me._title = title;
+        },
+        _init: function () {
+            var me = this;
+
+            // Title
+            if (me._title) {
+                me._$title.text(me._title);
+            }
+
+            // Close dialog event
+            setTimeout(function () {
+                $(window).one("mouseup", function () {
+                    me.closeMenu();
+                });
+            }, 10);
+        },
+        addHeader: function (title) {
+            var me = this;
+            if (title) {
+                me._title = title;
+            }
+            var $header = $(
+                // Header
+                "<tr>" +
+                    "<td class='fr-ctx-header'>" +
+                        "<div class='fr-ctx-title'>" +
+                        "</div>" +
+                    "</td>" +
+                "</tr>"
+            );
+            me._$table.append($header);
+            me._$title = me.element.find(".fr-ctx-title");
+            return $header;
+        },
+        addMenuItem: function (selectorClass, label) {
+            var me = this;
+            var $menuItem = $(
+                // Menu item
+                "<tr>" +
+                    "<td class='" + selectorClass + " fr-ctx-delete-id fr-ctx-container'>" +
+                        "<div class='fr-ctx-state fr-core-cursorpointer'>" +
+                            "<div class='fr-ctx-delete-id fr-ctx-item-text'>" + label + "</div>" +
+                        "</div>" +
+                    "</td>" +
+                "</tr>"
+            );
+            me._$table.append($menuItem);
+            return $menuItem;
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+
+            me._$table = $(
+                "<table class='fr-ctx-table'>" +
+                "</table>"
+            );
+
+            me.element.append(me._$table);
+        },
+        /**
+         * Open menu
+         *
+         * @function $.forerunner.createDashboard#openMenu
+         *
+         * @param {object} jQuery event object of the click event
+         */
+        openMenu: function (event) {
+            var me = this;
+            var margin = 10;
+            var offScreenRight = Math.max(0, event.clientX + me.element.width() + margin - me.options.$appContainer.width());
+            var offScreenBottom = Math.max(0, event.clientY + me.element.height() + margin - me.options.$appContainer.height());
+
+            var left = event.clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
+            var top = event.clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
+            me.element.css({
+                left: left + "px",
+                top: top + "px",
+                position: "absolute"
+            });
+            me.element.show();
+        },
+        /**
+         * Close menu
+         *
+         * @function $.forerunner.manageParamSets#closeMenu
+         */
+        closeMenu: function () {
+            var me = this;
+            me.element.hide();
+        },
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
 /**
  * @file Contains the toolbar widget.
@@ -6506,6 +6691,149 @@ $(function () {
         },
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerContextMenu.js
+/**
+ * @file Contains the Report Explorer Context Menu widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var contextMenu = locData.contextMenu;
+
+    // folder properties data
+    var propertyEnums = forerunner.ssr.constants.properties;
+    var propertyListMap = {
+        // Folder
+        1: [propertyEnums.tags, propertyEnums.description],
+        // Report
+        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        // Resource
+        3: [propertyEnums.tags, propertyEnums.description],
+        // LinkedReport
+        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+    };
+
+    /**
+     * Widget used to create the report explorer context menu
+     *
+     * @namespace $.forerunner.reportExplorerContextMenu
+     *
+     * @example
+     * $("#contextMenuId").reportExplorerContextMenu({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     *     catalogItem: me.catalogItem
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
+        options: {
+        },
+        _init: function () {
+            var me = this;
+
+            // Get the permissions for the path define in the catalogItem option
+            me.fetchPermissions();
+
+            // Dynamically set the title
+            me.setTitle(helper.getCurrentItemName(me.options.catalogItem.Path));
+
+            // Delete item
+            me._$delete.off("click");
+            if (!me.permissions["Delete"]) {
+                me._$delete.addClass("fr-toolbase-disabled");
+                me._$delete.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$delete.on("click", function (event, data) {
+                    me._onClickDelete.apply(me, arguments);
+                });
+                me._$delete.removeClass("fr-toolbase-disabled");
+                me._$delete.addClass("fr-core-cursorpointer");
+            }
+
+            // Properties
+            me._$properties.off("click");
+            if (!me.permissions["Update Properties"] &&
+                propertyListMap[me.options.catalogItem.Type]) {
+                me._$properties.addClass("fr-toolbase-disabled");
+                me._$properties.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$properties.on("click", function (event, data) {
+                    me._onClickProperties.apply(me, arguments);
+                });
+                me._$properties.removeClass("fr-toolbase-disabled");
+                me._$properties.addClass("fr-core-cursorpointer");
+            }
+
+            // Call contextMenuBase._init()
+            me._super();
+        },
+        _create: function () {
+            var me = this;
+
+            // Call contextMenuBase._create()
+            me._super();
+
+            me.addHeader();
+            me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
+            me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
+        },
+        _onClickDelete: function (event, data) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                    me.options.$reportExplorer.reportExplorer("refresh");
+                },
+                fail: function (jqXHR) {
+                    console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
+            });
+        },
+        _onClickProperties: function (event, data) {
+            var me = this;
+            var $propertyDlg = me.options.$appContainer.find(".fr-properties-section");
+            if (!$propertyDlg || $propertyDlg.length === 0) {
+                console.log("Error - fr-properties-section not found");
+                return;
+            }
+
+            // Save the current settings
+            var previous = $propertyDlg.forerunnerProperties("getProperties");
+
+            // Set the new settings based upon the catalogItem and show the dialog
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            $propertyDlg.forerunnerProperties("openDialog");
+
+            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
+                // Retore the previous settings
+                if (previous && previous.path && previous.propertyList) {
+                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                }
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
+        }
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerToolbar.js
 /**
  * @file Contains the reportExplorerToolbar widget.
@@ -7051,14 +7379,14 @@ $(function () {
             }
 
             // Aways re-initialize the dialog even if it was created before
-            $dlg.contextMenu({
+            $dlg.reportExplorerContextMenu({
                 $appContainer: me.options.$appContainer,
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.contextMenu("openMenu", e);
+            me._contextMenu.reportExplorerContextMenu("openMenu", e);
         },
         _renderPCView: function (catalogItems) {
             var me = this;
@@ -15214,233 +15542,6 @@ $(function () {
         }
     });  // $.widget
 });  // function()
-///#source 1 1 /Forerunner/ReportExplorer/js/ContextMenu.js
-/**
- * @file Contains the context menu widget.
- *
- */
-
-// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
-
-// Forerunner SQL Server Reports
-forerunner.ssr = forerunner.ssr || {};
-
-$(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
-    var helper = forerunner.helper;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var contextMenu = locData.contextMenu;
-
-    // folder properties data
-    var propertyEnums = forerunner.ssr.constants.properties;
-    var propertyListMap = {
-        // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
-        // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
-        // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
-        // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
-    };
-
-    /**
-     * Widget used to create the context menu
-     *
-     * @namespace $.forerunner.createDashboard
-     * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportExplorer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
-     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional, Report service instance name
-     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
-     *
-     * @example
-     * $("#contextMenuId").contextMenu({
-     *     $appContainer: me.options.$appContainer,
-     *     $reportExplorer: me.element,
-     *     catalogItem: me.catalogItem
-     * });
-     */
-    $.widget(widgets.getFullname(widgets.contextMenu), {
-        options: {
-            $reportExplorer: null,
-            $appContainer: null,
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
-            rsInstance: null,
-            catalogItem: null
-        },
-        _getPermissions: function () {
-            var me = this;
-            var permissionList = ["Delete", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
-        },
-        _init: function () {
-            var me = this;
-            me._getPermissions();
-
-            // Title
-            var title = helper.getCurrentItemName(me.options.catalogItem.Path);
-            me.$title.text(title);
-
-            // Delete item
-            me._$delete.off("click");
-            if (!me.permissions["Delete"]) {
-                me._$delete.addClass("fr-toolbase-disabled");
-                me._$delete.removeClass("fr-core-cursorpointer");
-            } else {
-                me._$delete.on("click", function (event, data) {
-                    me._onClickDelete.apply(me, arguments);
-                });
-                me._$delete.removeClass("fr-toolbase-disabled");
-                me._$delete.addClass("fr-core-cursorpointer");
-            }
-
-            // Properties
-            me._$properties.off("click");
-            if (!me.permissions["Update Properties"] &&
-                propertyListMap[me.options.catalogItem.Type]) {
-                me._$properties.addClass("fr-toolbase-disabled");
-                me._$properties.removeClass("fr-core-cursorpointer");
-            } else {
-                me._$properties.on("click", function (event, data) {
-                    me._onClickProperties.apply(me, arguments);
-                });
-                me._$properties.removeClass("fr-toolbase-disabled");
-                me._$properties.addClass("fr-core-cursorpointer");
-            }
-
-            // Close dialog event
-            setTimeout(function () {
-                $(window).one("mouseup", function () {
-                    me.closeMenu();
-                });
-            }, 10);
-        },
-        _create: function () {
-            var me = this;
-
-            me.element.html("");
-
-            var $dialog = $(
-                "<table class='fr-ctx-table'>" +
-                    // Header
-                    "<tr>" +
-                        "<td class='fr-ctx-header'>" +
-                            "<div class='fr-ctx-title'>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                    // Delete
-                    "<tr>" +
-                        "<td class='fr-ctx-delete-id fr-ctx-container'>" +
-                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
-                                "<div class='fr-ctx-delete-id fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                    // Properties
-                    "<tr>" +
-                        "<td class='fr-ctx-properties-id fr-ctx-container'>" +
-                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                "</table>"
-            );
-
-            me.element.append($dialog);
-
-            // Title
-            me.$title = me.element.find(".fr-ctx-title");
-
-            // Delete
-            me._$delete = me.element.find(".fr-ctx-delete-id");
-
-            // Properties
-            me._$properties = me.element.find(".fr-ctx-properties-id");
-        },
-        _onClickDelete: function (event, data) {
-            var me = this;
-
-            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
-            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
-            if (me.options.rsInstance) {
-                url += "&instance=" + me.options.rsInstance;
-            }
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                success: function (data) {
-                    me.options.$reportExplorer.reportExplorer("refresh");
-                },
-                fail: function (jqXHR) {
-                    console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
-                    console.log(jqXHR);
-                }
-            });
-        },
-        _onClickProperties: function (event, data) {
-            var me = this;
-            var $propertyDlg = me.options.$appContainer.find(".fr-properties-section");
-            if (!$propertyDlg || $propertyDlg.length === 0) {
-                console.log("Error - fr-properties-section not found");
-                return;
-            }
-
-            // Save the current settings
-            var previous = $propertyDlg.forerunnerProperties("getProperties");
-
-            // Set the new settings based upon the catalogItem and show the dialog
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
-            $propertyDlg.forerunnerProperties("openDialog");
-
-            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
-                // Retore the previous settings
-                if (previous && previous.path && previous.propertyList) {
-                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
-                }
-                me.options.$reportExplorer.reportExplorer("refresh");
-            });
-        },
-        /**
-         * Open menu
-         *
-         * @function $.forerunner.createDashboard#openMenu
-         *
-         * @param {object} jQuery event object of the click event
-         */
-        openMenu: function (event) {
-            var me = this;
-            var margin = 10;
-            var offScreenRight = Math.max(0, event.clientX + me.element.width() + margin - me.options.$appContainer.width());
-            var offScreenBottom = Math.max(0, event.clientY + me.element.height() + margin - me.options.$appContainer.height());
-
-            var left = event.clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
-            var top = event.clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
-            me.element.css({
-                left: left + "px",
-                top: top + "px",
-                position: "absolute"
-            });
-            me.element.show();
-        },
-        /**
-         * Close menu
-         *
-         * @function $.forerunner.manageParamSets#closeMenu
-         */
-        closeMenu: function () {
-            var me = this;
-            me.element.hide();
-        },
-    }); //$.widget
-});
 ///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
 /**
  * @file Contains the create dashboard widget.

@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the context menu widget.
+ * @file Contains the Report Explorer Context Menu widget.
  *
  */
 
@@ -30,43 +30,28 @@ $(function () {
     };
 
     /**
-     * Widget used to create the context menu
+     * Widget used to create the report explorer context menu
      *
-     * @namespace $.forerunner.createDashboard
-     * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportExplorer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
-     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional, Report service instance name
-     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
+     * @namespace $.forerunner.reportExplorerContextMenu
      *
      * @example
-     * $("#contextMenuId").contextMenu({
+     * $("#contextMenuId").reportExplorerContextMenu({
      *     $appContainer: me.options.$appContainer,
      *     $reportExplorer: me.element,
      *     catalogItem: me.catalogItem
      * });
      */
-    $.widget(widgets.getFullname(widgets.contextMenu), {
+    $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
         options: {
-            $reportExplorer: null,
-            $appContainer: null,
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
-            rsInstance: null,
-            catalogItem: null
-        },
-        _getPermissions: function () {
-            var me = this;
-            var permissionList = ["Delete", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
         },
         _init: function () {
             var me = this;
-            me._getPermissions();
 
-            // Title
-            var title = helper.getCurrentItemName(me.options.catalogItem.Path);
-            me.$title.text(title);
+            // Get the permissions for the path define in the catalogItem option
+            me.fetchPermissions();
+
+            // Dynamically set the title
+            me.setTitle(helper.getCurrentItemName(me.options.catalogItem.Path));
 
             // Delete item
             me._$delete.off("click");
@@ -95,56 +80,18 @@ $(function () {
                 me._$properties.addClass("fr-core-cursorpointer");
             }
 
-            // Close dialog event
-            setTimeout(function () {
-                $(window).one("mouseup", function () {
-                    me.closeMenu();
-                });
-            }, 10);
+            // Call contextMenuBase._init()
+            me._super();
         },
         _create: function () {
             var me = this;
 
-            me.element.html("");
+            // Call contextMenuBase._create()
+            me._super();
 
-            var $dialog = $(
-                "<table class='fr-ctx-table'>" +
-                    // Header
-                    "<tr>" +
-                        "<td class='fr-ctx-header'>" +
-                            "<div class='fr-ctx-title'>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                    // Delete
-                    "<tr>" +
-                        "<td class='fr-ctx-delete-id fr-ctx-container'>" +
-                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
-                                "<div class='fr-ctx-delete-id fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                    // Properties
-                    "<tr>" +
-                        "<td class='fr-ctx-properties-id fr-ctx-container'>" +
-                            "<div class='fr-ctx-state fr-core-cursorpointer'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
-                            "</div>" +
-                        "</td>" +
-                    "</tr>" +
-                "</table>"
-            );
-
-            me.element.append($dialog);
-
-            // Title
-            me.$title = me.element.find(".fr-ctx-title");
-
-            // Delete
-            me._$delete = me.element.find(".fr-ctx-delete-id");
-
-            // Properties
-            me._$properties = me.element.find(".fr-ctx-properties-id");
+            me.addHeader();
+            me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
+            me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -190,37 +137,6 @@ $(function () {
                 }
                 me.options.$reportExplorer.reportExplorer("refresh");
             });
-        },
-        /**
-         * Open menu
-         *
-         * @function $.forerunner.createDashboard#openMenu
-         *
-         * @param {object} jQuery event object of the click event
-         */
-        openMenu: function (event) {
-            var me = this;
-            var margin = 10;
-            var offScreenRight = Math.max(0, event.clientX + me.element.width() + margin - me.options.$appContainer.width());
-            var offScreenBottom = Math.max(0, event.clientY + me.element.height() + margin - me.options.$appContainer.height());
-
-            var left = event.clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
-            var top = event.clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
-            me.element.css({
-                left: left + "px",
-                top: top + "px",
-                position: "absolute"
-            });
-            me.element.show();
-        },
-        /**
-         * Close menu
-         *
-         * @function $.forerunner.manageParamSets#closeMenu
-         */
-        closeMenu: function () {
-            var me = this;
-            me.element.hide();
-        },
+        }
     }); //$.widget
 });

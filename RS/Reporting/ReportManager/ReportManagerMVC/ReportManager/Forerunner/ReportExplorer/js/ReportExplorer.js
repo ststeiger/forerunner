@@ -266,14 +266,14 @@ $(function () {
             }
 
             // Aways re-initialize the dialog even if it was created before
-            $dlg.contextMenu({
+            $dlg.reportExplorerContextMenu({
                 $appContainer: me.options.$appContainer,
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.contextMenu("openMenu", e);
+            me._contextMenu.reportExplorerContextMenu("openMenu", e);
         },
         _renderPCView: function (catalogItems) {
             var me = this;

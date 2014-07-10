@@ -97,7 +97,7 @@ $(function () {
 
             // Close dialog event
             setTimeout(function () {
-                $("body").one("mouseup", function () {
+                $(window).one("mouseup", function () {
                     me.closeMenu();
                 });
             }, 10);
@@ -200,8 +200,12 @@ $(function () {
          */
         openMenu: function (event) {
             var me = this;
-            var left = event.clientX + me.options.$appContainer.scrollLeft();
-            var top = event.clientY + me.options.$appContainer.scrollTop();
+            var margin = 10;
+            var offScreenRight = Math.max(0, event.clientX + me.element.width() + margin - me.options.$appContainer.width());
+            var offScreenBottom = Math.max(0, event.clientY + me.element.height() + margin - me.options.$appContainer.height());
+
+            var left = event.clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
+            var top = event.clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
             me.element.css({
                 left: left + "px",
                 top: top + "px",

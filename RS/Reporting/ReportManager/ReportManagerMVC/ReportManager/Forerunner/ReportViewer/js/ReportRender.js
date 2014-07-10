@@ -135,7 +135,6 @@ $(function () {
             if (reportObj.ReportContainer.Trial ===1) {                
                 me.element.append(me._getWatermark());
             }
-
             
             me.element.append(bgLayer);
         },
@@ -797,9 +796,13 @@ $(function () {
             if (dirClass !== "") {
                 Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 Style += "position:absolute;";
-                var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
-                var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
-                Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+
+                if (!forerunner.device.isMSIE8()) {
+                   
+                    var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
+                    var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
+                    Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+                }
                 $TextObj.addClass(dirClass);
             }
             else {
@@ -1073,8 +1076,13 @@ $(function () {
             NewImage.attr("style", Style);
             
 
-            //Add Highlighting
-            //$(NewImage).maphilight();
+            //Add Highlighting            
+            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on") {
+                var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
+                var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
+
+                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+            }
 
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
@@ -2094,7 +2102,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
             var me = this;
             
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on") {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && !forerunner.device.isMSIE8()) {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 
@@ -2103,38 +2111,41 @@ $(function () {
                 var timer;
 
                 // Mouseenter
-                actionElement.hover(function (e) {
+                actionElement.on("mouseenter",function (e) {
 
                     if (timer) {
                         clearTimeout(timer);
                         timer = null
                     }
                    
-                        $el = $(this);
-                        var top = 0;
-                        var left = 0;
+                    $el = $(this);
+                    var top = 0;
+                    var left = 0;
 
-                        // Reposition tooltip, in case of page movement e.g. screen resize           
-                        var parentOffset = $(this).parent().offset();
-                        if ($(this).parent().is("map")) {
-                            parentOffset = $(this).parent().parent().offset();
-                        }
+                    // Reposition tooltip, in case of page movement e.g. screen resize           
+                    var parentOffset = $(this).parent().offset();
+                    if ($(this).parent().is("map")) {
+                        parentOffset = $(this).parent().parent().offset();
+                    }
 
 
-                        top = e.pageY - parentOffset.top;
-                        left = e.pageX - parentOffset.left;
+                    top = e.pageY - parentOffset.top;
+                    left = e.pageX - parentOffset.left;
 
-                        $tooltip.css({
-                            top: top - $tooltip.outerHeight() - 13,
-                            left: left - ($tooltip.outerWidth() / 2)
-                        });
+                    $tooltip.css({
+                        top: top - $tooltip.outerHeight() - 13,
+                        left: left - ($tooltip.outerWidth() / 2)
+                    });
 
-                        timer = setTimeout(function () {
+                    timer = setTimeout(function () {
                         // Adding class handles animation through CSS
                         $tooltip.addClass("active");
                     }, 1000)
-                    // Mouseleave
-                }, function (e) {
+                }
+                );
+                    
+                // Mouseleave
+                actionElement.on("mouseleave", function (e) {
                     clearTimeout(timer);
                     $el = $(this);
 
@@ -2403,7 +2414,7 @@ $(function () {
                 if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 1)
                     Dirclass = "fr-rotate-90";
             if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 2)
-                    Dirclass = "fr-rotate-270";
+                Dirclass = "fr-rotate-270";
             }
             if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 1)
@@ -2411,6 +2422,10 @@ $(function () {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 2)
                     Dirclass = "fr-rotate-270";
             }
+
+            if (Dirclass !=="" && forerunner.device.isMSIE8())
+                Dirclass += "-IE8"
+
             return Dirclass;
 
           

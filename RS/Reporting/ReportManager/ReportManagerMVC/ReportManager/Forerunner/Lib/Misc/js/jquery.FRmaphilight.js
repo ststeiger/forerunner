@@ -14,7 +14,7 @@
     })();
 
     if (!(has_canvas || has_VML)) {
-        $.fn.maphilight = function () { return this; };
+        $.fn.FRmaphilight = function () { return this; };
         return;
     }
 
@@ -49,7 +49,7 @@
             }
             context.closePath();
         }
-        add_shape_to = function (canvas, shape, coords, options, name) {
+        add_shape_to = function (canvas, shape, coords, options, name,shiftPosition) {
             var i, context = canvas.getContext('2d');
 
             // Because I don't want to worry about setting things back to a base state
@@ -67,8 +67,8 @@
                 // Redraw the shape shifted off the canvas massively so we can cast a shadow
                 // onto the canvas without having to worry about the stroke or fill (which
                 // cannot have 0 opacity or width, since they're what cast the shadow).
-                var x_shift = canvas.width * 100;
-                var y_shift = canvas.height * 100;
+                var x_shift = (canvas.width * 100) - shiftPosition.left;
+                var y_shift = (canvas.height * 100 ) - shiftPosition.top;
                 draw_shape(context, shape, coords, x_shift, y_shift);
 
                 context.shadowOffsetX = options.shadowX - x_shift;
@@ -110,7 +110,7 @@
 
             context.save();
 
-            draw_shape(context, shape, coords);
+            draw_shape(context, shape, coords,shiftPosition.left,shiftPosition.top);
 
             // fill has to come after shadow, otherwise the shadow will be drawn over the fill,
             // which mostly looks weird when the shadow has a high opacity
@@ -189,8 +189,8 @@
     };
 
     var ie_hax_done = false;
-    $.fn.maphilight = function (opts) {
-        opts = $.extend({}, $.fn.maphilight.defaults, opts);
+    $.fn.FRmaphilight = function (opts) {
+        opts = $.extend({}, $.fn.FRmaphilight.defaults, opts);
 
         if (!has_canvas && !ie_hax_done) {
             $(window).ready(function () {
@@ -208,12 +208,16 @@
 
         return this.each(function () {
             var img, wrap, options, map, canvas, canvas_always, mouseover, highlighted_shape, usemap;
-            img = $(this);
+            var me = $(this);
+            if (me.is("IMG"))
+                img = me;
+            else
+                img = me.children("IMG");
 
-            if (!is_image_loaded(this)) {
+            if (!is_image_loaded(img[0])) {
                 // If the image isn't fully loaded, this won't work right.  Try again later.
                 return window.setTimeout(function () {
-                    img.maphilight(opts);
+                    me.FRmaphilight(opts);
                 }, 200);
             }
 
@@ -229,6 +233,15 @@
 
             map = $('map[name="' + usemap.substr(1) + '"]');
 
+            //issue with IE11
+            if (map.size() === 0) {
+                    // If the image isn't fully loaded, this won't work right.  Try again later.
+                    return window.setTimeout(function () {
+                        me.FRmaphilight(opts);
+                    }, 200);
+                }
+           
+
             if (!(img.is('img,input[type="image"]') && usemap && map.size() > 0)) {
                 return;
             }
@@ -236,35 +249,37 @@
             if (img.hasClass('maphilighted')) {
                 // We're redrawing an old map, probably to pick up changes to the options.
                 // Just clear out all the old stuff.
-                var wrapper = img.parent();
-                img.insertBefore(wrapper);
+                var wrapper = me.parent();
+                me.insertBefore(wrapper);
                 wrapper.remove();
                 $(map).unbind('.maphilight').find('area[coords]').unbind('.maphilight');
             }
 
             wrap = $('<div></div>').css({
                 display: 'block',
-                background: 'url("' + this.src + '")',
+                background: 'url("' + img[0].src + '")',
                 position: 'relative',
                 padding: 0,
-                width: this.width,
-                height: this.height
+                width: me.width(),
+                height: me.height(),
+                "background-position": img.position().left + "px " + img.position().top + "px"
             });
             if (options.wrapClass) {
                 if (options.wrapClass === true) {
-                    wrap.addClass($(this).attr('class'));
+                    wrap.addClass($(me).attr('class'));
                 } else {
                     wrap.addClass(options.wrapClass);
                 }
             }
-            img.before(wrap).css('opacity', 0).css(canvas_style).remove();
-            if (has_VML) { img.css('filter', 'Alpha(opacity=0)'); }
-            wrap.append(img);
+            me.before(wrap).css('opacity', 0).css(canvas_style).remove();
+            if (has_VML) { me.css('filter', 'Alpha(opacity=0)'); }
+            wrap.append(me);
+            //me.parent().append(wrap);
 
-            canvas = create_canvas_for(this);
+            canvas = create_canvas_for(me[0]);
             $(canvas).css(canvas_style);
-            canvas.height = this.height;
-            canvas.width = this.width;
+            canvas.height = me.height();
+            canvas.width = me.width();
 
             mouseover = function (e) {
                 var shape, area_options;
@@ -275,7 +290,7 @@
 					!area_options.alwaysOn
 				) {
                     shape = shape_from_area(this);
-                    add_shape_to(canvas, shape[0], shape[1], area_options, "highlighted");
+                    add_shape_to(canvas, shape[0], shape[1], area_options, "highlighted", img.position());
                     if (area_options.groupBy) {
                         var areas;
                         // two ways groupBy might work; attribute and selector
@@ -290,7 +305,7 @@
                                 var subarea_options = options_from_area(this, options);
                                 if (!subarea_options.neverOn && !subarea_options.alwaysOn) {
                                     var shape = shape_from_area(this);
-                                    add_shape_to(canvas, shape[0], shape[1], subarea_options, "highlighted");
+                                    add_shape_to(canvas, shape[0], shape[1], subarea_options, "highlighted", img.position());
                                 }
                             }
                         });
@@ -334,15 +349,15 @@
             });
 
             $(map).trigger('alwaysOn.maphilight').find('area[coords]')
-				.bind('mouseover.maphilight', mouseover)
-				.bind('mouseout.maphilight', function (e) { clear_canvas(canvas); });
+				.bind('mouseenter.maphilight', mouseover)
+				.bind('mouseleave.maphilight', function (e) { clear_canvas(canvas); });
 
-            img.before(canvas); // if we put this after, the mouseover events wouldn't fire.
+            me.before(canvas); // if we put this after, the mouseover events wouldn't fire.
 
             img.addClass('maphilighted');
         });
     };
-    $.fn.maphilight.defaults = {
+    $.fn.FRmaphilight.defaults = {
         fill: true,
         fillColor: '000000',
         fillOpacity: 0.2,

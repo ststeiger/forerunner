@@ -123,13 +123,22 @@ $(function () {
                 action = "browse";
             }
 
+            // Steal the bowser context menu if we click on a report explorer item
+            $anchor.on("contextmenu", function () {
+                // Handle the right click
+                data = {
+                    catalogItem: catalogItem
+                };
+                me._onContextMenu.call(me, event, data);
+
+                // Return false here so as to steal the right click from
+                // the browser. We will show the context menu for report
+                // explorer items
+                return false;
+            });
+
             $anchor.on("click", function (event) {
-                if (event.altKey) {
-                    data = {
-                        catalogItem: catalogItem
-                    };
-                    me._onContextMenu.call(me, event, data);
-                } else if (me.options.navigateTo) {
+                if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
@@ -251,20 +260,20 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-ctx-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg = $("<div class='fr-ctx-section'/>");
                 me.options.$appContainer.append($dlg);
                 me._contextMenu = $dlg;
             }
 
             // Aways re-initialize the dialog even if it was created before
-            $dlg.contextMenu({
+            $dlg.reportExplorerContextMenu({
                 $appContainer: me.options.$appContainer,
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.contextMenu("openDialog");
+            me._contextMenu.reportExplorerContextMenu("openMenu", e);
         },
         _renderPCView: function (catalogItems) {
             var me = this;
@@ -370,6 +379,15 @@ $(function () {
             }
 
             return null;
+        },
+        /*
+         * Will refresh the current report explorer view from the server
+         *
+         * @function $.forerunner.reportExplorer#refresh
+         */
+        refresh: function() {
+            var me = this;
+            me._fetch(me.lastFetched.view, me.lastFetched.path);
         },
         _fetch: function (view, path) {
             var me = this;

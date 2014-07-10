@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the context menu widget.
+ * @file Contains the Report Explorer Context Menu widget.
  *
  */
 
@@ -12,6 +12,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
@@ -29,43 +30,32 @@ $(function () {
     };
 
     /**
-     * Widget used to create the context menu
+     * Widget used to create the report explorer context menu
      *
-     * @namespace $.forerunner.createDashboard
-     * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportExplorer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
-     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
-     * @prop {String} options.rsInstance - Optional, Report service instance name
-     * @prop {Object} options.catalogItem - Optional, report explorer catalog item
+     * @namespace $.forerunner.reportExplorerContextMenu
      *
      * @example
-     * $("#contextMenuId").contextMenu({
+     * $("#contextMenuId").reportExplorerContextMenu({
      *     $appContainer: me.options.$appContainer,
      *     $reportExplorer: me.element,
      *     catalogItem: me.catalogItem
      * });
      */
-    $.widget(widgets.getFullname(widgets.contextMenu), {
+    $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
         options: {
-            $reportExplorer: null,
-            $appContainer: null,
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
-            rsInstance: null,
-            catalogItem: null
-        },
-        _getPermissions: function () {
-            var me = this;
-            var permissionList = ["Delete", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.catalogItem.Path, permissionList.join(","));
         },
         _init: function () {
             var me = this;
-            me._getPermissions();
+
+            // Get the permissions for the path define in the catalogItem option
+            me.fetchPermissions();
+
+            // Dynamically set the title
+            me.setTitle(helper.getCurrentItemName(me.options.catalogItem.Path));
 
             // Delete item
+            me._$delete.off("click");
             if (!me.permissions["Delete"]) {
-                me._$delete.off("click");
                 me._$delete.addClass("fr-toolbase-disabled");
                 me._$delete.removeClass("fr-core-cursorpointer");
             } else {
@@ -77,9 +67,9 @@ $(function () {
             }
 
             // Properties
+            me._$properties.off("click");
             if (!me.permissions["Update Properties"] &&
                 propertyListMap[me.options.catalogItem.Type]) {
-                me._$properties.off("click");
                 me._$properties.addClass("fr-toolbase-disabled");
                 me._$properties.removeClass("fr-core-cursorpointer");
             } else {
@@ -90,47 +80,18 @@ $(function () {
                 me._$properties.addClass("fr-core-cursorpointer");
             }
 
-            // Close dialog event
-            setTimeout(function () {
-                $("body").one("click", function () {
-                    me.closeDialog();
-                });
-            }, 10);
+            // Call contextMenuBase._init()
+            me._super();
         },
         _create: function () {
             var me = this;
 
-            me.element.html("");
+            // Call contextMenuBase._create()
+            me._super();
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("", contextMenu.title, "", "");
-            var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                    headerHtml +
-                    // Delete
-                    "<div class='fr-ctx-container'>" +
-                        "<div class='fr-ctx-delete-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
-                            "<div class='fr-ctx-item-text-container'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.delLabel + "</div>" +
-                            "</div>" +
-                        "</div>" +
-                    "</div>" +
-                    // Properties
-                    "<div class='fr-ctx-container'>" +
-                        "<div class='fr-ctx-properties-id fr-ctx-itemcontainer fr-ctx-state fr-core-cursorpointer'>" +
-                            "<div class='fr-ctx-item-text-container'>" +
-                                "<div class='fr-ctx-item-text'>" + contextMenu.properties + "</div>" +
-                            "</div>" +
-                        "</div>" +
-                    "</div>" +
-                "</div>");
-
-            me.element.append($dialog);
-
-            // Delete
-            me._$delete = me.element.find(".fr-ctx-delete-id");
-
-            // Properties
-            me._$properties = me.element.find(".fr-ctx-properties-id");
+            me.addHeader();
+            me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
+            me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -146,6 +107,7 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
+                    me.options.$reportExplorer.reportExplorer("refresh");
                 },
                 fail: function (jqXHR) {
                     console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
@@ -168,28 +130,13 @@ $(function () {
             $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
             $propertyDlg.forerunnerProperties("openDialog");
 
-            // Retore the previous settings
-            if (previous && previous.path && previous.propertyList) {
-                $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
-            }
-        },
-        /**
-         * Open parameter set dialog
-         *
-         * @function $.forerunner.createDashboard#openDialog
-         */
-        openDialog: function () {
-            var me = this;
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-        },
-        /**
-         * Close parameter set dialog
-         *
-         * @function $.forerunner.manageParamSets#closeDialog
-         */
-        closeDialog: function () {
-            var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-        },
+            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
+                // Retore the previous settings
+                if (previous && previous.path && previous.propertyList) {
+                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                }
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
+        }
     }); //$.widget
 });

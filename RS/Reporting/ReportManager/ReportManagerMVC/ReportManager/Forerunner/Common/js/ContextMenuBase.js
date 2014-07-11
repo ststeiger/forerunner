@@ -97,12 +97,29 @@ $(function () {
                 me._$title.text(me._title);
             }
 
+            // Note that 500 is needed to make the iPhone work properly
+            var milliseconds = 500;
+
             // Close dialog event
             setTimeout(function () {
-                $(window).one("mouseup", function () {
-                    me.closeMenu();
-                });
-            }, 10);
+                if (forerunner.device.isTouch()) {
+                    // Touch
+                    var touchFunc = function (event) {
+                        setTimeout(function () {
+                            me.closeMenu();
+                        }, milliseconds);
+                    };
+                    $(window).off("touchend", touchFunc);
+                    $(window).one("touchend", touchFunc);
+                } else {
+                    // Non-touch (PCs)
+                    var func = function (event) {
+                        me.closeMenu();
+                    };
+                    $(window).off("mouseup", func);
+                    $(window).one("mouseup", func);
+                }
+            }, milliseconds);
         },
         addHeader: function (title) {
             var me = this;
@@ -154,16 +171,17 @@ $(function () {
          *
          * @function $.forerunner.createDashboard#openMenu
          *
-         * @param {object} jQuery event object of the click event
+         * @param {number} client x position from the event
+         * @param {number} client /y position from the event
          */
-        openMenu: function (event) {
+        openMenu: function (clientX, clientY) {
             var me = this;
             var margin = 10;
-            var offScreenRight = Math.max(0, event.clientX + me.element.width() + margin - me.options.$appContainer.width());
-            var offScreenBottom = Math.max(0, event.clientY + me.element.height() + margin - me.options.$appContainer.height());
+            var offScreenRight = Math.max(0, clientX + me.element.width() + margin - me.options.$appContainer.width());
+            var offScreenBottom = Math.max(0, clientY + me.element.height() + margin - me.options.$appContainer.height());
 
-            var left = event.clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
-            var top = event.clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
+            var left = clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
+            var top = clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
             me.element.css({
                 left: left + "px",
                 top: top + "px",

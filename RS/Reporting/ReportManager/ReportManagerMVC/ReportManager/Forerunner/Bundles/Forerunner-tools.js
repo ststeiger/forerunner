@@ -581,6 +581,7 @@ $(function () {
             selectorClass: "fr-dashboardtoolpane-recent",
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolbar.recent,
             toolStateClass: null,
             events: {
@@ -596,6 +597,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
             text: locData.toolPane.favorites,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1487,6 +1489,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             text: locData.toolbar.favorites,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1503,6 +1506,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             text: locData.toolbar.recent,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {

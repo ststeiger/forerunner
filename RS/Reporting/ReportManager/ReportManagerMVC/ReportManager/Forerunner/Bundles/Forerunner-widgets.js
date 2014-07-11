@@ -1066,6 +1066,8 @@ $(function () {
                 me._setPageCallback = null;
             }
             
+            // Make sure each new page has the zoom factor applied
+            me.zoomToPercent();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
@@ -1093,11 +1095,20 @@ $(function () {
          */
         zoomToPercent: function (percent) {
             var me = this;
-            var zoomFactor = parseFloat(percent);
-            if (isNaN(zoomFactor)) {
-                me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-                return false;
+            var zoomFactor;
+
+            if (!percent) {
+                // Reset the zoom. This happens durring a page change
+                zoomFactor = me.getZoomFactor();
+            } else {
+                // Set a new percent factor
+                zoomFactor = parseFloat(percent);
+                if (isNaN(zoomFactor)) {
+                    me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    return false;
+                }
             }
+
 
             me._zoomFactor = zoomFactor;
             var page = me.$reportAreaContainer.find(".Page");
@@ -2562,6 +2573,9 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
+
+            // For each new report we reset the zoom factor back to 100%
+            me._zoomFactor = 100;
             
             me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });

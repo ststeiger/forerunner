@@ -938,10 +938,10 @@ table, td, tr div {
 .fr-ctx-state { background-color: transparent; height: 100%; width: 100%; }
 
 .fr-ctx-header { font-size: 13pt; font-weight: bold; color: #ffffff; position: relative; width: 100%; padding: 0; margin: 0; text-align:center; background: #537eb4; /* Old browsers */ background: -moz-linear-gradient(top, #537eb4 0%, #3c5d9c 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#537eb4), color-stop(100%,#3c5d9c)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* IE10+ */ background: linear-gradient(to bottom, #537eb4 0%,#3c5d9c 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */ }
-.fr-ctx-title { padding: 2px 0; vertical-align: middle; display: table-cell; }
+.fr-ctx-title { padding: 4px 0; vertical-align: middle; display: table-cell; }
 
 .fr-ctx-container { width: 100%; overflow: hidden; background: #354468; padding: 0; margin: 0; border-top: 1px groove black; vertical-align: top; font-size: 13pt; color: white; }
-    .fr-ctx-container .fr-ctx-item-text { vertical-align: middle;  padding: 2px 12px;}
+    .fr-ctx-container .fr-ctx-item-text { vertical-align: middle;  padding: 4px 12px;}
 
 @media only screen and (min-width : 1224px) {
   .fr-ctx-state:hover { background: #4f73a6; /* Old browsers */ background: -moz-linear-gradient(top, #4f73a6 0%, #32508a 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4f73a6), color-stop(100%,#32508a)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* IE10+ */ background: linear-gradient(to bottom, #4f73a6 0%,#32508a 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f73a6', endColorstr='#32508a',GradientType=0 ); /* IE6-9 */ }

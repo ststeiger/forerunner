@@ -114,6 +114,7 @@ $(function () {
                     console.log(jqXHR);
                 }
             });
+            me.closeMenu();
         },
         _onClickProperties: function (event, data) {
             var me = this;
@@ -137,6 +138,7 @@ $(function () {
                 }
                 me.options.$reportExplorer.reportExplorer("refresh");
             });
+            me.closeMenu();
         }
     }); //$.widget
 });

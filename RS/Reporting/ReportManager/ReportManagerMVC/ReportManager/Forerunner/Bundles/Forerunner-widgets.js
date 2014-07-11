@@ -2187,7 +2187,7 @@ $(function () {
             var me = this;
             me._clearHighLightWord();
             me._highLightWord(me.$reportContainer, keyword);
-            
+
             //Highlight the first match.
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
@@ -3056,56 +3056,50 @@ $(function () {
             }
             else {
                 var me = this;
-                var element = $element[0];
-               
-                $.each(element.childNodes, function (i, node) {
-                    //nodetype=3 : text node
-                    if (node.nodeType === 3) {
-                        var searchnode = node;
-                        try {
-                            var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                $($element).each(function () {
+                    var elt = $(this).get(0);
+                    elt.normalize();
+                    $.each(elt.childNodes, function (i, node) {
+                        //nodetype=3 : text node
+                        if (node.nodeType === 3) {
+                            var searchnode = node;
+                            try{
+                                var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
-                            while (pos < searchnode.data.length) {
-                                if (pos >= 0) {
-                                    //create a new span node with matched keyword text
-                                    var spannode = document.createElement("span");
-                                    spannode.className = "fr-render-find-keyword Unread";
+                                while (pos < searchnode.data.length) {
+                                    if (pos >= 0) {
+                                        //create a new span node with matched keyword text
+                                        var spannode = document.createElement("span");
+                                        spannode.className = "fr-render-find-keyword Unread";
 
-                                    //split the match node
-                                    var middlebit = searchnode.splitText(pos);
-                                    searchnode = middlebit.splitText(keyword.length);
+                                        //split the match node
+                                        var middlebit = searchnode.splitText(pos);
+                                        searchnode = middlebit.splitText(keyword.length);
 
-                                    //replace keyword text with span node 
-                                    var middleclone = middlebit.cloneNode(true);
-                                    spannode.appendChild(middleclone);
-                                    node.parentNode.replaceChild(spannode, middlebit);
+                                        //replace keyword text with span node 
+                                        var middleclone = middlebit.cloneNode(true);
+                                        spannode.appendChild(middleclone);
+                                        node.parentNode.replaceChild(spannode, middlebit);
+                                    }
+                                    else {
+                                        break;
+                                    }
+                                    pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
                                 }
-                                else {
-                                    break;
-                                }
-                                pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
-                            }
-                        } catch (error) { }
-                    }
-                    else {
-                        me._highLightWord($(node), keyword);
-                    }
+                            } catch (error) { }
+                        }
+                        else {
+                            me._highLightWord($(node), keyword);
+                        }
+                    });
                 });
             }
             return $(this);
         },
         _clearHighLightWord: function () {
-            $(".fr-render-find-keyword").each(function (index, obj) {
-                var parent = obj.parentNode;                
-                var text = obj.childNodes[0].nodeValue;
-                var node = document.createTextNode(text);
-
-                parent.replaceChild(node, obj);
-                //not sure why IE8 has this issue, it copy the first sibling node in jquery format??
-                //add hack to fixed it temporarily
-                if (!forerunner.device.isMSIE8()) {
-                    parent.normalize();
-                }
+            $(".fr-render-find-keyword").each(function () {
+                var text = document.createTextNode($(this).text());
+                $(this).replaceWith($(text));
             });
         },
         _setAutoRefresh: function (period) {

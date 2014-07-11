@@ -162,7 +162,9 @@
   "placeholders": {
     "Username":"nombre de usuario",
     "Password":"contraseña",
-    "Login":"login"
+    "Login":"iniciar sesión
+	
+"
   },
   "datepicker": {
     "closeText":"hecho",

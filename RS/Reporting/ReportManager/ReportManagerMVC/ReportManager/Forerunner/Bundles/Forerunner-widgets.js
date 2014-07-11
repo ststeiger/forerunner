@@ -9290,7 +9290,7 @@ $(function () {
             NewImage.attr("style", Style);
             
 
-            //Add Highlighting            
+            //Add Highlighting  except IE8
             if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");

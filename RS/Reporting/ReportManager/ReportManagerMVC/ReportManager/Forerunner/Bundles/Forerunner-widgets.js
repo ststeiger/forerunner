@@ -9290,8 +9290,8 @@ $(function () {
             NewImage.attr("style", Style);
             
 
-            //Add Highlighting            
-            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on") {
+            //Add Highlighting  except IE8
+            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
 
@@ -15343,30 +15343,23 @@ $(function () {
             var layout = me.DefaultAppTemplate;
 
             var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
-            
             var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
-
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
 
             // window phone 7 get top property wrong
             var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
 
-            layout.$leftpanecontent.css({ top: topDivHeight });
-            layout.$rightpanecontent.css({ top: topDivHeight });
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
-            layout.$topdiv.css({ height: topDivHeight });
-            layout.$topdivspacer.css({ height: topDivHeight });
-
-            if (forerunner.device.isWindowsPhone()) {
-                layout.$leftpanecontent.css({ top: toolpaneheaderheight });
-                layout.$rightpanecontent.css({ top: toolpaneheaderheight });
-            }
+            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
         },
         _getUserSettings: function () {
             var me = this;

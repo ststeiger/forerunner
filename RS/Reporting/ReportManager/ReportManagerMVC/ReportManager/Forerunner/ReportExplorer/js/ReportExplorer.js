@@ -123,37 +123,48 @@ $(function () {
                 action = "browse";
             }
 
-            // Steal the bowser context menu if we click on a report explorer item
-            $anchor.on("contextmenu", function () {
-                // Handle the right click
-                data = {
-                    catalogItem: catalogItem
-                };
-                me._onContextMenu.call(me, event, data);
-
-                // Return false here so as to steal the right click from
-                // the browser. We will show the context menu for report
-                // explorer items
-                return false;
-            });
-
-            $anchor.on("click", function (event) {
-                if (me.options.navigateTo) {
-                    me.options.navigateTo(action, catalogItem.Path);
-                }
-            });
-
             if (forerunner.device.isTouch()) {
-                $anchor.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch hold",
-                function (ev) {
-                    if (!ev.gesture) return;
-                    switch (ev.type) {
-                        case "hold":
-                            data = {
-                                catalogItem: catalogItem
-                            };
-                            me._onContextMenu.call(me, event, data);
-                            break;
+                // Touch devices
+                var options = { stop_browser_behavior: { userSelect: "none" }, swipe_max_touches: 22, drag_max_touches: 2 };
+                $anchor.hammer(options).on("tap",
+                    function (event) {
+                        if (me.options.navigateTo) {
+                            me.options.navigateTo(action, catalogItem.Path);
+                            event.stopPropagation();
+                        }
+                    }
+                );
+                $anchor.hammer(options).on("hold",
+                    function (event) {
+                        data = {
+                            catalogItem: catalogItem,
+                            clientX: event.gesture.touches[0].clientX,
+                            clientY: event.gesture.touches[0].clientY
+                        };
+                        me._onContextMenu.call(me, event, data);
+                        event.stopPropagation();
+                    }
+                );
+            } else {
+                // Non-touch (PCs)
+                $anchor.on("contextmenu", function (event) {
+                    // Steal the bowser context menu if we click on a report explorer item
+                    data = {
+                        catalogItem: catalogItem,
+                        clientX: event.clientX,
+                        clientY: event.clientY
+                    };
+                    me._onContextMenu.call(me, event, data);
+
+                    // Return false here so as to steal the right click from
+                    // the browser. We will show the context menu for report
+                    // explorer items
+                    return false;
+                });
+
+                $anchor.on("click", function (event) {
+                    if (me.options.navigateTo) {
+                        me.options.navigateTo(action, catalogItem.Path);
                     }
                 });
             }
@@ -273,7 +284,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.reportExplorerContextMenu("openMenu", e);
+            me._contextMenu.reportExplorerContextMenu("openMenu", data.clientX, data.clientY);
         },
         _renderPCView: function (catalogItems) {
             var me = this;

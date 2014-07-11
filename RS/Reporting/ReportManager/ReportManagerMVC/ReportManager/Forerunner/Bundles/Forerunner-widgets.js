@@ -5770,15 +5770,15 @@ $(function () {
                             me.closeMenu();
                         }, milliseconds);
                     };
-                    $(window).off("touchend", touchFunc);
-                    $(window).one("touchend", touchFunc);
+                    $(document).off("touchend", touchFunc);
+                    $(document).one("touchend", touchFunc);
                 } else {
                     // Non-touch (PCs)
                     var func = function (event) {
                         me.closeMenu();
                     };
-                    $(window).off("mouseup", func);
-                    $(window).one("mouseup", func);
+                    $(document).off("mouseup", func);
+                    $(document).one("mouseup", func);
                 }
             }, milliseconds);
         },

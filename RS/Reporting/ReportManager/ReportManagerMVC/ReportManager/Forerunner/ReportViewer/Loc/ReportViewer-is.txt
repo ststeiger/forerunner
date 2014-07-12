@@ -64,8 +64,8 @@
     "editDashboard":"breyta Mælaborð",
     "tags":"Tags",
     "viewDashboard":"Skoða Mælaborð",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Víxla síðu breidd",
+    "zoomPercent":"Þysja að Prósent",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -279,8 +279,8 @@
     "description":"Lýsing"
   },
   "contextMenu": {
-    "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "title":"samhengi Matseðill",
+    "delLabel":"eyða",
+    "properties":"eiginleikar"
   }
 }

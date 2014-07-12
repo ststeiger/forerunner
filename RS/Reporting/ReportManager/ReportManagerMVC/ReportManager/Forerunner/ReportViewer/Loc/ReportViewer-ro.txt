@@ -64,8 +64,8 @@
     "editDashboard":"Edit Tablou de bord",
     "tags":"Tag-uri",
     "viewDashboard":"Vezi Tablou de bord",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Toggle Page Lățime",
+    "zoomPercent":"Zoom la Procent",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -280,7 +280,7 @@
   },
   "contextMenu": {
     "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "delLabel":"șterge",
+    "properties":"Proprietăți"
   }
 }

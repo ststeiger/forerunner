@@ -197,6 +197,7 @@ jQuery.fn.extend({
                 return !!clientSize && ((compareRight <= viewRight) && (compareLeft >= viewLeft));
         }
     },
+    
     findUntil: function (selector, until) {
         
         var coll = $(this);
@@ -311,7 +312,9 @@ $(function () {
             /** @constant */
             forerunnerProperties: "forerunnerProperties",
             /** @constant */
-            contextMenu: "contextMenu",
+            contextMenuBase: "contextMenuBase",
+            /** @constant */
+            reportExplorerContextMenu: "reportExplorerContextMenu",
 
             /** @constant */
             namespace: "forerunner",
@@ -546,6 +549,13 @@ $(function () {
             reportPropertiesClose: function () { return (forerunner.ssr.constants.widgets.reportProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             userSettingsClose: function () { return (forerunner.ssr.constants.widgets.userSettings + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
+
+            /** @constant */
+            zoomChange: "zoomchange",
+            /** widget + event, lowercase */
+            reportViewerZoomChange: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.zoomChange).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -1585,6 +1595,21 @@ $(function () {
         isWindowsPhone : function() {
             var ua = navigator.userAgent;
             return ua.match(/(Windows Phone)/) !== null;
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 9.* */
+        isIEMobile9: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/9.0)/);
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 10 */
+        isIEMobile10: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/10.0)/);
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 11 */
+        isIEMobile11: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/11.0)/);
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {

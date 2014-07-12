@@ -105,7 +105,7 @@ $(function () {
                     "": "transitionToReportManager",
                     "explore/:path": "transitionToReportManager",
                     "browse/:path": "transitionToReportViewer",
-                    "view/:args": "transitionToReportViewerWithRSURLAccess",
+                    "view/?:args": "transitionToReportViewerWithRSURLAccess",
                     "open/:path": "transitionToOpenResource",
                     "openDashboard/:path": "transitionToOpenDashboard",
                     "search/:keyword": "transitionToSearch",
@@ -130,6 +130,8 @@ $(function () {
             }
 
             forerunner.history.history("start");
+
+
         },
         _onRoute: function (event, data) {
             var me = this;
@@ -146,7 +148,7 @@ $(function () {
                 me.transitionToReportViewer(path, params);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
-                var reportPath = startParam > 0 ? args.substring(1, startParam) : args;
+                var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
@@ -356,30 +358,23 @@ $(function () {
             var layout = me.DefaultAppTemplate;
 
             var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
-            
             var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
-
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
 
             // window phone 7 get top property wrong
             var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
 
-            layout.$leftpanecontent.css({ top: topDivHeight });
-            layout.$rightpanecontent.css({ top: topDivHeight });
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
-            layout.$topdiv.css({ height: topDivHeight });
-            layout.$topdivspacer.css({ height: topDivHeight });
-
-            if (forerunner.device.isWindowsPhone()) {
-                layout.$leftpanecontent.css({ top: toolpaneheaderheight });
-                layout.$rightpanecontent.css({ top: toolpaneheaderheight });
-            }
+            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
         },
         _getUserSettings: function () {
             var me = this;
@@ -418,7 +413,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    showBreadCrumb: true
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

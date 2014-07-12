@@ -100,6 +100,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selcted");
 
             var $anchor = new $("<a />");
+            $anchor.addClass("fr-explorer-item-image-link");
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -122,28 +123,48 @@ $(function () {
                 action = "browse";
             }
 
-            $anchor.on("click", function (event) {
-                if (event.altKey) {
+            if (forerunner.device.isTouch()) {
+                // Touch devices
+                var options = { stop_browser_behavior: { userSelect: "none" }, swipe_max_touches: 22, drag_max_touches: 2 };
+                $anchor.hammer(options).on("tap",
+                    function (event) {
+                        if (me.options.navigateTo) {
+                            me.options.navigateTo(action, catalogItem.Path);
+                            event.stopPropagation();
+                        }
+                    }
+                );
+                $anchor.hammer(options).on("hold",
+                    function (event) {
+                        data = {
+                            catalogItem: catalogItem,
+                            clientX: event.gesture.touches[0].clientX,
+                            clientY: event.gesture.touches[0].clientY
+                        };
+                        me._onContextMenu.call(me, event, data);
+                        event.stopPropagation();
+                    }
+                );
+            } else {
+                // Non-touch (PCs)
+                $anchor.on("contextmenu", function (event) {
+                    // Steal the bowser context menu if we click on a report explorer item
                     data = {
-                        catalogItem: catalogItem
+                        catalogItem: catalogItem,
+                        clientX: event.clientX,
+                        clientY: event.clientY
                     };
                     me._onContextMenu.call(me, event, data);
-                } else if (me.options.navigateTo) {
-                    me.options.navigateTo(action, catalogItem.Path);
-                }
-            });
 
-            if (forerunner.device.isTouch()) {
-                $anchor.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch hold",
-                function (ev) {
-                    if (!ev.gesture) return;
-                    switch (ev.type) {
-                        case "hold":
-                            data = {
-                                catalogItem: catalogItem
-                            };
-                            me._onContextMenu.call(me, event, data);
-                            break;
+                    // Return false here so as to steal the right click from
+                    // the browser. We will show the context menu for report
+                    // explorer items
+                    return false;
+                });
+
+                $anchor.on("click", function (event) {
+                    if (me.options.navigateTo) {
+                        me.options.navigateTo(action, catalogItem.Path);
                     }
                 });
             }
@@ -250,20 +271,20 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-ctx-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-ctx-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg = $("<div class='fr-ctx-section'/>");
                 me.options.$appContainer.append($dlg);
                 me._contextMenu = $dlg;
             }
 
             // Aways re-initialize the dialog even if it was created before
-            $dlg.contextMenu({
+            $dlg.reportExplorerContextMenu({
                 $appContainer: me.options.$appContainer,
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.contextMenu("openDialog");
+            me._contextMenu.reportExplorerContextMenu("openMenu", data.clientX, data.clientY);
         },
         _renderPCView: function (catalogItems) {
             var me = this;
@@ -369,6 +390,15 @@ $(function () {
             }
 
             return null;
+        },
+        /*
+         * Will refresh the current report explorer view from the server
+         *
+         * @function $.forerunner.reportExplorer#refresh
+         */
+        refresh: function() {
+            var me = this;
+            me._fetch(me.lastFetched.view, me.lastFetched.path);
         },
         _fetch: function (view, path) {
             var me = this;

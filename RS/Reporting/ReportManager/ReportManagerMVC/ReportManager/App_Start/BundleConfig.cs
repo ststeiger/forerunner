@@ -16,6 +16,7 @@ namespace ReportManager
             //bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Forerunner/Common/css/bundle").Include(
+                  "~/Forerunner/Common/css/ContextMenuBase.css",
                   "~/Forerunner/Common/css/DefaultAppTemplate.css",
                   "~/Forerunner/Common/css/Forerunner-core.css",
                   "~/Forerunner/Common/css/ForerunnerProperties.css",
@@ -35,7 +36,6 @@ namespace ReportManager
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
-                "~/Forerunner/ReportExplorer/css/ContextMenu.css",
                 "~/Forerunner/ReportExplorer/css/CreateDashboard.css",
                 "~/Forerunner/ReportExplorer/css/icons128x128.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
@@ -59,7 +59,8 @@ namespace ReportManager
                   "~/Forerunner/ReportViewer/css/ReportViewer.css",
                   "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",
                   "~/Forerunner/ReportViewer/css/ToolPane.css",
-                  "~/Forerunner/ReportViewer/css/Toolbar.css"
+                  "~/Forerunner/ReportViewer/css/Toolbar.css",
+                  "~/Forerunner/ReportViewer/css/tooltips.css"
                 ));
 
             BundleTable.EnableOptimizations = true;

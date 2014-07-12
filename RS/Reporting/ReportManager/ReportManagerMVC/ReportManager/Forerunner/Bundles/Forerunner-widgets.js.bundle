@@ -9,9 +9,11 @@
     <file>/Forerunner/Common/js/DefaultAppTemplate.js</file>
     <file>/Forerunner/Common/js/DashboardModel.js</file>
     <file>/Forerunner/Common/js/ForerunnerProperties.js</file>
+    <file>/Forerunner/Common/js/ContextMenuBase.js</file>
     <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
     <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
     <file>/Forerunner/ReportViewer/js/PageNav.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerContextMenu.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerToolbar.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerToolpane.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
@@ -26,7 +28,7 @@
     <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
     <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
-    <file>/Forerunner/ReportExplorer/js/ContextMenu.js</file>
+    <file>/Forerunner/ReportExplorer/js/ReportExplorerContextMenu.js</file>
     <file>/Forerunner/ReportExplorer/js/CreateDashboard.js</file>
     <file>/Forerunner/ReportViewer/js/EmailSubscription.js</file>
     <file>/Forerunner/ReportViewer/js/ManageSubscription.js</file>

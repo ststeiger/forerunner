@@ -64,8 +64,8 @@
     "editDashboard":"Editar o Dashboard",
     "tags":"Marcações",
     "viewDashboard":"Ver o Dashboard",
-    "zoomPageWidth":"Toggle Page Width",
-    "zoomPercent":"Zoom to Percent",
+    "zoomPageWidth":"Alternar Largura da Página",
+    "zoomPercent":"Zoom para Percent",
     "zoomDropdown":"Zoom"
   },
   "toolbar": {
@@ -280,7 +280,7 @@
   },
   "contextMenu": {
     "title":"Context Menu",
-    "delete":"Delete",
-    "properties":"Properties"
+    "delLabel":"excluir",
+    "properties":"Propriedades"
   }
 }

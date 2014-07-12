@@ -129,6 +129,12 @@ $(function () {
                 return false;
             });
 
+            me.element.find(".fr-property-input").on("keyup", function (e) {
+                if (e.keyCode === 13) {
+                    e.stopImmediatePropagation();
+                }
+            });
+
             me.$tabs.tabs();
 
             if (typeof me._preprocess === "function") {
@@ -143,7 +149,7 @@ $(function () {
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
-                    "<textarea class='fr-description-id fr-description-text' rows='5' name='Description' />" +
+                    "<textarea class='fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
                 "</div>");
 
             me.$desInput = $descriptionDiv.find(".fr-description-text");
@@ -158,7 +164,7 @@ $(function () {
             var $rdlDiv = new $(
                 "<div id='" + me.guid + "_" + "RDL" + "'  class='fr-property-container fr-rdl-container'>" +
                     "<label class='fr-rdl-label'>" + locData.RDLExt.dialogTitle + "</label>" +
-                    "<textarea rows='5' class='fr-rdl-id fr-rdl-text'  name='RDL' />" +
+                    "<textarea rows='5' class='fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
                 "</div>");
 
             me.$rdlInput = $rdlDiv.find(".fr-rdl-text");
@@ -178,16 +184,13 @@ $(function () {
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
-                    "<table class='fr-tag-table'>" +
-                        "<tr>" +
-                            "<td><label class='fr-tag-label'>" + locData.tags.tags + ":</label></td>" +
-                            "<td><input type='text' class='fr-tag-text' /></td>" +
-                        "</tr>" +
-                        "<tr class='fr-tag-prompt'>" +
-                            "<td></td>" +
-                            "<td><label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label></td>" +
-                        "<tr>" +
-                    "</table>" +
+                    "<div class='fr-tag-input-div'>" +
+                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<textarea class='fr-property-input fr-tag-text' rows='5' name='tags' />" +
+                    "</div>" +
+                    "<div class='fr-tag-prompt-div'>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                    "<div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");
@@ -210,7 +213,7 @@ $(function () {
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td><input type='text' class='fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -256,6 +259,7 @@ $(function () {
                     break;
             }
 
+            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
             me.closeDialog();
         },
         /**
@@ -276,7 +280,6 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _preprocess: null,

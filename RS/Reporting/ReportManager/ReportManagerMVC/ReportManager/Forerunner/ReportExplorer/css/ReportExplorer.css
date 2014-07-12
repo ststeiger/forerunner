@@ -4,14 +4,15 @@
 
 .fr-explorer-item-selected { border: 2px solid darkblue; }
 
-.fr-explorer-caption { width: 200px; /*display: table-caption;*/ margin-left: auto; margin-right: auto; }
+.fr-explorer-caption { width: 200px; display: table-row; margin-left: auto; margin-right: auto; }
 
 .fr-explorer-item-title { text-align: center; font-size:13pt; width:200px; height:45px; display: block; color: #212729; font-weight: 700; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
 
-/*.fr-explorer-desc-container { display:table-row; }*/
+.fr-explorer-desc-container { display:table-row; }
 
 .fr-explorer-item-desc { text-align: center; font-size: 9pt; width:200px; height:60px; display:block; color: #212729; font-weight: 500; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
 
+.fr-explorer-item-image-link { display:table-row; }
 
 .fr-explorer-item:hover { /*background: steelblue;*/ -webkit-transform: scale(1.1); -moz-transform: scale(1.1); -ms-transform: scale(1.1); -o-transform: scale(1.1); transform: scale(1.1); /*-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1.1, M12=0, M21=0, M22=1.1, SizingMethod='auto expand')";*/ /*user-select for IE8 overlaps with IE9*/ }
 

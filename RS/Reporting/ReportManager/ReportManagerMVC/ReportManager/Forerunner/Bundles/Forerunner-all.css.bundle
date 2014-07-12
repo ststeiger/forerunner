@@ -10,9 +10,9 @@
   <file>/Forerunner/Common/css/ReportManager.css</file>
   <file>/Forerunner/Common/css/ToolBase.css</file>
   <file>/Forerunner/Common/css/ForerunnerProperties.css</file>
+  <file>/Forerunner/Common/css/ContextMenuBase.css</file>
   <file>/Forerunner/ReportExplorer/css/ReportExplorer.css</file>
   <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
-  <file>/Forerunner/ReportExplorer/css/ContextMenu.css</file>
   <file>/Forerunner/ReportExplorer/css/CreateDashboard.css</file>
   <file>/Forerunner/ReportViewer/css/ManageSubscription.css</file>
   <file>/Forerunner/ReportExplorer/css/icons128x128.css</file>
@@ -23,6 +23,7 @@
   <file>/Forerunner/ReportViewer/css/ReportParameter.css</file>
   <file>/Forerunner/ReportViewer/css/ReportPrint.css</file>
   <file>/Forerunner/ReportViewer/css/ReportRender.css</file>
+  <file>/Forerunner/ReportViewer/css/tooltips.css</file>
   <file>/Forerunner/ReportViewer/css/ReportViewer.css</file>
   <file>/Forerunner/ReportViewer/css/ReportViewerEZ.css</file>
   <file>/Forerunner/ReportViewer/css/Toolbar.css</file>

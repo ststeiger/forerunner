@@ -239,7 +239,7 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-button",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-overlayed-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
@@ -581,6 +581,7 @@ $(function () {
             selectorClass: "fr-dashboardtoolpane-recent",
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolbar.recent,
             toolStateClass: null,
             events: {
@@ -596,6 +597,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
             text: locData.toolPane.favorites,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -653,6 +655,7 @@ $(function () {
             imageClass: "fr-icons24x24-zoom",
             sharedClass: "fr-toolbase-show-if-touch",
             text: locData.toolPane.zoom,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("allowZoom", true);
@@ -668,10 +671,50 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom-to-page-width",
             text: locData.toolPane.zoomPageWidth,
+            itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("toggleZoomPageWidth");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom-page-width"]);
+                }
+            }
+        },
+        /** @member */
+        itemPercent: {
+            toolType: toolTypes.input,
+            selectorClass: "fr-item-zoom-percent-textbox",
+            sharedClass: "fr-core-input",
+            tooltip: locData.toolPane.zoomPercent,
+            events: {
+                keydown: function (e) {
+                    if (e.keyCode === 13 || e.keyCode === 9) {
+                        e.data.$reportViewer.reportViewer("zoomToPercent", $.trim(this.value));
+                        return false;
+                    }
+                },
+                blur: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputBlur");
+                },
+                focus: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputFocus");
+                }
+            }
+        },
+        /** @member */
+        itemZoomIcon: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-item-zoom-icon",
+            iconClass: null,
+            toolContainerClass: null,
+            toolStateClass: null,
+            sharedClass: "fr-toolbase-overlayed-button",
+            imageClass: "fr-toolbase-zoom-icon",
+            text: locData.toolPane.find,
+            tooltip: locData.toolbar.find,
+            events: {
+                click: function (e) {
+                    var value = $.trim(e.data.me.element.find(".fr-item-zoom-percent-textbox").val());
+                    e.data.$reportViewer.reportViewer("zoomToPercent", value);
                 }
             }
         },
@@ -1012,7 +1055,7 @@ $(function () {
             iconClass: null,
             toolContainerClass: null,
             toolStateClass: null,
-            sharedClass: "fr-toolbase-find-button",
+            sharedClass: "fr-toolbase-overlayed-button",
             imageClass: "fr-toolbase-find-icon",
             text: locData.toolPane.find,
             tooltip: locData.toolbar.find,
@@ -1084,6 +1127,7 @@ $(function () {
             selectorClass: "fr-item-recent",
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolbar.recent,
             toolStateClass: null,
             events: {
@@ -1098,6 +1142,7 @@ $(function () {
             selectorClass: "fr-item-favorite",
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             text: locData.toolPane.favorites,
             toolStateClass: null,
             events: {
@@ -1348,7 +1393,7 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-find",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-button",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-overlayed-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
@@ -1444,6 +1489,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             text: locData.toolbar.favorites,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1460,6 +1506,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             text: locData.toolbar.recent,
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1513,7 +1560,7 @@ $(function () {
         itemFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-item-find",
-            sharedClass: "fr-toolbase-find-button",
+            sharedClass: "fr-toolbase-overlayed-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
@@ -1792,6 +1839,14 @@ $(function () {
             tools: [tp.itemZoom, tp.itemZoomPageWidth]
         },
         /** @member */
+        itemZoomPercentCompositeGroup: {
+            toolType: toolTypes.toolGroup,
+            selectorClass: "fr-item-zoom-percent-composite-group",
+            groupContainerClass: null,
+            tools: [tp.itemPercent,
+                    tp.itemZoomIcon]
+        },
+        /** @member */
         itemFindCompositeGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-item-find-composite-group",
@@ -1869,6 +1924,24 @@ $(function () {
             }
         }
     };
+    /** @member */
+    tg.itemZoomPercentGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-item-zoom-percent-group",
+        tools: [tg.itemZoomPercentCompositeGroup],
+        events: {
+            click: function (e) {
+                if (!forerunner.helper.containElement(e.target, ["fr-item-zoom-percent-composite-group"])) {
+                    var value = $.trim(e.data.me.element.find(".fr-item-zoom-percent-textbox").val());
+                    e.data.$reportViewer.reportViewer("zoomToPercent", value);
+                }
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+            }
+        }
+    };
+    // Add the zoom percentage group into the Zoom Group tools
+    tg.itemZoomGroup.tools.push(tg.itemZoomPercentGroup);
+
     /** @member */
     tg.explorerItemFindGroup = {
         toolType: toolTypes.toolGroup,

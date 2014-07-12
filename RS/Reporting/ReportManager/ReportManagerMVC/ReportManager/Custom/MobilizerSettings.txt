@@ -8,6 +8,9 @@
 	"FirefoxPDFbug":"on",
 	"ParameterPaneWidth":"350",
 	"showHomeButton":"off",
-	"showBreadCrumbInViewer":"off",
-	"showSubscriptionUI":"on"
+	"showSubscriptionUI":"on",
+	"FancyTooltips":"on",
+	"ImageAreaHighligh": "on",
+	"ImageAreaHighlighBorderColor": "0000ff",
+	"ImageAreaHighlighBorderWidth": "2"
 }

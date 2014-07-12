@@ -436,8 +436,8 @@ $(function () {
                 me._setPageCallback = null;
             }
             
-
-            me._unzoomPageWidth();
+            // Make sure each new page has the zoom factor applied
+            me.zoomToPercent();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
@@ -449,6 +449,9 @@ $(function () {
          */
         getZoomFactor: function () {
             var me = this;
+            if (!me._zoomFactor) {
+                me._zoomFactor = 100;
+            }
             return me._zoomFactor;
         },
         /**
@@ -457,10 +460,27 @@ $(function () {
          * @function $.forerunner.reportViewer#zoomToPercent
          *
          * @param {number} percent - percentage (I.e., 100 = 100%)
+         *
+         * @return {bool} - true = zoom factor change, false = percent not a number
          */
         zoomToPercent: function (percent) {
             var me = this;
-            me._zoomFactor = percent;
+            var zoomFactor;
+
+            if (!percent) {
+                // Reset the zoom. This happens durring a page change
+                zoomFactor = me.getZoomFactor();
+            } else {
+                // Set a new percent factor
+                zoomFactor = parseFloat(percent);
+                if (isNaN(zoomFactor)) {
+                    me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    return false;
+                }
+            }
+
+
+            me._zoomFactor = zoomFactor;
             var page = me.$reportAreaContainer.find(".Page");
 
             if (forerunner.device.isFirefox === true) {
@@ -468,6 +488,10 @@ $(function () {
             } else {
                 page.css('zoom', ' ' + me._zoomFactor + '%');
             }
+
+            me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+
+            return true;
         },
         /**
          * Toggles the Zoom To Page width on or off
@@ -476,22 +500,19 @@ $(function () {
          */
         toggleZoomPageWidth: function () {
             var me = this;
-            if (me._zoomFactor && me._zoomFactor !== 0) {
-                me._unzoomPageWidth(true);
-            } else {
-                me._unzoomPageWidth(false);
+            if (!me._zoomFactor) {
+                me._zoomFactor = 100;
             }
-        },
-        _unzoomPageWidth: function (unZoom) {
-            var me = this;
+
             var page = me.$reportAreaContainer.find(".Page");
+            var pageWidthZoom = (me.element.width() / page.width()) * 100;
+            var isPageWidth = Math.abs(pageWidthZoom - me._zoomFactor) < 1;  // To the nearest int is equal here
 
-            if (unZoom === true || unZoom === undefined)
-                me._zoomFactor = 0;
-            else
-                me._zoomFactor = (me.element.width() / page.width()) * 100;
-
-            me.zoomToPercent(me._zoomFactor);
+            if (isPageWidth) {
+                me.zoomToPercent(100);
+            } else {
+                me.zoomToPercent(pageWidthZoom);
+            }
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -1083,7 +1104,7 @@ $(function () {
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
-                    var replay = me.pages[me.curPage].Replay
+                    var replay = me.pages[me.curPage].Replay;
 
                     me._loadPage(data.NewPage, false, null, null, true,replay);
 
@@ -1195,7 +1216,7 @@ $(function () {
                         me.scrollLeft = $(window).scrollLeft();
                         me.scrollTop = $(window).scrollTop();
 
-                        var replay = me.pages[me.curPage].Replay
+                        var replay = me.pages[me.curPage].Replay;
 
                         me.pages[me.curPage] = null;
                         me._loadPage(me.curPage, false, undefined, undefined, undefined, replay, scrollID);
@@ -1638,7 +1659,7 @@ $(function () {
                     .done(function (data) {
                         if (data.length === 0) {
                             me.editEmailSubscription(null);
-                        } else if (data.length == 1) {
+                        } else if (data.length === 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
                         } else {
                             me.manageSubscription();
@@ -1677,7 +1698,7 @@ $(function () {
                 var pif = me.element.find(".fr-print-iframe");
                 if (pif.length === 1) pif.detach();
 
-                var pif = $("<iframe/>");
+                pif = $("<iframe/>");
                 pif.addClass("fr-print-iframe");
                 pif.attr("name", me.viewerID);
                 pif.attr("src", url);
@@ -1922,6 +1943,9 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
+
+            // For each new report we reset the zoom factor back to 100%
+            me._zoomFactor = 100;
             
             me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
@@ -2086,9 +2110,9 @@ $(function () {
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                         if (scrollID) {
-                            el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                            var el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                             if (el.length ===1)
-                                $('html, body').animate({ scrollTop: el.offset().top }, 500);
+                                $("html, body").animate({ scrollTop: el.offset().top }, 500);
                         }
 
                     }
@@ -2133,9 +2157,9 @@ $(function () {
                             //$(window).scrollLeft(me.scrollLeft);
                             //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
-                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]")
+                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                 if (el.length === 1)
-                                    $('html, body').animate({ scrollTop: el.offset().top-50 }, 500);
+                                    $("html, body").animate({ scrollTop: el.offset().top-50 }, 500);
                             }
                             me._updateTableHeaders(me);
                             me._saveThumbnail();
@@ -2194,7 +2218,7 @@ $(function () {
             }
             else {
                 me.pages[newPageNum].reportObj = data;
-            }
+            } 
 
             if (!data.SessionID)
                 me.sessionID = "";
@@ -2242,7 +2266,8 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum],false, me.RDLExtProperty);       
+                me._getPageContainer(pageNum).reportRender("render", me.pages[pageNum], false, me.RDLExtProperty);
+               
                 me.pages[pageNum].needsLayout= true;
             }
 

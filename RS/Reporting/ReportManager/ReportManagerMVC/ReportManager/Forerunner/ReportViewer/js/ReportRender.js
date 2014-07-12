@@ -135,7 +135,6 @@ $(function () {
             if (reportObj.ReportContainer.Trial ===1) {                
                 me.element.append(me._getWatermark());
             }
-
             
             me.element.append(bgLayer);
         },
@@ -386,8 +385,8 @@ $(function () {
 
                     Style += "position:absolute;";
 
-                    if (Measurements[Index].zIndex)
-                        Style += "z-index:" + Measurements[Index].zIndex + ";";
+                    //if (Measurements[Index].zIndex)
+                    //    Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                     //Background color goes on container
                     if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
@@ -538,7 +537,7 @@ $(function () {
                
             });
     
-            if (me.options.responsive)
+            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth)
                 return me._getResponsiveRectangleLayout(Measurements,l);
             return l;
         },
@@ -687,7 +686,7 @@ $(function () {
 
             var rdlExt = {};
             if (me.RDLExt) {
-                rdlExt = me.RDLExt["SharedActions"];
+                rdlExt = me.RDLExt.SharedActions;
                 if (!rdlExt)
                     rdlExt = {};
             }
@@ -797,9 +796,13 @@ $(function () {
             if (dirClass !== "") {
                 Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 Style += "position:absolute;";
-                var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
-                var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
-                Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+
+                if (!forerunner.device.isMSIE8()) {
+                   
+                    var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
+                    var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
+                    Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+                }
                 $TextObj.addClass(dirClass);
             }
             else {
@@ -985,20 +988,20 @@ $(function () {
         _writeImage: function (RIContext) {
             var NewImage = $("<img/>"); //new Image();
             var me = this; 
-
+            var imageContainer = $("<div/>").addClass("fr-render-image");
             
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style ;
-            RIContext.$HTMLParent.addClass("fr-render-image");
+            
 
             //Get padding
             Style += me._getTextStyle(RIContext.CurrObj.Elements);
-            RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            imageContainer.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
 
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
                 Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
-                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                imageContainer.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
             
             Style += me._getMeasurements(measurement, true);
@@ -1063,12 +1066,23 @@ $(function () {
                 imageHeight = RIContext.CurrLocation.Height * 3.78;
             }
 
-            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
+            imageContainer.append(NewImage);
+            imageContainer.attr("style", Style);
+            RIContext.$HTMLParent.append(imageContainer);
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
-            Style = imageStyle ? imageStyle : "display:table-cell;";
+            Style = imageStyle ? imageStyle : "display:table-cell";
             NewImage.attr("style", Style);
+            
+
+            //Add Highlighting  except IE8
+            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
+                var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
+                var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
+
+                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+            }
 
             //Remove the blue border on ie 8,9,10
             NewImage.css("border", "0").css("text-decoration", "none");
@@ -1188,7 +1202,11 @@ $(function () {
                 for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._writeAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
-
+            me._writeRDLExtActions(RIContext, $Control);
+        },
+        
+        _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
+            var me = this;
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 
@@ -1212,16 +1230,18 @@ $(function () {
 
 
                         if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            var newFunc;
-                            try {
-                                newFunc = new Function("e", action.Code);
+                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
+                                var newFunc;
+                                try {
+                                    newFunc = new Function("e", action.Code);
+                                }
+                                catch (e) { }
+                                action.JavaFunc = newFunc;
+                                if (action.On === undefined)
+                                    action.On = "click";
+                                if (action.Obj === "click")
+                                    $Control.addClass("fr-core-cursorpointer");
                             }
-                            catch (e) { }
-                            action.JavaFunc = newFunc;
-                            if (action.On === undefined)
-                                action.On = "click";
-                            if (action.Obj === "click")
-                                $Control.addClass("fr-core-cursorpointer");
                         }
 
                         $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
@@ -1287,10 +1307,14 @@ $(function () {
                         var $area = $("<AREA />");
                         $area.attr("tabindex", i + 1);
                         $area.attr("style", "text-decoration:none");
-                        $area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        //$area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        //$area.attr("title", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        me._writeTooltipInternal(element.ImageMapAreas.ImageMapArea[j].Tooltip, RIContext.$HTMLParent, $area, offsetLeft, offsetTop);
+
                         if (element.Actions) {
-                            this._writeAction(RIContext, element.Actions[0], $area);
+                            me._writeAction(RIContext, element.Actions[0], $area);
                         }
+                        me._writeRDLExtActions(RIContext, $area,true);
 
                         var shape;
                         var coords = "";
@@ -1454,8 +1478,8 @@ $(function () {
             var Style = "";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
-            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedColHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
+            var $FixedRowHeader = new $("<TABLE/>").addClass("fr-render-tablix-header");
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
@@ -1593,6 +1617,7 @@ $(function () {
                 $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
                 $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                $FixedColHeader.attr("Style", Style);
                 
             }
 
@@ -1652,6 +1677,7 @@ $(function () {
             if (State.ExtRow === undefined && respCols.isResp) {
                 $ExtRow = new $("<TR/>");                
                 $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                $ExtCell.css("position", "relative");
                 $ExtRow.addClass("fr-render-respRow");
                 $ExtRow.append($ExtCell);
                 $ExtRow.hide();
@@ -1703,6 +1729,7 @@ $(function () {
                 if (respCols.isResp) {
                     $ExtRow = new $("<TR/>");
                     $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
+                    $ExtCell.css("position", "relative");
                     $ExtRow.addClass("fr-render-respRow");
                     $ExtRow.append($ExtCell);
                     $ExtRow.hide();
@@ -2072,24 +2099,76 @@ $(function () {
                 RIContext.$HTMLParent.append($node);
             }   
         },
+        _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft,offsetTop) {
+            var me = this;
+            
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && !forerunner.device.isMSIE8()) {
+                // Make DIV and append to page 
+                var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
+
+
+                element.append($tooltip);
+                var timer;
+
+                // Mouseenter
+                actionElement.on("mouseenter",function (e) {
+
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null
+                    }
+                   
+                    $el = $(this);
+                    var top = 0;
+                    var left = 0;
+
+                    // Reposition tooltip, in case of page movement e.g. screen resize           
+                    var parentOffset = $(this).parent().offset();
+                    if ($(this).parent().is("map")) {
+                        parentOffset = $(this).parent().parent().offset();
+                    }
+
+
+                    top = e.pageY - parentOffset.top;
+                    left = e.pageX - parentOffset.left;
+
+                    $tooltip.css({
+                        top: top - $tooltip.outerHeight() - 13,
+                        left: left - ($tooltip.outerWidth() / 2)
+                    });
+
+                    timer = setTimeout(function () {
+                        // Adding class handles animation through CSS
+                        $tooltip.addClass("active");
+                    }, 1000)
+                }
+                );
+                    
+                // Mouseleave
+                actionElement.on("mouseleave", function (e) {
+                    clearTimeout(timer);
+                    $el = $(this);
+
+                    // Remove all classes
+                    setTimeout(function () {
+                        $tooltip.removeClass("active").removeClass("out");
+                    }, 300);
+
+                });
+                
+            }
+            else if (tooltip) {
+                actionElement.attr("alt", tooltip);
+                actionElement.attr("title", tooltip);
+            }
+        },
         _writeTooltip: function (RIContext) {
             var me = this;
 
-            var CurrObj = RIContext.CurrObj.Elements,
-                tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
+            var CurrObj = RIContext.CurrObj.Elements;
+            var tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
 
-            if (tooltip) {
-                if (RIContext.CurrObjParent.Type === "Image")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Chart")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Gauge")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else if (RIContext.CurrObjParent.Type === "Map")
-                    RIContext.$HTMLParent.attr("alt", tooltip);
-                else
-                    RIContext.$HTMLParent.attr("title", tooltip);
-            }
+            me._writeTooltipInternal(tooltip, RIContext.$HTMLParent, RIContext.$HTMLParent,0,0);
         },
         //Helper fucntions
         _getHeight: function ($obj) {
@@ -2256,8 +2335,8 @@ $(function () {
                 Style += "max-width:" + (CurrObj.Height) + "mm;";
             }
 
-            if (CurrObj.zIndex)
-                Style += "z-index:" + CurrObj.zIndex + ";";
+            //if (CurrObj.zIndex)
+            //    Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },
@@ -2282,8 +2361,8 @@ $(function () {
                 Style += "max-height:" + (CurrObj.Height) + "mm;";
             }
 
-            if (CurrObj.zIndex)
-                Style += "z-index:" + CurrObj.zIndex + ";";
+            //if (CurrObj.zIndex)
+            //    Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },
@@ -2335,7 +2414,7 @@ $(function () {
                 if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 1)
                     Dirclass = "fr-rotate-90";
             if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 2)
-                    Dirclass = "fr-rotate-270";
+                Dirclass = "fr-rotate-270";
             }
             if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 1)
@@ -2343,6 +2422,10 @@ $(function () {
                 if (CurrObj.NonSharedElements.Style.WritingMode === 2)
                     Dirclass = "fr-rotate-270";
             }
+
+            if (Dirclass !=="" && forerunner.device.isMSIE8())
+                Dirclass += "-IE8"
+
             return Dirclass;
 
           

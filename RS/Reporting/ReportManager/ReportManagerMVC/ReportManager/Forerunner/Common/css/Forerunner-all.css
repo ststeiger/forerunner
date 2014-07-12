@@ -2,6 +2,7 @@
 @import "../../Lib/jsTree/themes/default/style.css";
 @import "../../ReportExplorer/css/ReportExplorer-all.css";
 @import "../../ReportViewer/css/ReportViewer-all.css";
+@import "./ContextMenuBase.css";
 @import "./DefaultAppTemplate.css";
 @import "./Forerunner-core.css";
 @import "./ForerunnerProperties.css";

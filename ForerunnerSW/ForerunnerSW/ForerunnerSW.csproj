@@ -83,6 +83,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.1\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData">
       <Private>False</Private>
     </Reference>
@@ -200,6 +201,7 @@
     <Content Include="Content\img\JonTotton.JPG" />
     <Content Include="Content\img\mouse_icon.png" />
     <Content Include="Content\img\M_ProcessorCore_large.png" />
+    <Content Include="Content\Press\PressReleases.txt" />
     <Content Include="Content\prettify.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -296,7 +298,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\Thankyou.cshtml" />
-    <Content Include="Views\Home\PASS.cshtml" />
+    <Content Include="Views\Home\Press.cshtml" />
     <Content Include="Views\Home\Support.cshtml" />
     <Content Include="Views\Home\Developers.cshtml" />
     <Content Include="Views\Home\Samples.cshtml" />

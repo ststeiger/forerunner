@@ -1017,6 +1017,8 @@ $(function () {
         getParentPath: function (path) {
             if (!path || path === "/") return null;
 
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
@@ -1056,6 +1058,8 @@ $(function () {
          */
         getCurrentItemName: function (path) {
             if (!path) return null;
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return path;

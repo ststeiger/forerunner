@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1018,6 +1018,8 @@ $(function () {
         getParentPath: function (path) {
             if (!path || path === "/") return null;
 
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
@@ -1057,6 +1059,8 @@ $(function () {
          */
         getCurrentItemName: function (path) {
             if (!path) return null;
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return path;

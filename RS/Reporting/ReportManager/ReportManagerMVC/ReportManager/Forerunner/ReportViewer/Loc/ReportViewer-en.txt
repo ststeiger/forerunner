@@ -143,6 +143,7 @@
 	"format": "Format",
 	"saveFailed": "Saving subscription failed",
 	"addNew": "Create",
+	"edit": "Edit",
 	"deleteSubscription": "Delete",
 	"deleteFailed": "Subscription deletion failed"
   },

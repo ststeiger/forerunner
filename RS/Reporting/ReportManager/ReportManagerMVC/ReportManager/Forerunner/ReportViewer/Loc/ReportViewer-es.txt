@@ -162,7 +162,9 @@
   "placeholders": {
     "Username":"nombre de usuario",
     "Password":"contraseña",
-    "Login":"login"
+    "Login":"iniciar sesión
+	
+"
   },
   "datepicker": {
     "closeText":"hecho",
@@ -269,6 +271,7 @@
     "format":"Formato",
     "saveFailed":"Suscripción Ahorro fallado ",
     "addNew":"Crear",
+	"edit": "Edit",
     "deleteSubscription":"Borrar",
     "deleteFailed":"Eliminación Suscripción fallado"
   },

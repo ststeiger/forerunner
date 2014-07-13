@@ -268,6 +268,7 @@
     "format":"Formáid",
     "saveFailed":"Theip síntiús Shábháil",
     "addNew":"Cruthaigh",
+	"edit": "Edit",
     "deleteSubscription":"Scrios",
     "deleteFailed":"Theip scriosadh Síntiúis"
   },

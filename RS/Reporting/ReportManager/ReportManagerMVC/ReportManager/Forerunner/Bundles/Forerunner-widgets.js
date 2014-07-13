@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -1066,6 +1066,8 @@ $(function () {
                 me._setPageCallback = null;
             }
             
+            // Make sure each new page has the zoom factor applied
+            me.zoomToPercent();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
@@ -1093,11 +1095,20 @@ $(function () {
          */
         zoomToPercent: function (percent) {
             var me = this;
-            var zoomFactor = parseFloat(percent);
-            if (isNaN(zoomFactor)) {
-                me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-                return false;
+            var zoomFactor;
+
+            if (!percent) {
+                // Reset the zoom. This happens durring a page change
+                zoomFactor = me.getZoomFactor();
+            } else {
+                // Set a new percent factor
+                zoomFactor = parseFloat(percent);
+                if (isNaN(zoomFactor)) {
+                    me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    return false;
+                }
             }
+
 
             me._zoomFactor = zoomFactor;
             var page = me.$reportAreaContainer.find(".Page");
@@ -2562,6 +2573,9 @@ $(function () {
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
+
+            // For each new report we reset the zoom factor back to 100%
+            me._zoomFactor = 100;
             
             me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
@@ -5770,15 +5784,15 @@ $(function () {
                             me.closeMenu();
                         }, milliseconds);
                     };
-                    $(window).off("touchend", touchFunc);
-                    $(window).one("touchend", touchFunc);
+                    $(document).off("touchend", touchFunc);
+                    $(document).one("touchend", touchFunc);
                 } else {
                     // Non-touch (PCs)
                     var func = function (event) {
                         me.closeMenu();
                     };
-                    $(window).off("mouseup", func);
-                    $(window).one("mouseup", func);
+                    $(document).off("mouseup", func);
+                    $(document).one("mouseup", func);
                 }
             }, milliseconds);
         },
@@ -15343,30 +15357,23 @@ $(function () {
             var layout = me.DefaultAppTemplate;
 
             var routeLinkSectionHeight = layout.$linksection.is(":visible") ? layout.$linksection.outerHeight() : 0;
-            
             var toolpaneheaderheight = layout.$mainheadersection.height(); //equal toolbar height
-
-            var offset = forerunner.device.isWindowsPhone() ? 0 : routeLinkSectionHeight;
+            var offset = forerunner.device.isIEMobile9() ? 0 : routeLinkSectionHeight;
 
             // window phone 7 get top property wrong
             var topDivHeight = routeLinkSectionHeight + toolpaneheaderheight;
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$topdiv.css({ height: topDivHeight });
+            layout.$topdivspacer.css({ height: topDivHeight });
 
             layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
             layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
 
-            layout.$leftpanecontent.css({ top: topDivHeight });
-            layout.$rightpanecontent.css({ top: topDivHeight });
+            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
 
-            layout.$topdiv.css({ height: topDivHeight });
-            layout.$topdivspacer.css({ height: topDivHeight });
-
-            if (forerunner.device.isWindowsPhone()) {
-                layout.$leftpanecontent.css({ top: toolpaneheaderheight });
-                layout.$rightpanecontent.css({ top: toolpaneheaderheight });
-            }
+            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
         },
         _getUserSettings: function () {
             var me = this;
@@ -16249,12 +16256,14 @@ $(function () {
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
+            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
             $deleteIcon.on("click", function () {
                 me.options.subscriptionModel.subscriptionModel("deleteSubscription",
                     subInfo.SubscriptionID,
                     function () { me._renderList(); }, function () { me._showDeletionFailure(); });
             });
             $editIcon.addClass("fr-sub-edit-icon");
+            $editIcon.attr("title", locData.subscription.edit);
             $editIcon.on("click", function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
@@ -16265,6 +16274,11 @@ $(function () {
             var me = this;
             me.options.$reportViewer.reportViewer("editEmailSubscription", subscriptionID);
             me.closeDialog();
+        },
+
+        _createNew: function () {
+            var me = this;
+            me._editSubscription(null);
         },
         _renderList: function () {
             var me = this;
@@ -16293,7 +16307,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew);
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -16307,6 +16321,10 @@ $(function () {
 
             me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
                 me.closeDialog();
+            });
+
+            me.element.find(".fr-email-create-id").on("click", function (e) {
+                me._createNew();
             });
 
             me.element.on(events.modalDialogGenericSubmit, function () {

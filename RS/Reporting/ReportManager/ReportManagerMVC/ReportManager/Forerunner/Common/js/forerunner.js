@@ -1017,6 +1017,8 @@ $(function () {
         getParentPath: function (path) {
             if (!path || path === "/") return null;
 
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return null;
@@ -1056,6 +1058,8 @@ $(function () {
          */
         getCurrentItemName: function (path) {
             if (!path) return null;
+            var parts = path.split("&");
+            path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
             if (lastIndex === -1) return path;
@@ -1595,6 +1599,21 @@ $(function () {
         isWindowsPhone : function() {
             var ua = navigator.userAgent;
             return ua.match(/(Windows Phone)/) !== null;
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 9.* */
+        isIEMobile9: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/9.0)/);
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 10 */
+        isIEMobile10: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/10.0)/);
+        },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 11 */
+        isIEMobile11: function () {
+            var ua = navigator.userAgent;
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/11.0)/);
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {

@@ -271,6 +271,7 @@
     "format":"Formato",
     "saveFailed":"Suscripción Ahorro fallado ",
     "addNew":"Crear",
+	"edit": "Edit",
     "deleteSubscription":"Borrar",
     "deleteFailed":"Eliminación Suscripción fallado"
   },

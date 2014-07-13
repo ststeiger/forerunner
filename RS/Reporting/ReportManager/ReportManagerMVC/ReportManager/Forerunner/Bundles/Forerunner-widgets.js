@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -16256,12 +16256,14 @@ $(function () {
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
+            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
             $deleteIcon.on("click", function () {
                 me.options.subscriptionModel.subscriptionModel("deleteSubscription",
                     subInfo.SubscriptionID,
                     function () { me._renderList(); }, function () { me._showDeletionFailure(); });
             });
             $editIcon.addClass("fr-sub-edit-icon");
+            $editIcon.attr("title", locData.subscription.edit);
             $editIcon.on("click", function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
@@ -16272,6 +16274,11 @@ $(function () {
             var me = this;
             me.options.$reportViewer.reportViewer("editEmailSubscription", subscriptionID);
             me.closeDialog();
+        },
+
+        _createNew: function () {
+            var me = this;
+            me._editSubscription(null);
         },
         _renderList: function () {
             var me = this;
@@ -16300,7 +16307,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew);
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -16314,6 +16321,10 @@ $(function () {
 
             me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
                 me.closeDialog();
+            });
+
+            me.element.find(".fr-email-create-id").on("click", function (e) {
+                me._createNew();
             });
 
             me.element.on(events.modalDialogGenericSubmit, function () {

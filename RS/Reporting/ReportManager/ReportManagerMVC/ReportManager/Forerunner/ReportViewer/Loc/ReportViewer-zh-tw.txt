@@ -268,6 +268,7 @@
     "format":"格式",
     "saveFailed":"保存訂閱失敗",
     "addNew":"創建",
+	"edit": "編輯",
     "deleteSubscription":"刪除",
     "deleteFailed":"刪除訂閱成功"
   },

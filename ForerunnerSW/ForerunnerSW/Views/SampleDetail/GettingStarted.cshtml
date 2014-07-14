@@ -91,7 +91,7 @@
     <p><i>Add the Forerunner authentication support</i></p>
     <ul>
         <li>Open the file "Controllers" > "AccountController.cs></li>
-        <li>Change the following refernece from:</li>
+        <li>Change the following reference from:</li>
         <p>WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)</p>
         <p>in the Login action to:</p>
         <p>Forerunner.Security.FormsAuthenticationHelper.Login(model.UserName, model.Password, 30)</p>

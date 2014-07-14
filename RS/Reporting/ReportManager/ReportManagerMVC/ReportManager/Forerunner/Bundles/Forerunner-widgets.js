@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -4532,7 +4532,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form", "fr-nav-container", "ui-autocomplete"]);
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form", "fr-nav-container", "ui-autocomplete", "fr-property-input"]);
 
                     if (!isScrollable)
                         e.preventDefault();

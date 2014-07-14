@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -882,25 +882,29 @@ $(function () {
          */
         containElement: function (element, classList) {
             var isContained = false;
-
-            $.each(classList, function (index, className) {
-                if ($(element).hasClass(className)) {
-                    isContained = true;
-                } else {
-                    var parent = element.parentElement;
-                    while (parent !== undefined && parent !== null) {
-                        if ($(parent).hasClass(className)) {
-                            isContained = true;
-                            break;
-                        }
-                        parent = parent.parentElement;
-                    }
+            var target = element;
+            
+            while (true) {
+                if (target === null || target === undefined) {
+                    break;
                 }
+                
+                $.each(classList, function (index, className) {
+                    if ($(target).hasClass(className)) {
+                        isContained = true;
+                        return false;//break the $.each loop if has specify classname
+                    }
+                });
 
-                if (isContained)
-                    return false; //break the $.each loop if isCOntained === true
-            });
-                       
+                if (isContained) {
+                    break;
+                }
+                else {
+                    //parentNode is standard, parentElement only support by IE
+                    target = target.parentElement;
+                }
+            }
+            
             return isContained;
         },
         /**

@@ -268,7 +268,7 @@
     "format":"Format",
     "saveFailed":"Att spara abonnemang misslyckades",
     "addNew":"Skapa",
-	"edit": "Edit",
+	"edit": "Redigera",
     "deleteSubscription":"Radera",
     "deleteFailed":"Prenumerations deletion misslyckades"
   },

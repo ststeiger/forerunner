@@ -268,7 +268,7 @@
     "format":"Format",
     "saveFailed":"Speichern Abonnement gescheitert ",
     "addNew":"Schaffen ",
-	"edit": "Edit",
+	"edit": "Edieren",
     "deleteSubscription":"Löschen ",
     "deleteFailed":"Abonnement Löschung gescheitert"
   },

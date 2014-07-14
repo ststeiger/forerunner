@@ -268,7 +268,7 @@
     "format":"Format",
     "saveFailed":"Salvarea abonament eșuat",
     "addNew":"crea",
-	"edit": "Edit",
+	"edit": "edita",
     "deleteSubscription":"șterge",
     "deleteFailed":"Ștergerea abonament eșuat"
   },

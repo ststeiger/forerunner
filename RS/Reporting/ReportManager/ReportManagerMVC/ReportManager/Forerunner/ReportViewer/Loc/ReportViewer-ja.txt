@@ -268,7 +268,7 @@
     "format":"フォーマット",
     "saveFailed":"節約のサブスクリプションに失敗しました",
     "addNew":"作る",
-	"edit": "Edit",
+	"edit": "編集",
     "deleteSubscription":"削除",
     "deleteFailed":"サブスクリプションの削除に失敗しました"
   },

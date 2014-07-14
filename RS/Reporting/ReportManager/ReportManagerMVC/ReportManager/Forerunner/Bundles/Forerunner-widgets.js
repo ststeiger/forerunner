@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -896,8 +896,7 @@ $(function () {
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
-            //var me = this;
-          
+            //var me = this;          
             if (!$colHeader)
                 return;
 

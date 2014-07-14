@@ -4,22 +4,22 @@ table {	border-collapse: collapse;	border-spacing: 0;}
 a { text-decoration: none;color:#017cb9;}
 a:hover {text-decoration:none; cursor:pointer;color:#28b2e0}
 img {border:none}
-body {font-size: .85em;font-family:  Helvetica, Arial, sans-serif; color: #333333; background-color: #fff;  margin:0;padding:0;}
-input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;}
+body {font-family:'Segoe UI'; color: #333333; background-color: #fff;  margin:0;padding:0;}
+input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;font-family:'Segoe UI'}
 .Rounded {-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
-.Center{ display:table;margin: 0 auto;}
+.Center{ margin: 0 auto;}
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
 
 .HeaderFont{font-family:Candara}
 .DetailFont{font-family:'Segoe UI'}
-.BlueBackgrouud{background-color:#0e93D7}
+.BlueBackgrouud{background-image:url(img/bkg_tile_slide.png);background-repeat:repeat;}
 .GreyBackgrouud{background-color:#F0F0F0}
 .OrangeBackground{background-color:#ff6600;}
 .SectionHeader{font-size:52px;color:#087cb9;text-align:center;}
 
 .ForerunnerPort{width:100%;}
-.ForerunnerPage{width:1000px;}
+.ForerunnerPage{width:1200px;max-width:1200px;}
 .ForerunnerPageTitle{font-size:50px;color:#1ba0da;padding-top:50px;margin-bottom:15px;line-height:40px}
 .ForerunnerPageSubTitle{font-size:18px;margin-bottom:20px;line-height:30px;}
 .ForerunnerPageContent{font-size:14px;}
@@ -29,14 +29,14 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .TD2Left {}
 
 .Header{ width:100%;margin-top:20px;padding-bottom:30px;}
-.Footer{background-color:#02486c;width:100%;color:white;min-height:100px;}
+.Footer{background-color:#013657;width:100%;color:white;min-height:200px;}
 
 .SliderContent{text-align: left; font-size: 14pt; line-height: 1.2;}
 .SliderFrame{padding: 20px; display: table-cell; }
 .SliderContainer{width: 450px; height: 409px;  }
 .SliderHeader{ text-align: left; font-size: 24pt; line-height: 1.2;}
 .SliderFullContainer{ }
-.SliderIMG{width:100%;}
+.SliderIMG{width:100%;max-width:1200px;}
 
 .HomePageRegister { }
 .FooterContent{}
@@ -47,13 +47,13 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .TopNavbar a{color: gray;}
 .TopNavitem a{color:#666666;}
-.TopNavSelected a{color:#333333;font-weight:bold;border-bottom: 5px solid blue;}
+.TopNavSelected a{color:#333333;font-weight:bold;border-bottom: 5px solid #0E92D5;}
 .TopNavitem a:hover{color:#333333;}
 .BottomNavbar a{color: white;}
 .BottomNavitem a:hover{color:#13A3EB;}
 
 .ForerunnerImage { width:100%; }
-.ForerunnerHomeImage{max-width:350px;}
+.ForerunnerHomeImage{max-width:429px}
 
 .PressTitle{font-size:18px;margin-bottom:20px;}
 .PressDescription{font-size:14px;font-style:italic;  margin-bottom :20px;}
@@ -70,8 +70,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerBottomBanner{background-color:#EAEAEA;}
 .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
 
-.DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}
-.DownloadFormInputSmall{height:35px;width:145px;  border:1px solid #b8b8b8;margin-bottom:5px;}
+.DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;font-size: 24px;}
+.DownloadFormInputSmall{height:45px;width:200px;  border:1px solid #b8b8b8;margin-bottom:5px;font-size: 24px;display:inline-block;}
+.DownLoadFormEmailSmall{width: 407px;display:block;}
 
 .DownloadButton{background-color:#ff6600;color:white;text-align:center;font-size:16px;cursor:pointer;}
 .DownloadButtonSize{width:200px;height:36px;padding-top:7px;text-align:center;display:block;}
@@ -79,7 +80,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .DownloadButton a {color:white;}
 .DownloadButton a:hover{color:white;}
 
-.RegisterButton{background-color:#02486C;color:white;text-align:center;font-size:16px;cursor:pointer;}
+.RegisterButton{background-color:#02486C;color:white;text-align:center;font-size:16px;cursor:pointer;border:none;}
 .RegisterButton:hover{background-color:#075983;color:white;}
 
 
@@ -130,7 +131,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
  @media only screen and (min-width: 1023px) {
  
-    .ForerunnerPage{width:1000px;}
+    .ForerunnerPage{width:100%;}
     .ForerunnerTD{ display:table-cell;vertical-align:top}
     .TD2{width:50%;}
     .TD2Left {padding-right: 15px;}
@@ -138,12 +139,10 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1023px) {
-     .ForerunnerPage{width:100%;}
+     .ForerunnerPage{width:100%;max-width:1200px;}
     .ForerunnerTD{ display:inline-block;vertical-align:top}
     .TD2{width:100%;}
     .TD2Left {padding-right: 0px;}
-    .SliderFullContainer{width: 450px;}
-    .SliderContainer{width: 450px; height: 409px;  }
 
 }
 
@@ -154,8 +153,6 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .ForerunnerTD{ display:inline-block;}
     .TD2{width:100%;}
     .TD2Left {padding-right: 0px;}
-    .SliderFullContainer{width: 450px;}
-    .SliderContainer{width: 450px; height: 409px;  }
 
    
 }
@@ -164,8 +161,6 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 @media only screen and (min-width: 481px) and (max-width: 599px) {
     .ForerunnerPort{padding-right:10px;padding-left:10px;width:100%;}
     .ForerunnerPage{width:100%;}
-    .SliderFullContainer{width: 450px;}
-    .SliderContainer{width: 450px; height: 409px;  }
    
     .ForerunnerTD{ display:inline-block;}
     .TD2{width:100%;}
@@ -185,8 +180,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 @media only screen and (max-width:480px) {
     .ForerunnerPort{padding-right:0px;padding-left:0px;width:100%;}
     .ForerunnerPage{width:305px;}
-    .SliderFullContainer{width: 305px;}
-    .SliderContainer{width: 305px; height:auto; }
+
     .SliderFrame{padding:0}
 
    .ForerunnerTD{ display:inline-block;}
@@ -200,6 +194,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
    .TD3{width:100%;}
    .SupportTDBorder{border-right:none;}
    
-   .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}
+   .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;font-size: 24px;}
+   .DownLoadFormEmailSmall{width: 200px;margin: 0 auto;}
+   .DownloadFormInputSmall{display:block;margin: 0 auto;}
  
 }

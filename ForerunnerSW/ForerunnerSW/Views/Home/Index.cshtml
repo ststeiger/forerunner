@@ -12,17 +12,30 @@
     <div class="ForerunnerPage Center BlueBackgrouud" style="">
         <div id="Slide" class="SliderFullContainer Center" style="">
 
+
                     <div>
-                        <img class="SliderIMG" src="~/content/img/Slide1_Mobilizer.png" alt="Forerunner Mobilizer unlocks and extends the power of Microsoft's SQL Server by allowing users access to core business intelligence more quickly and across all devices and browsers. Forerunner is an easy to use out of the box solution that leverages your existing investments; eliminating the need for additional development or user training." />
+                        <img class="SliderIMG" usemap="#mobilizer" src="~/content/img/Slide1_Mobilizer.png" alt="Forerunner Mobilizer unlocks and extends the power of Microsoft's SQL Server by allowing users access to core business intelligence more quickly and across all devices and browsers. Forerunner is an easy to use out of the box solution that leverages your existing investments; eliminating the need for additional development or user training." />
+                         <map name="mobilizer">
+                            <area shape="rect" coords="89,418,356,465" alt="Register" href="/home/register">
+                        </map>
                     </div>
                     <div>
-                        <img class="SliderIMG" src="~/content/img/Slide2_Intel.png" alt="To support the demand of business users Intel executives chose Forerunner Software's unique Mobilizer to support their internal browser agnostic and BYOD policy. "With so many people in an organization you can't possibly lock everyone down to IE." states Intel's Applications Developer Rob Harrison. "People are going to download Chrome, they're going to download Firefox, they are going to get what they want. It makes sense, right? There's no reason why we shouldn't support these things." />
+                        <img class="SliderIMG" usemap="#intel" src="~/content/img/Slide2_Intel.png" alt="To support the demand of business users Intel executives chose Forerunner Software's unique Mobilizer to support their internal browser agnostic and BYOD policy. "With so many people in an organization you can't possibly lock everyone down to IE." states Intel's Applications Developer Rob Harrison. "People are going to download Chrome, they're going to download Firefox, they are going to get what they want. It makes sense, right? There's no reason why we shouldn't support these things." />
+                        <map name="intel">
+                            <area shape="rect" coords="472,427,638,456" alt="Read More" href ="/home/press?Atricle=10">
+                        </map>
                     </div>
                     <div>
-                        <img class="SliderIMG" src="~/content/img/Slide3_SQLReporting.png" alt="Leverage the power of Microsoft's SQLServer Reporting. Forerunner Software provides mobile business intelligence and access to SQL Server Reporting Services from any device and any browser for real time strategic planning and decision making. Enable your mobile workforce to gain business insights through information analysis using applications optimized for mobile devices." />
+                        <img class="SliderIMG" usemap="#sql" src="~/content/img/Slide3_SQLReporting.png" alt="Leverage the power of Microsoft's SQLServer Reporting. Forerunner Software provides mobile business intelligence and access to SQL Server Reporting Services from any device and any browser for real time strategic planning and decision making. Enable your mobile workforce to gain business insights through information analysis using applications optimized for mobile devices." />
+                        <map name="sql">
+                            <area shape="rect" coords="87,446,353,494" alt="Register" href="/home/register">
+                        </map>
                     </div>
                     <div>
-                        <img class="SliderIMG" src="~/content/img/Slide4_DesignedForDevs.png"  alt="Forerunner Mobilizer was designed by developers with developers in mind. It's got everything you need. All of the Controls, APIs, CSS and events we used to build Mobilizer are documented and available for you to build your own custom experience or incorporate into your applications. With full support the MVC and HTML5 building your own app is a breeze."/>
+                        <img class="SliderIMG" usemap="#developer" src="~/content/img/Slide4_DesignedForDevs.png"  alt="Forerunner Mobilizer was designed by developers with developers in mind. It's got everything you need. All of the Controls, APIs, CSS and events we used to build Mobilizer are documented and available for you to build your own custom experience or incorporate into your applications. With full support the MVC and HTML5 building your own app is a breeze."/>
+                        <map name="developer">
+                            <area shape="rect" coords="260,444,555,482" alt="Developers" href="home/developers">
+                        </map>
                     </div>
         </div>
        @* <div class="SliderFullContainer Center" style="display:table;">
@@ -37,14 +50,14 @@
 
 <div class="ForerunnerPort OrangeBackground" style="">
     <div class="ForerunnerPage Center OrangeBackground" style="padding-top:25px;padding-bottom:25px;">
-        <div class="HeaderFont Center SectionHeader" style="color:white;">See it in Action, Watch the Video!</div>
+        <div class="HeaderFont Center SectionHeader" style="color:white;padding-bottom:25px;">See it in Action, Watch the Video!</div>
         <div class="Center" style="display: table; width: 100%;">
             <div class="ForerunnerTD TD2 TD2Left Center" style="">
                 <div id="video" style="padding-right: 15px; display: none;">
                     <iframe width="100%" height="360" src="//www.youtube.com/embed/ffglPLTa6d4?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>
                 </div>
-                <div id="image" class="Center" style="cursor: pointer;max-width:484px;">
-                    <img class="ForerunnerImage OrangeBackground" src="~/Content/img/mobilizer_home-play.png" alt="Forerunner Mobilizer Product" />
+                <div id="image" class="Center ForerunnerImage" style="cursor: pointer;max-width:484px;">
+                    <img class="ForerunnerImage OrangeBackground" src="~/Content/img/Video_on.png" alt="Forerunner Mobilizer Product" />
                 </div>
             </div>
 
@@ -52,17 +65,17 @@
                 <form class="HomePageRegister Center DetailFont" name="reg" style="margin-bottom: 25px; font-size: 24px;" action="https://forerunnersw.com/register/api/Download" method="post">
                     <div class="Center HeaderFont" style="margin-bottom: 5px; margin-top: 25px; color: white; font-weight: bold; font-size: 30px;text-align:center;">Register to unlock your FREE Trial</div>
                     <div class="Center " style="margin-bottom: 20px; color: white;text-align:center;">You can be up and running in minutes</div>
-                    <div class="Center ">
+                    <div class="Center " style="max-width:420px;">
                         <input class="DownloadFormInputSmall" type="text" required="required" name="firstname" placeholder="First Name">
-                        <input class="DownloadFormInputSmall" type="text" required="required" name="lastname" placeholder="Last Name"><br />
-                        <input id="email" class="DownloadFormInputSmall" style="width: 292px;" type="text" required="required" name="email" placeholder="Email"><br />
+                        <input class="DownloadFormInputSmall" type="text" required="required" name="lastname" placeholder="Last Name">
+                        <input id="email" class="DownloadFormInputSmall DownLoadFormEmailSmall" style="" type="text" required="required" name="email" placeholder="Email">
                         <input class="DownloadFormInputSmall" type="text" name="companyname" placeholder="Company Name">
                         <input class="DownloadFormInputSmall" type="text" name="phonenumber" placeholder="Phone Number"><br />
                         <br />
                         <input id="zip" class="DownloadFormInputSmall" type="text" name="zipcode">
                         <input id="referer" class="DownloadFormInputSmall" type="text" name="referrer">
                     </div>
-                    <input class="RegisterButton Center DownloadButtonSize" style="" type="submit" value="Register">
+                    <input class="RegisterButton Center Rounded DownloadButtonSize HeaderFont" style="" type="submit" value="REGISTER">
                     <br />
                 </form>
             </div>
@@ -84,7 +97,7 @@
                 
             </div>
             <div class="ForerunnerTD TD2 TD2Left" style="">                
-                <div class="Center" style ="cursor: pointer;">
+                <div class="Center ForerunnerImage" style ="cursor: pointer;">
                     <img class="ForerunnerImage ForerunnerHomeImage" src="~/Content/img/OptimizedResponciveApp.png" alt="Optimized Responsive Application" />
                 </div>
             </div>
@@ -98,7 +111,7 @@
         <div class="Center" style="display: table; width: 100%;">
             
              <div class="ForerunnerTD TD2 TD2Left" style="">                
-                <div class="Center" style ="cursor: pointer;">
+                <div class="Center ForerunnerImage" style ="cursor: pointer;">
                     <img class="ForerunnerImage ForerunnerHomeImage" src="~/Content/img/CostEffective.png" alt="Cost Effective Mobile BI" />
                 </div>
             </div>
@@ -129,7 +142,7 @@
                 
             </div>
             <div class="ForerunnerTD TD2 TD2Left" style="">                
-                <div class="Center" style ="cursor: pointer;">
+                <div class="Center ForerunnerImage" style ="cursor: pointer;">
                     <img class="ForerunnerImage ForerunnerHomeImage" src="~/Content/img/NoTraining.png" alt="No Training Required" />
                 </div>
             </div>
@@ -143,7 +156,7 @@
         <div class="Center" style="display: table; width: 100%;">
             
              <div class="ForerunnerTD TD2 TD2Left" style="">                
-                <div class="Center" style ="cursor: pointer;">
+                <div class="Center ForerunnerImage" style ="cursor: pointer;">
                     <img class="ForerunnerImage ForerunnerHomeImage"  src="~/Content/img/CompetitiveAdvantage.png" alt="Compeditive advantage" />
                 </div>
             </div>

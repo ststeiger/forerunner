@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
+using System.Web.Script.Serialization;
 
 namespace ForerunnerSW.Controllers
 {
@@ -21,6 +23,23 @@ namespace ForerunnerSW.Controllers
         }
         public ActionResult About()
         {
+            PressRelease[] prs;
+            JavaScriptSerializer releases = new JavaScriptSerializer();
+
+            prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt"));
+            string news = @"<div class='ForerunnerPageContent' style='margin-bottom:20px;'>
+            <span style='font-weight:bold;'>{0}</span>
+            <div class='ForerunnerPageContent'><b>{1}</b> — {2}
+            <a href='{3}' target='_blank' >read more...</a></div>
+        </div>";
+            string allNews = "";
+
+            foreach (PressRelease pr in prs)
+            {
+                allNews+=  String.Format(news, pr.Title, pr.Release, pr.Description, pr.Link);                    
+               
+            }
+            ViewData["Press"] = allNews;
             return View();
         }
         public ActionResult Contact()
@@ -39,8 +58,34 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
-        public ActionResult PASS()
+
+        class PressRelease
         {
+            public string ID;
+            public string Link;
+            public string Title;
+            public string Release;
+            public string Description;
+            public string Content;
+
+        }
+        public ActionResult Press(string Article)
+        {
+            PressRelease[] prs;
+            JavaScriptSerializer releases = new JavaScriptSerializer();
+
+            prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt")) ;
+
+            foreach (PressRelease pr in prs)
+            {
+                if (pr.ID == Article)
+                {
+                    ViewData["Title"] = pr.Title;
+                    ViewData["Description"] = pr.Description;
+                    ViewData["Content"] = pr.Content.Replace("\r\n","<br/>");
+                    ViewData["Release"] = pr.Release;
+                }
+            }
             return View();
         }
         public ActionResult Support()

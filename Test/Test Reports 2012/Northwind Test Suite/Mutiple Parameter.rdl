@@ -356,11 +356,6 @@ ORDER BY CategoryID </CommandText>
       <Nullable>true</Nullable>
       <Prompt>IntegerTest</Prompt>
     </ReportParameter>
-    <ReportParameter Name="FloatTest">
-      <DataType>Float</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>FloatTest</Prompt>
-    </ReportParameter>
     <ReportParameter Name="MultipleValues">
       <DataType>String</DataType>
       <AllowBlank>true</AllowBlank>
@@ -390,6 +385,10 @@ ORDER BY CategoryID </CommandText>
         </ParameterValues>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="FloatTest">
+      <DataType>Float</DataType>
+      <Prompt>FloatTest</Prompt>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

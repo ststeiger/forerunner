@@ -205,7 +205,6 @@ jQuery.fn.extend({
         this.addUntil(until, coll);
 
         return $(coll).filter(selector);
-
     },
 
     addUntil: function (until, collection) {

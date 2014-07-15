@@ -896,7 +896,8 @@ $(function () {
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
-            //var me = this;          
+            //var me = this;
+
             if (!$colHeader)
                 return;
 

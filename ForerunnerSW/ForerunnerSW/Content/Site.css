@@ -53,7 +53,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .BottomNavitem a:hover{color:#13A3EB;}
 
 .ForerunnerImage { width:100%; }
-.ForerunnerHomeImage{max-width:429px}
+.ForerunnerHomeImage{max-width:429px;}
 
 .PressTitle{font-size:18px;margin-bottom:20px;}
 .PressDescription{font-size:14px;font-style:italic;  margin-bottom :20px;}

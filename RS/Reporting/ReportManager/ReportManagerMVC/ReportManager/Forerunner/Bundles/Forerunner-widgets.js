@@ -896,7 +896,8 @@ $(function () {
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
-            //var me = this;          
+            //var me = this;
+
             if (!$colHeader)
                 return;
 
@@ -1333,6 +1334,10 @@ $(function () {
          */
         navToPage: function (newPageNum) {
             var me = this;
+
+            if (newPageNum === 0)
+                return;
+
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
             me._resetContextIfInvalid();
@@ -8506,6 +8511,10 @@ $(function () {
             
             $sec.attr("Style", "width:" + me._getWidth(loc.Width) + "mm;");
 
+            //Set the responsive width
+            me._setResonsiveWidth(me._getWidth(loc.Width),$sec);
+
+
             //Columns
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
@@ -8534,10 +8543,24 @@ $(function () {
 
                 $header.attr("Style", "width:" + me._getWidth(headerLoc.Width) + "mm;");
 
+                //Set the responsive width
+                me._setResonsiveWidth(me._getWidth(headerLoc.Width),$header);
+
                 $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
                 return $header;
             }
         },
+
+        _setResonsiveWidth: function (defWidth, element) {
+            var me = this;
+
+            //Set the responsive width
+            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
+                if (defWidth > me._convertToMM(me._currentWidth + "px"))
+                    element.css("width", me._currentWidth);
+            }
+        },
+
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
@@ -8645,6 +8668,7 @@ $(function () {
             me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(rec, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
@@ -8712,6 +8736,10 @@ $(function () {
                 if (RIContext.CurrLocation) {
                     if (rec.RecExt.FixedWidth === undefined)
                         rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
+
+                    //Set the responsive width
+                    me._setResonsiveWidth(me._getWidth(RIContext.CurrLocation.Width),rec.HTMLRec);
+
 
                     if (RIContext.CurrObj.ReportItems.length === 0)
                         rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
@@ -15058,7 +15086,7 @@ $(function () {
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.tags, propertyEnums.description);
+                propertyList.push(propertyEnums.description, propertyEnums.tags);
             }
             else if (view === "searchfolder") {
                 propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
@@ -15391,7 +15419,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15436,7 +15464,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS

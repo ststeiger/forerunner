@@ -266,7 +266,8 @@ $(function () {
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
-            //var me = this;          
+            //var me = this;
+
             if (!$colHeader)
                 return;
 
@@ -703,6 +704,10 @@ $(function () {
          */
         navToPage: function (newPageNum) {
             var me = this;
+
+            if (newPageNum === 0)
+                return;
+
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
             me._resetContextIfInvalid();

@@ -200,19 +200,18 @@ jQuery.fn.extend({
     
     findUntil: function (selector, until) {
         
-        var coll = $(this);
+        var coll = [];
         this.addUntil(until, coll);
 
-        return coll.filter(selector);
-
+        return $(coll).filter(selector);
     },
 
     addUntil: function (until, collection) {
 
         var children = this.children().filter(":not( " + until + ")");
-        collection.add(children);
 
         $.each(children, function (Index, Obj) {
+            collection.push(Obj);
             $(Obj).addUntil(until, collection);
         });
     }

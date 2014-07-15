@@ -60,7 +60,7 @@ $(function () {
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.tags, propertyEnums.description);
+                propertyList.push(propertyEnums.description, propertyEnums.tags);
             }
             else if (view === "searchfolder") {
                 propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
@@ -393,7 +393,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -438,7 +438,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS

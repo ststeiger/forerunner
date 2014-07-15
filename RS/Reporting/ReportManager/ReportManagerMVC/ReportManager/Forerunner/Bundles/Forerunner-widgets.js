@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -9843,6 +9843,7 @@ $(function () {
             if (tablixExt.ID)
                 $Tablix.attr("id", tablixExt.ID);
 
+
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
@@ -14676,8 +14677,7 @@ $(function () {
                         }
                     }
 
-                    //$viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
                     $("head").slice(0).append($viewportStyle);
 
                     // Show the unzoom toolbar

@@ -1527,6 +1527,7 @@ $(function () {
             if (tablixExt.ID)
                 $Tablix.attr("id", tablixExt.ID);
 
+
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               

@@ -1334,6 +1334,10 @@ $(function () {
          */
         navToPage: function (newPageNum) {
             var me = this;
+
+            if (newPageNum === 0)
+                return;
+
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
             me._resetContextIfInvalid();
@@ -8507,6 +8511,10 @@ $(function () {
             
             $sec.attr("Style", "width:" + me._getWidth(loc.Width) + "mm;");
 
+            //Set the responsive width
+            me._setResonsiveWidth(me._getWidth(loc.Width),$sec);
+
+
             //Columns
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
@@ -8535,10 +8543,24 @@ $(function () {
 
                 $header.attr("Style", "width:" + me._getWidth(headerLoc.Width) + "mm;");
 
+                //Set the responsive width
+                me._setResonsiveWidth(me._getWidth(headerLoc.Width),$header);
+
                 $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
                 return $header;
             }
         },
+
+        _setResonsiveWidth: function (defWidth, element) {
+            var me = this;
+
+            //Set the responsive width
+            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
+                if (defWidth > me._convertToMM(me._currentWidth + "px"))
+                    element.css("width", me._currentWidth);
+            }
+        },
+
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
@@ -8646,6 +8668,7 @@ $(function () {
             me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(rec, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
@@ -8713,6 +8736,10 @@ $(function () {
                 if (RIContext.CurrLocation) {
                     if (rec.RecExt.FixedWidth === undefined)
                         rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
+
+                    //Set the responsive width
+                    me._setResonsiveWidth(me._getWidth(RIContext.CurrLocation.Width),rec.HTMLRec);
+
 
                     if (RIContext.CurrObj.ReportItems.length === 0)
                         rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");

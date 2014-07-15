@@ -1978,7 +1978,7 @@ $(function () {
                     } catch (e) {
                         options.section = 1;
                     }
-                else if (key.startWith("rc:"))
+                else if (key.indexOf("rc:")===0)
                     options.deviceInfo[decodeURIComponent(pair[0]).substring(3, key.length -1)] = decodeURIComponent(pair[1]);
             }
             return options;

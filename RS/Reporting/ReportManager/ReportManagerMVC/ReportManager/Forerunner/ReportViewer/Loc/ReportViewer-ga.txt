@@ -268,7 +268,7 @@
     "format":"Formáid",
     "saveFailed":"Theip síntiús Shábháil",
     "addNew":"Cruthaigh",
-	"edit": "Edit",
+	"edit": "Eagar",
     "deleteSubscription":"Scrios",
     "deleteFailed":"Theip scriosadh Síntiúis"
   },

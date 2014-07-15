@@ -1334,6 +1334,10 @@ $(function () {
          */
         navToPage: function (newPageNum) {
             var me = this;
+
+            if (newPageNum === 0)
+                return;
+
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
             me._resetContextIfInvalid();

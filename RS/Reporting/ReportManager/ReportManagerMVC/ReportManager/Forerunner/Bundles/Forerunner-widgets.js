@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -15040,6 +15040,7 @@ $(function () {
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var helper = forerunner.helper;
+    var constants = forerunner.ssr.constants;
     var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
@@ -15170,15 +15171,17 @@ $(function () {
                 var parts = path.split("?");
                 path = parts[0];
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+                var options = data.args.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(data.args[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
-                me.transitionToReportViewer(path, params);
+                me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
                 var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
+                var options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
-                me.transitionToReportViewer(reportPath, RSURLParams);
+                me.transitionToReportViewer(reportPath, RSURLParams, options);
             } else if (data.name === "transitionToOpenResource") {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
@@ -15412,7 +15415,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path, params) {
+        transitionToReportViewer: function (path, params, urlOptions) {
             var me = this;
             var layout = me.DefaultAppTemplate;
             layout.$mainsection.html("");
@@ -15430,23 +15433,31 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                var toolbarConfig = constants.toolbarConfigOption.full;
+                if (urlOptions && !urlOptions.showToolbar) {
+                    toolbarConfig = constants.toolbarConfigOption.hide;
+                }
                 layout.$mainviewport.reportViewerEZ({
                     DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    isReportManager: true,
+                    isReportManager: urlOptions ? urlOptions.isReportManager : true,
+                    useReportManagerSettings: urlOptions? urlOptions.useReportManagerSettings : true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    showBreadCrumb: true
+                    showBreadCrumb: urlOptions ? urlOptions.isReportManager : true,
+                    showToolbar: urlOptions ? urlOptions.showToolbar : true,
+                    showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    toolbarConfigOption: toolbarConfig
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
-                    $reportViewer.reportViewer("loadReport", path, 1, params);
+                    $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
                 

@@ -2484,7 +2484,7 @@ $(function () {
                 var me = this;
                 $($element).each(function () {
                     var elt = $(this).get(0);
-                    elt.normalize();
+                    //elt.normalize();
                     $.each(elt.childNodes, function (i, node) {
                         //nodetype=3 : text node
                         if (node.nodeType === 3) {
@@ -2523,10 +2523,52 @@ $(function () {
             return $(this);
         },
         _clearHighLightWord: function () {
-            $(".fr-render-find-keyword").each(function () {
-                var text = document.createTextNode($(this).text());
-                $(this).replaceWith($(text));
+            var me = this;
+
+            $(".fr-render-find-keyword").each(function (index, keywordSpan) {
+                var parent = keywordSpan.parentNode;
+                var textNode = document.createTextNode(keywordSpan.firstChild.nodeValue);
+
+                parent.replaceChild(textNode, keywordSpan);
+
+                //normalize the textnode that search split
+                if (forerunner.device.isMSIE()) {
+                    me._frSearchNormalize(parent);
+                } else {
+                    parent.normalize();
+                }
             });
+        },
+        _joinAdjacentTextnodes: function (textNode) {// textNode is a DOM text node
+            // while there are text siblings, concatenate them into the first   
+            while (textNode.nextSibling) {
+                var next = textNode.nextSibling;
+
+                if (next.nodeType == 3 || next.nodeType == 4) {
+                    textNode.nodeValue += next.nodeValue;
+                    textNode.parentNode.removeChild(next);
+                    // Stop if not a text node
+                } else {
+                    return;
+                }
+            }
+        },
+        //normalize textnode, used by join the text node split by report viewer find
+        _frSearchNormalize: function (element) {// element is a DOM element
+            var me = this;
+            var node = element.firstChild;
+
+            // Traverse siblings, call normalise for elements and 
+            // collectTextNodes for text nodes   
+            while (node && node.nextSibling) {
+                if (node.nodeType == 1) {
+                    me._frSearchNormalize(node);
+
+                } else if (node.nodeType == 3) {
+                    me._joinAdjacentTextnodes(node);
+                }
+                node = node.nextSibling;
+            }
         },
         _setAutoRefresh: function (period) {
             var me = this;

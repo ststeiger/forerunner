@@ -48,7 +48,9 @@ $(function () {
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
             handleWindowResize: true,
-            showBreadCrumb: false
+            showBreadCrumb: false,
+            showParameterArea: "Collapsed",
+            zoom: "100"
         },
         _render: function () {
             var me = this;
@@ -83,7 +85,8 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
-                toolbarConfigOption: me.options.toolbarConfigOption
+                toolbarConfigOption: me.options.toolbarConfigOption,
+                zoom: me.options.zoom
             });
 
             initializer.render();

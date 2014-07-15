@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -698,7 +698,8 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
-            showSubscriptionUI: false
+            showSubscriptionUI: false,
+            zoom: "100"
         },
 
         _destroy: function () {
@@ -1144,6 +1145,30 @@ $(function () {
                 me.zoomToPercent(pageWidthZoom);
             }
         },
+
+        /**
+         * Zoom To Page width
+         *
+         * @function $.forerunner.reportViewer#zoomToPageWidth
+         */
+        zoomToPageWidth : function() {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            var pageWidthZoom = (me.element.width() / page.width()) * 100;
+            me.zoomToPercent(pageWidthZoom);
+        },
+
+        /**
+         * Zoom To show the whole page
+         *
+         * @function $.forerunner.reportViewer#zoomToWhoePage
+         */
+        zoomToWholePage: function () {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            // TODO
+        },
+
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
 
@@ -2616,6 +2641,19 @@ $(function () {
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                if (me.options.zoom) {
+                    if (me.options.zoom === "page width")
+                        me.zoomToPageWidth();
+                    else if (me.options.zoom === "whole page")
+                        me.zoomToWholePage();
+                    else {
+                        try {
+                            var zoomLevel = parseFloat(me.options.zoom);
+                            me.zoomToPercent(zoomLevel);
+                        } catch (e) {
+                        }
+                    }
+                }
             });
         },
         _getRDLExtProp: function () {
@@ -3080,7 +3118,7 @@ $(function () {
                 var me = this;
                 $($element).each(function () {
                     var elt = $(this).get(0);
-                    elt.normalize();
+                    //elt.normalize();
                     $.each(elt.childNodes, function (i, node) {
                         //nodetype=3 : text node
                         if (node.nodeType === 3) {
@@ -3119,10 +3157,52 @@ $(function () {
             return $(this);
         },
         _clearHighLightWord: function () {
-            $(".fr-render-find-keyword").each(function () {
-                var text = document.createTextNode($(this).text());
-                $(this).replaceWith($(text));
+            var me = this;
+
+            $(".fr-render-find-keyword").each(function (index, keywordSpan) {
+                var parent = keywordSpan.parentNode;
+                var textNode = document.createTextNode(keywordSpan.firstChild.nodeValue);
+
+                parent.replaceChild(textNode, keywordSpan);
+
+                //normalize the textnode that search split
+                if (forerunner.device.isMSIE()) {
+                    me._frSearchNormalize(parent);
+                } else {
+                    parent.normalize();
+                }
             });
+        },
+        _joinAdjacentTextnodes: function (textNode) {// textNode is a DOM text node
+            // while there are text siblings, concatenate them into the first   
+            while (textNode.nextSibling) {
+                var next = textNode.nextSibling;
+
+                if (next.nodeType == 3 || next.nodeType == 4) {
+                    textNode.nodeValue += next.nodeValue;
+                    textNode.parentNode.removeChild(next);
+                    // Stop if not a text node
+                } else {
+                    return;
+                }
+            }
+        },
+        //normalize textnode, used by join the text node split by report viewer find
+        _frSearchNormalize: function (element) {// element is a DOM element
+            var me = this;
+            var node = element.firstChild;
+
+            // Traverse siblings, call normalise for elements and 
+            // collectTextNodes for text nodes   
+            while (node && node.nextSibling) {
+                if (node.nodeType == 1) {
+                    me._frSearchNormalize(node);
+
+                } else if (node.nodeType == 3) {
+                    me._joinAdjacentTextnodes(node);
+                }
+                node = node.nextSibling;
+            }
         },
         _setAutoRefresh: function (period) {
             var me = this;
@@ -14087,7 +14167,8 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on"
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on",
+                zoom : me.options.zoom
             });
 
             // Create / render the toolbar
@@ -14479,7 +14560,9 @@ $(function () {
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
             handleWindowResize: true,
-            showBreadCrumb: false
+            showBreadCrumb: false,
+            showParameterArea: "Collapsed",
+            zoom: "100"
         },
         _render: function () {
             var me = this;
@@ -14514,7 +14597,8 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
-                toolbarConfigOption: me.options.toolbarConfigOption
+                toolbarConfigOption: me.options.toolbarConfigOption,
+                zoom: me.options.zoom
             });
 
             initializer.render();
@@ -15053,6 +15137,7 @@ $(function () {
     var rtb = forerunner.ssr.tools.reportExplorerToolbar;
     var rtp = forerunner.ssr.tools.reportExplorerToolpane;
     var helper = forerunner.helper;
+    var constants = forerunner.ssr.constants;
     var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var viewToBtnMap = {
@@ -15099,7 +15184,7 @@ $(function () {
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.tags, propertyEnums.description);
+                propertyList.push(propertyEnums.description, propertyEnums.tags);
             }
             else if (view === "searchfolder") {
                 propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
@@ -15183,15 +15268,17 @@ $(function () {
                 var parts = path.split("?");
                 path = parts[0];
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+                var options = data.args.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(data.args[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
-                me.transitionToReportViewer(path, params);
+                me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
                 var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
+                var options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
-                me.transitionToReportViewer(reportPath, RSURLParams);
+                me.transitionToReportViewer(reportPath, RSURLParams, options);
             } else if (data.name === "transitionToOpenResource") {
                 me.transitionToReportManager(path, "resource");
             } else if (data.name === "transitionToSearch") {
@@ -15425,14 +15512,14 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path, params) {
+        transitionToReportViewer: function (path, params, urlOptions) {
             var me = this;
             var layout = me.DefaultAppTemplate;
             layout.$mainsection.html("");
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15443,23 +15530,31 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                var toolbarConfig = constants.toolbarConfigOption.full;
+                if (urlOptions && !urlOptions.showToolbar) {
+                    toolbarConfig = constants.toolbarConfigOption.hide;
+                }
                 layout.$mainviewport.reportViewerEZ({
                     DefaultAppTemplate: layout,
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
-                    isReportManager: true,
+                    isReportManager: urlOptions ? urlOptions.isReportManager : true,
+                    useReportManagerSettings: urlOptions? urlOptions.useReportManagerSettings : true,
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    showBreadCrumb: true
+                    showBreadCrumb: urlOptions ? urlOptions.isReportManager : true,
+                    showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    toolbarConfigOption: toolbarConfig,
+                    zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
-                    $reportViewer.reportViewer("loadReport", path, 1, params);
+                    $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
                 
@@ -15477,7 +15572,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.tags, propertyEnums.description]);
+            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS

@@ -423,9 +423,9 @@ $(function () {
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.isReportManager : true,
-                    showToolbar: urlOptions ? urlOptions.showToolbar : true,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
-                    toolbarConfigOption: toolbarConfig
+                    toolbarConfigOption: toolbarConfig,
+                    zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

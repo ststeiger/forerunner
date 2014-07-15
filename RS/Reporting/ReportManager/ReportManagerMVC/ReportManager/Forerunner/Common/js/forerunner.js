@@ -1955,7 +1955,7 @@ $(function () {
             if (url == null)
                 return null;
 
-            var options = { "isReportManager" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "deviceInfo": {}};
+            var options = { "isReportManager" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
             var start = url.indexOf("?") + 1;
             var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -1970,8 +1970,14 @@ $(function () {
                     options.showToolbar = !(value === "false");
                 else if (key === "rc:parameters")
                     options.showParameterArea = value;
+                else if (key === "rc:zoom")
+                    options.zoom = value;
                 else if (key === "rc:section")
-                    options.section = parseInt(value);
+                    try {
+                        options.section = parseInt(value);
+                    } catch (e) {
+                        options.section = 1;
+                    }
                 else if (key.startWith("rc:"))
                     options.deviceInfo[decodeURIComponent(pair[0]).substring(3, key.length -1)] = decodeURIComponent(pair[1]);
             }

@@ -698,7 +698,8 @@ $(function () {
             savePosition: null,
             viewerID: null,
             rsInstance: null,
-            showSubscriptionUI: false
+            showSubscriptionUI: false,
+            zoom: "100"
         },
 
         _destroy: function () {
@@ -1144,6 +1145,30 @@ $(function () {
                 me.zoomToPercent(pageWidthZoom);
             }
         },
+
+        /**
+         * Zoom To Page width
+         *
+         * @function $.forerunner.reportViewer#zoomToPageWidth
+         */
+        zoomToPageWidth : function() {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            var pageWidthZoom = (me.element.width() / page.width()) * 100;
+            me.zoomToPercent(pageWidthZoom);
+        },
+
+        /**
+         * Zoom To show the whole page
+         *
+         * @function $.forerunner.reportViewer#zoomToWhoePage
+         */
+        zoomToWholePage: function () {
+            var me = this;
+            var page = me.$reportAreaContainer.find(".Page");
+            // TODO
+        },
+
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
 
@@ -2616,6 +2641,19 @@ $(function () {
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                if (me.options.zoom) {
+                    if (me.options.zoom === "page width")
+                        me.zoomToPageWidth();
+                    else if (me.options.zoom === "whole page")
+                        me.zoomToWholePage();
+                    else {
+                        try {
+                            var zoomLevel = parseFloat(me.options.zoom);
+                            me.zoomToPercent(zoomLevel);
+                        } catch (e) {
+                        }
+                    }
+                }
             });
         },
         _getRDLExtProp: function () {
@@ -14075,7 +14113,8 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on"
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on",
+                zoom : me.options.zoom
             });
 
             // Create / render the toolbar
@@ -14467,7 +14506,9 @@ $(function () {
             useReportManagerSettings: false,
             toolbarConfigOption: constants.toolbarConfigOption.full,
             handleWindowResize: true,
-            showBreadCrumb: false
+            showBreadCrumb: false,
+            showParameterArea: "Collapsed",
+            zoom: "100"
         },
         _render: function () {
             var me = this;
@@ -14502,7 +14543,8 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
-                toolbarConfigOption: me.options.toolbarConfigOption
+                toolbarConfigOption: me.options.toolbarConfigOption,
+                zoom: me.options.zoom
             });
 
             initializer.render();
@@ -15449,9 +15491,9 @@ $(function () {
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.isReportManager : true,
-                    showToolbar: urlOptions ? urlOptions.showToolbar : true,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
-                    toolbarConfigOption: toolbarConfig
+                    toolbarConfigOption: toolbarConfig,
+                    zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");

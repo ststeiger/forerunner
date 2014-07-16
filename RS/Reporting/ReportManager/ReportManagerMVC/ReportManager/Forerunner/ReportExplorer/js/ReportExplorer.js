@@ -165,8 +165,6 @@ $(function () {
             }
             if (isSelected)
                 me.$selectedItem = $item;
-
-            
             
             //Caption
             var $caption = new $("<div />");
@@ -174,7 +172,7 @@ $(function () {
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
             $captiontext.attr("title", catalogItem.Name);
-            $captiontext.html(catalogItem.Name);
+            $captiontext.text(catalogItem.Name);
             $caption.append($captiontext);
             $item.append($caption);
 
@@ -183,8 +181,15 @@ $(function () {
             //$desc.addClass("fr-explorer-caption");
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            $desctext.attr("title", catalogItem.Description);
-            $desctext.html(catalogItem.Description);
+
+            var description = catalogItem.Description;
+            if (description) {
+                description = forerunner.helper.htmlDecode(description);
+
+                $desctext.attr("title", description);
+                $desctext.text(description);
+            }
+
             //$desctext.multiLineEllipsis();
             $desc.append($desctext);
             $item.append($desc);

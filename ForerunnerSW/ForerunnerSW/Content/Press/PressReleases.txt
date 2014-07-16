@@ -1,6 +1,27 @@
 ﻿
 [
 {
+"ID": "10",
+"Link": "/home/press?Article=10",
+"Title":"Multinational Chip Maker Intel Corporation Leverages the Power of Forerunner Software’s Unique Mobilizer to Access Data from Anywhere, on Any Browser or Mobile Device",
+"Description":"In order to support the demand of business users Intel executives have recently chosen Forerunner Software’s innovative Mobilizer to deliver a key part of Intel's mobile BI initiative.",
+"Release": "Redmond, WA, July 10, 2014",
+"Content": "Intel, like many companies, has moved to support a browser agnostic and BYOD policy and Intel executives recently chose Forerunner Software’s innovative Mobilizer for mobile BI to unlock the power of SSRS across all devices and browsers.
+
+“With so many people in an organization you can’t possibly lock everyone down to IE,” states Intel’s Applications Developer Rob Harrison. “People are going to download Chrome, they’re going to download Firefox, they’re going to get what they want. It makes sense, right? There’s no reason why we shouldn’t support these things.”
+
+Intel’s emphasis on user centricity and decision to leverage the power of Mobilizer will pay off in productivity improvement and increased competitive advantage for Intel employees as they make more informed decisions in real time, wherever they are from whatever device they choose to use.
+
+The Aberdeen Group’s report “Decisions on the Move: Mobile BI 2013” highlighted companies that implemented a mobile business intelligence system and reported a 45% improvement on ability to make decisions while away from the office—over twice the improvement of non-mobile BI users at 19%.
+
+Several of Harrison’s counterparts had sought some control that renders the reports in HTML5. “That’s how we came across Mobilizer,” states Harrison, adding, “Intel is a really big place. With that understood, all we are trying to do is move to the next technology. The Silverlight that we were using was fine, it’s just that it was not going to be supported forever and there’s other issues with browsers that weren’t working and with the transition to Windows 8 –it doesn’t run in the Metro version of Windows 8 so we had to move away from Silverlight.”
+
+Forerunner Founder Jason Carlson understands well the challenges Intel and many organizations face with mobile BI today. “In the 13 years since we released SQL Server Reporting Services technology has continued to evolve. Now HTML5, MVC and Mobile are must have requirements. Customers are demanding modern applications that support all devices and work fluidly without reloading the entire page. SSRS is a very powerful reporting engine, but it does not support MVC applications and is still an HTML4 WebForms application. It also does not support modern devices (iPhones, Androids) consistently. So what do you do if you have 100s of SSRS reports or need reporting in your modern application?”
+
+Download your free trial of Mobilizer now at www.forerunnersw.com to see Mobilizer in action for yourself. Leverage your existing investment in SSRS and cost effectively transform your organization with mobile BI today."
+  },
+
+{
 "ID": "1",
 "Link": "/home/press?Article=1",
 "Title":"Forerunner Software, a Leading Provider of Mobile Business Intelligence (BI) Solutions, Today Announces the Public Beta Availability of Mobilizer 3.0",

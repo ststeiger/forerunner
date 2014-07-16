@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2693,6 +2693,10 @@ $(function () {
             if (!pageNum) {
                 pageNum = 1;
             }
+
+            if (paramList && typeof paramList === "object")
+                paramList =JSON.stringify(paramList);
+
             me._loadPage(pageNum, false, null, paramList, true);
         },
         /**
@@ -7462,8 +7466,6 @@ $(function () {
             }
             if (isSelected)
                 me.$selectedItem = $item;
-
-            
             
             //Caption
             var $caption = new $("<div />");
@@ -7473,7 +7475,7 @@ $(function () {
 
             var name = catalogItem.Name;
             $captiontext.attr("title", name);
-            $captiontext.html(name);
+            $captiontext.text(name);
             $caption.append($captiontext);
             $item.append($caption);
 
@@ -7485,8 +7487,10 @@ $(function () {
 
             var description = catalogItem.Description;
             if (description) {
-                $desctext.attr("title", forerunner.helper.htmlDecode(description));
-                $desctext.html(description);
+                description = forerunner.helper.htmlDecode(description);
+
+                $desctext.attr("title", description);
+                $desctext.text(description);
             }
             $desc.append($desctext);
             $item.append($desc);
@@ -9077,6 +9081,8 @@ $(function () {
                 }
             }
 
+            if (textExt.ID)
+                $TextObj.attr("id", textExt.ID);
 
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
@@ -9570,7 +9576,9 @@ $(function () {
                                 try {
                                     newFunc = new Function("e", action.Code);
                                 }
-                                catch (e) { }
+                                catch (e) {
+                                    console.log(e.message);
+                                }
                                 action.JavaFunc = newFunc;
                                 if (action.On === undefined)
                                     action.On = "click";
@@ -9831,6 +9839,11 @@ $(function () {
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
 
+            var tablixExt = me._getRDLExt(RIContext);
+            if (tablixExt.ID)
+                $Tablix.attr("id", tablixExt.ID);
+
+
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
@@ -9838,7 +9851,7 @@ $(function () {
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
-                var tablixExt = me._getRDLExt(RIContext);                
+                              
 
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);

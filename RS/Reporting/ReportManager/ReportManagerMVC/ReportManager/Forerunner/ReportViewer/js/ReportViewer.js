@@ -2063,6 +2063,10 @@ $(function () {
             if (!pageNum) {
                 pageNum = 1;
             }
+
+            if (paramList && typeof paramList === "object")
+                paramList =JSON.stringify(paramList);
+
             me._loadPage(pageNum, false, null, paramList, true);
         },
         /**

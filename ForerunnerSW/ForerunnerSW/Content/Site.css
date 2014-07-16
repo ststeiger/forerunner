@@ -4,15 +4,15 @@ table {	border-collapse: collapse;	border-spacing: 0;}
 a { text-decoration: none;color:#017cb9;}
 a:hover {text-decoration:none; cursor:pointer;color:#28b2e0}
 img {border:none}
-body {font-family:'Segoe UI'; color: #333333; background-color: #fff;  margin:0;padding:0;}
+body {font-family:'Segoe UI',Arial, Helvetica, sans-serif; color: #333333; background-color: #fff;  margin:0;padding:0;}
 input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;font-family:'Segoe UI'}
 .Rounded {-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 .Center{ margin: 0 auto;}
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
 
-.HeaderFont{font-family:Candara}
-.DetailFont{font-family:'Segoe UI'}
+.HeaderFont{font-family:Candara,Arial, Helvetica, sans-serif}
+.DetailFont{font-family:'Segoe UI',Arial, Helvetica, sans-serif}
 .BlueBackgrouud{background-image:url(img/bkg_tile_slide.png);background-repeat:repeat;}
 .GreyBackgrouud{background-color:#F0F0F0}
 .OrangeBackground{background-color:#ff6600;}
@@ -55,7 +55,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerImage { width:100%; }
 .ForerunnerHomeImage{max-width:429px;}
 
-.PressTitle{font-size:18px;margin-bottom:20px;}
+.PressTitle{font-size:18px;margin-bottom:20px;font-weight:bold;}
 .PressDescription{font-size:14px;font-style:italic;  margin-bottom :20px;}
 .PressContent{font-size:14px;  margin-bottom :20px;}
 

@@ -200,19 +200,18 @@ jQuery.fn.extend({
     
     findUntil: function (selector, until) {
         
-        var coll = $(this);
+        var coll = [];
         this.addUntil(until, coll);
 
-        return coll.filter(selector);
-
+        return $(coll).filter(selector);
     },
 
     addUntil: function (until, collection) {
 
         var children = this.children().filter(":not( " + until + ")");
-        collection.add(children);
 
         $.each(children, function (Index, Obj) {
+            collection.push(Obj);
             $(Obj).addUntil(until, collection);
         });
     }
@@ -881,25 +880,29 @@ $(function () {
          */
         containElement: function (element, classList) {
             var isContained = false;
-
-            $.each(classList, function (index, className) {
-                if ($(element).hasClass(className)) {
-                    isContained = true;
-                } else {
-                    var parent = element.parentElement;
-                    while (parent !== undefined && parent !== null) {
-                        if ($(parent).hasClass(className)) {
-                            isContained = true;
-                            break;
-                        }
-                        parent = parent.parentElement;
-                    }
+            var target = element;
+            
+            while (true) {
+                if (target === null || target === undefined) {
+                    break;
                 }
+                
+                $.each(classList, function (index, className) {
+                    if ($(target).hasClass(className)) {
+                        isContained = true;
+                        return false;//break the $.each loop if has specify classname
+                    }
+                });
 
-                if (isContained)
-                    return false; //break the $.each loop if isCOntained === true
-            });
-                       
+                if (isContained) {
+                    break;
+                }
+                else {
+                    //parentNode is standard, parentElement only support by IE
+                    target = target.parentElement;
+                }
+            }
+            
             return isContained;
         },
         /**
@@ -1941,11 +1944,44 @@ $(function () {
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
                 var ssrsPram = key.substring(0, 3);
-                if (ssrsPram !== "rs:" && ssrsPram !== "rc:") {
+                if (ssrsPram !== "rs:" && ssrsPram !== "rc:" && ssrsPram !== "fr:") {
                     params.push({ "Parameter": key, "Value": value, "IsMultiple": "false", Type: "" });
                 }
             }
             return params;
+        },
+
+        getOptionsFromURL: function (url) {
+            if (url == null)
+                return null;
+
+            var options = { "isReportManager" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
+            var start = url.indexOf("?") + 1;
+            var vars = url.substring(start).split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                var key = decodeURIComponent(pair[0]).toLowerCase();
+                var value = decodeURIComponent(pair[1]).toLowerCase();
+                if (key === "fr:reportmanager")
+                    options.isReportManager = !(value === "false");
+                else if (key === "fr:reportmanagersettings")
+                    options.useReportManagerSettings = !(value === "false");
+                else if (key === "rc:toolbar")
+                    options.showToolbar = !(value === "false");
+                else if (key === "rc:parameters")
+                    options.showParameterArea = value;
+                else if (key === "rc:zoom")
+                    options.zoom = value;
+                else if (key === "rc:section")
+                    try {
+                        options.section = parseInt(value);
+                    } catch (e) {
+                        options.section = 1;
+                    }
+                else if (key.indexOf("rc:")===0)
+                    options.deviceInfo[decodeURIComponent(pair[0]).substring(3, key.length -1)] = decodeURIComponent(pair[1]);
+            }
+            return options;
         },
 
         cultureDateFormat: null,

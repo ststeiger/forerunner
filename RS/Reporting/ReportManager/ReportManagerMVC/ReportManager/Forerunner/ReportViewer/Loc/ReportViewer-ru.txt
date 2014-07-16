@@ -169,7 +169,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"дд-мм-гг",
+    "dateFormat":"dd.mm.yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -268,7 +268,7 @@
     "format":"формат",
     "saveFailed":"Сохранение подписка не удалось",
     "addNew":"создавать",
-	"edit": "Edit",
+	"edit": "редактировать",
     "deleteSubscription":"удалять",
     "deleteFailed":"Подписка Ошибка удаления"
   },

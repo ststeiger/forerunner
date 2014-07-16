@@ -12,11 +12,17 @@
     <DataSet Name="CustomerDataSet">
       <Query>
         <DataSourceName>Northwind</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@PostalCode">
+            <Value>=Parameters!PostalCode.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
         <CommandText>SELECT        Customers.CompanyName, Customers.CustomerID, Customers.Address, Customers.City, Customers.Region, Customers.PostalCode, Customers.Phone, Orders.OrderID, Orders.OrderDate, 
                          Employees.EmployeeID, Employees.LastName, Employees.FirstName
 FROM            Customers INNER JOIN
                          Orders ON Customers.CustomerID = Orders.CustomerID INNER JOIN
-                         Employees ON Orders.EmployeeID = Employees.EmployeeID</CommandText>
+                         Employees ON Orders.EmployeeID = Employees.EmployeeID
+WHERE      Customers.PostalCode = @PostalCode</CommandText>
       </Query>
       <Fields>
         <Field Name="CustomerID">
@@ -843,7 +849,7 @@ FROM            Customers INNER JOIN
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>CustomerDataSet</DataSetName>
-            <Top>0.73833in</Top>
+            <Top>1.26958in</Top>
             <Left>0.26958in</Left>
             <Height>0.5in</Height>
             <Width>10.4271in</Width>
@@ -886,6 +892,64 @@ FROM            Customers INNER JOIN
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
+          <Textbox Name="txtPostal">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.91542in</Top>
+            <Left>0.31125in</Left>
+            <Height>0.25in</Height>
+            <Width>1.1875in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="btnSubmit">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Submit</Value>
+                    <Style />
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>0.91542in</Top>
+            <Left>1.55431in</Left>
+            <Height>0.25in</Height>
+            <Width>0.66667in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
         </ReportItems>
         <Height>2.08333in</Height>
         <Style />
@@ -900,6 +964,18 @@ FROM            Customers INNER JOIN
       </Page>
     </ReportSection>
   </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="PostalCode">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>05022</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Postal Code</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>7658c736-57e4-4743-a172-727a6e6bbb8d</rd:ReportID>
 </Report>

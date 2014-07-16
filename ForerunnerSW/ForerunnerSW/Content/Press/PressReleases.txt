@@ -1,0 +1,160 @@
+﻿
+[
+{
+"ID": "10",
+"Link": "/home/press?Article=10",
+"Title":"Multinational Chip Maker Intel Corporation Leverages the Power of Forerunner Software’s Unique Mobilizer to Access Data from Anywhere, on Any Browser or Mobile Device",
+"Description":"In order to support the demand of business users Intel executives have recently chosen Forerunner Software’s innovative Mobilizer to deliver a key part of Intel's mobile BI initiative.",
+"Release": "Redmond, WA, July 10, 2014",
+"Content": "Intel, like many companies, has moved to support a browser agnostic and BYOD policy and Intel executives recently chose Forerunner Software’s innovative Mobilizer for mobile BI to unlock the power of SSRS across all devices and browsers.
+
+“With so many people in an organization you can’t possibly lock everyone down to IE,” states Intel’s Applications Developer Rob Harrison. “People are going to download Chrome, they’re going to download Firefox, they’re going to get what they want. It makes sense, right? There’s no reason why we shouldn’t support these things.”
+
+Intel’s emphasis on user centricity and decision to leverage the power of Mobilizer will pay off in productivity improvement and increased competitive advantage for Intel employees as they make more informed decisions in real time, wherever they are from whatever device they choose to use.
+
+The Aberdeen Group’s report “Decisions on the Move: Mobile BI 2013” highlighted companies that implemented a mobile business intelligence system and reported a 45% improvement on ability to make decisions while away from the office—over twice the improvement of non-mobile BI users at 19%.
+
+Several of Harrison’s counterparts had sought some control that renders the reports in HTML5. “That’s how we came across Mobilizer,” states Harrison, adding, “Intel is a really big place. With that understood, all we are trying to do is move to the next technology. The Silverlight that we were using was fine, it’s just that it was not going to be supported forever and there’s other issues with browsers that weren’t working and with the transition to Windows 8 –it doesn’t run in the Metro version of Windows 8 so we had to move away from Silverlight.”
+
+Forerunner Founder Jason Carlson understands well the challenges Intel and many organizations face with mobile BI today. “In the 13 years since we released SQL Server Reporting Services technology has continued to evolve. Now HTML5, MVC and Mobile are must have requirements. Customers are demanding modern applications that support all devices and work fluidly without reloading the entire page. SSRS is a very powerful reporting engine, but it does not support MVC applications and is still an HTML4 WebForms application. It also does not support modern devices (iPhones, Androids) consistently. So what do you do if you have 100s of SSRS reports or need reporting in your modern application?”
+
+Download your free trial of Mobilizer now at www.forerunnersw.com to see Mobilizer in action for yourself. Leverage your existing investment in SSRS and cost effectively transform your organization with mobile BI today."
+  },
+
+{
+"ID": "1",
+"Link": "/home/press?Article=1",
+"Title":"Forerunner Software, a Leading Provider of Mobile Business Intelligence (BI) Solutions, Today Announces the Public Beta Availability of Mobilizer 3.0",
+"Description":"Forerunner Software's Mobilizer 3.0 uniquely unlocks the power of SQL Server Reporting Services across all devices and all browsers. With no per user charges, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI to gain and sustain competitive advantage.",
+"Release": "Redmond, WA, June 27, 2014",
+"Content": "Already ahead of the curve in the global move to mobile and created by the original developer and architect of SSRS, Forerunner Software's Mobilizer 3.0 allows organizations of all sizes to cost effectively transform your business and empower your teams with mobile business intelligence, whether employees use iPhones, iPads, Androids or any other device.
+
+With Mobilizer 3.0 end users and executives alike can easily subscribe to emailed reports, quickly create dashboards out of multiple reports, and tag reports and folders. You can also create Virtual Report Folders based on Tags to quickly and easily find exactly the right data when you need it on PCs, phones, tablets, phablets, notebooks and laptops.
+
+Multinational semiconductor chip maker Intel Corporation is among the many organizations strategically choosing to leverage the power of Forerunner Software’s Mobilizer to access data from anywhere, anytime, on any browser or mobile device. “Mobilizer is the only game in town,” states Intel’s Applications Developer, Rob Harrison.
+
+Building upon the success of Mobilizer V2 and responding to customer requests for additional enhancements, Mobilizer 3.0 now also extends RDL to enable many advanced features such as:
+
+-Allowing designers to add client side JavaScript on text boxes or images
+-Define fixed size tables and matrixes
+-Scroll within a fixed region instead of expanding the page size
+-Enable editing of data with updatable controls
+-Easily post data to another application using HTML forms in your reports
+-Include information from other applications in your report via an IFrame
+
+Visit <a href='http://www.forerunnersw.com'>www.forerunnersw.com</a> to download your free trial version of Mobilizer today. Find out for yourself how Mobilizer completely optimizes the end user experience of SSRS for mobile BI and how Mobilizer can cost effectively help your organization leverage the power of Microsoft’s SQL Server Reporting Services (SSRS) faster and easier than ever before."
+  },
+  {
+  "ID": "2",
+  "Link": "/home/press?Article=2",
+"Title":"Forerunner Software's Unique Mobilizer for Mobile BI is Now More Affordable Than Ever with Volume Pricing and Discounts for Public Sector and Non-Profits",
+"Description":"Forerunner Software's Mobilizer is an easy to use, cost effective, out of the box mobile business intelligence solution for all mobile devices and browsers with no per user charges. As if that’s not enough, Mobilizer is now more affordable than ever with volume pricing and discounts for public sector and non-profits",
+"Release": "Redmond, WA — 14 June 2014",
+"Content": "Forerunner Software, the creator of Mobilizer, a cost effective, easy to use, next generation enterprise reporting and mobile business intelligence solution. Today Forerunner Software announced special pricing for public sector and non-profit organizations.
+
+With volume discounts, new special pricing and the fact that Forerunner Mobilizer has no per user charges, organizations can now cost effectively transform their business and empower their teams with Forerunner Software's Mobilizer for mobile business intelligence.
+
+Mobilizer unleashes the power of SQL Server across all mobile devices and browsers and provides a modern, optimized responsive application experience. By leveraging SQL Server Reporting Services (SSRS) users now have mobile access anywhere to real time data for better decision making.
+
+Educational institutions and non-profit organizations can leverage existing investments very affordably with this mobile BI solution developed by the original creator of SSRS.
+
+With the Mobilizer 2.0 the end user experience is optimized and users can more easily view reports with more powerful parameters, improved responsive UI and additional customizations.
+
+Forerunner Founder Jason Carlson states, “Public sector and non- profit’s alike can benefit from our new pricing structure which provides a discount on Mobilizer with Software Assurance. This ensures you receive the highest level of support and access to the latest updates. We also offer volume discounts for purchases of more than 16 cores."
+  }
+  ,
+  {
+  "ID": "3",
+  "Link": "/home/press?Article=3",
+"Title":"SQL Server Pro Spotlights Forerunner Software’s CEO and Founder Jason Carlson for His Groundbreaking Work in Creating Mobilizer for Cost Effective Mobile BI",
+"Description":"Forerunner Founder Jason Carlson was previously the chief architect of SSRS and ran the SQL Server Reporting Services division for 8 of the 15 years he worked at Microsoft. Now Jason has created a unique solution unlike any other for mobile business intelligence across any device or browser. ",
+"Release": "Redmond, WA— 31 May 2014",
+"Content": "Jason Carlson, the chief architect and General Manager of SQL Server Reporting Services from 2001-2009 has recently been featured in a SQL Server Pro magazine article entitled, “SQL Server Spotlight: Forerunner CEO and Founder, Jason Carlson.”
+
+Blair Greenwood, the author of the feature and Associate Editor of SQL Server Pro & SharePoint Pro, reported, “Recently, I had the chance to sit down with Jason Carlson, CEO and founder of Forerunner Software. Jason got me up-to-speed on what he's being doing with the company's Mobilizer 2.0 product, which leverages SQL Server Reporting Services (SSRS) to deliver important information on any device or browser. He also provided some great insight into the SQL Server industry as a whole, which I thought SQL Server Pro readers would find to be invaluable.”
+
+Working in conjunction with Microsoft, Carlson explains in the article how Mobilizer completes SSRS by providing the current-generation technology and user experience that's missing from the Microsoft offering. “Customers are demanding support for mobile devices, HTML5 and MVC-style programing,” stated Carlson, adding that, “Mobilizer fills all of these gaps with a modern, easy-to-use product.”
+
+SQL Server Pro also reported Mobilizer is the first of many products from Forerunner Software and quoted Carlson’s statement, “We want to help companies reach all of their employees with the critical information they need to run their business in today's hyper-competitive environment where decisions need to be made in real-time, not when you get back to your desk.”
+
+To read the entire article go <a href='http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson'>here</a>."
+  },
+  {
+  "ID": "4",
+  "Link": "http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson",
+"Title":"SQL Server Spotlight: Forerunner Software CEO and Founder, Jason Carlson",
+"Description":"Recently, I had the chance to sit down with Jason Carlson, CEO and founder of Forerunner Software. Jason got me up-to-speed on what he's being doing with the company's Mobilizer 2.0 product, which leverages SQL Server Reporting Services (SSRS) ",
+"Release": "Fort Collins, CO — 18 April 2014",
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson' target='_blank' >Full Article</a>"
+  },
+  {
+  "ID": "5",
+  "Link": "http://sqlmag.com/sql-server-reporting-services/gain-insights-your-sql-server-databases-any-browser-mobile-device",
+"Title":"SQLMag Article: Gain Insights Into Your SQL Server Databases on Any Browser, Mobile Device",
+"Description":"Forerunner Software has recently announced the release of its Mobilizer 2.0 enterprise reporting and business intelligence (BI) solution. Mobilizer provides a modern application experiences and works in conjunction with SQL Server. By leveraging SQL Server Reporting Services (SSRS), users have access to the status and health of their databases on any browser or device.",
+"Release": "Fort Collins, CO — 17 April 2014",
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/gain-insights-your-sql-server-databases-any-browser-mobile-device' target='_blank' >Full Article</a>"
+  },
+  {
+  "ID": "6",
+   "Link": "/home/press?Article=6",
+"Title":"Announcing the Release of Forerunner Software’s Mobilizer Version 2.0",
+"Description":"Forerunner Software, the leading provider of next generation, mobile first, enterprise reporting and embedded business intelligence solutions, today announced the release of Mobilizer version 2.0.",
+"Release": "REDMOND, WA — 4 April 2014",
+"Content": "Forerunner Software, the leading provider of next generation, mobile first, enterprise reporting and embedded business intelligence solutions, today announced the release of Mobilizer version 2.0.
+
+With this release Forerunner Software adds another update to its highly acclaimed software that powers modern application environments and uniquely unlocks the power of SQL Server across all devices and browsers.
+
+Targeted at the exploding mobile business intelligence market, Forerunner Software's Mobilizer V2 now allows users to easily view reports with specific data and create multiple parameter sets which may be saved both per user and per report for faster viewing. Existing Mobilizer users, as well as new users, can take advantage of this upgrade as soon as convenient.
+
+In addition to support for SharePoint Server 2007, 2010 and 2013, several of the compelling changes within this release are the ability to filter in parameters, save multiple sets of parameters per user and report, the addition of custom folder formats, DataSource Credential prompts and auto refresh.
+
+Forerunner Software Founder Jason Carlson utilizes his experience in leading teams at Amazon and Microsoft to provide innovative offerings. \"This release of Mobilizer version 2.0 breaks new ground and the changes in this release significantly enhance the user experience,” Jason said, adding that, “Our development philosophy is driven by the needs of our business users and Forerunner Software is proud to provide the most robust, multiplatform data integration and presentation capabilities as possible for corporations and ISVs.”"
+  },
+  {
+  "ID": "7",
+   "Link": "/home/press?Article=7",
+"Title":"Increasing Adoption of Mobile Devices Fuels Demand for Forerunner Software’s Innovative Mobilizer to Unlock the Power of SQL Server Across All Devices and Browsers",
+"Description":"Forerunner Software is continuing to accelerate growth amidst the explosive adoption of mobile devices which create user need to access core business intelligence anywhere.",
+"Release": "REDMOND, WA — 22 March 2014",
+"Content": "Forerunner Software is continuing to accelerate growth amidst the explosive adoption of mobile devices which create user need to access core business intelligence anywhere.
+
+The proliferation of smartphones, tablets and phablets has fueled demand for Forerunner Software’s offerings and capabilities to provide next generation, mobile first, enterprise reporting and embedded business intelligence solutions that power modern application environments. What was a dream is now reality: Forerunner Mobilizer unlocks the power of SQL Server for users across all devices and browsers.
+
+According to TechNavio analysts the Global Mobile Business Intelligence market is forecast to grow at a compound annual rate of over 27% to 2016. The Global Mobile Business Intelligence market has also been witnessing the increasing usage of mobile business intelligence for sales activity.
+
+Previously the incompatibility of mobile business intelligence applications with mobile devices posed a challenge to the growth of the market, but Forerunner Software Founder Jason Carlson is addressing this challenge and finding solutions. “It’s undeniable that device and browser support is a serious limitation with SSRS,” Jason states. “We’ve developed a solution that provides a full HTML5 Report Viewer and Report Manager. It works great as a standalone solution or as a set of controls for your project. You can see the API and UI on our website at www.forerunnersw.com.”
+
+Jason has led product innovation and engineering teams at Amazon and Microsoft and led the SQL Server Reporting Services team for many years. Jason states, “Any technology vendor can claim to offer innovative products and groundbreaking technology, but only a select few, such as Forerunner, can truly impact end users productivity anywhere with our offerings.”
+
+Jason’s 15 years heading Microsoft’s SQL platform and services inspired him to create Forerunner Software. Currently Jason holds over 20 patents and plans to keep building innovation. “At Forerunner Software we provide robust, multiplatform data integration and presentation capabilities for corporations and ISVs. It all centers around providing users with the mobile business intelligence they require and demand in today’s marketplace.”"
+  },
+  {
+  "ID": "8",
+   "Link": "/home/press?Article=8",
+"Title":"Forerunner Software Launches Forerunner Mobilizer to Extend Power of SQL Server Reporting Services",
+"Description":"Forerunner Software launches Forerunner Mobilizer, an optimized, responsive mobile application built to extend the power of Microsoft SQL Server Reporting Services. Designed to unlock SQL Server across all communication devices and browsers, Mobilizer allows users access to core business intelligence anywhere. Corporate mobility is a reality, and maintaining security and protection is paramount as the workspace extends outside of an office.",
+"Release": "REDMOND, WA — 15 October 2013",
+"Content": "Forerunner Software launches Forerunner Mobilizer, an optimized, responsive mobile application built to extend the power of Microsoft SQL Server Reporting Services. Designed to unlock SQL Server across all communication devices and browsers, Mobilizer allows users access to core business intelligence anywhere. Corporate mobility is a reality, and maintaining security and protection is paramount as the workspace extends outside of an office. Announced at PASS Summit 2013, Forerunner Mobilizer is an out of the box solution that supports Microsoft SQL Server 2008, SQL Server 2008 R2 and SQL Server 2012. Forerunner Mobilizer is built for IT and development professionals and provides a mobile solution while preserving how users work with critical business intelligence.
+
+\"The core application we provide to clients is an out of the box mobile solution that allows IT and development professionals to support the incredible power of SQL Server and provide users access to critical data anywhere. Corporate mobility must balance maintaining administrative control and costs,\" said Jason Carlson, Founder of Forerunner Software. \"Having spent 15 years at Microsoft building SQL Server Reporting Services, I understand the administrative time and money invested in SQL Server. We built Mobilizer to unleash that power anywhere your team goes.\" 
+
+ Forerunner Mobilizer is built for the business user. Focusing on usability and natural gestures, Mobilizer’s modern UI is simple to use while maintaining the power and flexibility of SQL Server. Mobilizer makes complex tasks easy. With just a couple of clicks, users can save their favorite reports, set their own personal defaults for parameters, subscribe to reports, and much more. With the responsive UI, data is easy to read and actionable on any device.
+
+\"SQL Server Reporting Services is a highly scalable solution that empowers customers to make real-time decisions based on their business data,\" said Luis Daniel Soto Maldonado, Director, Product Marketing SQL Server, Microsoft. \"We are excited to work with Forerunner to provide our joint customers the ability to access their corporate data from any device.\"
+
+Forerunner Mobilizer is designed for IT and development professionals to quickly integrate a complete mobile solution with existing security policies and infrastructure. Mobilizer supports all standard authentication modes including: Basic, forms, Windows NTLM, and Kerberos. Easy to integrate into modern applications with a fluid responsive layout, Mobilizer adapts business intelligence content to all form factors. Forerunner Mobilizer natively plugs into HTML5 and MVC applications using industry standard interfaces REST and jQuery. Forerunner Mobilizer is completely customizable via code and/or simple CSS changes.
+
+A key benefit of Forerunner Mobilizer is its user-centric design. Mobilizer dynamically displays data across the browser and device of choice. It is browser agnostic (IE8+, Chrome, Safari, Firefox) and is a fully localized, multi-language UI. Mobilizer supports all devices: IOS, Android and Windows mobile.
+
+Forerunner Mobilizer enables critical levels of access, increased business agility, faster end-user performance, and greater operational efficiency. 
+
+About Forerunner Software
+Forerunner Software solutions are responsive mobile applications designed to extend Microsoft SQL Server access on any mobile or tablet device and from any browser. Forerunner Software provides the next generation, mobile first, enterprise reporting and embedded Business Intelligence solutions. Forerunner Software solutions power modern application environments by providing robust, multiplatform data integration and data presentation capabilities for corporations and ISV’s. Forerunner Software is run by the team that originally brought you Microsoft SQL Server Reporting Services — no one understands the technology and the customers better. 
+
+ See how Forerunner Mobilizer can help you by downloading the free trial at www.ForerunnerSW.com. 
+
+"
+  }
+  ]
+

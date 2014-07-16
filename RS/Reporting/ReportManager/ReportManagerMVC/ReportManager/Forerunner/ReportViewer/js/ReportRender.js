@@ -279,6 +279,10 @@ $(function () {
             
             $sec.attr("Style", "width:" + me._getWidth(loc.Width) + "mm;");
 
+            //Set the responsive width
+            me._setResonsiveWidth(me._getWidth(loc.Width),$sec);
+
+
             //Columns
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
@@ -307,10 +311,24 @@ $(function () {
 
                 $header.attr("Style", "width:" + me._getWidth(headerLoc.Width) + "mm;");
 
+                //Set the responsive width
+                me._setResonsiveWidth(me._getWidth(headerLoc.Width),$header);
+
                 $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
                 return $header;
             }
         },
+
+        _setResonsiveWidth: function (defWidth, element) {
+            var me = this;
+
+            //Set the responsive width
+            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
+                if (defWidth > me._convertToMM(me._currentWidth + "px"))
+                    element.css("width", me._currentWidth);
+            }
+        },
+
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
@@ -418,6 +436,7 @@ $(function () {
             me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(rec, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
@@ -485,6 +504,10 @@ $(function () {
                 if (RIContext.CurrLocation) {
                     if (rec.RecExt.FixedWidth === undefined)
                         rec.HTMLRec.css("width", me._getWidth(RIContext.CurrLocation.Width) + "mm");
+
+                    //Set the responsive width
+                    me._setResonsiveWidth(me._getWidth(RIContext.CurrLocation.Width),rec.HTMLRec);
+
 
                     if (RIContext.CurrObj.ReportItems.length === 0)
                         rec.HTMLRec.css("height", me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm");
@@ -742,6 +765,8 @@ $(function () {
                 }
             }
 
+            if (textExt.ID)
+                $TextObj.attr("id", textExt.ID);
 
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
@@ -1235,7 +1260,9 @@ $(function () {
                                 try {
                                     newFunc = new Function("e", action.Code);
                                 }
-                                catch (e) { }
+                                catch (e) {
+                                    console.log(e.message);
+                                }
                                 action.JavaFunc = newFunc;
                                 if (action.On === undefined)
                                     action.On = "click";
@@ -1496,6 +1523,11 @@ $(function () {
             $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             $Tablix.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
 
+            var tablixExt = me._getRDLExt(RIContext);
+            if (tablixExt.ID)
+                $Tablix.attr("id", tablixExt.ID);
+
+
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
@@ -1503,7 +1535,7 @@ $(function () {
                 var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
-                var tablixExt = me._getRDLExt(RIContext);                
+                              
 
                 //Setup the responsive columns def
                 respCols.Columns = new Array(RIContext.CurrObj.ColumnWidths.ColumnCount);

@@ -268,7 +268,7 @@
     "format":"formato",
     "saveFailed":"Salvare l'iscrizione non riuscito",
     "addNew":"Creare",
-	"edit": "Edit",
+	"edit": "Modifica",
     "deleteSubscription":"Cancellare ",
     "deleteFailed":"Eliminazione di abbonamento fallito"
   },

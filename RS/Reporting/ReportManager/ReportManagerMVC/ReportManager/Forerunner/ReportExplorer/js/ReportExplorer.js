@@ -260,6 +260,7 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
+
             // Hook up any / all custom events that the report viewer may trigger
         },
         _initOverrides: function () {

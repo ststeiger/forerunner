@@ -60,7 +60,6 @@ $(function () {
          */
         saveUserSettings: function (settings) {
             var me = this;
-
             var stringified = JSON.stringify(settings);
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;

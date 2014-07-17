@@ -7466,8 +7466,6 @@ $(function () {
             }
             if (isSelected)
                 me.$selectedItem = $item;
-
-            
             
             //Caption
             var $caption = new $("<div />");
@@ -7477,7 +7475,7 @@ $(function () {
 
             var name = catalogItem.Name;
             $captiontext.attr("title", name);
-            $captiontext.html(name);
+            $captiontext.text(name);
             $caption.append($captiontext);
             $item.append($caption);
 
@@ -7489,8 +7487,10 @@ $(function () {
 
             var description = catalogItem.Description;
             if (description) {
-                $desctext.attr("title", forerunner.helper.htmlDecode(description));
-                $desctext.html(description);
+                description = forerunner.helper.htmlDecode(description);
+
+                $desctext.attr("title", description);
+                $desctext.text(description);
             }
             $desc.append($desctext);
             $item.append($desc);

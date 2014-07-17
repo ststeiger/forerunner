@@ -6447,7 +6447,7 @@ $(function () {
             else if (Rowspans[Obj.ColumnIndex] > 0)
                 Rowspans[Obj.ColumnIndex]--;
             
-            if (Rowspans[Obj.ColumnIndex] === 0)
+            if (Rowspans[Obj.ColumnIndex] === 0 || isNaN(Rowspans[Obj.ColumnIndex]))
                 Rowspans[Obj.ColumnIndex] = undefined;
 
             //TODO: need to do Col spans
@@ -6491,6 +6491,12 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
+
+                //Handle missing cells
+                $.each(Rowspans, function (rsIndex, RSObj) {
+                    Rowspans[rsIndex]--;
+                });
+
                 $.each(Obj.Cells, function (BRIndex, BRObj) {                  
                     $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
                 });

@@ -148,9 +148,9 @@
     <Compile Include="sdk\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Custom\Explorer_Examples.css" />
+    <Content Include="Custom\Mobilizer_Examples.css" />
     <Content Include="Custom\MobilizerSettings_Examples.txt" />
-    <Content Include="Custom\Explorer.css" />
+    <Content Include="Custom\Mobilizer.css" />
     <Content Include="Custom\MobilizerSettings.txt" />
     <Content Include="Custom\MobilizerSharedSchedule.txt" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css">

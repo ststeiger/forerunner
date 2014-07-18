@@ -430,9 +430,8 @@ $(function () {
                 Style += "overflow-y: scroll;height:" + me._convertToMM(RecExt.FixedHeight) + "mm;";
             if (RecExt.FixedWidth)
                 Style += "overflow-x: scroll;width:" + me._convertToMM(RecExt.FixedWidth) + "mm;";
-            if (RecExt.ID)
-                rec.attr("id", RecExt.ID);
             
+            me._AddExtIDs(RecExt, rec);
             me._writeActions(RIContext, {}, rec);
 
             rec.attr("Style", Style);
@@ -765,9 +764,6 @@ $(function () {
                 }
             }
 
-            if (textExt.ID)
-                $TextObj.attr("id", textExt.ID);
-
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -846,8 +842,6 @@ $(function () {
                     }
                     else
                         $TextObj.text(val);
-                    if (textExt.ID)
-                        $TextObj.attr("id", textExt.ID);
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
                     
@@ -896,6 +890,9 @@ $(function () {
             $TextObj.attr("Style", Style);
             $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             $TextObj.addClass("fr-r-t");
+
+            //Add extension ID and Class
+            me._AddExtIDs(textExt, $TextObj);
 
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
@@ -1017,7 +1014,8 @@ $(function () {
             
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style ;
-            
+            //See if RDLExt
+            var Ext = me._getRDLExt(RIContext);
 
             //Get padding
             Style += me._getTextStyle(RIContext.CurrObj.Elements);
@@ -1139,6 +1137,9 @@ $(function () {
                         me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
                     });
             }
+
+            //Add Ext ID and class
+            me._AddExtIDs(Ext, NewImage);
 
             return RIContext.$HTMLParent;
         },
@@ -1499,6 +1500,13 @@ $(function () {
                 $Cell.html("&nbsp");
             return $Cell;
         },
+        _AddExtIDs: function(Ext, Element){
+
+            if (Ext.ID)
+                Element.attr("id", Ext.ID);
+            if (Ext.Class)
+                Element.addClass(Ext.Class);
+        },
         _writeTablix: function (RIContext) {
             var me = this;
             var $Tablix = me._getDefaultHTMLTable();
@@ -1524,9 +1532,8 @@ $(function () {
             $Tablix.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
 
             var tablixExt = me._getRDLExt(RIContext);
-            if (tablixExt.ID)
-                $Tablix.attr("id", tablixExt.ID);
-
+            me._AddExtIDs(tablixExt, $Tablix);
+            
 
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
@@ -1735,7 +1742,7 @@ $(function () {
             else if (Rowspans[Obj.ColumnIndex] > 0)
                 Rowspans[Obj.ColumnIndex]--;
 
-            if (Rowspans[Obj.ColumnIndex] === 0)
+            if (Rowspans[Obj.ColumnIndex] === 0 || isNaN(Rowspans[Obj.ColumnIndex]))
                 Rowspans[Obj.ColumnIndex] = undefined;
 
             //TODO: need to do Col spans
@@ -1800,7 +1807,16 @@ $(function () {
             var $Drilldown;            
             CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
             if (Obj.Type === "BodyRow") {
+
+                //Handle missing cells
+                $.each(Rowspans, function (rsIndex, RSObj) {
+                    Rowspans[rsIndex]--;
+                });
+
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
+
+
+
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
@@ -1838,7 +1854,7 @@ $(function () {
                             }
 
                         }
-                    }
+                    }                   
                 });
                 State.CellCount += Obj.Cells.length;
             }

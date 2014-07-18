@@ -242,6 +242,10 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Hidden cell expand.rdl</Name>
+      <FullPath>Hidden cell expand.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

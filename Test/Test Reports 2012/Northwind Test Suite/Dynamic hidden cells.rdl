@@ -459,6 +459,10 @@ FROM            Orders INNER JOIN
                           </Textbox>
                         </CellContents>
                       </TablixHeader>
+                      <Visibility>
+                        <Hidden>true</Hidden>
+                        <ToggleItem>CategoryName1</ToggleItem>
+                      </Visibility>
                       <DataElementOutput>Output</DataElementOutput>
                       <KeepTogether>true</KeepTogether>
                     </TablixMember>

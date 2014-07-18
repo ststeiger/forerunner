@@ -155,7 +155,8 @@
     "viewReport":"View",
     "cancel":"Cancel",
     "datePicker":"Date",
-    "select":"Select"
+    "select":"Select",
+	"useDefault":"Use Default"
   },
   "validateError": {
     "required":"Required",

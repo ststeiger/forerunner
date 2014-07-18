@@ -135,7 +135,8 @@
     "viewReport":"Vista",
     "cancel":"Cancelar",
     "datePicker":"Fecha",
-    "select":"Seleccionar"
+    "select":"Seleccionar",
+    "useDefault":"Utilice defecto"
   },
   "validateError": {
     "required":"necesario",
@@ -162,9 +163,7 @@
   "placeholders": {
     "Username":"nombre de usuario",
     "Password":"contraseña",
-    "Login":"iniciar sesión
-	
-"
+    "Login":"iniciar sesión\r\n\t\r\n"
   },
   "datepicker": {
     "closeText":"hecho",
@@ -271,7 +270,7 @@
     "format":"Formato",
     "saveFailed":"Suscripción Ahorro fallado ",
     "addNew":"Crear",
-	"edit": "Editar",
+    "edit":"Editar",
     "deleteSubscription":"Borrar",
     "deleteFailed":"Eliminación Suscripción fallado"
   },

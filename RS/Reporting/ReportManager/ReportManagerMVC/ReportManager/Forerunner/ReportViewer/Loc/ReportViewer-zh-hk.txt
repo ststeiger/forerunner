@@ -134,7 +134,8 @@
     "viewReport":"加載",
     "cancel":"取消",
     "datePicker":"日期",
-    "select":"選擇"
+    "select":"選擇",
+    "useDefault":"使用默認值"
   },
   "validateError": {
     "required":"必填",
@@ -268,7 +269,7 @@
     "format":"格式",
     "saveFailed":"保存訂閱失敗",
     "addNew":"創建",
-	"edit": "編輯",
+    "edit":"編輯",
     "deleteSubscription":"刪除",
     "deleteFailed":"刪除訂閱成功"
   },

@@ -2054,10 +2054,15 @@ $(function () {
          *
          * @param {Object} paramList - Parameter list object
          * @param {Integer} pageNum - The page to load
+         * @param {useDefaultValue} pageNum - Whether use default parameter value on server side
          */
-        loadReportWithNewParameters: function (paramList, pageNum) {
+        loadReportWithNewParameters: function (paramList, pageNum, useDefaultValue) {
             var me = this;
-           
+
+            if (useDefaultValue) {
+                me.sessionID = "";
+            }
+            
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
             if (!pageNum) {
@@ -2169,7 +2174,8 @@ $(function () {
             if (!loadOnly) {
                 me._addLoadingIndicator();
             }
-            me.togglePageNum = newPageNum;            
+            me.togglePageNum = newPageNum;
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",

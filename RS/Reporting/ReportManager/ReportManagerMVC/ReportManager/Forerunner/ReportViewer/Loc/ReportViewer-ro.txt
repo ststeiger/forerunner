@@ -134,7 +134,8 @@
     "viewReport":"Vedere",
     "cancel":"Anula",
     "datePicker":"Data",
-    "select":"Selecta"
+    "select":"Selecta",
+    "useDefault":"Utilizați Implicit"
   },
   "validateError": {
     "required":"Necesare",
@@ -268,7 +269,7 @@
     "format":"Format",
     "saveFailed":"Salvarea abonament eșuat",
     "addNew":"crea",
-	"edit": "edita",
+    "edit":"edita",
     "deleteSubscription":"șterge",
     "deleteFailed":"Ștergerea abonament eșuat"
   },

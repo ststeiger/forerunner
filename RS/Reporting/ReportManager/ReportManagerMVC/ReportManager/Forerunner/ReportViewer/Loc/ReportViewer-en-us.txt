@@ -134,7 +134,8 @@
     "viewReport":"View",
     "cancel":"Cancel",
     "datePicker":"Date",
-    "select":"Select"
+    "select":"Select",
+    "useDefault":"Use Default"
   },
   "validateError": {
     "required":"Required",
@@ -268,7 +269,7 @@
     "format":"Format",
     "saveFailed":"Saving subscription failed",
     "addNew":"Create",
-	"edit": "Edit",
+    "edit":"Edit",
     "deleteSubscription":"Delete",
     "deleteFailed":"Subscription deletion failed"
   },

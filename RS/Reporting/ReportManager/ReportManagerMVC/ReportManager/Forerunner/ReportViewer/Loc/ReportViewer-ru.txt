@@ -134,7 +134,8 @@
     "viewReport":"Показать",
     "cancel":"Oтменить",
     "datePicker":"дата",
-    "select":"выбирать"
+    "select":"выбирать",
+    "useDefault":"Используйте умолчанию"
   },
   "validateError": {
     "required":"Необходимый",
@@ -268,7 +269,7 @@
     "format":"формат",
     "saveFailed":"Сохранение подписка не удалось",
     "addNew":"создавать",
-	"edit": "редактировать",
+    "edit":"редактировать",
     "deleteSubscription":"удалять",
     "deleteFailed":"Подписка Ошибка удаления"
   },

@@ -1417,7 +1417,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; font-weight:normal; font-size: medium; }
-.fr-param-label-null { display: inline-block; font-weight:normal; font-size: medium;}
 .fr-param-form .fr-param-radio { width: 24px; }
 .fr-param-form .fr-param-radio-label { color: #ffffff; }
 .fr-param-form .fr-param-checkbox { margin-left: 4px; margin-right: 2px; padding: 2px; display:inline-block; }
@@ -1437,10 +1436,14 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-form .fr-param-error { border-width: thin; border-color: red; }
-.fr-param-error-placeholder { margin-left: 4px; }
-.fr-param-nullable { display:inline-block; }
+.fr-param-error-message { margin-left: 5px; }
 .fr-param-required{}
 .fr-param-watermark {color:lightgray;}
+
+.fr-param-option-container { margin-top:-6px; margin-left:4px; text-align:right; padding-right:2px; }
+.fr-param-option-checkbox{ vertical-align:middle; }
+.fr-param-option-label { font-size:12px; }
+.fr-param-option-div {display:inline-block;margin-left:10px;}
 
 .fr-param-tree-hidden { display:none; }
 .fr-param-tree {

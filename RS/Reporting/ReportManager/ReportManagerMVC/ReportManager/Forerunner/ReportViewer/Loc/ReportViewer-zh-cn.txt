@@ -134,7 +134,8 @@
     "viewReport":"加载",
     "cancel":"取消",
     "datePicker":"日期",
-    "select":"选择"
+    "select":"选择",
+    "useDefault":"使用默认值"
   },
   "validateError": {
     "required":"必填",
@@ -268,7 +269,7 @@
     "format":"格式",
     "saveFailed":"保存订阅失败",
     "addNew":"创建",
-	"edit": "编辑",
+    "edit":"编辑",
     "deleteSubscription":"删除",
     "deleteFailed":"删除订阅成功"
   },

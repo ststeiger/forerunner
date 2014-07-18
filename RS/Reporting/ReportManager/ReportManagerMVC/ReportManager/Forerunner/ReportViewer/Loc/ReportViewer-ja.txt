@@ -134,7 +134,8 @@
     "viewReport":"ビュー",
     "cancel":"キャンセル",
     "datePicker":"日付",
-    "select":"選択する"
+    "select":"選択する",
+    "useDefault":"デフォルトを使用"
   },
   "validateError": {
     "required":"必修",
@@ -268,7 +269,7 @@
     "format":"フォーマット",
     "saveFailed":"節約のサブスクリプションに失敗しました",
     "addNew":"作る",
-	"edit": "編集",
+    "edit":"編集",
     "deleteSubscription":"削除",
     "deleteFailed":"サブスクリプションの削除に失敗しました"
   },

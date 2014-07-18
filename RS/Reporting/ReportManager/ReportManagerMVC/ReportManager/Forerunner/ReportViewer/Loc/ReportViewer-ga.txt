@@ -134,7 +134,8 @@
     "viewReport":"Féach",
     "cancel":"Cancelar",
     "datePicker":"Dáta",
-    "select":"Roghnaigh"
+    "select":"Roghnaigh",
+    "useDefault":"Bain úsáid as Réamhshocrú"
   },
   "validateError": {
     "required":"Riachtanach",
@@ -268,7 +269,7 @@
     "format":"Formáid",
     "saveFailed":"Theip síntiús Shábháil",
     "addNew":"Cruthaigh",
-	"edit": "Eagar",
+    "edit":"Eagar",
     "deleteSubscription":"Scrios",
     "deleteFailed":"Theip scriosadh Síntiúis"
   },

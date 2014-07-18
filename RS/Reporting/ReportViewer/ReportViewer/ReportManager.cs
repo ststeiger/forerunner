@@ -1874,6 +1874,23 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public string ReadTXTFile(string filePath)
+        {
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/") + filePath;
+
+            if (File.Exists(path))
+            {
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+            else
+            {
+                return "{}";
+            }
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

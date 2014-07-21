@@ -200,12 +200,12 @@ $(function () {
             var $linksection = me.DefaultAppTemplate.$linksection;
             //clear prior route link
             $linksection.html("");
+
             var path = data.args[0];
             me._getLink(path, $linksection, 0, data.name);
+            $linksection.show();
 
             me._linkResize($linksection);
-
-            $linksection.show();
         },
         _getLink: function (path, $container, index, transitionName) {
             var me = this,
@@ -273,7 +273,6 @@ $(function () {
         //compare link section and container width, ellipsis long word to only keep 10 characters.
         _linkResize: function ($linksection) {
             var me = this;
-
             var $lastLink = $linksection.find(".fr-location-link-last"),
                 text,
                 newText;

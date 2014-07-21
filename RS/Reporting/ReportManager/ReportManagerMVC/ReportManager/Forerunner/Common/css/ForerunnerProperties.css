@@ -47,6 +47,7 @@
 .fr-rdl-text, .fr-description-text, .fr-tag-text { 
     width: 350px; 
     display: block;
+    resize: none;
 } 
 
 .fr-properties-container 

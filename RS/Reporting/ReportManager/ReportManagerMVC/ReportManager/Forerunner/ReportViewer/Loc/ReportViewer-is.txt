@@ -134,7 +134,8 @@
     "viewReport":"Skoða",
     "cancel":"Hætta",
     "datePicker":"dagsetning",
-    "select":"Velja"
+    "select":"Velja",
+    "useDefault":"nota sjálfgefið"
   },
   "validateError": {
     "required":"krafist",
@@ -268,7 +269,7 @@
     "format":"Format",
     "saveFailed":"Sparnaður áskrift mistókst",
     "addNew":"Búa",
-	"edit": "Breyta",
+    "edit":"Breyta",
     "deleteSubscription":"Eyða",
     "deleteFailed":"Áskrift eyða mistókst"
   },

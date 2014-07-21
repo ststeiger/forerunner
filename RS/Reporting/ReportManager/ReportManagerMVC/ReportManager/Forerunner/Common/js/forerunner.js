@@ -740,17 +740,21 @@ $(function () {
          */
         getCustomSettings: function () {
             if (this._customSettings === null) {
-                $.ajax({
-                    url: forerunner.config.forerunnerFolder() + "../Custom/MobilizerSettings.txt",
+                var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetMobilizerSetting";
+               
+                forerunner.ajax.ajax({
+                    url: url,
                     dataType: "json",
                     async: false,
                     success: function (data) {
                         forerunner.config._customSettings = data;
                     },
                     fail: function () {
+                        forerunner.config._customSettings = {};
                         console.log("Load mobilizer custom settings failed");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
+                        forerunner.config._customSettings = {};
                         console.log("Load mobilizer custom settings .  " + textStatus);
                     },
                 });

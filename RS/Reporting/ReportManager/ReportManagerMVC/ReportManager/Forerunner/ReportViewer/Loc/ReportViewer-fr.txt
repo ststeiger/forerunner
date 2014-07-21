@@ -135,7 +135,8 @@
     "viewReport":"Voir",
     "cancel":"Résilier",
     "datePicker":"Date",
-    "select":"Sélectionner"
+    "select":"Sélectionner",
+    "useDefault":"Utilisez par défaut"
   },
   "validateError": {
     "required":"Demandé",
@@ -269,7 +270,7 @@
     "format":"Format",
     "saveFailed":"Abonnement sauver échoué ",
     "addNew":"Créer",
-	"edit": "Modifier",
+    "edit":"Modifier",
     "deleteSubscription":"Effacer",
     "deleteFailed":"Suppression abonnement qui a échoué"
   },

@@ -44,6 +44,7 @@ namespace ReportManager.Controllers
         static private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         static private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
         static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
+        static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
    
         static ReportManagerController()
         {
@@ -335,6 +336,19 @@ namespace ReportManager.Controllers
             }
 
             return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetMobilizerSetting(string instance = null)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadTXTFile(MobilizerSettingPath)), "text/JSON");
+            }
+            catch (Exception ex) 
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
         }
 
         private string ToString<T>(T value)

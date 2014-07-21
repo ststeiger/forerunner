@@ -2684,10 +2684,15 @@ $(function () {
          *
          * @param {Object} paramList - Parameter list object
          * @param {Integer} pageNum - The page to load
+         * @param {useDefaultValue} pageNum - Whether use default parameter value on server side
          */
-        loadReportWithNewParameters: function (paramList, pageNum) {
+        loadReportWithNewParameters: function (paramList, pageNum, useDefaultValue) {
             var me = this;
-           
+
+            if (useDefaultValue) {
+                me.sessionID = "";
+            }
+            
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
             if (!pageNum) {
@@ -2799,7 +2804,8 @@ $(function () {
             if (!loadOnly) {
                 me._addLoadingIndicator();
             }
-            me.togglePageNum = newPageNum;            
+            me.togglePageNum = newPageNum;
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",
@@ -9409,10 +9415,7 @@ $(function () {
             RIContext.$HTMLParent.append(imageContainer);
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
-
-            Style = imageStyle ? imageStyle : "display:table-cell";
-            NewImage.attr("style", Style);
-            
+            NewImage.attr("style", imageStyle);//remove display:table-cell; from image style
 
             //Add Highlighting  except IE8
             if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
@@ -11230,7 +11233,8 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
-        _revertLock: false, 
+        _revertLock: false,
+        _useDefault: false,
 
         _init: function () {
             var me = this;
@@ -11389,16 +11393,16 @@ $(function () {
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if (element.is(":radio"))
-                        error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
+                        error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                     else {
                         if (element.attr("ismultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
                         }
                         else if (element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
-                            error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
+                            error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                         }
                         else
-                            error.appendTo(element.nextAll(".fr-param-error-placeholder"));
+                            error.appendTo(element.nextAll(".fr-param-error-message"));
                     }
                 },
                 highlight: function (element) {
@@ -11480,13 +11484,14 @@ $(function () {
             var containerWidth = me.options.$appContainer.width();
             var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
             var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;
-            var elementWidth = parameterPaneWidth - 128;
+            var elementWidth = parameterPaneWidth - 80;
 
             //180 is the default element width
             if (elementWidth > 180) {
                 me.element.find(".fr-param-width").css({ "width": elementWidth });
                 me.element.find(".fr-param-dropdown-input").css({ "width": elementWidth - 24 });
                 me.element.find(".ui-autocomplete").css({ "min-width": elementWidth, "max-width": elementWidth });
+                me.element.find(".fr-param-option-container").css({ "width": elementWidth });
             }
         },
         /**
@@ -11512,7 +11517,7 @@ $(function () {
 
             var paramList = me.getParamsList();
             if (paramList) {
-                me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum);
+                me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }
@@ -11545,61 +11550,61 @@ $(function () {
 
                 for (var i = 0; i < list.length; i++) {
                     var savedParam = list[i];
-                    var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
+                    var param = me._parameterDefinitions[savedParam.Parameter];
+                    me._setParamValue(param, savedParam.Value);
+                    //if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
 
-                    if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
+                    //    var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
+                    //    //Revert cascading tree status: display text, backend value, tree UI
+                    //    me._setTreeItemStatus(paramDefinition, savedParam, isTopParent);
+                    //    $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
+                    //    $control.attr("backendValue", JSON.stringify(savedParam.Value));
+                    //    continue;
+                    //}
 
-                        var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
-                        //Revert cascading tree status: display text, backend value, tree UI
-                        me._setTreeItemStatus(paramDefinition, savedParam, isTopParent);
-                        $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
-                        $control.attr("backendValue", JSON.stringify(savedParam.Value));
-                        continue;
-                    }
-
-                    if (paramDefinition.MultiValue) {
-                        if (paramDefinition.ValidValues !== "") {
-                            $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
-                            me._setCheckBoxes($control, savedParam.Value);
-                            me._setMultipleInputValues(paramDefinition);
-                        } else {
-                            $control = $(".fr-paramname-" + paramDefinition.Name);
-                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
-                            $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
-                            $control.val(me._getTextAreaValue(savedParam.Value, false));
-                            $control.attr("jsonValues", JSON.stringify(savedParam.Value));
-                        }
-                    } else {
-                        $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                        // Only non-multi-value parameters can be nullable.
-                        if (paramDefinition.Nullable && savedParam.Value === null) {
-                            var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                            if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
-                                $cb.trigger("click");
-                        } else if (paramDefinition.ValidValues !== "") {
-                            if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
-                                me._setSelectedIndex($control, savedParam.Value);
-                            }
-                            else {
-                                me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
-                            }
-                        } else if (paramDefinition.Type === "Boolean") {
-                            me._setRadioButton($control, savedParam.Value);
-                        } else {
-                            if ($control.attr("datatype").toLowerCase() === "datetime") {
-                                $control.val(me._getDateTimeFromDefault(savedParam.Value));
-                            }
-                            else {
-                                $control.val(savedParam.Value);
-                            }
-                        }
-                    }
+                    //if (paramDefinition.MultiValue) {
+                    //    if (paramDefinition.ValidValues !== "") {
+                    //        $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
+                    //        me._setCheckBoxes($control, savedParam.Value);
+                    //        me._setMultipleInputValues(paramDefinition);
+                    //    } else {
+                    //        $control = $(".fr-paramname-" + paramDefinition.Name);
+                    //        var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                    //        $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
+                    //        $control.val(me._getTextAreaValue(savedParam.Value, false));
+                    //        $control.attr("jsonValues", JSON.stringify(savedParam.Value));
+                    //    }
+                    //} else {
+                    //    $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
+                    //    // Only non-multi-value parameters can be nullable.
+                    //    if (paramDefinition.Nullable && savedParam.Value === null) {
+                    //        var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                    //        if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                    //            $cb.trigger("click");
+                    //    } else if (paramDefinition.ValidValues !== "") {
+                    //        if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                    //            me._setSelectedIndex($control, savedParam.Value);
+                    //        }
+                    //        else {
+                    //            me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
+                    //        }
+                    //    } else if (paramDefinition.Type === "Boolean") {
+                    //        me._setRadioButton($control, savedParam.Value);
+                    //    } else {
+                    //        if ($control.attr("datatype").toLowerCase() === "datetime") {
+                    //            $control.val(me._getDateTimeFromDefault(savedParam.Value));
+                    //        }
+                    //        else {
+                    //            $control.val(savedParam.Value);
+                    //        }
+                    //    }
+                    //}
                 }
 
                 //set tree selected status after revert
-                if (me._isDropdownTree && me.enableCascadingTree) {
-                    me._closeCascadingTree(true);
-                }
+                //if (me._isDropdownTree && me.enableCascadingTree) {
+                //    me._closeCascadingTree(true);
+                //}
 
                 me._revertLock = false;
             }
@@ -11642,7 +11647,8 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
-            var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
+            var $optionsDiv = new $("<div class='fr-param-option-container'></div>")
+            var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
             
             if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
@@ -11698,17 +11704,76 @@ $(function () {
             }
 
             $container.append($element);
-            //for cascading hidden elements, don't add null checkbox constraint
+
+            //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
                 if (!$element.find(".fr-param").hasClass("fr-param-required")) {
-                    $container.append(me._addNullableCheckBox(param, $element, predefinedValue));
+                    $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
                 }
+
+                //Add use default option
+                if (predefinedValue) {
+                    $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
+                }
+
                 $container.append($errorMsg);
             }
                 
-            $parent.append($label).append($container);
+            $parent.append($label).append($container).append($optionsDiv);
             return $parent;
+        },
+        _setParamValue: function (param, defaultValue, $element) {
+            var me = this;
+            var $control;
+            
+            if (me._isDropdownTree && me.enableCascadingTree && (param.isParent || param.isChild)) {
+                var isTopParent = param.isParent === true && param.isChild !== true;
+                //Revert cascading tree status: display text, backend value, tree UI
+                me._setTreeItemStatus(param, defaultValue, isTopParent);
+                $control = $element || me.element.find(".fr-paramname-" + param.Name);
+                $control.attr("backendValue", JSON.stringify(defaultValue));
+
+                me._closeCascadingTree(true);
+                //continue;
+            }
+            else if (param.MultiValue) {
+                if (param.ValidValues !== "") {
+                    $control = $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params);
+                    me._setCheckBoxes($control, defaultValue);
+                    me._setMultipleInputValues(param);
+                } else {
+                    $control = $element || $(".fr-paramname-" + param.Name);
+                    var $dropdownText = $(".fr-paramname-" + param.Name + "-dropdown-textArea");
+                    $dropdownText.val(me._getTextAreaValue(defaultValue, true));
+                    $control.val(me._getTextAreaValue(defaultValue, false));
+                    $control.attr("jsonValues", JSON.stringify(defaultValue));
+                }
+            } else {
+                $control = $element || $(".fr-paramname-" + param.Name, me.$params);
+                // Only non-multi-value parameters can be nullable.
+                if (param.Nullable && defaultValue === null) {
+                    var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + param.Name + "']").first();
+                    if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                        $cb.trigger("click");
+                } else if (param.ValidValues !== "") {
+                    if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                        me._setSelectedIndex($control, defaultValue);
+                    }
+                    else {
+                        me._setBigDropDownIndex(param, defaultValue, $control);
+                    }
+                } else if (param.Type === "Boolean") {
+                    me._setRadioButton($control, defaultValue);
+                } else {
+                    if ($control.attr("datatype").toLowerCase() === "datetime") {
+                        $control.val(me._getDateTimeFromDefault(defaultValue));
+                    }
+                    else {
+                        $control.val(defaultValue);
+                    }
+                }
+            }
         },
         _getParameterControlProperty: function (param, $control) {
             var me = this;
@@ -11738,12 +11803,11 @@ $(function () {
                 $control = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") :
                     param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
 
-                var $nullableSpan = new $("<div class='fr-param-nullable' />");
-                var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
+                var $container = new $("<div class='fr-param-option-div' />");
+                var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-null-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
-                    if ($checkbox.attr("checked") === "checked") {
-                        $checkbox.removeAttr("checked");
+                    if ($checkbox[0].checked === false) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
 
                         //add validate arrtibutes to control when uncheck null checkbox
@@ -11756,7 +11820,6 @@ $(function () {
                         }
                     }
                     else {
-                        $checkbox.attr("checked", "true");
                         $control.attr("disabled", "true").addClass("fr-param-disable");
 
                         //remove validate arrtibutes
@@ -11766,7 +11829,7 @@ $(function () {
 
                         if (param.Type === "DateTime") {
                             //set delay to 100 since datepicker need time to generate image for the first time
-                            setTimeout(function () { $control.datepicker("disable"); }, 100);
+                            $control.datepicker("disable");
                         }
                     }
                 });
@@ -11774,14 +11837,118 @@ $(function () {
                 // Check it only if it is really null, not because nobody touched it
                 if (predefinedValue === null && param.State !== "MissingValidValue") $checkbox.trigger("click");
 
-                var $nullableLable = new $("<Label class='fr-param-label-null' />");
-                $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
+                var $label = new $("<Label class='fr-param-option-label' />");
+                $label.html(me.options.$reportViewer.locData.paramPane.nullField);
+                $label.on("click", function () { $checkbox.trigger("click"); });
 
-                $nullableSpan.append($checkbox).append($nullableLable);
-                return $nullableSpan;
+                $container.append($checkbox).append($label);
+                return $container;
             }
             else
                 return null;
+        },
+        _addUseDefaultOption: function (param, $control, predefinedValue) {
+            var me = this;
+            var $hidden = null;
+
+            if ($control.hasClass("fr-param-element-container")) {
+                $hidden = $control.find("input[type='hidden']");
+                $control = $control.find(".fr-param-dropdown-input");
+            }
+            else {
+                $control = param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
+            }
+            
+            var $container = new $("<div class='fr-param-option-div' />");
+
+            var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-usedefault-checkbox' name='" + param.Name + "' />");
+            $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden) });
+
+            var $label = new $("<label class='fr-param-option-label' />")
+            $label.text(me.options.$reportViewer.locData.paramPane.useDefault);
+            $label.on("click", function () { $checkbox.trigger("click"); });
+
+            $container.append($checkbox).append($label);
+            return $container;
+        },
+        _triggerUseDefaultClick: function (param, $control, $checkbox, preDefinedValue, $hidden) {
+            var me = this;
+            var $nullCheckbox = $(".fr-null-checkbox").filter("[name='" + param.Name + "']");
+
+            if ($checkbox[0].checked === false) {//uncheck
+                if ($nullCheckbox.length) {
+                    $nullCheckbox.removeAttr("disabled");
+                }
+                
+                $control.removeAttr("disabled").removeClass("fr-usedefault");
+
+                if ($hidden && $hidden.length) {
+                    $hidden.removeClass("fr-usedefault");
+                }
+
+                if ($control.hasClass("fr-param-tree-input")) {
+                    $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
+                        $(".fr-paramname-" + childname).removeClass("fr-usedefault");
+                    });
+                }
+
+                if ($control.hasClass("fr-param-dropdown-input")) {
+                    $control.parent().removeClass("fr-param-disable");
+                }
+                else {
+                    $control.removeClass("fr-param-disable");
+                }
+
+                //add validate arrtibutes to control when uncheck null checkbox
+                $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                    $control.attr(attribute, "true");
+                });
+
+                if (param.Type === "DateTime") { $control.datepicker("enable"); }
+            }
+            else {
+                if ($nullCheckbox.length) {
+                    if ($nullCheckbox[0].checked === true) {
+                        $nullCheckbox[0].checked = false;
+                    }
+
+                    $nullCheckbox.attr("disabled", true);
+                }
+
+                $control.attr("disabled", "true").addClass("fr-usedefault");
+
+                if ($hidden && $hidden.length) {
+                    $hidden.addClass("fr-usedefault");
+                }
+
+                //set all hidden children parameter to use default value
+                if ($control.hasClass("fr-param-tree-input")) {
+                    $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
+                        $(".fr-paramname-" + childname).addClass("fr-usedefault");
+                    });
+                }
+
+                if ($control.hasClass("fr-param-dropdown-input")) {
+                    $control.parent().addClass("fr-param-disable");
+                }
+                else {
+                    $control.addClass("fr-param-disable");
+                }
+
+                //remove validate arrtibutes
+                $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                    $control.removeAttr(attribute);
+                });
+
+                if (param.Type === "DateTime") {
+                    //set delay to 100 since datepicker need time to generate image for the first time
+                    setTimeout(function () { $control.datepicker("disable"); }, 100);
+                }
+
+                //not reset the default value, since it may always change on the server side like current date.
+                //me._setParamValue(param, preDefinedValue, $control);
+                //$control.valid();
+            }
         },
         _setRadioButton: function (s, v) {
             for (var i = 0; i < s.length; i++) {
@@ -12110,7 +12277,12 @@ $(function () {
             $openDropDown.append($dropdownicon);
 
             $input.on("click", function () { me._showTreePanel($treeContainer, $input); });
-            $openDropDown.on("click", function () { me._showTreePanel($treeContainer, $input); });
+            $openDropDown.on("click", function () {
+                if ($input.attr("disabled"))
+                    return;
+
+                me._showTreePanel($treeContainer, $input);
+            });
             //generate default value after write parameter panel done
             me._addWriteParamDoneCallback(function () { me._setTreeSelectedValues($treeContainer); });
 
@@ -12533,6 +12705,7 @@ $(function () {
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             var valids = param.ValidValues;
+
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
@@ -12556,6 +12729,9 @@ $(function () {
                     }
                 }
             }
+            else {
+                me._loadedForDefault = false;
+            }
         },
         //set each tree item status by specify parameter value
         _setTreeItemStatus:  function (param, defaultParam, isTopParent) {
@@ -12570,12 +12746,12 @@ $(function () {
             var $li = $parent.children("li");
             $.each($li, function (index, item) {
                 if (param.MultiValue) {
-                    if (me._contains(defaultParam.Value, $(item).attr("value"))) {
+                    if (me._contains(defaultParam, $(item).attr("value"))) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
                 else {
-                    if ($(item).attr("value") === defaultParam.Value) {
+                    if ($(item).attr("value") === defaultParam) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
@@ -12625,6 +12801,23 @@ $(function () {
                 $control.addClass("fr-param-required");
             }
         },
+        _getTreeItemChildren: function (paramName, list) {
+            //get all its children parameters by using recursive
+            //return parameter name array
+            var me = this;
+            var innerlist = list || [];
+
+            if (me._dependencyList[paramName]) {
+                $.each(me._dependencyList[paramName], function (index, child) {
+                    if (innerlist.indexOf(child) === -1) {
+                        innerlist.push(child);
+                        innerlist = me._getTreeItemChildren(child, innerlist);
+                    }
+                });
+            }
+
+            return innerlist;
+        },
         _createInput: function (param, type, readonly, listOfClasses) {
             var $input = new $("<Input />");
             $input.attr("type", type);
@@ -12672,7 +12865,12 @@ $(function () {
             me._getParameterControlProperty(param, $multipleCheckBox);
             var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
 
-            $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
+            $openDropDown.on("click", function () {
+                if ($multipleCheckBox.attr("disabled"))
+                    return;
+                
+                me._popupDropDownPanel(param);
+            });
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
@@ -12727,9 +12925,7 @@ $(function () {
 
                 var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
-                $label.attr("value", value);
-
-                $label.text(key);
+                $label.attr("value", value).text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);
@@ -12764,7 +12960,12 @@ $(function () {
             }
             me._getParameterControlProperty(param, $multipleTextArea);
             $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
-            $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
+            $openDropDown.on("click", function () {
+                if ($multipleTextArea.attr("disabled"))
+                    return;
+                
+                me._popupDropDownPanel(param);
+            });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
             $dropDownContainer.attr("value", param.Name);
@@ -12929,53 +13130,83 @@ $(function () {
          */
         getParamsList: function (noValid) {
             var me = this;
-            var i;
+            var i, $input;
 
             //for all get request that need validate, close all dropdown panel to get latest value first
             if (!noValid) {
                 me._closeAllDropdown();
             }
-            
+            me._useDefault = false;
             if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
-                $(".fr-param", me.$params).filter(":text").each(function () {
-                    if (me._shouldInclude(this, noValid)) {
-                        if ($(this).attr("ismultiple") === "false") {
-                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                $(".fr-param", me.$params).filter(":text").each(function (index, input) {
+                    $input = $(input);
+                    
+                    if ($input.hasClass("fr-usedefault")) {
+                        me._useDefault = true;
+                        return true;
+                    }
+
+                    if (me._shouldInclude(input, noValid)) {
+                        if ($input.attr("ismultiple") === "false") {
+                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
-                            var jsonValues = $(this).attr("jsonValues");
-                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                            var jsonValues = $input.attr("jsonValues");
+                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
                         }
                     }
                 });
                 //Hidden
-                $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    if (me._shouldInclude(this, noValid)) {
-                        if ($(this).attr("ismultiple") === "false") {
-                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                $(".fr-param", me.$params).filter("[type='hidden']").each(function (index, input) {
+                    $input = $(input);
+
+                    if ($input.hasClass("fr-usedefault")) {
+                        me._useDefault = true;
+                        return true;
+                    }
+
+                    if (me._shouldInclude(input, noValid)) {
+                        if ($input.attr("ismultiple") === "false") {
+                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
-                            var value = me._isParamNullable(this);
-                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                            var value = me._isParamNullable(input);
+                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(value ? value : null) });
                         }
                     }
                 });
-                //dropdown
-                $(".fr-param", me.$params).filter("select").each(function () {
-                    var shouldInclude = this.value !== null && this.value !== "" && me._shouldInclude(this, noValid);
-                    if (shouldInclude)
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                //normal dropdown
+                $(".fr-param", me.$params).filter("select").each(function (index, input) {
+                    $input = $(input);
+
+                    if ($input.hasClass("fr-usedefault")) {
+                        me._useDefault = true;
+                        return true;
+                    }
+
+                    var shouldInclude = input.value !== null && input.value !== "" && me._shouldInclude(input, noValid);
+
+                    if (shouldInclude) {
+                        a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                    }
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
-                $(".fr-param", me.$params).filter(":radio").each(function () {
-                    if (!(this.name in radioList)) {
-                        if (!noValid || me._isNullChecked(this)) {
-                            radioList[this.name] = null;
+                $(".fr-param", me.$params).filter(":radio").each(function (index, input) {
+                    $input = $(input);
+
+                    if ($input.hasClass("fr-usedefault")) {
+                        me._useDefault = true;
+                        return true;
+                    }
+
+                    if (!(input.name in radioList)) {
+                        if (!noValid || me._isNullChecked(input)) {
+                            radioList[input.name] = null;
                         }
                     }
-                    if (this.checked === true) {
-                        radioList[this.name] = me._isParamNullable(this);
+                    if (input.checked === true) {
+                        radioList[input.name] = me._isParamNullable(input);
                     }
                 });
                 for (var radioName in radioList) {
@@ -13018,7 +13249,7 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
             return $cb.length !== 0 && $cb.attr("checked") === "checked";
         },
         _isParamNullable: function (param) {
@@ -14692,7 +14923,10 @@ $(function () {
                         }
                     }
 
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
+                    //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}" +
+                        "ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }" +
+                        +"</style>");
                     $("head").slice(0).append($viewportStyle);
 
                     // Show the unzoom toolbar
@@ -15338,12 +15572,12 @@ $(function () {
             var $linksection = me.DefaultAppTemplate.$linksection;
             //clear prior route link
             $linksection.html("");
+
             var path = data.args[0];
             me._getLink(path, $linksection, 0, data.name);
+            $linksection.show();
 
             me._linkResize($linksection);
-
-            $linksection.show();
         },
         _getLink: function (path, $container, index, transitionName) {
             var me = this,
@@ -15411,7 +15645,6 @@ $(function () {
         //compare link section and container width, ellipsis long word to only keep 10 characters.
         _linkResize: function ($linksection) {
             var me = this;
-
             var $lastLink = $linksection.find(".fr-location-link-last"),
                 text,
                 newText;

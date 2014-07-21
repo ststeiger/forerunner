@@ -134,7 +134,8 @@
     "viewReport":"Visa",
     "cancel":"Avbryta",
     "datePicker":"Datum",
-    "select":"Välj"
+    "select":"Välj",
+    "useDefault":"Använd standard"
   },
   "validateError": {
     "required":"krävs",
@@ -268,7 +269,7 @@
     "format":"Format",
     "saveFailed":"Att spara abonnemang misslyckades",
     "addNew":"Skapa",
-	"edit": "Redigera",
+    "edit":"Redigera",
     "deleteSubscription":"Radera",
     "deleteFailed":"Prenumerations deletion misslyckades"
   },

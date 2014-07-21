@@ -134,7 +134,8 @@
     "viewReport":"Anzeigen",
     "cancel":"Abbestellen",
     "datePicker":"Datum",
-    "select":"Wählen"
+    "select":"Wählen",
+    "useDefault":"Verwenden Sie Standard-"
   },
   "validateError": {
     "required":"Erforderlich",
@@ -268,7 +269,7 @@
     "format":"Format",
     "saveFailed":"Speichern Abonnement gescheitert ",
     "addNew":"Schaffen ",
-	"edit": "Edieren",
+    "edit":"Edieren",
     "deleteSubscription":"Löschen ",
     "deleteFailed":"Abonnement Löschung gescheitert"
   },
@@ -281,6 +282,6 @@
   "contextMenu": {
     "title":"Kontextmenü",
     "delLabel":"löschen",
-   "properties":"Eigenschaften"
+    "properties":"Eigenschaften"
   }
 }

@@ -153,30 +153,6 @@
     <Content Include="Custom\Mobilizer.css" />
     <Content Include="Custom\MobilizerSettings.txt" />
     <Content Include="Custom\MobilizerSharedSchedule.txt" />
-    <Content Include="Forerunner\Bundles\Forerunner-all.css">
-      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-all.min.css">
-      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-tools.js">
-      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js">
-      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.js">
-      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js">
-      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner.js">
-      <DependentUpon>Forerunner.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner.min.js">
-      <DependentUpon>Forerunner.js.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
@@ -497,15 +473,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="sdk\readme.docx" />
-    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
-      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
-      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
-      <DependentUpon>Forerunner.js.bundle</DependentUpon>
-    </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

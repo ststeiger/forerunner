@@ -49,6 +49,7 @@ namespace Forerunner.SSRS.Manager
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
+        static string MobilizerSetting = string.Empty;
 
         private class SSRSServer
         {
@@ -1874,10 +1875,54 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string ReadTXTFile(string filePath)
+        public string ReadMobilizerSetting(string path)
         {
-            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/") + filePath;
+            if (MobilizerSetting == String.Empty)
+            {
+                string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
 
+                MobilizerSetting = ReadTXTFile(filePath);
+
+                //watch the setting file.
+                if (File.Exists(filePath))
+                {
+                    FileSystemWatcher watcher = new FileSystemWatcher();
+
+                    watcher.Path = Path.GetDirectoryName(filePath);
+                    watcher.Filter = Path.GetFileName(filePath);
+
+                    watcher.Created += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                    watcher.Changed += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                    watcher.Renamed += MobilizerWatcher_Renamed;
+                    watcher.Deleted += MobilizerWatcher_Deleted;
+
+                    //begin watching.
+                    watcher.EnableRaisingEvents = true;
+                }
+            }
+
+            return MobilizerSetting;
+        }
+
+        void MobilizerWatcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            MobilizerSetting = "{}";
+        }
+
+        void MobilizerWatcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            //re-loaded the setting file from the new full path when file renamed.
+            MobilizerSetting = ReadTXTFile(e.FullPath);
+        }
+
+        void MobilizerWatcher_OnChanged(object sender, FileSystemEventArgs e)
+        {
+            //re-loaded the setting file if file created, change
+            MobilizerSetting = ReadTXTFile(e.FullPath);
+        }
+
+        string ReadTXTFile(string path)
+        {
             if (File.Exists(path))
             {
                 using (StreamReader reader = new StreamReader(path))

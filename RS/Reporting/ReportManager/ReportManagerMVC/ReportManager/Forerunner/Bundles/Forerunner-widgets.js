@@ -9416,10 +9416,7 @@ $(function () {
             RIContext.$HTMLParent.append(imageContainer);
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
-
-            Style = imageStyle ? imageStyle : "display:table-cell";
-            NewImage.attr("style", Style);
-            
+            NewImage.attr("style", imageStyle);//remove display:table-cell; from image style
 
             //Add Highlighting  except IE8
             if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
@@ -15576,12 +15573,12 @@ $(function () {
             var $linksection = me.DefaultAppTemplate.$linksection;
             //clear prior route link
             $linksection.html("");
+
             var path = data.args[0];
             me._getLink(path, $linksection, 0, data.name);
+            $linksection.show();
 
             me._linkResize($linksection);
-
-            $linksection.show();
         },
         _getLink: function (path, $container, index, transitionName) {
             var me = this,
@@ -15649,7 +15646,6 @@ $(function () {
         //compare link section and container width, ellipsis long word to only keep 10 characters.
         _linkResize: function ($linksection) {
             var me = this;
-
             var $lastLink = $linksection.find(".fr-location-link-last"),
                 text,
                 newText;

@@ -1094,10 +1094,7 @@ $(function () {
             RIContext.$HTMLParent.append(imageContainer);
              
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
-
-            Style = imageStyle ? imageStyle : "display:table-cell";
-            NewImage.attr("style", Style);
-            
+            NewImage.attr("style", imageStyle);//remove display:table-cell; from image style
 
             //Add Highlighting  except IE8
             if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {

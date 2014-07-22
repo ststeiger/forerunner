@@ -343,7 +343,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadTXTFile(MobilizerSettingPath)), "text/JSON");
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
             }
             catch (Exception ex) 
             {

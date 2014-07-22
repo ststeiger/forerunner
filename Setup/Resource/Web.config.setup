@@ -24,7 +24,7 @@
     <add key="Forerunner.ReportServerTimeout" value="100000" />
     <add key="Forerunner.IgnoreSSLErrors" value="true" />
     <add key="Forerunner.QueueThumbnails" value="false" />
-    
+    <add key="Forerunner.MobilizerSettingPath" value="Custom\MobilizerSettings.txt"/>
   </appSettings>
   <system.net>
     <defaultProxy enabled="true" useDefaultCredentials="true" >

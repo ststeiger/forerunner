@@ -2524,17 +2524,17 @@ $(function () {
                         } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
-                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading);
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading, paramList);
                         }
                     }
                 });
             }
         },
-        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading) {
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam) {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
@@ -11302,10 +11302,11 @@ $(function () {
          * @param {Boolean} submitForm - Submit form when parameters are satisfied
          * @param {Integer} pageNum - Current page number
          * @param {Boolean} renderParamArea - Whether to make parameter area visible
+         * @param {Boolean} isCascading - Cascading refresh or normal refresh
+         * @param {Object} savedParam - User saved parameters
          */
-        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam) {
             var me = this;
-
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
             if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
                 var $li = me.element.find(".fr-param-tree-loading");
@@ -11327,7 +11328,7 @@ $(function () {
             }
             else {
                 this.removeParameter();
-                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
+                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea, savedParam);
             }
 
             this._hasPostedBackWithoutSubmitForm = true;
@@ -11360,8 +11361,9 @@ $(function () {
          * @param {Integer} pageNum - Current page number
          * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied.
          * @param {Boolean} renderParamArea - Whether to make parameter area visible.
+         * @param {Object} savedParam - User saved parameter.
          */
-        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -11386,6 +11388,10 @@ $(function () {
             });
             //resize the textbox width when custom right pane width is big
             me._elementWidthCheck();
+
+            if (savedParam) {
+                me._useDefaultCheck(savedParam);
+            }
 
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
@@ -11477,7 +11483,7 @@ $(function () {
                 };
             }
         },
-
+        
         _submittedParamsList: null,
         _elementWidthCheck: function () {
             var me = this;
@@ -11494,6 +11500,21 @@ $(function () {
                 me.element.find(".ui-autocomplete").css({ "min-width": elementWidth, "max-width": elementWidth });
                 me.element.find(".fr-param-option-container").css({ "width": elementWidth });
             }
+        },
+        _useDefaultCheck: function (savedParam) {
+            var me = this;
+
+            var params = JSON.parse(savedParam);
+            var $useDefaults = me.element.find(".fr-usedefault-checkbox");
+
+            $.each(params.ParamsList, function (index, param) {
+                if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
+                    var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
+                    if ($checkbox.length) {
+                        $checkbox.trigger("click");
+                    }
+                }
+            });
         },
         /**
          * Set parameters with specify parameter list
@@ -13146,6 +13167,7 @@ $(function () {
                     
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
+                        a.push({ Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
@@ -13164,6 +13186,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
+                        a.push({ Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
@@ -13182,6 +13205,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
+                        a.push({ Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
@@ -13198,6 +13222,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
+                        a.push({ Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
@@ -13213,35 +13238,6 @@ $(function () {
                 for (var radioName in radioList) {
                     a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                 }
-                //combobox - multiple values
-                //var tempCb = "";
-                //$(".fr-param", me.$params).filter(":checkbox").filter(":checked").each(function () {
-                //    if (tempCb.indexOf(this.name) === -1) {
-                //        tempCb += this.name + ",";
-                //    }
-                //});
-                //if (tempCb !== "") {
-                //    var cbArray = tempCb.split(",");
-                //    var cbName = "";
-                //    var cbValue = "";
-                //    for (i = 0; i < cbArray.length - 1; i++) {
-                //        cbName = cbArray[i];
-                //        var $target = $("input[name='" + cbArray[i] + "']:checked", me.$params);
-                //        var cbValueLength = $target.length;
-
-                //        $target.each(function (i) {
-                //            if (i === cbValueLength - 1)
-                //                cbValue += this.value;
-                //            else
-                //                cbValue += this.value + ",";
-
-                //        });
-                //        a.push({ name: cbName, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: cbValue });
-                //    }
-                //}
-
-                //Combined to JSON String, format as below
-                //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
 
                 var paramsObject = { "ParamsList": a };
                 return JSON.stringify(paramsObject);

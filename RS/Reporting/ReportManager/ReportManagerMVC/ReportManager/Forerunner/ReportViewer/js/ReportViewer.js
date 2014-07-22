@@ -1894,17 +1894,17 @@ $(function () {
                         } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
-                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading);
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading, paramList);
                         }
                     }
                 });
             }
         },
-        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading) {
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam) {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });

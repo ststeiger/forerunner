@@ -63,6 +63,7 @@ namespace Forerunner.SSRS
         public string IsMultiple { get; set; }
         public string Type { get; set; }
         public object Value { get; set; }
+        public string UseDefault { get; set; }
     }
 
     public class Data

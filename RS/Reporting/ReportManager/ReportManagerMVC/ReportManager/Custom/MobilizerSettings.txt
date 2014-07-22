@@ -1,7 +1,7 @@
 {
 	"MaxBigDropdownItem": 50,
 	"MinItemToEnableBigDropdownOnTouch": 10,
-	"EnableCascadingTree": "on",
+	"EnableCascadingTree": true,
 	"MaxResponsiveResolution": 1280,
 	"FullScreenPageNavSize" : 768,
 	"DefaultResponsiveTablix" : "on",

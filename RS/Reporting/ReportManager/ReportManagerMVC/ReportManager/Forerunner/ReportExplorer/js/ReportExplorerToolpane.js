@@ -16,7 +16,7 @@ $(function () {
     var tp = forerunner.ssr.tools.reportExplorerToolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
-    var itemActiveClass = "fr-toolbase-persistent-active-state";
+    var itemActiveClass = "fr-toolbase-persistent-active-light";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**

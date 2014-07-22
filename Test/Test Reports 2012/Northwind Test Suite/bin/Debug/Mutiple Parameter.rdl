@@ -348,7 +348,11 @@ ORDER BY CategoryID </CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>=Today()</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>ProductionDate</Prompt>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">

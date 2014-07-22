@@ -121,34 +121,21 @@ function SetupSlider() {
             controls: false,
             pager: false,
             auto: true,
-            randomStart: true
+            randomStart: true,
+            speed: 700
         });
 
     }
 
 
-    if ($("#SliderForward").length === 1)
-        $("#SliderForward").click(function () {
-            slideLeft.goToNextSlide();
-            return false;
-        });
-    if ($("#SliderBack").length === 1)
-        $("#SliderBack").click(function () {
-            slideLeft.goToPrevSlide();
-            return false;
-        });
-
-  
-    //if ($("#Slide").length > 0)
-    //    $(window).on("resize", function () { $("#Slide").hide().show(1); });
 }
 
-function NextSlide(right,left) {
-    right.goToNextSlide();
-    left.goToNextSlide();
+function NextSlide() {
+    $("#Slide").bxSlider("goToNextSlide");
+}
 
-    $(left).parent().css("height", "");
-    $(left).css("height", "");
+function PrevSlide() {
+    $("#Slide").bxSlider("goToPrevSlide");
 }
 
 var page = $("#Page").attr("data-page");

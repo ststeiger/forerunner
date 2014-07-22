@@ -1,6 +1,6 @@
 ﻿/**
  * @file
- *  Defines forerunner SDK specific namespaces
+ *  Defines forerunner SDK specific namespace
  *
  */
 
@@ -1549,22 +1549,22 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the device is an iOS device */
         isiOS: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(iPhone|iPod|iPad)/);
+            return ua.match(/(iPhone|iPod|iPad)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is an iPhone or iPod device */
         isiPhone: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(iPhone|iPod)/);
+            return ua.match(/(iPhone|iPod)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is an iPad device */
         isiPad: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(iPad)/);
+            return ua.match(/(iPad)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is an Firefox Browser  */
         isFirefox: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(Firefox)/);
+            return ua.match(/(Firefox)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is an Safari Browser  */
         isSafari: function () {
@@ -1585,17 +1585,17 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
-            return (ua.match(/(MSIE)/) || ua.match(/(.NET)/));  //Handle IE11
+            return (ua.match(/(MSIE)/) !== null || ua.match(/(.NET)/) !== null);  //Handle IE11
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(MSIE 8)/);
+            return ua.match(/(MSIE 8)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
         isMSIE9: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(MSIE 9)/);
+            return ua.match(/(MSIE 9)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key word */
         isMSIEAndTouch :function () {
@@ -1610,17 +1610,17 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 9.* */
         isIEMobile9: function () {
             var ua = navigator.userAgent;
-            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/9.0)/);
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/9.0)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 10 */
         isIEMobile10: function () {
             var ua = navigator.userAgent;
-            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/10.0)/);
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/10.0)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 11 */
         isIEMobile11: function () {
             var ua = navigator.userAgent;
-            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/11.0)/);
+            return forerunner.device.isWindowsPhone() && ua.match(/(IEMobile\/11.0)/) !== null;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {

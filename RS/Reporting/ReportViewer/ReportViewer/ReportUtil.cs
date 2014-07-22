@@ -176,6 +176,12 @@ namespace Forerunner
                 {
                     foreach (JsonObject obj in parameterArray)
                     {
+                        //if parameter use default then don't include this parameter
+                        if (obj["UseDefault"] != null && obj["UseDefault"].ToString().ToLower() == "true")
+                        {
+                            continue;
+                        }
+
                         if (obj["IsMultiple"].ToString().ToLower() == "true")
                         {
                             if (obj["Value"] == null)

@@ -6,7 +6,7 @@ a:hover {text-decoration:none; cursor:pointer;color:#28b2e0}
 img {border:none}
 body {font-family:'Segoe UI',Arial, Helvetica, sans-serif; color: #333333; background-color: #fff;  margin:0;padding:0;}
 input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;font-family:'Segoe UI'}
-.Rounded {-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
+.Rounded {-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;}
 .Center{ margin: 0 auto;}
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
@@ -14,6 +14,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .HeaderFont{font-family:Candara,Arial, Helvetica, sans-serif}
 .DetailFont{font-family:'Segoe UI',Arial, Helvetica, sans-serif}
 .BlueBackgrouud{background-image:url(img/bkg_tile_slide.png);background-repeat:repeat;}
+.PageHeader{background-image:url(img/SectionBanner_Tile.png);background-repeat:repeat;}
+.PageHeaderTitle{color:white;font-family:Candara;font-size:100px;}
 .GreyBackgrouud{background-color:#F0F0F0}
 .OrangeBackground{background-color:#ff6600;}
 .SectionHeader{font-size:52px;color:#087cb9;text-align:center;}
@@ -36,7 +38,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .SliderContainer{width: 450px; height: 409px;  }
 .SliderHeader{ text-align: left; font-size: 24pt; line-height: 1.2;}
 .SliderFullContainer{ }
-.SliderIMG{width:100%;max-width:1200px;}
+.SliderIMG{width:100%;max-width:1200px;display:block;}
 
 .HomePageRegister { }
 .FooterContent{}
@@ -70,9 +72,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerBottomBanner{background-color:#EAEAEA;}
 .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
 
-.DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;font-size: 24px;}
-.DownloadFormInputSmall{height:45px;width:200px;  border:1px solid #b8b8b8;margin-bottom:5px;font-size: 24px;display:inline-block;}
-.DownLoadFormEmailSmall{width: 407px;display:block;}
+.DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;font-size: 22px;}
+.DownloadFormInputSmall{height:45px;width:200px; margin-bottom:5px;font-size: 22px;display:inline-block;border:none;color:#999}
+.DownLoadFormEmailSmall{width: 407px;display:block;border:none;color:#999;font-size: 22px;}
 
 .DownloadButton{background-color:#ff6600;color:white;text-align:center;font-size:16px;cursor:pointer;}
 .DownloadButtonSize{width:200px;height:36px;padding-top:7px;text-align:center;display:block;}
@@ -108,10 +110,19 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .DeveloperCheveron{vertical-align:top;}
 .DeveloperSubHeader{padding-bottom:15px;}
 
-.PricingBanner{border:1px solid black;text-align:center;margin:25px;font-size:18pt;min-height:450px;padding:15px;}
+.PricingBanner{text-align:center;margin:20px;font-size:18pt;min-height:580px;padding:15px;}
 .BuyNowButton{text-align:center;margin:auto;font-size:18pt;padding:15px;width:250px;}
 .PricingAlert{font-weight:bold;color:darkblue;}
+.PricingBannerTitle{font-family:Candara;font-size:48px;color:white;}
+.PricingBannerSubTitle{font-family:Candara;font-size:30px;color:white;}
+.PricingBannerDetail{font-family:Candara;font-size:24px;color:white;}
+.PricingBannerCost{font-family:Candara;font-size:72px;}
+.PricingOrange{color:#ff6600;}
 .PricingBanner2{text-align:center;margin-top:0px;font-size:16pt;padding:65px;}
+.PricingList{ list-style: none;padding:0; margin:0;text-align:left;color:white;}
+.PricingListItem{padding-left: 1em; text-indent: -.7em;}
+.PricingListItem:before{ content: "• "; color: #ff6600;}
+
 
 .FeatureHeader{font-weight:bold;color:darkblue;font-size:18pt;padding:15px;}
 .FeatureContent{font-size:14pt;padding:15px;}

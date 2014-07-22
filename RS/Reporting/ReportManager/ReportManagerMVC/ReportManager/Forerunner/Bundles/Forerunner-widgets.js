@@ -1099,7 +1099,7 @@ $(function () {
             var zoomFactor;
 
             if (!percent) {
-                // Reset the zoom. This happens durring a page change
+                // Reset the zoom. This happens during a page change
                 zoomFactor = me.getZoomFactor();
             } else {
                 // Set a new percent factor
@@ -1110,14 +1110,15 @@ $(function () {
                 }
             }
 
-
             me._zoomFactor = zoomFactor;
             var page = me.$reportAreaContainer.find(".Page");
 
-            if (forerunner.device.isFirefox === true) {
-                page.css('MozTransform', 'scale(' + me._zoomFactor + ')');
+            if (forerunner.device.isFirefox() === true) {
+                scaleFactor = me._zoomFactor / 100.0;
+                page.css("transform", "scale(" + scaleFactor + "," + scaleFactor + ")");
+                page.css("transform-origin", "left top");
             } else {
-                page.css('zoom', ' ' + me._zoomFactor + '%');
+                page.css("zoom", " " + me._zoomFactor + "%");
             }
 
             me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });

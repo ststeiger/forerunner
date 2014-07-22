@@ -13220,12 +13220,6 @@ $(function () {
                 $(".fr-param", me.$params).filter(":radio").each(function (index, input) {
                     $input = $(input);
 
-                    if ($input.hasClass("fr-usedefault")) {
-                        me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
-                        return true;
-                    }
-
                     if (!(input.name in radioList)) {
                         if (!noValid || me._isNullChecked(input)) {
                             radioList[input.name] = null;
@@ -13236,7 +13230,12 @@ $(function () {
                     }
                 });
                 for (var radioName in radioList) {
-                    a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
+                    if (me.element.find(".fr-paramname-" + radioName).hasClass("fr-usedefault")) {
+                        a.push({ Parameter: radioName, UseDefault: true });
+                    }
+                    else {
+                        a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
+                    }
                 }
 
                 var paramsObject = { "ParamsList": a };

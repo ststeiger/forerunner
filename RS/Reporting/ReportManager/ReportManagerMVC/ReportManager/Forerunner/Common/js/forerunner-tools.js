@@ -1896,7 +1896,7 @@ $(function () {
     };
     var tg = forerunner.ssr.tools.groups;
 
-    if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+    if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
         tg.itemFolderGroup.tools.push(tp.itemHome);
         tg.explorerItemFolderGroup.tools.push(rep.itemHome);
         tg.dashboardItemFolderGroup.tools.push(dbtp.itemHome);

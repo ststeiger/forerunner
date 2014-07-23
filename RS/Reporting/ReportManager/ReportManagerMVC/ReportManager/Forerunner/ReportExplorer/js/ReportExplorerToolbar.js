@@ -79,7 +79,7 @@ $(function () {
 
             //check whether hide home button is enable
             var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
-            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }

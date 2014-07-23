@@ -7045,7 +7045,7 @@ $(function () {
 
             //check whether hide home button is enable
             var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
-            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }
@@ -14411,7 +14411,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on",
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom : me.options.zoom
             });
 
@@ -14425,7 +14425,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
                 //add home button if user enable it
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(tb.btnHome);
                 }
                 listOfButtons.push(tb.btnRecent, tb.btnFavorite);
@@ -23084,7 +23084,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
 
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(dtb.btnHome);
                 }
                 listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);

@@ -155,7 +155,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
 
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(dtb.btnHome);
                 }
                 listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);

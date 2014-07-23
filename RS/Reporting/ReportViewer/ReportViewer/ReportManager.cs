@@ -50,6 +50,7 @@ namespace Forerunner.SSRS.Manager
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
+        private static readonly object obj = new object();
 
         private class SSRSServer
         {
@@ -1883,37 +1884,39 @@ namespace Forerunner.SSRS.Manager
 
         public string ReadMobilizerSetting(string path)
         {
-            if (MobilizerSetting == String.Empty)
+            lock (obj)
             {
-                if (path == null || path == "")
-                    path = "custom/MobilizerSettings.txt";
-
-                string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
-
-               
-
-                MobilizerSetting = ReadTXTFile(filePath);
-
-
-                //watch the setting file.
-                if (File.Exists(filePath))
+                if (MobilizerSetting == String.Empty)
                 {
-                    FileSystemWatcher watcher = new FileSystemWatcher();
+                    if (path == null || path == "")
+                        path = "custom/MobilizerSettings.txt";
 
-                    watcher.Path = Path.GetDirectoryName(filePath);
-                    watcher.Filter = Path.GetFileName(filePath);
+                    string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
 
-                    watcher.Created += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
-                    watcher.Changed += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
-                    watcher.Renamed += MobilizerWatcher_Renamed;
-                    watcher.Deleted += MobilizerWatcher_Deleted;
 
-                    //begin watching.
-                    watcher.EnableRaisingEvents = true;
+
+                    MobilizerSetting = ReadTXTFile(filePath);
+
+
+                    //watch the setting file.
+                    if (File.Exists(filePath))
+                    {
+                        FileSystemWatcher watcher = new FileSystemWatcher();
+
+                        watcher.Path = Path.GetDirectoryName(filePath);
+                        watcher.Filter = Path.GetFileName(filePath);
+
+                        watcher.Created += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                        watcher.Changed += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                        watcher.Renamed += MobilizerWatcher_Renamed;
+                        watcher.Deleted += MobilizerWatcher_Deleted;
+
+                        //begin watching.
+                        watcher.EnableRaisingEvents = true;
+                    }
                 }
+                return MobilizerSetting;
             }
-
-            return MobilizerSetting;
         }
 
         void MobilizerWatcher_Deleted(object sender, FileSystemEventArgs e)

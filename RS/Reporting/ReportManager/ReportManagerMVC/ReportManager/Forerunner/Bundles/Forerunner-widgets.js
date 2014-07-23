@@ -11372,6 +11372,7 @@ $(function () {
 
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
+            me._isDropdownTree = true;
             me._render();
             me.$numVisibleParams = 0;
 

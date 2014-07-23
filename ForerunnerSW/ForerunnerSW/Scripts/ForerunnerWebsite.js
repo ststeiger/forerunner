@@ -121,7 +121,7 @@ function SetupSlider() {
             controls: false,
             pager: false,
             auto: true,
-            randomStart: true,
+           // randomStart: true,
             speed: 700
         });
 

@@ -1885,9 +1885,15 @@ namespace Forerunner.SSRS.Manager
         {
             if (MobilizerSetting == String.Empty)
             {
+                if (path == null || path == "")
+                    path = "custom/MobilizerSettings.txt";
+
                 string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
 
+               
+
                 MobilizerSetting = ReadTXTFile(filePath);
+
 
                 //watch the setting file.
                 if (File.Exists(filePath))

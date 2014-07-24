@@ -15695,6 +15695,8 @@ $(function () {
                     $reportExplorer: me.$reportExplorer
                 });
 
+                me._setLeftRightPaneStyle();
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                 if (view === "search") {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
@@ -15716,8 +15718,6 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
-
-                me._setLeftRightPaneStyle();
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
@@ -15796,15 +15796,14 @@ $(function () {
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-                
-                me._setLeftRightPaneStyle();
-
             }, timeout);
 
             me.element.css("background-color", "");
@@ -15835,10 +15834,12 @@ $(function () {
                     handleWindowResize: false
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
-                me._setLeftRightPaneStyle();
+                
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
 
@@ -23588,6 +23589,10 @@ $(function () {
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
+
+                //set floating header top property base on the outer header height
+                me.outerToolbarHeight = me.outerToolbarHeight || me.options.$appContainer.find(".fr-layout-topdiv:first").height();
+                $reportViewer.reportViewer("option", "toolbarHeight", me.outerToolbarHeight);
 
                 var catalogItem = reportProperties.catalogItem;
                 var parameters = reportProperties.parameters;

@@ -27,9 +27,9 @@ namespace ForerunnerSW.Controllers
             JavaScriptSerializer releases = new JavaScriptSerializer();
 
             prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt"));
-            string news = @"<div class='ForerunnerPageContent' style='margin-bottom:20px;'>
+            string news = @"<div class='ForerunnerPressContent' style='margin-bottom:20px;'>
             <span style='font-weight:bold;'>{0}</span>
-            <div class='ForerunnerPageContent'><b>{1}</b> — {2}
+            <div class='ForerunnerPressContent'><b>{1}</b> — {2}
             <a href='{3}' target='_blank' >read more...</a></div>
         </div>";
             string allNews = "";

@@ -1683,7 +1683,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-render-rec {border-collapse:collapse;}
 .fr-r-rT{display:table;table-layout: fixed;}
-.fr-r-t{white-space:pre-wrap;margin:0;display: table-cell;overflow:hidden; -ms-word-wrap:break-word;word-wrap:break-word;} 
+.fr-r-t{white-space:pre-wrap;margin:0;display: table-cell;overflow:hidden; -ms-word-wrap:break-word;word-wrap:break-word;-moz-box-sizing:border-box;-webkit-box-sizing:border-box; box-sizing:border-box;} 
 .fr-r-pL{width:100%;height:100%;}
 .fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;position:relative;}
 .fr-r-tC{vertical-align:top;padding:0;margin:0;}

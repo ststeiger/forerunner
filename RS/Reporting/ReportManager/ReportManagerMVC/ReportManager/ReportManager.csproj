@@ -159,6 +159,12 @@
     <Content Include="Forerunner\Bundles\Forerunner-all.min.css">
       <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
     </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.js">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-widgets.js">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
@@ -487,6 +493,9 @@
     <Content Include="sdk\readme.docx" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />

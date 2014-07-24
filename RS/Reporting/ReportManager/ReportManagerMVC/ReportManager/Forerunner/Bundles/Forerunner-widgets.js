@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -1167,7 +1167,12 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            // TODO
+            var heightScale = (me.element.height() / page.height());
+            if (heightScale - 1 < 0.00001) {
+                heightScale = $(window).height() / $(document).height();
+            }
+            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom);
         },
 
         _addSetPageCallback: function (func) {
@@ -3933,7 +3938,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
 
@@ -3958,11 +3963,16 @@ $(function () {
          * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
-        hideAllTools: function (){
+        hideAllTools: function () {
             var me = this;
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                //skip hide toolGroup, it will hide all its buttons inside.
+                if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                    var $toolEl = me.element.find("." + Obj.selectorClass);
+
+                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
                     me.hideTool(Obj.selectorClass);
+                }
             });
         },
         /**
@@ -14447,6 +14457,7 @@ $(function () {
                 var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
 
                 $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                $toolbar.show();
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;

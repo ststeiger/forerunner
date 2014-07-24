@@ -537,7 +537,12 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            // TODO
+            var heightScale = (me.element.height() / page.height());
+            if (heightScale - 1 < 0.00001) {
+                heightScale = $(window).height() / $(document).height();
+            }
+            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom);
         },
 
         _addSetPageCallback: function (func) {

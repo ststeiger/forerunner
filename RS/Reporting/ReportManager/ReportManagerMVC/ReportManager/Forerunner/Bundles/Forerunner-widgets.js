@@ -676,7 +676,7 @@ $(function () {
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
-     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
+     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
@@ -2604,9 +2604,9 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
-         * @param {Object} savedParameters - Saved parameters
+         * @param {Object} parameters - Optional parameters
          */
-        loadReport: function (reportPath, pageNum, savedParameters) {
+        loadReport: function (reportPath, pageNum, parameters) {
             var me = this;
 
             // For each new report we reset the zoom factor back to 100%
@@ -2633,7 +2633,7 @@ $(function () {
             
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
-            me.savedParameters = savedParameters ? savedParameters : null;
+            me.savedParameters = parameters ? parameters : null;
 
             //See if we have RDL extensions
             me._getRDLExtProp();

@@ -3938,7 +3938,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
 
@@ -3963,11 +3963,16 @@ $(function () {
          * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
-        hideAllTools: function (){
+        hideAllTools: function () {
             var me = this;
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                //skip hide toolGroup, it will hide all its buttons inside.
+                if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                    var $toolEl = me.element.find("." + Obj.selectorClass);
+
+                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
                     me.hideTool(Obj.selectorClass);
+                }
             });
         },
         /**

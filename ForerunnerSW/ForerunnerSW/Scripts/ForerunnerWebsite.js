@@ -107,6 +107,7 @@ if ($("#register")) {
 
 $(document).ready(function () {
     SetupSlider();
+    $('img[usemap]').rwdImageMaps();
     
 });
 
@@ -121,8 +122,9 @@ function SetupSlider() {
             controls: false,
             pager: false,
             auto: true,
-           // randomStart: true,
-            speed: 700
+            randomStart: true,
+            pause: 9000,
+            autoHover:true
         });
 
     }

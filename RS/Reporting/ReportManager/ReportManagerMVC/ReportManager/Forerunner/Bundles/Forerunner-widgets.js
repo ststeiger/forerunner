@@ -4503,11 +4503,18 @@ $(function () {
             $rightpane.append($rightheaderspacer);
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
+            //Property Dialog Section
+            var $propertySection = new $("<div />");
+            $propertySection.addClass("fr-properties-section");
+            me.$propertySection = $propertySection;
+            $container.append($propertySection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
             me.$unzoomsection = $unzoomsection;
             $mainviewport.append(me.$unzoomsection);
+
+            me._initPropertiesDialog();
 
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -4544,6 +4551,16 @@ $(function () {
             me.$rightpanecontent.removeClass("fr-layout-position-absolute");
         },
 
+        _initPropertiesDialog: function () {
+            var me = this;
+            me.$propertySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$propertySection.forerunnerProperties({
+                $appContainer: me.$container,
+                $reportViewer: me.$mainviewport,
+                $reportExplorer: me.$mainsection
+            });
+        },
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -4821,7 +4838,7 @@ $(function () {
 
             var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
-            $viewer.on(events.reportVieweractionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = me.$bottomdivspacer;
@@ -5342,6 +5359,15 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
+
+            me.$tabs.find("div").remove();
+            me.$tabsUL.find("li").remove();
+            me._preprocess = null;
+
+            if (!path) {
+                return;
+            }
+
             me.curPath = path;
             me._propertyList = propertyList;
 
@@ -5352,10 +5378,6 @@ $(function () {
                     me.$tabs[widget.widgetName]("destroy");
                 }
             }
-            
-            me.$tabs.find("div").remove();
-            me.$tabsUL.empty();
-            me._preprocess = null;
 
             for (var i = 0; i < me._propertyList.length; i++) {
                 switch (me._propertyList[i]) {
@@ -5799,13 +5821,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6850,13 +6874,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6958,7 +6984,13 @@ $(function () {
             var previous = $propertyDlg.forerunnerProperties("getProperties");
 
             // Set the new settings based upon the catalogItem and show the dialog
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            var propertyList = propertyListMap[me.options.catalogItem.Type];
+            // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
+            if (me.options.catalogItem.Type === 3) {
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+            }
+
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
@@ -14773,7 +14805,9 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var events = constants.events;
     var helper = forerunner.helper;
+    var propertyEnums = forerunner.ssr.constants.properties;
     
      /**
      * Widget used to view a report
@@ -14857,24 +14891,31 @@ $(function () {
 
             initializer.render();
 
-            $viewer.on("reportviewerback", function (e, data) {
+            $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             
             });
 
-            $viewer.on("reportvieweractionhistorypop", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) {
                 if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }
             });
 
-            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPush(), function (e, data) {
                 if (!me.options.historyBack) {
                     layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                if (me.options.DefaultAppTemplate === null) {
+                    layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
                 }
             });
 
@@ -15407,6 +15448,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var propertyListMap = {
+        // Normal explorer folder and resource files except search folder
+        normal: [propertyEnums.description, propertyEnums.tags],
+        // Report/Linked Report
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+    };
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -15432,19 +15482,17 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            var propertyList = [];
 
             if (!path) {// root page
                 path = "/";
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.description, propertyEnums.tags);
+                me._setPropertiesTabs(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+                me._setPropertiesTabs(path, propertyListMap.searchFolder);
             }
-            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -15773,7 +15821,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+            me._setPropertiesTabs(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15825,7 +15873,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
+            me._setPropertiesTabs(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -15901,33 +15949,16 @@ $(function () {
                 $container: me.element,
                 isFullScreen: me.isFullScreen
             }).render();
-            me._initPropertiesDialog();
+            
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
         },
-        _initPropertiesDialog: function () {
+        _setPropertiesTabs: function (path, propertyList) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var $dlg = layout.$container.find(".fr-tag-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-properties-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.forerunnerProperties({
-                    $appContainer: layout.$container,
-                    $reportViewer: layout.$mainviewport,
-                    $reportExplorer: layout.$mainsection,
-                    rsInstance: me.options.rsInstance
-                });
-                layout.$container.append($dlg);
-            }
-
-            me._propertiesDialog = $dlg;
-        },
-        _setProperties: function (path, propertyList) {
-            var me = this;
-            me._propertiesDialog.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
          * Get report explorer

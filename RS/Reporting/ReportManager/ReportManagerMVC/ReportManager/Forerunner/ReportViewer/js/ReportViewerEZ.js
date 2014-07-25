@@ -7,7 +7,9 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var events = constants.events;
     var helper = forerunner.helper;
+    var propertyEnums = forerunner.ssr.constants.properties;
     
      /**
      * Widget used to view a report
@@ -91,24 +93,31 @@ $(function () {
 
             initializer.render();
 
-            $viewer.on("reportviewerback", function (e, data) {
+            $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             
             });
 
-            $viewer.on("reportvieweractionhistorypop", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) {
                 if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }
             });
 
-            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPush(), function (e, data) {
                 if (!me.options.historyBack) {
                     layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                if (me.options.DefaultAppTemplate === null) {
+                    layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
                 }
             });
 

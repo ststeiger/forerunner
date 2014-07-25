@@ -29,6 +29,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var propertyListMap = {
+        // Normal explorer folder and resource files except search folder
+        normal: [propertyEnums.description, propertyEnums.tags],
+        // Report/Linked Report
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+    };
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -54,19 +63,17 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            var propertyList = [];
 
             if (!path) {// root page
                 path = "/";
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.description, propertyEnums.tags);
+                me._setProperties(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+                me._setProperties(path, propertyListMap.searchFolder);
             }
-            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -395,7 +402,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+            me._setProperties(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -447,7 +454,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
+            me._setProperties(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS

@@ -5799,13 +5799,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6850,13 +6852,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6958,7 +6962,13 @@ $(function () {
             var previous = $propertyDlg.forerunnerProperties("getProperties");
 
             // Set the new settings based upon the catalogItem and show the dialog
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            var propertyList = propertyListMap[me.options.catalogItem.Type];
+            // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
+            if (me.options.catalogItem.Type === 3) {
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+            }
+
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
@@ -15407,6 +15417,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var propertyListMap = {
+        // Normal explorer folder and resource files except search folder
+        normal: [propertyEnums.description, propertyEnums.tags],
+        // Report/Linked Report
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+    };
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -15432,19 +15451,17 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            var propertyList = [];
 
             if (!path) {// root page
                 path = "/";
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.description, propertyEnums.tags);
+                me._setProperties(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+                me._setProperties(path, propertyListMap.searchFolder);
             }
-            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -15773,7 +15790,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+            me._setProperties(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15825,7 +15842,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
+            me._setProperties(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS

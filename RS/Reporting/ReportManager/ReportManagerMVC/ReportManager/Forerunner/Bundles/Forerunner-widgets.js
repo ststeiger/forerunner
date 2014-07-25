@@ -2550,13 +2550,11 @@ $(function () {
         },
         _removeParameters: function () {
             var me = this;
-            if (me.paramLoaded === true) {
-                var $paramArea = me.options.paramArea;
-                if ($paramArea) {
-                    $paramArea.reportParameter("removeParameter");
-                    me.paramLoaded = false;
-                    me.$numOfVisibleParameters = 0;
-                }
+            var $paramArea = me.options.paramArea;
+            if ($paramArea) {
+                $paramArea.reportParameter("removeParameter");
+                me.paramLoaded = false;
+                me.$numOfVisibleParameters = 0;
             }
         },
         _resetViewer: function(isSameReport){
@@ -2582,6 +2580,10 @@ $(function () {
             me.origionalReportPath = "";
             me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+
+            if (!isSameReport) {
+                me._removeParameters();
+            }
         },
         _reloadFromSessionStorage: function () {
             var me = this;
@@ -13190,7 +13192,7 @@ $(function () {
          *
          * @param {Boolean} noValid - if not need valid form set noValid = true
          *
-         * @return {String} - parameter value list
+         * @return {String} - parameter value list or null if this report has no parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -13201,7 +13203,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {
@@ -13280,9 +13282,15 @@ $(function () {
                     }
                 }
 
+                // Return null if this report has no parameters
+                if (a.length === 0) {
+                    return null;
+                }
+
                 var paramsObject = { "ParamsList": a };
                 return JSON.stringify(paramsObject);
             } else {
+                // Return null if this report has no parameters
                 return null;
             }
         },

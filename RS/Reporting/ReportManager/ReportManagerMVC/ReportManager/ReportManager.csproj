@@ -497,11 +497,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="sdk\readme.docx" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
-      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
+      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>

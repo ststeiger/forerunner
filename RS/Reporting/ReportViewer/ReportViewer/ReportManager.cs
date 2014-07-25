@@ -50,6 +50,7 @@ namespace Forerunner.SSRS.Manager
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
+        private static readonly object SettingLockObj = new object();
 
         private class SSRSServer
         {
@@ -470,17 +471,20 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 //This should move to the install program
                 string SQL = @"
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
+
+                           DECLARE @DBVersion varchar(200) 
+                           DECLARE @DBVersionPrev varchar(200) 
+                           
+                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
                             BEGIN	                            
 	                            CREATE TABLE dbo.ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
                                 INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.3','0'
                             END
-                            ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
 
-                            DECLARE @DBVersion varchar(200) 
-                            DECLARE @DBVersionPrev varchar(200) 
-                            SELECT @DBVersion = Version, @DBVersionPrev =PreviousVersion  FROM ForerunnerDBVersion                        
+
+                           SELECT @DBVersion = Version, @DBVersionPrev =PreviousVersion  FROM ForerunnerDBVersion                                                        
+                            
+
 
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
@@ -504,7 +508,7 @@ namespace Forerunner.SSRS.Manager
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerItemTags')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL, PRIMARY KEY (ItemID))
+                                CREATE TABLE dbo.ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL, PRIMARY KEY (ItemID))
                             END
 
                            /*  Version update Code */
@@ -535,6 +539,9 @@ namespace Forerunner.SSRS.Manager
                                     ALTER TABLE ForerunnerCatalog ALTER COLUMN ThumbnailImage Image NULL
                                     SELECT @DBVersionPrev = '1.3'
                                 END
+
+                            IF @DBVersion <> '1.3'
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
                              
                             ";
                 OpenSQLConn();
@@ -1879,28 +1886,37 @@ namespace Forerunner.SSRS.Manager
         {
             if (MobilizerSetting == String.Empty)
             {
-                string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
-
-                MobilizerSetting = ReadTXTFile(filePath);
-
-                //watch the setting file.
-                if (File.Exists(filePath))
+                lock (SettingLockObj)
                 {
-                    FileSystemWatcher watcher = new FileSystemWatcher();
+                    if (MobilizerSetting == String.Empty)
+                    {
+                        if (path == null || path == "")
+                            path = "custom/MobilizerSettings.txt";
 
-                    watcher.Path = Path.GetDirectoryName(filePath);
-                    watcher.Filter = Path.GetFileName(filePath);
+                        string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
 
-                    watcher.Created += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
-                    watcher.Changed += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
-                    watcher.Renamed += MobilizerWatcher_Renamed;
-                    watcher.Deleted += MobilizerWatcher_Deleted;
+                        MobilizerSetting = ReadTXTFile(filePath);
 
-                    //begin watching.
-                    watcher.EnableRaisingEvents = true;
+
+                        //watch the setting file.
+                        if (File.Exists(filePath))
+                        {
+                            FileSystemWatcher watcher = new FileSystemWatcher();
+
+                            watcher.Path = Path.GetDirectoryName(filePath);
+                            watcher.Filter = Path.GetFileName(filePath);
+
+                            watcher.Created += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                            watcher.Changed += new FileSystemEventHandler(MobilizerWatcher_OnChanged);
+                            watcher.Renamed += MobilizerWatcher_Renamed;
+                            watcher.Deleted += MobilizerWatcher_Deleted;
+
+                            //begin watching.
+                            watcher.EnableRaisingEvents = true;
+                        }
+                    }
                 }
             }
-
             return MobilizerSetting;
         }
 

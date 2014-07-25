@@ -6065,8 +6065,9 @@ $.widget( "ui.autocomplete", {
 					previous = this.previous;
 
 				// only trigger when focus was lost (click on menu)
-				if ( this.element[0] !== this.document[0].activeElement ) {
-					this.element.focus();
+				if (this.element[0] !== this.document[0].activeElement) {
+                    //remove element focus when menu select -- forerunner
+					//this.element.focus();
 					this.previous = previous;
 					// #6109 - IE triggers two focus events and the second
 					// is asynchronous, so we need to reset the previous

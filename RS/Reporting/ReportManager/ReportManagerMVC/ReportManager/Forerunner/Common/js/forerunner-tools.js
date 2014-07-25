@@ -1027,8 +1027,8 @@ $(function () {
         /** @member */
         itemKeyword: {
             toolType: toolTypes.input,
-            selectorClass: "fr-item-keyword-textbox fr-core-input",
-            sharedClass: "fr-toolbase-find-textbox fr-item-keyword-textbox",
+            selectorClass: "fr-item-keyword-textbox",
+            sharedClass: "fr-toolbase-find-textbox fr-core-input",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -1896,7 +1896,7 @@ $(function () {
     };
     var tg = forerunner.ssr.tools.groups;
 
-    if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+    if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
         tg.itemFolderGroup.tools.push(tp.itemHome);
         tg.explorerItemFolderGroup.tools.push(rep.itemHome);
         tg.dashboardItemFolderGroup.tools.push(dbtp.itemHome);

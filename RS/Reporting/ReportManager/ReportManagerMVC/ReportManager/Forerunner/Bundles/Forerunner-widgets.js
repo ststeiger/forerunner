@@ -676,7 +676,7 @@ $(function () {
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
-     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
+     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
@@ -1167,7 +1167,12 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            // TODO
+            var heightScale = (me.element.height() / page.height());
+            if (heightScale - 1 < 0.00001) {
+                heightScale = $(window).height() / $(document).height();
+            }
+            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom);
         },
 
         _addSetPageCallback: function (func) {
@@ -2599,9 +2604,9 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
-         * @param {Object} savedParameters - Saved parameters
+         * @param {Object} parameters - Optional parameters
          */
-        loadReport: function (reportPath, pageNum, savedParameters) {
+        loadReport: function (reportPath, pageNum, parameters) {
             var me = this;
 
             // For each new report we reset the zoom factor back to 100%
@@ -2628,7 +2633,7 @@ $(function () {
             
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
-            me.savedParameters = savedParameters ? savedParameters : null;
+            me.savedParameters = parameters ? parameters : null;
 
             //See if we have RDL extensions
             me._getRDLExtProp();
@@ -2699,7 +2704,6 @@ $(function () {
             if (!pageNum) {
                 pageNum = 1;
             }
-
             if (paramList && typeof paramList === "object")
                 paramList =JSON.stringify(paramList);
 
@@ -3934,7 +3938,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
 
@@ -3959,11 +3963,16 @@ $(function () {
          * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
-        hideAllTools: function (){
+        hideAllTools: function () {
             var me = this;
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                //skip hide toolGroup, it will hide all its buttons inside.
+                if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                    var $toolEl = me.element.find("." + Obj.selectorClass);
+
+                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
                     me.hideTool(Obj.selectorClass);
+                }
             });
         },
         /**
@@ -7045,7 +7054,7 @@ $(function () {
 
             //check whether hide home button is enable
             var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
-            if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }
@@ -11372,6 +11381,7 @@ $(function () {
 
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
+            me._isDropdownTree = true;
             me._render();
             me.$numVisibleParams = 0;
 
@@ -14410,7 +14420,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on",
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom : me.options.zoom
             });
 
@@ -14424,7 +14434,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
                 //add home button if user enable it
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(tb.btnHome);
                 }
                 listOfButtons.push(tb.btnRecent, tb.btnFavorite);
@@ -14447,6 +14457,7 @@ $(function () {
                 var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
 
                 $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                $toolbar.show();
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
@@ -14919,11 +14930,10 @@ $(function () {
                         }
                     }
 
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
                     //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}" +
-                        "ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }" +
-                        +"</style>");
-                    $("head").slice(0).append($viewportStyle);
+                    $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
 
                     // Show the unzoom toolbar
                     if (userZoom === "zoom") {
@@ -15694,6 +15704,8 @@ $(function () {
                     $reportExplorer: me.$reportExplorer
                 });
 
+                me._setLeftRightPaneStyle();
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                 if (view === "search") {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
@@ -15715,8 +15727,6 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
-
-                me._setLeftRightPaneStyle();
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
@@ -15795,15 +15805,14 @@ $(function () {
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-                
-                me._setLeftRightPaneStyle();
-
             }, timeout);
 
             me.element.css("background-color", "");
@@ -15834,10 +15843,12 @@ $(function () {
                     handleWindowResize: false
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
-                me._setLeftRightPaneStyle();
+                
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
 
@@ -23083,7 +23094,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
 
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(dtb.btnHome);
                 }
                 listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);
@@ -23587,6 +23598,10 @@ $(function () {
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
+
+                //set floating header top property base on the outer header height
+                me.outerToolbarHeight = me.outerToolbarHeight || me.options.$appContainer.find(".fr-layout-topdiv:first").height();
+                $reportViewer.reportViewer("option", "toolbarHeight", me.outerToolbarHeight);
 
                 var catalogItem = reportProperties.catalogItem;
                 var parameters = reportProperties.parameters;

@@ -80,7 +80,7 @@ $(function () {
                 userSettings: userSettings,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
-                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI") === "on",
+                showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
                 zoom : me.options.zoom
             });
 
@@ -94,7 +94,7 @@ $(function () {
             if (me.options.isReportManager) {
                 var listOfButtons = [];
                 //add home button if user enable it
-                if (forerunner.config.getCustomSettingsValue("showHomeButton") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(tb.btnHome);
                 }
                 listOfButtons.push(tb.btnRecent, tb.btnFavorite);
@@ -117,6 +117,7 @@ $(function () {
                 var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
 
                 $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                $toolbar.show();
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;

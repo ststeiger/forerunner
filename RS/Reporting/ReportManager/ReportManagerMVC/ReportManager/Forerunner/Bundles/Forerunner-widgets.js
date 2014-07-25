@@ -14913,8 +14913,10 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
-                layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
-                layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+                if (me.options.DefaultAppTemplate === null) {
+                    layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+                }
             });
 
             if (me.options.historyBack){

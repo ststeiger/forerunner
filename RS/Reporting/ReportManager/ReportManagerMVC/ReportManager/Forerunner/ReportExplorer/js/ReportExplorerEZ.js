@@ -69,10 +69,10 @@ $(function () {
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                me._setProperties(path, propertyListMap.normal);
+                me._setPropertiesTabs(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                me._setProperties(path, propertyListMap.searchFolder);
+                me._setPropertiesTabs(path, propertyListMap.searchFolder);
             }
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
@@ -402,7 +402,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, propertyListMap.report);
+            me._setPropertiesTabs(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -454,7 +454,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, propertyListMap.normal);
+            me._setPropertiesTabs(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -530,33 +530,16 @@ $(function () {
                 $container: me.element,
                 isFullScreen: me.isFullScreen
             }).render();
-            me._initPropertiesDialog();
+            
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
         },
-        _initPropertiesDialog: function () {
+        _setPropertiesTabs: function (path, propertyList) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var $dlg = layout.$container.find(".fr-tag-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-properties-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.forerunnerProperties({
-                    $appContainer: layout.$container,
-                    $reportViewer: layout.$mainviewport,
-                    $reportExplorer: layout.$mainsection,
-                    rsInstance: me.options.rsInstance
-                });
-                layout.$container.append($dlg);
-            }
-
-            me._propertiesDialog = $dlg;
-        },
-        _setProperties: function (path, propertyList) {
-            var me = this;
-            me._propertiesDialog.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
          * Get report explorer

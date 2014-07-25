@@ -676,7 +676,7 @@ $(function () {
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @example
      * $("#reportViewerId").reportViewer();
-     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
+     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
@@ -1167,7 +1167,12 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            // TODO
+            var heightScale = (me.element.height() / page.height());
+            if (heightScale - 1 < 0.00001) {
+                heightScale = $(window).height() / $(document).height();
+            }
+            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom);
         },
 
         _addSetPageCallback: function (func) {
@@ -2601,9 +2606,9 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
-         * @param {Object} savedParameters - Saved parameters
+         * @param {Object} parameters - Optional parameters
          */
-        loadReport: function (reportPath, pageNum, savedParameters) {
+        loadReport: function (reportPath, pageNum, parameters) {
             var me = this;
 
             // For each new report we reset the zoom factor back to 100%
@@ -2630,7 +2635,7 @@ $(function () {
             
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
-            me.savedParameters = savedParameters ? savedParameters : null;
+            me.savedParameters = parameters ? parameters : null;
 
             //See if we have RDL extensions
             me._getRDLExtProp();
@@ -2701,7 +2706,6 @@ $(function () {
             if (!pageNum) {
                 pageNum = 1;
             }
-
             if (paramList && typeof paramList === "object")
                 paramList =JSON.stringify(paramList);
 
@@ -3936,7 +3940,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
 
@@ -3961,11 +3965,16 @@ $(function () {
          * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
-        hideAllTools: function (){
+        hideAllTools: function () {
             var me = this;
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
+                //skip hide toolGroup, it will hide all its buttons inside.
+                if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                    var $toolEl = me.element.find("." + Obj.selectorClass);
+
+                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
                     me.hideTool(Obj.selectorClass);
+                }
             });
         },
         /**
@@ -4496,11 +4505,18 @@ $(function () {
             $rightpane.append($rightheaderspacer);
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
+            //Property Dialog Section
+            var $propertySection = new $("<div />");
+            $propertySection.addClass("fr-properties-section");
+            me.$propertySection = $propertySection;
+            $container.append($propertySection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
             me.$unzoomsection = $unzoomsection;
             $mainviewport.append(me.$unzoomsection);
+
+            me._initPropertiesDialog();
 
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -4537,6 +4553,16 @@ $(function () {
             me.$rightpanecontent.removeClass("fr-layout-position-absolute");
         },
 
+        _initPropertiesDialog: function () {
+            var me = this;
+            me.$propertySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$propertySection.forerunnerProperties({
+                $appContainer: me.$container,
+                $reportViewer: me.$mainviewport,
+                $reportExplorer: me.$mainsection
+            });
+        },
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -4814,7 +4840,7 @@ $(function () {
 
             var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
-            $viewer.on(events.reportVieweractionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = me.$bottomdivspacer;
@@ -5335,6 +5361,15 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
+
+            me.$tabs.find("div").remove();
+            me.$tabsUL.find("li").remove();
+            me._preprocess = null;
+
+            if (!path) {
+                return;
+            }
+
             me.curPath = path;
             me._propertyList = propertyList;
 
@@ -5345,10 +5380,6 @@ $(function () {
                     me.$tabs[widget.widgetName]("destroy");
                 }
             }
-            
-            me.$tabs.find("div").remove();
-            me.$tabsUL.empty();
-            me._preprocess = null;
 
             for (var i = 0; i < me._propertyList.length; i++) {
                 switch (me._propertyList[i]) {
@@ -5792,13 +5823,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6843,13 +6876,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6951,7 +6986,13 @@ $(function () {
             var previous = $propertyDlg.forerunnerProperties("getProperties");
 
             // Set the new settings based upon the catalogItem and show the dialog
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            var propertyList = propertyListMap[me.options.catalogItem.Type];
+            // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
+            if (me.options.catalogItem.Type === 3) {
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+            }
+
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
@@ -14456,6 +14497,7 @@ $(function () {
                 var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
 
                 $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                $toolbar.show();
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;
@@ -14771,7 +14813,9 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var events = constants.events;
     var helper = forerunner.helper;
+    var propertyEnums = forerunner.ssr.constants.properties;
     
      /**
      * Widget used to view a report
@@ -14855,24 +14899,31 @@ $(function () {
 
             initializer.render();
 
-            $viewer.on("reportviewerback", function (e, data) {
+            $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             
             });
 
-            $viewer.on("reportvieweractionhistorypop", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) {
                 if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }
             });
 
-            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPush(), function (e, data) {
                 if (!me.options.historyBack) {
                     layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                if (me.options.DefaultAppTemplate === null) {
+                    layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
                 }
             });
 
@@ -14928,11 +14979,10 @@ $(function () {
                         }
                     }
 
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
                     //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}" +
-                        "ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }" +
-                        +"</style>");
-                    $("head").slice(0).append($viewportStyle);
+                    $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
 
                     // Show the unzoom toolbar
                     if (userZoom === "zoom") {
@@ -15406,6 +15456,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var propertyListMap = {
+        // Normal explorer folder and resource files except search folder
+        normal: [propertyEnums.description, propertyEnums.tags],
+        // Report/Linked Report
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+    };
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -15431,19 +15490,17 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            var propertyList = [];
 
             if (!path) {// root page
                 path = "/";
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.description, propertyEnums.tags);
+                me._setPropertiesTabs(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+                me._setPropertiesTabs(path, propertyListMap.searchFolder);
             }
-            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -15703,6 +15760,8 @@ $(function () {
                     $reportExplorer: me.$reportExplorer
                 });
 
+                me._setLeftRightPaneStyle();
+
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
                 if (view === "search") {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
@@ -15724,8 +15783,6 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
-
-                me._setLeftRightPaneStyle();
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
@@ -15772,7 +15829,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+            me._setPropertiesTabs(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15804,15 +15861,14 @@ $(function () {
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
                 }
-                
-                me._setLeftRightPaneStyle();
-
             }, timeout);
 
             me.element.css("background-color", "");
@@ -15825,7 +15881,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
+            me._setPropertiesTabs(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -15843,10 +15899,12 @@ $(function () {
                     handleWindowResize: false
                 });
 
+                me._setLeftRightPaneStyle();
+
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
-                me._setLeftRightPaneStyle();
+                
                 layout.$mainsection.fadeIn("fast");
             }, timeout);
 
@@ -15899,33 +15957,16 @@ $(function () {
                 $container: me.element,
                 isFullScreen: me.isFullScreen
             }).render();
-            me._initPropertiesDialog();
+            
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
         },
-        _initPropertiesDialog: function () {
+        _setPropertiesTabs: function (path, propertyList) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var $dlg = layout.$container.find(".fr-tag-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-properties-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.forerunnerProperties({
-                    $appContainer: layout.$container,
-                    $reportViewer: layout.$mainviewport,
-                    $reportExplorer: layout.$mainsection,
-                    rsInstance: me.options.rsInstance
-                });
-                layout.$container.append($dlg);
-            }
-
-            me._propertiesDialog = $dlg;
-        },
-        _setProperties: function (path, propertyList) {
-            var me = this;
-            me._propertiesDialog.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
          * Get report explorer
@@ -23596,6 +23637,10 @@ $(function () {
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
+
+                //set floating header top property base on the outer header height
+                me.outerToolbarHeight = me.outerToolbarHeight || me.options.$appContainer.find(".fr-layout-topdiv:first").height();
+                $reportViewer.reportViewer("option", "toolbarHeight", me.outerToolbarHeight);
 
                 var catalogItem = reportProperties.catalogItem;
                 var parameters = reportProperties.parameters;

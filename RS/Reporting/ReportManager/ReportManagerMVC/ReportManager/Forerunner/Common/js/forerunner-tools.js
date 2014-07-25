@@ -1027,8 +1027,8 @@ $(function () {
         /** @member */
         itemKeyword: {
             toolType: toolTypes.input,
-            selectorClass: "fr-item-keyword-textbox fr-core-input",
-            sharedClass: "fr-toolbase-find-textbox fr-item-keyword-textbox",
+            selectorClass: "fr-item-keyword-textbox",
+            sharedClass: "fr-toolbase-find-textbox fr-core-input",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -1752,7 +1752,7 @@ $(function () {
             text: locData.properties.title,
             events: {
                 click: function (e) {
-                    var $propertyDlg = e.data.me.options.$appContainer.find(".fr-properties-section");
+                    var $propertyDlg = e.data.me.options.$appContainer.children(".fr-properties-section");
                     $propertyDlg.forerunnerProperties("openDialog");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
                 }

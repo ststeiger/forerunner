@@ -90,6 +90,15 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
+
+            me.$tabs.find("div").remove();
+            me.$tabsUL.find("li").remove();
+            me._preprocess = null;
+
+            if (!path) {
+                return;
+            }
+
             me.curPath = path;
             me._propertyList = propertyList;
 
@@ -100,10 +109,6 @@ $(function () {
                     me.$tabs[widget.widgetName]("destroy");
                 }
             }
-            
-            me.$tabs.find("div").remove();
-            me.$tabsUL.empty();
-            me._preprocess = null;
 
             for (var i = 0; i < me._propertyList.length; i++) {
                 switch (me._propertyList[i]) {

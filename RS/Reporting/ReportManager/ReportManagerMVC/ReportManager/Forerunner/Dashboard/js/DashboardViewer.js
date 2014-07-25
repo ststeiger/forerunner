@@ -189,6 +189,10 @@ $(function () {
                     me._onAfterReportLoaded.apply(me, arguments);
                 });
 
+                //set floating header top property base on the outer header height
+                me.outerToolbarHeight = me.outerToolbarHeight || me.options.$appContainer.find(".fr-layout-topdiv:first").height();
+                $reportViewer.reportViewer("option", "toolbarHeight", me.outerToolbarHeight);
+
                 var catalogItem = reportProperties.catalogItem;
                 var parameters = reportProperties.parameters;
                 $reportViewer.reportViewer("loadReport", catalogItem.Path, 1, parameters);

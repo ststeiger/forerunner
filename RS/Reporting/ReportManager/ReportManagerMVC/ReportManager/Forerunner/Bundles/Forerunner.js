@@ -413,7 +413,7 @@ $(function () {
             /** @constant */
             actionHistoryPop: "actionHistoryPop",
             /** widget + event, lowercase */
-            reportVieweractionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
+            reportViewerActionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
 
             /** @constant */
             changeReport: "changeReport",
@@ -423,7 +423,7 @@ $(function () {
             /** @constant */
             actionHistoryPush: "actionHistoryPush",
             /** widget + event, lowercase */
-            reportVieweractionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
+            reportViewerActionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
 
             /** @constant */
             showNav: "showNav",
@@ -1591,7 +1591,9 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(MSIE 8)/) !== null;
+
+            var ret = (ua.match(/(MSIE 8)/) !== null) || (ua.match(/(MSIE 7)/) !== null)
+            return ret;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
         isMSIE9: function () {

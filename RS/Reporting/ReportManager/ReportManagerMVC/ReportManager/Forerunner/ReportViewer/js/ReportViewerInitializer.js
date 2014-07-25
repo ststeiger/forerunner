@@ -117,6 +117,7 @@ $(function () {
                 var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
 
                 $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                $toolbar.show();
             }
 
             var $unzoomtoolbar = me.options.$unzoomtoolbar;

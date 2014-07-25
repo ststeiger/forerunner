@@ -1915,13 +1915,11 @@ $(function () {
         },
         _removeParameters: function () {
             var me = this;
-            if (me.paramLoaded === true) {
-                var $paramArea = me.options.paramArea;
-                if ($paramArea) {
-                    $paramArea.reportParameter("removeParameter");
-                    me.paramLoaded = false;
-                    me.$numOfVisibleParameters = 0;
-                }
+            var $paramArea = me.options.paramArea;
+            if ($paramArea) {
+                $paramArea.reportParameter("removeParameter");
+                me.paramLoaded = false;
+                me.$numOfVisibleParameters = 0;
             }
         },
         _resetViewer: function(isSameReport){
@@ -1947,6 +1945,10 @@ $(function () {
             me.origionalReportPath = "";
             me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+
+            if (!isSameReport) {
+                me._removeParameters();
+            }
         },
         _reloadFromSessionStorage: function () {
             var me = this;

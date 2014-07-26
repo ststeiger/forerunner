@@ -804,7 +804,7 @@ $(function () {
             $control.attr("datatype", param.Type);
 
             for (var i = 0; i < radioValues.length; i++) {
-                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
+                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' prompt='" + param.Prompt + "' value='" + radioValues[i].value +
                     "' datatype='" + param.Type + "' />");
                 if (dependenceDisable) {
                     $radioItem.attr("disabled", "true");
@@ -832,7 +832,7 @@ $(function () {
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
+            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' prompt='" + param.Prompt + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
             if (dependenceDisable) {
@@ -1172,6 +1172,7 @@ $(function () {
                     .attr("haschild", hasChild)
                     .attr("nullable", param.Nullable)
                     .attr("level", level)
+                    .attr("prompt", param.Prompt)
                     .addClass("fr-param-tree-ul");
 
                 if (param.isChild) {
@@ -1447,9 +1448,9 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-                var $parent = $tree.siblings(".fr-param-tree-input");
+            var $parent = $tree.siblings(".fr-param-tree-input");
 
-                $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
+            $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
             for (var i in me._parameterDefinitions) {
                 if (me._parameterDefinitions.hasOwnProperty(i)) {
@@ -1657,6 +1658,7 @@ $(function () {
             $input.attr("name", param.Name);
             $input.attr("ismultiple", param.MultiValue);
             $input.attr("datatype", param.Type);
+            $input.attr("prompt", param.Prompt);
             if (readonly) {
                 $input.attr("readonly", true);
             }
@@ -1952,6 +1954,10 @@ $(function () {
 
             return true;
         },
+        _pushParam: function (a, $input, data) {
+            data.Prompt = $input.attr("prompt");
+            a.push(data);
+        },
         /**
          * Generate parameter value list into string and return
          *
@@ -1978,16 +1984,16 @@ $(function () {
                     
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     if (me._shouldInclude(input, noValid)) {
                         if ($input.attr("ismultiple") === "false") {
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
                             var jsonValues = $input.attr("jsonValues");
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
                         }
                     }
                 });
@@ -1997,16 +2003,16 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     if (me._shouldInclude(input, noValid)) {
                         if ($input.attr("ismultiple") === "false") {
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
                             var value = me._isParamNullable(input);
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(value ? value : null) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(value ? value : null) });
                         }
                     }
                 });
@@ -2016,14 +2022,14 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     var shouldInclude = input.value !== null && input.value !== "" && me._shouldInclude(input, noValid);
 
                     if (shouldInclude) {
-                        a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                        me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                     }
                 });
                 var radioList = {};
@@ -2042,10 +2048,10 @@ $(function () {
                 });
                 for (var radioName in radioList) {
                     if (me.element.find(".fr-paramname-" + radioName).hasClass("fr-usedefault")) {
-                        a.push({ Parameter: radioName, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: radioName, UseDefault: true });
                     }
                     else {
-                        a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
+                        me._pushParam(a, $input, { Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                     }
                 }
 

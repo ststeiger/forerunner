@@ -380,6 +380,9 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
+
+                    //var paramsList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
+                    //alert("paramsList: " + paramsList);
                 }
             }
         },

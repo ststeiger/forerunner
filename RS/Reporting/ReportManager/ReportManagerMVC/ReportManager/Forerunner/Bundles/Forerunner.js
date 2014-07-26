@@ -413,7 +413,7 @@ $(function () {
             /** @constant */
             actionHistoryPop: "actionHistoryPop",
             /** widget + event, lowercase */
-            reportVieweractionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
+            reportViewerActionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
 
             /** @constant */
             changeReport: "changeReport",
@@ -423,7 +423,7 @@ $(function () {
             /** @constant */
             actionHistoryPush: "actionHistoryPush",
             /** widget + event, lowercase */
-            reportVieweractionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
+            reportViewerActionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
 
             /** @constant */
             showNav: "showNav",

@@ -2550,13 +2550,11 @@ $(function () {
         },
         _removeParameters: function () {
             var me = this;
-            if (me.paramLoaded === true) {
-                var $paramArea = me.options.paramArea;
-                if ($paramArea) {
-                    $paramArea.reportParameter("removeParameter");
-                    me.paramLoaded = false;
-                    me.$numOfVisibleParameters = 0;
-                }
+            var $paramArea = me.options.paramArea;
+            if ($paramArea) {
+                $paramArea.reportParameter("removeParameter");
+                me.paramLoaded = false;
+                me.$numOfVisibleParameters = 0;
             }
         },
         _resetViewer: function(isSameReport){
@@ -2582,6 +2580,10 @@ $(function () {
             me.origionalReportPath = "";
             me.renderError = false;            
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+
+            if (!isSameReport) {
+                me._removeParameters();
+            }
         },
         _reloadFromSessionStorage: function () {
             var me = this;
@@ -4503,11 +4505,18 @@ $(function () {
             $rightpane.append($rightheaderspacer);
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
+            //Property Dialog Section
+            var $propertySection = new $("<div />");
+            $propertySection.addClass("fr-properties-section");
+            me.$propertySection = $propertySection;
+            $container.append($propertySection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
             me.$unzoomsection = $unzoomsection;
             $mainviewport.append(me.$unzoomsection);
+
+            me._initPropertiesDialog();
 
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -4544,6 +4553,16 @@ $(function () {
             me.$rightpanecontent.removeClass("fr-layout-position-absolute");
         },
 
+        _initPropertiesDialog: function () {
+            var me = this;
+            me.$propertySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$propertySection.forerunnerProperties({
+                $appContainer: me.$container,
+                $reportViewer: me.$mainviewport,
+                $reportExplorer: me.$mainsection
+            });
+        },
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -4821,7 +4840,7 @@ $(function () {
 
             var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
-            $viewer.on(events.reportVieweractionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = me.$bottomdivspacer;
@@ -5342,6 +5361,15 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
+
+            me.$tabs.find("div").remove();
+            me.$tabsUL.find("li").remove();
+            me._preprocess = null;
+
+            if (!path) {
+                return;
+            }
+
             me.curPath = path;
             me._propertyList = propertyList;
 
@@ -5352,10 +5380,6 @@ $(function () {
                     me.$tabs[widget.widgetName]("destroy");
                 }
             }
-            
-            me.$tabs.find("div").remove();
-            me.$tabsUL.empty();
-            me._preprocess = null;
 
             for (var i = 0; i < me._propertyList.length; i++) {
                 switch (me._propertyList[i]) {
@@ -5799,13 +5823,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6850,13 +6876,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.tags, propertyEnums.description],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
-        3: [propertyEnums.tags, propertyEnums.description],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.description],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**
@@ -6958,7 +6986,13 @@ $(function () {
             var previous = $propertyDlg.forerunnerProperties("getProperties");
 
             // Set the new settings based upon the catalogItem and show the dialog
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyListMap[me.options.catalogItem.Type]);
+            var propertyList = propertyListMap[me.options.catalogItem.Type];
+            // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
+            if (me.options.catalogItem.Type === 3) {
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+            }
+
+            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
@@ -12003,7 +12037,7 @@ $(function () {
             $control.attr("datatype", param.Type);
 
             for (var i = 0; i < radioValues.length; i++) {
-                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
+                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' prompt='" + param.Prompt + "' value='" + radioValues[i].value +
                     "' datatype='" + param.Type + "' />");
                 if (dependenceDisable) {
                     $radioItem.attr("disabled", "true");
@@ -12031,7 +12065,7 @@ $(function () {
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
+            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' prompt='" + param.Prompt + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
             if (dependenceDisable) {
@@ -12371,6 +12405,7 @@ $(function () {
                     .attr("haschild", hasChild)
                     .attr("nullable", param.Nullable)
                     .attr("level", level)
+                    .attr("prompt", param.Prompt)
                     .addClass("fr-param-tree-ul");
 
                 if (param.isChild) {
@@ -12646,9 +12681,9 @@ $(function () {
                 temp = null,
                 isValid = true,
                 invalidList = null;
-                var $parent = $tree.siblings(".fr-param-tree-input");
+            var $parent = $tree.siblings(".fr-param-tree-input");
 
-                $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
+            $parent.removeClass("fr-param-cascadingtree-error").attr("cascadingTree", "");
 
             for (var i in me._parameterDefinitions) {
                 if (me._parameterDefinitions.hasOwnProperty(i)) {
@@ -12856,6 +12891,7 @@ $(function () {
             $input.attr("name", param.Name);
             $input.attr("ismultiple", param.MultiValue);
             $input.attr("datatype", param.Type);
+            $input.attr("prompt", param.Prompt);
             if (readonly) {
                 $input.attr("readonly", true);
             }
@@ -13151,6 +13187,10 @@ $(function () {
 
             return true;
         },
+        _pushParam: function (a, $input, data) {
+            data.Prompt = $input.attr("prompt");
+            a.push(data);
+        },
         /**
          * Generate parameter value list into string and return
          *
@@ -13158,7 +13198,7 @@ $(function () {
          *
          * @param {Boolean} noValid - if not need valid form set noValid = true
          *
-         * @return {String} - parameter value list
+         * @return {String} - parameter value list or null if this report has no parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -13169,7 +13209,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {
@@ -13177,16 +13217,16 @@ $(function () {
                     
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     if (me._shouldInclude(input, noValid)) {
                         if ($input.attr("ismultiple") === "false") {
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
                             var jsonValues = $input.attr("jsonValues");
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
                         }
                     }
                 });
@@ -13196,16 +13236,16 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     if (me._shouldInclude(input, noValid)) {
                         if ($input.attr("ismultiple") === "false") {
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                         } else {
                             var value = me._isParamNullable(input);
-                            a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(value ? value : null) });
+                            me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: JSON.parse(value ? value : null) });
                         }
                     }
                 });
@@ -13215,14 +13255,14 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        a.push({ Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
                         return true;
                     }
 
                     var shouldInclude = input.value !== null && input.value !== "" && me._shouldInclude(input, noValid);
 
                     if (shouldInclude) {
-                        a.push({ Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
+                        me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
                     }
                 });
                 var radioList = {};
@@ -13241,16 +13281,22 @@ $(function () {
                 });
                 for (var radioName in radioList) {
                     if (me.element.find(".fr-paramname-" + radioName).hasClass("fr-usedefault")) {
-                        a.push({ Parameter: radioName, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: radioName, UseDefault: true });
                     }
                     else {
-                        a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
+                        me._pushParam(a, $input, { Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                     }
+                }
+
+                // Return null if this report has no parameters
+                if (a.length === 0) {
+                    return null;
                 }
 
                 var paramsObject = { "ParamsList": a };
                 return JSON.stringify(paramsObject);
             } else {
+                // Return null if this report has no parameters
                 return null;
             }
         },
@@ -14773,7 +14819,9 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
+    var events = constants.events;
     var helper = forerunner.helper;
+    var propertyEnums = forerunner.ssr.constants.properties;
     
      /**
      * Widget used to view a report
@@ -14857,24 +14905,31 @@ $(function () {
 
             initializer.render();
 
-            $viewer.on("reportviewerback", function (e, data) {
+            $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             
             });
 
-            $viewer.on("reportvieweractionhistorypop", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) {
                 if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }
             });
 
-            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+            $viewer.on(events.reportViewerActionHistoryPush(), function (e, data) {
                 if (!me.options.historyBack) {
                     layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                if (me.options.DefaultAppTemplate === null) {
+                    layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
                 }
             });
 
@@ -15407,6 +15462,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var propertyListMap = {
+        // Normal explorer folder and resource files except search folder
+        normal: [propertyEnums.description, propertyEnums.tags],
+        // Report/Linked Report
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        // Search Folder
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+    };
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -15432,19 +15496,17 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            var propertyList = [];
 
             if (!path) {// root page
                 path = "/";
             }
             if (!view) {// general catalog page
                 view = "catalog";
-                propertyList.push(propertyEnums.description, propertyEnums.tags);
+                me._setPropertiesTabs(path, propertyListMap.normal);
             }
             else if (view === "searchfolder") {
-                propertyList.push(propertyEnums.searchFolder, propertyEnums.description);
+                me._setPropertiesTabs(path, propertyListMap.searchFolder);
             }
-            me._setProperties(path, propertyList);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -15773,7 +15835,7 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+            me._setPropertiesTabs(path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -15825,7 +15887,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setProperties(path, [propertyEnums.description, propertyEnums.tags]);
+            me._setPropertiesTabs(path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -15901,33 +15963,16 @@ $(function () {
                 $container: me.element,
                 isFullScreen: me.isFullScreen
             }).render();
-            me._initPropertiesDialog();
+            
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
         },
-        _initPropertiesDialog: function () {
+        _setPropertiesTabs: function (path, propertyList) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
-
-            var $dlg = layout.$container.find(".fr-tag-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-properties-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.forerunnerProperties({
-                    $appContainer: layout.$container,
-                    $reportViewer: layout.$mainviewport,
-                    $reportExplorer: layout.$mainsection,
-                    rsInstance: me.options.rsInstance
-                });
-                layout.$container.append($dlg);
-            }
-
-            me._propertiesDialog = $dlg;
-        },
-        _setProperties: function (path, propertyList) {
-            var me = this;
-            me._propertiesDialog.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
          * Get report explorer

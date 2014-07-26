@@ -108,11 +108,18 @@ $(function () {
             $rightpane.append($rightheaderspacer);
             $rightpane.append($rightpanecontent);
             $container.append($rightpane);
+            //Property Dialog Section
+            var $propertySection = new $("<div />");
+            $propertySection.addClass("fr-properties-section");
+            me.$propertySection = $propertySection;
+            $container.append($propertySection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
             me.$unzoomsection = $unzoomsection;
             $mainviewport.append(me.$unzoomsection);
+
+            me._initPropertiesDialog();
 
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -149,6 +156,16 @@ $(function () {
             me.$rightpanecontent.removeClass("fr-layout-position-absolute");
         },
 
+        _initPropertiesDialog: function () {
+            var me = this;
+            me.$propertySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$propertySection.forerunnerProperties({
+                $appContainer: me.$container,
+                $reportViewer: me.$mainviewport,
+                $reportExplorer: me.$mainsection
+            });
+        },
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -426,7 +443,7 @@ $(function () {
 
             var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
-            $viewer.on(events.reportVieweractionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
+            $viewer.on(events.reportViewerActionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = me.$bottomdivspacer;

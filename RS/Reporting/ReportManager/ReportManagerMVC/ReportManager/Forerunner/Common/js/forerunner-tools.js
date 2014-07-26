@@ -379,6 +379,9 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
+
+                    //var paramsList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
+                    //alert("paramsList: " + paramsList);
                 }
             }
         },
@@ -1752,7 +1755,7 @@ $(function () {
             text: locData.properties.title,
             events: {
                 click: function (e) {
-                    var $propertyDlg = e.data.me.options.$appContainer.find(".fr-properties-section");
+                    var $propertyDlg = e.data.me.options.$appContainer.children(".fr-properties-section");
                     $propertyDlg.forerunnerProperties("openDialog");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
                 }

@@ -13201,7 +13201,7 @@ $(function () {
          *
          * @param {Boolean} noValid - if not need valid form set noValid = true
          *
-         * @return {String} - parameter value list or null if this report has no parameters
+         * @return {String} - parameter value list or null if this report has no visible parameters
          */
         getParamsList: function (noValid) {
             var me = this;

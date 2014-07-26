@@ -111,20 +111,19 @@ $(document).ready(function () {
     
 });
 
+var slider;
 function SetupSlider() {
-    var slideLeft;
-    var slideRight;
-
+ 
     if ($("#Slide").length === 1) {
 
-        slideLeft = $("#Slide").bxSlider({
+        slider = $("#Slide").bxSlider({
             mode: 'horizontal',
             controls: false,
             pager: false,
             auto: true,
             randomStart: true,
             pause: 9000,
-            autoHover:true
+            autoHover: true
         });
 
     }
@@ -133,11 +132,13 @@ function SetupSlider() {
 }
 
 function NextSlide() {
-    $("#Slide").bxSlider("goToNextSlide");
+    slider.goToNextSlide();
+    return false;
 }
 
 function PrevSlide() {
-    $("#Slide").bxSlider("goToPrevSlide");
+    slider.goToPrevSlide();
+    return false;
 }
 
 var page = $("#Page").attr("data-page");

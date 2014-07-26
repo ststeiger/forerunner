@@ -2479,7 +2479,10 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
+                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
+                    else {
+                        me._loadPage(pageNum, false);
+                    }
 
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;

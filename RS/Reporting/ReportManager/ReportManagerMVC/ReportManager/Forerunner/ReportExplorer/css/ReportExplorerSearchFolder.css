@@ -12,7 +12,7 @@
     margin:4px;
 }
 .fr-sf-table td {
-    padding:2px;
+    padding:5px;
 }
 .fr-sf-prompt td {
     padding:0px 2px;
@@ -30,10 +30,12 @@
     margin-top:2px;
     font-style:italic;
 }
-.fr-sf-text {
+.fr-sf-form-container .fr-sf-text {
     width:240px;
     margin-right:4px;
-    border: 1px solid lightblue;
+    padding: 0 0 0 4px;
+    font-size:13pt;
+    height:24px;
 }
 .fr-sf-form-container .fr-sf-error { 
     border-width: thin; 

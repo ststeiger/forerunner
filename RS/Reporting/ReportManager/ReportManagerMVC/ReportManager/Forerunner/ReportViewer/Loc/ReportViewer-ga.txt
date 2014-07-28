@@ -250,7 +250,8 @@
     "submit":"Cuir",
     "prompt":"Clibeanna ar leith le camóga.",
     "homePage":"leathanach baile",
-    "createTo":"cruthaithe faoi"
+    "createTo":"cruthaithe faoi",
+    "namePlaceholder":"Cuardaigh Fillteán Ainm"
   },
   "subscription": {
     "email":"Ríomhphost",

@@ -250,7 +250,8 @@
     "submit":"inkomma",
     "prompt":"åtskilja taggar med kommatecken.",
     "homePage":"Hemsida",
-    "createTo":"Tillverkad enligt"
+    "createTo":"Tillverkad enligt",
+    "namePlaceholder":"sökmapp Namn"
   },
   "subscription": {
     "email":"E",

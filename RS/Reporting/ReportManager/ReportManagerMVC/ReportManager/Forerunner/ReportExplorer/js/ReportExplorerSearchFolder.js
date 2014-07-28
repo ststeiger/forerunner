@@ -38,11 +38,11 @@ $(function () {
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +

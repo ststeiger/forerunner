@@ -5428,7 +5428,7 @@ $(function () {
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
-                    "<textarea class='fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
+                    "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
                 "</div>");
 
             me.$desInput = $descriptionDiv.find(".fr-description-text");
@@ -5443,7 +5443,7 @@ $(function () {
             var $rdlDiv = new $(
                 "<div id='" + me.guid + "_" + "RDL" + "'  class='fr-property-container fr-rdl-container'>" +
                     "<label class='fr-rdl-label'>" + locData.RDLExt.dialogTitle + "</label>" +
-                    "<textarea rows='5' class='fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
+                    "<textarea rows='5' class='fr-core-input fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
                 "</div>");
 
             me.$rdlInput = $rdlDiv.find(".fr-rdl-text");
@@ -5465,7 +5465,7 @@ $(function () {
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
                     "<div class='fr-tag-input-div'>" +
                         "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
-                        "<textarea class='fr-property-input fr-tag-text' rows='5' name='tags' />" +
+                        "<textarea class='fr-core-input fr-property-input fr-tag-text' rows='5' name='tags' />" +
                     "</div>" +
                     "<div class='fr-tag-prompt-div'>" +
                         "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
@@ -5488,11 +5488,11 @@ $(function () {
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
+                                "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td><input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -5523,6 +5523,7 @@ $(function () {
             var me = this;
 
             var tabName = me.$tabsUL.find(".ui-state-active").attr("name");
+            var result = true;
             switch (tabName) {
                 case propertyEnums.description:
                     me._setDescription();
@@ -5534,12 +5535,14 @@ $(function () {
                     me._saveTags();
                     break;
                 case propertyEnums.searchFolder:
-                    me._setSearchFolder();
+                    result = me._setSearchFolder();
                     break;
             }
 
-            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
-            me.closeDialog();
+            if (result === true) {
+                me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
+                me.closeDialog();
+            }
         },
         /**
          * Show the properties modal dialog.
@@ -5799,6 +5802,11 @@ $(function () {
 
                     me.options.$reportExplorer.reportExplorer("setSearchFolder", searchfolder);
                 }
+
+                return true;
+            }
+            else {
+                return false;
             }
         }
     });
@@ -8276,11 +8284,11 @@ $(function () {
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -15265,14 +15273,14 @@ $(function () {
                       "<div class='fr-dsc-username'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.username + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
+                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-core-input fr-dsc-text-input fr-dsc-username-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +
                       "<div class='fr-dsc-password'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.password + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
+                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-core-input fr-dsc-text-input fr-dsc-password-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +

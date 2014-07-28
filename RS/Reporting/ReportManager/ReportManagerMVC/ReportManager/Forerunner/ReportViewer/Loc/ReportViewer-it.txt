@@ -250,7 +250,8 @@
     "submit":"presentare",
     "prompt":"Separa i tags con virgole.",
     "homePage":"Home page",
-    "createTo":"creato sotto"
+    "createTo":"creato sotto",
+    "namePlaceholder":"Folder ricerca nome"
   },
   "subscription": {
     "email":"Email",

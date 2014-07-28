@@ -250,7 +250,8 @@
     "submit":"提交",
     "prompt":"使用逗號分隔標籤.",
     "homePage":"主頁",
-    "createTo":"創建到"
+    "createTo":"創建到",
+    "namePlaceholder":"搜索文件夾名稱"
   },
   "subscription": {
     "email":"電子郵件",

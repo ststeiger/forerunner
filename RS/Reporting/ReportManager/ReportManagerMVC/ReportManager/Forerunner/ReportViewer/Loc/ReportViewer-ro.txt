@@ -250,7 +250,8 @@
     "submit":"Executa",
     "prompt":"Tag-uri separate prin virgula.",
     "homePage":"pagina principală",
-    "createTo":"creat sub"
+    "createTo":"creat sub",
+    "namePlaceholder":"Folder de căutare Nume"
   },
   "subscription": {
     "email":"E-mail",

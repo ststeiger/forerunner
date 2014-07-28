@@ -139,8 +139,8 @@ $(function () {
             $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
-            $propertyDlg.on(events.forerunnerPropertiesClose(), function (event, data) {
-                // Retore the previous settings
+            $propertyDlg.one(events.forerunnerPropertiesClose(), function (event, data) {
+                // Restore the previous settings
                 if (previous && previous.path && previous.propertyList) {
                     $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
                 }

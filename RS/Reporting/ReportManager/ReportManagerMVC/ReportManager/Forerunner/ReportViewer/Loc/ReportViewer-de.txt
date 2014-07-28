@@ -250,7 +250,8 @@
     "submit":"einreichen",
     "prompt":"Tags mit Kommas.",
     "homePage":"Startseite",
-    "createTo":"erstellt unter"
+    "createTo":"erstellt unter",
+    "namePlaceholder":"Suchordner Name"
   },
   "subscription": {
     "email":"E-Mail",

@@ -250,7 +250,8 @@
     "submit":"提出する",
     "prompt":"複数のタグはコンマで区切って.",
     "homePage":"ホームページ",
-    "createTo":"下に作成"
+    "createTo":"下に作成",
+    "namePlaceholder":"検索フォルダ 名前"
   },
   "subscription": {
     "email":"Eメール",

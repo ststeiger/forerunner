@@ -250,7 +250,8 @@
     "submit":"leggja",
     "prompt":"Aðskilja merki með kommum.",
     "homePage":"heimasíða",
-    "createTo":"búin undir"
+    "createTo":"búin undir",
+    "namePlaceholder":"Leita Mappa nafn"
   },
   "subscription": {
     "email":"Email",

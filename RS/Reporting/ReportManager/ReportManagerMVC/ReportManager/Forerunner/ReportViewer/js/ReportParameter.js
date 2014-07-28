@@ -40,20 +40,22 @@ $(function () {
 
         $params: null,
         _formInit: false,
-        _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
         _revertLock: false,
         _useDefault: false,
+        _submittedParamsList: null,
+        _parameterDefinitions: null,
+        _hasPostedBackWithoutSubmitForm: false,
+        _dependencyList: null,
+        _isDropdownTree: true, // indicate whether apply cascading tree
+        _writeParamDoneCallback: null,
 
         _init: function () {
             var me = this;
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
-        },
-        _destroy: function () {
-
         },
         _render: function () {
             var me = this;
@@ -82,11 +84,6 @@ $(function () {
 
             me._formInit = true;
         },
-        _dependencyList: null,
-        //indicate whether apply cascading tree
-        _isDropdownTree: true,
-        _writeParamDoneCallback: null,
-
         /**
          * Get number of visible parameters
          *
@@ -96,13 +93,10 @@ $(function () {
          */
         getNumOfVisibleParameters: function () {
             var me = this;
-            if (me.$numVisibleParams !== undefined)
-                return me.$numVisibleParams;
+            if (me._numVisibleParams !== undefined)
+                return me._numVisibleParams;
             return 0;
         },
-
-        _parameterDefinitions: {},
-        _hasPostedBackWithoutSubmitForm: false,
         /**
          * Update an existing parameter panel by posting back current selected values to update casacade parameters.
          *
@@ -178,20 +172,19 @@ $(function () {
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
-            me._paramCount = parseInt(data.Count, 10);
 
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
-            me._isDropdownTree = true;
-            me._render();
-            me.$numVisibleParams = 0;
+            me._submittedParamsList = null;
+            me._numVisibleParams = 0;
 
+            me._render();
             me._dataPreprocess(data.ParametersList);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
-                    me.$numVisibleParams += 1;
+                    me._numVisibleParams += 1;
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                 }
                 else
@@ -213,14 +206,11 @@ $(function () {
                     if (element.is(":radio"))
                         error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                     else {
-                        if (element.attr("ismultiple") === "true") {
-                            error.appendTo(element.parent("div").next("span"));
-                        }
-                        else if (element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
-                            error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
+                        if (element.attr("ismultiple") === "true" || element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
+                            error.appendTo(element.parent("div").siblings(".fr-param-error-message"));
                         }
                         else
-                            error.appendTo(element.nextAll(".fr-param-error-message"));
+                            error.appendTo(element.siblings(".fr-param-error-message"));
                     }
                 },
                 highlight: function (element) {
@@ -244,7 +234,7 @@ $(function () {
             });
 
             if (submitForm !== false) {
-                if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
+                if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
                     if (renderParamArea !== false)
@@ -294,8 +284,6 @@ $(function () {
                 };
             }
         },
-        
-        _submittedParamsList: null,
         _elementWidthCheck: function () {
             var me = this;
             
@@ -1965,7 +1953,7 @@ $(function () {
          *
          * @param {Boolean} noValid - if not need valid form set noValid = true
          *
-         * @return {String} - parameter value list or null if this report has no parameters
+         * @return {String} - parameter value list or null if this report has no visible parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -2118,10 +2106,14 @@ $(function () {
         */
         removeParameter: function () {
             var me = this;
+
             me._formInit = false;
             me.$params = null;
+            me._submittedParamsList = null;
+            me._parameterDefinitions = null;
+            me._dependencyList = null;
+
             $("." + paramContainerClass, me.element).detach();
-            me._parameterDefinitions = {};
         },
         _getDefaultHTMLTable: function () {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");
@@ -2165,12 +2157,20 @@ $(function () {
         _dataPreprocess: function (parametersList) {
             var me = this;
 
+            //clean cached data
+            me._parameterDefinitions = null;
+            me._dependencyList = null;
+            me._isDropdownTree = true;
+
             $.each(parametersList, function (index, param) {
+                me._parameterDefinitions = me._parameterDefinitions || {};
+
                 me._parameterDefinitions[param.Name] = param;
                 me._parameterDefinitions[param.Name].ValidatorAttrs = [];
 
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                     me._dependencyList = me._dependencyList || {};
+
                     me._parameterDefinitions[param.Name].isChild = true;
 
                     if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {

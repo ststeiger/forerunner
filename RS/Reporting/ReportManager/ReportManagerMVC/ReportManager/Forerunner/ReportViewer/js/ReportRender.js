@@ -1469,9 +1469,15 @@ $(function () {
             
             //Row and column span
             if (Obj.RowSpan !== undefined) {
+                for (var rh = RowIndex+1; rh < RowIndex + Obj.RowSpan ; rh++) {
+                    height += RIContext.CurrObj.RowHeights.Rows[rh].Height;
+                }
                 $Cell.attr("rowspan", Obj.RowSpan);
             }
             if (Obj.ColSpan !== undefined) {
+                for (var cw = ColIndex + 1; cw < ColIndex + Obj.ColSpan ; cw++) {
+                    width += me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cw].Width);
+                }
                 $Cell.attr("colspan", Obj.ColSpan);
                 
             }

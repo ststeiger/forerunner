@@ -2479,7 +2479,10 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
+                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
+                    else {
+                        me._loadPage(pageNum, false);
+                    }
 
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
@@ -5425,7 +5428,7 @@ $(function () {
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
-                    "<textarea class='fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
+                    "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
                 "</div>");
 
             me.$desInput = $descriptionDiv.find(".fr-description-text");
@@ -5440,7 +5443,7 @@ $(function () {
             var $rdlDiv = new $(
                 "<div id='" + me.guid + "_" + "RDL" + "'  class='fr-property-container fr-rdl-container'>" +
                     "<label class='fr-rdl-label'>" + locData.RDLExt.dialogTitle + "</label>" +
-                    "<textarea rows='5' class='fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
+                    "<textarea rows='5' class='fr-core-input fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
                 "</div>");
 
             me.$rdlInput = $rdlDiv.find(".fr-rdl-text");
@@ -5462,7 +5465,7 @@ $(function () {
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
                     "<div class='fr-tag-input-div'>" +
                         "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
-                        "<textarea class='fr-property-input fr-tag-text' rows='5' name='tags' />" +
+                        "<textarea class='fr-core-input fr-property-input fr-tag-text' rows='5' name='tags' />" +
                     "</div>" +
                     "<div class='fr-tag-prompt-div'>" +
                         "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
@@ -5485,11 +5488,11 @@ $(function () {
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
+                                "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td><input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -5520,6 +5523,7 @@ $(function () {
             var me = this;
 
             var tabName = me.$tabsUL.find(".ui-state-active").attr("name");
+            var result = true;
             switch (tabName) {
                 case propertyEnums.description:
                     me._setDescription();
@@ -5531,12 +5535,14 @@ $(function () {
                     me._saveTags();
                     break;
                 case propertyEnums.searchFolder:
-                    me._setSearchFolder();
+                    result = me._setSearchFolder();
                     break;
             }
 
-            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
-            me.closeDialog();
+            if (result === true) {
+                me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
+                me.closeDialog();
+            }
         },
         /**
          * Show the properties modal dialog.
@@ -5796,6 +5802,11 @@ $(function () {
 
                     me.options.$reportExplorer.reportExplorer("setSearchFolder", searchfolder);
                 }
+
+                return true;
+            }
+            else {
+                return false;
             }
         }
     });
@@ -8273,11 +8284,11 @@ $(function () {
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -9834,9 +9845,15 @@ $(function () {
             
             //Row and column span
             if (Obj.RowSpan !== undefined) {
+                for (var rh = RowIndex+1; rh < RowIndex + Obj.RowSpan ; rh++) {
+                    height += RIContext.CurrObj.RowHeights.Rows[rh].Height;
+                }
                 $Cell.attr("rowspan", Obj.RowSpan);
             }
             if (Obj.ColSpan !== undefined) {
+                for (var cw = ColIndex + 1; cw < ColIndex + Obj.ColSpan ; cw++) {
+                    width += me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cw].Width);
+                }
                 $Cell.attr("colspan", Obj.ColSpan);
                 
             }
@@ -11273,20 +11290,22 @@ $(function () {
 
         $params: null,
         _formInit: false,
-        _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
         _revertLock: false,
         _useDefault: false,
+        _submittedParamsList: null,
+        _parameterDefinitions: null,
+        _hasPostedBackWithoutSubmitForm: false,
+        _dependencyList: null,
+        _isDropdownTree: true, // indicate whether apply cascading tree
+        _writeParamDoneCallback: null,
 
         _init: function () {
             var me = this;
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
-        },
-        _destroy: function () {
-
         },
         _render: function () {
             var me = this;
@@ -11315,11 +11334,6 @@ $(function () {
 
             me._formInit = true;
         },
-        _dependencyList: null,
-        //indicate whether apply cascading tree
-        _isDropdownTree: true,
-        _writeParamDoneCallback: null,
-
         /**
          * Get number of visible parameters
          *
@@ -11329,13 +11343,10 @@ $(function () {
          */
         getNumOfVisibleParameters: function () {
             var me = this;
-            if (me.$numVisibleParams !== undefined)
-                return me.$numVisibleParams;
+            if (me._numVisibleParams !== undefined)
+                return me._numVisibleParams;
             return 0;
         },
-
-        _parameterDefinitions: {},
-        _hasPostedBackWithoutSubmitForm: false,
         /**
          * Update an existing parameter panel by posting back current selected values to update casacade parameters.
          *
@@ -11411,20 +11422,19 @@ $(function () {
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
-            me._paramCount = parseInt(data.Count, 10);
 
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
-            me._isDropdownTree = true;
-            me._render();
-            me.$numVisibleParams = 0;
+            me._submittedParamsList = null;
+            me._numVisibleParams = 0;
 
+            me._render();
             me._dataPreprocess(data.ParametersList);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
-                    me.$numVisibleParams += 1;
+                    me._numVisibleParams += 1;
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                 }
                 else
@@ -11446,14 +11456,11 @@ $(function () {
                     if (element.is(":radio"))
                         error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
                     else {
-                        if (element.attr("ismultiple") === "true") {
-                            error.appendTo(element.parent("div").next("span"));
-                        }
-                        else if (element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
-                            error.appendTo(element.parent("div").nextAll(".fr-param-error-message"));
+                        if (element.attr("ismultiple") === "true" || element.hasClass("ui-autocomplete-input") || element.hasClass("fr-param-tree-input")) {
+                            error.appendTo(element.parent("div").siblings(".fr-param-error-message"));
                         }
                         else
-                            error.appendTo(element.nextAll(".fr-param-error-message"));
+                            error.appendTo(element.siblings(".fr-param-error-message"));
                     }
                 },
                 highlight: function (element) {
@@ -11477,7 +11484,7 @@ $(function () {
             });
 
             if (submitForm !== false) {
-                if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
+                if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
                     if (renderParamArea !== false)
@@ -11527,8 +11534,6 @@ $(function () {
                 };
             }
         },
-        
-        _submittedParamsList: null,
         _elementWidthCheck: function () {
             var me = this;
             
@@ -13198,7 +13203,7 @@ $(function () {
          *
          * @param {Boolean} noValid - if not need valid form set noValid = true
          *
-         * @return {String} - parameter value list or null if this report has no parameters
+         * @return {String} - parameter value list or null if this report has no visible parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -13351,10 +13356,14 @@ $(function () {
         */
         removeParameter: function () {
             var me = this;
+
             me._formInit = false;
             me.$params = null;
+            me._submittedParamsList = null;
+            me._parameterDefinitions = null;
+            me._dependencyList = null;
+
             $("." + paramContainerClass, me.element).detach();
-            me._parameterDefinitions = {};
         },
         _getDefaultHTMLTable: function () {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");
@@ -13398,12 +13407,20 @@ $(function () {
         _dataPreprocess: function (parametersList) {
             var me = this;
 
+            //clean cached data
+            me._parameterDefinitions = null;
+            me._dependencyList = null;
+            me._isDropdownTree = true;
+
             $.each(parametersList, function (index, param) {
+                me._parameterDefinitions = me._parameterDefinitions || {};
+
                 me._parameterDefinitions[param.Name] = param;
                 me._parameterDefinitions[param.Name].ValidatorAttrs = [];
 
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                     me._dependencyList = me._dependencyList || {};
+
                     me._parameterDefinitions[param.Name].isChild = true;
 
                     if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
@@ -15262,14 +15279,14 @@ $(function () {
                       "<div class='fr-dsc-username'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.username + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
+                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-core-input fr-dsc-text-input fr-dsc-username-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +
                       "<div class='fr-dsc-password'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.password + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
+                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-core-input fr-dsc-text-input fr-dsc-password-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +

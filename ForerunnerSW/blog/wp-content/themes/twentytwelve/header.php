@@ -35,87 +35,44 @@
 <body <?php body_class(); ?>>
 
 
- <div id="fb-root"></div>
-<script>(function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, "script", "facebook-jssdk"));</script>
-
-
-
-   <!-- Header ================================================== -->
+     <!-- Header ================================================== -->
     <div class="ForerunnerPort Header" style="">
         <div class="ForerunnerPage Center" style="">
-            <table class="" style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="ForerunnerTDLeft ForerunnerLogo">
-                                <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
-                            </div>
-                           
-                        </td>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="Navbar TopNavbar">
-                                <div style="display:table-row;" >
-                                <ul>
-                                    <li id="Blog" class="Navitem TopNavitem"><a href="../blog">Blog</a></li>
-                                    <li id="Contact" class="Navitem TopNavitem"><a href="../home/contact">Contact</a></li>
-                                    <li id="About" class="Navitem TopNavitem"><a href="../home/about">About</a></li>
-                                    <li id="Support" class="Navitem TopNavitem"><a href="../home/support">Support</a></li>
-                                    <li id="Demo" class="Navitem TopNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem"><a href="../home/developers">Developers</a></li>
-                                    <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
-                                    <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
-                                </ul>
-                                    </div>
-                                <div style="padding-top:20px;display:table-row;" >
-                                <ul>
-                                    <li class="Navitem" style="padding-left:10px;">
-                                        <div class="g-plusone" data-size="medium" data-annotation="none"></div>
 
-                                        <!-- Place this tag after the last +1 button tag. -->
-                                        <script type="text/javascript">
-                                            (function () {
-                                                var po = document.createElement("script"); po.type = "text/javascript"; po.async = true;
-                                                po.src = "https://apis.google.com/js/platform.js";
-                                                var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s);
-                                            })();
-                                        </script>
-                                    </li>
-                                    <li class="Navitem" style="padding-left:10px;">
-                                        <script src="//platform.linkedin.com/in.js" type="text/javascript">
-                                     lang: en_US
-                                        </script>
-                                        <script type="IN/Share"></script>
-                                    </li>
-                                    <li class="Navitem" style="padding-left:10px;">
-                                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://forerunnersw.com" data-via="ForerunnerSW" data-count="none">Tweet</a>
-                                        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? "http" : "https"; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
-                                    </li>
-                                    <li class="Navitem" style="padding-left:10px;">
-                                        <a href="http://www.reddit.com/submit" onclick="window.location = """http://www.reddit.com/submit?url=""" + encodeURIComponent(window.location); return false">
-                                            <img src="http://www.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" />
-                                        </a>
-                                    </li>
-                                    <li class="Navitem" style="margin:-8px;padding-left:10px;">
-                                        <div class="fb-like" data-href="https://forerunnersw.com" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
-                                    </li>
+            <div class="" style="display:block; width: 100%;">
+                <div class="HeaderFont" style="display:block;width: 100%;text-align:right;color:#0b86c6;"><span style="font-size:30px;">855.367.3511</span> | <a style="font-size:14px;" href="/home/contact">CONTACT US</a> </div>
+
+                <div class="" style="display: table; width: 100%;">
+                    <div class="ForerunnerTD " style="max-width:350px;">
+                        <div class="ForerunnerTD ForerunnerLogo">
+                            <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Software" />
+                        </div>
+                    </div>
+                    <div class="ForerunnerTD " style="width:100%;">
+                        <div class="Navbar TopNavbar">
+                            <div style="float:right;">
+                                <ul>            
+                                    <li id="Index" class="Navitem TopNavitem"><a href="/Home">HOME</a></li>
+                                    <li id="Features" class="Navitem TopNavitem"><a href="/home/features">FEATURES</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="/home/developers">DEVELOPERS</a></li>
+                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/home/pricing">PRICING</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="/home/demo">DEMO</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="/home/support">SUPPORT</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="/home/about">ABOUT</a></li>
+                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
                                 </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>                                    
+            </div>
+        
+      
+        </div>        
     </div>
     <div style="clear: both"></div>
 
-    <!-- Header ================================================== -->';
+    <!-- Header ================================================== -->'
 
 
 

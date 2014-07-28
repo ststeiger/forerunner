@@ -45,16 +45,14 @@
     display: block;
 }
 .fr-rdl-text, .fr-description-text, .fr-tag-text { 
-    width: 350px; 
+    width: 350px;
+    height: auto;
     display: block;
     resize: none;
 } 
 
-.fr-properties-container 
-.fr-sf-text, .fr-rdl-text,
-.fr-description-text, .fr-tag-text {
-    border: 1px solid black;
-    box-shadow: 0 0 7px #545454 inset;
+.fr-properties-container .fr-sf-text, .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text {
+    padding: 0 0 0 4px;
 }
 
 @media only screen and (max-width : 479px) {

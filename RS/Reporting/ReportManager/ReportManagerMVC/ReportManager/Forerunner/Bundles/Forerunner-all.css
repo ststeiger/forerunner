@@ -900,16 +900,14 @@ table, td, tr div {
     display: block;
 }
 .fr-rdl-text, .fr-description-text, .fr-tag-text { 
-    width: 350px; 
+    width: 350px;
+    height: auto;
     display: block;
     resize: none;
 } 
 
-.fr-properties-container 
-.fr-sf-text, .fr-rdl-text,
-.fr-description-text, .fr-tag-text {
-    border: 1px solid black;
-    box-shadow: 0 0 7px #545454 inset;
+.fr-properties-container .fr-sf-text, .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text {
+    padding: 0 0 0 4px;
 }
 
 @media only screen and (max-width : 479px) {
@@ -1299,7 +1297,7 @@ table, td, tr div {
     margin:4px;
 }
 .fr-sf-table td {
-    padding:2px;
+    padding:5px;
 }
 .fr-sf-prompt td {
     padding:0px 2px;
@@ -1317,10 +1315,12 @@ table, td, tr div {
     margin-top:2px;
     font-style:italic;
 }
-.fr-sf-text {
+.fr-sf-form-container .fr-sf-text {
     width:240px;
     margin-right:4px;
-    border: 1px solid lightblue;
+    padding: 0 0 0 4px;
+    font-size:13pt;
+    height:24px;
 }
 .fr-sf-form-container .fr-sf-error { 
     border-width: thin; 
@@ -1979,7 +1979,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dsc-section{ display:none; }
 
 .fr-dsc-form { }
-  .fr-dsc-form .fr-dsc-text-input { display: inline-block; width: 120px; margin: 4px; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
+  .fr-dsc-form .fr-dsc-text-input { display: inline-block; width: 120px; margin: 4px; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
   .fr-dsc-form .fr-dsc-label { display:inline-block; min-width:110px; max-width:110px; margin:4px; }
   .fr-dsc-form .fr-dsc-prompt { margin:10px 10px 4px 4px; }
   .fr-dsc-form .fr-dsc-username { margin-top:8px; }

@@ -251,7 +251,8 @@
     "submit":"soumettre",
     "prompt":"Séparez les tags par des virgules.",
     "homePage":"Page d'accueil",
-    "createTo":"créé en vertu de"
+    "createTo":"créé en vertu de",
+    "namePlaceholder":"dossier de recherche nom"
   },
   "subscription": {
     "email":"Email",

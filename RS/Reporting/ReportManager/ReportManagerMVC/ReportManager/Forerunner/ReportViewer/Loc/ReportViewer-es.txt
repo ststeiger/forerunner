@@ -251,7 +251,8 @@
     "submit":"presentar",
     "prompt":"Separa las etiquetas con comas.",
     "homePage":"página de Inicio",
-    "createTo":"Creado bajo"
+    "createTo":"Creado bajo",
+    "namePlaceholder":"carpeta de búsqueda nombre"
   },
   "subscription": {
     "email":"Email",

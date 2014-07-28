@@ -250,7 +250,8 @@
     "submit":"Submit",
     "prompt":"Separate tags with commas.",
     "homePage":"Home Page",
-    "createTo":"Created under"
+    "createTo":"Created under",
+    "namePlaceholder":"Search Folder Name"
   },
   "subscription": {
     "email":"Email",

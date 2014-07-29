@@ -266,7 +266,6 @@ $(function () {
             }
 
             if (result === true) {
-                me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
                 me.closeDialog();
             }
         },
@@ -288,6 +287,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _preprocess: null,

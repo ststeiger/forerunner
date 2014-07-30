@@ -91,7 +91,7 @@ div.fr-layout-position-absolute { position: absolute; }
     .fr-core-widget input[type="number"]::-webkit-inner-spin-button,
     .fr-core-widget input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; text-align: right; padding-right: 4px; }
 
-.fr-core-input { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; color: black; background-color: white; margin: 0; height: 22px; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
+.fr-core-input { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; color: black; background-color: white; margin: 0; height: 22px; line-height:22px; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
 
 .fr-core-dialog-layout { width: 100%; height: 100%; position: absolute; left: 0px; right: 0px; z-index: 5; }
 .fr-core-dialog-innerPage { overflow-y: auto; overflow-x: hidden; background-color: #ffffff; border: 1px solid #035378; box-shadow: 0px 0px 15px #696969; margin-top: 80px; position: relative; -webkit-appearance: none; }
@@ -117,6 +117,8 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-core-mask { opacity: 0.75; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
 .fr-core-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
+
+.fr-watermark { color: lightgrey; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
@@ -1056,7 +1058,7 @@ table, td, tr div {
 .fr-cdb-form { margin-right: 16px; }
     .fr-cdb-form .fr-cdb-label { display: inline; vertical-align: middle; margin-right: 10px; font-size: 13pt; }
     .fr-cdb-form .fr-cdb-input { display: inline; vertical-align: middle; padding: 0 0 0 4px; font-size: 13pt; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-    .fr-cdb-form .fr-cdb-dashboard-name { min-width: 200px; height: 24px; padding-right: 4px; }
+    .fr-cdb-form .fr-cdb-dashboard-name { min-width: 200px; height: 24px; line-height:24px; padding-right: 4px; }
     .fr-cdb-form .fr-cdb-template-name { min-width: 210px; margin-top: 5px; }
     .fr-cdb-form .fr-cdb-overwrite-checkbox { display: inline; vertical-align: middle; }
 
@@ -1412,7 +1414,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
-.fr-param, .fr-param-client { margin: 4px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; color: #000000; }
+.fr-param, .fr-param-client { margin: 4px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; }
 .fr-param-width { width:180px; }
 .fr-param-dropdown-input { margin-bottom: 0px;outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; -ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; text-overflow:ellipsis;}
 .fr-param-dropdown-div { border: 1px solid #1f98c7; margin:2px 4px; background-color:white; }
@@ -1440,8 +1442,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-form .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-message { margin-left: 5px; }
 .fr-param-required{}
-.fr-param-watermark {color:lightgray;}
-
 .fr-param-option-container { margin-top:-6px; margin-left:4px; text-align:right; padding-right:2px; }
 .fr-param-option-checkbox{ vertical-align:middle; }
 .fr-param-option-label { font-size:12px; }

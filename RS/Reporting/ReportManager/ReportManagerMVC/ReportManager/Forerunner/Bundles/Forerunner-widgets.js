@@ -6083,7 +6083,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
                 }
             });
 
@@ -6330,7 +6330,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
                 }
             });
 
@@ -7086,7 +7086,7 @@ $(function () {
             var me = this;
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
         },
@@ -7207,8 +7207,6 @@ $(function () {
         _createCallbacks: function () {
             var me = this;
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-
             // Hook up any / all custom events that the report explorer may trigger
             me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
@@ -7261,6 +7259,8 @@ $(function () {
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
+
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
 
             me.updateBtnStates();
         },
@@ -8284,11 +8284,11 @@ $(function () {
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -8306,6 +8306,9 @@ $(function () {
                 "</div>");
 
             me.element.append($container);
+
+            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, { useNative: false, className: "fr-watermark" });
 
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
@@ -8697,7 +8700,7 @@ $(function () {
 
         _setResonsiveWidth: function (defWidth, element) {
             var me = this;
-
+            return;
             //Set the responsive width
             if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
                 if (defWidth > me._convertToMM(me._currentWidth + "px"))
@@ -11856,7 +11859,7 @@ $(function () {
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
                 $control.addClass("fr-param-required");
                 me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
             } else if (param.MultiValue) {
@@ -16094,6 +16097,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+
             // Reinitialize the fields
             me.$dashboardName.val("");
             me.$overwrite.prop({ checked: false });
@@ -16118,7 +16122,8 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     // Dashboard name
-                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' placeholder='" + createDashboard.namePlaceholder + "' required='true'/><span class='fr-cdb-error-span'/>" +
+                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' required='true'/>" +
+                                    "<span class='fr-cdb-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                             "<tr>" +
@@ -16143,7 +16148,7 @@ $(function () {
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -16160,6 +16165,8 @@ $(function () {
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
+
+            me.$dashboardName.watermark(createDashboard.namePlaceholder, { useNative: false, className: "fr-watermark" });
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -16478,7 +16485,7 @@ $(function () {
             var $input = new $("<INPUT />");
             $input.attr("type", type);
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -16488,7 +16495,7 @@ $(function () {
             var me = this;
             var $input = new $("<TEXTAREA />");
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -24055,7 +24062,7 @@ $(function () {
                         "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -24090,7 +24097,7 @@ $(function () {
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input name='submit' type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
+                                "<input type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -24128,6 +24135,8 @@ $(function () {
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
+
+            me.$reportInput.watermark(reportProperties.selectReport, { useNative: false, className: "fr-watermark" });
 
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);

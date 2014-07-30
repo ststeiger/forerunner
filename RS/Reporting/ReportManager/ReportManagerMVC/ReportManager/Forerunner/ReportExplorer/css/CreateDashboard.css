@@ -3,7 +3,7 @@
 .fr-cdb-form { margin-right: 16px; }
     .fr-cdb-form .fr-cdb-label { display: inline; vertical-align: middle; margin-right: 10px; font-size: 13pt; }
     .fr-cdb-form .fr-cdb-input { display: inline; vertical-align: middle; padding: 0 0 0 4px; font-size: 13pt; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
-    .fr-cdb-form .fr-cdb-dashboard-name { min-width: 200px; height: 24px; padding-right: 4px; }
+    .fr-cdb-form .fr-cdb-dashboard-name { min-width: 200px; height: 24px; line-height:24px; padding-right: 4px; }
     .fr-cdb-form .fr-cdb-template-name { min-width: 210px; margin-top: 5px; }
     .fr-cdb-form .fr-cdb-overwrite-checkbox { display: inline; vertical-align: middle; }
 

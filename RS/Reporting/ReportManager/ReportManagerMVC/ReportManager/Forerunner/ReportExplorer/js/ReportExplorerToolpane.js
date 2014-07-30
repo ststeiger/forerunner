@@ -74,8 +74,6 @@ $(function () {
         _createCallbacks: function () {
             var me = this;
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-
             // Hook up any / all custom events that the report explorer may trigger
             me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
@@ -128,6 +126,8 @@ $(function () {
             var $itemRecent = me.element.find("." + tp.itemRecent.selectorClass);
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
+
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
 
             me.updateBtnStates();
         },

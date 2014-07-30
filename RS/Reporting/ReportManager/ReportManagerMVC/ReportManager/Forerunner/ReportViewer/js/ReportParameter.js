@@ -606,7 +606,7 @@ $(function () {
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
                 $control.addClass("fr-param-required");
                 me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
             } else if (param.MultiValue) {

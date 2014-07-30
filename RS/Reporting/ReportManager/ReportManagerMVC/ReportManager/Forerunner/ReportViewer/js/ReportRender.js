@@ -321,7 +321,7 @@ $(function () {
 
         _setResonsiveWidth: function (defWidth, element) {
             var me = this;
-
+            //return;
             //Set the responsive width
             if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
                 if (defWidth > me._convertToMM(me._currentWidth + "px"))

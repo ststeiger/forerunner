@@ -7292,11 +7292,12 @@ $(function () {
         updateBtnStates: function () {
             var me = this;
 
+            // Then we start out disabled and enable if needed
+            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
+
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
-                // Then we start out disabled and enable if needed
-                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
 
                 if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
                     me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);

@@ -493,8 +493,17 @@ $(function () {
 
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
             $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
-                me.scrollToPosition(data);
-                me.savePosition = null;
+                var timeout = 0;
+
+                if (forerunner.device.isWindowsPhone()) {
+                    timeout = 200;
+                }
+
+                setTimeout(function () {
+                    me.scrollToPosition(data);
+                    me.savePosition = null;
+                }, timeout);
+                
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {

@@ -214,11 +214,17 @@ $(function () {
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -232,7 +238,7 @@ $(function () {
 
             me.$sfForm.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");

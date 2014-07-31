@@ -184,6 +184,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ads.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SampleDetailController.cs" />
     <Compile Include="Global.asax.cs">
@@ -317,6 +318,9 @@
     <Content Include="Views\Home\Activation.cshtml" />
     <Content Include="Views\Home\Pricing.cshtml" />
     <Content Include="Views\Home\Features.cshtml" />
+    <Content Include="Views\Home\Video.cshtml" />
+    <Content Include="Views\ads\mobilizer.cshtml" />
+    <Content Include="Views\ads\Dev.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

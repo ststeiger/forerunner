@@ -25,6 +25,12 @@ namespace ForerunnerSW
         }
         protected void Application_BeginRequest()
         {
+            if (Request.Url.AbsoluteUri.EndsWith("/home", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Response.Redirect(Request.Url.AbsoluteUri + "/index");
+                return;
+            }
+
 
             if (Request.Url.AbsoluteUri.IndexOf("/Sample", StringComparison.CurrentCultureIgnoreCase) > 0)
             {

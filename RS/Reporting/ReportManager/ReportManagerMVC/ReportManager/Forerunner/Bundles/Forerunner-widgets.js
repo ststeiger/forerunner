@@ -2195,9 +2195,9 @@ $(function () {
         _findNext: function (keyword) {
             var me = this;
 
-            $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
+            me.$keywords.filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
-            var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $nextWord = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
@@ -2232,10 +2232,12 @@ $(function () {
         _setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
-            me._highLightWord(me.$reportContainer, keyword);
+            me._highLightWord(me.$reportContainer[0], keyword);
+
+            me.$keywords = me.$reportContainer.find("span.fr-render-find-keyword");
 
             //Highlight the first match.
-            var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $item = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
@@ -3126,56 +3128,54 @@ $(function () {
             //This is an error
             return value;
         },
-        _highLightWord: function ($element, keyword) {
+        _highLightWord: function (element, keyword) {
+            var me = this;
+
             if (!keyword || keyword === "") {
                 return;
             }
             else {
-                var me = this;
-                $($element).each(function () {
-                    var elt = $(this).get(0);
-                    //elt.normalize();
-                    $.each(elt.childNodes, function (i, node) {
-                        //nodetype=3 : text node
-                        if (node.nodeType === 3) {
-                            var searchnode = node;
-                            try{
-                                var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                $.each(element.childNodes, function (i, node) {
+                    //nodetype=3 : text node
+                    if (node.nodeType === 3) {
+                        var searchnode = node;
+                        try {
+                            var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
-                                while (pos < searchnode.data.length) {
-                                    if (pos >= 0) {
-                                        //create a new span node with matched keyword text
-                                        var spannode = document.createElement("span");
-                                        spannode.className = "fr-render-find-keyword Unread";
+                            while (pos < searchnode.data.length) {
+                                if (pos >= 0) {
+                                    //create a new span node with matched keyword text
+                                    var spannode = document.createElement("span");
+                                    spannode.className = "fr-render-find-keyword Unread";
 
-                                        //split the match node
-                                        var middlebit = searchnode.splitText(pos);
-                                        searchnode = middlebit.splitText(keyword.length);
+                                    //split the match node
+                                    var middlebit = searchnode.splitText(pos);
+                                    searchnode = middlebit.splitText(keyword.length);
 
-                                        //replace keyword text with span node 
-                                        var middleclone = middlebit.cloneNode(true);
-                                        spannode.appendChild(middleclone);
-                                        node.parentNode.replaceChild(spannode, middlebit);
-                                    }
-                                    else {
-                                        break;
-                                    }
-                                    pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                                    //replace keyword text with span node 
+                                    var middleclone = middlebit.cloneNode(true);
+                                    spannode.appendChild(middleclone);
+                                    node.parentNode.replaceChild(spannode, middlebit);
                                 }
-                            } catch (error) { }
-                        }
-                        else {
-                            me._highLightWord($(node), keyword);
-                        }
-                    });
+                                else {
+                                    break;
+                                }
+                                pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                            }
+                        } catch (error) { }
+                    }
+                    else {
+                        me._highLightWord(node, keyword);
+                    }
                 });
             }
-            return $(this);
         },
         _clearHighLightWord: function () {
             var me = this;
 
-            $(".fr-render-find-keyword").each(function (index, keywordSpan) {
+            if (!me.$keywords) return;
+
+            me.$keywords.each(function (index, keywordSpan) {
                 var parent = keywordSpan.parentNode;
                 var textNode = document.createTextNode(keywordSpan.firstChild.nodeValue);
 
@@ -3188,6 +3188,8 @@ $(function () {
                     parent.normalize();
                 }
             });
+
+            me.$keywords = null;
         },
         _joinAdjacentTextnodes: function (textNode) {// textNode is a DOM text node
             // while there are text siblings, concatenate them into the first   
@@ -4893,8 +4895,17 @@ $(function () {
 
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
             $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
-                me.scrollToPosition(data);
-                me.savePosition = null;
+                var timeout = 0;
+
+                if (forerunner.device.isWindowsPhone()) {
+                    timeout = 200;
+                }
+
+                setTimeout(function () {
+                    me.scrollToPosition(data);
+                    me.savePosition = null;
+                }, timeout);
+                
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
@@ -5488,11 +5499,17 @@ $(function () {
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -5506,7 +5523,7 @@ $(function () {
 
             me.$sfForm.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");
@@ -7275,11 +7292,12 @@ $(function () {
         updateBtnStates: function () {
             var me = this;
 
+            // Then we start out disabled and enable if needed
+            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
+
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
-                // Then we start out disabled and enable if needed
-                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
 
                 if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
                     me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
@@ -8280,15 +8298,19 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                    "<div class='fr-sf-form-container'>" +
-                        "<form class='fr-sf-form'>" +
+                        "<form class='fr-core-dialog-form fr-sf-form'>" +
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' />" +
+                                         "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                        "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -8313,7 +8335,7 @@ $(function () {
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");

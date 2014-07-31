@@ -1565,9 +1565,9 @@ $(function () {
         _findNext: function (keyword) {
             var me = this;
 
-            $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
+            me.$keywords.filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
-            var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $nextWord = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
@@ -1602,10 +1602,12 @@ $(function () {
         _setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
-            me._highLightWord(me.$reportContainer, keyword);
+            me._highLightWord(me.$reportContainer[0], keyword);
+
+            me.$keywords = me.$reportContainer.find("span.fr-render-find-keyword");
 
             //Highlight the first match.
-            var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $item = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
@@ -2496,56 +2498,54 @@ $(function () {
             //This is an error
             return value;
         },
-        _highLightWord: function ($element, keyword) {
+        _highLightWord: function (element, keyword) {
+            var me = this;
+
             if (!keyword || keyword === "") {
                 return;
             }
             else {
-                var me = this;
-                $($element).each(function () {
-                    var elt = $(this).get(0);
-                    //elt.normalize();
-                    $.each(elt.childNodes, function (i, node) {
-                        //nodetype=3 : text node
-                        if (node.nodeType === 3) {
-                            var searchnode = node;
-                            try{
-                                var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                $.each(element.childNodes, function (i, node) {
+                    //nodetype=3 : text node
+                    if (node.nodeType === 3) {
+                        var searchnode = node;
+                        try {
+                            var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
-                                while (pos < searchnode.data.length) {
-                                    if (pos >= 0) {
-                                        //create a new span node with matched keyword text
-                                        var spannode = document.createElement("span");
-                                        spannode.className = "fr-render-find-keyword Unread";
+                            while (pos < searchnode.data.length) {
+                                if (pos >= 0) {
+                                    //create a new span node with matched keyword text
+                                    var spannode = document.createElement("span");
+                                    spannode.className = "fr-render-find-keyword Unread";
 
-                                        //split the match node
-                                        var middlebit = searchnode.splitText(pos);
-                                        searchnode = middlebit.splitText(keyword.length);
+                                    //split the match node
+                                    var middlebit = searchnode.splitText(pos);
+                                    searchnode = middlebit.splitText(keyword.length);
 
-                                        //replace keyword text with span node 
-                                        var middleclone = middlebit.cloneNode(true);
-                                        spannode.appendChild(middleclone);
-                                        node.parentNode.replaceChild(spannode, middlebit);
-                                    }
-                                    else {
-                                        break;
-                                    }
-                                    pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                                    //replace keyword text with span node 
+                                    var middleclone = middlebit.cloneNode(true);
+                                    spannode.appendChild(middleclone);
+                                    node.parentNode.replaceChild(spannode, middlebit);
                                 }
-                            } catch (error) { }
-                        }
-                        else {
-                            me._highLightWord($(node), keyword);
-                        }
-                    });
+                                else {
+                                    break;
+                                }
+                                pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                            }
+                        } catch (error) { }
+                    }
+                    else {
+                        me._highLightWord(node, keyword);
+                    }
                 });
             }
-            return $(this);
         },
         _clearHighLightWord: function () {
             var me = this;
 
-            $(".fr-render-find-keyword").each(function (index, keywordSpan) {
+            if (!me.$keywords) return;
+
+            me.$keywords.each(function (index, keywordSpan) {
                 var parent = keywordSpan.parentNode;
                 var textNode = document.createTextNode(keywordSpan.firstChild.nodeValue);
 
@@ -2558,6 +2558,8 @@ $(function () {
                     parent.normalize();
                 }
             });
+
+            me.$keywords = null;
         },
         _joinAdjacentTextnodes: function (textNode) {// textNode is a DOM text node
             // while there are text siblings, concatenate them into the first   

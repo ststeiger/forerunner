@@ -23,10 +23,10 @@ $(function () {
             me.serverData = null;
             me.selectSetId = forerunner.helper.guidGen();
         },
-        getNewSet: function (name, parameterList) {
+        getNewSet: function (parameterList) {
             var newSet = {
                 isAllUser: false,
-                name: name,
+                name: null,
                 id: forerunner.helper.guidGen(),
                 data: parameterList
             };
@@ -55,9 +55,9 @@ $(function () {
 
             return !me.isCurrentSetAllUser();
         },
-        _addNewSet: function (name, parameterList) {
+        _addNewSet: function (parameterList) {
             var me = this;
-            var newSet = me.getNewSet(name, parameterList);
+            var newSet = me.getNewSet(parameterList);
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -266,7 +266,7 @@ $(function () {
             var me = this;
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
-                    me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._addNewSet(JSON.parse(parameterList));
                     me._triggerModelChange();
                 } else {
                     me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);

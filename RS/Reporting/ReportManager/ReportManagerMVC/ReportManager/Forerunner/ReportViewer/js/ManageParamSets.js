@@ -39,7 +39,9 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
+
             me.serverData = me.options.model.parameterModel("cloneServerData");
+            
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -53,52 +55,22 @@ $(function () {
             var me = this;
 
             // Remove any previous event handlers
-            me.element.find(".fr-mps-text-input").off("change");
             me.element.find(".fr-mps-default-id").off("click");
             me.element.find(".fr-mps-all-users-id").off("click");
             me.element.find(".fr-mps-delete-id").off("click");
+            me.element.find(".fr-mps-text-input").off("change").off("click").off("focus").off("blur");
 
             me.$tbody.html("");
             var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
+
             $.each(optionArray, function (index, option) {
                 if (index > 0) {
                     // Skip the "<select set>" option
                     var parameterSet = me.serverData.parameterSets[option.id];
                     var $row = me._createRow(index, parameterSet);
                     me.$tbody.append($row);
-
-                    if (me.serverData.canEditAllUsersSet) {
-                        $row.find(".fr-mps-all-users-id").on("click", function (e) {
-                            me._onClickAllUsers(e);
-                        });
-                    }
-                    if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
-                        $row.find(".fr-mps-delete-id").on("click", function (e) {
-                            me._onClickDelete(e);
-                        });
-                    }
                 }
             });
-
-            // Add any table body specific event handlers
-            me.element.find(".fr-mps-text-input").on("change", function (e) {
-                me._onChangeInput(e);
-            });
-            me.element.find(".fr-mps-default-id").on("click", function (e) {
-                me._onClickDefault(e);
-            });
-
-            $(":text", me.element).each(
-               function (index) {
-                   var textinput = $(this);
-                   textinput.on("blur", function () {
-                       me.options.$reportViewer.reportViewer("onInputBlur");
-                   });
-                   textinput.on("focus", function () {
-                       me.options.$reportViewer.reportViewer("onInputFocus");
-                   });
-               }
-           );
 
             // Set up the form validation
             me._validateForm(me.$form);
@@ -111,8 +83,9 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var encodedSetName = parameterSet.name && forerunner.helper.htmlEncode(parameterSet.name);
+
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -132,7 +105,7 @@ $(function () {
             var $row = $(
                 "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
                     // Name
-                    "<td title='" + encodedSetName + "'>" + textElement + "</td>" +
+                    "<td>" + textElement + "</td>" +
                     // Default
                     "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
                     // All Users
@@ -140,6 +113,44 @@ $(function () {
                     // Delete
                     "<td class='fr-mps-delete-id ui-state-error-text fr-core-cursorpointer'><div" + deleteClass + "/></td>" +
                 "</tr>");
+
+            var $input = $row.find("input");
+
+            if (encodedSetName) {
+                $input.val(encodedSetName).attr("title", encodedSetName);
+            }
+            else {
+                $input.watermark(manageParamSets.newSet, { useNative: false, className: "fr-watermark" });
+            }
+
+            $input.on("change", function (e) {
+                me._onChangeInput(e);
+            });
+
+            $input.on("focus", function () {
+                me.options.$reportViewer.reportViewer("onInputFocus");
+            });
+
+            $input.on("blur", function () {
+                me.options.$reportViewer.reportViewer("onInputBlur");
+            });
+
+            $row.find(".fr-mps-default-id").on("click", function (e) {
+                me._onClickDefault(e);
+            });
+
+            if (me.serverData.canEditAllUsersSet) {
+                $row.find("td.fr-mps-all-users-id").on("click", function (e) {
+                    me._onClickAllUsers(e);
+                });
+            }
+
+            if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                $row.find("td.fr-mps-delete-id").on("click", function (e) {
+                    me._onClickDelete(e);
+                });
+            }
+
             return $row;
         },
         _init: function () {
@@ -166,7 +177,7 @@ $(function () {
                             "</table>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
+                                    "<input type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -229,22 +240,25 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
+            var newSet = me.options.model.parameterModel("getNewSet", me.parameterList);
             me.serverData.parameterSets[newSet.id] = newSet;
-            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
 
+            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
+            
             if (setCount === 1) {
                 // Set the default id if this is the first set
                 me.serverData.defaultSetId = newSet.id;
             }
 
-            // Update the UI with the new set
-            me._createRows();
-            var $tr = me._findRow(newSet.id);
-            var $input = $tr.find("input");
+            var $row = me._createRow(setCount, newSet);
+            me.$tbody.append($row);
+
+            var $input = $row.find("input");
             $input.focus();
 
             me.lastAddedSetId = newSet.id;
+
+            me._validateForm(me.$form);
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -252,7 +266,8 @@ $(function () {
             $input.attr("title", $input.val());
             var id = me._findId(e);
             me.serverData.parameterSets[id].name = $input.val();
-            me._createRows();
+            //don't need to do sort everytime name change
+            //me._createRows();
         },
         _onClickDefault: function(e) {
             var me = this;

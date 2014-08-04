@@ -16368,10 +16368,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -16398,7 +16398,7 @@ $(function () {
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.attr("value", userName );
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }

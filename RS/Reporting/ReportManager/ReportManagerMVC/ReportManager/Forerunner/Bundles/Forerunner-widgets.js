@@ -8192,7 +8192,7 @@ $(function () {
             var me = this;
             var url = forerunner.config.forerunnerFolder() + "version.txt";
             var buildVersion = null;
-            $.ajax({
+            forerunner.ajax.ajax({
                 url: url,
                 dataType: "text",
                 async: false,
@@ -9599,8 +9599,7 @@ $(function () {
             if (datatype === "json")
                 data = JSON.stringify(data);
 
-            $.ajax({
-
+            forerunner.ajax.ajax({
                 type: type,
                 dataType: datatype,
                 url: url,

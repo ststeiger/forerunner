@@ -1198,8 +1198,7 @@ $(function () {
             if (datatype === "json")
                 data = JSON.stringify(data);
 
-            $.ajax({
-
+            forerunner.ajax.ajax({
                 type: type,
                 dataType: datatype,
                 url: url,

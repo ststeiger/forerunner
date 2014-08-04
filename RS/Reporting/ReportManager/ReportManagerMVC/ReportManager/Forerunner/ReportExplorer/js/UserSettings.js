@@ -103,7 +103,7 @@ $(function () {
             var me = this;
             var url = forerunner.config.forerunnerFolder() + "version.txt";
             var buildVersion = null;
-            $.ajax({
+            forerunner.ajax.ajax({
                 url: url,
                 dataType: "text",
                 async: false,

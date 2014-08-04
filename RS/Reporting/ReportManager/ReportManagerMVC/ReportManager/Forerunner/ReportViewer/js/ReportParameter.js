@@ -307,7 +307,7 @@ $(function () {
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {
-                if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
+                if (param.UseDefault && param.UseDefault === true) {
                     var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
                     if ($checkbox.length) {
                         $checkbox.trigger("click");

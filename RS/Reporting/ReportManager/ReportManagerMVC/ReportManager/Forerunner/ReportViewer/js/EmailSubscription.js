@@ -159,6 +159,8 @@ $(function () {
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
+                    if (param.UseDefault)
+                        continue;
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });

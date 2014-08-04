@@ -88,7 +88,7 @@ $(function () {
          * @function $.forerunner.reportRender#render
          *
          * @param {Integer} Page - The page number of the report to render
-         * @param {Boolean} delayLayout - Delay do the layout or not
+         * @param {Boolean} delayLayout - Delay the layout or not
          * @param {Object} RDLExt - RDL extension object for this report
          */
         render: function (Page, delayLayout, RDLExt) {
@@ -446,7 +446,15 @@ $(function () {
             return rec;
         },
 
-      
+          /**
+          * Layout all the elements on the report surface
+          *
+          * @function $.forerunner.reportRender#layoutReport
+          *
+          * @param {Boolean} isLoaded - Has the report been loaded in the DOM
+          * @param {Boolean} force - force a re-layout
+          * @param {Object} RDLExt - RDL extension object for this report
+          */
         layoutReport: function(isLoaded,force,RDLExt){
             var me = this;
             var renderWidth = me.options.reportViewer.element.width();
@@ -536,7 +544,7 @@ $(function () {
                 var curRI = l.ReportItems[Index];
                 curRI.Left = Obj.Left;
 
-                if (me.isNull(l.LowestIndex))
+                if (me._isNull(l.LowestIndex))
                     l.LowestIndex = Index;
                 else if (Obj.Top + Obj.Height > Measurements[l.LowestIndex].Top + Measurements[l.LowestIndex].Height)
                     l.LowestIndex = Index;
@@ -1197,8 +1205,7 @@ $(function () {
             if (datatype === "json")
                 data = JSON.stringify(data);
 
-            $.ajax({
-
+            forerunner.ajax.ajax({
                 type: type,
                 dataType: datatype,
                 url: url,
@@ -1453,7 +1460,7 @@ $(function () {
             var ColIndex = Obj.ColumnIndex;
 
             var RowIndex;
-            if (me.isNull(BodyCellRowIndex))
+            if (me._isNull(BodyCellRowIndex))
                 RowIndex = Obj.RowIndex;
             else
                 RowIndex = BodyCellRowIndex;
@@ -1943,6 +1950,13 @@ $(function () {
 
 
         },
+        /**
+         * Open all the toggles for a repsonsive tablix
+         *
+         * @function $.forerunner.reportRender#replayRespTablix
+         *
+         * @param {Object} replay - The stack of toggles top replay
+         */
         replayRespTablix: function (replay) {
             var me = this;
 
@@ -2819,7 +2833,7 @@ $(function () {
                 return { width: img.width, height: img.height };
             }
         },
-        isNull: function (val) {
+        _isNull: function (val) {
             if (val === null || val === undefined)
                 return true;
             else

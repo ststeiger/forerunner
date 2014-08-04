@@ -1221,6 +1221,7 @@ $(function () {
          * @function $.forerunner.reportViewer#toggleItem
          *
          * @param {String} toggleID - Id of the item to toggle
+         * @param {String} scrollID - The element to scroll to after the toggle
          */
         toggleItem: function (toggleID,scrollID) {
             var me = this;

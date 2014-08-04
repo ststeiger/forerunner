@@ -770,7 +770,7 @@ $(function () {
          */
         getMobilizerSharedSchedule: function () {
             if (!this._forerunnerSharedSchedule) {
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: forerunner.config.forerunnerFolder() + "../Custom/MobilizerSharedSchedule.txt",
                     dataType: "json",
                     async: false,
@@ -1179,7 +1179,7 @@ $(function () {
             //Enumerate the styleSheets
             $.each(document.styleSheets, function (sheetsIndex, sheet) {
                 var rules = (sheet.cssRules || sheet.rules);
-                var rulesLength = rules.length;
+                var rulesLength = rules ? rules.length : 0;
 
                 // Enumerate the rules
                 for (var ruleIndex = 0; ruleIndex < rulesLength; ruleIndex++) {
@@ -1269,7 +1269,7 @@ $(function () {
             var me = this;
 
             if (!me._languageList) {
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: forerunner.config.forerunnerAPIBase() + "reportViewer/AcceptLanguage",
                     dataType: "json",
                     async: false,
@@ -1297,7 +1297,7 @@ $(function () {
             if (me._locData[locFileLocation][lang] === undefined) {
                 // This does not need to be wrapped because this should
                 // not require authn,
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: locFileLocation + "-" + lang + ".txt",
                     dataType: dataType,
                     async: false,
@@ -1331,7 +1331,7 @@ $(function () {
         _getLoginUrl: function () {
             if (!this.loginUrl) {
                 var returnValue = null;
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: forerunner.config.forerunnerAPIBase() + "reportViewer/LoginUrl",
                     dataType: "json",
                     async: false,
@@ -1368,7 +1368,8 @@ $(function () {
             }
         },
         /**
-        * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
+        * Wraps the $.ajax call and if the response status 302 || 401, it will redirect to login page. 
+        * Additionally this method will set the proper CORS setting to enable cross domain scripting.
         *
         * @param {Object} options - Options for the ajax call.
         * @member
@@ -1378,6 +1379,10 @@ $(function () {
             var errorCallback = options.error;
             var successCallback = options.success;
             options.success = null;
+
+            options.xhrFields = {
+                withCredentials: true
+            };
 
             if (options.fail)
                 errorCallback = options.fail;
@@ -1389,7 +1394,6 @@ $(function () {
             if (successCallback)
                 jqXHR.done(successCallback);
 
-
             jqXHR.fail( function (jqXHR, textStatus, errorThrown) {
                 me._handleRedirect(jqXHR);
                 if (errorCallback)
@@ -1398,7 +1402,8 @@ $(function () {
             return jqXHR;
         },
         /**
-        * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
+        * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page.
+        * Additionally this method will set the proper CORS setting to enable cross domain scripting.
         *
         * @param {String} url - Url of the ajax call
         * @param {Object} options - Options for the ajax call.
@@ -1408,6 +1413,11 @@ $(function () {
         */
         getJSON: function (url, options, done, fail) {
             var me = this;
+
+            options.xhrFields = {
+                withCredentials: true
+            };
+
             return $.getJSON(url, options)
             .done(function (data) {
                 if (done)
@@ -1421,7 +1431,7 @@ $(function () {
             });
         },
         /**
-        * Wraps the $.post call and if the response status 401 or 302, it will redirect to login page. 
+        * Makes a "POST" type ajax request and if the response status 401 or 302, it will redirect to login page. 
         *
         * @param {String} url - Url of the ajax call
         * @param {Object} data - data for the ajax call.
@@ -1431,16 +1441,18 @@ $(function () {
         */
         post: function (url, data, success, fail) {
             var me = this;
-            return $.post(url, data, function (data, textStatus, jqXHR) {
-                if (success && typeof (success) === "function") {
-                    success(data);
-                }
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                me._handleRedirect(jqXHR);
-                console.log(jqXHR);
-                if (fail)
-                    fail(jqXHR, textStatus, errorThrown,this);
-            });
+
+            var options = {};
+            options.xhrFields = {
+                withCredentials: true
+            };
+            options.type = "POST";
+            options.data = data;
+            options.url = url;
+            options.success = success;
+            options.fail = fail;
+
+            return forerunner.ajax.ajax(options);
         },
         /**
         * Returns json data indicating is the user has the requested permissions for the given path

@@ -184,7 +184,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ads.cs" />
+    <Compile Include="Controllers\PR.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SampleDetailController.cs" />
     <Compile Include="Global.asax.cs">
@@ -204,6 +204,7 @@
     <Content Include="Content\img\M_ProcessorCore_large.png" />
     <Content Include="Content\Press\PressReleases.txt" />
     <Content Include="Content\prettify.css" />
+    <Content Include="Content\redirect.txt" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -319,8 +320,9 @@
     <Content Include="Views\Home\Pricing.cshtml" />
     <Content Include="Views\Home\Features.cshtml" />
     <Content Include="Views\Home\Video.cshtml" />
-    <Content Include="Views\ads\mobilizer.cshtml" />
-    <Content Include="Views\ads\Dev.cshtml" />
+    <Content Include="Views\PR\mobilizer.cshtml" />
+    <Content Include="Views\PR\Dev.cshtml" />
+    <Content Include="Views\Shared\Video.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

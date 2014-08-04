@@ -1,0 +1,15 @@
+﻿/home,/home/index
+/mob3,/pr/mobilizer?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
+/dev3,/pr/dev?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
+/trial3,/home/register?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
+/video3,/home/video?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
+/trial-ed3,/home/register?utm_source=dev&utm_medium=email&utm_campaign=V3Rel
+/video-ed3,/home/video?utm_source=dev&utm_medium=email&utm_campaign=V3Rel
+/home-ed3,/home/index?utm_source=dev&utm_medium=email&utm_campaign=V3Rel
+/JSAPI-ed3,/Docs/Index.html?utm_source=dev&utm_medium=email&utm_campaign=V3Rel
+/trial-eb3,/home/register?utm_source=BDM&utm_medium=email&utm_campaign=V3Rel
+/video-eb3,/home/video?utm_source=BDM&utm_medium=email&utm_campaign=V3Rel
+/home-eb3,/home/index?utm_source=BDM&utm_medium=email&utm_campaign=V3Rel
+/trial-et3,/home/register?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel
+/video-et3,/home/video?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel
+/home-et3,/home/index?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel

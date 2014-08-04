@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace ForerunnerSW.Controllers
 {
-    public class adsController : Controller
+    public class PRController : Controller
     {
      
 
@@ -18,6 +18,7 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+      
       
     }
 }

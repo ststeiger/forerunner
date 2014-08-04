@@ -117,7 +117,7 @@ if ($("#register")) {
 
 $(document).ready(function () {
     SetupSlider();
-    $('img[usemap]').rwdImageMaps();
+    $("img[usemap]").rwdImageMaps();
     
 });
 
@@ -127,7 +127,7 @@ function SetupSlider() {
     if ($("#Slide").length === 1) {
 
         slider = $("#Slide").bxSlider({
-            mode: 'horizontal',
+            mode: "horizontal",
             controls: false,
             pager: false,
             auto: true,

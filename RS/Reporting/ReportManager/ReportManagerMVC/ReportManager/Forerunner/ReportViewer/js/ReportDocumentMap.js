@@ -33,12 +33,12 @@ $(function () {
 
         },
         /**
-        * Write document map layout with passed data
-        *
-        * @function $.forerunner.reportDocumentMap#write
-        * 
-        * @param {Object} docMapData - Document map data returned from server
-        */
+         * Write document map layout with doc map data.
+         *
+         * @function $.forerunner.reportDocumentMap#write
+         * 
+         * @param {Object} docMapData - Document map data returned from server
+         */
         write: function (docMapData) {
             var me = this;
             this.element.html("");

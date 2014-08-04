@@ -50,16 +50,13 @@ $(function () {
     *
     * @namespace $.forerunner.reportRender
     * @prop {Object} options - The options for reportRender
-    * @prop {String} options.reportViewer - The ReportViewer object  that is rendering this report
+    * @prop {Object} options.reportViewer - The ReportViewer object that is rendering this report
     * @prop {boolean} options.responsive - Whether the report layout should be based on the device size or the RDL defintion
     * @prop {Number} options.renderTime - Unique id for this report
     * @example
     * $("#reportRenderId").reportRender({ reportViewer: this, responsive: true, renderTime: new Date().getTime() });
     * $("#reportViewerId").reportRender("render", 1);
     */
-
-
-    // report render widget
     $.widget(widgets.getFullname(widgets.reportRender),/** @lends $.forerunner.reportRender */ {
         // Default options
         options: {
@@ -86,18 +83,20 @@ $(function () {
         },
          
         /**
-        * Renders the report
-        *
-        * @function $.forerunner.reportRender#render
-        *
-        * @param {integer} Page - The page number of the report to render
-        */
-        render: function (Page, delayLayout, RLDExt) {
+         * Renders the report
+         *
+         * @function $.forerunner.reportRender#render
+         *
+         * @param {Integer} Page - The page number of the report to render
+         * @param {Boolean} delayLayout - Delay do the layout or not
+         * @param {Object} RDLExt - RDL extension object for this report
+         */
+        render: function (Page, delayLayout, RDLExt) {
             var me = this;
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
-            me.RDLExt = RLDExt;
+            me.RDLExt = RDLExt;
             
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
@@ -175,12 +174,12 @@ $(function () {
 
             return svg;
         },
-         /**
+        /**
          * Writes error data to the page
          *
          * @function $.forerunner.reportRender#writeError
          *
-         * @param {object} errorData - Error data object to srite error page from.
+         * @param {object} errorData - Error data object.
          */
         writeError: function (errorData) {
             var me = this;

@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the subscription model widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects
@@ -13,6 +18,16 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to create subscription model
+     *
+     * @namespace $.forerunner.subscriptionModel
+     * @prop {String} options.rsInstance - Report service instance name
+     *
+     * @example
+     * $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+     *
+    */
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {
             rsInstance: null
@@ -24,6 +39,13 @@ $(function () {
         schedules: null,
         _create: function () {
         },
+        /**
+         * Get current report's subscription data.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscriptionList
+         *
+         * @return {Object} The xml http requeset for current report's subscription loading
+         */
         getSubscriptionList: function (reportPath) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
@@ -40,6 +62,13 @@ $(function () {
             });
             return jqxhr;
         },
+        /**
+         * Get current report's schedule data
+         *
+         * @function $.forerunner.subscriptionModel#getSchedules
+         *
+         * @return {Object} The xml http requeset for current report's schedule loading
+         */
         getSchedules: function () {
             var me = this;
             if (me.schedules) return [me.schedules];
@@ -59,6 +88,13 @@ $(function () {
                 });
             return me.schedules || jqxhr;
         },
+        /**
+         * Returns a list of extensions for delivery extension type.
+         *
+         * @function $.forerunner.subscriptionModel#getDeliveryExtensions
+         *
+         * @return {Array} Extension list for delivery extension
+         */
         getDeliveryExtensions: function () {
             var me = this;
             if (me.extensionList) return [me.extensionList];
@@ -77,7 +113,16 @@ $(function () {
             });
         },
         _extensionSettingsCount: 0,
-        _extensionSettingsJQXHR : {},
+        _extensionSettingsJQXHR: {},
+        /**
+         * Returns a list of settings for a given extension.
+         *
+         * @function $.forerunner.subscriptionModel#getExtensionSettings
+         *
+         * @param {String} extensionName - The name of the extension as it appears in the report server configuration file.
+         *
+         * @return {Object} The xml http requeset object for extension setting loading
+         */
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
@@ -100,6 +145,15 @@ $(function () {
                         me._extensionSettingsCount++;
                     });
         },
+        /**
+         * Get the properties of a specified subscription.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscription
+         *
+         * @param {String} subscriptionID - The ID of the subscription.
+         *
+         * @return {Object} Specify subscription properties
+         */
         getSubscription: function (subscriptionID) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
@@ -117,12 +171,39 @@ $(function () {
             });
             return retval;
         },
+        /**
+         * Creates a subscription for a specified report in the report server database.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscription
+         *
+         * @param {Object} subscriptionInfo - Subscription object.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         createSubscription: function (subscriptionInfo, success, error) {
             return this._saveSubscription("CreateSubscription", subscriptionInfo, success, error);
         },
+        /**
+         * Update the properties of a subscription.
+         *
+         * @function $.forerunner.subscriptionModel#updateSubscription
+         *
+         * @param {Object} subscriptionInfo - Subscription object.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         updateSubscription: function (subscriptionInfo, success, error) {
             return this._saveSubscription("UpdateSubscription", subscriptionInfo, success, error);
         },
+        /**
+         * Deletes a subscription from the report server database.
+         *
+         * @function $.forerunner.subscriptionModel#deleteSubscription
+         *
+         * @param {String} subscriptionID - Subscription ID.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         deleteSubscription: function (subscriptionID, success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;

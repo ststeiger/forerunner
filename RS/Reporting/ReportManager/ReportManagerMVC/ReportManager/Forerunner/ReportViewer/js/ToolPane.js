@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the toolPane widget.
+ * @file Contains the report viewer toolPane widget.
  *
  */
 

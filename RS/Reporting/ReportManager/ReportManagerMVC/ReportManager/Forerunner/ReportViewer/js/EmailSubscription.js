@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the email subscription widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects
@@ -13,6 +18,25 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to create email subscription
+     *
+     * @namespace $.forerunner.emailSubscription
+     * @prop {Object} options - The options for emailSubscription
+     * @prop {String} options.reportPath - Current report path
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.subscriptionModel - Subscription model instance
+     * @prop {String} options.paramList - Current report selected parameter list
+     *
+     * @example
+     * $("#subscription").emailSubscription({
+     *  reportPath : path
+     *  $appContainer: $appContainer, 
+     *  subscriptionModel : subscriptionModel,
+     *  paramList: parameterList
+     *  
+     * });
+    */
     $.widget(widgets.getFullname(widgets.emailSubscription), {
         options: {
             reportPath: null,
@@ -65,10 +89,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -95,7 +119,7 @@ $(function () {
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.attr("value", userName );
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
@@ -159,6 +183,8 @@ $(function () {
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
+                    if (param.UseDefault)
+                        continue;
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
@@ -268,11 +294,24 @@ $(function () {
         _init : function () {
         },
         _subscriptionID: null,
-
+        /**
+         * Get current report's subscription data
+         *
+         * @function $.forerunner.emailSubscription#getSubscriptionList
+         *
+         * @return {Object} The xml http requeset for current report's subscription loading
+         */
         getSubscriptionList : function() {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
         },
+        /**
+         * Generate email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#loadSubscription
+         *
+         * @param {String} Subscription id, if not exist set it to null
+         */
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
@@ -392,16 +431,29 @@ $(function () {
                function () { me.closeDialog(); },
                function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
         },
-        
+        /**
+         * Open email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
-        
+        /**
+         * Close email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
         },
+        /**
+         * Removes the email subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.emailSubscription#destroy
+         */
         destroy: function () {
             var me = this;
             me.element.html("");

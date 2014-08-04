@@ -401,9 +401,9 @@ $(function () {
             }
         },
         /**
-        * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+        * Removes the print functionality completely. This will return the element back to its pre-init state.
         *
-        * @function $.forerunner.dsCredential#destroy
+        * @function $.forerunner.reportPrint#destroy
         */
         destroy: function () {
             var me = this;

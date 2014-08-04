@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the email subscription widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects
@@ -13,6 +18,25 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to create email subscription
+     *
+     * @namespace $.forerunner.emailSubscription
+     * @prop {Object} options - The options for emailSubscription
+     * @prop {String} options.reportPath - Current report path
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.subscriptionModel - Subscription model instance
+     * @prop {String} options.paramList - Current report selected parameter list
+     *
+     * @example
+     * $("#subscription").emailSubscription({
+     *  reportPath : path
+     *  $appContainer: $appContainer, 
+     *  subscriptionModel : subscriptionModel,
+     *  paramList: parameterList
+     *  
+     * });
+    */
     $.widget(widgets.getFullname(widgets.emailSubscription), {
         options: {
             reportPath: null,
@@ -268,11 +292,24 @@ $(function () {
         _init : function () {
         },
         _subscriptionID: null,
-
+        /**
+         * Get current report's subscription data
+         *
+         * @function $.forerunner.emailSubscription#getSubscriptionList
+         *
+         * @return {Object} The xml http requeset for current report's subscription loading
+         */
         getSubscriptionList : function() {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
         },
+        /**
+         * Generate email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#loadSubscription
+         *
+         * @param {String} Subscription id, if not exist set it to null
+         */
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
@@ -392,16 +429,29 @@ $(function () {
                function () { me.closeDialog(); },
                function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
         },
-        
+        /**
+         * Open email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
-        
+        /**
+         * Close email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
         },
+        /**
+         * Removes the email subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.emailSubscription#destroy
+         */
         destroy: function () {
             var me = this;
             me.element.html("");

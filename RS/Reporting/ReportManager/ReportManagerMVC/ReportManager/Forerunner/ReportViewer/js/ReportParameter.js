@@ -85,7 +85,7 @@ $(function () {
             me._formInit = true;
         },
         /**
-         * Get number of visible parameters
+         * Get the number of visible parameters
          *
          * @function $.forerunner.reportParameter#getNumOfVisibleParameters
          *
@@ -157,7 +157,7 @@ $(function () {
 
 
         /**
-         * Write parameter pane with passed definition data
+         * Write parameter pane with parameters data
          *
          * @function $.forerunner.reportParameter#writeParameterPanel
          *
@@ -345,8 +345,10 @@ $(function () {
             me._hasPostedBackWithoutSubmitForm = false;
         },
         /**
-         * Revert any unsubmitted parameters, called in two scenario:  when cancelling out from parameter area or 
-         * before submitting an action when the set of parameters for the session does not match the loaded report.
+         * Revert any unsubmitted parameters, called in two scenario: 
+         *
+         * 1. when cancelling out from parameter area or before submitting an action
+         * 2. when the set of parameters for the session does not match the loaded report.
          *
          * @function $.forerunner.reportParameter#revertParameters 
          */
@@ -1951,9 +1953,9 @@ $(function () {
          *
          * @function $.forerunner.reportParameter#getParamsList
          *
-         * @param {Boolean} noValid - if not need valid form set noValid = true
+         * @param {Boolean} noValid - If not need valid form set noValid = true
          *
-         * @return {String} - parameter value list or null if this report has no visible parameters
+         * @return {String} - Parameter value list or null if this report has no visible parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -2203,6 +2205,7 @@ $(function () {
         * @function $.forerunner.reportParameter#refreshParameters
         *
         * @param {String} savedParams - Saved parameter value list
+        * @param {Boolean} isCascading - Is cadcading parameter refresh or not
         */
         refreshParameters: function (savedParams, isCascading) {
             var me = this;
@@ -2233,10 +2236,18 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        /**
+        * Removes the report parameter functionality completely. This will return the element back to its pre-init state.
+        *
+        * @function $.forerunner.reportParameter#destroy
+        */
         destroy: function () {
             var me = this;
 
+            me.removeParameter();
             $(document).off("click", me._checkExternalClick);
+
+            this._destroy();
         }
     });  // $.widget
 });

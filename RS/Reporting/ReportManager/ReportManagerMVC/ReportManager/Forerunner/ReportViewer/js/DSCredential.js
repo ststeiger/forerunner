@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the datasource credential modal dialog widget.
+ * @file Contains the datasource credential widget.
  *
  */
 
@@ -164,7 +164,7 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
-         * Create datasource credential dialog 
+         * Write datasource credential dialog by specify Sql Server datasource credential data
          *
          * @function $.forerunner.dsCredential#writeDialog
          *
@@ -218,11 +218,11 @@ $(function () {
             me.element.find(".fr-dsc-text-input").val("");
         },
         /**
-         * Get user input credential JSON string 
+         * Get user input credential in JSON format string
          *
          * @function $.forerunner.dsCredential#getCredentialList
          *
-         * @return {String} If form valid return credential JSON string, if not return null
+         * @return {String} Return credential in JSON format string If form valid, if not return null
          */
         getCredentialList: function () {
             var me = this;

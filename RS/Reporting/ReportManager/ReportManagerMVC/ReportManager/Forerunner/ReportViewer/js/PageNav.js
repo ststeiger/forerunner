@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the page navigation widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -18,7 +23,9 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#pageNavContainer").pageNav({
-     *  $reportViewer: me.$reportViewer
+     *  $reportViewer: me.$reportViewer,
+     *  $appContainer: me.$appContainer,
+     *  rsInstance: rsInstance,
      * });
      */
     $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {

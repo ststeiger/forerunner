@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the ReportViewerEZ widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -27,6 +32,7 @@ $(function () {
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
+     * @prop {String} options.zoom- Zoom factor. Defaults to 100.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -210,7 +216,7 @@ $(function () {
             }
         },
         /**
-         * Get report viewer page navigation
+         * Get report viewer page navigation section
          *
          * @function $.forerunner.reportViewerEZ#getPageNav
          * 
@@ -225,7 +231,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer document map
+         * Get report viewer document map section
          *
          * @function $.forerunner.reportViewerEZ#getReportDocumentMap
          * 
@@ -240,7 +246,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer report parameter
+         * Get report viewer report parameter section
          *
          * @function $.forerunner.reportViewerEZ#getReportParameter
          * 
@@ -255,7 +261,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer
+         * Get report viewer section
          *
          * @function $.forerunner.reportViewerEZ#getReportViewer
          * 
@@ -274,7 +280,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer toolbar
+         * Get report viewer toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getToolbar
          * 
@@ -289,7 +295,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer toolpane
+         * Get report viewer toolpane section
          *
          * @function $.forerunner.reportViewerEZ#getToolPane
          * 
@@ -304,7 +310,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer left toolbar
+         * Get report viewer left toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getLeftToolbar
          * 
@@ -319,7 +325,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer right toolbar
+         * Get report viewer right toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getRightToolbar
          * 

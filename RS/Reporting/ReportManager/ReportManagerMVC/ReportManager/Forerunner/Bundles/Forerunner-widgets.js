@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -11618,7 +11618,7 @@ $(function () {
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {
-                if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
+                if (param.UseDefault && param.UseDefault === true) {
                     var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
                     if ($checkbox.length) {
                         $checkbox.trigger("click");
@@ -16445,10 +16445,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -16475,7 +16475,7 @@ $(function () {
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.attr("value", userName );
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
@@ -16539,6 +16539,8 @@ $(function () {
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
+                    if (param.UseDefault)
+                        continue;
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });

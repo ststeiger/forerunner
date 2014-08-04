@@ -674,6 +674,7 @@ $(function () {
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
+     * @prop {String} options.zoom - Zoom factor, default to 100.
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -700,9 +701,6 @@ $(function () {
             rsInstance: null,
             showSubscriptionUI: false,
             zoom: "100"
-        },
-
-        _destroy: function () {
         },
 
         // Constructor
@@ -785,9 +783,9 @@ $(function () {
             me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
         },
         /**
-         * Get current path user permission
+         * Get current user permission
          *
-         * @function $.forerunner.dashboardEZ#getPermission
+         * @function $.forerunner.reportViewer#getPermission
          * 
          * @return {Object} - permission jQuery object
          */
@@ -800,6 +798,7 @@ $(function () {
          * Get current user settings
          *
          * @function $.forerunner.reportViewer#getUserSettings
+         *
          * @return {Object} - Current user settings
          */
         getUserSettings: function () {
@@ -809,7 +808,7 @@ $(function () {
          * Get the flag to indicate whether to show subscription UI
          *
          * @function $.forerunner.reportViewer#showSubscriptionUI
-         * @return {Object} - Flag to indicate whether to show subscription UI
+         * @return {Boolean} - Flag to indicate whether to show subscription UI
          */
         showSubscriptionUI: function() {
             return this.options.showSubscriptionUI;
@@ -868,17 +867,17 @@ $(function () {
          * Get current report contain document map or not
          *
          * @function $.forerunner.reportViewer#getHasDocMap
-         * @return {Boolean} - true if there is a document map
+         * @return {Boolean} - Whether document map exist
          */
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
         },
         /**
-         * Get datasource credentials' data
+         * Get datasource credentials data
          *
          * @function $.forerunner.reportViewer#getDataSourceCredential
-         * @return {Object} datasource credential if saved datasource credential exist; return null if not
+         * @return {Object} Datasource credential if saved datasource credential exist; return null if not
          */
         getDataSourceCredential: function () {
             var me = this;
@@ -889,7 +888,8 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#triggerEvent
          *
-         * @paran {String} eventName - event name
+         * @paran {String} eventName - Event name
+         * @paran {Object} eventData - Data pass with event
          */
         triggerEvent: function (eventName,eventData) {
             var me = this;
@@ -996,7 +996,7 @@ $(function () {
             }
         },
         /**
-         * windowResize will relayout the report
+         * Re-layout the report
          *
          * @function $.forerunner.reportViewer#windowResize
          */
@@ -1146,7 +1146,6 @@ $(function () {
                 me.zoomToPercent(pageWidthZoom);
             }
         },
-
         /**
          * Zoom To Page width
          *
@@ -1467,7 +1466,7 @@ $(function () {
             }
         },
         /**
-         * Shows the visibility of the Document Map
+         * Shows Document Map
          *
          * @function $.forerunner.reportViewer#showDocMap
          */
@@ -1972,7 +1971,7 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#navigateDrillthrough
          *
-         * @param {String} drillthroughID - Id of the item
+         * @param {String} drillthroughID - Id of the drill through item
          */
         navigateDrillthrough: function (drillthroughID) {
             var me = this;
@@ -2113,14 +2112,14 @@ $(function () {
             me.scrollTop = top;
         },
         /**
-         * Find the given keyword. Find will always find the first matched
+         * Find the given keyword
          *
          * @function $.forerunner.reportViewer#find
          *
          * @param {String} keyword - Keyword to find
          * @param {Integer} startPage - Starting page of the search range
          * @param {Integer} endPage - Ending page of the search range
-         * @param {Boolean} findInNewPage - Find in new page not current
+         * @param {Boolean} findInNewPage - Find in new page or current page
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
@@ -2272,7 +2271,7 @@ $(function () {
             me.findEndPage = null;
         },
         /**
-         * Export the report in the given format
+         * Export the report in a specify format
          *
          * @function $.forerunner.reportViewer#exportReport
          *
@@ -2297,6 +2296,13 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
+        /**
+         * Edit email subscription
+         *
+         * @function $.forerunner.reportViewer#editEmailSubscription
+         *
+         * @param {String} subscriptionID - subscription ID
+         */
         editEmailSubscription : function(subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -2316,6 +2322,13 @@ $(function () {
                 me.$emailSub.emailSubscription("openDialog");
             }
         },
+        /**
+         * Show email subscription dialog
+         *
+         * @function $.forerunner.reportViewer#showEmailSubscription
+         *
+         * @param {String} subscriptionID - subscription ID
+         */
         showEmailSubscription : function (subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -2335,6 +2348,11 @@ $(function () {
                     .fail(function() { me._showEmailSubscriptionDialog(null); });
             }
         },
+        /**
+         * Show manage subscription dialog
+         *
+         * @function $.forerunner.reportViewer#manageSubscription
+         */
         manageSubscription : function() {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -2346,7 +2364,7 @@ $(function () {
             }
         },
         /**
-         * Print current reprot in PDF format
+         * Show report print layout in PDF viewer and do print on that
          *
          * @function $.forerunner.reportViewer#printReport
          *
@@ -2605,7 +2623,7 @@ $(function () {
             return false;
         },
         /**
-         * Load the given report
+         * Load report with pass path, page number and parameters
          *
          * @function $.forerunner.reportViewer#loadReport
          *
@@ -2999,7 +3017,7 @@ $(function () {
             me.removeLoadingIndicator();
         },
         /**
-         * Show datasource dialog, close if opened
+         * Show datasource credential dialog
          *
          * @function $.forerunner.reportViewer#showDSCredential
          */
@@ -3263,12 +3281,27 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        /**
+         * Get RDL Extension
+         *
+         * @function $.forerunner.reportViewer#getRDLExt
+         * @return {Object} RDL extension object for current report
+         */
         getRDLExt: function () {
             var me = this;
 
             return me.RDLExtProperty;
 
         },
+        /**
+         * Save RDL Extension
+         *
+         * @function $.forerunner.reportViewer#getRDLExt
+         *
+         * @param {String} RDL - RDL Extension string
+         *
+         * @return {Object} XML http request return object
+         */
         saveRDLExt: function (RDL) {
             var me = this;
 
@@ -3321,7 +3354,7 @@ $(function () {
         /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
          *
-         * @function $.forerunner.dsCredential#destroy
+         * @function $.forerunner.reportViewer#destroy
          */
         destroy: function () {
             var me = this;
@@ -3381,10 +3414,10 @@ $(function () {
             me.serverData = null;
             me.selectSetId = forerunner.helper.guidGen();
         },
-        getNewSet: function (name, parameterList) {
+        getNewSet: function (parameterList) {
             var newSet = {
                 isAllUser: false,
-                name: name,
+                name: null,
                 id: forerunner.helper.guidGen(),
                 data: parameterList
             };
@@ -3413,9 +3446,9 @@ $(function () {
 
             return !me.isCurrentSetAllUser();
         },
-        _addNewSet: function (name, parameterList) {
+        _addNewSet: function (parameterList) {
             var me = this;
-            var newSet = me.getNewSet(name, parameterList);
+            var newSet = me.getNewSet(parameterList);
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -3624,7 +3657,7 @@ $(function () {
             var me = this;
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
-                    me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._addNewSet(JSON.parse(parameterList));
                     me._triggerModelChange();
                 } else {
                     me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);
@@ -6035,7 +6068,7 @@ $(function () {
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
 /**
- * @file Contains the toolbar widget.
+ * @file Contains the report viewer toolbar widget.
  *
  */
 
@@ -6282,9 +6315,6 @@ $(function () {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
         },
-        
-        _destroy: function () {
-        },
         _create: function () {
         },
     });  // $.widget
@@ -6292,7 +6322,7 @@ $(function () {
 
 ///#source 1 1 /Forerunner/ReportViewer/js/ToolPane.js
 /**
- * @file Contains the toolPane widget.
+ * @file Contains the report viewer toolPane widget.
  *
  */
 
@@ -6559,6 +6589,11 @@ $(function () {
 });  // function()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/PageNav.js
+/**
+ * @file Contains the page navigation widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -6579,7 +6614,9 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#pageNavContainer").pageNav({
-     *  $reportViewer: me.$reportViewer
+     *  $reportViewer: me.$reportViewer,
+     *  $appContainer: me.$appContainer,
+     *  rsInstance: rsInstance,
      * });
      */
     $.widget(widgets.getFullname(widgets.pageNav), /** @lends $.forerunner.pageNav */ {
@@ -8451,16 +8488,13 @@ $(function () {
     *
     * @namespace $.forerunner.reportRender
     * @prop {Object} options - The options for reportRender
-    * @prop {String} options.reportViewer - The ReportViewer object  that is rendering this report
+    * @prop {Object} options.reportViewer - The ReportViewer object that is rendering this report
     * @prop {boolean} options.responsive - Whether the report layout should be based on the device size or the RDL defintion
     * @prop {Number} options.renderTime - Unique id for this report
     * @example
     * $("#reportRenderId").reportRender({ reportViewer: this, responsive: true, renderTime: new Date().getTime() });
     * $("#reportViewerId").reportRender("render", 1);
     */
-
-
-    // report render widget
     $.widget(widgets.getFullname(widgets.reportRender),/** @lends $.forerunner.reportRender */ {
         // Default options
         options: {
@@ -8487,18 +8521,20 @@ $(function () {
         },
          
         /**
-        * Renders the report
-        *
-        * @function $.forerunner.reportRender#render
-        *
-        * @param {integer} Page - The page number of the report to render
-        */
-        render: function (Page, delayLayout, RLDExt) {
+         * Renders the report
+         *
+         * @function $.forerunner.reportRender#render
+         *
+         * @param {Integer} Page - The page number of the report to render
+         * @param {Boolean} delayLayout - Delay do the layout or not
+         * @param {Object} RDLExt - RDL extension object for this report
+         */
+        render: function (Page, delayLayout, RDLExt) {
             var me = this;
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
-            me.RDLExt = RLDExt;
+            me.RDLExt = RDLExt;
             
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
@@ -8576,12 +8612,12 @@ $(function () {
 
             return svg;
         },
-         /**
+        /**
          * Writes error data to the page
          *
          * @function $.forerunner.reportRender#writeError
          *
-         * @param {object} errorData - Error data object to srite error page from.
+         * @param {object} errorData - Error data object.
          */
         writeError: function (errorData) {
             var me = this;
@@ -11359,7 +11395,7 @@ $(function () {
             me._formInit = true;
         },
         /**
-         * Get number of visible parameters
+         * Get the number of visible parameters
          *
          * @function $.forerunner.reportParameter#getNumOfVisibleParameters
          *
@@ -11431,7 +11467,7 @@ $(function () {
 
 
         /**
-         * Write parameter pane with passed definition data
+         * Write parameter pane with parameters data
          *
          * @function $.forerunner.reportParameter#writeParameterPanel
          *
@@ -11581,7 +11617,7 @@ $(function () {
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {
-                if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
+                if (param.UseDefault && param.UseDefault === true) {
                     var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
                     if ($checkbox.length) {
                         $checkbox.trigger("click");
@@ -11619,8 +11655,10 @@ $(function () {
             me._hasPostedBackWithoutSubmitForm = false;
         },
         /**
-         * Revert any unsubmitted parameters, called in two scenario:  when cancelling out from parameter area or 
-         * before submitting an action when the set of parameters for the session does not match the loaded report.
+         * Revert any unsubmitted parameters, called in two scenario: 
+         *
+         * 1. when cancelling out from parameter area or before submitting an action
+         * 2. when the set of parameters for the session does not match the loaded report.
          *
          * @function $.forerunner.reportParameter#revertParameters 
          */
@@ -13225,9 +13263,9 @@ $(function () {
          *
          * @function $.forerunner.reportParameter#getParamsList
          *
-         * @param {Boolean} noValid - if not need valid form set noValid = true
+         * @param {Boolean} noValid - If not need valid form set noValid = true
          *
-         * @return {String} - parameter value list or null if this report has no visible parameters
+         * @return {String} - Parameter value list or null if this report has no visible parameters
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -13477,6 +13515,7 @@ $(function () {
         * @function $.forerunner.reportParameter#refreshParameters
         *
         * @param {String} savedParams - Saved parameter value list
+        * @param {Boolean} isCascading - Is cadcading parameter refresh or not
         */
         refreshParameters: function (savedParams, isCascading) {
             var me = this;
@@ -13507,10 +13546,18 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        /**
+        * Removes the report parameter functionality completely. This will return the element back to its pre-init state.
+        *
+        * @function $.forerunner.reportParameter#destroy
+        */
         destroy: function () {
             var me = this;
 
+            me.removeParameter();
             $(document).off("click", me._checkExternalClick);
+
+            this._destroy();
         }
     });  // $.widget
 });
@@ -13550,12 +13597,12 @@ $(function () {
 
         },
         /**
-        * Write document map layout with passed data
-        *
-        * @function $.forerunner.reportDocumentMap#write
-        * 
-        * @param {Object} docMapData - Document map data returned from server
-        */
+         * Write document map layout with doc map data.
+         *
+         * @function $.forerunner.reportDocumentMap#write
+         * 
+         * @param {Object} docMapData - Document map data returned from server
+         */
         write: function (docMapData) {
             var me = this;
             this.element.html("");
@@ -14038,9 +14085,9 @@ $(function () {
             }
         },
         /**
-        * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+        * Removes the print functionality completely. This will return the element back to its pre-init state.
         *
-        * @function $.forerunner.dsCredential#destroy
+        * @function $.forerunner.reportPrint#destroy
         */
         destroy: function () {
             var me = this;
@@ -14052,7 +14099,7 @@ $(function () {
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
 /**
- * @file Contains the print widget.
+ * @file Contains the manage param set widget.
  *
  */
 
@@ -14092,7 +14139,9 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
+
             me.serverData = me.options.model.parameterModel("cloneServerData");
+            
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -14106,52 +14155,22 @@ $(function () {
             var me = this;
 
             // Remove any previous event handlers
-            me.element.find(".fr-mps-text-input").off("change");
             me.element.find(".fr-mps-default-id").off("click");
             me.element.find(".fr-mps-all-users-id").off("click");
             me.element.find(".fr-mps-delete-id").off("click");
+            me.element.find(".fr-mps-text-input").off("change").off("click").off("focus").off("blur");
 
             me.$tbody.html("");
             var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
+
             $.each(optionArray, function (index, option) {
                 if (index > 0) {
                     // Skip the "<select set>" option
                     var parameterSet = me.serverData.parameterSets[option.id];
                     var $row = me._createRow(index, parameterSet);
                     me.$tbody.append($row);
-
-                    if (me.serverData.canEditAllUsersSet) {
-                        $row.find(".fr-mps-all-users-id").on("click", function (e) {
-                            me._onClickAllUsers(e);
-                        });
-                    }
-                    if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
-                        $row.find(".fr-mps-delete-id").on("click", function (e) {
-                            me._onClickDelete(e);
-                        });
-                    }
                 }
             });
-
-            // Add any table body specific event handlers
-            me.element.find(".fr-mps-text-input").on("change", function (e) {
-                me._onChangeInput(e);
-            });
-            me.element.find(".fr-mps-default-id").on("click", function (e) {
-                me._onClickDefault(e);
-            });
-
-            $(":text", me.element).each(
-               function (index) {
-                   var textinput = $(this);
-                   textinput.on("blur", function () {
-                       me.options.$reportViewer.reportViewer("onInputBlur");
-                   });
-                   textinput.on("focus", function () {
-                       me.options.$reportViewer.reportViewer("onInputFocus");
-                   });
-               }
-           );
 
             // Set up the form validation
             me._validateForm(me.$form);
@@ -14164,8 +14183,9 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var encodedSetName = parameterSet.name && forerunner.helper.htmlEncode(parameterSet.name);
+
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -14185,7 +14205,7 @@ $(function () {
             var $row = $(
                 "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
                     // Name
-                    "<td title='" + encodedSetName + "'>" + textElement + "</td>" +
+                    "<td>" + textElement + "</td>" +
                     // Default
                     "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
                     // All Users
@@ -14193,6 +14213,44 @@ $(function () {
                     // Delete
                     "<td class='fr-mps-delete-id ui-state-error-text fr-core-cursorpointer'><div" + deleteClass + "/></td>" +
                 "</tr>");
+
+            var $input = $row.find("input");
+
+            if (encodedSetName) {
+                $input.val(encodedSetName).attr("title", encodedSetName);
+            }
+            else {
+                $input.watermark(manageParamSets.newSet, { useNative: false, className: "fr-watermark" });
+            }
+
+            $input.on("change", function (e) {
+                me._onChangeInput(e);
+            });
+
+            $input.on("focus", function () {
+                me.options.$reportViewer.reportViewer("onInputFocus");
+            });
+
+            $input.on("blur", function () {
+                me.options.$reportViewer.reportViewer("onInputBlur");
+            });
+
+            $row.find(".fr-mps-default-id").on("click", function (e) {
+                me._onClickDefault(e);
+            });
+
+            if (me.serverData.canEditAllUsersSet) {
+                $row.find("td.fr-mps-all-users-id").on("click", function (e) {
+                    me._onClickAllUsers(e);
+                });
+            }
+
+            if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                $row.find("td.fr-mps-delete-id").on("click", function (e) {
+                    me._onClickDelete(e);
+                });
+            }
+
             return $row;
         },
         _init: function () {
@@ -14219,7 +14277,7 @@ $(function () {
                             "</table>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
+                                    "<input type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -14282,22 +14340,25 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
+            var newSet = me.options.model.parameterModel("getNewSet", me.parameterList);
             me.serverData.parameterSets[newSet.id] = newSet;
-            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
 
+            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
+            
             if (setCount === 1) {
                 // Set the default id if this is the first set
                 me.serverData.defaultSetId = newSet.id;
             }
 
-            // Update the UI with the new set
-            me._createRows();
-            var $tr = me._findRow(newSet.id);
-            var $input = $tr.find("input");
+            var $row = me._createRow(setCount, newSet);
+            me.$tbody.append($row);
+
+            var $input = $row.find("input");
             $input.focus();
 
             me.lastAddedSetId = newSet.id;
+
+            me._validateForm(me.$form);
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -14305,7 +14366,8 @@ $(function () {
             $input.attr("title", $input.val());
             var id = me._findId(e);
             me.serverData.parameterSets[id].name = $input.val();
-            me._createRows();
+            //don't need to do sort everytime name change
+            //me._createRows();
         },
         _onClickDefault: function(e) {
             var me = this;
@@ -14851,6 +14913,11 @@ $(function () {
 });  // $(function ()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportViewerEZ.js
+/**
+ * @file Contains the ReportViewerEZ widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -14880,6 +14947,7 @@ $(function () {
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
+     * @prop {String} options.zoom- Zoom factor. Defaults to 100.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -15063,7 +15131,7 @@ $(function () {
             }
         },
         /**
-         * Get report viewer page navigation
+         * Get report viewer page navigation section
          *
          * @function $.forerunner.reportViewerEZ#getPageNav
          * 
@@ -15078,7 +15146,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer document map
+         * Get report viewer document map section
          *
          * @function $.forerunner.reportViewerEZ#getReportDocumentMap
          * 
@@ -15093,7 +15161,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer report parameter
+         * Get report viewer report parameter section
          *
          * @function $.forerunner.reportViewerEZ#getReportParameter
          * 
@@ -15108,7 +15176,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer
+         * Get report viewer section
          *
          * @function $.forerunner.reportViewerEZ#getReportViewer
          * 
@@ -15127,7 +15195,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer toolbar
+         * Get report viewer toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getToolbar
          * 
@@ -15142,7 +15210,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer toolpane
+         * Get report viewer toolpane section
          *
          * @function $.forerunner.reportViewerEZ#getToolPane
          * 
@@ -15157,7 +15225,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer left toolbar
+         * Get report viewer left toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getLeftToolbar
          * 
@@ -15172,7 +15240,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report viewer right toolbar
+         * Get report viewer right toolbar section
          *
          * @function $.forerunner.reportViewerEZ#getRightToolbar
          * 
@@ -15190,7 +15258,7 @@ $(function () {
 });  // function()
 ///#source 1 1 /Forerunner/ReportViewer/js/DSCredential.js
 /**
- * @file Contains the datasource credential modal dialog widget.
+ * @file Contains the datasource credential widget.
  *
  */
 
@@ -15355,7 +15423,7 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
-         * Create datasource credential dialog 
+         * Write datasource credential dialog by specify Sql Server datasource credential data
          *
          * @function $.forerunner.dsCredential#writeDialog
          *
@@ -15409,11 +15477,11 @@ $(function () {
             me.element.find(".fr-dsc-text-input").val("");
         },
         /**
-         * Get user input credential JSON string 
+         * Get user input credential in JSON format string
          *
          * @function $.forerunner.dsCredential#getCredentialList
          *
-         * @return {String} If form valid return credential JSON string, if not return null
+         * @return {String} Return credential in JSON format string If form valid, if not return null
          */
         getCredentialList: function () {
             var me = this;
@@ -16285,6 +16353,11 @@ $(function () {
     }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/EmailSubscription.js
+/**
+ * @file Contains the email subscription widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -16300,6 +16373,25 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to create email subscription
+     *
+     * @namespace $.forerunner.emailSubscription
+     * @prop {Object} options - The options for emailSubscription
+     * @prop {String} options.reportPath - Current report path
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.subscriptionModel - Subscription model instance
+     * @prop {String} options.paramList - Current report selected parameter list
+     *
+     * @example
+     * $("#subscription").emailSubscription({
+     *  reportPath : path
+     *  $appContainer: $appContainer, 
+     *  subscriptionModel : subscriptionModel,
+     *  paramList: parameterList
+     *  
+     * });
+    */
     $.widget(widgets.getFullname(widgets.emailSubscription), {
         options: {
             reportPath: null,
@@ -16352,10 +16444,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.attr("value", extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -16382,7 +16474,7 @@ $(function () {
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.attr("value", userName );
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
@@ -16446,6 +16538,8 @@ $(function () {
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
+                    if (param.UseDefault)
+                        continue;
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
@@ -16555,11 +16649,24 @@ $(function () {
         _init : function () {
         },
         _subscriptionID: null,
-
+        /**
+         * Get current report's subscription data
+         *
+         * @function $.forerunner.emailSubscription#getSubscriptionList
+         *
+         * @return {Object} The xml http requeset for current report's subscription loading
+         */
         getSubscriptionList : function() {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
         },
+        /**
+         * Generate email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#loadSubscription
+         *
+         * @param {String} Subscription id, if not exist set it to null
+         */
         loadSubscription: function (subscripitonID) {
             var me = this;
             me._subscriptionID = subscripitonID;
@@ -16679,16 +16786,29 @@ $(function () {
                function () { me.closeDialog(); },
                function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
         },
-        
+        /**
+         * Open email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
-        
+        /**
+         * Close email subscription dialog
+         *
+         * @function $.forerunner.emailSubscription#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
         },
+        /**
+         * Removes the email subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.emailSubscription#destroy
+         */
         destroy: function () {
             var me = this;
             me.element.html("");
@@ -16698,6 +16818,11 @@ $(function () {
 });  // $(function ()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageSubscription.js
+/**
+ * @file Contains the manage subscription widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -16713,6 +16838,25 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+    * Widget used to manage subscription
+    *
+    * @namespace $.forerunner.manageSubscription
+    * @prop {Object} options - The options for manageSubscription
+    * @prop {String} options.reportPath - Current report path
+    * @prop {Object} options.$appContainer - Report page container
+    * @prop {Object} options.$reportViewer - The report viewer widget instance
+    * @prop {Object} options.subscriptionModel - Subscription model instance
+    *
+    * @example
+    * $("#subscription").manageSubscription({
+    *  reportPath : path
+    *  $appContainer: $appContainer, 
+    *  $viewer: $viewer
+    *  subscriptionModel : subscriptionModel,
+    *  
+    * });
+    */
     $.widget(widgets.getFullname(widgets.manageSubscription), {
         options: {
             reportPath: null,
@@ -16780,7 +16924,12 @@ $(function () {
                 }
             );
         },
-
+        /**
+         * Load subscription data and generate manage subscription UI
+         *
+         * @function $.forerunner.manageSubscription#listSubscriptions
+         *
+         */
         listSubscriptions: function () {
             var me = this;
             me.element.html("");
@@ -16815,16 +16964,29 @@ $(function () {
                 me.closeDialog();
             });
         },
-
+        /**
+         * Open manage subscription dialog
+         *
+         * @function $.forerunner.manageSubscription#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
-
+        /**
+         * Close manage subscription dialog
+         *
+         * @function $.forerunner.manageSubscription#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Removes the manage subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.manageSubscription#destroy
+         */
         destroy: function () {
             var me = this;
             me.element.html("");
@@ -16834,6 +16996,11 @@ $(function () {
 });  // $(function ()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/SubscriptionModel.js
+/**
+ * @file Contains the subscription model widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -16849,6 +17016,16 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to create subscription model
+     *
+     * @namespace $.forerunner.subscriptionModel
+     * @prop {String} options.rsInstance - Report service instance name
+     *
+     * @example
+     * $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+     *
+    */
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {
             rsInstance: null
@@ -16860,6 +17037,13 @@ $(function () {
         schedules: null,
         _create: function () {
         },
+        /**
+         * Get current report's subscription data.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscriptionList
+         *
+         * @return {Object} The xml http requeset for current report's subscription loading
+         */
         getSubscriptionList: function (reportPath) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
@@ -16876,6 +17060,13 @@ $(function () {
             });
             return jqxhr;
         },
+        /**
+         * Get current report's schedule data
+         *
+         * @function $.forerunner.subscriptionModel#getSchedules
+         *
+         * @return {Object} The xml http requeset for current report's schedule loading
+         */
         getSchedules: function () {
             var me = this;
             if (me.schedules) return [me.schedules];
@@ -16895,6 +17086,13 @@ $(function () {
                 });
             return me.schedules || jqxhr;
         },
+        /**
+         * Returns a list of extensions for delivery extension type.
+         *
+         * @function $.forerunner.subscriptionModel#getDeliveryExtensions
+         *
+         * @return {Array} Extension list for delivery extension
+         */
         getDeliveryExtensions: function () {
             var me = this;
             if (me.extensionList) return [me.extensionList];
@@ -16913,7 +17111,16 @@ $(function () {
             });
         },
         _extensionSettingsCount: 0,
-        _extensionSettingsJQXHR : {},
+        _extensionSettingsJQXHR: {},
+        /**
+         * Returns a list of settings for a given extension.
+         *
+         * @function $.forerunner.subscriptionModel#getExtensionSettings
+         *
+         * @param {String} extensionName - The name of the extension as it appears in the report server configuration file.
+         *
+         * @return {Object} The xml http requeset object for extension setting loading
+         */
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
@@ -16936,6 +17143,15 @@ $(function () {
                         me._extensionSettingsCount++;
                     });
         },
+        /**
+         * Get the properties of a specified subscription.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscription
+         *
+         * @param {String} subscriptionID - The ID of the subscription.
+         *
+         * @return {Object} Specify subscription properties
+         */
         getSubscription: function (subscriptionID) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
@@ -16953,12 +17169,39 @@ $(function () {
             });
             return retval;
         },
+        /**
+         * Creates a subscription for a specified report in the report server database.
+         *
+         * @function $.forerunner.subscriptionModel#getSubscription
+         *
+         * @param {Object} subscriptionInfo - Subscription object.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         createSubscription: function (subscriptionInfo, success, error) {
             return this._saveSubscription("CreateSubscription", subscriptionInfo, success, error);
         },
+        /**
+         * Update the properties of a subscription.
+         *
+         * @function $.forerunner.subscriptionModel#updateSubscription
+         *
+         * @param {Object} subscriptionInfo - Subscription object.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         updateSubscription: function (subscriptionInfo, success, error) {
             return this._saveSubscription("UpdateSubscription", subscriptionInfo, success, error);
         },
+        /**
+         * Deletes a subscription from the report server database.
+         *
+         * @function $.forerunner.subscriptionModel#deleteSubscription
+         *
+         * @param {String} subscriptionID - Subscription ID.
+         * @param {Function} success - Success callback.
+         * @param {Function} error - Failed callback.
+         */
         deleteSubscription: function (subscriptionID, success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;

@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the manage subscription widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects
@@ -13,6 +18,25 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+    * Widget used to manage subscription
+    *
+    * @namespace $.forerunner.manageSubscription
+    * @prop {Object} options - The options for manageSubscription
+    * @prop {String} options.reportPath - Current report path
+    * @prop {Object} options.$appContainer - Report page container
+    * @prop {Object} options.$reportViewer - The report viewer widget instance
+    * @prop {Object} options.subscriptionModel - Subscription model instance
+    *
+    * @example
+    * $("#subscription").manageSubscription({
+    *  reportPath : path
+    *  $appContainer: $appContainer, 
+    *  $viewer: $viewer
+    *  subscriptionModel : subscriptionModel,
+    *  
+    * });
+    */
     $.widget(widgets.getFullname(widgets.manageSubscription), {
         options: {
             reportPath: null,
@@ -80,7 +104,12 @@ $(function () {
                 }
             );
         },
-
+        /**
+         * Load subscription data and generate manage subscription UI
+         *
+         * @function $.forerunner.manageSubscription#listSubscriptions
+         *
+         */
         listSubscriptions: function () {
             var me = this;
             me.element.html("");
@@ -115,16 +144,29 @@ $(function () {
                 me.closeDialog();
             });
         },
-
+        /**
+         * Open manage subscription dialog
+         *
+         * @function $.forerunner.manageSubscription#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
-
+        /**
+         * Close manage subscription dialog
+         *
+         * @function $.forerunner.manageSubscription#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Removes the manage subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.manageSubscription#destroy
+         */
         destroy: function () {
             var me = this;
             me.element.html("");

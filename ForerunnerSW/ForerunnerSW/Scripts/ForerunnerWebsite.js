@@ -85,9 +85,19 @@ $(window).resize(ReSizeFooter);
 if ($("#image")) {
     $("#image").on("click", function () {
         $("#image").hide();
-        ga("send", "event", "Video", "click", "Image",0);
+        ga("send", "event", "Video", "click", "Image", 0);
+
+        $("#video").find("iframe").attr("src", "//www.youtube.com/embed/yhfVa_bpuHE?showinfo=0&autoplay=1&autohide=1");
         $("#video").show();
-        //$("#video").onclick.call();
+    });
+}
+if ($("#image2")) {
+    $("#image2").on("click", function () {
+        $("#image2").hide();
+        ga("send", "event", "Video", "click", "Image-Dev", 0);
+
+        $("#video2").find("iframe").attr("src", "//www.youtube.com/embed/ffglPLTa6d4?showinfo=0&autoplay=1&autohide=1");
+        $("#video2").show();
     });
 }
 
@@ -107,7 +117,7 @@ if ($("#register")) {
 
 $(document).ready(function () {
     SetupSlider();
-    $('img[usemap]').rwdImageMaps();
+    $("img[usemap]").rwdImageMaps();
     
 });
 
@@ -117,7 +127,7 @@ function SetupSlider() {
     if ($("#Slide").length === 1) {
 
         slider = $("#Slide").bxSlider({
-            mode: 'horizontal',
+            mode: "horizontal",
             controls: false,
             pager: false,
             auto: true,

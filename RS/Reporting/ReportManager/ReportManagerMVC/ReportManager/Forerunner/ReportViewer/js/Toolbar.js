@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the toolbar widget.
+ * @file Contains the report viewer toolbar widget.
  *
  */
 
@@ -245,9 +245,6 @@ $(function () {
             } else {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
-        },
-        
-        _destroy: function () {
         },
         _create: function () {
         },

@@ -44,6 +44,7 @@ $(function () {
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
+     * @prop {String} options.zoom - Zoom factor, default to 100.
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -70,9 +71,6 @@ $(function () {
             rsInstance: null,
             showSubscriptionUI: false,
             zoom: "100"
-        },
-
-        _destroy: function () {
         },
 
         // Constructor
@@ -155,9 +153,9 @@ $(function () {
             me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
         },
         /**
-         * Get current path user permission
+         * Get current user permission
          *
-         * @function $.forerunner.dashboardEZ#getPermission
+         * @function $.forerunner.reportViewer#getPermission
          * 
          * @return {Object} - permission jQuery object
          */
@@ -170,6 +168,7 @@ $(function () {
          * Get current user settings
          *
          * @function $.forerunner.reportViewer#getUserSettings
+         *
          * @return {Object} - Current user settings
          */
         getUserSettings: function () {
@@ -179,7 +178,7 @@ $(function () {
          * Get the flag to indicate whether to show subscription UI
          *
          * @function $.forerunner.reportViewer#showSubscriptionUI
-         * @return {Object} - Flag to indicate whether to show subscription UI
+         * @return {Boolean} - Flag to indicate whether to show subscription UI
          */
         showSubscriptionUI: function() {
             return this.options.showSubscriptionUI;
@@ -238,17 +237,17 @@ $(function () {
          * Get current report contain document map or not
          *
          * @function $.forerunner.reportViewer#getHasDocMap
-         * @return {Boolean} - true if there is a document map
+         * @return {Boolean} - Whether document map exist
          */
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
         },
         /**
-         * Get datasource credentials' data
+         * Get datasource credentials data
          *
          * @function $.forerunner.reportViewer#getDataSourceCredential
-         * @return {Object} datasource credential if saved datasource credential exist; return null if not
+         * @return {Object} Datasource credential if saved datasource credential exist; return null if not
          */
         getDataSourceCredential: function () {
             var me = this;
@@ -259,7 +258,8 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#triggerEvent
          *
-         * @paran {String} eventName - event name
+         * @paran {String} eventName - Event name
+         * @paran {Object} eventData - Data pass with event
          */
         triggerEvent: function (eventName,eventData) {
             var me = this;
@@ -366,7 +366,7 @@ $(function () {
             }
         },
         /**
-         * windowResize will relayout the report
+         * Re-layout the report
          *
          * @function $.forerunner.reportViewer#windowResize
          */
@@ -516,7 +516,6 @@ $(function () {
                 me.zoomToPercent(pageWidthZoom);
             }
         },
-
         /**
          * Zoom To Page width
          *
@@ -837,7 +836,7 @@ $(function () {
             }
         },
         /**
-         * Shows the visibility of the Document Map
+         * Shows Document Map
          *
          * @function $.forerunner.reportViewer#showDocMap
          */
@@ -1342,7 +1341,7 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#navigateDrillthrough
          *
-         * @param {String} drillthroughID - Id of the item
+         * @param {String} drillthroughID - Id of the drill through item
          */
         navigateDrillthrough: function (drillthroughID) {
             var me = this;
@@ -1483,14 +1482,14 @@ $(function () {
             me.scrollTop = top;
         },
         /**
-         * Find the given keyword. Find will always find the first matched
+         * Find the given keyword
          *
          * @function $.forerunner.reportViewer#find
          *
          * @param {String} keyword - Keyword to find
          * @param {Integer} startPage - Starting page of the search range
          * @param {Integer} endPage - Ending page of the search range
-         * @param {Boolean} findInNewPage - Find in new page not current
+         * @param {Boolean} findInNewPage - Find in new page or current page
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
@@ -1642,7 +1641,7 @@ $(function () {
             me.findEndPage = null;
         },
         /**
-         * Export the report in the given format
+         * Export the report in a specify format
          *
          * @function $.forerunner.reportViewer#exportReport
          *
@@ -1667,6 +1666,13 @@ $(function () {
                 me.$printDialog.reportPrint("openDialog");
             }
         },
+        /**
+         * Edit email subscription
+         *
+         * @function $.forerunner.reportViewer#editEmailSubscription
+         *
+         * @param {String} subscriptionID - subscription ID
+         */
         editEmailSubscription : function(subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -1686,6 +1692,13 @@ $(function () {
                 me.$emailSub.emailSubscription("openDialog");
             }
         },
+        /**
+         * Show email subscription dialog
+         *
+         * @function $.forerunner.reportViewer#showEmailSubscription
+         *
+         * @param {String} subscriptionID - subscription ID
+         */
         showEmailSubscription : function (subscriptionID) {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -1705,6 +1718,11 @@ $(function () {
                     .fail(function() { me._showEmailSubscriptionDialog(null); });
             }
         },
+        /**
+         * Show manage subscription dialog
+         *
+         * @function $.forerunner.reportViewer#manageSubscription
+         */
         manageSubscription : function() {
             var me = this;
             if (!me.showSubscriptionUI()) return;
@@ -1716,7 +1734,7 @@ $(function () {
             }
         },
         /**
-         * Print current reprot in PDF format
+         * Show report print layout in PDF viewer and do print on that
          *
          * @function $.forerunner.reportViewer#printReport
          *
@@ -1975,7 +1993,7 @@ $(function () {
             return false;
         },
         /**
-         * Load the given report
+         * Load report with pass path, page number and parameters
          *
          * @function $.forerunner.reportViewer#loadReport
          *
@@ -2369,7 +2387,7 @@ $(function () {
             me.removeLoadingIndicator();
         },
         /**
-         * Show datasource dialog, close if opened
+         * Show datasource credential dialog
          *
          * @function $.forerunner.reportViewer#showDSCredential
          */
@@ -2633,12 +2651,27 @@ $(function () {
                 //console.log('add settimeout, period: ' + period + "s");
             }
         },
+        /**
+         * Get RDL Extension
+         *
+         * @function $.forerunner.reportViewer#getRDLExt
+         * @return {Object} RDL extension object for current report
+         */
         getRDLExt: function () {
             var me = this;
 
             return me.RDLExtProperty;
 
         },
+        /**
+         * Save RDL Extension
+         *
+         * @function $.forerunner.reportViewer#getRDLExt
+         *
+         * @param {String} RDL - RDL Extension string
+         *
+         * @return {Object} XML http request return object
+         */
         saveRDLExt: function (RDL) {
             var me = this;
 
@@ -2691,7 +2724,7 @@ $(function () {
         /**
          * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
          *
-         * @function $.forerunner.dsCredential#destroy
+         * @function $.forerunner.reportViewer#destroy
          */
         destroy: function () {
             var me = this;

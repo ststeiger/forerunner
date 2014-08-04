@@ -58,7 +58,10 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
-
+        public ActionResult Video()
+        {
+            return View();
+        }
         class PressRelease
         {
             public string ID;

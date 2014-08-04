@@ -1178,7 +1178,7 @@ $(function () {
             //Enumerate the styleSheets
             $.each(document.styleSheets, function (sheetsIndex, sheet) {
                 var rules = (sheet.cssRules || sheet.rules);
-                var rulesLength = rules.length;
+                var rulesLength = rules ? rules.length : 0;
 
                 // Enumerate the rules
                 for (var ruleIndex = 0; ruleIndex < rulesLength; ruleIndex++) {

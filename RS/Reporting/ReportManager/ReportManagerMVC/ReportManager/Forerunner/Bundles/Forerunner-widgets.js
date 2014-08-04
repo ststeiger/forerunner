@@ -2195,9 +2195,9 @@ $(function () {
         _findNext: function (keyword) {
             var me = this;
 
-            $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
+            me.$keywords.filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
-            var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $nextWord = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
@@ -2232,10 +2232,12 @@ $(function () {
         _setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
-            me._highLightWord(me.$reportContainer, keyword);
+            me._highLightWord(me.$reportContainer[0], keyword);
+
+            me.$keywords = me.$reportContainer.find("span.fr-render-find-keyword");
 
             //Highlight the first match.
-            var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $item = me.$keywords.filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
@@ -3126,56 +3128,54 @@ $(function () {
             //This is an error
             return value;
         },
-        _highLightWord: function ($element, keyword) {
+        _highLightWord: function (element, keyword) {
+            var me = this;
+
             if (!keyword || keyword === "") {
                 return;
             }
             else {
-                var me = this;
-                $($element).each(function () {
-                    var elt = $(this).get(0);
-                    //elt.normalize();
-                    $.each(elt.childNodes, function (i, node) {
-                        //nodetype=3 : text node
-                        if (node.nodeType === 3) {
-                            var searchnode = node;
-                            try{
-                                var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                $.each(element.childNodes, function (i, node) {
+                    //nodetype=3 : text node
+                    if (node.nodeType === 3) {
+                        var searchnode = node;
+                        try {
+                            var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
-                                while (pos < searchnode.data.length) {
-                                    if (pos >= 0) {
-                                        //create a new span node with matched keyword text
-                                        var spannode = document.createElement("span");
-                                        spannode.className = "fr-render-find-keyword Unread";
+                            while (pos < searchnode.data.length) {
+                                if (pos >= 0) {
+                                    //create a new span node with matched keyword text
+                                    var spannode = document.createElement("span");
+                                    spannode.className = "fr-render-find-keyword Unread";
 
-                                        //split the match node
-                                        var middlebit = searchnode.splitText(pos);
-                                        searchnode = middlebit.splitText(keyword.length);
+                                    //split the match node
+                                    var middlebit = searchnode.splitText(pos);
+                                    searchnode = middlebit.splitText(keyword.length);
 
-                                        //replace keyword text with span node 
-                                        var middleclone = middlebit.cloneNode(true);
-                                        spannode.appendChild(middleclone);
-                                        node.parentNode.replaceChild(spannode, middlebit);
-                                    }
-                                    else {
-                                        break;
-                                    }
-                                    pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                                    //replace keyword text with span node 
+                                    var middleclone = middlebit.cloneNode(true);
+                                    spannode.appendChild(middleclone);
+                                    node.parentNode.replaceChild(spannode, middlebit);
                                 }
-                            } catch (error) { }
-                        }
-                        else {
-                            me._highLightWord($(node), keyword);
-                        }
-                    });
+                                else {
+                                    break;
+                                }
+                                pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                            }
+                        } catch (error) { }
+                    }
+                    else {
+                        me._highLightWord(node, keyword);
+                    }
                 });
             }
-            return $(this);
         },
         _clearHighLightWord: function () {
             var me = this;
 
-            $(".fr-render-find-keyword").each(function (index, keywordSpan) {
+            if (!me.$keywords) return;
+
+            me.$keywords.each(function (index, keywordSpan) {
                 var parent = keywordSpan.parentNode;
                 var textNode = document.createTextNode(keywordSpan.firstChild.nodeValue);
 
@@ -3188,6 +3188,8 @@ $(function () {
                     parent.normalize();
                 }
             });
+
+            me.$keywords = null;
         },
         _joinAdjacentTextnodes: function (textNode) {// textNode is a DOM text node
             // while there are text siblings, concatenate them into the first   
@@ -3379,10 +3381,10 @@ $(function () {
             me.serverData = null;
             me.selectSetId = forerunner.helper.guidGen();
         },
-        getNewSet: function (name, parameterList) {
+        getNewSet: function (parameterList) {
             var newSet = {
                 isAllUser: false,
-                name: name,
+                name: null,
                 id: forerunner.helper.guidGen(),
                 data: parameterList
             };
@@ -3411,9 +3413,9 @@ $(function () {
 
             return !me.isCurrentSetAllUser();
         },
-        _addNewSet: function (name, parameterList) {
+        _addNewSet: function (parameterList) {
             var me = this;
-            var newSet = me.getNewSet(name, parameterList);
+            var newSet = me.getNewSet(parameterList);
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -3622,7 +3624,7 @@ $(function () {
             var me = this;
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
-                    me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._addNewSet(JSON.parse(parameterList));
                     me._triggerModelChange();
                 } else {
                     me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);
@@ -4893,8 +4895,17 @@ $(function () {
 
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
             $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
-                me.scrollToPosition(data);
-                me.savePosition = null;
+                var timeout = 0;
+
+                if (forerunner.device.isWindowsPhone()) {
+                    timeout = 200;
+                }
+
+                setTimeout(function () {
+                    me.scrollToPosition(data);
+                    me.savePosition = null;
+                }, timeout);
+                
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
@@ -5488,11 +5499,17 @@ $(function () {
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                "<td><input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' /></td>" +
+                                "<td>" +
+                                    "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                    "<span class='fr-sf-error-span' />" +
+                                "</td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
@@ -5506,7 +5523,7 @@ $(function () {
 
             me.$sfForm.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");
@@ -6083,7 +6100,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
                 }
             });
 
@@ -6330,7 +6347,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
                 }
             });
 
@@ -7086,7 +7103,7 @@ $(function () {
             var me = this;
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
             //trigger window resize event to regulate toolbar buttons visibility
             $(window).resize();
         },
@@ -7207,8 +7224,6 @@ $(function () {
         _createCallbacks: function () {
             var me = this;
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
-
             // Hook up any / all custom events that the report explorer may trigger
             me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
@@ -7262,6 +7277,8 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+
             me.updateBtnStates();
         },
         _destroy: function () {
@@ -7275,11 +7292,12 @@ $(function () {
         updateBtnStates: function () {
             var me = this;
 
+            // Then we start out disabled and enable if needed
+            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
+
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
-                // Then we start out disabled and enable if needed
-                me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
 
                 if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
                     me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
@@ -8280,15 +8298,19 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                    "<div class='fr-sf-form-container'>" +
-                        "<form class='fr-sf-form'>" +
+                        "<form class='fr-core-dialog-form fr-sf-form'>" +
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' />" +
+                                         "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                        "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -8307,10 +8329,13 @@ $(function () {
 
             me.element.append($container);
 
+            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, { useNative: false, className: "fr-watermark" });
+
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");
@@ -8697,7 +8722,7 @@ $(function () {
 
         _setResonsiveWidth: function (defWidth, element) {
             var me = this;
-
+            return;
             //Set the responsive width
             if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
                 if (defWidth > me._convertToMM(me._currentWidth + "px"))
@@ -11856,7 +11881,7 @@ $(function () {
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
                 $control.addClass("fr-param-required");
                 me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
             } else if (param.MultiValue) {
@@ -14068,7 +14093,9 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
+
             me.serverData = me.options.model.parameterModel("cloneServerData");
+            
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -14082,52 +14109,22 @@ $(function () {
             var me = this;
 
             // Remove any previous event handlers
-            me.element.find(".fr-mps-text-input").off("change");
             me.element.find(".fr-mps-default-id").off("click");
             me.element.find(".fr-mps-all-users-id").off("click");
             me.element.find(".fr-mps-delete-id").off("click");
+            me.element.find(".fr-mps-text-input").off("change").off("click").off("focus").off("blur");
 
             me.$tbody.html("");
             var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
+
             $.each(optionArray, function (index, option) {
                 if (index > 0) {
                     // Skip the "<select set>" option
                     var parameterSet = me.serverData.parameterSets[option.id];
                     var $row = me._createRow(index, parameterSet);
                     me.$tbody.append($row);
-
-                    if (me.serverData.canEditAllUsersSet) {
-                        $row.find(".fr-mps-all-users-id").on("click", function (e) {
-                            me._onClickAllUsers(e);
-                        });
-                    }
-                    if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
-                        $row.find(".fr-mps-delete-id").on("click", function (e) {
-                            me._onClickDelete(e);
-                        });
-                    }
                 }
             });
-
-            // Add any table body specific event handlers
-            me.element.find(".fr-mps-text-input").on("change", function (e) {
-                me._onChangeInput(e);
-            });
-            me.element.find(".fr-mps-default-id").on("click", function (e) {
-                me._onClickDefault(e);
-            });
-
-            $(":text", me.element).each(
-               function (index) {
-                   var textinput = $(this);
-                   textinput.on("blur", function () {
-                       me.options.$reportViewer.reportViewer("onInputBlur");
-                   });
-                   textinput.on("focus", function () {
-                       me.options.$reportViewer.reportViewer("onInputFocus");
-                   });
-               }
-           );
 
             // Set up the form validation
             me._validateForm(me.$form);
@@ -14140,8 +14137,9 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
+            var encodedSetName = parameterSet.name && forerunner.helper.htmlEncode(parameterSet.name);
+
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input fr-core-input'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -14161,7 +14159,7 @@ $(function () {
             var $row = $(
                 "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
                     // Name
-                    "<td title='" + encodedSetName + "'>" + textElement + "</td>" +
+                    "<td>" + textElement + "</td>" +
                     // Default
                     "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
                     // All Users
@@ -14169,6 +14167,44 @@ $(function () {
                     // Delete
                     "<td class='fr-mps-delete-id ui-state-error-text fr-core-cursorpointer'><div" + deleteClass + "/></td>" +
                 "</tr>");
+
+            var $input = $row.find("input");
+
+            if (encodedSetName) {
+                $input.val(encodedSetName).attr("title", encodedSetName);
+            }
+            else {
+                $input.watermark(manageParamSets.newSet, { useNative: false, className: "fr-watermark" });
+            }
+
+            $input.on("change", function (e) {
+                me._onChangeInput(e);
+            });
+
+            $input.on("focus", function () {
+                me.options.$reportViewer.reportViewer("onInputFocus");
+            });
+
+            $input.on("blur", function () {
+                me.options.$reportViewer.reportViewer("onInputBlur");
+            });
+
+            $row.find(".fr-mps-default-id").on("click", function (e) {
+                me._onClickDefault(e);
+            });
+
+            if (me.serverData.canEditAllUsersSet) {
+                $row.find("td.fr-mps-all-users-id").on("click", function (e) {
+                    me._onClickAllUsers(e);
+                });
+            }
+
+            if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                $row.find("td.fr-mps-delete-id").on("click", function (e) {
+                    me._onClickDelete(e);
+                });
+            }
+
             return $row;
         },
         _init: function () {
@@ -14195,7 +14231,7 @@ $(function () {
                             "</table>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
+                                    "<input type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -14258,22 +14294,25 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
+            var newSet = me.options.model.parameterModel("getNewSet", me.parameterList);
             me.serverData.parameterSets[newSet.id] = newSet;
-            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
 
+            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
+            
             if (setCount === 1) {
                 // Set the default id if this is the first set
                 me.serverData.defaultSetId = newSet.id;
             }
 
-            // Update the UI with the new set
-            me._createRows();
-            var $tr = me._findRow(newSet.id);
-            var $input = $tr.find("input");
+            var $row = me._createRow(setCount, newSet);
+            me.$tbody.append($row);
+
+            var $input = $row.find("input");
             $input.focus();
 
             me.lastAddedSetId = newSet.id;
+
+            me._validateForm(me.$form);
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -14281,7 +14320,8 @@ $(function () {
             $input.attr("title", $input.val());
             var id = me._findId(e);
             me.serverData.parameterSets[id].name = $input.val();
-            me._createRows();
+            //don't need to do sort everytime name change
+            //me._createRows();
         },
         _onClickDefault: function(e) {
             var me = this;
@@ -16094,6 +16134,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+
             // Reinitialize the fields
             me.$dashboardName.val("");
             me.$overwrite.prop({ checked: false });
@@ -16118,7 +16159,8 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     // Dashboard name
-                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' placeholder='" + createDashboard.namePlaceholder + "' required='true'/><span class='fr-cdb-error-span'/>" +
+                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' required='true'/>" +
+                                    "<span class='fr-cdb-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                             "<tr>" +
@@ -16143,7 +16185,7 @@ $(function () {
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -16160,6 +16202,8 @@ $(function () {
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
+
+            me.$dashboardName.watermark(createDashboard.namePlaceholder, { useNative: false, className: "fr-watermark" });
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -16480,7 +16524,7 @@ $(function () {
             var $input = new $("<INPUT />");
             $input.attr("type", type);
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -16490,7 +16534,7 @@ $(function () {
             var me = this;
             var $input = new $("<TEXTAREA />");
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -24057,7 +24101,7 @@ $(function () {
                         "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' placeholder='" + reportProperties.selectReport + "' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' autofocus='autofocus' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
@@ -24092,7 +24136,7 @@ $(function () {
                         // Submit conatiner
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input name='submit' type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
+                                "<input type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -24130,6 +24174,8 @@ $(function () {
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$popup = me.element.find(".fr-rp-popup-container");
             me.$tree = me.element.find(".fr-report-tree-id");
+
+            me.$reportInput.watermark(reportProperties.selectReport, { useNative: false, className: "fr-watermark" });
 
             me.$tree.on("changed.jstree", function (e, data) {
                 me._onChangedjsTree.apply(me, arguments);

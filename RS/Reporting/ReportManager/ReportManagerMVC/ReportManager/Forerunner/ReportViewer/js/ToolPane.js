@@ -54,7 +54,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-param-watermark" });
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
                 }
             });
 

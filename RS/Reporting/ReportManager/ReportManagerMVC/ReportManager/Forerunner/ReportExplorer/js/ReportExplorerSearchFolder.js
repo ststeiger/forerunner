@@ -34,15 +34,19 @@ $(function () {
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
                    "<div class='fr-sf-form-container'>" +
-                        "<form class='fr-sf-form'>" +
+                        "<form class='fr-core-dialog-form fr-sf-form'>" +
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' placeholder='" + locData.searchFolder.namePlaceholder + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' />" +
+                                         "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr>" +
                                     "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
-                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' placeholder='" + locData.searchFolder.tags + "' required='true' /></td>" +
+                                    "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
+                                        "<span class='fr-sf-error-span' />" +
+                                    "</td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
@@ -61,10 +65,13 @@ $(function () {
 
             me.element.append($container);
 
+            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, { useNative: false, className: "fr-watermark" });
+
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
                 errorPlacement: function (error, element) {
-                    error.appendTo(element.parent("td"));
+                    error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
                     $(element).addClass("fr-sf-error");

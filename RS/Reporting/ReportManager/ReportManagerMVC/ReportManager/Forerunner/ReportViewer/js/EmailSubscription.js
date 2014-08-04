@@ -221,7 +221,7 @@ $(function () {
             var $input = new $("<INPUT />");
             $input.attr("type", type);
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -231,7 +231,7 @@ $(function () {
             var me = this;
             var $input = new $("<TEXTAREA />");
             if (placeholder)
-                $input.attr("placeholder", placeholder);
+                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }

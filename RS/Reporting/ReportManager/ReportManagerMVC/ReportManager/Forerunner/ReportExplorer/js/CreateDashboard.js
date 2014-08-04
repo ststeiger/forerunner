@@ -57,6 +57,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+
             // Reinitialize the fields
             me.$dashboardName.val("");
             me.$overwrite.prop({ checked: false });
@@ -81,7 +82,8 @@ $(function () {
                                 "</td>" +
                                 "<td>" +
                                     // Dashboard name
-                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' placeholder='" + createDashboard.namePlaceholder + "' required='true'/><span class='fr-cdb-error-span'/>" +
+                                    "<input class='fr-cdb-dashboard-name fr-cdb-input' autofocus='autofocus' type='text' required='true'/>" +
+                                    "<span class='fr-cdb-error-span'/>" +
                                 "</td>" +
                             "</tr>" +
                             "<tr>" +
@@ -106,7 +108,7 @@ $(function () {
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input name='submit' autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -123,6 +125,8 @@ $(function () {
 
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
+
+            me.$dashboardName.watermark(createDashboard.namePlaceholder, { useNative: false, className: "fr-watermark" });
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();

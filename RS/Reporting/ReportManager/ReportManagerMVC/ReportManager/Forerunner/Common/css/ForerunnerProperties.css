@@ -55,6 +55,15 @@
     padding: 0 0 0 4px;
 }
 
+.fr-properties-form .fr-sf-error-span {
+    font-size: 10pt;
+    display:block;
+}
+.fr-properties-form, .fr-sf-error {
+    border-width: thin; 
+    border-color: red;
+}
+
 @media only screen and (max-width : 479px) {
     .fr-properties-container {
         width:320px;

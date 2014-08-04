@@ -1369,7 +1369,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-keyword-textbox",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-textbox",
+            sharedClass: "fr-core-input fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
@@ -1537,7 +1537,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-item-keyword",
             tooltip: locData.toolbar.keyword,
-            sharedClass: "fr-toolbase-find-textbox",
+            sharedClass: "fr-core-input fr-toolbase-find-textbox",
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {

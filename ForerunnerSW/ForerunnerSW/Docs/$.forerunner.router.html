@@ -73,7 +73,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: toolBase</h1>
+			<h1 class="page-title">Namespace: router</h1>
 			 
 
 
@@ -84,7 +84,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    toolBase
+    router
     </h2>
     
 </header>  
@@ -95,7 +95,7 @@
     
     
         
-            <div class="description">The toolBase widget is used as a base namespace for toolbars and the toolPane</div>
+            <div class="description">The router widget is used to provide methods for routing client-side pages,and connecting them to actions and events. It works in concert with the forerunner.history widget.</div>
         
         
         
@@ -144,7 +144,7 @@
             
             
             
-            <td class="description last">The options for toolBase
+            <td class="description last">The options for router
                 <h6>Properties</h6>
 
 <table class="props">
@@ -169,7 +169,7 @@
 	
         <tr>
             
-                <td class="name"><code>toolClass</code></td>
+                <td class="name"><code>routes</code></td>
             
             
             <td class="type">
@@ -185,7 +185,7 @@
             
             
             
-            <td class="description last">The top level class for this tool (E.g., fr-toolbar)</td>
+            <td class="description last">hash of routes.</td>
         </tr>
 	
 	
@@ -227,7 +227,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>var widgets = <a href="forerunner.ssr.constants.widgets.html">forerunner.ssr.constants.widgets</a>;$.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, { options: {     $reportViewer: null,     toolClass: "fr-toolbar" },});</code></pre>
+    <pre class="prettyprint"><code> // // Callback Router Example var router = $({}).router({     routes: {         "": "home",         "home": "home",         "favorites": "favorites",         "browse/:path": "browse"     },     home: function () {         // Your code goes here     },     favorites: function () {         // Your code goes here     },     browse: function (path) {         // Your code goes here     }, }); // // Event Router Example var EventRouter = $({}).router({     routes: {         "": "home",         "home": "home",         "favorites": "favorites",         "browse/:path": "browse"     }, }); // Hook up to the router events var onRoute = function (event, data) {     if (data.name === "home") {         // Your code goes here     } else if (data.name === "favorites") {         // Your code goes here     } else if (data.name === "browse") {         // Your code goes here     } } // Hook up the onRoute handler to the route event router.on(events.routerRoute(), onRoute);Notes: - The callback functions are defined as members of the options</code></pre>
 
         
     
@@ -251,7 +251,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="addTools"><span class="type-signature"></span>addTools<span class="signature">(index, enabled, tools)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="navigate"><span class="type-signature"></span>navigate<span class="signature">(fragment, options)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -259,7 +259,7 @@
     
     
     <div class="description">
-        Add tools starting at index, enabled or disabled based upon the given tools array.
+        Updates the URL. If you wish to also call the route function, set thetrigger option to true. To update the URL without creating an entry inthe browser's history, set the replace option to true.
     </div>
     
 
@@ -293,13 +293,13 @@
 	
         <tr>
             
-                <td class="name"><code>index</code></td>
+                <td class="name"><code>fragment</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Integer</span>
+<span class="param-type">String</span>
 
 
             
@@ -309,20 +309,20 @@
             
             
             
-            <td class="description last">1 based index of where to insert the button array.</td>
+            <td class="description last">URL fragment</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>enabled</code></td>
+                <td class="name"><code>options</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">Object</span>
 
 
             
@@ -332,20 +332,130 @@
             
             
             
-            <td class="description last">true = enabled, false = disabled</td>
+            <td class="description last">Navigation options</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="route"><span class="type-signature"></span>route<span class="signature">(route, name, callback)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Manually create a route for the router/
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>route</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">routing string or regular expression</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>tools</code></td>
+                <td class="name"><code>name</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Array</span>
+<span class="param-type">String</span>
 
 
             
@@ -355,7 +465,30 @@
             
             
             
-            <td class="description last">array containing the collection of tool information objects.</td>
+            <td class="description last">Used as the callback function name and / or a                       property of the data object passed to the route                       event.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">function to call when a route is matched if                           callback is ommitted me[name] will be used</td>
         </tr>
 	
 	
@@ -404,1062 +537,8 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>var toolTypes = <a href="forerunner.ssr.constants.html#toolTypes">forerunner.ssr.constants.toolTypes</a>;var btnMenu = { toolType: toolTypes.button, selectorClass: "fr-toolbar-menu-button", imageClass: "fr-icons24x24-menu", events: {     click: function (e) {         e.data.me._trigger(events.menuClick, null, {});     } }};this.element.html("&lt;div class='" + me.options.toolClass + "'/>");this.addTools(1, true, [btnMenu]); Notes:     Any events property that is of type function, e.g., "click" above will be interpreted     as a event handler. The event, i.e., the name of the property will be bound to the button     when the button is enabled and removed when the button is disabled.</code></pre>
+    <pre class="prettyprint"><code>The routes hash maps URLs with parameters to functions on your router (or justdirect function definitions, if you prefer). Routes can contain parameter parts,:param, which match a single URL component between slashes; and splat parts *splat,which can match any number of URL components.Part of a route can be made optional by surrounding it in parentheses (/:optional). For example, a route of "search/:query/p:page" will match a fragment of #search/obama/p2, passing "obama" and "2" to the action. A route of "file/*path" willmatch #file/nested/folder/file.txt, passing "nested/folder/file.txt" to the action. A route of "docs/:section(/:subsection)" will match #docs/faq and #docs/faq/installing,passing "faq" to the action in the first case, and passing "faq" and "installing" to theaction in the second. Trailing slashes are treated as part of the URL, and (correctly) treated as a unique routewhen accessed. docs and docs/ will fire different callbacks. If you can't avoid generatingboth types of URLs, you can define a "docs(/)" matcher to capture both cases. When the visitor presses the back button, or enters a URL, and a particular route is matched,the name of the action will be fired as an event, so that other objects can listen to therouter, and be notified. In the following example, visiting #help/uploading will fire aforerunner.ssr.constants.events.routerRoute() event from the router. routes: {  "help/:page":         "help",  "download/*path":     "download",  "folder/:name":       "openFolder",  "folder/:name-:mode": "openFolder"}router.on(forerunner.ssr.constants.events.routerRoute(), function(data) { // Where: //  data.name = "help" //  data.args[0] = "uploading"});// You can also hook routes on the history object as followsforerunner.history.on(events.historyRoute(), onRoute);</code></pre>
 
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="configure"><span class="type-signature"></span>configure<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Configures the toolbar to hide / show buttons based upon the given configuration option
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="disableAllTools"><span class="type-signature"></span>disableAllTools<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make all tools disable and remember which ones where enabled
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="disableTools"><span class="type-signature"></span>disableTools<span class="signature">(tools)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Disable the given tools
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>tools</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Array of tools to disable</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="enableAllTools"><span class="type-signature"></span>enableAllTools<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make all tools enable that where enabled before disable
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="enableTools"><span class="type-signature"></span>enableTools<span class="signature">(tools)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Enable the given tools
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>tools</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Array of tools to enable</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="freezeEnableDisable"><span class="type-signature"></span>freezeEnableDisable<span class="signature">(freeze)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Enable or disable tool frozen
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>freeze</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">ture: enable, false: disable</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getTool"><span class="type-signature"></span>getTool<span class="signature">(selectorClass)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Return the tool object
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>selectorClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">tool's class name</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    - specify tool object
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">Object</span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="hideAllTools"><span class="type-signature"></span>hideAllTools<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make all tools hidden
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="hideTool"><span class="type-signature"></span>hideTool<span class="signature">(selectorClass)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make tool hidden
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>selectorClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">tool's class name</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="removeAllTools"><span class="type-signature"></span>removeAllTools<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Clears the allTools array. This function is useful when re-initializing a toolbar.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="showAllTools"><span class="type-signature"></span>showAllTools<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make all tools visible
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="showTool"><span class="type-signature"></span>showTool<span class="signature">(selectorClass)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Make tool visible
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>selectorClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">tool's class name</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
     
 </dd>
 

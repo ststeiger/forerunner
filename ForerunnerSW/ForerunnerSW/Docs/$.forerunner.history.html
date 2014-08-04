@@ -73,7 +73,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: reportDocumentMap</h1>
+			<h1 class="page-title">Namespace: history</h1>
 			 
 
 
@@ -84,7 +84,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    reportDocumentMap
+    history
     </h2>
     
 </header>  
@@ -95,10 +95,193 @@
     
     
         
-            <div class="description">Widget used to show report documenet map</div>
+            <div class="description">The history widget is a singleton widget accessed via the referenceforerunner.history.</div>
         
         
         
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>     forerunner.history.history("start");Notes: - history is adapted from backbone.js 1.1.2 but it is packaged as a widget   and all backbone and underscore dependencies have been removed. - history has been designed and tested to peacefully co-exist with   Backbone.history - You shouldn't ever have to create this widget - pushState support exists on a purely opt-in basis. See the options   above. Older browsers that don't support pushState will continue to   use hash-based URL fragments, and if a hash URL is visited by a   pushState-capable browser, it will be transparently upgraded to the   true URL. Note that using real URLs requires your web server to be   able to correctly render those pages, so back-end changes are required   as well. For example, if you have a route of /documents/100, your web   server must be able to serve that page, if the browser visits that URL   directly. For full search-engine crawlability, it's best to have the   server generate the complete HTML for the page ... but if it's a web   application, just rendering the same content you would have for the root   URL, and filling in the rest with Backbone Views and JavaScript works fine. </code></pre>
+
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="isStarted"><span class="type-signature"></span>isStarted<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Returns true if forerunner.history has been started
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="start"><span class="type-signature"></span>start<span class="signature">(options)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Starts monitoring hashChanged events and triggers all registered routes and / orcallbacks
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Start options</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
 <dl class="details">
     
         
@@ -144,7 +327,7 @@
             
             
             
-            <td class="description last">The options for document map
+            <td class="description last">The options for router
                 <h6>Properties</h6>
 
 <table class="props">
@@ -169,13 +352,13 @@
 	
         <tr>
             
-                <td class="name"><code>$reportViewer</code></td>
+                <td class="name"><code>pushState</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Bool</span>
 
 
             
@@ -185,7 +368,53 @@
             
             
             
-            <td class="description last">The report viewer widget</td>
+            <td class="description last">True indicates you would like to use                                 pushState support in your application</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>root</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">If your application is not being served                              from the root url / of your domain, use                              this parameter.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>silent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">True indicates to not trigger the initial                                route when starting up.</td>
         </tr>
 	
 	
@@ -223,138 +452,22 @@
     
 </dl>
 
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
         
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>  $("#docMap").reportDocumentMap({      $reportViewer: $viewer   });   </code></pre>
+    <pre class="prettyprint"><code> forerunner.history.history("start"); Notes: To indicate that you'd like to use HTML5 pushState support in your application, use Backbone.history.start({pushState: true}). If you'd like to use pushState, but have browsers that don't support it natively use full page refreshes instead, you can add {hashChange: false} to the options.  If your application is not being served from the root url / of your domain, be sure to tell History where the root really is, as an option: forerunner.history.history("start", {pushState: true, root: "/public/search/"}); When called, if a route succeeds with a match for the current URL,  forerunner.history.start() returns true. If no defined route matches the current URL, it returns false. </code></pre>
 
-        
-    
-    </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="write"><span class="type-signature"></span>write<span class="signature">(docMapData)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Write document map layout with doc map data.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>docMapData</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Document map data returned from server</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
     
 </dd>
 

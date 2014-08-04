@@ -73,7 +73,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: reportDocumentMap</h1>
+			<h1 class="page-title">Namespace: contextMenuBase</h1>
 			 
 
 
@@ -84,7 +84,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    reportDocumentMap
+    contextMenuBase
     </h2>
     
 </header>  
@@ -95,7 +95,7 @@
     
     
         
-            <div class="description">Widget used to show report documenet map</div>
+            <div class="description">Widget used to create the context menu</div>
         
         
         
@@ -144,7 +144,7 @@
             
             
             
-            <td class="description last">The options for document map
+            <td class="description last">The options for the context menu base widget
                 <h6>Properties</h6>
 
 <table class="props">
@@ -169,7 +169,30 @@
 	
         <tr>
             
-                <td class="name"><code>$reportViewer</code></td>
+                <td class="name"><code>$reportExplorer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Report viewer widget</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$appContainer</code></td>
             
             
             <td class="type">
@@ -185,7 +208,76 @@
             
             
             
-            <td class="description last">The report viewer widget</td>
+            <td class="description last">Report page container</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>reportManagerAPI</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Path to the REST calls for the reportManager</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rsInstance</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Report service instance name</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>catalogItem</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, report explorer catalog item</td>
         </tr>
 	
 	
@@ -227,7 +319,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>  $("#docMap").reportDocumentMap({      $reportViewer: $viewer   });   </code></pre>
+    <pre class="prettyprint"><code>$("#contextMenuId").contextMenuBase({    $appContainer: me.options.$appContainer,    $reportExplorer: me.element,    catalogItem: me.catalogItem});</code></pre>
 
         
     
@@ -245,120 +337,6 @@
     
     
     
-    
-        <h3 class="subsection-title">Methods</h3>
-        
-        <dl>
-            
-<dt>
-    <h4 class="name" id="write"><span class="type-signature"></span>write<span class="signature">(docMapData)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Write document map layout with doc map data.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>docMapData</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Document map data returned from server</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
     
     
     

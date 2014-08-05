@@ -37,7 +37,7 @@ $(function () {
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
      * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
-     * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
+     * @prop {Function} options.onInputFocus - Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
      * @prop {Object} options.parameterModel - Parameter model
      * @prop {Object} options.savePosition - Saved report page scroll position 

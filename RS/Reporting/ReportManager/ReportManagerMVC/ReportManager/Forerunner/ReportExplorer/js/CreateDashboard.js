@@ -22,8 +22,8 @@ $(function () {
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportExplorer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @prop {Object} options.parentFolder - Folder that this resource should be created in
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
      * @prop {String} options.rsInstance - Optional, Report service instance name
@@ -179,7 +179,7 @@ $(function () {
             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
         },
         /**
-         * Open parameter set dialog
+         * Open create dashboard dialog
          *
          * @function $.forerunner.createDashboard#openDialog
          */
@@ -188,7 +188,7 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
-         * Close parameter set dialog
+         * Close create dashboard dialog
          *
          * @function $.forerunner.manageParamSets#closeDialog
          */

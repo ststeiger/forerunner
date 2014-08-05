@@ -131,18 +131,6 @@ $(function () {
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
         },
-        /**
-         * Open user setting dialog
-         *
-         * @function $.forerunner.userSettings#openDialog
-         */
-        openDialog: function () {
-            var me = this;
-
-            me._getSettings();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-
-        },
         _triggerClose: function (isSubmit) {
             var me = this;
             var data = {
@@ -160,6 +148,18 @@ $(function () {
             forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
             me._triggerClose(true);
+        },
+        /**
+         * Open user setting dialog
+         *
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+
+            me._getSettings();
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
         },
         /**
          * Close user setting dialog

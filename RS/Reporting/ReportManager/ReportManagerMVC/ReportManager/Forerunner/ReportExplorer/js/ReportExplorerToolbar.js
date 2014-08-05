@@ -25,6 +25,8 @@ $(function () {
      * @prop {Object} options - The options for toolbar
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @prop {Object} options.$reportExplorer - The report explorer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @example
      * $("#reportExplorerToolbarId").reportExplorerToolbar({
      *  navigateTo: navigateTo
@@ -51,6 +53,11 @@ $(function () {
                 $btn.addClass(btnActiveClass);
             }
         },
+        /**
+         * Sets the keyword on the search textbox in the toolbar
+         *
+         * @function $.forerunner.reportExplorerToolbar#setSearchKeyword
+         */
         setSearchKeyword: function (keyword) {
             var me = this;
 
@@ -101,10 +108,6 @@ $(function () {
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
         },
-
-        _destroy: function () {
-        },
-
         _create: function () {
         }
     });  // $.widget

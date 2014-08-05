@@ -123,7 +123,7 @@
     "submit":"Ok",
     "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI",
-    "Email":"E",
+    "Email":"e-post",
     "AdminUI":"Admin UI"
   },
   "paramPane": {
@@ -140,7 +140,7 @@
   "validateError": {
     "required":"krävs",
     "remote":"Vänligen fixa detta område",
-    "email":"Ogiltigt e-mail",
+    "email":"Ogiltig e-",
     "url":"Ogiltigt URL",
     "date":"Ogiltigt Datum",
     "dateISO":"Ogiltigt Datum (yyyy-mm-dd)",
@@ -254,7 +254,7 @@
     "namePlaceholder":"sökmapp Namn"
   },
   "subscription": {
-    "email":"E",
+    "email":"e-post",
     "cancel":"Avbryt",
     "save":"Spara",
     "manageSubscription":"Hantera prenumeration",
@@ -281,7 +281,7 @@
     "description":"Beskrivning"
   },
   "contextMenu": {
-    "title":"Context Menu",
+    "title":"snabbmenyn",
     "delLabel":"Radera",
     "properties":"Egenskaper"
   }

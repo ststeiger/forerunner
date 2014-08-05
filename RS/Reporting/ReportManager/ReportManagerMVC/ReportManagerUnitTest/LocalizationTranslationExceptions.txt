@@ -171,7 +171,7 @@
     "description":["fr"]
   },
   "contextMenu": {
-    "title":["ga", "it", "pt", "ro", "sv"]
+    "title":["ga", "it", "pt", "ro"]
   }
 }
 

@@ -1380,9 +1380,9 @@ $(function () {
             var successCallback = options.success;
             options.success = null;
 
-            options.xhrFields = {
-                withCredentials: true
-            };
+            //options.xhrFields = {
+            //    withCredentials: true
+            //};
 
             if (options.fail)
                 errorCallback = options.fail;
@@ -1414,9 +1414,9 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            options.xhrFields = {
-                withCredentials: true
-            };
+            //options.xhrFields = {
+            //    withCredentials: true
+            //};
 
             return $.getJSON(url, options)
             .done(function (data) {

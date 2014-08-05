@@ -77,7 +77,7 @@ namespace ForerunnerSW
 
                     redirect += Request.Url.Host + ":";
                     if (Request.Url.Port != 80)
-                        redirect += Request.Url.Port + r[1];
+                        redirect += Request.Url.Port;
 
                     redirect += r[1];
                     Response.Redirect(redirect);

@@ -323,6 +323,7 @@
     <Content Include="Views\PR\mobilizer.cshtml" />
     <Content Include="Views\PR\Dev.cshtml" />
     <Content Include="Views\Shared\Video.cshtml" />
+    <Content Include="Views\Shared\_PRLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

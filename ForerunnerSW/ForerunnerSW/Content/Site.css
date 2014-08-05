@@ -118,12 +118,13 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .DeveloperCheveron{vertical-align:top;}
 .DeveloperSubHeader{padding-bottom:15px;}
 
-.PricingBanner{text-align:center;margin:20px;font-size:18pt;min-height:580px;padding:15px;}
+.PricingBanner{text-align:center;margin:20px;font-size:18pt;min-height:640px;padding:15px;}
 .BuyNowButton{text-align:center;margin:auto;font-size:18pt;width:250px;height:50px;padding:5px;}
 .PricingAlert{font-weight:bold;color:darkblue;}
 .PricingBannerTitle{font-family:Candara;font-size:48px;color:white;}
 .PricingBannerSubTitle{font-family:Candara;font-size:30px;color:white;}
 .PricingBannerDetail{font-family:Candara;font-size:24px;color:white;}
+.PricingBannerNote{font-family:Candara;font-size:18px;color:white;}
 .PricingBannerCost{font-family:Candara;font-size:72px;}
 .PricingOrange{color:#ff6600;}
 .PricingBanner2{text-align:center;margin-top:0px;font-size:16pt;padding:65px;}

@@ -18,7 +18,7 @@ $(function () {
      *
      * @namespace $.forerunner.messageBox
      * @prop {Object} options - The options for Message Box
-     * @prop {Object} options.$appContainer - The app container that messageBox belong to
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      *
      * @example
      * $msgBox.messageBox({ 

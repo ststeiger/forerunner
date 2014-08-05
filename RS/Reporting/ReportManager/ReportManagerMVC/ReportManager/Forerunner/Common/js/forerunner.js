@@ -684,17 +684,17 @@ $(function () {
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
          *
+         * @return {String} - Forerunner folder path
          * @member
          */
-        forerunnerFolder: function ()
-        {
+        forerunnerFolder: function () {
             if (this._forerunnerFolderPath) return this._forerunnerFolderPath;
             return this._getVirtualRootBase() + "forerunner/";
         },
         /**
         * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
         *
-        * @param {String} Forerunner folder path.
+        * @param {String} forerunnerFolderPath - Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
             if (this._endsWith(forerunnerFolderPath, "/") === -1) {
@@ -706,6 +706,7 @@ $(function () {
         /**
          * Base path to the REST api controlers
          *
+         * @return {String} - API controller base path
          * @member
          */
         forerunnerAPIBase: function () {
@@ -715,7 +716,7 @@ $(function () {
         /**
         * Override the api base.  By default, it is the vroot + /api.
         *
-        * @param {String} API Base.
+        * @param {String} apiBase - API Base.
         */
         setAPIBase: function (apiBase) {
             if (this._endsWith(apiBase, "/") === -1) {
@@ -727,7 +728,7 @@ $(function () {
         /**
         * Set custom settings object
         *
-        * @param {Object} Custom Settings Object
+        * @param {Object} settingObject - Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
             this._customSettings = settingObject;
@@ -736,7 +737,7 @@ $(function () {
         /**
          * Get custom settings object, will retrieve from default location if not set.
          *
-         * 
+         * @return {Object} - Customer setting object
          */
         getCustomSettings: function () {
             if (this._customSettings === null) {
@@ -765,7 +766,7 @@ $(function () {
         /**
          * Get list of mobilizer shared schedule, which everybody can read, unlike the RS shared schedule.
          *
-         * 
+         * @return {Object} - Mobilizer shared schedule object
          */
         getMobilizerSharedSchedule: function () {
             if (!this._forerunnerSharedSchedule) {
@@ -788,11 +789,13 @@ $(function () {
             return this._forerunnerSharedSchedule;
         },
         /**
-       * Get user custom settings
-       *
-       * @param {string} value to get.
-       * @param {var} default if not set
-       */
+         * Get user custom settings
+         *
+         * @param {String} setting - value to get.
+         * @param {String} defaultval - default if not set
+         *
+         * @return {String} - Default value for the specify setting key
+         */
         getCustomSettingsValue: function (setting, defaultval) {
             var settings = this.getCustomSettings();
             if (settings && settings[setting])
@@ -813,8 +816,10 @@ $(function () {
          * Returns a number array sorted in the given direction
          *
          * @member
-         * @param {array} array - Array to sort
-         * @param {boolean} asc - true for ascending false for decending
+         * @param {Array} array - Array to sort
+         * @param {Boolean} asc - true for ascending false for decending
+         *
+         * @return {Array} - Array after sort
          */
         sortNumberArray: function (array, asc) {
             if (asc)
@@ -828,6 +833,8 @@ $(function () {
          *
          * @member
          * @param {Object} obj - target object        
+         *
+         * @return {Number} - Number of element or properties in an object
          */
         objectSize: function (obj) {
             var size = 0, key;
@@ -840,6 +847,8 @@ $(function () {
          * Returns a unique GUID string
          *
          * @member
+         *
+         * @return {String} - GUID
          */
         guidGen: function () {
             var _padLeft = function (paddingString, width, replacementChar) {
@@ -878,7 +887,7 @@ $(function () {
          * Returns whether given element contain specify class names
          * @param {Object} element - target element
          * @param {Array} classList - class name list
-         * @return {Boolean} - element contain one of the class list or not
+         * @return {Boolean} - Element contain one of the class list or not
          *
          * @member
          */
@@ -913,7 +922,7 @@ $(function () {
          * Returns a new div of the specified classes.
          *
          * @params {Array} listOfClassed - List of classes for the new div.
-         * @return {Object} - element contain one of the class list or not
+         * @return {Object} - A div element contain one of the class list or not
          *
          * @member
          */
@@ -927,7 +936,9 @@ $(function () {
         /**
         * Returns a checkbox dropdown list for the valid values
         *
-        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        * @param {Array} validValues - List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        *
+        * @return {Object} - Select element jQuery object that contain specify values
         */
         createDropDownForValidValues: function (validValues) {
             var $select = new $("<SELECT />");
@@ -940,20 +951,24 @@ $(function () {
             return $select;
         },
         /**
-        * Returns a div filled with radio buttons for the valid values.
+        * Returns an input filled with radio buttons for the valid values.
         *
-        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
-        * @param identifier - An identifier for that option.
-        * @param callback -- event handler for the onclick
+        * @param {Array} validValues - List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        * @param {String} identifier - An identifier for that option.
+        * @param {Function} callback - event handler for the onclick
+        *
+        * @return {Object} - Radio input jQuery object filled with radio buttons for the valid values.
         */
         createRadioButtonsForValidValues: function (validValues, identifier, callback) {
             return this._createInput(validValues, identifier, "radio", callback);
         },
         /**
-        * Returns a div filled with radio buttons for the valid values.
+        * Returns an input filled with radio buttons for the valid values.
         *
-        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
-        * @param identifier - An identifier for that option.
+        * @param {Array} List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        * @param {String} identifier - An identifier for that option.
+        *
+        * @return {Object} - Input jQuery object filled with radio buttons for the valid values
         */
         createCheckBoxForValidValues: function (validValues, identifier) {
             return this._createInput(validValues, identifier, "checkbox");
@@ -981,6 +996,9 @@ $(function () {
         /**
          * Replaces special characters with the html escape character equivalents
          *
+         * @param {String} str - the html string that need to encode
+         *
+         * @return {String} - Html string after encode.
          * @member
          */
         htmlEncode: function (str) {
@@ -994,6 +1012,9 @@ $(function () {
         /**
          * Replaces html escape characters with the ASCII equivalents
          *
+         * @param {String} str - the html string that need to decode
+         *
+         * @return {String} - Html string after decode.
          * @member
          */
         htmlDecode: function (str) {
@@ -1004,13 +1025,25 @@ $(function () {
                 .replace(/&lt;/g, "<")
                 .replace(/&gt;/g, ">");
         },
-
+        /**
+         * Check a element has a special attribute or not
+         *
+         * @param {Object} $control - jQuery object that need to check
+         * @param {String} attrbute - Specify attribute
+         *
+         * @return {Boolean} - true for has this attribute and false for not
+         * @member
+         */
         hasAttr: function ($control, attribute) {
             return typeof ($control.attr(attribute)) !== "undefined";
         },
         /**
          * Parse css property value to integer value
          *
+         * @param {Object} $control - The jQuery object that contain the property
+         * @param {String} property - Property name
+         *
+         * @return {Integer} - Integer value of the property
          * @member
          */
         parseCss: function ($control, property) {
@@ -1019,6 +1052,9 @@ $(function () {
         /**
          * Get parent item path by the given path
          *
+         * @param {String} path - Path that need to handle
+         *
+         * @return {String} - Its parent path, return null if not has
          * @member
          */
         getParentPath: function (path) {
@@ -1035,6 +1071,10 @@ $(function () {
         /**
          * Returns true if str ends with suffix
          *
+         * @param {String} str - String need to check
+         * @param {String} suffix - Suffix string
+         *
+         * @return {Boolean} - Return true if path end with suffix and false it not
          * @member
          */
         endsWith: function (str, suffix) {
@@ -1044,6 +1084,10 @@ $(function () {
          * Combines the give folder and name infor a forward slash separated
          * path. Note that this function can combine multiple path parts.
          *
+         * @param {String} folder - Folder name
+         * @param {String} name - Name need to combine
+         *
+         * @return {String} - COmbine path
          * @member
          */
         combinePaths: function (folder, name) {
@@ -1061,6 +1105,9 @@ $(function () {
         /**
          * Get current item name by the given path
          *
+         * @param {String} path - Path
+         *
+         * @return {String} - Item name of the path
          * @member
          */
         getCurrentItemName: function (path) {
@@ -1081,6 +1128,8 @@ $(function () {
          * @param {Function} func - Function to call when time expires
          * @param {integer} n - Optional, Default 100, timeout milliseconds
          * @param {String} id - Optional, timer id
+         *
+         * @member
          */
         delay: function (me, func, n, id) {
             if (!n) {
@@ -1233,6 +1282,8 @@ $(function () {
          * @param {String} dataType - optional, ajax dataType. defaults to "json"
          *
          * @return {Object} Localization data
+         *
+         * @member
          */
         getLocData: function (locFileLocation, dataType) {
             var languageList = this._getLanguages();
@@ -1323,6 +1374,12 @@ $(function () {
      */
     forerunner.ajax = {
         loginUrl: null,
+        /**
+         * Check it's form authentication or not
+         *
+         * @return {Boolean} - Return true if it is form authentication and false if not
+         * @member
+         */
         isFormsAuth: function () {
             var url = this._getLoginUrl();
             return (url && url.length > 0);
@@ -1461,7 +1518,10 @@ $(function () {
         * Returns json data indicating is the user has the requested permissions for the given path
         *
         * @param {String} path - fully qualified path to the resource
-        * @param {String} permissions - Requested permissions list
+        * @param {Array} permissions - Requested permissions list
+        * 
+        * @return {Object} - Check result for each permission
+        * @member
         */
         hasPermission: function (path, permissions) {
             var permissionData = null;
@@ -1488,13 +1548,19 @@ $(function () {
         /**
          * Set user settings object
          *
-         * @param {Object} User Settings Object
+         * @param {Object} usetSetting - User Settings Object
+         * @member
          */
         setUserSetting: function (usetSetting) {
             this._userSetting = usetSetting;
         },
         /**
         * Get user name.
+        *
+        * @param {String} rsInstance - Reporting Service instance name
+        *
+        * @return {String} - User name
+        * @member
         */
         getUserName: function (rsInstance) {
             if (this._userName === null) {
@@ -1517,6 +1583,11 @@ $(function () {
         },
         /**
         * Get user settings object, will retrieve from database if not set.
+        *
+        * @param {String} rsInstance - Reporting Service instance name
+        *
+        * @return {Object} - User setting object
+        * @member
         */
         getUserSetting: function (rsInstance) {
             if (this._userSetting === null) {
@@ -1739,8 +1810,9 @@ $(function () {
        * Show a modal dialog with appContainer and target dialog container specify
        *
        * @function forerunner.dialog#showModalDialog
-       * @param {Object} $appContainer - app Container
+       * @prop {Object} options.$appContainer - The container jQuery object that holds the application
        * @param {Object} target - object that modal dialog apply to
+       * @member
        */
         showModalDialog: function ($appContainer, target) {
             var me = this;
@@ -1777,8 +1849,9 @@ $(function () {
         * Close a modal dialog with appContainer and target dialog container specify
         *
         * @function forerunner.dialog#closeModalDialog
-        * @param {Object} $appContainer - app Container
+        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
         * @param {Object} target - object that modal dialog apply to
+        * @member
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
@@ -1794,7 +1867,8 @@ $(function () {
         * Close all opened modal dialogs in specify appContainer
         *
         * @function forerunner.dialog#closeAllModalDialogs
-        * @param {Object} $appContainer - app Container
+        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+        * @member
         */
         closeAllModalDialogs: function ($appContainer) {
             var me = this;
@@ -1812,9 +1886,10 @@ $(function () {
         * Show message box
         *
         * @function forerunner.dialog#showMessageBox
-        * @param {Object} $appContainer - app Container
-        * @param {String} msg - message content
-        * @param {String} caption - modal dialog caption
+        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+        * @param {String} msg - Message content
+        * @param {String} caption - Modal dialog caption
+        * @member
         */
         showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
@@ -1829,12 +1904,15 @@ $(function () {
         * Get modal dialog static header html snippet
         *
         * @function forerunner.dialog#getModalDialogHeaderHtml
-        * @param {String} iconClass - icon class to specific icon position
-        * @param {String} title - modal dialog title
-        * @param {String} cancelClass - cancel button class name
-        * @param {String} cancelWord - cancel button's text
+        * @param {String} iconClass - Icon class to specific icon position
+        * @param {String} title - Modal dialog title
+        * @param {String} cancelClass - Cancel button class name
+        * @param {String} cancelWord - Cancel button's text
+        * @param {String} action - Action class
+        * @param {String} actionWork - Action text
         *
-        * @return {String} - modal dialog header html snippet
+        * @return {String} - Modal dialog header html snippet
+        * @member
         */
         getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord, actionClass, actionWord) {
             var html = "<div class='fr-core-dialog-header'>" +

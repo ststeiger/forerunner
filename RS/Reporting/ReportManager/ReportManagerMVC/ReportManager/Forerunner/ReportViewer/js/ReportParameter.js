@@ -307,7 +307,7 @@ $(function () {
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {
-                if (param.UseDefault && param.UseDefault === true) {
+                if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
                     var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
                     if ($checkbox.length) {
                         $checkbox.trigger("click");
@@ -1974,7 +1974,7 @@ $(function () {
                     
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
                         return true;
                     }
 
@@ -1993,7 +1993,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
                         return true;
                     }
 
@@ -2012,7 +2012,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
                         return true;
                     }
 
@@ -2038,7 +2038,7 @@ $(function () {
                 });
                 for (var radioName in radioList) {
                     if (me.element.find(".fr-paramname-" + radioName).hasClass("fr-usedefault")) {
-                        me._pushParam(a, $input, { Parameter: radioName, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: radioName, UseDefault: "true" });
                     }
                     else {
                         me._pushParam(a, $input, { Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });

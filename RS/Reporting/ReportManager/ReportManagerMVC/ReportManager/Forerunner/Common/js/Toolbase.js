@@ -398,6 +398,10 @@ $(function () {
                 }
             });
         },
+        /**
+         * Show/Hide buttons when window resize
+         * @function $.forerunner.toolBase#windowResize
+         */
         windowResize: function () {
             var me = this;
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
@@ -501,8 +505,6 @@ $(function () {
                     $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
-        },
-        _destroy: function () {
         },
         _create: function () {
         },

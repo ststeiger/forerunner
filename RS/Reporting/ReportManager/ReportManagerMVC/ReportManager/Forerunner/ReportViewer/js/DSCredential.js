@@ -20,7 +20,7 @@ $(function () {
      * @namespace $.forerunner.dsCredential
      * @prop {Object} options - The options for dsCredential
      * @prop {Object} options.$reportViewer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      *
      * @example
      * $("#dsCredential").dsCredential({

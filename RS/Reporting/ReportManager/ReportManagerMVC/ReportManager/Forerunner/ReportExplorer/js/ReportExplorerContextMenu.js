@@ -30,19 +30,7 @@ $(function () {
         // Search Folder
         searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
-
-    /**
-     * Widget used to create the report explorer context menu
-     *
-     * @namespace $.forerunner.reportExplorerContextMenu
-     *
-     * @example
-     * $("#contextMenuId").reportExplorerContextMenu({
-     *     $appContainer: me.options.$appContainer,
-     *     $reportExplorer: me.element,
-     *     catalogItem: me.catalogItem
-     * });
-     */
+    
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
         options: {
         },

@@ -1427,6 +1427,11 @@ $(function () {
         },
     };
 
+    /**
+      * Defines all the tools used in the Report Explorer Toolpane.
+      *
+      * @namespace
+      */
     forerunner.ssr.tools.reportExplorerToolpane = {
         /** @member */
         itemHome: {
@@ -1748,6 +1753,7 @@ $(function () {
                 }
             }
         },
+        /** @member */
         itemProperty: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-property",

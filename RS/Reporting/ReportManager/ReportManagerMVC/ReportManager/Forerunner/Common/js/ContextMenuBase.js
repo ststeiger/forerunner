@@ -60,6 +60,8 @@ $(function () {
         /*
          * Sets the permissions list
          *
+         * @function $.forerunner.contextMenuBase#setPermissionsList
+         *
          * @param {array} list - Array of permission strings to query the server for
          */
         setPermissionsList: function (list) {
@@ -76,6 +78,8 @@ $(function () {
         },
         /*
          * Gets the permissions defined by the call to setPermissionsList
+         *
+         * @function $.forerunner.contextMenuBase#fetchPermissions
          */
         fetchPermissions: function () {
             var me = this;
@@ -85,7 +89,7 @@ $(function () {
         /*
          * Sets the title. Used in the _init call to dymanicaaly set the title
          *
-         * @param {string} title - title to set dynamically
+         * @param {String} title - title to set dynamically
          */
         setTitle: function (title) {
             var me = this;
@@ -123,6 +127,15 @@ $(function () {
                 }
             }, milliseconds);
         },
+        /*
+         * Generate context menu dialog header structure
+         *
+         * @function $.forerunner.contextMenuBase#addHeader
+         *
+         * @param {String} title - Context menu title
+         *
+         * @return {Object} Context menu header object
+         */
         addHeader: function (title) {
             var me = this;
             if (title) {
@@ -141,6 +154,16 @@ $(function () {
             me._$title = me.element.find(".fr-ctx-title");
             return $header;
         },
+        /*
+         * Generate context menu item structure
+         *
+         * @function $.forerunner.contextMenuBase#addMenuItem
+         *
+         * @param {String} selectorClass - Class name
+         * @param {String} label - Display value
+         *
+         * @return {Object} Context menu item object
+         */
         addMenuItem: function (selectorClass, label) {
             var me = this;
             var $menuItem = $(
@@ -171,7 +194,7 @@ $(function () {
         /**
          * Open menu
          *
-         * @function $.forerunner.createDashboard#openMenu
+         * @function $.forerunner.contextMenuBase#openMenu
          *
          * @param {number} client x position from the event
          * @param {number} client /y position from the event
@@ -194,7 +217,7 @@ $(function () {
         /**
          * Close menu
          *
-         * @function $.forerunner.manageParamSets#closeMenu
+         * @function $.forerunner.contextMenuBase#closeMenu
          */
         closeMenu: function () {
             var me = this;

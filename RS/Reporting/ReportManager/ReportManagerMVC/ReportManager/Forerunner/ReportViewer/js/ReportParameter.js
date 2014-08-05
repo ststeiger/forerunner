@@ -1974,7 +1974,7 @@ $(function () {
                     
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
                         return true;
                     }
 
@@ -1993,7 +1993,7 @@ $(function () {
 
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
-                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: true });
+                        me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
                         return true;
                     }
 

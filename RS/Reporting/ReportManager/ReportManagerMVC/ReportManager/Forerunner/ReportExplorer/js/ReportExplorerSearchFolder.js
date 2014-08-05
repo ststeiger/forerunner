@@ -3,6 +3,7 @@
  *
  */
 
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -12,7 +13,20 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-
+    /**
+     * Widget used to create search folder
+     *
+     * @namespace $.forerunner.reportExplorerSearchFolder
+     * @prop {Object} options - The options for reportExplorerSearchFolder
+     * @prop {Object} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+     *
+     * @example
+     * $("#searchFolder").reportExplorerSearchFolder({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     * });
+    */
     $.widget(widgets.getFullname(widgets.reportExplorerSearchFolder), {
         options: {
             $reportExplorer: null,
@@ -122,11 +136,21 @@ $(function () {
                 me.closeDialog();
             }
         },
+        /**
+         * Open search folder dialog
+         *
+         * @function $.forerunner.reportExplorerSearchFolder#openDialog
+         */
         openDialog: function () {
             var me = this;
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Close search folder dialog
+         *
+         * @function $.forerunner.reportExplorerSearchFolder#closeDialog
+         */
         closeDialog: function () {
             var me = this;
 

@@ -25,8 +25,8 @@ $(function () {
      * @namespace $.forerunner.reportExplorerToolpane
      * @prop {Object} options - The options for toolpane
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
-     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
-     * @prop {Object} options.$reportExplorer - The report explorer wiget
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolpane)
+     * @prop {Object} options.$reportExplorer - The report explorer widget
      * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @example
      * $("#reportExplorerToolpaneId").reportExplorerToolpane({
@@ -56,7 +56,7 @@ $(function () {
             }
         },
         /**
-         * Sets the search item keyword into the UI
+         * Sets the keyword on the search textbox in the toolpane
          *
          * @function $.forerunner.reportExplorerToolpane#setSearchKeyword
          */
@@ -77,14 +77,14 @@ $(function () {
             // Hook up any / all custom events that the report explorer may trigger
             me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me.updateBtnStates.call(me);
+                me._updateBtnStates.call(me);
             });
 
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
                 if (data.isSubmit) {
-                    me.updateBtnStates.call(me);
+                    me._updateBtnStates.call(me);
                 }
             });
         },
@@ -129,9 +129,7 @@ $(function () {
 
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
 
-            me.updateBtnStates();
-        },
-        _destroy: function () {
+            me._updateBtnStates();
         },
         _create: function () {
             var me = this;
@@ -139,7 +137,7 @@ $(function () {
             //to make it only run one time
             me._createCallbacks();
         },
-        updateBtnStates: function () {
+        _updateBtnStates: function () {
             var me = this;
 
             // Then we start out disabled and enable if needed

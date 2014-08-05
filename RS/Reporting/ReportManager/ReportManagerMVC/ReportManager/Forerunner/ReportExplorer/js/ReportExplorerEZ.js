@@ -394,6 +394,8 @@ $(function () {
          *
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
+         * @param {String} params - ??.
+         * @param {Object} urlOptions - ??
          */
         transitionToReportViewer: function (path, params, urlOptions) {
             var me = this;
@@ -542,7 +544,7 @@ $(function () {
             me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
-         * Get report explorer
+         * Get report explorer object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorer
          * 
@@ -553,7 +555,7 @@ $(function () {
             return me.$reportExplorer;
         },
         /**
-         * Get report explorer toolbar
+         * Get report explorer toolbar object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorerToolbar
          * 
@@ -568,7 +570,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report explorer toolpane
+         * Get report explorer toolpane object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
          * 

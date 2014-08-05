@@ -667,7 +667,7 @@ $(function () {
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
      * @prop {Object} options.userSettings - User settings used for user specific options
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
-     * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
+     * @prop {Function} options.onInputFocus - Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
      * @prop {Object} options.parameterModel - Parameter model
      * @prop {Object} options.savePosition - Saved report page scroll position 
@@ -3390,6 +3390,11 @@ $(function () {
 
 
 ///#source 1 1 /Forerunner/ReportExplorer/js/ParameterModel.js
+/**
+ * @file Contains the parameter model widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -3405,6 +3410,16 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to parameter model
+     *
+     * @namespace $.forerunner.parameterModel
+     * @prop {String} options.rsInstance - Report service instance name
+     *
+     * @example
+     * $({}).parameterModel({ rsInstance: me.options.rsInstance });
+     *
+    */
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
             rsInstance: null,
@@ -3415,6 +3430,15 @@ $(function () {
             me.serverData = null;
             me.selectSetId = forerunner.helper.guidGen();
         },
+        /**
+         * Get a new parameter manage set item
+         *
+         * @function $.forerunner.parameterModel#getNewSet
+         *
+         * @param {String} parameterList - Current selected parameter list
+         *
+         * @return {Object} New manage set item, default name to null
+         */
         getNewSet: function (parameterList) {
             var newSet = {
                 isAllUser: false,
@@ -7100,6 +7124,8 @@ $(function () {
      * @prop {Object} options - The options for toolbar
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @prop {Object} options.$reportExplorer - The report explorer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @example
      * $("#reportExplorerToolbarId").reportExplorerToolbar({
      *  navigateTo: navigateTo
@@ -7126,6 +7152,11 @@ $(function () {
                 $btn.addClass(btnActiveClass);
             }
         },
+        /**
+         * Sets the keyword on the search textbox in the toolbar
+         *
+         * @function $.forerunner.reportExplorerToolbar#setSearchKeyword
+         */
         setSearchKeyword: function (keyword) {
             var me = this;
 
@@ -7176,10 +7207,6 @@ $(function () {
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
         },
-
-        _destroy: function () {
-        },
-
         _create: function () {
         }
     });  // $.widget
@@ -7213,8 +7240,8 @@ $(function () {
      * @namespace $.forerunner.reportExplorerToolpane
      * @prop {Object} options - The options for toolpane
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
-     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
-     * @prop {Object} options.$reportExplorer - The report explorer wiget
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolpane)
+     * @prop {Object} options.$reportExplorer - The report explorer widget
      * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @example
      * $("#reportExplorerToolpaneId").reportExplorerToolpane({
@@ -7244,7 +7271,7 @@ $(function () {
             }
         },
         /**
-         * Sets the search item keyword into the UI
+         * Sets the keyword on the search textbox in the toolpane
          *
          * @function $.forerunner.reportExplorerToolpane#setSearchKeyword
          */
@@ -7265,14 +7292,14 @@ $(function () {
             // Hook up any / all custom events that the report explorer may trigger
             me.options.$reportExplorer.off(events.reportExplorerBeforeFetch());
             me.options.$reportExplorer.on(events.reportExplorerBeforeFetch(), function (e, data) {
-                me.updateBtnStates.call(me);
+                me._updateBtnStates.call(me);
             });
 
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
                 if (data.isSubmit) {
-                    me.updateBtnStates.call(me);
+                    me._updateBtnStates.call(me);
                 }
             });
         },
@@ -7317,9 +7344,7 @@ $(function () {
 
             me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
 
-            me.updateBtnStates();
-        },
-        _destroy: function () {
+            me._updateBtnStates();
         },
         _create: function () {
             var me = this;
@@ -7327,7 +7352,7 @@ $(function () {
             //to make it only run one time
             me._createCallbacks();
         },
-        updateBtnStates: function () {
+        _updateBtnStates: function () {
             var me = this;
 
             // Then we start out disabled and enable if needed
@@ -7374,18 +7399,21 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {Object} options.userSettings - User settings used for user specific options
+     * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
+     * @prop {Function} options.onInputFocus - Callback function used to handle input focus event 
      * @example
      * $("#reportExplorerId").reportExplorer({
-     *  reportManagerAPI: "./api/ReportManager",
-     *  forerunnerPath: "./forerunner/",
-     *  path: "/",
-     *  view: "catalog",
-     *  navigateTo: navigateTo,
-     *  $appContainer: me.$container,
-     *  explorerSettings: explorerSettings
+     *    reportManagerAPI: "./api/ReportManager",
+     *    forerunnerPath: "./forerunner/",
+     *    path: "/",
+     *    view: "catalog",
+     *    navigateTo: navigateTo,
+     *    $appContainer: me.$container,
+     *    explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
@@ -7733,6 +7761,7 @@ $(function () {
          * Returns the last fetch view and path
          *
          * @function $.forerunner.reportExplorer#getLastFetched
+         * @return {Object} - Last fetch object that contain view and path, return null if not exist.
          */
         getLastFetched: function () {
             var me = this;
@@ -7871,11 +7900,11 @@ $(function () {
             me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
         },
         /**
-         * Get current path user permission
+         * Get user permission for current path
          *
-         * @function $.forerunner.dashboardEZ#getPermission
+         * @function $.forerunner.reportExplorer#getPermission
          * 
-         * @return {Object} - permission jQuery object
+         * @return {Object} - Permission jQuery object
          */
         getPermission: function () {
             var me = this;
@@ -7923,7 +7952,13 @@ $(function () {
             var me = this;
             me._searchFolderDialog.reportExplorerSearchFolder("openDialog");
         },
-        //this method call by createSearchFolder and search folder property widgets
+        /**
+         * Set search folder content, it not exist then create it, if exist then update the content.
+         *
+         * @function $.forerunner.reportExplorer#setSearchFolder
+         *
+         * @param {Object} searchFolder - Search folder object.
+         */
         setSearchFolder: function (searchFolder) {
             var me = this;
             var url = me.options.reportManagerAPI + "/SaveResource";
@@ -8004,10 +8039,10 @@ $(function () {
             me.element.append($explorer);
         },
         /**
-        * Function execute when input element blur
-        *
-        * @function $.forerunner.reportExplorer#onInputBlur
-        */
+         * Function execute when input element blur
+         *
+         * @function $.forerunner.reportExplorer#onInputBlur
+         */
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
@@ -8024,7 +8059,7 @@ $(function () {
                 me.options.onInputFocus();
         },
         /**
-         * Get current explorer path
+         * Get current explorer page path
          *
          * @function $.forerunner.reportExplorer#getCurrentPath
          */
@@ -8033,7 +8068,7 @@ $(function () {
             return decodeURIComponent(me.options.path);
         },
         /**
-         * Get current explorer view
+         * Get current explorer page view
          *
          * @function $.forerunner.reportExplorer#getCurrentView
          */
@@ -8258,18 +8293,6 @@ $(function () {
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
         },
-        /**
-         * Open user setting dialog
-         *
-         * @function $.forerunner.userSettings#openDialog
-         */
-        openDialog: function () {
-            var me = this;
-
-            me._getSettings();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-
-        },
         _triggerClose: function (isSubmit) {
             var me = this;
             var data = {
@@ -8289,6 +8312,18 @@ $(function () {
             me._triggerClose(true);
         },
         /**
+         * Open user setting dialog
+         *
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+
+            me._getSettings();
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
+        },
+        /**
          * Close user setting dialog
          *
          * @function $.forerunner.userSettings#closeDialog
@@ -8305,6 +8340,7 @@ $(function () {
  *
  */
 
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -8314,7 +8350,20 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-
+    /**
+     * Widget used to create search folder
+     *
+     * @namespace $.forerunner.reportExplorerSearchFolder
+     * @prop {Object} options - The options for reportExplorerSearchFolder
+     * @prop {Object} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+     *
+     * @example
+     * $("#searchFolder").reportExplorerSearchFolder({
+     *     $appContainer: me.options.$appContainer,
+     *     $reportExplorer: me.element,
+     * });
+    */
     $.widget(widgets.getFullname(widgets.reportExplorerSearchFolder), {
         options: {
             $reportExplorer: null,
@@ -8424,11 +8473,21 @@ $(function () {
                 me.closeDialog();
             }
         },
+        /**
+         * Open search folder dialog
+         *
+         * @function $.forerunner.reportExplorerSearchFolder#openDialog
+         */
         openDialog: function () {
             var me = this;
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Close search folder dialog
+         *
+         * @function $.forerunner.reportExplorerSearchFolder#closeDialog
+         */
         closeDialog: function () {
             var me = this;
 
@@ -15294,7 +15353,7 @@ $(function () {
      *
      * @namespace $.forerunner.dsCredential
      * @prop {Object} options - The options for dsCredential
-     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$reportViewer - Report viewer widget
      * @prop {Object} options.$appContainer - Report page container
      *
      * @example
@@ -15952,6 +16011,8 @@ $(function () {
          *
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
+         * @param {String} params - ??.
+         * @param {Object} urlOptions - ??
          */
         transitionToReportViewer: function (path, params, urlOptions) {
             var me = this;
@@ -16100,7 +16161,7 @@ $(function () {
             me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
         },
         /**
-         * Get report explorer
+         * Get report explorer object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorer
          * 
@@ -16111,7 +16172,7 @@ $(function () {
             return me.$reportExplorer;
         },
         /**
-         * Get report explorer toolbar
+         * Get report explorer toolbar object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorerToolbar
          * 
@@ -16126,7 +16187,7 @@ $(function () {
             return null;
         },
         /**
-         * Get report explorer toolpane
+         * Get report explorer toolpane object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorerToolpane
          * 
@@ -16167,8 +16228,8 @@ $(function () {
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
-     * @prop {String} options.$reportExplorer - Report viewer widget
-     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.$reportExplorer - Report viewer widget
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @prop {Object} options.parentFolder - Folder that this resource should be created in
      * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
      * @prop {String} options.rsInstance - Optional, Report service instance name
@@ -16324,7 +16385,7 @@ $(function () {
             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
         },
         /**
-         * Open parameter set dialog
+         * Open create dashboard dialog
          *
          * @function $.forerunner.createDashboard#openDialog
          */
@@ -16333,7 +16394,7 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
-         * Close parameter set dialog
+         * Close create dashboard dialog
          *
          * @function $.forerunner.manageParamSets#closeDialog
          */

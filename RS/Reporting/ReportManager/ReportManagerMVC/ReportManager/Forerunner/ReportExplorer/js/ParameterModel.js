@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the parameter model widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects
@@ -13,6 +18,16 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+     * Widget used to parameter model
+     *
+     * @namespace $.forerunner.parameterModel
+     * @prop {String} options.rsInstance - Report service instance name
+     *
+     * @example
+     * $({}).parameterModel({ rsInstance: me.options.rsInstance });
+     *
+    */
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
             rsInstance: null,
@@ -23,6 +38,15 @@ $(function () {
             me.serverData = null;
             me.selectSetId = forerunner.helper.guidGen();
         },
+        /**
+         * Get a new parameter manage set item
+         *
+         * @function $.forerunner.parameterModel#getNewSet
+         *
+         * @param {String} parameterList - Current selected parameter list
+         *
+         * @return {Object} New manage set item, default name to null
+         */
         getNewSet: function (parameterList) {
             var newSet = {
                 isAllUser: false,

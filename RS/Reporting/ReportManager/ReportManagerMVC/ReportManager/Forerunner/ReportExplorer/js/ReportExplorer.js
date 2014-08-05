@@ -22,18 +22,21 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
      * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {Object} options.userSettings - User settings used for user specific options
+     * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
+     * @prop {Function} options.onInputFocus - Callback function used to handle input focus event 
      * @example
      * $("#reportExplorerId").reportExplorer({
-     *  reportManagerAPI: "./api/ReportManager",
-     *  forerunnerPath: "./forerunner/",
-     *  path: "/",
-     *  view: "catalog",
-     *  navigateTo: navigateTo,
-     *  $appContainer: me.$container,
-     *  explorerSettings: explorerSettings
+     *    reportManagerAPI: "./api/ReportManager",
+     *    forerunnerPath: "./forerunner/",
+     *    path: "/",
+     *    view: "catalog",
+     *    navigateTo: navigateTo,
+     *    $appContainer: me.$container,
+     *    explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
@@ -381,6 +384,7 @@ $(function () {
          * Returns the last fetch view and path
          *
          * @function $.forerunner.reportExplorer#getLastFetched
+         * @return {Object} - Last fetch object that contain view and path, return null if not exist.
          */
         getLastFetched: function () {
             var me = this;
@@ -519,11 +523,11 @@ $(function () {
             me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
         },
         /**
-         * Get current path user permission
+         * Get user permission for current path
          *
-         * @function $.forerunner.dashboardEZ#getPermission
+         * @function $.forerunner.reportExplorer#getPermission
          * 
-         * @return {Object} - permission jQuery object
+         * @return {Object} - Permission jQuery object
          */
         getPermission: function () {
             var me = this;
@@ -571,7 +575,13 @@ $(function () {
             var me = this;
             me._searchFolderDialog.reportExplorerSearchFolder("openDialog");
         },
-        //this method call by createSearchFolder and search folder property widgets
+        /**
+         * Set search folder content, it not exist then create it, if exist then update the content.
+         *
+         * @function $.forerunner.reportExplorer#setSearchFolder
+         *
+         * @param {Object} searchFolder - Search folder object.
+         */
         setSearchFolder: function (searchFolder) {
             var me = this;
             var url = me.options.reportManagerAPI + "/SaveResource";
@@ -652,10 +662,10 @@ $(function () {
             me.element.append($explorer);
         },
         /**
-        * Function execute when input element blur
-        *
-        * @function $.forerunner.reportExplorer#onInputBlur
-        */
+         * Function execute when input element blur
+         *
+         * @function $.forerunner.reportExplorer#onInputBlur
+         */
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
@@ -672,7 +682,7 @@ $(function () {
                 me.options.onInputFocus();
         },
         /**
-         * Get current explorer path
+         * Get current explorer page path
          *
          * @function $.forerunner.reportExplorer#getCurrentPath
          */
@@ -681,7 +691,7 @@ $(function () {
             return decodeURIComponent(me.options.path);
         },
         /**
-         * Get current explorer view
+         * Get current explorer page view
          *
          * @function $.forerunner.reportExplorer#getCurrentView
          */

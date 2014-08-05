@@ -12,5 +12,6 @@
 	"FancyTooltips":"on",
 	"ImageAreaHighligh": "on",
 	"ImageAreaHighlighBorderColor": "0000ff",
-	"ImageAreaHighlighBorderWidth": "2"
+	"ImageAreaHighlighBorderWidth": "2",
+    "CORSEnableWithCredentials": false
 }

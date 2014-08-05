@@ -1,5 +1,5 @@
 ﻿/**
- * @file Contains the forerunnerTags widget.
+ * @file Contains the forerunnerProperties widget.
  *
  */
 
@@ -14,6 +14,23 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
+    /**
+    * Widget used to manage property
+    *
+    * @namespace $.forerunner.forerunnerProperties
+    * @prop {Object} options - The options for the property dialog
+    * @prop {Object} options.$reportExplorer - Report viewer widget
+    * @prop {Object} options.$reportViewer - Report viewer widget
+    * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    *
+    * @example
+    * $("#property").forerunnerProperties({
+    *     $appContainer: me.options.$appContainer,
+    *     $reportExplorer: me.$explorer,
+    *     $reportViewer: me.$viewer
+    * });
+    */
     $.widget(widgets.getFullname(widgets.forerunnerProperties), {
         options: {
             $appContainer: null,
@@ -72,6 +89,10 @@ $(function () {
         },
         /**
          * Returns the current path and propertyList
+         *
+         * @function $.forerunner.forerunnerProperties#getProperties
+         *
+         * @return {Object} Property object that contain current path and properties
          */
         getProperties: function () {
             var me = this;
@@ -81,12 +102,14 @@ $(function () {
             };
         },
         /**
-         * Set the properties the dialog need to show up
+         * Set the properties current item should have
          *
          * @function $.forerunner.forerunnerProperties#setProperties
          *
          * @param {String} path - the path of the item
-         * @param {Array} propertyList - the list of the properties, valid value from forerunner.ssr.constants.properties [description,rdlExtension,tags,searchFolder] 
+         * @param {Array} propertyList - the list of the properties
+         *
+         * @see forerunner.ssr.constants.properties
          */
         setProperties: function (path, propertyList) {
             var me = this;

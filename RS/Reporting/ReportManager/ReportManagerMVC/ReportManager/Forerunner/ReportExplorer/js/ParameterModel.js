@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the parameter model widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports objects

@@ -742,7 +742,7 @@ $(function () {
             if (this._customSettings === null) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetMobilizerSetting";
                
-                forerunner.ajax.ajax({
+                $.ajax({
                     url: url,
                     dataType: "json",
                     async: false,
@@ -1371,6 +1371,7 @@ $(function () {
         * Additionally this method will set the proper CORS setting to enable cross domain scripting.
         *
         * @param {Object} options - Options for the ajax call.
+        * @param {Boolean} noWithCredentials - true means to not add the withCredentials CORS option
         * @member
         */
         ajax: function (options) {
@@ -1379,9 +1380,12 @@ $(function () {
             var successCallback = options.success;
             options.success = null;
 
-            options.xhrFields = {
-                withCredentials: true
-            };
+            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            if (enableWithCredentials) {
+                options.xhrFields = {
+                    withCredentials: true
+                };
+            }
 
             if (options.fail)
                 errorCallback = options.fail;
@@ -1413,9 +1417,12 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            options.xhrFields = {
-                withCredentials: true
-            };
+            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            if (enableWithCredentials) {
+                options.xhrFields = {
+                    withCredentials: true
+                };
+            }
 
             return $.getJSON(url, options)
             .done(function (data) {
@@ -1442,9 +1449,6 @@ $(function () {
             var me = this;
 
             var options = {};
-            options.xhrFields = {
-                withCredentials: true
-            };
             options.type = "POST";
             options.data = data;
             options.url = url;

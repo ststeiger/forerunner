@@ -1438,12 +1438,14 @@ $(function () {
             var successCallback = options.success;
             options.success = null;
 
-            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            if (enableWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true
-                };
-            }
+            // TODO V4
+            // We need to enable CORS support
+            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            //if (enableWithCredentials) {
+            //    options.xhrFields = {
+            //        withCredentials: true
+            //    };
+            //}
 
             if (options.fail)
                 errorCallback = options.fail;
@@ -1475,12 +1477,14 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            if (enableWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true
-                };
-            }
+            // TODO V4
+            // We need to enable CORS support
+            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            //if (enableWithCredentials) {
+            //    options.xhrFields = {
+            //        withCredentials: true
+            //    };
+            //}
 
             return $.getJSON(url, options)
             .done(function (data) {

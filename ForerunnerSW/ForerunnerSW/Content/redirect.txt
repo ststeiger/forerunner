@@ -13,3 +13,7 @@
 /trial-et3,/home/register?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel
 /video-et3,/home/video?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel
 /home-et3,/home/index?utm_source=TDM&utm_medium=email&utm_campaign=V3Rel
+/video3s,/home/video?utm_source=SQLMag&utm_medium=Article&utm_campaign=V3Rel
+/mob3s,/pr/mobilizer?utm_source=SQLMag&utm_medium=Article&utm_campaign=V3Rel
+/dev3s,/pr/dev?utm_source=SQLMag&utm_medium=Article&utm_campaign=V3Rel
+/home3s,/home/index?utm_source=SQLMag&utm_medium=Article&utm_campaign=V3Rel

@@ -2631,13 +2631,17 @@ $(function () {
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
          * @param {Object} parameters - Optional parameters
+         * @param {Object} sessionID - Optional SessionID for existing execution
          */
-        loadReport: function (reportPath, pageNum, parameters) {
+        loadReport: function (reportPath, pageNum, parameters,sessionID) {
             var me = this;
 
             // For each new report we reset the zoom factor back to 100%
             me._zoomFactor = 100;
             
+            if (sessionID)
+                me.sessionID = sessionID;
+
             me._checkPermission(reportPath);
             me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
@@ -2657,6 +2661,8 @@ $(function () {
             
             me._resetViewer();
             
+           
+
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
             me.savedParameters = parameters ? parameters : null;

@@ -101,6 +101,14 @@ if ($("#image2")) {
     });
 }
 
+if ($("#demo")) {
+    $("#demo").on("click", function () {
+        ga("send", "event", "Demo", "click", "demo", 0);
+        window.location.href ="http://demo.forerunnersw.com/Mobilizer";
+    });
+}
+
+
 if ($("#zip")) {
     $("#zip").hide();
 }

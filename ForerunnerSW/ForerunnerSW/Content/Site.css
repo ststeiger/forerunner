@@ -8,6 +8,7 @@ body {font-family:'Segoe UI',Arial, Helvetica, sans-serif; color: #333333; backg
 input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;font-family:'Segoe UI'}
 .Rounded {-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;}
 .Center{ margin: 0 auto;}
+.CenterText {text-align: center;}
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
 
@@ -57,6 +58,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .ForerunnerImage { width:100%; }
 .ForerunnerHomeImage{max-width:300px;vertical-align:middle;}
+.ForerunnerMobImage{max-height:300px;vertical-align:middle;}
 
 .PressTitle{font-size:24px;margin-bottom:20px;font-weight:bold;}
 .PressDescription{font-size:24px;font-style:italic;  margin-bottom :20px;}
@@ -132,6 +134,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .PricingListItem{padding-left: 1em; text-indent: -.7em;}
 .PricingListItem:before{ content: "• "; color: #ff6600;}
 
+.PRHeader{color: white; font-size: 48px; text-align: left;  font-weight: bold;}
+.PRSubHeader{color: white; font-size: 24px; text-align: left; margin-top: 10px;}
 
 .FeatureHeader{font-weight:bold;color:darkblue;font-size:18pt;padding:15px;}
 .FeatureContent{font-size:24px;color:#666666;text-align:center;padding:25px;}
@@ -221,5 +225,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
    .DownloadFormInputSmall{display:block;margin: 0 auto;}
 
    .PageHeaderTitle{font-size:80px;}
+   .PRSubHeader{color:#087cb9;margin-top:100px;}
+   .ForerunnerMobImage{width:100%;}
  
 }

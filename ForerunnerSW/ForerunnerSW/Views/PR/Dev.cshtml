@@ -4,31 +4,17 @@
     Layout = "~/Views/Shared/_PRLayout.cshtml";
 }
 
-<div id="Page" data-page="" class="ForerunnerPort BlueBackgrouud" style="">
-    <div class="ForerunnerPage Center BlueBackgrouud" style="padding-bottom:25px;padding-top:25px">
-        <div class="HeaderFont Center " style="font-size: 32px; color: white; padding-bottom: 25px;text-align:center;">Tyring to find a SSRS mobile solution that allows you to customize the experience? Look no further! Forerunner Mobilizer provides you developer access to all Controls, APIs, CSS and Events, in order to make customization easy. Looking to build an app? No problem, we support MVC and HTML5 so you can build your app with ease. Want to give it a shot? Download our trial today! </div>
-    </div>
-</div>
-
-
-<div class="ForerunnerPort OrangeBackground" style="">
-    <div class="ForerunnerPage Center OrangeBackground" style="padding-top:25px;padding-bottom:25px;">
+<div id="Page" data-page="Index" class="ForerunnerPort " style="display: table; width: 100%;  background-image: url(/Content/img/Background_tile_mob.png);background-repeat:repeat-x;">
+    <div class="ForerunnerPage Center " style="background-image: url(/Content/img/Background_mob.png); height: 100%;background-repeat:no-repeat;">
+        <div class="HeaderFont  PRHeader" style="">Looking for a modern SSRS solution that allows you develop using the latest technology? </div>
         <div class="Center" style="display: table; width: 100%;">
-            <div class="ForerunnerTD TD2 TD2Left Center" style="">
-                <div id="video2" style="padding-right: 15px; display: none;">
-                    @*<iframe width="100%" height="360" src="//www.youtube.com/embed/ffglPLTa6d4?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>*@
-                    <iframe width="100%" height="360" src="" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div id="image2" class="Center ForerunnerImage" style="cursor: pointer;max-width:484px;">
-                    <img class="ForerunnerImage OrangeBackground" src="~/Content/img/Video_on.png" alt="Forerunner Mobilizer Product" />
-                </div>
-            </div>
+            <div class="ForerunnerTD TD2 TD2Left " style="">
+                <div class="HeaderFont  PRSubHeader" style="">Look no further! Forerunner Mobilizer provides you access to all Controls, APIs, Events and CSS in order to make development easy. Building an app? No problem, we support Node.js,  MVC, WebForms, and HTML5 so you can build your app with ease.</div>
 
-            <div class="ForerunnerTD TD2 TD2Left" style="">
-                <form class="HomePageRegister Center DetailFont" name="reg" style="margin-bottom: 25px; font-size: 24px;" action="https://forerunnersw.com/register/api/Download" method="post">
-                    <div class="Center HeaderFont" style="margin-bottom: 5px; margin-top: 25px; color: white; font-weight: bold; font-size: 30px;text-align:center;">Register to unlock your FREE Trial</div>
-                    <div class="Center " style="margin-bottom: 20px; color: white;text-align:center;">You can be up and running in minutes</div>
-                    <div class="Center " style="max-width:420px;">
+                <form class="OrangeBackground HomePageRegister Center DetailFont" name="reg" style="margin-bottom: 45px; margin-top: 30px; font-size: 24px; max-width: 450px;" action="https://forerunnersw.com/register/api/Download" method="post">
+                    <div class="Center HeaderFont" style="margin-bottom: 5px; margin-top: 25px; color: white; font-weight: bold; font-size: 40px; text-align: center;">Want to give it a shot?</div>
+                    <div class="Center " style="margin-bottom: 20px; color: white; text-align: center;">Unlock your trial today by filling out the form!</div>
+                    <div class="Center " style="max-width: 420px;">
                         <input class="DownloadFormInputSmall" type="text" required="required" name="firstname" placeholder="First Name">
                         <input class="DownloadFormInputSmall" type="text" required="required" name="lastname" placeholder="Last Name">
                         <input id="email" class="DownloadFormInputSmall DownLoadFormEmailSmall" style="" type="text" required="required" name="email" placeholder="Email">
@@ -41,6 +27,9 @@
                     <input class="RegisterButton Center Rounded DownloadButtonSize HeaderFont" style="" type="submit" value="REGISTER">
                     <br />
                 </form>
+                <div class="HeaderFont  SectionHeader" style="font-size: 32px; text-align: left;">Give us a call: <span style="font-size: 50px;">855.367.3511</span> </div>
+            </div>
+            <div class="ForerunnerTD TD2 TD2Left" style="">
             </div>
         </div>
     </div>
@@ -57,8 +46,9 @@
                 <td class="ForerunnerTD TD4 SupportTDBorder" style="">
                    <div class="DeveloperCell" >
                        @*<a href="Samples"><img style="" src="~/Content/img/Mobilizer_update.png" alt="Mobilizer Setup" /></a>*@
-                       <div class="MobilizerDetailHeader DeveloperSubHeader">Support for MVC</div>
+                       <div class="MobilizerDetailHeader DeveloperSubHeader">Any Platform</div>
                        <table>
+                           <tr><td class="DeveloperCheveron"><img style="" class="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Supports MVC, Webforms, Node.js,Java, ... </div></td></tr>
                            <tr><td class="DeveloperCheveron"><img style="" class="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Source code for controllers</div></td></tr>
                            <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Simple intergration into MVC applications</div></td></tr>
                            <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Several <a href="/home/samples">samples</a> online</div></td></tr>                           
@@ -104,8 +94,8 @@
                    <div class="MobilizerDetailHeader DeveloperSubHeader">SSRS Compatability</div>
                     <div class="DeveloperCell" >
                        <table>
-                           <tr><td class="DeveloperCheveron"><img style="" class="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Supports SSRS 2008, 200R2, 2012</div></td></tr>
-                           @*<tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Support SharePoint 2010, 2013</div></td></tr>*@
+                           <tr><td class="DeveloperCheveron"><img style="" class="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Supports SSRS 2008, 200R2, 2012, 2014</div></td></tr>
+                           <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Support SharePoint 2010, 2013</div></td></tr>
                            <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Works with all report items and 3rd party extensions</div></td></tr>                                                      
                            <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Supports all datasources</div></td></tr>                                                      
                            <tr><td class="DeveloperCheveron"><img style="" src="~/Content/img/Chev.png" alt="cheveron" /></td><td><div class="DeveloperList">Support for Windows, Forms and custom security models</div></td></tr>                                                      

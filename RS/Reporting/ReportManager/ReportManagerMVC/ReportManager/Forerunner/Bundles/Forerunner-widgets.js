@@ -15783,6 +15783,13 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
+
+            if (forerunner.device.isAllowZoom()) {
+                forerunner.device.allowZoom(false);
+                window.location.reload();
+                return;
+            }
+
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
 
@@ -15955,7 +15962,6 @@ $(function () {
             }
             
             layout.cleanUp();
-            forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay

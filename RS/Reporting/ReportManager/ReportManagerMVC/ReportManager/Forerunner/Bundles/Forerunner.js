@@ -1438,12 +1438,14 @@ $(function () {
             var successCallback = options.success;
             options.success = null;
 
-            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            if (enableWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true
-                };
-            }
+            // TODO V4
+            // We need to enable CORS support
+            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            //if (enableWithCredentials) {
+            //    options.xhrFields = {
+            //        withCredentials: true
+            //    };
+            //}
 
             if (options.fail)
                 errorCallback = options.fail;
@@ -1475,12 +1477,14 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            if (enableWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true
-                };
-            }
+            // TODO V4
+            // We need to enable CORS support
+            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
+            //if (enableWithCredentials) {
+            //    options.xhrFields = {
+            //        withCredentials: true
+            //    };
+            //}
 
             return $.getJSON(url, options)
             .done(function (data) {
@@ -1746,13 +1750,16 @@ $(function () {
             
         },
 
-        _allowZoomFlag : false,
+        _allowZoomFlag : null,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
          * @param {Boolean} flag - true = scale enabled (max = 10.0), false = scale disabled
          */
         allowZoom: function (flag) {
-            this._allowZoomFlag = flag;
+            if (this._allowZoomFlag === flag) {
+                return;
+            }
+
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=yes' />");
@@ -1760,6 +1767,8 @@ $(function () {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no' />");
             }
+
+            this._allowZoomFlag = flag;
         },
 
         /** 

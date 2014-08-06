@@ -7573,7 +7573,6 @@ $(function () {
 
             $item.append($anchor);
 
-
             //Image Block
             var $imageblock = new $("<div />");
             $imageblock.addClass("fr-report-item-image-block");

@@ -761,7 +761,6 @@ $(function () {
                     },
                 });
             }
-
             return this._customSettings;
         },
         /**

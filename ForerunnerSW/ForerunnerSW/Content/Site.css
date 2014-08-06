@@ -12,6 +12,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
 
+.ForerunnerSocial{display:table-cell;vertical-align:top;}
+
 .HeaderFont{font-family:Candara,Arial, Helvetica, sans-serif}
 .DetailFont{font-family:'Segoe UI',Arial, Helvetica, sans-serif}
 .BlueBackgrouud{background-image:url(img/bkg_tile_slide.png);background-repeat:repeat;}
@@ -28,7 +30,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .ForerunnerPageContent{font-size:24px;}
 .ForerunnerPressContent{font-size:18px;}
 
-.ForerunnerTD{ display:table-cell;vertical-align:top}
+.ForerunnerTD{ display:table-cell;}
 .TD2{width:50%;}
 .TD2Left {}
 
@@ -227,5 +229,6 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
    .PageHeaderTitle{font-size:80px;}
    .PRSubHeader{color:#087cb9;margin-top:100px;}
    .ForerunnerMobImage{width:100%;}
+    .ForerunnerSocial {        display: inline;    }
  
 }

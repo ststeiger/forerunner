@@ -1373,7 +1373,7 @@ $(function () {
                             me.origionalReportPath = me.reportPath;
                         me.reportPath = data.ReportPath;
                         if (me.options.parameterModel)
-                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, true);
 
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
                         if (data.CredentialsRequired) {

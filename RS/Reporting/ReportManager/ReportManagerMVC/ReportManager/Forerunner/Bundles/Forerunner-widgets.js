@@ -12050,7 +12050,7 @@ $(function () {
                         }
                     }
                     else {
-                        $control.attr("disabled", "true").addClass("fr-param-disable");
+                        $control.attr("disabled", true).addClass("fr-param-disable");
 
                         //remove validate arrtibutes
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
@@ -12124,10 +12124,9 @@ $(function () {
 
                 if ($control.hasClass("fr-param-dropdown-input")) {
                     $control.parent().removeClass("fr-param-disable");
-                }
-                else {
-                    $control.removeClass("fr-param-disable");
-                }
+                }                
+                $control.removeClass("fr-param-disable");
+               
 
                 //add validate arrtibutes to control when uncheck null checkbox
                 $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
@@ -12145,7 +12144,7 @@ $(function () {
                     $nullCheckbox.attr("disabled", true);
                 }
 
-                $control.attr("disabled", "true").addClass("fr-usedefault");
+                $control.attr("disabled", true).addClass("fr-usedefault");
 
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
@@ -12161,9 +12160,8 @@ $(function () {
                 if ($control.hasClass("fr-param-dropdown-input")) {
                     $control.parent().addClass("fr-param-disable");
                 }
-                else {
-                    $control.addClass("fr-param-disable");
-                }
+                $control.addClass("fr-param-disable");
+                
 
                 //remove validate arrtibutes
                 $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
@@ -12204,13 +12202,13 @@ $(function () {
                 var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' prompt='" + param.Prompt + "' value='" + radioValues[i].value +
                     "' datatype='" + param.Type + "' />");
                 if (dependenceDisable) {
-                    $radioItem.attr("disabled", "true");
+                    $radioItem.attr("disabled", true);
                 }
                 else {
                     me._getParameterControlProperty(param, $radioItem);
 
                     if (predefinedValue && predefinedValue === radioValues[i].value) {
-                        $radioItem.attr("checked", "true");
+                        $radioItem.attr("checked", true);
                     }
 
                     $radioItem.on("click", function () {

@@ -284,6 +284,8 @@ $(function () {
                 // time showTool is called.
                 var $toolEl = me.element.find("." + selectorClass);
                 $toolEl.hide();
+            } else {
+                console.log("hideTool called with an invalid selector class: " + selectorClass);
             }
         },
         /**

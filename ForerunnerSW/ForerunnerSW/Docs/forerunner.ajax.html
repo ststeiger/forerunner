@@ -153,7 +153,7 @@
 <dd>
     
     <div class="description">
-        Wraps the $.ajax call and if the response status 302, it will redirect to login page.
+        Wraps the $.ajax call and if the response status 302 || 401, it will redirect to login page. Additionally this method will set the proper CORS setting to enable cross domain scripting.
     </div>
     
     
@@ -200,7 +200,195 @@
 <dd>
     
     <div class="description">
-        Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page.
+        Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page.Additionally this method will set the proper CORS setting to enable cross domain scripting.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getUserName"><span class="type-signature">&lt;static> </span>getUserName<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Get user name.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getUserSetting"><span class="type-signature">&lt;static> </span>getUserSetting<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Get user settings object, will retrieve from database if not set.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hasPermission"><span class="type-signature">&lt;static> </span>hasPermission<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Returns json data indicating is the user has the requested permissions for the given path
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isFormsAuth"><span class="type-signature">&lt;static> </span>isFormsAuth<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Check it's form authentication or not
     </div>
     
     
@@ -247,7 +435,7 @@
 <dd>
     
     <div class="description">
-        Wraps the $.post call and if the response status 401 or 302, it will redirect to login page.
+        Makes a "POST" type ajax request and if the response status 401 or 302, it will redirect to login page.
     </div>
     
     
@@ -284,338 +472,22 @@
     
 </dd>
 
-        </dl>
-    
-    
-    
-        <h3 class="subsection-title">Methods</h3>
         
-        <dl>
             
 <dt>
-    <h4 class="name" id="getUserName"><span class="type-signature">&lt;static> </span>getUserName<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setUserSetting"><span class="type-signature">&lt;static> </span>setUserSetting<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
-    
-    
-    <div class="description">
-        Get user name.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getUserSetting"><span class="type-signature">&lt;static> </span>getUserSetting<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Get user settings object, will retrieve from database if not set.
-    </div>
-    
-
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="hasPermission"><span class="type-signature">&lt;static> </span>hasPermission<span class="signature">(path, permissions)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Returns json data indicating is the user has the requested permissions for the given path
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">fully qualified path to the resource</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>permissions</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Requested permissions list</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="setUserSetting"><span class="type-signature">&lt;static> </span>setUserSetting<span class="signature">(User)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
     
     <div class="description">
         Set user settings object
     </div>
     
+    
+    
 
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>User</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Settings Object</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
     
 <dl class="details">
     
@@ -645,19 +517,11 @@
 
     
     
-
-    
-
-    
-    
-    
-    
-    
-    
-    
 </dd>
 
         </dl>
+    
+    
     
     
     
@@ -672,7 +536,7 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerContextMenu.html">reportExplorerContextMenu</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.subscriptionModel.html">subscriptionModel</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProperties">getProperties</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
 		</nav>
 	</div>
 </div>

@@ -246,7 +246,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="getCustomSettings"><span class="type-signature">&lt;static> </span>getCustomSettings<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getCustomSettings"><span class="type-signature">&lt;static> </span>getCustomSettings<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -301,6 +301,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Customer setting object
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -308,7 +330,7 @@
         
             
 <dt>
-    <h4 class="name" id="getCustomSettingsValue"><span class="type-signature">&lt;static> </span>getCustomSettingsValue<span class="signature">(value, default)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getCustomSettingsValue"><span class="type-signature">&lt;static> </span>getCustomSettingsValue<span class="signature">(setting, defaultval)</span><span class="type-signature"> &rarr; {String}</span></h4>
     
     
 </dt>
@@ -350,13 +372,13 @@
 	
         <tr>
             
-                <td class="name"><code>value</code></td>
+                <td class="name"><code>setting</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -366,20 +388,20 @@
             
             
             
-            <td class="description last">to get.</td>
+            <td class="description last">value to get.</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>default</code></td>
+                <td class="name"><code>defaultval</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">var</span>
+<span class="param-type">String</span>
 
 
             
@@ -389,7 +411,7 @@
             
             
             
-            <td class="description last">if not set</td>
+            <td class="description last">default if not set</td>
         </tr>
 	
 	
@@ -434,6 +456,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Default value for the specify setting key
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">String</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -441,7 +485,7 @@
         
             
 <dt>
-    <h4 class="name" id="getMobilizerSharedSchedule"><span class="type-signature">&lt;static> </span>getMobilizerSharedSchedule<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getMobilizerSharedSchedule"><span class="type-signature">&lt;static> </span>getMobilizerSharedSchedule<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
@@ -496,6 +540,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Mobilizer shared schedule object
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -503,7 +569,7 @@
         
             
 <dt>
-    <h4 class="name" id="setAPIBase"><span class="type-signature">&lt;static> </span>setAPIBase<span class="signature">(API)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setAPIBase"><span class="type-signature">&lt;static> </span>setAPIBase<span class="signature">(apiBase)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -545,7 +611,7 @@
 	
         <tr>
             
-                <td class="name"><code>API</code></td>
+                <td class="name"><code>apiBase</code></td>
             
             
             <td class="type">
@@ -561,7 +627,7 @@
             
             
             
-            <td class="description last">Base.</td>
+            <td class="description last">API Base.</td>
         </tr>
 	
 	
@@ -613,7 +679,7 @@
         
             
 <dt>
-    <h4 class="name" id="setCustomSettings"><span class="type-signature">&lt;static> </span>setCustomSettings<span class="signature">(Custom)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setCustomSettings"><span class="type-signature">&lt;static> </span>setCustomSettings<span class="signature">(settingObject)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -655,7 +721,7 @@
 	
         <tr>
             
-                <td class="name"><code>Custom</code></td>
+                <td class="name"><code>settingObject</code></td>
             
             
             <td class="type">
@@ -671,7 +737,7 @@
             
             
             
-            <td class="description last">Settings Object</td>
+            <td class="description last">Custom Settings Object</td>
         </tr>
 	
 	
@@ -723,7 +789,7 @@
         
             
 <dt>
-    <h4 class="name" id="setForerunnerFolder"><span class="type-signature">&lt;static> </span>setForerunnerFolder<span class="signature">(Forerunner)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setForerunnerFolder"><span class="type-signature">&lt;static> </span>setForerunnerFolder<span class="signature">(forerunnerFolderPath)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -765,7 +831,7 @@
 	
         <tr>
             
-                <td class="name"><code>Forerunner</code></td>
+                <td class="name"><code>forerunnerFolderPath</code></td>
             
             
             <td class="type">
@@ -781,7 +847,7 @@
             
             
             
-            <td class="description last">folder path.</td>
+            <td class="description last">Forerunner folder path.</td>
         </tr>
 	
 	
@@ -845,7 +911,7 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerContextMenu.html">reportExplorerContextMenu</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.subscriptionModel.html">subscriptionModel</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getProperties">getProperties</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
 		</nav>
 	</div>
 </div>

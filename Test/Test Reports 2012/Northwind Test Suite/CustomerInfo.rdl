@@ -87,18 +87,10 @@ WHERE      Customers.PostalCode = @PostalCode</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Customers with </Value>
+                    <Value>Customers</Value>
                     <Style>
                       <FontSize>16pt</FontSize>
                       <FontWeight>Bold</FontWeight>
-                    </Style>
-                  </TextRun>
-                  <TextRun>
-                    <Value>Action</Value>
-                    <Style>
-                      <FontSize>16pt</FontSize>
-                      <FontWeight>Bold</FontWeight>
-                      <TextDecoration>Underline</TextDecoration>
                     </Style>
                   </TextRun>
                 </TextRuns>
@@ -860,38 +852,6 @@ WHERE      Customers.PostalCode = @PostalCode</CommandText>
               </Border>
             </Style>
           </Tablix>
-          <Textbox Name="NextPage">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>Next Page &gt;</Value>
-                    <Style>
-                      <FontWeight>Bold</FontWeight>
-                      <Color>Blue</Color>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <Top>0.35292in</Top>
-            <Left>3.39458in</Left>
-            <Height>0.25in</Height>
-            <Width>1.01042in</Width>
-            <ZIndex>2</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="txtPostal">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -910,7 +870,7 @@ WHERE      Customers.PostalCode = @PostalCode</CommandText>
             <Left>0.31125in</Left>
             <Height>0.25in</Height>
             <Width>1.1875in</Width>
-            <ZIndex>3</ZIndex>
+            <ZIndex>2</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -939,7 +899,7 @@ WHERE      Customers.PostalCode = @PostalCode</CommandText>
             <Left>1.55431in</Left>
             <Height>0.25in</Height>
             <Width>0.66667in</Width>
-            <ZIndex>4</ZIndex>
+            <ZIndex>3</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>

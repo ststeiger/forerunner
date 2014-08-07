@@ -1270,11 +1270,12 @@ $(function () {
                                 action.JavaFunc = newFunc;
                                 if (action.On === undefined)
                                     action.On = "click";
-                                if (action.Obj === "click")
-                                    $Control.addClass("fr-core-cursorpointer");
+                               
                             }
-                        }
 
+                        }
+                        if (action.On === "click")
+                            $Control.addClass("fr-core-cursorpointer");
                         $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
 
                         if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)

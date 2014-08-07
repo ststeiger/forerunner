@@ -87,6 +87,10 @@
       <FullPath>Header footer indicator report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Hidden cell expand.rdl</Name>
+      <FullPath>Hidden cell expand.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ICAllocation.rdl.rdl</Name>
       <FullPath>ICAllocation.rdl.rdl</FullPath>
     </ProjectItem>
@@ -242,10 +246,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Hidden cell expand.rdl</Name>
-      <FullPath>Hidden cell expand.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -254,7 +254,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://demo.forerunnersw.com/reportserver_beta</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

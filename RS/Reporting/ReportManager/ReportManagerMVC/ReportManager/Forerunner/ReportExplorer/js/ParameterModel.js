@@ -82,6 +82,8 @@ $(function () {
             return {
                 serverData: me.cloneServerData(),
                 reportPath: me.reportPath,
+                //remember prior select set id
+                currentSetId: me.currentSetId
             };
         },
         // setModel restores the model state and triggers a Model change event
@@ -89,7 +91,9 @@ $(function () {
             var me = this;
             me.serverData = modelData.serverData;
             me.reportPath = modelData.reportPath;
-            me.currentSetId = null;
+            //restore prior select set id
+            me.currentSetId = modelData.currentSetId || null;
+            
             me._triggerModelChange();
         },
         cloneServerData: function () {
@@ -292,10 +296,18 @@ $(function () {
                 }
             }
         },
-        getCurrentParameterList: function (reportPath) {
+        getCurrentParameterList: function (reportPath, isSkipSetDefault) {
             var me = this;
             var currentParameterList = null;
             me._load(reportPath);
+
+            //isSkipSetDefault: used for drill through scenario, don't need to set default set id.
+            if (isSkipSetDefault === true) {
+                me.currentSetId = null;
+                me._triggerModelChange();
+                return;
+            }
+
             if (me.serverData) {
                 var parameterSet;
                 if (me.currentSetId) {

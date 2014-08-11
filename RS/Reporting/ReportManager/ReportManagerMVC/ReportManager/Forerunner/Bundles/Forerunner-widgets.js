@@ -15204,13 +15204,14 @@ $(function () {
                         }
                     }
 
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:device-width; user-zoom:" + userZoom + ";}</style>");
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
                     //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
                     $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
                     $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
 
                     // Show the unzoom toolbar
                     if (userZoom === "zoom") {
+                        forerunner.device.allowZoom(true);
                         me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
                     }
                 }
@@ -16099,8 +16100,8 @@ $(function () {
                 var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
                 if ($reportViewer && path !== null) {
                     path = String(path).replace(/%2f/g, "/");
-                    $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                     layout.$mainsection.fadeIn("fast");
+                    $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
             }, timeout);
 
@@ -16133,12 +16134,11 @@ $(function () {
                 });
 
                 me._setLeftRightPaneStyle();
+                layout.$mainsection.fadeIn("fast");
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
-                
-                layout.$mainsection.fadeIn("fast");
             }, timeout);
 
             me.element.css("background-color", "");

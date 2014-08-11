@@ -164,7 +164,7 @@ function template_html_above()
 
 	echo '
 </head>
-<body>';
+<body style="background:white;">';
 }
 
 function template_body_above()
@@ -174,7 +174,7 @@ echo '
 
 
      <!-- Header ================================================== -->
-    <div class="ForerunnerPort Header" style="">
+    <div class="ForerunnerPort Header" style="background:white;">
         <div class="ForerunnerPage Center" style="">
 
             <div class="" style="display:block; width: 100%;">

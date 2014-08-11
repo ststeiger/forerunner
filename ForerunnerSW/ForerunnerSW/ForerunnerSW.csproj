@@ -193,6 +193,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\AdCopy.txt" />
     <Content Include="Content\img\background_checkers.png" />
     <Content Include="Content\img\box.png" />
     <Content Include="Content\img\browser_icon.png" />

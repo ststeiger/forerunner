@@ -10,6 +10,15 @@ namespace ForerunnerSW.Controllers
 {
     public class HomeController : Controller
     {
+
+        static PressRelease[] prs = null;
+        static FileSystemWatcher watcher = null;
+
+        public void fileChange(object sender, FileSystemEventArgs e)
+        {
+            prs = null;
+
+        }
         //
         // GET: /Home/
 
@@ -74,10 +83,32 @@ namespace ForerunnerSW.Controllers
         }
         public ActionResult Press(string Article)
         {
-            PressRelease[] prs;
-            JavaScriptSerializer releases = new JavaScriptSerializer();
+            if (watcher == null)
+            {
+                //watch the setting file.
+                string file = Server.MapPath("~") + "/Content/Press/PressReleases.txt";
 
-            prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt")) ;
+                if (System.IO.File.Exists(file))
+                {
+                    watcher = new FileSystemWatcher();
+
+                    watcher.Path = Path.GetDirectoryName(file);
+                    watcher.Filter = Path.GetFileName(file);
+
+                    watcher.Created += new FileSystemEventHandler(fileChange);
+                    watcher.Changed += new FileSystemEventHandler(fileChange);
+
+                    //begin watching.
+                    watcher.EnableRaisingEvents = true;
+                }
+            }
+
+            if (prs == null)
+            {
+                JavaScriptSerializer releases = new JavaScriptSerializer();
+
+                prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt"));
+            }
 
             foreach (PressRelease pr in prs)
             {

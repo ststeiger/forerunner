@@ -117,6 +117,21 @@ $(function () {
                 { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
             ];
         },
+        /**
+         * Returns true if this toolbar is contained in a dashboard. Either directly or a child report.
+         *
+         * @function $.forerunner.toolBase#isDashboard
+         */
+        isDashboard: function () {
+            var me = this;
+            var returnValue = false;
+            me.element.parents().each(function (index, element) {
+                if (widgets.hasWidget($(element), widgets.dashboardEditor)) {
+                    returnValue = true;
+                }
+            });
+            return returnValue;
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {

@@ -3854,6 +3854,21 @@ $(function () {
                 { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
             ];
         },
+        /**
+         * Returns true if this toolbar is contained in a dashboard. Either directly or a child report.
+         *
+         * @function $.forerunner.toolBase#isDashboard
+         */
+        isDashboard: function () {
+            var me = this;
+            var returnValue = false;
+            me.element.parents().each(function (index, element) {
+                if (widgets.hasWidget($(element), widgets.dashboardEditor)) {
+                    returnValue = true;
+                }
+            });
+            return returnValue;
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
@@ -6363,6 +6378,15 @@ $(function () {
                 me.disableTools([tb.btnNav]);
             else
                 me.enableTools([tb.btnNav]);
+
+            // Since the pinch zoom effects all reports in a dashboard and it is currently
+            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
+            // reports
+            if (me.isDashboard()) {
+                me.disableTools([tb.btnZoom]);
+            } else {
+                me.enableTools([tb.btnZoom]);
+            };
         },
         _clearBtnStates: function () {
             var me = this;
@@ -6634,6 +6658,15 @@ $(function () {
                 me.disableTools([tp.itemNav]);
             else
                 me.enableTools([tp.itemNav]);
+
+            // Since the pinch zoom effects all reports in a dashboard and it is currently
+            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
+            // reports
+            if (me.isDashboard()) {
+                me.disableTools([tp.itemZoom]);
+            } else {
+                me.enableTools([tp.itemZoom]);
+            };
         },
         _clearItemStates: function () {
             var me = this;

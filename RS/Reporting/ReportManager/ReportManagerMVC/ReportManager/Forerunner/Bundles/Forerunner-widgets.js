@@ -4780,28 +4780,27 @@ $(function () {
                 if (me.options.isFullScreen)
                     return;
 
+                var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
+                var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
                 //if it is a dashboard report, then not update top div and left/right toolpane top position, scroll it with report
                 if (!me.$container.hasClass("fr-dashboard-report-id")) {
-                    var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-                    var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
-
                     if (me.$leftpane.is(":visible")) {
                         me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
                     } else if (me.$rightpane.is(":visible")) {
                         me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
                     }
+                }
 
-                    me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
-                    me.$topdiv.css("left", me.$container.scrollLeft());
+                me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
+                me.$topdiv.css("left", me.$container.scrollLeft());
 
-                    if (!me.isZoomed()) {
-                        me.$topdiv.show();
-                    }
+                if (!me.isZoomed()) {
+                    me.$topdiv.show();
                 }
 
                 delete me.scrollTimer;
             }, 50);
-            
         },
         
         toggleZoom: function () {

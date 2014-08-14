@@ -149,7 +149,7 @@ namespace Forerunner.SSRS.Viewer
                 return credentials;
 
             if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
-            {
+            {                
                 return CredentialCache.DefaultNetworkCredentials;
             }
 

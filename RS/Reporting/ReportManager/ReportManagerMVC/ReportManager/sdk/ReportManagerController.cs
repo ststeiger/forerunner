@@ -146,7 +146,7 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
         {
-#if (MOBILIZER_ENDPOINT)
+            // This endpoint does not write to the ReportServer DB and is therefore safe for all customers
             try
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetItemProperty(path, propertyName)), "text/JSON");
@@ -155,9 +155,6 @@ namespace ReportManager.Controllers
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
-#else
-            return GetEmptyJSONResponse();
-#endif
         }
 
         public class SaveReprotPropertyPostBack{
@@ -217,11 +214,8 @@ namespace ReportManager.Controllers
         [ActionName("HasPermission")]
         public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
         {
-#if (MOBILIZER_ENDPOINT)
+            // This endpoint does not write to the ReportServer DB and is therefore safe for all customers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetCatalogPermission(path, permission)), "text/JSON");
-#else
-            return GetEmptyJSONResponse();
-#endif
         }
 
         [HttpGet]
@@ -475,7 +469,7 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetMobilizerSetting(string instance = null)
         {
-#if (MOBILIZER_ENDPOINT)
+            // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
             try
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
@@ -484,9 +478,6 @@ namespace ReportManager.Controllers
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
             }
-#else
-            return GetEmptyJSONResponse();
-#endif
         }
 
         private string ToString<T>(T value)

@@ -122,6 +122,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tp.itemCredential]);
+                me.removeHideDisable([tp.itemCredential]);
             });
 
             me.options.$reportViewer.on(events.reportViewerZoomChange(), function (e, data) {
@@ -210,10 +211,13 @@ $(function () {
                 me.element.find(".fr-toolbar-numPages-button").html("?");
             }
             
-            if (me.options.$reportViewer.reportViewer("getHasDocMap"))
+            if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tp.itemDocumentMap]);
-            else
+                me.removeHideDisable([tp.itemDocumentMap]);
+            }
+            else {
                 me.disableTools([tp.itemDocumentMap]);
+            }
 
             if (curPage <= 1) {
                 me.disableTools([tp.itemPrev, tp.itemFirstPage]);
@@ -233,10 +237,13 @@ $(function () {
                 }
             }
            
-            if (maxPage === 1)
+            if (maxPage === 1) {
                 me.disableTools([tp.itemNav]);
-            else
+            }
+            else {
                 me.enableTools([tp.itemNav]);
+                me.removeHideDisable([tp.itemNav]);
+            }
 
             // Since the pinch zoom effects all reports in a dashboard and it is currently
             // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
@@ -245,6 +252,7 @@ $(function () {
                 me.disableTools([tp.itemZoom]);
             } else {
                 me.enableTools([tp.itemZoom]);
+                me.removeHideDisable([tp.itemZoom]);
             };
         },
         _clearItemStates: function () {

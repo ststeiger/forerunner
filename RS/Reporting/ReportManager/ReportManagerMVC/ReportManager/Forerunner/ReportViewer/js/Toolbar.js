@@ -70,6 +70,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
+                me.removeHideDisable([tb.btnParamarea]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -129,6 +130,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tb.btnMenu, tb.btnCredential]);
+                me.removeHideDisable([tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
             });
 
@@ -195,10 +197,13 @@ $(function () {
             }
 
 
-            if (me.options.$reportViewer.reportViewer("getHasDocMap"))
+            if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tb.btnDocumentMap]);
-            else
+                me.removeHideDisable([tb.btnDocumentMap]);
+            }
+            else {
                 me.disableTools([tb.btnDocumentMap]);
+            }
 
             if (curPage <= 1) {
                 me.disableTools([tb.btnPrev, tb.btnFirstPage]);
@@ -216,10 +221,13 @@ $(function () {
                 else
                     me.enableTools([tb.btnNext, tb.btnLastPage]);
             }
-            if (maxPage ===1 )
+            if (maxPage === 1) {
                 me.disableTools([tb.btnNav]);
-            else
+            }
+            else {
                 me.enableTools([tb.btnNav]);
+                me.removeHideDisable([tb.btnNav]);
+            }
 
             // Since the pinch zoom effects all reports in a dashboard and it is currently
             // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
@@ -228,6 +236,7 @@ $(function () {
                 me.disableTools([tb.btnZoom]);
             } else {
                 me.enableTools([tb.btnZoom]);
+                me.removeHideDisable([tb.btnZoom]);
             };
         },
         _clearBtnStates: function () {

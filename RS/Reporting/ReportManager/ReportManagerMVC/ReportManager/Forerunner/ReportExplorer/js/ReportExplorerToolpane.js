@@ -149,10 +149,12 @@ $(function () {
 
                 if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
                     me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
                 }
 
                 if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
                     me.enableTools([mi.itemProperty]);
+                    me.removeHideDisable([mi.itemProperty]);
                 }
             }
         },

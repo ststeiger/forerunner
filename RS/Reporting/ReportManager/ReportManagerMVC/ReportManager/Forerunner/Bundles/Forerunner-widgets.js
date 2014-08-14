@@ -3964,6 +3964,10 @@ $(function () {
 
             // tool click event handler
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
+                if ($tool.hasClass("fr-toolbase-disabled")) {
+                    return;
+                }
+
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
                 $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
@@ -4089,6 +4093,10 @@ $(function () {
                     if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                         me.enableTools(toolInfo.tools);
                     }
+
+                    if (me.hideDisabledTool && $toolEl.hasClass("fr-hide-if-disable")) {
+                        me.showTool(toolInfo.selectorClass);
+                    }
                 } else {
                     throw new Error("Toolbase - enableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
@@ -4116,6 +4124,10 @@ $(function () {
                     }
                     if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                         me.disableTools(toolInfo.tools);
+                    }
+
+                    if (me.hideDisabledTool && $toolEl.hasClass("fr-hide-if-disable")) {
+                        me.hideTool(toolInfo.selectorClass);
                     }
                 } else {
                     throw new Error("Toolbase - disableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
@@ -4260,12 +4272,31 @@ $(function () {
                 }
             }
         },
+        /**
+        * Remove hide disable class from given tools
+        * @param {Array} tools - item list
+        * @function $.forerunner.toolBase#removeHideDisable
+        */
+        removeHideDisable: function (tools) {
+            var me = this;
+            if (me.hideDisabledTool) {
+                $.each(tools, function (index, toolInfo) {
+                    me.element.find("." + toolInfo.selectorClass).removeClass("fr-hide-if-disable");
+                });
+            }
+        },
         _create: function () {
         },
         _init: function () {
             var me = this;
             //inilialize widget data
             me.frozen = false;
+
+            me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
+
+            if (forerunner.device.isFirefox()) {
+                delete me.hideDisabledTool;
+            }
         }
     });  // $.widget
 
@@ -6233,6 +6264,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
+                me.removeHideDisable([tb.btnParamarea]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -6292,6 +6324,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tb.btnMenu, tb.btnCredential]);
+                me.removeHideDisable([tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
             });
 
@@ -6358,10 +6391,13 @@ $(function () {
             }
 
 
-            if (me.options.$reportViewer.reportViewer("getHasDocMap"))
+            if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tb.btnDocumentMap]);
-            else
+                me.removeHideDisable([tb.btnDocumentMap]);
+            }
+            else {
                 me.disableTools([tb.btnDocumentMap]);
+            }
 
             if (curPage <= 1) {
                 me.disableTools([tb.btnPrev, tb.btnFirstPage]);
@@ -6379,10 +6415,13 @@ $(function () {
                 else
                     me.enableTools([tb.btnNext, tb.btnLastPage]);
             }
-            if (maxPage ===1 )
+            if (maxPage === 1) {
                 me.disableTools([tb.btnNav]);
-            else
+            }
+            else {
                 me.enableTools([tb.btnNav]);
+                me.removeHideDisable([tb.btnNav]);
+            }
 
             // Since the pinch zoom effects all reports in a dashboard and it is currently
             // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
@@ -6391,6 +6430,7 @@ $(function () {
                 me.disableTools([tb.btnZoom]);
             } else {
                 me.enableTools([tb.btnZoom]);
+                me.removeHideDisable([tb.btnZoom]);
             };
         },
         _clearBtnStates: function () {
@@ -6548,6 +6588,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tp.itemCredential]);
+                me.removeHideDisable([tp.itemCredential]);
             });
 
             me.options.$reportViewer.on(events.reportViewerZoomChange(), function (e, data) {
@@ -6636,10 +6677,13 @@ $(function () {
                 me.element.find(".fr-toolbar-numPages-button").html("?");
             }
             
-            if (me.options.$reportViewer.reportViewer("getHasDocMap"))
+            if (me.options.$reportViewer.reportViewer("getHasDocMap")) {
                 me.enableTools([tp.itemDocumentMap]);
-            else
+                me.removeHideDisable([tp.itemDocumentMap]);
+            }
+            else {
                 me.disableTools([tp.itemDocumentMap]);
+            }
 
             if (curPage <= 1) {
                 me.disableTools([tp.itemPrev, tp.itemFirstPage]);
@@ -6659,10 +6703,13 @@ $(function () {
                 }
             }
            
-            if (maxPage === 1)
+            if (maxPage === 1) {
                 me.disableTools([tp.itemNav]);
-            else
+            }
+            else {
                 me.enableTools([tp.itemNav]);
+                me.removeHideDisable([tp.itemNav]);
+            }
 
             // Since the pinch zoom effects all reports in a dashboard and it is currently
             // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
@@ -6671,6 +6718,7 @@ $(function () {
                 me.disableTools([tp.itemZoom]);
             } else {
                 me.enableTools([tp.itemZoom]);
+                me.removeHideDisable([tp.itemZoom]);
             };
         },
         _clearItemStates: function () {
@@ -7439,10 +7487,12 @@ $(function () {
 
                 if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
                     me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
                 }
 
                 if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
                     me.enableTools([mi.itemProperty]);
+                    me.removeHideDisable([mi.itemProperty]);
                 }
             }
         },
@@ -23819,6 +23869,7 @@ $(function () {
 
                 if (permissions["Update Properties"]) {
                     me.enableTools([mi.itemProperty]);
+                    me.removeHideDisable([mi.itemProperty]);
                 }
             }
         },

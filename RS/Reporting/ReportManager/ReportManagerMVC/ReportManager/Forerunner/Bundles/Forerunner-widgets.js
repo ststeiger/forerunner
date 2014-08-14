@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -16694,7 +16694,7 @@ $(function () {
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {
                     var param = paramListObj.ParamsList[i];
-                    if (param.UseDefault.toLowerCase() === "true")
+                    if (param.UseDefault && param.UseDefault.toLowerCase() === "true")
                         continue;
                     if (param.IsMultiple === "true") {
                         for (var j = 0; j < param.Value.length; j++) {

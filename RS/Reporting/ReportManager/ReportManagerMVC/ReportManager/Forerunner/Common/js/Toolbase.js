@@ -227,6 +227,10 @@ $(function () {
 
             // tool click event handler
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
+                if ($tool.hasClass("fr-toolbase-disabled")) {
+                    return;
+                }
+
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
                 $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
@@ -352,6 +356,10 @@ $(function () {
                     if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                         me.enableTools(toolInfo.tools);
                     }
+
+                    if (me.hideDisabledTool && $toolEl.hasClass("fr-hide-if-disable")) {
+                        me.showTool(toolInfo.selectorClass);
+                    }
                 } else {
                     throw new Error("Toolbase - enableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
                 }
@@ -379,6 +387,10 @@ $(function () {
                     }
                     if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                         me.disableTools(toolInfo.tools);
+                    }
+
+                    if (me.hideDisabledTool && $toolEl.hasClass("fr-hide-if-disable")) {
+                        me.hideTool(toolInfo.selectorClass);
                     }
                 } else {
                     throw new Error("Toolbase - disableTools() Undefined tool, index: " + index + ", toolClass: " + me.options.toolClass);
@@ -523,12 +535,27 @@ $(function () {
                 }
             }
         },
+        /**
+        * Remove hide disable class from given tools
+        * @param {Array} tools - item list
+        * @function $.forerunner.toolBase#removeHideDisable
+        */
+        removeHideDisable: function (tools) {
+            var me = this;
+            if (me.hideDisabledTool) {
+                $.each(tools, function (index, toolInfo) {
+                    me.element.find("." + toolInfo.selectorClass).removeClass("fr-hide-if-disable");
+                });
+            }
+        },
         _create: function () {
         },
         _init: function () {
             var me = this;
             //inilialize widget data
             me.frozen = false;
+
+            me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
         }
     });  // $.widget
 

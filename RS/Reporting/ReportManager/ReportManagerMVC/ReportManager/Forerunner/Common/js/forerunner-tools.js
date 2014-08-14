@@ -55,7 +55,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-nav-button",
             imageClass: "fr-icons24x24-nav",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-hide-if-disable",
             tooltip: locData.toolbar.navigation,
             events: {
                 click: function (e) {
@@ -68,7 +68,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
-            sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit",
+            sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit fr-hide-if-disable",
             tooltip: locData.toolbar.paramarea,
             events: {
                 click: function (e) {
@@ -204,7 +204,7 @@ $(function () {
         btnDocumentMap: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-documentmap-button",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
             imageClass: "fr-icons24x24-documentmap",
             tooltip: locData.toolbar.docMap,
             events: {
@@ -361,7 +361,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-show-if-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbase-show-if-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
             tooltip: locData.toolPane.zoom,
             events: {
                 click: function (e) {
@@ -403,7 +403,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
             imageClass: "fr-icons24x24-dataSourceCred",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
             tooltip: locData.toolbar.dsCredential,
             events: {
                 click: function (e) {
@@ -641,6 +641,7 @@ $(function () {
             selectorClass: "fr-id-nav",
             imageClass: "fr-icons24x24-nav",
             text: locData.toolPane.navigation,
+            sharedClass: "fr-hide-if-disable",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showNav");
@@ -655,7 +656,7 @@ $(function () {
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-show-if-touch",
+            sharedClass: "fr-toolbase-show-if-touch fr-hide-if-disable",
             text: locData.toolPane.zoom,
             itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
@@ -885,6 +886,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-documentmap",
             imageClass: "fr-icons24x24-documentmap",
+            sharedClass: "fr-hide-if-disable",
             text: locData.toolPane.docMap,
             events: {
                 click: function (e) {
@@ -1100,6 +1102,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
             imageClass: "fr-icons24x24-dataSourceCred",
+            sharedClass: "fr-hide-if-disable",
             text: locData.toolPane.dsCredential,
             events: {
                 click: function (e) {
@@ -1454,6 +1457,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-createdashboard",
             imageClass: "fr-icons24x24-createdashboard",
+            sharedClass: "fr-hide-if-disable",
             text: locData.toolbar.createDashboard,
             events: {
                 click: function (e) {
@@ -1610,6 +1614,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-searchfolder",
             imageClass: "fr-icons24x24-searchfolder",
+            sharedClass: "fr-hide-if-disable",
             text: locData.toolbar.searchFolder,
             events: {
                 click: function (e) {
@@ -1758,6 +1763,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-property",
             imageClass: "fr-icons24x24-tags",
+            sharedClass: "fr-hide-if-disable",
             text: locData.properties.title,
             events: {
                 click: function (e) {

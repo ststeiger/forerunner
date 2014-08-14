@@ -106,6 +106,7 @@ $(function () {
 
                 if (permissions["Update Properties"]) {
                     me.enableTools([mi.itemProperty]);
+                    me.removeHideDisable([mi.itemProperty]);
                 }
             }
         },

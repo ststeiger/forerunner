@@ -3854,6 +3854,21 @@ $(function () {
                 { name: constants.toolbarConfigOption.dashboardEdit, selectorClass: "fr-toolbase-config-edit" }
             ];
         },
+        /**
+         * Returns true if this toolbar is contained in a dashboard. Either directly or a child report.
+         *
+         * @function $.forerunner.toolBase#isDashboard
+         */
+        isDashboard: function () {
+            var me = this;
+            var returnValue = false;
+            me.element.parents().each(function (index, element) {
+                if (widgets.hasWidget($(element), widgets.dashboardEditor)) {
+                    returnValue = true;
+                }
+            });
+            return returnValue;
+        },
         _isButtonInConfig: function ($tool) {
             var me = this;
             if (!me.toolbarConfigOption) {
@@ -4583,7 +4598,8 @@ $(function () {
             $mainviewport.append(me.$unzoomsection);
 
             me._initPropertiesDialog();
-
+            me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
+            
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
@@ -4690,13 +4706,13 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
+                    me.$container.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll") || me.isDashboard === true)
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -4709,13 +4725,21 @@ $(function () {
                                 break;
                         }
                     });
-                    $(me.$container).on("scrollstop", function () {
+                    me.$container.on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
                     $(window).on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
-                }  
+                }
+                else {
+                    $(window).on("scroll", function () {
+                        me._updateTopDiv(me);
+                    });
+                    me.$container.on("scroll", function () {
+                        me._updateTopDiv(me);
+                    });
+                }
             }
 
             $(me.$container).on("touchmove", function (e) {
@@ -4728,15 +4752,6 @@ $(function () {
                 }
             });
 
-            if (!me.options.isFullScreen && !isTouch) {
-                $(window).on("scroll", function () {
-                    me._updateTopDiv(me);
-                });
-                me.$container.on("scroll", function () {
-                    me._updateTopDiv(me);
-                });
-            }
-            
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
                 $(document.documentElement).height(window.innerHeight);
@@ -4760,17 +4775,22 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-            
-            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 
-            if (me.$leftpane.is(":visible")) {
-                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
-            } else if (me.$rightpane.is(":visible")) {
-                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+            //if it is a dashboard report, then not update top div and left/right toolpane top position, scroll it with report
+            if (me.isDashboard === false) {
+                var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
+                var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
+                if (me.$leftpane.is(":visible")) {
+                    me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+                } else if (me.$rightpane.is(":visible")) {
+                    me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+                }
+
+                me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
+                me.$topdiv.css("left", me.$container.scrollLeft());
             }
-            me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
-            me.$topdiv.css("left", me.$container.scrollLeft());
+
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
@@ -6363,6 +6383,15 @@ $(function () {
                 me.disableTools([tb.btnNav]);
             else
                 me.enableTools([tb.btnNav]);
+
+            // Since the pinch zoom effects all reports in a dashboard and it is currently
+            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
+            // reports
+            if (me.isDashboard()) {
+                me.disableTools([tb.btnZoom]);
+            } else {
+                me.enableTools([tb.btnZoom]);
+            };
         },
         _clearBtnStates: function () {
             var me = this;
@@ -6634,6 +6663,15 @@ $(function () {
                 me.disableTools([tp.itemNav]);
             else
                 me.enableTools([tp.itemNav]);
+
+            // Since the pinch zoom effects all reports in a dashboard and it is currently
+            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
+            // reports
+            if (me.isDashboard()) {
+                me.disableTools([tp.itemZoom]);
+            } else {
+                me.enableTools([tp.itemZoom]);
+            };
         },
         _clearItemStates: function () {
             var me = this;

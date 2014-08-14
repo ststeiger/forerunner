@@ -120,7 +120,8 @@ $(function () {
             $mainviewport.append(me.$unzoomsection);
 
             me._initPropertiesDialog();
-
+            me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
+            
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
@@ -227,13 +228,13 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
+                    me.$container.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll") || me.isDashboard === true)
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -246,13 +247,21 @@ $(function () {
                                 break;
                         }
                     });
-                    $(me.$container).on("scrollstop", function () {
+                    me.$container.on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
                     $(window).on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
-                }  
+                }
+                else {
+                    $(window).on("scroll", function () {
+                        me._updateTopDiv(me);
+                    });
+                    me.$container.on("scroll", function () {
+                        me._updateTopDiv(me);
+                    });
+                }
             }
 
             $(me.$container).on("touchmove", function (e) {
@@ -265,15 +274,6 @@ $(function () {
                 }
             });
 
-            if (!me.options.isFullScreen && !isTouch) {
-                $(window).on("scroll", function () {
-                    me._updateTopDiv(me);
-                });
-                me.$container.on("scroll", function () {
-                    me._updateTopDiv(me);
-                });
-            }
-            
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
                 $(document.documentElement).height(window.innerHeight);
@@ -297,17 +297,22 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-            
-            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 
-            if (me.$leftpane.is(":visible")) {
-                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
-            } else if (me.$rightpane.is(":visible")) {
-                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+            //if it is a dashboard report, then not update top div and left/right toolpane top position, scroll it with report
+            if (me.isDashboard === false) {
+                var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
+                var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
+
+                if (me.$leftpane.is(":visible")) {
+                    me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+                } else if (me.$rightpane.is(":visible")) {
+                    me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
+                }
+
+                me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
+                me.$topdiv.css("left", me.$container.scrollLeft());
             }
-            me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
-            me.$topdiv.css("left", me.$container.scrollLeft());
+
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }

@@ -220,6 +220,15 @@ $(function () {
                 me.disableTools([tb.btnNav]);
             else
                 me.enableTools([tb.btnNav]);
+
+            // Since the pinch zoom effects all reports in a dashboard and it is currently
+            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
+            // reports
+            if (me.isDashboard()) {
+                me.disableTools([tb.btnZoom]);
+            } else {
+                me.enableTools([tb.btnZoom]);
+            };
         },
         _clearBtnStates: function () {
             var me = this;

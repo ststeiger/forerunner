@@ -556,10 +556,6 @@ $(function () {
             me.frozen = false;
 
             me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
-
-            if (forerunner.device.isFirefox()) {
-                delete me.hideDisabledTool;
-            }
         }
     });  // $.widget
 

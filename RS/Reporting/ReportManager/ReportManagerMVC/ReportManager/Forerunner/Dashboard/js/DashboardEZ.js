@@ -57,14 +57,19 @@ $(function () {
          *
          * @function $.forerunner.dashboardEZ#enableEdit
          * @param {bool} enableEdit - true = enable, false = view
+         * @param {bool} isInitialize - true = call from dashboard initialize, false = call from tool click
          */
-        enableEdit: function (enableEdit) {
+        enableEdit: function (enableEdit, isInitialize) {
             var me = this;
             me.options.enableEdit = enableEdit;
 
             // Set the tools to the correct edit mode
             me.$toolbar.dashboardToolbar("enableEdit", enableEdit);
             me.$toolpane.dashboardToolPane("enableEdit", enableEdit);
+
+            if (isInitialize) {
+                return;
+            }
 
             var $dashboardEditor = me.getDashboardEditor();
             $dashboardEditor.dashboardEditor("openDashboard", null, enableEdit);

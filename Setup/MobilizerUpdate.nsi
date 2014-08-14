@@ -345,8 +345,8 @@ Section "ReportManager" SEC01
  
 
   SetOutPath "$INSTDIR\Custom"
-  File "${LOCALROOT}\Custom\Explorer.css"
-  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\Mobilizer.css"
+  File "${LOCALROOT}\Custom\Mobilizer_Examples.css"
   File "${LOCALROOT}\Custom\MobilizerSettings.txt"
   File "${LOCALROOT}\Custom\MobilizerSettings_Examples.txt"
   File "${LOCALROOT}\Custom\MobilizerSharedSchedule.txt"
@@ -883,8 +883,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\xml.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
 
-  Delete "$INSTDIR\Custom\Explorer.css"
-  Delete "$INSTDIR\Custom\Explorer_Examples.css"
+  Delete "$INSTDIR\Custom\Mobilizer.css"
+  Delete "$INSTDIR\Custom\Mobilizer_Examples.css"
   Delete "$INSTDIR\Custom\MobilizerSettings.txt"
   Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   Delete "$INSTDIR\Custom\MobilizerSharedSchedule.txt"

@@ -120,7 +120,10 @@ $(function () {
             $mainviewport.append(me.$unzoomsection);
 
             me._initPropertiesDialog();
+
             me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
+            //dashboard report toolbar height, used for each report floating header
+            me.outerToolbarHeight = me.isDashboard ? $("body").children(".fr-layout-mainviewport").children(".fr-layout-topdiv").height() : 0;
             
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
@@ -234,7 +237,7 @@ $(function () {
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll") || me.isDashboard === true)
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -297,21 +300,25 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
+            
+            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight() - me.outerToolbarHeight);
+            diff += me.outerToolbarHeight;
+
+            var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 
             //if it is a dashboard report, then not update top div and left/right toolpane top position, scroll it with report
             if (me.isDashboard === false) {
-                var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight());
-                var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
-
                 if (me.$leftpane.is(":visible")) {
                     me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
                 } else if (me.$rightpane.is(":visible")) {
                     me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop() + linkSectionHeight);
                 }
-
-                me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
-                me.$topdiv.css("left", me.$container.scrollLeft());
             }
+            
+            var floatingTop = diff > 0 ? diff : me.$container.scrollTop(),
+                floatingLeft = me.$container.scrollLeft();
+
+            me.$topdiv.css({ "top": floatingTop, "left": floatingLeft });
 
             if (!me.isZoomed()) {
                 me.$topdiv.show();
@@ -432,13 +439,19 @@ $(function () {
 
         showTopDiv: function (isEnabled) {
             var me = this;
+
+            var top = isEnabled ? 0 : me.$topdiv.outerHeight();
+            if (me.isDashboard) {
+                top += me.outerToolbarHeight;
+            }
+
             if (isEnabled === true) {
                 me.$topdiv.hide();
-                me.$viewer.reportViewer("option", "toolbarHeight", 0);
+                me.$viewer.reportViewer("option", "toolbarHeight", top);
             }
             else {
                 me.$topdiv.show();
-                me.$viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
+                me.$viewer.reportViewer("option", "toolbarHeight", top);
             }
         },
 
@@ -489,6 +502,10 @@ $(function () {
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 me.setBackgroundLayout.apply(me, arguments);
+
+                if (me.isDashboard) {
+                    me.$viewer.reportViewer("option", "toolbarHeight", me.outerToolbarHeight + me.$topdiv.outerHeight());
+                }
             });
 
             //  Just in case it is hidden

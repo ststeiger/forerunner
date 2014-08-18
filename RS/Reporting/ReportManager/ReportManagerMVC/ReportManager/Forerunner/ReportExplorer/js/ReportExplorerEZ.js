@@ -485,7 +485,7 @@ $(function () {
 
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
-                $dashboardEZ.dashboardEZ("enableEdit", enableEdit);
+                $dashboardEZ.dashboardEZ("enableEdit", enableEdit, true);
             }, timeout);
 
             me.element.css("background-color", "");

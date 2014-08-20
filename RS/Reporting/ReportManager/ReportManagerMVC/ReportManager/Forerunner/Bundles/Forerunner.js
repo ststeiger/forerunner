@@ -757,7 +757,8 @@ $(function () {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         forerunner.config._customSettings = {};
-                        console.log("Load mobilizer custom settings .  " + textStatus);
+                        console.log("Load mobilizer custom settings.  textStatus: " + textStatus);
+                        console.log(jqXHR);
                     },
                 });
             }

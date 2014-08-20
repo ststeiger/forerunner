@@ -1,22 +1,69 @@
 ﻿
 [
 {
+"ID": "13",
+"Link": "http://sqlmag.com/sql-server-reporting-services/do-more-mobilizers-rdl-update-forerunner",
+"Title":"Do More with Mobilizer's RDL Update from Forerunner",
+"Description":"Forerunner Software, previously featured on SQL Server Pro (SQL Server Spotlight: Forerunner Software CEO and Founder, Jason Carlson), has released a new update for its product, Mobilizer.",
+"Release": "Redmond, WA, August 07, 2014",
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/do-more-mobilizers-rdl-update-forerunner' target='_blank' >Full Article</a>"
+  },
+{
+"ID": "12",
+"Link": "/home/press?Article=12",
+"Title":"Forerunner Software Announces the Addition of Patent Pending Technology to Its Portfolio Which Extends the Power of Mobilizer’s Unique Design for True Mobile Reporting",
+"Description":"Forerunner Software’s Mobilizer unlocks the power of Microsoft’s SQL Server by allowing users access to mobile business intelligence quickly and easily across all devices and browsers. It is an easy to use out of the box solution that leverages your existing investment in SSRS and eliminates the need for additional development or user training.",
+"Release": "Redmond, WA, July 26, 2014",
+"Content": "Forerunner Software is a leading provider of mobile BI solutions and the creator of Forerunner Mobilizer, an optimized, responsive mobile application built to extend the power of Microsoft SQL Server Reporting Services to mobile BI. Today Forerunner Software proudly announces additional patent pending technology to its extensive portfolio of 20 patents from the U.S. Patent and Trademark Office.
+
+Mobilizer allows users access to mobile business intelligence anywhere and the new patent is for Mobilizer’s unique and automatic responsive layout on all screen sizes. Mobilizer will automatically re-layout reports for all device sizes with no change to the original report design and works with all report layouts, including free form, dynamic rows and dynamic columns. Additionally, it allows for hinting to customize the layout rules and the result is true mobile reporting.
+
+“We are very pleased to announce the addition of this patent to our IP portfolio as we continue innovations in our design to completely optimize the end user experience of our unique Mobilizer,” said Jon Totton, Forerunner Software’s Director of Development.
+
+Built for the business user, Forerunner Software’s Mobilizer is focused on usability and natural gestures. Mobilizer’s modern UI is simple to use and makes complex tasks easy while maintaining the power and flexibility of SQL Server. Users can easily save favorite or recent reports, create virtual folders on the fly to take to meetings, set their own personal defaults for parameters, and subscribe to emailed reports. The responsive UI makes data easy to read and actionable on any device.
+
+Forerunner Software Founder Jason Carlson spent 15 years at Microsoft building SQL Server Reporting Services and understands well the administrative time and money invested in SQL Server. “We built Mobilizer to cost effectively unleash that power anywhere your team goes and provide our customers the ability to access their corporate data on any device and browser they choose to use.”
+
+Extremely cost effective with no per user charges and no need for additional development or training, Mobilizer is now available for a free trial. Download your free 30 day trial today at www.forerunnersw.com and affordably transform your business with modern mobile BI."
+  },
+  {
+"ID": "11",
+"Link": "/home/press?Article=11",
+"Title":"Today Forerunner Software, a Leading Provider of Mobile BI Solutions, Announces an Updated Version of the Public Beta of Mobilizer 3.0 with Many New Features",
+"Description":"Forerunner Software's Mobilizer 3.0 works by unlocking the power of SQL Server Reporting Services across all devices and all browsers. Created by the original architect of SSRS, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI to gain and sustain competitive advantage.",
+"Release": "Redmond, WA, July 16, 2014",
+"Content": "Whether employees use iPhones, iPads, Androids or any other device, Forerunner Software’s Mobilizer 3.0 allows organizations of all sizes to cost effectively implement a mobile BI program with no per user charges. Now, in addition to the ability to easily subscribe to emailed reports users can also quickly create dashboards out of multiple reports, and tag reports and folders. You can also create Virtual Report Folders based on Tags to quickly and easily find exactly the right data when you need it on PCs, phones, tablets, phablets, notebooks and laptops.
+
+“It's now easier and less expensive than ever before to release the power of SSRS across your organization and share relevant, actionable data and reports with everyone,” states Forerunner Software Founder Jason Carlson. “We have just released an updated version of the beta with many new features such as shared script actions, a context and property menu, and image map highlighting---very cool on charts and maps.”
+
+Mobilizer 3.0 builds on the success and widespread adoption of Mobilizer V2. Mobilizer now also extends RDL to enable many advanced features such as:
+
+-Allows designers to add client side JavaScript on report items
+-Define fixed size tables and matrixes to enable scrolling inside a report
+-Enable editing of data with updatable controls
+-Easily post data to another application using HTML forms in your reports
+-Include information from other applications in your report via an IFrame
+-Embed any custom HTML into your report
+
+Visit www.forerunnersw.com to download your free trial version of Mobilizer today. Find out for yourself how Mobilizer completely optimizes the end user experience of SSRS for mobile BI and how Mobilizer can cost effectively help your organization leverage the power of Microsoft’s SQL Server Reporting Services (SSRS) faster and easier than ever before."
+  },
+{
 "ID": "10",
 "Link": "/home/press?Article=10",
-"Title":"Multinational Chip Maker Intel Corporation Leverages the Power of Forerunner Software’s Unique Mobilizer to Access Data from Anywhere, on Any Browser or Mobile Device",
-"Description":"In order to support the demand of business users Intel executives have recently chosen Forerunner Software’s innovative Mobilizer to deliver a key part of Intel's mobile BI initiative.",
+"Title":"Multinational Chip Maker Leverages the Power of Forerunner Software’s Unique Mobilizer to Access Data from Anywhere, on Any Browser or Mobile Device",
+"Description":"In order to support the demand of business users they have recently chosen Forerunner Software’s innovative Mobilizer to deliver a key part of their mobile BI initiative.",
 "Release": "Redmond, WA, July 10, 2014",
-"Content": "Intel, like many companies, has moved to support a browser agnostic and BYOD policy and Intel executives recently chose Forerunner Software’s innovative Mobilizer for mobile BI to unlock the power of SSRS across all devices and browsers.
+"Content": "Many companies have moved to support a browser agnostic and BYOD policy and a Multinational Chip Make recently chose Forerunner Software’s innovative Mobilizer for mobile BI to unlock the power of SSRS across all devices and browsers.
 
-“With so many people in an organization you can’t possibly lock everyone down to IE,” states Intel’s Applications Developer Rob Harrison. “People are going to download Chrome, they’re going to download Firefox, they’re going to get what they want. It makes sense, right? There’s no reason why we shouldn’t support these things.”
+“With so many people in an organization you can’t possibly lock everyone down to IE,” states Applications Developer Rob Harrison. “People are going to download Chrome, they’re going to download Firefox, they’re going to get what they want. It makes sense, right? There’s no reason why we shouldn’t support these things.”
 
-Intel’s emphasis on user centricity and decision to leverage the power of Mobilizer will pay off in productivity improvement and increased competitive advantage for Intel employees as they make more informed decisions in real time, wherever they are from whatever device they choose to use.
+The emphasis on user centricity and decision to leverage the power of Mobilizer will pay off in productivity improvement and increased competitive advantage for employees as they make more informed decisions in real time, wherever they are from whatever device they choose to use.
 
 The Aberdeen Group’s report “Decisions on the Move: Mobile BI 2013” highlighted companies that implemented a mobile business intelligence system and reported a 45% improvement on ability to make decisions while away from the office—over twice the improvement of non-mobile BI users at 19%.
 
-Several of Harrison’s counterparts had sought some control that renders the reports in HTML5. “That’s how we came across Mobilizer,” states Harrison, adding, “Intel is a really big place. With that understood, all we are trying to do is move to the next technology. The Silverlight that we were using was fine, it’s just that it was not going to be supported forever and there’s other issues with browsers that weren’t working and with the transition to Windows 8 –it doesn’t run in the Metro version of Windows 8 so we had to move away from Silverlight.”
+Several of Harrison’s counterparts had sought some control that renders the reports in HTML5. “That’s how we came across Mobilizer,” states Harrison, adding, “We are really big place. With that understood, all we are trying to do is move to the next technology. The Silverlight that we were using was fine, it’s just that it was not going to be supported forever and there’s other issues with browsers that weren’t working and with the transition to Windows 8 –it doesn’t run in the Metro version of Windows 8 so we had to move away from Silverlight.”
 
-Forerunner Founder Jason Carlson understands well the challenges Intel and many organizations face with mobile BI today. “In the 13 years since we released SQL Server Reporting Services technology has continued to evolve. Now HTML5, MVC and Mobile are must have requirements. Customers are demanding modern applications that support all devices and work fluidly without reloading the entire page. SSRS is a very powerful reporting engine, but it does not support MVC applications and is still an HTML4 WebForms application. It also does not support modern devices (iPhones, Androids) consistently. So what do you do if you have 100s of SSRS reports or need reporting in your modern application?”
+Forerunner Founder Jason Carlson understands well the challenges organizations face with mobile BI today. “In the 13 years since we released SQL Server Reporting Services technology has continued to evolve. Now HTML5, MVC and Mobile are must have requirements. Customers are demanding modern applications that support all devices and work fluidly without reloading the entire page. SSRS is a very powerful reporting engine, but it does not support MVC applications and is still an HTML4 WebForms application. It also does not support modern devices (iPhones, Androids) consistently. So what do you do if you have 100s of SSRS reports or need reporting in your modern application?”
 
 Download your free trial of Mobilizer now at www.forerunnersw.com to see Mobilizer in action for yourself. Leverage your existing investment in SSRS and cost effectively transform your organization with mobile BI today."
   },
@@ -31,7 +78,7 @@ Download your free trial of Mobilizer now at www.forerunnersw.com to see Mobiliz
 
 With Mobilizer 3.0 end users and executives alike can easily subscribe to emailed reports, quickly create dashboards out of multiple reports, and tag reports and folders. You can also create Virtual Report Folders based on Tags to quickly and easily find exactly the right data when you need it on PCs, phones, tablets, phablets, notebooks and laptops.
 
-Multinational semiconductor chip maker Intel Corporation is among the many organizations strategically choosing to leverage the power of Forerunner Software’s Mobilizer to access data from anywhere, anytime, on any browser or mobile device. “Mobilizer is the only game in town,” states Intel’s Applications Developer, Rob Harrison.
+A multinational semiconductor chip maker is among the many organizations strategically choosing to leverage the power of Forerunner Software’s Mobilizer to access data from anywhere, anytime, on any browser or mobile device. “Mobilizer is the only game in town,” states Applications Developer, Rob Harrison.
 
 Building upon the success of Mobilizer V2 and responding to customer requests for additional enhancements, Mobilizer 3.0 now also extends RDL to enable many advanced features such as:
 

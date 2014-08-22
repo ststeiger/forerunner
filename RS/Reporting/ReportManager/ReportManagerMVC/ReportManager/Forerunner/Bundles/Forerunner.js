@@ -1838,14 +1838,16 @@ $(function () {
 
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
-            
-            $appContainer.mask(undefined, document.body.scrollHeight);
-            target.element.css({ top: $(window).scrollTop() }).fadeIn(200);
 
-            me._removeEventsBinding();
-            //reset modal dialog position when window resize happen or orientation change
-            $(window).on("resize", { target: target, me: me }, me._setPosition);
-            $(document).on("keyup", { target: target }, me._bindKeyboard);
+            setTimeout(function () {
+                $appContainer.mask(undefined, document.body.scrollHeight);
+                target.element.css({ top: $(window).scrollTop() }).show();
+
+                //reset modal dialog position when window resize happen or orientation change
+                me._removeEventsBinding();
+                $(window).on("resize", { target: target, me: me }, me._setPosition);
+                $(document).on("keyup", { target: target }, me._bindKeyboard);
+            }, 200);
         },
         /**
         * Close a modal dialog with appContainer and target dialog container specify
@@ -1857,7 +1859,7 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-
+            
             me._removeEventsBinding();
             target.element.hide();
             $appContainer.unmask();
@@ -1885,6 +1887,7 @@ $(function () {
                 }
             });
         },
+        _messageBox: null,
         /**
         * Show message box
         *
@@ -1895,13 +1898,35 @@ $(function () {
         * @member
         */
         showMessageBox: function ($appContainer, msg, caption) {
-            var $msgBox = $appContainer.find(".fr-messagebox");
-            if ($msgBox.length === 0) {
-                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $msgBox.messageBox({ $appContainer: $appContainer });
-                $appContainer.append($msgBox);
+            var me = this;
+
+            if (me._messageBox === null) {
+                me._messageBox = $appContainer.children(".fr-messagebox");
+
+                if (me._messageBox.length === 0) {
+                    me._messageBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    me._messageBox.messageBox({ $appContainer: $appContainer });
+                    $appContainer.append(me._messageBox);
+                }
             }
-            $msgBox.messageBox("openDialog", msg, caption);
+
+            me._messageBox.messageBox("openDialog", msg, caption);
+        },
+        /**
+        * Check message box visible or not
+        *
+        * @function forerunner.dialog#isMessageBoxVisible
+        * @return {Boolean} - true for visible, false for hide
+        * @member
+        */
+        isMessageBoxVisible: function () {
+            var me = this;
+
+            if (me._messageBox && me._messageBox.is(":visible")) {
+                return true;
+            }
+
+            return false;
         },
         /**
         * Get modal dialog static header html snippet
@@ -1972,7 +1997,6 @@ $(function () {
         },
         _removeEventsBinding: function () {
             var me = this;
-
             $(window).off("resize", me._setPosition);
             $(document).off("keyup", me._bindKeyboard);
         }

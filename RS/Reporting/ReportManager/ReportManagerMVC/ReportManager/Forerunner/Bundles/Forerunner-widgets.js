@@ -2124,7 +2124,13 @@ $(function () {
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
-            if (keyword === "") return;
+
+            if (keyword === "")
+                return;
+
+            if (forerunner.dialog.isMessageBoxVisible())
+                return;
+
             me._resetContextIfInvalid();
             //input new keyword
             if (!me.findKeyword || me.findKeyword !== keyword) {

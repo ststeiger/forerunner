@@ -24001,7 +24001,15 @@ $(function () {
                     $item.reportViewerEZ("windowResize");
                 }
             });
-            if (updated) {
+
+            // This line has caused trouble; on IE8 in particular. The case it fixes is when the code just above
+            // changes the DOM, I.e., the updated variable becomes true. In that case the display does not always
+            // update properly.
+            //
+            // To test, switch between full screen and a smaller size (with the Responsive UI on). Without this
+            // line the display will not update properly. On IE8 it causes an infinite loop so on IE8 this is
+            // removed (lesser of two evils).
+            if (updated && !forerunner.device.isMSIE8()) {
                 // Need the hide and show to refresh the viewer to see the changes
                 me.element.hide().show(0);
             }

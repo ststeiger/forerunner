@@ -55,8 +55,9 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-nav-button",
             imageClass: "fr-icons24x24-nav",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-hide-if-disable",
+            sharedClass: "fr-hide-if-disable",
             tooltip: locData.toolbar.navigation,
+            visibilityOrder: 7,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showNav");
@@ -81,8 +82,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-refresh-button",
             imageClass: "fr-icons24x24-refresh",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolbar.refresh,
+            visibilityOrder: 15,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("refreshReport");
@@ -94,8 +95,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-firstpage-button",
             imageClass: "fr-icons24x24-firstpage",
-            sharedClass: "fr-toolbar-hidden-on-small",
             tooltip: locData.toolbar.firstPage,
+            visibilityOrder: 4,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -107,8 +108,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-prev-button",
             imageClass: "fr-icons24x24-prev",
-            sharedClass: "fr-toolbar-hidden-on-small",
             tooltip: locData.toolbar.previousPage,
+            visibilityOrder: 4,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -122,6 +123,7 @@ $(function () {
             sharedClass: "fr-core-input",
             //inputType: "number",
             tooltip: locData.toolbar.reportPage,
+            visibilityOrder: 1,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -166,21 +168,23 @@ $(function () {
         btnPageOf: {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-pageOf-button",
-            text: locData.toolbar.pageOf
+            text: locData.toolbar.pageOf,
+            visibilityOrder: 1
         },
         /** @member */
         btnNumPages: {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-numPages-button",
-            text: "0"
+            text: "0",
+            visibilityOrder: 1
         },
         /** @member */
         btnNext: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-next-button",
             imageClass: "fr-icons24x24-next",
-            sharedClass: "fr-toolbar-hidden-on-small",
             tooltip: locData.toolbar.next,
+            visibilityOrder: 4,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", parseInt(e.data.$reportViewer.reportViewer("getCurPage")) + 1);
@@ -192,8 +196,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-lastpage-button",
             imageClass: "fr-icons24x24-lastpage",
-            sharedClass: "fr-toolbar-hidden-on-small",
             tooltip: locData.toolbar.lastPage,
+            visibilityOrder: 4,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -204,9 +208,10 @@ $(function () {
         btnDocumentMap: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-documentmap-button",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
+            sharedClass: "fr-hide-if-disable",
             imageClass: "fr-icons24x24-documentmap",
             tooltip: locData.toolbar.docMap,
+            visibilityOrder: 6,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showDocMap");
@@ -217,8 +222,9 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
-            sharedClass: "fr-core-input fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-find-textbox",
+            sharedClass: "fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
+            visibilityOrder: 10,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -238,12 +244,14 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-toolbase-overlayed-button",
+            sharedClass: "fr-toolbase-overlayed-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
             tooltip: locData.toolbar.find,
+            visibilityOrder: 10,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -260,6 +268,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.xml,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -275,6 +285,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.csv,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -290,6 +302,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.pdf,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -305,6 +319,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.mhtml,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -320,6 +336,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.excel,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
@@ -335,6 +353,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.tiff,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -350,6 +370,8 @@ $(function () {
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.word,
+            visibilityOrder: 8,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.word);
@@ -361,8 +383,9 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-show-if-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
+            sharedClass: "fr-toolbase-show-if-touch fr-hide-if-disable",
             tooltip: locData.toolPane.zoom,
+            visibilityOrder: 11,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("allowZoom", true);
@@ -374,8 +397,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-print-button",
             imageClass: "fr-icons24x24-printreport",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolbar.print,
+            visibilityOrder: 13,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
@@ -390,8 +413,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-email-button",
             imageClass: "fr-icons24x24-emailsubscription",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.subscription.email,
+            visibilityOrder: 14,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showEmailSubscription");
@@ -403,8 +426,9 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
             imageClass: "fr-icons24x24-dataSourceCred",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large fr-hide-if-disable",
+            sharedClass: "fr-hide-if-disable",
             tooltip: locData.toolbar.dsCredential,
+            visibilityOrder: 9,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showDSCredential");
@@ -485,6 +509,7 @@ $(function () {
             selectorClass: "fr-dashboard-button-recent",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
+            visibilityOrder: 1,
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("recent", null);
@@ -509,6 +534,7 @@ $(function () {
             selectorClass: "fr-dashboard-button-logOff",
             imageClass: "fr-icons24x24-logout",
             tooltip: locData.toolbar.logOff,
+            visibilityOrder: 2,
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
@@ -1309,6 +1335,7 @@ $(function () {
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
             tooltip: locData.toolbar.logOff,
+            visibilityOrder: 2,
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
@@ -1347,6 +1374,7 @@ $(function () {
             selectorClass: "fr-rm-button-recent",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
+            visibilityOrder: 1,
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1371,8 +1399,9 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-keyword-textbox",
-            sharedClass: "fr-core-input fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-find-textbox",
+            sharedClass: "fr-core-input fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
+            visibilityOrder: 3,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -1398,12 +1427,14 @@ $(function () {
         btnFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-find",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbase-overlayed-button",
+            sharedClass: "fr-toolbase-overlayed-button",
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
             tooltip: locData.toolbar.search,
+            visibilityOrder: 3,
+            visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-keyword-textbox").val());
@@ -1637,9 +1668,9 @@ $(function () {
         btnFav: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-update-fav",
-            sharedClass: "fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-favorite-minus",
             tooltip: locData.toolbar.addToFavorites,
+            visibilityOrder: 5,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
@@ -1653,6 +1684,7 @@ $(function () {
             sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-favorites",
             tooltip: locData.toolbar.favorites,
+            visibilityOrder: 2,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
@@ -1663,9 +1695,10 @@ $(function () {
         btnRecent: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-recent",
-            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
+            sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
+            visibilityOrder: 3,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
@@ -1691,6 +1724,7 @@ $(function () {
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
             tooltip: locData.toolbar.logOff,
+            visibilityOrder: 12,
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
@@ -1787,6 +1821,8 @@ $(function () {
         btnVCRGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-toolbar-VCR-group-id",
+            visibilityOrder: 1,
+            visibilityNoWidth: true,
             tools: [tb.btnFirstPage,
                     tb.btnPrev,
                     tb.btnReportPage,
@@ -1799,6 +1835,8 @@ $(function () {
         btnFindGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-toolbar-find-group-id",
+            visibilityOrder: 10,
+            visibilityNoWidth: true,
             tools: [tb.btnKeyword,
                     tb.btnFind]
         },
@@ -1807,9 +1845,9 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-export-button",
             imageClass: "fr-icons24x24-export",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolbar.exportMenu,
             dropdown: true,
+            visibilityOrder: 8,
             tools: [tb.btnExportXML,
                     tb.btnExportCSV,
                     tb.btnExportPDF,

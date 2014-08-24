@@ -14,9 +14,3 @@
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }
 
-/* The following toolbar sizes will be supported and are device agnostic */
-
-/* Small toolbar (E.g., for phones, potrait) */
-@media only screen and (max-width : 479px) {
-  .fr-toolbar .fr-toolbar-reportpage-textbox { margin-left: 45px; }
-}

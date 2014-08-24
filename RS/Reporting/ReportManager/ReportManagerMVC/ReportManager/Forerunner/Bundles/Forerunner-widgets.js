@@ -4147,7 +4147,7 @@ $(function () {
         enableAllTools: function () {
             var me = this;
 
-            $.each(me.allTools, function (Index, Tools) {
+            $.each(me.allTools, function (index, toolInfo) {
                 if (Tools.selectorClass && me.allTools[Tools.selectorClass].isEnable) {
                     me.enableTools([Tools]);
                 }
@@ -4170,12 +4170,82 @@ $(function () {
                 }
             });
         },
+        _orderedList: [],
+        // Return an array ordered by visibilityOrder
+        _getOrderedList: function () {
+            var me = this;
+
+            if (forerunner.helper.objectSize(me.allTools) === me._orderedList.length) {
+                // Only regenerate the ordered list if the size of allTools changes
+                return me._orderedList;
+            }
+            me._orderedList = [];
+
+            // Process the alltools array
+            $.each(me.allTools, function (index, toolInfo) {
+                var $tool = me.element.find("." + toolInfo.selectorClass);
+                var width = $tool.outerWidth();
+                if (toolInfo.visibilityNoWidth === true) {
+                    width = 0;
+                }
+                me._orderedList.push({ toolInfo: toolInfo, width: width });
+            });
+
+            // Sort the array
+            me._orderedList.sort(function (a, b) {
+                if (a.toolInfo.visibilityOrder === undefined || typeof(a.toolInfo.visibilityOrder) !== "number") {
+                    a.toolInfo.visibilityOrder = 0;
+                }
+                if (b.toolInfo.visibilityOrder === undefined) {
+                    b.toolInfo.visibilityOrder = 0;
+                }
+
+                return a.toolInfo.visibilityOrder - b.toolInfo.visibilityOrder;
+            });
+
+            return me._orderedList;
+        },
         /**
          * Show/Hide buttons when window resize
          * @function $.forerunner.toolBase#windowResize
          */
         windowResize: function () {
             var me = this;
+
+            var toolbarWidth = me.element.width();
+            var tools = me._getOrderedList();
+
+            var runningWidth = 0;
+            var firstOver = null;
+            $.each(tools, function (index, tool) {
+                var $tool = me.element.find("." + tool.toolInfo.selectorClass);
+                $tool.removeClass("fr-core-hidden");
+                if ($tool.is(":visible")) {
+                    // Only total widths of visible tools
+                    runningWidth += tool.width;
+                    if (runningWidth > toolbarWidth) {
+                        if (firstOver === null) {
+                            firstOver = {
+                                index: index,
+                                visibilityOrder: tool.toolInfo.visibilityOrder
+                            };
+                        }
+                        $tool.addClass("fr-core-hidden");
+                    }
+                }
+            });
+
+            if (firstOver !== null) {
+                // Make sure any tools with the same visibility order are hidden
+                var index = firstOver.index - 1;
+                while (index > 0 && tools[index].toolInfo.visibilityOrder === firstOver.visibilityOrder) {
+                    var $tool = me.element.find("." + tools[index].toolInfo.selectorClass);
+                    $tool.addClass("fr-core-hidden");
+                    index--;
+                };
+            }
+
+            /*
             var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
             var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
             var largeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-large";
@@ -4194,6 +4264,7 @@ $(function () {
             } else {  // Screen >= 769
                 me.element.find(veryLargeClass).addClass("fr-core-hidden");
             }
+            */
         },
         _getToolHtml: function (toolInfo) {
             var me = this;

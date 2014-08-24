@@ -2124,7 +2124,13 @@ $(function () {
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
-            if (keyword === "") return;
+
+            if (keyword === "")
+                return;
+
+            if (forerunner.dialog.isMessageBoxVisible())
+                return;
+
             me._resetContextIfInvalid();
             //input new keyword
             if (!me.findKeyword || me.findKeyword !== keyword) {
@@ -24604,10 +24610,8 @@ $(function () {
             var $window = $(window);
 
             // Show the popup
-            var top = me.$dropdown.offset().top + me.$dropdown.height() - $window.scrollTop();
-            var left = me.$dropdown.offset().left - $window.scrollLeft();
-            var width = me.$dropdown.width();
-            me.$popup.css({ top: top, left: left, width: width });
+            var width = me.$dropdown.width() - 2;//minus border width
+            me.$popup.css({ width: width });
             me.$popup.toggleClass("fr-core-hidden");
         },
         // _getItems will return back an array of CatalogItem objects where:

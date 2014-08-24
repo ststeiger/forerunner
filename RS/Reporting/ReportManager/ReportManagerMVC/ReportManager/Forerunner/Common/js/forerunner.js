@@ -81,12 +81,18 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
     },
-    mask: function (onClick) {
+    mask: function (onClick, maskHeight) {
         var $mask = $(this).find(".fr-core-mask");
 
         if ($mask.length === 0) {
             $mask = $("<div class='fr-core-mask'></div>");
-            $mask.height($(this).height() + 38);
+            if (maskHeight) {
+                $mask.height(maskHeight);
+            }
+            else {
+                $mask.height($(this).height());
+            }
+
             $(this).append($mask);
         }
         if (onClick !== undefined)
@@ -94,8 +100,11 @@ jQuery.fn.extend({
         return $(this);
     },
     unmask: function (onClick) {
-
         var $mask = $(this).find(".fr-core-mask");
+        if ($mask.length === 0) {
+            return $(this);
+        }
+
         if (onClick !== undefined)
             $mask.on("click", onClick);
         $mask.remove();
@@ -1830,26 +1839,11 @@ $(function () {
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
             setTimeout(function () {
-                if (!target.element.parent().hasClass("ui-dialog")) {
-                    target.element.dialog({
-                        dialogClass: "noTitleStuff",
-                        height: "auto",
-                        width: "auto",
-                        modal: true,
-                        resizable: false,
-                        draggable: false,
-                        autoOpen: false,
-                        position: ["center", 0],
-                    }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
-                    //target._dialogInit = true;
-                }
+                $appContainer.mask(undefined, document.body.scrollHeight);
+                target.element.css({ top: $(window).scrollTop() }).show();
 
-                //modal dialog will highlight the first matched button, add blur to remove it
-                target.element.dialog("open");
-                target.element.find(":button").blur();
-                
-                me._removeEventsBinding();
                 //reset modal dialog position when window resize happen or orientation change
+                me._removeEventsBinding();
                 $(window).on("resize", { target: target, me: me }, me._setPosition);
                 $(document).on("keyup", { target: target }, me._bindKeyboard);
             }, 200);
@@ -1864,10 +1858,10 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-
+            
             me._removeEventsBinding();
-            target.element.dialog("destroy");
             target.element.hide();
+            $appContainer.unmask();
 
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
@@ -1886,11 +1880,13 @@ $(function () {
 
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
                 var $dlg = $(modalDialog);
-                if ($dlg.is(":visible") && $dlg.data().dialog) {
-                    $dlg.dialog("destroy");
+                if ($dlg.is(":visible")) {
+                    $appContainer.unmask();
+                    $dlg.hide();
                 }
             });
         },
+        _messageBox: null,
         /**
         * Show message box
         *
@@ -1901,13 +1897,35 @@ $(function () {
         * @member
         */
         showMessageBox: function ($appContainer, msg, caption) {
-            var $msgBox = $appContainer.find(".fr-messagebox");
-            if ($msgBox.length === 0) {
-                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $msgBox.messageBox({ $appContainer: $appContainer });
-                $appContainer.append($msgBox);
+            var me = this;
+
+            if (me._messageBox === null) {
+                me._messageBox = $appContainer.children(".fr-messagebox");
+
+                if (me._messageBox.length === 0) {
+                    me._messageBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    me._messageBox.messageBox({ $appContainer: $appContainer });
+                    $appContainer.append(me._messageBox);
+                }
             }
-            $msgBox.messageBox("openDialog", msg, caption);
+
+            me._messageBox.messageBox("openDialog", msg, caption);
+        },
+        /**
+        * Check message box visible or not
+        *
+        * @function forerunner.dialog#isMessageBoxVisible
+        * @return {Boolean} - true for visible, false for hide
+        * @member
+        */
+        isMessageBoxVisible: function () {
+            var me = this;
+
+            if (me._messageBox && me._messageBox.is(":visible")) {
+                return true;
+            }
+
+            return false;
         },
         /**
         * Get modal dialog static header html snippet
@@ -1948,19 +1966,21 @@ $(function () {
             html += "</div>";
             return html;
         },
-        _timer: null,
+        
         _setPosition: function (event) {
-            var me = event.data.me;
+            var me = event.data.me, target = event.data.target;
 
-            if (me._timer) {
-                clearTimeout(me._timer);
-                me._timer = null;
-            }
+            forerunner.helper.delay(me,
+                function () {
+                    var maskSize = { height: document.body.scrollHeight };
+                    var $mask = $(".fr-core-mask:first");
+                    if ($mask.length) {
+                        $mask.css(maskSize);
+                    }
 
-            me._timer = setTimeout(function () {
-                event.data.target.element.dialog("resetPosition");
-                me._timer = null;
-            }, 100);
+                    target.element.css({ top: $(window).scrollTop() });
+                },
+            50, "_dialogTimerId");
         },
         _bindKeyboard: function (event) {
             var element = event.data.target.element;
@@ -1976,12 +1996,6 @@ $(function () {
         },
         _removeEventsBinding: function () {
             var me = this;
-            
-            if (me._timer) {
-                clearTimeout(me._timer);
-                me._timer = null;
-            }
-            
             $(window).off("resize", me._setPosition);
             $(document).off("keyup", me._bindKeyboard);
         }

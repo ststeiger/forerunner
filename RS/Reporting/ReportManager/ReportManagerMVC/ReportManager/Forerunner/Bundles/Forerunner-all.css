@@ -417,6 +417,10 @@ div.fr-layout-position-absolute { position: absolute; }
   background-image:url(../images/ToolbarIcons/ZoomOff.png);
 }
 
+.fr-icons24x24-zoom-blue {
+  background-image:url(../images/ToolbarIcons/ZoomOffBlue.png);
+}
+
 .fr-icons24x24-printreport {
   background-image:url(../images/ToolbarIcons/PrintOff.png);
 }

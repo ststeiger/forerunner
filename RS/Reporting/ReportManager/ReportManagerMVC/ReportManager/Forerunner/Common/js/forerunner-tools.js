@@ -682,7 +682,7 @@ $(function () {
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom-blue",
-            //sharedClass: "fr-toolbase-show-if-touch fr-hide-if-disable",
+            sharedClass: "fr-toolbase-show-if-touch fr-hide-if-disable",
             text: locData.toolPane.zoom,
             itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {

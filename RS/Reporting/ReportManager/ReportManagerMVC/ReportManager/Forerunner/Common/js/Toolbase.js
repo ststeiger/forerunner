@@ -442,7 +442,7 @@ $(function () {
             $.each(me.allTools, function (index, toolInfo) {
                 var $tool = me.element.find("." + toolInfo.selectorClass);
                 var width = $tool.outerWidth();
-                if (toolInfo.visibilityNoWidth === true) {
+                if (toolInfo.visibilityNoWidth) {
                     width = 0;
                 }
                 me._orderedList.push({ toolInfo: toolInfo, width: width });

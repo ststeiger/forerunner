@@ -322,7 +322,7 @@ namespace Forerunner.SSRS.Viewer
         }
 
 
-        public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
+        public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string paramList, string credentials)
         {
             byte[] result = null;
             string format;
@@ -415,9 +415,9 @@ namespace Forerunner.SSRS.Viewer
                         }
                     }
 
-                    if (execInfo.Parameters.Length != 0 && parametersList != null)
+                    if (execInfo.Parameters.Length != 0 && paramList != null)
                     {
-                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters), "en-us");
                     }
 
                     result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);                    
@@ -524,9 +524,7 @@ namespace Forerunner.SSRS.Viewer
 
             try
             {
-                rs.Credentials = GetCredentials();
-                ParameterValue[] values = paramList == null ? null : JsonUtility.GetParameterValue(paramList);
-
+                rs.Credentials = GetCredentials();                
                 if (SessionID != "" && SessionID != null)
                 {
                     ExecutionHeader execHeader = new ExecutionHeader();
@@ -536,6 +534,8 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                     execInfo = rs.LoadReport(ReportPath, historyID);
+
+                ParameterValue[] clientParameters = paramList == null ? null : JsonUtility.GetParameterValue(paramList, execInfo.Parameters);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
@@ -552,7 +552,9 @@ namespace Forerunner.SSRS.Viewer
                 }
 
                 if (paramList != null)
-                    execInfo = rs.SetExecutionParameters(values, null);
+                {
+                    execInfo = rs.SetExecutionParameters(clientParameters, null);
+                }
 
 
                 if (execInfo.Parameters.Length != 0)

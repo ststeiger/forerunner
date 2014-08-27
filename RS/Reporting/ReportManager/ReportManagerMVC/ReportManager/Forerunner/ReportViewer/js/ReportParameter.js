@@ -237,8 +237,8 @@ $(function () {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
-                    if (renderParamArea !== false)
-                        me._trigger(events.render);
+                    //if (renderParamArea !== false)
+                    me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
                 }
             } else {

@@ -188,6 +188,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\RDLExtension.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\Tags.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png"
+  File "${LOCALROOT}\Forerunner\Common\images\ToolbarIcons\ZoomOffBlue.png"
   SetOutPath "$INSTDIR\Forerunner\Common\images\ToolpaneIcons"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\csv.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\doc.png"
@@ -873,6 +874,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\RDLExtension.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\Tags.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\SearchFolder_icon.png"
+  Delete "$INSTDIR\Forerunner\Common\images\ToolbarIcons\ZoomOffBlue.png"
   
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\csv.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\doc.png"

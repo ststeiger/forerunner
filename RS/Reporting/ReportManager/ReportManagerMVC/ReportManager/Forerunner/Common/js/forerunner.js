@@ -740,7 +740,7 @@ $(function () {
         * @param {Object} settingObject - Custom Settings Object
         */
         setCustomSettings: function (settingObject) {
-            this._customSettings = settingObject;
+            forerunner.config._customSettings = settingObject;
         },
 
         /**
@@ -749,7 +749,7 @@ $(function () {
          * @return {Object} - Customer setting object
          */
         getCustomSettings: function () {
-            if (this._customSettings === null) {
+            if (forerunner.config._customSettings === null) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetMobilizerSetting";
                
                 $.ajax({
@@ -770,7 +770,7 @@ $(function () {
                     },
                 });
             }
-            return this._customSettings;
+            return forerunner.config._customSettings;
         },
         /**
          * Get list of mobilizer shared schedule, which everybody can read, unlike the RS shared schedule.

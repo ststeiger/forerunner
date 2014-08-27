@@ -161,7 +161,7 @@ namespace Forerunner
 
     public static class JsonUtility
     {
-        internal static ParameterValue[] GetParameterValue(string parameterList)
+        internal static ParameterValue[] GetParameterValue(string parameterList, ReportParameter[] originalParams)
         {
             List<ParameterValue> list = new List<ParameterValue>();
 
@@ -182,13 +182,23 @@ namespace Forerunner
                             continue;
                         }
 
+                        string paramName = obj["Parameter"].ToString(), paramType = obj["Type"].ToString();
+
+                        //either parameter name or type not match will be skipped.
+                        //for saved parameter only matched parameter will be passed to the reporting service.
+                        //this will make sure saved parameter won't break the execution when report parameter change.
+                        if (originalParams.Where(m => m.Name == paramName && m.Type.ToString().ToLower() == paramType.ToLower()).Count() == 0)
+                        {
+                            continue;
+                        }
+
                         if (obj["IsMultiple"].ToString().ToLower() == "true")
                         {
                             if (obj["Value"] == null)
                             {
                                 ParameterValue pv = new ParameterValue();
-                                pv.Name = obj["Parameter"].ToString();
-                                pv.Value = GetDefaultValue(obj["Type"].ToString());
+                                pv.Name = paramName;
+                                pv.Value = GetDefaultValue(paramType);
                                 list.Add(pv);
                             }
                             else
@@ -197,7 +207,7 @@ namespace Forerunner
                                 foreach (String value in multipleValues)
                                 {
                                     ParameterValue pv = new ParameterValue();
-                                    pv.Name = obj["Parameter"].ToString();
+                                    pv.Name = paramName;
                                     pv.Value = value;
                                     list.Add(pv);
                                 }

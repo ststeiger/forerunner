@@ -48,6 +48,7 @@ namespace Forerunner.SSRS.Manager
         SqlConnection SQLConn;
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
+        static bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
         private static readonly object SettingLockObj = new object();
@@ -465,6 +466,10 @@ namespace Forerunner.SSRS.Manager
         {
             if (GetServerInfo().isSchemaChecked)
                 return;
+
+            if (UseMobilizerDB == false)
+                return;
+
             Impersonator impersonator = null;
             try
             {
@@ -936,6 +941,9 @@ namespace Forerunner.SSRS.Manager
         }
         public CatalogItem[] GetFavorites()
         {
+            if (UseMobilizerDB == false)
+                return null;
+
             Impersonator impersonator = null;
             string userName = GetDomainUserName();
             try
@@ -982,6 +990,9 @@ namespace Forerunner.SSRS.Manager
 
         public CatalogItem[] GetRecentReports()
         {
+            if (UseMobilizerDB == false)
+                return null;
+
             Impersonator impersonator = null;
             string userName = GetDomainUserName();
             try
@@ -1817,6 +1828,9 @@ namespace Forerunner.SSRS.Manager
 
         public CatalogItem[] GetSearchFolderItems(string path)
         {
+            if (UseMobilizerDB == false)
+                return null;
+
             //string tags = GetProperty(path, "ForerunnerTags");
             string mimeType;
             string content = Encoding.UTF8.GetString(GetCatalogResource(path, out mimeType));

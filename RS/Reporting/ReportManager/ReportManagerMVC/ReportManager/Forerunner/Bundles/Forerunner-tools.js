@@ -223,7 +223,7 @@ $(function () {
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
-            sharedClass: "fr-toolbase-find-textbox",
+            sharedClass: "fr-toolbase-find-textbox fr-core-input",
             tooltip: locData.toolbar.keyword,
             visibilityOrder: 10,
             events: {

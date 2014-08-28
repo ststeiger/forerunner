@@ -450,7 +450,7 @@ $(function () {
 
             // Sort the array
             me._orderedList.sort(function (a, b) {
-                if (a.toolInfo.visibilityOrder === undefined || typeof(a.toolInfo.visibilityOrder) !== "number") {
+                if (a.toolInfo.visibilityOrder === undefined) {
                     a.toolInfo.visibilityOrder = 0;
                 }
                 if (b.toolInfo.visibilityOrder === undefined) {

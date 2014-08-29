@@ -329,6 +329,12 @@ $(function () {
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
+            //On mobile use the browsers native viewer, does not work in IFrame
+            if (forerunner.device.isMobile()) {
+                window.location = url;            
+                return;
+            }
+
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);

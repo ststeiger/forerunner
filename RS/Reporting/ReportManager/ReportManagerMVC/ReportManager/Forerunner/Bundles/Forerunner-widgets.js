@@ -1285,9 +1285,34 @@ $(function () {
         _touchNav: function () {
             if (!forerunner.device.isTouch())
                 return;
+
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
+
+            $(me.element).hammer().on("pinchin", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(me._zoomFactor * .99);
+                    //me.hide().show(0);
+                }
+            });
+            $(me.element).hammer().on("pinchout", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(me._zoomFactor * 1.01);
+                    //me.hide().show(0);
+                }
+
+            });
+            $(me.element).hammer().on("doubletap", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(100);
+                    me.hide().show(0);
+                }
+            });  
+
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -7921,6 +7946,12 @@ $(function () {
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
+            //On mobile use the browsers native viewer, does not work in IFrame
+            if (forerunner.device.isMobile()) {
+                window.location = url;            
+                return;
+            }
+
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
@@ -10272,7 +10303,8 @@ $(function () {
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
                 var viewerWidth = me._convertToMM(me._currentWidth + "px");
-                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                //var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var tablixwidth = RIContext.CurrLocation.Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                               

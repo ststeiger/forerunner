@@ -758,14 +758,14 @@ $(function () {
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        forerunner.config._customSettings = data;
+                        forerunner.config.setCustomSettings(data);
                     },
                     fail: function () {
-                        forerunner.config._customSettings = {};
+                        forerunner.config.setCustomSettings({});
                         console.log("Load mobilizer custom settings failed");
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        forerunner.config._customSettings = {};
+                        forerunner.config.setCustomSettings({});
                         console.log("Load mobilizer custom settings.  textStatus: " + textStatus);
                         console.log(jqXHR);
                     },

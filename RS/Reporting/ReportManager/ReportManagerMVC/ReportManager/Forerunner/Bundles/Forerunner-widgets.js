@@ -1285,9 +1285,34 @@ $(function () {
         _touchNav: function () {
             if (!forerunner.device.isTouch())
                 return;
+
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
+
+            $(me.element).hammer().on("pinchin", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(me._zoomFactor * .99);
+                    //me.hide().show(0);
+                }
+            });
+            $(me.element).hammer().on("pinchout", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(me._zoomFactor * 1.01);
+                    //me.hide().show(0);
+                }
+
+            });
+            $(me.element).hammer().on("doubletap", function (ev) {
+                if (me._allowSwipe === true) {
+                    ev.preventDefault();
+                    me.zoomToPercent(100);
+                    me.hide().show(0);
+                }
+            });  
+
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -7921,6 +7946,12 @@ $(function () {
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
 
+            //On mobile use the browsers native viewer, does not work in IFrame
+            if (forerunner.device.isMobile()) {
+                window.location = url;            
+                return;
+            }
+
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
             $if.attr("src", url);
@@ -8852,8 +8883,11 @@ $(function () {
         _getWatermark: function () {
 
             var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+
+            var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
+
             if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
-                var wtr = $("<DIV/>").html("Evaluation");
+                var wtr = $("<DIV/>").html("Evaluation </br></br>" + postText);
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
                 return wtr;
@@ -8880,7 +8914,15 @@ $(function () {
             text.setAttribute("y", "160");
             text.setAttribute("fill", "#000");
             text.setAttribute("pointer-events", "none");
-            text.textContent = "E" + "val" + "ua" + "tion";
+
+            var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");            
+            span.textContent = "Evaluation";
+            text.appendChild(span);
+            var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            span.setAttribute("x", "10");
+            span.setAttribute("y", "280");
+            span.textContent = postText;
+            text.appendChild(span);
 
             svg.appendChild(text);
 
@@ -10261,7 +10303,8 @@ $(function () {
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");               
                 var viewerWidth = me._convertToMM(me._currentWidth + "px");
-                var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                //var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
+                var tablixwidth = RIContext.CurrLocation.Width;
                 var cols;
                 var sharedElements = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements);
                               

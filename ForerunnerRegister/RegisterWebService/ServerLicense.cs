@@ -227,6 +227,28 @@ namespace ForerunnerLicense
             }
         }
 
+
+        public void ExtendTrial(string LicenseKey)
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+
+            string SQL = @"UPDATE License Set Duration = Duration+14 WHERE LicenseID = @LicenseID AND SKU = 'MobTrial'";
+            try
+            {
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseID", LicenseKey);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+            }
+            catch
+            {
+                if (SQLConn.State != System.Data.ConnectionState.Closed)
+                    SQLConn.Close();
+            }
+        }
+
         private string ProcessActivate()
         {
             ForerunnerDB DB = new ForerunnerDB();

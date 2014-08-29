@@ -24,7 +24,18 @@ namespace RegisterWebService.Controllers
             return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
         }
 
- 
+
+         [HttpGet]
+        public HttpResponseMessage ExtendTrial(string Key, int Hash)
+        {
+            if (Hash != DateTime.Now.Month)
+                return WebSerivceHelper.GetResponseFromString("<div>Incorrect Hash</div>", "text/xml", this.Request.CreateResponse());
+
+
+            new ServerLicense().ExtendTrial(Key);
+
+            return WebSerivceHelper.GetResponseFromString("<div>Success</div>", "text/xml", this.Request.CreateResponse());
+        }
 
     }
 }

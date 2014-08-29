@@ -2121,12 +2121,21 @@ $(function () {
             }
             return this.cultureDateFormat;
         },
-        getMomentDateFormat: function () {
+        //standard date format like YYYY-MM-DD
+        getStandardMomentDateFormat: function () {
             if (!this.cultureDateFormat) {
                 this._setDateFormat();
             }
-
             return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+        },
+        //both standard and simplified date format like YYYY-M-D
+        //this allow people enter data like 2002-1-1 in strict mode
+        //moment.js support this from 2.3.0 on, we used 2.5.1 now
+        getMomentDateFormat: function () {
+            var format = this.getStandardMomentDateFormat(),
+                formatSimple = format.replace("DD", "D").replace("MM", "M");
+
+            return [format, formatSimple];
         },
         
     };

@@ -246,6 +246,11 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ResourceProjectItem>
+      <Name>May 2 2014.pdf</Name>
+      <FullPath>May 2 2014.pdf</FullPath>
+      <MimeType>application/pdf</MimeType>
+    </ResourceProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -254,7 +259,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://demo.forerunnersw.com/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

@@ -175,7 +175,7 @@ $(function () {
             var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");            
             span.textContent = "Evaluation";
             text.appendChild(span);
-            var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
             span.setAttribute("x", "10");
             span.setAttribute("y", "280");
             span.textContent = postText;
@@ -333,10 +333,10 @@ $(function () {
             var me = this;
             return;
             //Set the responsive width
-            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
-                if (defWidth > me._convertToMM(me._currentWidth + "px"))
-                    element.css("width", me._currentWidth);
-            }
+            //if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
+            //    if (defWidth > me._convertToMM(me._currentWidth + "px"))
+            //        element.css("width", me._currentWidth);
+            //}
         },
 
         _writeRectangle: function (RIContext) {
@@ -2192,10 +2192,10 @@ $(function () {
 
                     if (timer) {
                         clearTimeout(timer);
-                        timer = null
+                        timer = null;
                     }
                    
-                    $el = $(this);
+                    var $el = $(this);
                     var top = 0;
                     var left = 0;
 
@@ -2217,14 +2217,14 @@ $(function () {
                     timer = setTimeout(function () {
                         // Adding class handles animation through CSS
                         $tooltip.addClass("active");
-                    }, 1000)
+                    }, 1000);
                 }
                 );
                     
                 // Mouseleave
                 actionElement.on("mouseleave", function (e) {
                     clearTimeout(timer);
-                    $el = $(this);
+                    var $el = $(this);
 
                     // Remove all classes
                     setTimeout(function () {
@@ -2500,8 +2500,8 @@ $(function () {
                     Dirclass = "fr-rotate-270";
             }
 
-            if (Dirclass !=="" && forerunner.device.isMSIE8())
-                Dirclass += "-IE8"
+            if (Dirclass !== "" && forerunner.device.isMSIE8())
+                Dirclass += "-IE8";
 
             return Dirclass;
 

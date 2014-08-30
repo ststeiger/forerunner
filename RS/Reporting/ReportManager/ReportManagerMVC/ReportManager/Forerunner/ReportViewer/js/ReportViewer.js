@@ -484,7 +484,7 @@ $(function () {
             var page = me.$reportAreaContainer.find(".Page");
 
             if (forerunner.device.isFirefox() === true) {
-                scaleFactor = me._zoomFactor / 100.0;
+                var scaleFactor = me._zoomFactor / 100.0;
                 page.css("transform", "scale(" + scaleFactor + "," + scaleFactor + ")");
                 page.css("transform-origin", "left top");
             } else {
@@ -662,7 +662,7 @@ $(function () {
             $(me.element).hammer().on("pinchin", function (ev) {
                 if (me._allowSwipe === true) {
                     ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * .99);
+                    me.zoomToPercent(me._zoomFactor * 0.99);
                     //me.hide().show(0);
                 }
             });
@@ -2622,7 +2622,7 @@ $(function () {
             while (textNode.nextSibling) {
                 var next = textNode.nextSibling;
 
-                if (next.nodeType == 3 || next.nodeType == 4) {
+                if (next.nodeType === 3 || next.nodeType === 4) {
                     textNode.nodeValue += next.nodeValue;
                     textNode.parentNode.removeChild(next);
                     // Stop if not a text node
@@ -2639,10 +2639,10 @@ $(function () {
             // Traverse siblings, call normalise for elements and 
             // collectTextNodes for text nodes   
             while (node && node.nextSibling) {
-                if (node.nodeType == 1) {
+                if (node.nodeType === 1) {
                     me._frSearchNormalize(node);
 
-                } else if (node.nodeType == 3) {
+                } else if (node.nodeType === 3) {
                     me._joinAdjacentTextnodes(node);
                 }
                 node = node.nextSibling;

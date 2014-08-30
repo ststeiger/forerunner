@@ -178,7 +178,7 @@ $(function () {
 
             //remove zoom button on android
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfButtons.pop()
+                listOfButtons.pop();
             }
 
             listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
@@ -237,7 +237,7 @@ $(function () {
             } else {
                 me.enableTools([tb.btnZoom]);
                 me.removeHideDisable([tb.btnZoom]);
-            };
+            }
         },
         _clearBtnStates: function () {
             var me = this;

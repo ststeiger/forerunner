@@ -470,7 +470,7 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
-            var $optionsDiv = new $("<div class='fr-param-option-container'></div>")
+            var $optionsDiv = new $("<div class='fr-param-option-container'></div>");
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
             
@@ -685,9 +685,9 @@ $(function () {
             var $container = new $("<div class='fr-param-option-div' />");
 
             var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-usedefault-checkbox' name='" + param.Name + "' />");
-            $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden) });
+            $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
-            var $label = new $("<label class='fr-param-option-label' />")
+            var $label = new $("<label class='fr-param-option-label' />");
             $label.text(me.options.$reportViewer.locData.paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 

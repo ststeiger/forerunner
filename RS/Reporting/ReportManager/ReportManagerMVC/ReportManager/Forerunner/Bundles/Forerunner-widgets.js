@@ -1114,7 +1114,7 @@ $(function () {
             var page = me.$reportAreaContainer.find(".Page");
 
             if (forerunner.device.isFirefox() === true) {
-                scaleFactor = me._zoomFactor / 100.0;
+                var scaleFactor = me._zoomFactor / 100.0;
                 page.css("transform", "scale(" + scaleFactor + "," + scaleFactor + ")");
                 page.css("transform-origin", "left top");
             } else {
@@ -1292,7 +1292,7 @@ $(function () {
             $(me.element).hammer().on("pinchin", function (ev) {
                 if (me._allowSwipe === true) {
                     ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * .99);
+                    me.zoomToPercent(me._zoomFactor * 0.99);
                     //me.hide().show(0);
                 }
             });
@@ -3252,7 +3252,7 @@ $(function () {
             while (textNode.nextSibling) {
                 var next = textNode.nextSibling;
 
-                if (next.nodeType == 3 || next.nodeType == 4) {
+                if (next.nodeType === 3 || next.nodeType === 4) {
                     textNode.nodeValue += next.nodeValue;
                     textNode.parentNode.removeChild(next);
                     // Stop if not a text node
@@ -3269,10 +3269,10 @@ $(function () {
             // Traverse siblings, call normalise for elements and 
             // collectTextNodes for text nodes   
             while (node && node.nextSibling) {
-                if (node.nodeType == 1) {
+                if (node.nodeType === 1) {
                     me._frSearchNormalize(node);
 
-                } else if (node.nodeType == 3) {
+                } else if (node.nodeType === 3) {
                     me._joinAdjacentTextnodes(node);
                 }
                 node = node.nextSibling;
@@ -6487,7 +6487,7 @@ $(function () {
 
             //remove zoom button on android
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfButtons.pop()
+                listOfButtons.pop();
             }
 
             listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
@@ -6546,7 +6546,7 @@ $(function () {
             } else {
                 me.enableTools([tb.btnZoom]);
                 me.removeHideDisable([tb.btnZoom]);
-            };
+            }
         },
         _clearBtnStates: function () {
             var me = this;
@@ -7755,7 +7755,7 @@ $(function () {
                 );
                 $anchor.hammer(options).on("hold",
                     function (event) {
-                        data = {
+                        var data = {
                             catalogItem: catalogItem,
                             clientX: event.gesture.touches[0].clientX,
                             clientY: event.gesture.touches[0].clientY
@@ -7768,7 +7768,7 @@ $(function () {
                 // Non-touch (PCs)
                 $anchor.on("contextmenu", function (event) {
                     // Steal the bowser context menu if we click on a report explorer item
-                    data = {
+                    var data = {
                         catalogItem: catalogItem,
                         clientX: event.clientX,
                         clientY: event.clientY
@@ -8918,7 +8918,7 @@ $(function () {
             var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");            
             span.textContent = "Evaluation";
             text.appendChild(span);
-            var span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
+            span = document.createElementNS("http://www.w3.org/2000/svg", "tspan");
             span.setAttribute("x", "10");
             span.setAttribute("y", "280");
             span.textContent = postText;
@@ -9076,10 +9076,10 @@ $(function () {
             var me = this;
             return;
             //Set the responsive width
-            if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
-                if (defWidth > me._convertToMM(me._currentWidth + "px"))
-                    element.css("width", me._currentWidth);
-            }
+            //if (me.options.responsive && me._maxResponsiveRes > me._currentWidth) {
+            //    if (defWidth > me._convertToMM(me._currentWidth + "px"))
+            //        element.css("width", me._currentWidth);
+            //}
         },
 
         _writeRectangle: function (RIContext) {
@@ -10935,10 +10935,10 @@ $(function () {
 
                     if (timer) {
                         clearTimeout(timer);
-                        timer = null
+                        timer = null;
                     }
                    
-                    $el = $(this);
+                    var $el = $(this);
                     var top = 0;
                     var left = 0;
 
@@ -10960,14 +10960,14 @@ $(function () {
                     timer = setTimeout(function () {
                         // Adding class handles animation through CSS
                         $tooltip.addClass("active");
-                    }, 1000)
+                    }, 1000);
                 }
                 );
                     
                 // Mouseleave
                 actionElement.on("mouseleave", function (e) {
                     clearTimeout(timer);
-                    $el = $(this);
+                    var $el = $(this);
 
                     // Remove all classes
                     setTimeout(function () {
@@ -11243,8 +11243,8 @@ $(function () {
                     Dirclass = "fr-rotate-270";
             }
 
-            if (Dirclass !=="" && forerunner.device.isMSIE8())
-                Dirclass += "-IE8"
+            if (Dirclass !== "" && forerunner.device.isMSIE8())
+                Dirclass += "-IE8";
 
             return Dirclass;
 
@@ -12113,7 +12113,7 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
-            var $optionsDiv = new $("<div class='fr-param-option-container'></div>")
+            var $optionsDiv = new $("<div class='fr-param-option-container'></div>");
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
             
@@ -12328,9 +12328,9 @@ $(function () {
             var $container = new $("<div class='fr-param-option-div' />");
 
             var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-usedefault-checkbox' name='" + param.Name + "' />");
-            $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden) });
+            $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
-            var $label = new $("<label class='fr-param-option-label' />")
+            var $label = new $("<label class='fr-param-option-label' />");
             $label.text(me.options.$reportViewer.locData.paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
@@ -15427,7 +15427,7 @@ $(function () {
 
                     $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
                     //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                    $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
                     $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
 
                     // Show the unzoom toolbar

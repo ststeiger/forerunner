@@ -138,7 +138,7 @@ $(function () {
                 );
                 $anchor.hammer(options).on("hold",
                     function (event) {
-                        data = {
+                        var data = {
                             catalogItem: catalogItem,
                             clientX: event.gesture.touches[0].clientX,
                             clientY: event.gesture.touches[0].clientY
@@ -151,7 +151,7 @@ $(function () {
                 // Non-touch (PCs)
                 $anchor.on("contextmenu", function (event) {
                     // Steal the bowser context menu if we click on a report explorer item
-                    data = {
+                    var data = {
                         catalogItem: catalogItem,
                         clientX: event.clientX,
                         clientY: event.clientY

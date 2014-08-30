@@ -181,7 +181,7 @@ $(function () {
 
                     $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
                     //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                    $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
                     $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
 
                     // Show the unzoom toolbar

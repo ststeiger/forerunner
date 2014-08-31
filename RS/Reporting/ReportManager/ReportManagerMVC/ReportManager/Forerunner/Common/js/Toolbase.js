@@ -405,8 +405,8 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (index, toolInfo) {
-                if (Tools.selectorClass && me.allTools[Tools.selectorClass].isEnable) {
-                    me.enableTools([Tools]);
+                if (toolInfo.selectorClass && me.allTools[toolInfo.selectorClass].isEnable) {
+                    me.enableTools([toolInfo]);
                 }
             });
         },

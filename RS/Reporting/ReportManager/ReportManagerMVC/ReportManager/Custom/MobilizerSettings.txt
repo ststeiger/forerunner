@@ -15,5 +15,5 @@
 	"ImageAreaHighlighBorderWidth": "2",
 	"HideDisabledTool":"on",
 	"WatermarkPostText":"",
-	"DefaultSubscriptionFormat":"PDF"
+	"DefaultSubscriptionFormat":"MHTML"
 }

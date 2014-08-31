@@ -16914,6 +16914,9 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
+
+                    setting.Value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
+
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
                     me.$renderFormat.val(setting.Value);
                     me.$renderFormat.addClass(".fr-email-renderformat");

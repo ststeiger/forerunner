@@ -14,5 +14,6 @@
 	"ImageAreaHighlighBorderColor": "0000ff",
 	"ImageAreaHighlighBorderWidth": "2",
 	"HideDisabledTool":"on",
-	"WatermarkPostText":""
+	"WatermarkPostText":"",
+	"DefaultSubscriptionFormat":"PDF"
 }

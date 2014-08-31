@@ -9525,6 +9525,11 @@ $(function () {
                 }
             }
 
+            // RDL Extension
+            if (textExt.Align === "justify") {
+                Style += "white-space:normal;text-align:" + textExt.Align + ";";
+            }
+
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -9591,7 +9596,8 @@ $(function () {
                 //Needs to be 100% to handle center align                
                 $TextObj.addClass("fr-r-fS");
             }
-               
+            
+            //
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
@@ -9690,6 +9696,13 @@ $(function () {
                     
                     ParagraphStyle += me._getMeasurements(me._getMeasurmentsObj(Obj, Index));
                     ParagraphStyle += me._getElementsStyle(RIContext.RS, Obj.Paragraph);
+
+                    //See if RDLExt
+                    var textExt = me._getRDLExt(RIContext);
+                    if (textExt.Align === "justify") {
+                        ParagraphStyle += "white-space:normal;text-align:" + textExt.Align + ";";
+                    }
+
                     $ParagraphItem.attr("Style", ParagraphStyle);
                     $ParagraphItem.addClass(me._getClassName("fr-n-", Obj.Paragraph));
                     $ParagraphItem.addClass(me._getClassName("fr-t-", Obj.Paragraph));
@@ -9728,6 +9741,12 @@ $(function () {
                             var TextRunStyle = "";
                             TextRunStyle += me._getMeasurements(me._getMeasurmentsObj(Obj.TextRuns[i], i));
                             TextRunStyle += me._getElementsTextStyle(Obj.TextRuns[i].Elements);
+
+                            //See if RDLExt
+                            if (textExt.Align === "justify") {
+                                TextRunStyle += "white-space:normal;text-align:" + textExt.Align + ";";
+                            }
+
                             $TextRun.attr("Style", TextRunStyle);
                             $TextRun.addClass(me._getClassName("fr-t-", Obj.TextRuns[i]));                            
 

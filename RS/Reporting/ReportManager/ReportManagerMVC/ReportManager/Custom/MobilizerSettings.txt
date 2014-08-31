@@ -14,5 +14,5 @@
 	"ImageAreaHighlighBorderColor": "0000ff",
 	"ImageAreaHighlighBorderWidth": "2",
 	"HideDisabledTool":"on",
-	"WatermarkPostText":"\r\nDev Server"
+	"WatermarkPostText":""
 }

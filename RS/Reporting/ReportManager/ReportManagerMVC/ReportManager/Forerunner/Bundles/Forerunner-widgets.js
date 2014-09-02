@@ -7748,6 +7748,12 @@ $(function () {
                 $anchor.hammer(options).on("tap",
                     function (event) {
                         if (me.options.navigateTo) {
+                            //On mobile use the browsers native viewer, does not work in IFrame
+                            if (action === "open" && forerunner.device.isMobile()) {
+                                var fileUrl = me.options.reportManagerAPI + "/Resource?path=" + encodeURIComponent(catalogItem.Path) + "&instance=" + me.options.rsInstance;
+                                window.location = fileUrl;
+                                return;
+                            }
                             me.options.navigateTo(action, catalogItem.Path);
                             event.stopPropagation();
                         }
@@ -7945,12 +7951,6 @@ $(function () {
             var url = me.options.reportManagerAPI + "/Resource?";
             url += "path=" + encodeURIComponent(path);
             url += "&instance=" + me.options.rsInstance;
-
-            //On mobile use the browsers native viewer, does not work in IFrame
-            if (forerunner.device.isMobile()) {
-                window.location = url;            
-                return;
-            }
 
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");

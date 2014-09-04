@@ -67,6 +67,12 @@ namespace ForerunnerWebService
                         StatusMessage = Or.SendLicenseMail(SQLReader.GetXmlReader(2), this);
                     }
 
+                    if (TaskType == "RunCampaign")
+                    {
+                        Register Reg = new Register();
+                        StatusMessage = Reg.RunCampaign(SQLReader.GetXmlReader(2), this);
+                    }
+
                     if (StatusMessage == "success")
                         TaskStatus = 3;
                     else
@@ -154,11 +160,16 @@ INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAtt
             SQLConn.Close();
         }
 
-        public string SendMail(string MailFromAccount,string Email,string MailSubject,string MailBody)
+        public string SendMail(string MailFromAccount,string Email,string MailSubject,string MailBody,string SentAccount = null,string SentPWD = null)
         {
 
             try
             {
+                if (SentAccount == null)
+                {
+                    SentAccount = MailSendAccount;
+                    SentPWD = MailSendPassword;
+                }
                 SmtpClient client = new SmtpClient();
                 client.Port = 587;
                 client.Host = MailHost;
@@ -166,7 +177,7 @@ INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAtt
                 client.Timeout = 50000;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential(MailSendAccount, MailSendPassword);
+                client.Credentials = new System.Net.NetworkCredential(SentAccount, SentPWD);
 
                 MailMessage mm = new MailMessage(MailFromAccount, Email, MailSubject, MailBody);
                 mm.BodyEncoding = UTF8Encoding.UTF8;

@@ -499,7 +499,7 @@ $(function () {
                     var $tool = me.element.find("." + tools[index].toolInfo.selectorClass);
                     $tool.addClass("fr-core-hidden");
                     index--;
-                };
+                }
             }
 
             /*
@@ -662,12 +662,12 @@ $(function () {
                                 $select.prop("selectedIndex", focusIndex);
                             }
                             focusIndex = -1;
-                            $('body').off("keyup mouseup", resetSelected);
+                            $("body").off("keyup mouseup", resetSelected);
                         }
                     };
 
-                    $('body').off("keyup mouseup", resetSelected);
-                    $('body').on("keyup mouseup", resetSelected);
+                    $("body").off("keyup mouseup", resetSelected);
+                    $("body").on("keyup mouseup", resetSelected);
                 }
             });
         },
@@ -720,7 +720,7 @@ $(function () {
             $select.html("");
             $.each(data.optionArray, function (index, option) {
                 var encodedOptionName = forerunner.helper.htmlEncode(option.name);
-                $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
+                var $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {

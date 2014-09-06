@@ -356,6 +356,8 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
   File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
 
 
 ;This must be the last line of the config tool will not work after install

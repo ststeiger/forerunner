@@ -520,7 +520,7 @@ WHERE        OrderID IN (@Orders)</CommandText>
   </DataSets>
   <ReportParameters>
     <ReportParameter Name="CatID">
-      <DataType>String</DataType>
+      <DataType>Integer</DataType>
       <Prompt>Cat ID</Prompt>
       <ValidValues>
         <DataSetReference>

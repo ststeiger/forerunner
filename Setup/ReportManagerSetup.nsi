@@ -430,6 +430,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Global.asax"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
   File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
   
 
 
@@ -1013,6 +1015,8 @@ Section Uninstall
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
   Delete "$INSTDIR\InstallInstructions.rtf"
   Delete "$INSTDIR\RDL Extension Documentation.rtf"
+  Delete "$INSTDIR\Forerunner Mobilizer Dashboards.rtf"
+  Delete "$INSTDIR\Forerunner Mobilizer Virtual Folders.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV3\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV3\MobilizerConfigTool.lnk"

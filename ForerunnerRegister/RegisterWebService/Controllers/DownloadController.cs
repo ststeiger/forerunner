@@ -9,6 +9,7 @@ using System.Web;
 using System.Text;
 using ForerunnerRegister;
 using ForerunnerWebService;
+using System.IO;
 
 namespace RegisterWebService.Controllers
 {
@@ -16,6 +17,7 @@ namespace RegisterWebService.Controllers
     {
 
         private Register Reg = new Register();
+        static private byte[] logo = null;
         
         [HttpGet]
         public HttpResponseMessage Get(string Referer, string Page)
@@ -54,6 +56,18 @@ namespace RegisterWebService.Controllers
 
         }
 
+        [HttpGet]
+        public HttpResponseMessage Image(string ID,string user)
+        {
+            Reg.SaveEmailOpen(ID,user);
+
+            if (logo == null)
+            {
+                logo = File.ReadAllBytes(System.Web.HttpContext.Current.Server.MapPath("~") + "/content/img/logo.png");
+            }
+
+            return WebSerivceHelper.GetResponseFromBytes(logo, "image/png", new HttpResponseMessage(HttpStatusCode.OK));
+        }
   
     }
 }

@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Text;
 using ForerunnerWebService;
+using System.Xml.Serialization;
 
 namespace ForerunnerRegister
 {
@@ -38,11 +39,11 @@ namespace ForerunnerRegister
             {
                 string XML = "<Registration>";
                 XML += "<ID>" + ID + "</ID>";
-                XML += "<Email>" + Email + "</Email>";
-                XML += "<FirstName>" + FirstName + "</FirstName>";
-                XML += "<LastName>" + LastName + "</LastName>";
-                XML += "<CompanyName>" + CompanyName + "</CompanyName>";
-                XML += "<PhoneNumber>" + PhoneNumber + "</PhoneNumber>";
+                XML += "<Email>" +HttpUtility.HtmlEncode(  Email) + "</Email>";
+                XML += "<FirstName>" + HttpUtility.HtmlEncode( FirstName) + "</FirstName>";
+                XML += "<LastName>" + HttpUtility.HtmlEncode( LastName) + "</LastName>";
+                XML += "<CompanyName>" + HttpUtility.HtmlEncode( CompanyName) + "</CompanyName>";
+                XML += "<PhoneNumber>" + HttpUtility.HtmlEncode( PhoneNumber) + "</PhoneNumber>";
                 XML += "<LicenseID>" + LicenseID + "</LicenseID>";
                 XML += "</Registration>";
 
@@ -250,6 +251,91 @@ namespace ForerunnerRegister
                 SQLConn.Close();
             }
 
+        }
+
+        public void SaveEmailOpen(string ID, string email)
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+            SqlCommand SQLComm;
+
+            try
+            {
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT campaignOpens (ID ,email, actionDate)  SELECT @ID,@email,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", ID);
+                SQLComm.Parameters.AddWithValue("@email", email);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+            }
+            catch (Exception e)
+            {
+                SQLConn.Close();
+            }
+
+        }
+
+        public class campaign { public string ID; public string ListID;}
+
+        public string RunCampaign(XmlReader XMLData, TaskWorker tw)
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+            SqlCommand SQLComm; 
+            SqlDataReader SQLReader;
+            string email;
+            string content;
+            string subject;
+            string company;
+            string name;
+            string from;
+            string fromPWD;
+
+            try
+            {
+                campaign c = (campaign)new XmlSerializer(typeof(campaign)).Deserialize(XMLData);
+                SQLConn.Open();
+                SQLComm = new SqlCommand("select content,subject,fromEmail,fromPWD from campaign where id = @ID", SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", c.ID);
+                SQLReader = SQLComm.ExecuteReader();
+
+                SQLReader.Read();
+                content = SQLReader.GetString(0);
+                subject = SQLReader.GetString(1);
+                from = SQLReader.GetString(2);
+                fromPWD = SQLReader.GetString(3);
+                SQLReader.Close();
+
+
+                SQLComm = new SqlCommand("select email,company,name from campaignList where ListID = @ListID", SQLConn);
+                SQLComm.Parameters.AddWithValue("@ListID", c.ListID);
+                SQLReader = SQLComm.ExecuteReader();
+
+                while (SQLReader.Read())
+                {                    
+                    email = SQLReader.GetString(0);
+                    company = SQLReader.GetString(1);
+                    name = SQLReader.GetString(2);
+                    
+                    tw.SendMail(from, email, subject, string.Format(content,company,email,name),from,fromPWD);
+                    System.Threading.Thread.Sleep(3000);
+                }
+                SQLReader.Close();
+
+
+                SQLConn.Close();
+            }
+           
+
+            catch (Exception e)
+            {
+                if (SQLConn.State == System.Data.ConnectionState.Open)
+                {
+                    SQLConn.Close();
+                }
+                return "fail";
+            }
+            return "success";
         }
 
         public string SendRegisterMail(XmlReader XMLReg,TaskWorker tw)

@@ -215,10 +215,18 @@ namespace Forerunner
                         }
                         else
                         {
-                            ParameterValue pv = new ParameterValue();
-                            pv.Name = obj["Parameter"].ToString();
-                            pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
-                            list.Add(pv);
+                            //Handle case of invalid parameters.  Do not add invalid, get error from SSRS
+                            if ((obj["Type"].ToString() != "String") && obj["Value"] == "")
+                            {
+                                // do nothing
+                            }
+                            else
+                            {
+                                ParameterValue pv = new ParameterValue();
+                                pv.Name = obj["Parameter"].ToString();
+                                pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
+                                list.Add(pv);
+                            }
                         }
                     }
                 }

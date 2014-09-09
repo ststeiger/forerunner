@@ -38,6 +38,7 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ToolTip>=Sum(Fields!price.Value)</ToolTip>
                   <ActionInfo>
                     <Actions>
                       <Action>
@@ -648,7 +649,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>10</AutoRefresh>
+  <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

@@ -2557,7 +2557,7 @@ $(function () {
             if (CurrObj.FontWeight !== undefined)
                 Style += "font-weight:" + me._getFontWeight(CurrObj.FontWeight) + ";";
             if (CurrObj.FontFamily !== undefined)
-                Style += "font-family:" + CurrObj.FontFamily + ";";
+                Style += "font-family:\"" + CurrObj.FontFamily + "\";";
             if (CurrObj.FontSize !== undefined)
                 Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)

@@ -115,10 +115,6 @@
       <FullPath>images and subreports.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Justify.rdl</Name>
-      <FullPath>Justify.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Layout.rdl</Name>
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
@@ -256,8 +252,20 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Justify.rdl</Name>
+      <FullPath>Justify.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Incident Health Dashboard Cube.rdl</Name>
+      <FullPath>Incident Health Dashboard Cube.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Phone_Leads_with_Transcription.rdl</Name>
       <FullPath>Phone_Leads_with_Transcription.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CS-Asset Management Dashboard.rdl</Name>
+      <FullPath>CS-Asset Management Dashboard.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -267,7 +275,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

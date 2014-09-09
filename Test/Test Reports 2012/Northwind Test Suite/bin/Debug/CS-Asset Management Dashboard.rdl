@@ -1,0 +1,2031 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Textbox Name="Textbox64">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Label>Client Services Asset Management Dashboard</Label>
+                <Value>="Client Services Asset Management Dashboard"</Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve"> </Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Data Source IMPM data as of </Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <Color>Gray</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Label>snapshotdate</Label>
+                <Value>=FIRST(Fields!clndr_dt.Value, "RefreshDate")</Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>8pt</FontSize>
+                  <Color>Gray</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value xml:space="preserve">  </Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>None</TextDecoration>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox64</rd:DefaultName>
+        <Height>0.59375in</Height>
+        <Width>5.875in</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>p q r s tu vw</Value>
+                <Style>
+                  <FontFamily>Wingdings 3</FontFamily>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>p     q     r     s      tu       vw</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Left>6.18478in</Left>
+        <Height>0.41008in</Height>
+        <Width>1.84722in</Width>
+        <ZIndex>1</ZIndex>
+        <Visibility>
+          <Hidden>true</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Tablix Name="Dashboard5">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>0.96925in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.35in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Deployments5">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent", ROUND(Last(Fields!Measure.Value)*100), ROUND(Last(Fields!Measure.Value)))</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <Format>0;(0);'-'</Format>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Label>%</Label>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent" AND ROUND(Fields!Measure.Value*100) &lt;&gt; 0, "%", "")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Deployments</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="matrix2_ColumnGroup3">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!clndr_qtr.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!clndr_yyyyqq.Value</Value>
+                  <Direction>Descending</Direction>
+                </SortExpression>
+              </SortExpressions>
+              <TablixHeader>
+                <Size>0.25in</Size>
+                <CellContents>
+                  <Textbox Name="Textbox198">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>White</Color>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Center</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox194</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <RightBorder>
+                        <Color>#0071c5</Color>
+                      </RightBorder>
+                      <BackgroundColor>#0071c5</BackgroundColor>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Month3">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!clndr_yyyyqq.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!clndr_yyyymm.Value</Value>
+                      <Direction>Descending</Direction>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Month4">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>=IIF(Fields!clndr_qtr.Value = Fields!thisqtr.Value, "QTD", "Prior Qtr")</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Month</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#0071c5</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+              <DataElementOutput>Output</DataElementOutput>
+            </TablixMember>
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="IndicatorGroup2">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!IndicatorGroup.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!GroupSort.Value</Value>
+                </SortExpression>
+              </SortExpressions>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Indicator2">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Indicator.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Indicator.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <RepeatColumnHeaders>true</RepeatColumnHeaders>
+        <RepeatRowHeaders>true</RepeatRowHeaders>
+        <DataSetName>AssetsbyQuarter2</DataSetName>
+        <Top>0.72987in</Top>
+        <Left>7.37525in</Left>
+        <Height>0.85in</Height>
+        <Width>0.96925in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+      <Tablix Name="Dashboard6">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>0.6565in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.35in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Deployments6">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent", ROUND(Last(Fields!Measure.Value)*100), ROUND(Last(Fields!Measure.Value)))</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <Format>0;(0);'-'</Format>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Label>%</Label>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent" AND ROUND(Fields!Measure.Value*100) &lt;&gt; 0, "%", "")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Deployments</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <VerticalAlign>Middle</VerticalAlign>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Month4">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!clndr_yyyymm.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!clndr_yyyymm.Value</Value>
+                      <Direction>Descending</Direction>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Month5">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>=IIF(Fields!clndr_mth_nbr.Value = Fields!thismonth.Value, "This Month", "Prior Month")</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Month</rd:DefaultName>
+                        <ToolTip>=Fields!clndr_short_mth_txt.Value + " " + Fields!clndr_yyyyy.Value</ToolTip>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#004280</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="Region">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Region.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!Region.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>0.25in</Size>
+                        <CellContents>
+                          <Textbox Name="Region">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!Region.Value</Value>
+                                    <Style>
+                                      <FontFamily>Verdana</FontFamily>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Center</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Region</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>DimGray</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#004280</BackgroundColor>
+                              <VerticalAlign>Middle</VerticalAlign>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember />
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+              <DataElementOutput>Output</DataElementOutput>
+            </TablixMember>
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="IndicatorGroup3">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!IndicatorGroup.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!GroupSort.Value</Value>
+                </SortExpression>
+              </SortExpressions>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Indicator3">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Indicator.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Indicator.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <RepeatColumnHeaders>true</RepeatColumnHeaders>
+        <RepeatRowHeaders>true</RepeatRowHeaders>
+        <DataSetName>AssetMetricsRegion2</DataSetName>
+        <Top>0.72987in</Top>
+        <Left>8.3445in</Left>
+        <Height>0.85in</Height>
+        <Width>0.6565in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+      <Tablix Name="Dashboard7">
+        <TablixCorner>
+          <TablixCornerRows>
+            <TablixCornerRow>
+              <TablixCornerCell>
+                <CellContents>
+                  <Textbox Name="Textbox664">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontStyle>Normal</FontStyle>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <TextDecoration>None</TextDecoration>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Left</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox662</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>None</Style>
+                      </Border>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixCornerCell>
+              <TablixCornerCell>
+                <CellContents>
+                  <Textbox Name="Textbox661">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontStyle>Normal</FontStyle>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <TextDecoration>None</TextDecoration>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Left</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox659</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>None</Style>
+                      </Border>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixCornerCell>
+            </TablixCornerRow>
+            <TablixCornerRow>
+              <TablixCornerCell>
+                <CellContents>
+                  <Textbox Name="Textbox665">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontStyle>Normal</FontStyle>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <TextDecoration>None</TextDecoration>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Left</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox663</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>None</Style>
+                      </Border>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixCornerCell>
+              <TablixCornerCell>
+                <CellContents>
+                  <Textbox Name="Textbox666">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontStyle>Normal</FontStyle>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <TextDecoration>None</TextDecoration>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Left</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox660</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>None</Style>
+                      </Border>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixCornerCell>
+            </TablixCornerRow>
+          </TablixCornerRows>
+        </TablixCorner>
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>0.6565in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.65625in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.65625in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.65625in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.35in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Trend3">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=IIF(ISNothing(Fields!Goal.Value), "N/A", IIF(Fields!CalcType.Value = "Percent", ROUND(Last(Fields!Goal.Value)*100), ROUND(Last(Fields!Goal.Value))))</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Label>%</Label>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent", "%", "")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Trend</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Deployments7">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent", ROUND(Fields!CurrentMeasure.Value*100), ROUND(Fields!CurrentMeasure.Value))</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <Format>0;(0);'-'</Format>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Label>%</Label>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent" AND ROUND(Fields!CurrentMeasure.Value*100) &lt;&gt; 0, "%", "")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Deployments</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="PriorMeasure">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent", ROUND(Last(Fields!PriorMeasure.Value)*100), ROUND(Last(Fields!PriorMeasure.Value)))</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <Format>0;(0);'-'</Format>
+                              </Style>
+                            </TextRun>
+                            <TextRun>
+                              <Label>%</Label>
+                              <Value>=IIF(Fields!CalcType.Value = "Percent" AND ROUND(Fields!PriorMeasure.Value*100) &lt;&gt; 0, "%", "")</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>PriorMeasure</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="TrendIcon">
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Label>p</Label>
+                              <Value>=Fields!Trend.Value</Value>
+                              <Style>
+                                <FontFamily>Wingdings 3</FontFamily>
+                                <FontSize>16pt</FontSize>
+                                <Color>=IIF(ISNothing(Fields!Goal.Value), "White",
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &gt; Fields!RedThreshold.Value, "Firebrick", 
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &gt; Fields!Goal.Value, "Yellow", 
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &lt;= Fields!Goal.Value, "MediumSeaGreen", 
+  IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value =0,  "White", 
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &lt; Fields!RedThreshold.Value, "Firebrick", 
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &lt; Fields!Goal.Value, "Yellow",
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &gt;= Fields!Goal.Value, "MediumSeaGreen", "White"))))))))</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <ToolTip>=IIF(ISNothing(Fields!Goal.Value), "No Target",
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &gt; Fields!RedThreshold.Value, "Red", 
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &gt; Fields!Goal.Value, "Yellow", 
+ IIF(Fields!CalcType.Value = "Count" AND Fields!CurrentMeasure.Value &lt;= Fields!Goal.Value, "Green", 
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &lt; Fields!RedThreshold.Value, "Red", 
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &lt; Fields!Goal.Value, "Yellow",
+ IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentMeasure.Value &gt;= Fields!Goal.Value, "Green", "Cannot Verify Actual to Target")))))))</ToolTip>
+                      <Style>
+                        <Border>
+                          <Color>DimGray</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>Silver</BackgroundColor>
+                        <VerticalAlign>Middle</VerticalAlign>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="matrix2_ColumnGroup4">
+                <GroupExpressions>
+                  <GroupExpression>=0</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <TablixHeader>
+                <Size>0.25in</Size>
+                <CellContents>
+                  <Textbox Name="Textbox196">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value>GLOBAL</Value>
+                            <Style>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>White</Color>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Center</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox194</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <RightBorder>
+                        <Color>#0071c5</Color>
+                      </RightBorder>
+                      <BackgroundColor>#0071c5</BackgroundColor>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Textbox7">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Target</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Textbox5</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#0071c5</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="Month5">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!CurrentYearMonth.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!CurrentYearMonth.Value</Value>
+                      <Direction>Descending</Direction>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Month6">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Actual</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Month</rd:DefaultName>
+                        <ToolTip>=Fields!CurrentShortMonth.Value + " " + Fields!CurrentYear.Value</ToolTip>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#0071c5</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Textbox340">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Prior </Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Textbox340</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#0071c5</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                </TablixMember>
+              </TablixMembers>
+              <DataElementOutput>Output</DataElementOutput>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="Group2">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!CurrentYearMonth.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!CurrentYearMonth.Value</Value>
+                </SortExpression>
+              </SortExpressions>
+              <TablixHeader>
+                <Size>0.25in</Size>
+                <CellContents>
+                  <Textbox Name="Group2">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value />
+                            <Style>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>White</Color>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Center</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Group1</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <RightBorder>
+                        <Color>#0071c5</Color>
+                      </RightBorder>
+                      <BackgroundColor>#0071c5</BackgroundColor>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Textbox103">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Trend</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Textbox101</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#0071c5</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="IndicatorGroup4">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!IndicatorGroup.Value</GroupExpression>
+                </GroupExpressions>
+              </Group>
+              <SortExpressions>
+                <SortExpression>
+                  <Value>=Fields!GroupSort.Value</Value>
+                </SortExpression>
+              </SortExpressions>
+              <TablixHeader>
+                <Size>1.5in</Size>
+                <CellContents>
+                  <Textbox Name="IndicatorGroup2">
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value>=Fields!IndicatorGroup.Value</Value>
+                            <Style>
+                              <FontFamily>Verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <TextDecoration>None</TextDecoration>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Left</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>IndicatorGroup</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>DimGray</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                      <VerticalAlign>Middle</VerticalAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Indicator4">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Indicator.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Indicator.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>3.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Indicator2">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>=Fields!Indicator.Value</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                  <TextDecoration>Underline</TextDecoration>
+                                  <Color>#0071c5</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Left</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Indicator</rd:DefaultName>
+                        <ActionInfo>
+                          <Actions>
+                            <Action>
+                              <Drillthrough>
+                                <ReportName>=Fields!ChildReport.Value</ReportName>
+                                <Parameters>
+                                  <Parameter Name="ReportName">
+                                    <Value>=Fields!ShortName.Value</Value>
+                                  </Parameter>
+                                </Parameters>
+                              </Drillthrough>
+                            </Action>
+                          </Actions>
+                        </ActionInfo>
+                        <ToolTip>=Fields!IndicatorDescription.Value</ToolTip>
+                        <Style>
+                          <Border>
+                            <Color>DimGray</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>=Fields!GroupColor.Value</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                        </Style>
+                      </Textbox>
+                      <rd:Selected>true</rd:Selected>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember />
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <RepeatColumnHeaders>true</RepeatColumnHeaders>
+        <RepeatRowHeaders>true</RepeatRowHeaders>
+        <DataSetName>AssetMetricsTrend</DataSetName>
+        <Top>0.72987in</Top>
+        <Height>0.85in</Height>
+        <Width>7.37525in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+    </ReportItems>
+    <Height>3.53473in</Height>
+    <Style />
+  </Body>
+  <Width>10.02159in</Width>
+  <Page>
+    <PageFooter>
+      <Height>1.19098in</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="textbox6">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>8pt</FontSize>
+                    <Color>#939598</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Support</Value>
+                  <ActionInfo>
+                    <Actions>
+                      <Action>
+                        <Hyperlink>="javascript:void(window.open('"+ First(Fields!Value.Value, "SupportURL")+ "','_blank'))"</Hyperlink>
+                      </Action>
+                    </Actions>
+                  </ActionInfo>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                    <Color>#0071c5</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value />
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>8pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <Color>#0071c5</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Label>Footer</Label>
+                  <Value>=First(Fields!Value.Value, "Footer")</Value>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>8pt</FontSize>
+                    <Color>#939598</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Copyright © Intel Corporation. All rights reserved.</Value>
+                  <Style>
+                    <FontFamily>Verdana</FontFamily>
+                    <FontSize>8pt</FontSize>
+                    <Color>#939598</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <Top>0.39584in</Top>
+          <Height>0.79514in</Height>
+          <Width>8.032in</Width>
+          <Style>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style>
+        <Border>
+          <Style>None</Style>
+        </Border>
+      </Style>
+    </PageFooter>
+    <InteractiveHeight>0in</InteractiveHeight>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <Author>amr\jmiddlek</Author>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="GlobalData">
+      <DataSourceReference>GlobalData</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>fa5c31e5-829b-4f6b-9eca-16a9156140ee</rd:DataSourceID>
+    </DataSource>
+    <DataSource Name="IMPM">
+      <DataSourceReference>IMPM</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>0fa7082c-46dd-44ef-8e90-0de883adb381</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="SupportURL">
+      <Query>
+        <DataSourceName>GlobalData</DataSourceName>
+        <CommandText>SELECT DISTINCT Code, Value
+FROM            tbl_Config
+WHERE        (Code = 'ssrs-supporturl')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Code">
+          <DataField>Code</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Footer">
+      <Query>
+        <DataSourceName>GlobalData</DataSourceName>
+        <CommandText>SELECT DISTINCT Value, Code
+FROM            tbl_Config
+WHERE        (Code = 'SSRS-Footer')</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Code">
+          <DataField>Code</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="RefreshDate">
+      <Query>
+        <DataSourceName>IMPM</DataSourceName>
+        <CommandText>SELECT DISTINCT f.TimePeriodKey, c.clndr_dt
+FROM            FactAssetCSTrend AS f INNER JOIN
+                         DimCalendar AS c ON f.TimePeriodKey = c.clndr_dim_key
+ORDER BY c.clndr_dt DESC</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="clndr_dt">
+          <DataField>clndr_dt</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="TimePeriodKey">
+          <DataField>TimePeriodKey</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AssetMetricsRegion2">
+      <Query>
+        <DataSourceName>IMPM</DataSourceName>
+        <CommandText>Declare @ThisMonth Int = (Select c2.clndr_mth_nbr from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE()))
+Declare @ThisYear Int = (Select c2.clndr_yyyyy from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE())) 
+Declare @LastMonth INT = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+Declare @LastYear INT = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+
+-- Accommodate the brief hours on the 1st of the month between midnight and the completion of the nightly processing
+If Not Exists(Select TrendID From FactAssetCSTrend f
+		Where f.TimeType='Monthly' 
+			And f.TimePeriod=CONVERT(varchar,@ThisYear)+Right('00'+CONVERT(varchar,@ThisMonth),2))
+	Begin
+		Set @ThisMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @ThisYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+		Set @LastMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @LastYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+	End
+
+Select Distinct @ThisMonth as thismonth, @LastMonth as lastmonth, c.clndr_yyyyy, c.clndr_mth_nbr,
+	c.clndr_yyyymm, c.clndr_short_mth_txt, Indicator, ShortName, IndicatorGroup, 
+	Sum(value1) as numerator, Sum(value2) as denominator, Goal, RedThreshold, CalcType, Region,
+	Case When IndicatorGroup = 'Assets' Then 1
+		When IndicatorGroup = 'Stock Control' Then 2
+		When IndicatorGroup = 'Awaiting Delivery' Then 3
+		When IndicatorGroup = 'AMBWA' Then 4
+		When IndicatorGroup = 'Data Registration' Then 5
+		When IndicatorGroup = 'Termination' Then 7
+		When IndicatorGroup = 'SPU' Then 8
+	Else 9 End as GroupSort,
+	Case When IndicatorGroup = 'Assets' Then 'WhiteSmoke'
+		When IndicatorGroup = 'Stock Control' Then 'White'
+		When IndicatorGroup = 'Awaiting Delivery' Then 'WhiteSmoke'
+		When IndicatorGroup = 'AMBWA' Then 'White'
+		When IndicatorGroup = 'Data Registration' Then 'WhiteSmoke'
+		When IndicatorGroup = 'Termination' Then 'White'
+		When IndicatorGroup = 'SPU' Then 'WhiteSmoke'
+	Else 'White' End as GroupColor,
+	Case When ShortName in ('Deployments', 'AvailableAssets', 'VendorRepairing', 'AvailableNonDeployable', 'NotAvailableAssets', 'TerminatedEmployeeOver30Days', 'TerminatedEmployeeWithin30Days', 'ForDisposal', 'AwaitingDelivery') Then 'CS Asset Inventory Summary'
+		When ShortName in ('HWTamGeneration', 'RefreshProgress', 'PCdeployment', 'AssetDataAccuracy', 'PartiallyRegisteredWithin30Days', 'PartiallyRegisteredOver30Days') Then 'CS Asset Data Validation Summary'
+		When ShortName in ('LostStolen', 'AMBWA') Then 'CS Asset Audit Summary'
+		When ShortName in ( 'OpenLDORequests', 'OpenSPURequests') Then 'Asset-DispositionSummary'
+	Else 'CS-Asset Management Dashboard' End as ChildReport
+
+From [IMPM].[dbo].[FactAssetCSTrend] t
+	Join DimIndicator i on i.IndicatorID = t.IndicatorID 
+	Left Join DimCalendar c on t.timeperiodkey = c.clndr_dim_key
+
+Where ((c.clndr_mth_nbr = @ThisMonth And c.clndr_yyyyy = @ThisYear)
+		Or (c.clndr_mth_nbr = @LastMonth And c.clndr_yyyyy = @LastYear))
+	And TimeType = 'Monthly'
+--where clause is a requeriment from costumer to hide indicator #9
+	And i.indicatorid != '9'		
+Group By c.clndr_yyyyy, c.clndr_mth_nbr, c.clndr_yyyymm, c.clndr_short_mth_txt, Indicator,
+	ShortName, IndicatorGroup, Goal, RedThreshold, CalcType, Region</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="thismonth">
+          <DataField>thismonth</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="lastmonth">
+          <DataField>lastmonth</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="clndr_yyyyy">
+          <DataField>clndr_yyyyy</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="clndr_mth_nbr">
+          <DataField>clndr_mth_nbr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="clndr_yyyymm">
+          <DataField>clndr_yyyymm</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="clndr_short_mth_txt">
+          <DataField>clndr_short_mth_txt</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Indicator">
+          <DataField>Indicator</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShortName">
+          <DataField>ShortName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="IndicatorGroup">
+          <DataField>IndicatorGroup</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="numerator">
+          <DataField>numerator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="denominator">
+          <DataField>denominator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Goal">
+          <DataField>Goal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="RedThreshold">
+          <DataField>RedThreshold</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CalcType">
+          <DataField>CalcType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Region">
+          <DataField>Region</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupSort">
+          <DataField>GroupSort</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Measure">
+          <Value>=IIF(Fields!CalcType.Value = "Percent" AND Fields!denominator.Value &lt;&gt; 0, Fields!numerator.Value/Fields!denominator.Value, Fields!numerator.Value)</Value>
+        </Field>
+        <Field Name="ChildReport">
+          <DataField>ChildReport</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupColor">
+          <DataField>GroupColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AssetsbyQuarter2">
+      <Query>
+        <DataSourceName>IMPM</DataSourceName>
+        <CommandText>Declare @ThisMonth Int = (Select c2.clndr_mth_nbr from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE()))
+Declare @ThisQuarter Int = (Select c2.clndr_qtr from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE()))
+Declare @ThisYear Int = (Select c2.clndr_yyyyy from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE())) 
+Declare @LastMonth INT = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End              
+Declare @LastQuarter INT = Case When @ThisQuarter=1 Then 4 Else @ThisQuarter-1 End 
+Declare @LastYear INT = Case When @ThisQuarter=1 Then @ThisYear-1 Else @ThisYear End  
+
+-- Accommodate the brief hours on the 1st of the month between midnight and the completion of the nightly processing
+If Not Exists(Select TrendID From FactAssetCSTrend f
+		Where f.TimeType='Monthly' 
+			And f.TimePeriod=CONVERT(varchar,@ThisYear)+Right('00'+CONVERT(varchar,@ThisMonth),2))
+	Begin
+		Set @ThisMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @ThisYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+		Set @ThisQuarter = (Select Distinct c2.clndr_qtr from DimCalendar c2
+				Where c2.clndr_mth_nbr=@ThisMonth And c2.clndr_yyyyy=@ThisYear)
+		Set @LastMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @LastQuarter = Case When @ThisQuarter=1 Then 4 Else @ThisQuarter-1 End 
+		Set @LastYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+	End
+
+Select @ThisQuarter as thisqtr, @LastQuarter as lastqtr, c.clndr_yyyyqq, c.clndr_yyyymm, c.clndr_qtr,  
+	Indicator, ShortName, IndicatorGroup, SUM(value1) as numerator, SUM(value2) as denominator,
+	Goal, RedThreshold, CalcType,
+	Case When IndicatorGroup = 'Assets' Then 1
+		When IndicatorGroup = 'Stock Control' Then 2
+		When IndicatorGroup = 'Awaiting Delivery' Then 3
+		When IndicatorGroup = 'AMBWA' Then 4
+		When IndicatorGroup = 'Data Registration' Then 5
+		When IndicatorGroup = 'Termination' Then 7
+		When IndicatorGroup = 'SPU' Then 8
+	Else 9 End as GroupSort,
+	Case When IndicatorGroup = 'Assets' Then 'WhiteSmoke'
+		When IndicatorGroup = 'Stock Control' Then 'White'
+		When IndicatorGroup = 'Awaiting Delivery' Then 'WhiteSmoke'
+		When IndicatorGroup = 'AMBWA' Then 'White'
+		When IndicatorGroup = 'Data Registration' Then 'WhiteSmoke'
+		When IndicatorGroup = 'Termination' Then 'White'
+		When IndicatorGroup = 'SPU' Then 'WhiteSmoke'
+	Else 'White' End as GroupColor,
+	Case When ShortName in ('Deployments', 'AvailableAssets', 'VendorRepairing', 'AvailableNonDeployable', 
+			'NotAvailableAssets', 'TerminatedEmployeeOver30Days', 'TerminatedEmployeeWithin30Days', 
+			'ForDisposal', 'AwaitingDelivery') Then 'CS Asset Inventory Summary'
+		When ShortName in ('HWTamGeneration', 'RefreshProgress', 'PCdeployment', 'AssetDataAccuracy', 
+			'PartiallyRegisteredWithin30Days', 'PartiallyRegisteredOver30Days') Then 'CS Asset Data Validation Summary'
+		When ShortName in ('LostStolen', 'AMBWA') Then 'CS Asset Audit Summary'
+		When ShortName in ( 'OpenLDORequests', 'OpenSPURequests') Then 'Asset-DispositionSummary'
+	Else 'CS-Asset Management Dashboard' End as ChildReport
+
+From [IMPM].[dbo].[FactAssetCSTrend] t
+	Join DimIndicator i on i.IndicatorID = t.IndicatorID 
+	Join (Select Distinct indicatorid From FactAssetCSTrend t2 
+			Join DimCalendar c2 on t2.TimePeriodKey = c2.clndr_dim_key 
+		Where TimeType = 'Monthly' And c2.clndr_mth_nbr in (@ThisMonth, @LastMonth)
+		)m On t.IndicatorID = m.IndicatorID
+	Left Join DimCalendar c on t.timeperiodkey = c.clndr_dim_key
+
+Where ((c.clndr_qtr = @ThisQuarter And c.clndr_yyyyy = @ThisYear)
+		Or (c.clndr_qtr = @LastQuarter And c.clndr_yyyyy = @LastYear))
+	And TimeType = 'Quarterly'
+--where clause is a requeriment from costumer to hide indicator #9
+	And i.indicatorid != '9'
+
+Group By c.clndr_qtr , c.clndr_yyyyqq, c.clndr_yyyymm, Indicator, ShortName,
+	IndicatorGroup, Goal, RedThreshold, CalcType
+
+Order By c.clndr_yyyyqq, c.clndr_yyyymm</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="thisqtr">
+          <DataField>thisqtr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="lastqtr">
+          <DataField>lastqtr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="clndr_yyyyqq">
+          <DataField>clndr_yyyyqq</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="clndr_yyyymm">
+          <DataField>clndr_yyyymm</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="clndr_qtr">
+          <DataField>clndr_qtr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Indicator">
+          <DataField>Indicator</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShortName">
+          <DataField>ShortName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="IndicatorGroup">
+          <DataField>IndicatorGroup</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="numerator">
+          <DataField>numerator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="denominator">
+          <DataField>denominator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Goal">
+          <DataField>Goal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="RedThreshold">
+          <DataField>RedThreshold</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CalcType">
+          <DataField>CalcType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupSort">
+          <DataField>GroupSort</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Measure">
+          <Value>=IIF(Fields!CalcType.Value = "Percent" AND Fields!denominator.Value &lt;&gt; 0, Fields!numerator.Value/Fields!denominator.Value, Fields!numerator.Value)</Value>
+        </Field>
+        <Field Name="ChildReport">
+          <DataField>ChildReport</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupColor">
+          <DataField>GroupColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="AssetMetricsTrend">
+      <Query>
+        <DataSourceName>IMPM</DataSourceName>
+        <CommandText>Declare @ThisMonth Int = (Select c2.clndr_mth_nbr from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE()))
+Declare @ThisYear Int = (Select c2.clndr_yyyyy from DimCalendar c2
+	Where c2.clndr_dt=CONVERT(date,GETDATE())) 
+Declare @LastMonth INT = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+Declare @LastYear INT = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+
+-- Accommodate the brief hours on the 1st of the month between midnight and the completion of the nightly processing
+If Not Exists(Select TrendID From FactAssetCSTrend f
+		Where f.TimeType='Monthly' 
+			And f.TimePeriod=CONVERT(varchar,@ThisYear)+Right('00'+CONVERT(varchar,@ThisMonth),2))
+	Begin
+		Set @ThisMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @ThisYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+		Set @LastMonth = Case When @ThisMonth=1 Then 12 Else @ThisMonth-1 End 
+		Set @LastYear = Case When @ThisMonth=1 Then @ThisYear-1 Else @ThisYear End  
+	End
+
+Select Distinct b.indicatorid, b.IndicatorGroup, CurrentYear, CurrentMonth, CurrentYearMonth, CurrentShortMonth, 
+	PriorYear, PriorMonth, PriorYearMonth, PriorShortMonth, Indicator, ShortName, IndicatorDescription, 
+    PriorNumerator, PriorDenominator, CurrentNumerator, CurrentDenominator, 
+	CASE When b.IndicatorID = 20 Then (select SUM(a.CountOfStudentsGB) from (
+select Case When l.SiteCode is null Then 'Other' Else l.SiteCode End as [Site], COUNT(Distinct fa.AssignedToWWID) as [CountOfStudentsGB] --e.BadgeType, e.EmpTypeCode,  e.StatCode, fa.AssetID, da.Name, da.FormFactor, das.StatusLabel 
+from GlobalData.dbo.tbl_EmployeeInfo as e
+Left Join IMPM.dbo.FactAsset as fa With (NoLock) on fa.AssignedToWWID = e.WWID
+Left Join IMPm.dbo.DimAsset as da With (NoLock) on da.AssetID = fa.AssetID
+Left Join IMPM.dbo.DimLocation l With (NoLock) On l.LocationCode=e.CampusCode and LocationType = 'Campus'
+Left Join IMPM.dbo.DimAssetStatus das With (NoLock) on das.StatusID = fa.HardwareStatusID
+where
+(e.BadgeType = 'GB' or e.EmpTypeCode = 'SH')
+and da.FormFactor = 'Laptop'
+and e.StatCode = 'A'
+and das.StatusLabel = 'in_use'
+group by l.SiteCode) as a) * (Goal/100)
+	Else Goal End as Goal,
+--	Goal,
+	RedThreshold, CalcType,
+	CASE When b.IndicatorGroup = 'Assets' Then 1
+		When b.IndicatorGroup = 'Stock Control' Then 2
+		When b.IndicatorGroup = 'Awaiting Delivery' Then 3
+		When b.IndicatorGroup = 'AMBWA' Then 4
+		When b.IndicatorGroup = 'Data Registration' Then 5
+		When b.IndicatorGroup = 'Termination' Then 7
+		When b.IndicatorGroup = 'SPU' Then 8
+	Else 9 End as GroupSort,
+	Case When b.CalcType = 'COUNT' And CurrentNumerator &gt; PriorNumerator Then 'p'
+		When b.CalcType = 'COUNT' And CurrentNumerator = PriorNumerator Then 'tu'
+		When b.CalcType = 'COUNT' And CurrentNumerator &lt; PriorNumerator Then 'q'
+		When b.CalcType = 'PERCENT' And (CurrentDenominator is NULL And PriorDenominator is NULL) Then 'tu'
+		When b.CalcType = 'PERCENT' And CurrentDenominator is NULL Then 'tu'
+		When b.CalcType = 'PERCENT' And PriorDenominator is NULL Then 'tu'
+		When b.CalcType = 'PERCENT' And 
+				Case CurrentDenominator When 0 Then 0 Else CurrentNumerator/CurrentDenominator End &gt; 
+				Case PriorDenominator When 0 Then 0 Else PriorNumerator/PriorDenominator End Then 'p'
+		When b.CalcType = 'PERCENT' And 
+				Case CurrentDenominator When 0 Then 0 Else CurrentNumerator/CurrentDenominator End = 
+				Case PriorDenominator When 0 Then 0 Else PriorNumerator/PriorDenominator End Then 'tu'
+		When b.CalcType = 'PERCENT' And 
+				Case CurrentDenominator When 0 Then 0 Else CurrentNumerator/CurrentDenominator End &lt; 
+				Case PriorDenominator When 0 Then 0 Else PriorNumerator/PriorDenominator End Then 'q'
+	Else 'tu' End as Trend,
+	Case When b.IndicatorGroup = 'Assets' Then 'WhiteSmoke'
+		When b.IndicatorGroup = 'Stock Control' Then 'White'
+		When b.IndicatorGroup = 'Awaiting Delivery' Then 'WhiteSmoke'
+		When b.IndicatorGroup = 'AMBWA' Then 'White'
+		When b.IndicatorGroup = 'Data Registration' Then 'WhiteSmoke'
+		When b.IndicatorGroup = 'Termination' Then 'White'
+		When b.IndicatorGroup = 'SPU' Then 'WhiteSmoke'
+	Else 'White' End as GroupColor,
+	Case When b.ShortName in ('Deployments', 'AvailableAssets', 'VendorRepairing', 'AvailableNonDeployable', 'NotAvailableAssets', 'TerminatedEmployeeOver30Days', 'TerminatedEmployeeWithin30Days', 'ForDisposal', 'AwaitingDelivery') Then 'CS Asset Inventory Summary'
+		When b.ShortName in ('HWTamGeneration', 'RefreshProgress', 'PCdeployment', 'AssetDataAccuracy', 'PartiallyRegisteredWithin30Days', 'PartiallyRegisteredOver30Days') Then 'CS Asset Data Validation Summary'
+		When b.ShortName in ('LostStolen', 'AMBWA') Then 'CS Asset Audit Summary'
+		When b.ShortName in ( 'LDORequests', 'SPURequests') Then 'Asset-DispositionSummary'
+		When b.ShortName = 'OldStock' Then 'CS Asset Old Stock'
+	Else 'CS-Asset Management Dashboard' End as ChildReport
+From (Select Distinct c.clndr_yyyyy as PriorYear, c.clndr_mth_nbr as PriorMonth, c.clndr_yyyymm as PriorYearMonth,
+		c.clndr_short_mth_txt as PriorShortMonth, i.indicatorid, 
+		Sum(t.value1) as PriorNumerator, Sum(t.value2) as PriorDenominator 
+	From [IMPM].[dbo].[FactAssetCSTrend] t
+		Join DimIndicator i on i.IndicatorID = t.IndicatorID 
+		Left Join DimCalendar c on t.timeperiodkey = c.clndr_dim_key
+	Where c.clndr_mth_nbr = @LastMonth AND c.clndr_yyyyy = @LastYear AND TimeType = 'Monthly'
+	Group By c.clndr_yyyyy, c.clndr_mth_nbr, c.clndr_yyyymm, c.clndr_short_mth_txt, i.indicatorid
+	) a
+	Right Join (Select Distinct c.clndr_yyyyy as CurrentYear, c.clndr_mth_nbr as CurrentMonth,
+			c.clndr_yyyymm as CurrentYearMonth, c.clndr_short_mth_txt as CurrentShortMonth, Indicator,
+			ShortName, IndicatorDescription, i.indicatorid, IndicatorGroup,
+			Sum(t.value1) as CurrentNumerator, Sum(t.value2) as CurrentDenominator,
+			Goal, RedThreshold, CalcType
+		From [IMPM].[dbo].[FactAssetCSTrend] t
+			Join DimIndicator i on i.IndicatorID = t.IndicatorID 
+			Left Join DimCalendar c on t.timeperiodkey = c.clndr_dim_key
+		Where c.clndr_mth_nbr = @ThisMonth AND c.clndr_yyyyy = @ThisYear AND TimeType = 'Monthly'
+		Group By c.clndr_yyyyy, c.clndr_mth_nbr, c.clndr_yyyymm, c.clndr_short_mth_txt, Indicator,
+			ShortName, IndicatorDescription, i.indicatorid, IndicatorGroup, Goal, RedThreshold, CalcType
+		) b on a.indicatorid = b.indicatorid
+--where clause is a requeriment from costumer to hide indicator #9
+WHERE b.indicatorid != '9'</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="indicatorid">
+          <DataField>indicatorid</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="IndicatorGroup">
+          <DataField>IndicatorGroup</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrentYear">
+          <DataField>CurrentYear</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrentMonth">
+          <DataField>CurrentMonth</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CurrentYearMonth">
+          <DataField>CurrentYearMonth</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrentShortMonth">
+          <DataField>CurrentShortMonth</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PriorYear">
+          <DataField>PriorYear</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PriorMonth">
+          <DataField>PriorMonth</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PriorYearMonth">
+          <DataField>PriorYearMonth</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PriorShortMonth">
+          <DataField>PriorShortMonth</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Indicator">
+          <DataField>Indicator</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ShortName">
+          <DataField>ShortName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="IndicatorDescription">
+          <DataField>IndicatorDescription</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PriorNumerator">
+          <DataField>PriorNumerator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="PriorDenominator">
+          <DataField>PriorDenominator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CurrentNumerator">
+          <DataField>CurrentNumerator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CurrentDenominator">
+          <DataField>CurrentDenominator</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Goal">
+          <DataField>Goal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="RedThreshold">
+          <DataField>RedThreshold</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="CalcType">
+          <DataField>CalcType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupSort">
+          <DataField>GroupSort</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Trend">
+          <DataField>Trend</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupColor">
+          <DataField>GroupColor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ChildReport">
+          <DataField>ChildReport</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrentMeasure">
+          <Value>=IIF(Fields!CalcType.Value = "Percent" AND Fields!CurrentDenominator.Value &lt;&gt; 0, Fields!CurrentNumerator.Value/Fields!CurrentDenominator.Value, Fields!CurrentNumerator.Value)</Value>
+        </Field>
+        <Field Name="PriorMeasure">
+          <Value>=IIF(Fields!CalcType.Value = "Percent" AND Fields!PriorDenominator.Value &lt;&gt; 0, Fields!PriorNumerator.Value/Fields!PriorDenominator.Value, Fields!PriorNumerator.Value)</Value>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <CustomProperties>
+    <CustomProperty>
+      <Name>font</Name>
+      <Value>Verdana</Value>
+    </CustomProperty>
+  </CustomProperties>
+  <EmbeddedImages>
+    <EmbeddedImage Name="banner_bck">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>/9j/4AAQSkZJRgABAgAAZABkAAD/7AARRHVja3kAAQAEAAAAUAAA/+4ADkFkb2JlAGTAAAAAAf/bAIQAAgICAgICAgICAgMCAgIDBAMCAgMEBQQEBAQEBQYFBQUFBQUGBgcHCAcHBgkJCgoJCQwMDAwMDAwMDAwMDAwMDAEDAwMFBAUJBgYJDQsJCw0PDg4ODg8PDAwMDAwPDwwMDAwMDA8MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM/8AAEQgAOgAOAwERAAIRAQMRAf/EAHAAAQEBAQEAAAAAAAAAAAAAAAAFBwQIAQEAAgMBAAAAAAAAAAAAAAAAAgUDBAcBEAABAgMJAQAAAAAAAAAAAAAAARNhoRaRUmJTBJTUVgcXEQEAAQIFBQAAAAAAAAAAAAAAEhETodECUhWiUwQUBf/aAAwDAQACEQMRAD8A9R/I/JerJv8AXcg6hy3mb8NOTg/AfN7XVqzPkfkvVk3+u5A5bzN+GnI4D5va6tWaRUa5sxae+wVGubMWj2GCVHjQtLSmvFR40FovMDqFb8yxgrplQrfmIE2cPRUyVSiPRUVIpjpjq2YjoqRSXYkKtuI7EVIuO0izFoH/2Q==</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>94c76f4c-eb8d-4c93-9092-965612a63d87</rd:ReportID>
+</Report>

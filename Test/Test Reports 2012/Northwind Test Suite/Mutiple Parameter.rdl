@@ -243,6 +243,7 @@
             </FilterValues>
           </Filter>
         </Filters>
+        <Top>0.61458in</Top>
         <Height>0.5in</Height>
         <Width>4.95834in</Width>
         <Style>
@@ -251,11 +252,57 @@
           </Border>
         </Style>
       </Tablix>
+      <Textbox Name="Textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Label>Report Title</Label>
+                <Value>= "Multiple Parameter Report"</Value>
+                <Style>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Label>Subtitle</Label>
+                <Value>=""</Value>
+                <Style>
+                  <Color>White</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>0.12375in</Top>
+        <Left>0.13417in</Left>
+        <Height>0.42139in</Height>
+        <Width>4.82417in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
     <Height>2in</Height>
     <Style />
   </Body>
-  <Width>9.41791in</Width>
+  <Width>9.95834in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -303,6 +350,11 @@ ORDER BY CategoryID </CommandText>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>CategoryID</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -320,15 +372,14 @@ ORDER BY CategoryID </CommandText>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <DefaultValue>
-        <DataSetReference>
-          <DataSetName>DataSet1</DataSetName>
-          <ValueField>ProductName</ValueField>
-        </DataSetReference>
+        <Values>
+          <Value>ProductName</Value>
+        </Values>
       </DefaultValue>
       <AllowBlank>true</AllowBlank>
       <Prompt>ProductName</Prompt>
@@ -339,6 +390,7 @@ ORDER BY CategoryID </CommandText>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="IsCheap">
@@ -348,16 +400,16 @@ ORDER BY CategoryID </CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Today()</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>ProductionDate</Prompt>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
-      <DataType>Integer</DataType>
+      <DataType>String</DataType>
       <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>*</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>IntegerTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="MultipleValues">
@@ -389,13 +441,25 @@ ORDER BY CategoryID </CommandText>
         </ParameterValues>
       </ValidValues>
       <MultiValue>true</MultiValue>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="FloatTest">
-      <DataType>Float</DataType>
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>*</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>FloatTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="ReportParameter1">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>*</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>

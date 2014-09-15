@@ -711,3 +711,5 @@ Test/AdventureWorks Sample Reports/UpgradeLog.XML
 Test/Test Reports 2012/Northwind Test Suite/CascadingParameter.rdl
 Test/Test Reports 2012/Northwind Test Suite/CS-Asset Management Dashboard.rdl
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user
+Test/Test Reports 2012/Northwind Test Suite/bin/Debug/TrainingComplianceReport.rdl
+Test/Test Reports 2012/Northwind Test Suite/TrainingComplianceReport.rdl

@@ -361,7 +361,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Checkin Test Report</ReportName>
+                          <ReportName>Cascading Parameter single category</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>

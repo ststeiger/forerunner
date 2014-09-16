@@ -13,7 +13,16 @@
     "favoriteFailed":"Gescheiterte",
     "docmapShowFailed":"Gescheiterte",
     "prepareActionFailed":"Gescheiterte",
-    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht"
+    "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht",
+    "saveDashboardFailed":"Sparen Sie Dashboard-Fehler",
+    "saveDashboardSucceeded":"Sparen Sie Dashboard-Nachfolger",
+    "loadDashboardFailed":"Last-Übersicht fehlgeschlagen",
+    "loadDashboard":"Last-Übersicht",
+    "createFailed":"Eine Übersicht mit diesem Namen ist bereits vorhanden. Sie können entweder: 1) umbenennen Ihrem Armaturenbrett oder 2) Überprüfen Sie die Überschreibkasten , dann versuchen Sie es erneut.",
+    "saveSearchFolderSucceeded":"Suchordner Erstellt Nachfolger",
+    "saveSearchFolderFailed":"Suchordner Erstellt fehlgeschlagen",
+    "addTagsSucceeded":"Schlagworte hinzufügen Nachfolger",
+    "addTagsFailed":"Schlagworte hinzufügen fehlgeschlagen"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
@@ -49,7 +58,15 @@
     "print":"Drucken",
     "dsCredential":"Credential",
     "views":"Ansichten",
-    "addToFavorites":"Zu Favoriten"
+    "addToFavorites":"Zu Favoriten",
+    "RDLExt":"RDL-Erweiterung",
+    "editDashboard":"Dashboard-Bearbeiten",
+    "saveDashboard":"Save-Übersicht",
+    "tags":"Schlagworte",
+    "viewDashboard":"Dashboard-Ansicht",
+    "zoomPageWidth":"Toggle Seitenbreite",
+    "zoomPercent":"Zoom auf Prozent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Zurück",
@@ -78,7 +95,14 @@
     "parameterSets":"Sätze verwalten",
     "selectSet":"wählen Sätze",
     "dsCredential":"Datenquelle Credential",
-    "addToFavorites":"Zu Favoriten hinzufügen"
+    "addToFavorites":"Zu Favoriten hinzufügen",
+    "unzoom":"unzoom",
+    "search":"Suche",
+    "createDashboard":"Dashboard erstellen",
+    "editDashboard":"Dashboard-Bearbeiten",
+    "saveDashboard":"Save-Übersicht",
+    "searchFolder":"Suchordner",
+    "viewDashboard":"Dashboard-Ansicht"
   },
   "print": {
     "title":"Bericht drucken",
@@ -98,17 +122,20 @@
     "title":"Benutzereinstellungen",
     "submit":"Ok",
     "cancel":"Abbestellen",
-    "ResponsiveUI":"Responsive UI"
+    "ResponsiveUI":"Responsive UI",
+    "Email":"E-Mail",
+    "AdminUI":"Admin-Benutzeroberfläche"
   },
   "paramPane": {
-    "nullField":"Null",
+    "nullField":"nichtig",
     "isTrue":"Wahr",
     "isFalse":"Falsch",
     "required":"Erforderlich",
     "viewReport":"Anzeigen",
     "cancel":"Abbestellen",
     "datePicker":"Datum",
-    "select":"Wählen"
+    "select":"Wählen",
+    "useDefault":"Verwenden Sie Standard-"
   },
   "validateError": {
     "required":"Erforderlich",
@@ -125,7 +152,8 @@
     "range":"Geben Sie einen Wert zwischen {0} und {1}",
     "max":"Geben Sie einen Wert kleiner oder gleich {0}",
     "min":"Geben Sie einen Wert größer oder gleich {0}",
-    "invalid":"ungültig"
+    "invalid":"ungültig",
+    "invalidTree":"{0} nicht gewählt"
   },
   "dialog": {
     "title":"Eingabeaufforderung",
@@ -175,5 +203,86 @@
     "username":"Login name:",
     "password":"Passwort:",
     "reset":"rücksetzen"
+  },
+  "explorerSearch": {
+    "emptyError":"Suchkriterien können nicht leer sein",
+    "notFound":"Keine Ergebnisse gefunden, bitte verfeinern Sie Ihre Suche."
+  },
+  "createDashboard": {
+    "title":"Dashboard erstellen",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "dashboardName":"Name",
+    "namePlaceholder":"Dashboard-Namen",
+    "dashboardTemplate":"Schablone",
+    "overwrite":"überschreiben"
+  },
+  "RDLExt": {
+    "title":"RDL-Erweiterungen",
+    "submit":"einreichen",
+    "cancel":"stornieren",
+    "dialogTitle":"RDL JSON-Erweiterung"
+  },
+  "reportProperties": {
+    "title":"Berichtseigenschaften",
+    "cancel":"stornieren",
+    "submit":"einsenden",
+    "selectReport":"<wählen Bericht>",
+    "hideToolbar":"Symbolleiste ausblenden",
+    "toolbar":"Toolbar:",
+    "minimal":"Minimal",
+    "full":"voll",
+    "removeReport":"Bericht entfernen"
+  },
+  "tags": {
+    "title":"Schlagworte",
+    "tags":"Schlagworte",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "prompt":"Tags mit Kommas.",
+    "yourPosition":"Sie sind auf"
+  },
+  "searchFolder": {
+    "title":"Suchordner",
+    "name":"Name",
+    "tags":"Schlagworte",
+    "cancel":"stornieren",
+    "submit":"einreichen",
+    "prompt":"Tags mit Kommas.",
+    "homePage":"Startseite",
+    "createTo":"erstellt unter",
+    "namePlaceholder":"Suchordner Name"
+  },
+  "subscription": {
+    "email":"E-Mail",
+    "cancel":"stornieren",
+    "save":"sparen",
+    "manageSubscription":"Abonnement verwalten",
+    "toPlaceholder":"zu",
+    "subjectPlaceholder":"Thema",
+    "descriptionPlaceholder":"Beschreibung",
+    "commentPlaceholder":"Kommentar",
+    "subject":"@ Report wurde unter @ ExecutionTime ausgeführt",
+    "description":"E-Mail an {0}",
+    "includeLink":"Fügen Link",
+    "includeReport":"Fügen Bericht",
+    "schedule":"Zeitplan",
+    "format":"Format",
+    "saveFailed":"Speichern Abonnement gescheitert ",
+    "addNew":"Schaffen ",
+    "edit":"Edieren",
+    "deleteSubscription":"Löschen ",
+    "deleteFailed":"Abonnement Löschung gescheitert"
+  },
+  "properties": {
+    "title":"Eigenschaften",
+    "submit":"einreichen",
+    "deleteItem":"löschen",
+    "description":"Beschreibung"
+  },
+  "contextMenu": {
+    "title":"Kontextmenü",
+    "delLabel":"löschen",
+    "properties":"Eigenschaften"
   }
 }

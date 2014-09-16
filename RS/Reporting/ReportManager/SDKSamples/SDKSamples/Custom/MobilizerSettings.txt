@@ -1,4 +1,19 @@
 {
 	"MaxBigDropdownItem": 50,
-	"MinItemToEnableBigDropdownOnTouch": 10
+	"MinItemToEnableBigDropdownOnTouch": 10,
+	"EnableCascadingTree": "on",
+	"MaxResponsiveResolution": 1280,
+	"FullScreenPageNavSize" : 768,
+	"DefaultResponsiveTablix" : "on",
+	"FirefoxPDFbug":"on",
+	"ParameterPaneWidth":"350",
+	"showHomeButton":"off",
+	"showSubscriptionUI":"on",
+	"FancyTooltips":"on",
+	"ImageAreaHighligh": "on",
+	"ImageAreaHighlighBorderColor": "0000ff",
+	"ImageAreaHighlighBorderWidth": "2",
+	"HideDisabledTool":"on",
+	"WatermarkPostText":"",
+	"DefaultSubscriptionFormat":"MHTML"
 }

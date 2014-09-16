@@ -3,38 +3,31 @@
     Layout = "../Shared/_SamplesLayout.cshtml";
 }
 
+@section styles {
+<style>
+    .sample-header { width: 100%; background-color: lightgrey; }
+</style>
+}
+
+<div class="sample-header">
+    <h1>Report Explorer EZ Sample</h1>
+</div>
+
+<div id="reportarea"></div>
+
 @section scripts {
 <script>
     $(function () {
-        // This sample is full page so the container will be the body
-        var $container = $('body');
-
-        // NavigateTo gets called whenever the user wants to navigate away from the
-        // current context
-        var navigateTo = function (action, path) {
-            if (action == "favorites" || action == "recent") {
-                $container.reportExplorerEZ("transitionToReportManager", path, action);
-            }
-            else if (action == "home" || action == "explore") {
-                $container.reportExplorerEZ("transitionToReportManager", path, null);
-            }
-            else if (action == "back") {
-                window.history.back();
-            }
-            else if (action == "browse") {
-                $container.reportExplorerEZ("transitionToReportViewer", path);
-            }
-        };
+        var $reportArea = $("#reportarea");
 
         // Create the report explorer widget
         $(document).ready(function () {
-            $container.reportExplorerEZ({
-                navigateTo: navigateTo,
-                historyBack: null
+            $reportArea.reportExplorerEZ({
+                isFullScreen: false
             });
 
             // Transition to the home catalog view
-            $container.reportExplorerEZ("transitionToReportManager", "/", null);
+            $reportArea.reportExplorerEZ("transitionToReportManager", "/", null);
         });
 
 

@@ -535,7 +535,7 @@ $(function () {
             var me = this;
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
                 $container: me.element,
-                isFullScreen: me.isFullScreen
+                isFullScreen: me.options.isFullScreen
             }).render();
             
             me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);

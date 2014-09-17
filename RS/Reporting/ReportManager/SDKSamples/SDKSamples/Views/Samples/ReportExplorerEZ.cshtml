@@ -27,6 +27,11 @@
                 showBreadCrumb: false
             });
 
+            // Remove the logout button
+            var $reportExplorerToolbar = $reportArea.reportExplorerEZ("getReportExplorerToolbar");
+            var reportExplorerTools = forerunner.ssr.tools.reportExplorerToolbar;
+            $reportExplorerToolbar("hideTool", reportExplorerTools.btnLogOff.selectorClass);
+
             // Transition to the home catalog view
             $reportArea.reportExplorerEZ("transitionToReportManager", "/", null);
         });

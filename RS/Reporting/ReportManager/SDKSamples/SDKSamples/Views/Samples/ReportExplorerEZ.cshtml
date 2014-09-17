@@ -21,24 +21,26 @@
         var $reportArea = $("#reportarea");
 
         // Create the report explorer widget
-        $(document).ready(function () {
-            $reportArea.reportExplorerEZ({
-                isFullScreen: false,
-                showBreadCrumb: false
-            });
+        $reportArea.reportExplorerEZ({
+            isFullScreen: false,
+            showBreadCrumb: false
+        });
+
+        var events = forerunner.ssr.constants.events;
+        $reportArea.on(events.reportExplorerEZAfterTransition(), function (type) {
+            // Note that code to remove buttons must be inside of the after transition event. This is because the
+            // function transitionToReportManager will create the widgets (E.g., reportExplorerToolbar) after a timer
+            // so this call cannot be synchronous
 
             // Remove the logout button
             var $reportExplorerToolbar = $reportArea.reportExplorerEZ("getReportExplorerToolbar");
             var reportExplorerTools = forerunner.ssr.tools.reportExplorerToolbar;
-            $reportExplorerToolbar("hideTool", reportExplorerTools.btnLogOff.selectorClass);
-
-            // Transition to the home catalog view
-            $reportArea.reportExplorerEZ("transitionToReportManager", "/", null);
+            $reportExplorerToolbar.reportExplorerToolbar("hideTool", reportExplorerTools.btnLogOff.selectorClass);
         });
 
+        // Transition to the home catalog view
+        $reportArea.reportExplorerEZ("transitionToReportManager", "/", null);
 
     })  // function ()
 </script>
 }
-
-

@@ -373,6 +373,8 @@ $(function () {
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
+
+                me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
         },
         _setLeftRightPaneStyle: function () {
@@ -458,6 +460,8 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
+
+                me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 
             me.element.css("background-color", "");
@@ -494,6 +498,8 @@ $(function () {
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit, true);
+
+                me._trigger(events.afterTransition, null, { type: "Dashboard", path: path, enableEdit: enableEdit });
             }, timeout);
 
             me.element.css("background-color", "");

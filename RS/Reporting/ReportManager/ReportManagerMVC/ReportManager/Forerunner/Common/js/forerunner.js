@@ -564,6 +564,11 @@ $(function () {
             zoomChange: "zoomchange",
             /** widget + event, lowercase */
             reportViewerZoomChange: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.zoomChange).toLowerCase(); },
+
+            /** @constant */
+            afterTransition: "aftertransition",
+            /** widget + event, lowercase */
+            reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

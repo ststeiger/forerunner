@@ -2079,7 +2079,7 @@ $(function () {
             if (url == null)
                 return null;
 
-            var options = { "isReportManager" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
+            var options = { "isReportManager" : true, "showBreadCrumb" : false, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
             var start = url.indexOf("?") + 1;
             var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -2088,6 +2088,8 @@ $(function () {
                 var value = decodeURIComponent(pair[1]).toLowerCase();
                 if (key === "fr:reportmanager")
                     options.isReportManager = !(value === "false");
+                else if (key === "fr:showBreadCrumb")
+                    options.showBreadCrumb = !(value === "false");
                 else if (key === "fr:reportmanagersettings")
                     options.useReportManagerSettings = !(value === "false");
                 else if (key === "rc:toolbar")

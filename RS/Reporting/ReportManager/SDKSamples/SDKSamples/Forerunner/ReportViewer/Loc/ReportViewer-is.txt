@@ -13,7 +13,16 @@
     "favoriteFailed":"Theip ar",
     "docmapShowFailed":"Theip ar",
     "prepareActionFailed":"Theip ar",
-    "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil"
+    "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil",
+    "saveDashboardFailed":"Vista Mælaborð mistókst",
+    "saveDashboardSucceeded":"Vista Mælaborð Eftirmaður",
+    "loadDashboardFailed":"Hlaða Mælaborð mistókst",
+    "loadDashboard":"hlaða Mælaborð",
+    "createFailed":"A mælaborð með þessu nafni er þegar til. Þú getur annað hvort: 1) endurnefna mælaborðið þitt eða 2) athuga yfirskrifa kassi þá reyna aftur.",
+    "saveSearchFolderSucceeded":"Leita Mappa Búið Eftirmaður",
+    "saveSearchFolderFailed":"Leita Mappa Búið mistókst",
+    "addTagsSucceeded":"Bæta Tags Eftirmaður",
+    "addTagsFailed":"Bæta Tags mistókst"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",
@@ -49,7 +58,15 @@
     "print":"Prenta",
     "dsCredential":"Persónuskilríki",
     "views":"Views",
-    "addToFavorites":"Bæta við uppáhöld"
+    "addToFavorites":"Bæta við uppáhöld",
+    "RDLExt":"RDL Eftirnafn",
+    "saveDashboard":"vista Mælaborð",
+    "editDashboard":"breyta Mælaborð",
+    "tags":"Tags",
+    "viewDashboard":"Skoða Mælaborð",
+    "zoomPageWidth":"Víxla síðu breidd",
+    "zoomPercent":"Þysja að Prósent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Til baka",
@@ -61,7 +78,7 @@
     "home":"Forsíða",
     "keyword":"leitarorð",
     "lastPage":"síðast",
-    "logOff": "nafnplata",
+    "logOff":"nafnplata",
     "menu":"Valmynd",
     "navigation":"Navigation",
     "next":"Næsta",
@@ -70,7 +87,7 @@
     "previousPage":"Fyrri",
     "recent":"Nýleg",
     "refresh":"Uppfæra",
-    "reportPage":"Page",
+    "reportPage":"síða",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "userSettings":"Stillingar",
@@ -78,7 +95,14 @@
     "parameterSets":"stjórna Leikmynd",
     "selectSet":"valið er Stilla",
     "dsCredential":"DataSource persónuskilríki",
-    "addToFavorites":"Bæta við uppáhöld"
+    "addToFavorites":"Bæta við uppáhöld",
+    "unzoom":"unzoom",
+    "search":"Leita",
+    "createDashboard":"Búa Mælaborð",
+    "editDashboard":"breyta Mælaborð",
+    "saveDashboard":"vista Mælaborð",
+    "searchFolder":"Leita Mappa",
+    "viewDashboard":"Skoða Mælaborð"
   },
   "print": {
     "title":"Print Report",
@@ -98,7 +122,9 @@
     "title":"notandi Stillingar",
     "submit":"Ok",
     "cancel":"Hætta",
-    "ResponsiveUI":"móttækilegur HÍ"
+    "ResponsiveUI":"móttækilegur HÍ",
+    "Email":"Email",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Zero",
@@ -108,7 +134,8 @@
     "viewReport":"Skoða",
     "cancel":"Hætta",
     "datePicker":"dagsetning",
-    "select":"Velja"
+    "select":"Velja",
+    "useDefault":"nota sjálfgefið"
   },
   "validateError": {
     "required":"krafist",
@@ -125,7 +152,8 @@
     "range":"Sláðu inn gildið á milli {0} og {1}",
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
     "min":"Sláðu inn gildið stærra en eða jafnt og {0}",
-    "invalid":"ógild"
+    "invalid":"ógild",
+    "invalidTree":"{0} ekki valinn"
   },
   "dialog": {
     "title":"hvetja",
@@ -175,5 +203,86 @@
     "username":"notandanafn:",
     "password":"lykilorð:",
     "reset":"endurstilla"
+  },
+  "explorerSearch": {
+    "emptyError":"Leitarskilyrðum má ekki vera autt",
+    "notFound":"Engar niðurstöður passa við leitarskilyrði þín skaltu fínstilla leitina."
+  },
+  "createDashboard": {
+    "title":"Búa Mælaborð",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "dashboardName":"nafn",
+    "namePlaceholder":"nafn mælaborð",
+    "dashboardTemplate":"Snið",
+    "overwrite":"Skrifa yfir"
+  },
+  "RDLExt": {
+    "title":"RDL Eftirnafn",
+    "submit":"leggja",
+    "cancel":"hætta",
+    "dialogTitle":"RDL Eftirnafn JSON"
+  },
+  "reportProperties": {
+    "title":"skýrslu Properties",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "selectReport":"<Veldu skýrslu>",
+    "hideToolbar":"fela tækjastiku",
+    "toolbar":"tækjastika:",
+    "minimal":"Minimal",
+    "full":"fullur",
+    "removeReport":"fjarlægja sKÝRSLA"
+  },
+  "tags": {
+    "title":"Tags",
+    "tags":"Tags",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "prompt":"Aðskilja merki með kommum.",
+    "yourPosition":"Þú ert á"
+  },
+  "searchFolder": {
+    "title":"Leita Mappa",
+    "name":"nafn",
+    "tags":"Tags",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "prompt":"Aðskilja merki með kommum.",
+    "homePage":"heimasíða",
+    "createTo":"búin undir",
+    "namePlaceholder":"Leita Mappa nafn"
+  },
+  "subscription": {
+    "email":"Email",
+    "cancel":"hætta",
+    "save":"vista",
+    "manageSubscription":"stjórna áskrift",
+    "toPlaceholder":"að",
+    "subjectPlaceholder":"Subject",
+    "descriptionPlaceholder":"Lýsing",
+    "commentPlaceholder":"athugasemd",
+    "subject":"@ ReportName var keyrð á @ ExecutionTime",
+    "description":"Senda tölvupóst til {0}",
+    "includeLink":"Hafa tengil",
+    "includeReport":"fela skýrslu",
+    "schedule":"Stundaskrá ",
+    "format":"Format",
+    "saveFailed":"Sparnaður áskrift mistókst",
+    "addNew":"Búa",
+    "edit":"Breyta",
+    "deleteSubscription":"Eyða",
+    "deleteFailed":"Áskrift eyða mistókst"
+  },
+  "properties": {
+    "title":"eiginleikar ",
+    "submit":"leggja",
+    "deleteItem":"eyða",
+    "description":"Lýsing"
+  },
+  "contextMenu": {
+    "title":"samhengi Matseðill",
+    "delLabel":"eyða",
+    "properties":"eiginleikar"
   }
 }

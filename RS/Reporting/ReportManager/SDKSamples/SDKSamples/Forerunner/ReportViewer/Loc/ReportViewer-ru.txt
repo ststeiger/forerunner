@@ -13,7 +13,16 @@
     "favoriteFailed":"Не удалось",
     "docmapShowFailed":"Не удалось",
     "prepareActionFailed":"Не удалось",
-    "bookmarkNotFound":"Не можете найти закладку в докладе"
+    "bookmarkNotFound":"Не можете найти закладку в докладе",
+    "saveDashboardFailed":"Сохранить Dashboard Failed",
+    "saveDashboardSucceeded":"Сохранить Dashboard удалось",
+    "loadDashboardFailed":"Нагрузка Dashboard удалось",
+    "loadDashboard":"Нагрузка Dashboard",
+    "createFailed":"Приборная панель с таким именем уже существует. Вы можете либо: 1) переименовать панель или 2) установите флажок перезаписи затем повторите попытку.",
+    "saveSearchFolderSucceeded":"Поиск Папка создания Преемник",
+    "saveSearchFolderFailed":"Поиск Папка создания Неудачный",
+    "addTagsSucceeded":"Добавить метки успешно завершено",
+    "addTagsFailed":"Добавить метки Failed"
   },
   "errorTag": {
     "moreDetail":"Подробнее",
@@ -49,7 +58,15 @@
     "print":"Напечатать",
     "dsCredential":"учетных",
     "views":"Просмотров",
-    "addToFavorites":"избранное"
+    "addToFavorites":"избранное",
+    "RDLExt":"RDL Расширение",
+    "saveDashboard":"Сохранить Dashboard",
+    "editDashboard":"Редактировать Dashboard",
+    "tags":"Метки",
+    "viewDashboard":"Посмотреть Dashboard",
+    "zoomPageWidth":"Переключить Ширина страницы",
+    "zoomPercent":"Увеличить до Процент",
+    "zoomDropdown":"Увеличить"
   },
   "toolbar": {
     "back":"Назад",
@@ -78,7 +95,14 @@
     "parameterSets":"управлять наборами",
     "selectSet":"Выбор набора",
     "dsCredential":"источник данных учетных",
-    "addToFavorites":"Добавить в избранное"
+    "addToFavorites":"Добавить в избранное",
+    "unzoom":"unzoom",
+    "search":"поиск",
+    "createDashboard":"Создание Dashboard",
+    "editDashboard":"Редактировать Dashboard",
+    "saveDashboard":"Сохранить Dashboard",
+    "searchFolder":"Поиск Папка",
+    "viewDashboard":"Посмотреть Dashboard"
   },
   "print": {
     "title":"Печать отчета",
@@ -98,7 +122,9 @@
     "title":"Настройки пользователя",
     "submit":"Оклахома",
     "cancel":"Oтменить",
-    "ResponsiveUI":"Отзывчивый интерфейс"
+    "ResponsiveUI":"Отзывчивый интерфейс",
+    "Email":"по электронной почте",
+    "AdminUI":"UI Админ"
   },
   "paramPane": {
     "nullField":"Ноль",
@@ -108,7 +134,8 @@
     "viewReport":"Показать",
     "cancel":"Oтменить",
     "datePicker":"дата",
-    "select":"выбирать"
+    "select":"выбирать",
+    "useDefault":"Используйте умолчанию"
   },
   "validateError": {
     "required":"Необходимый",
@@ -125,7 +152,8 @@
     "range":"Введите значение от {0} и {1}",
     "max":"Введите значение меньше или равно {0}",
     "min":"Введите значение больше или равно {0}",
-    "invalid":"инвалид"
+    "invalid":"инвалид",
+    "invalidTree":"{0} Не выбрано"
   },
   "dialog": {
     "title":"побуждать",
@@ -142,7 +170,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"дд-мм-гг",
+    "dateFormat":"dd.mm.yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -154,7 +182,7 @@
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
     "defaultName":"дефолт",
-    "selectSet":"<выберите набор>"
+    "selectSet":"<cвыберите набор>"
   },
   "manageParamSets": {
     "manageSets":"Управление наборы",
@@ -175,5 +203,86 @@
     "username":"Войти название:",
     "password":"пароль:",
     "reset":"сброс"
+  },
+  "explorerSearch": {
+    "emptyError":"Критерии поиска не может быть пустым",
+    "notFound":"Никого не соответствуют вашим критериям поиска, расширенный поиск."
+  },
+  "createDashboard": {
+    "title":"Создание Dashboard",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "dashboardName":"название",
+    "namePlaceholder":"имя приборной панели",
+    "dashboardTemplate":"шаблон",
+    "overwrite":"переписывать"
+  },
+  "RDLExt": {
+    "title":"RDL Расширения",
+    "submit":"представлять",
+    "cancel":"отменить",
+    "dialogTitle":"RDL расширение JSON"
+  },
+  "reportProperties": {
+    "title":"Свойства Сообщить",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "selectReport":"<выберите отчет>",
+    "hideToolbar":"Скрыть панель инструментов",
+    "toolbar":"Панель инструментов:",
+    "minimal":"минимальный",
+    "full":"полный",
+    "removeReport":"Удалить Сообщить"
+  },
+  "tags": {
+    "title":"Метки",
+    "tags":"Метки",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "prompt":"разделяйте метки запятыми.",
+    "yourPosition":"Вы находитесь"
+  },
+  "searchFolder": {
+    "title":"Поиск Папка",
+    "name":"название",
+    "tags":"Метки",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "prompt":"разделяйте метки запятыми.",
+    "homePage":"Главная",
+    "createTo":"Созданный под",
+    "namePlaceholder":"Поиск Папка название"
+  },
+  "subscription": {
+    "email":"Электронная почта",
+    "cancel":"отменить",
+    "save":"экономить",
+    "manageSubscription":"Управление Подписчикам",
+    "toPlaceholder":"к",
+    "subjectPlaceholder":"тема",
+    "descriptionPlaceholder":"описание",
+    "commentPlaceholder":"комментарий",
+    "subject":"@ ReportName был казнен в @ ExecutionTime",
+    "description":"Отправить персональное сообщение для {0}",
+    "includeLink":"Включите ссылку",
+    "includeReport":"Включите отчет",
+    "schedule":"график ",
+    "format":"формат",
+    "saveFailed":"Сохранение подписка не удалось",
+    "addNew":"создавать",
+    "edit":"редактировать",
+    "deleteSubscription":"удалять",
+    "deleteFailed":"Подписка Ошибка удаления"
+  },
+  "properties": {
+    "title":"свойства",
+    "submit":"представлять",
+    "deleteItem":"удалять",
+    "description":"описание"
+  },
+  "contextMenu": {
+    "title":"Контекстное меню",
+    "delLabel":"удалять",
+    "properties":"свойства"
   }
 }

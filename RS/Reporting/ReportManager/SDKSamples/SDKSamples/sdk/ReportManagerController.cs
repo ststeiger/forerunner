@@ -26,6 +26,11 @@ namespace ReportManager.Controllers
         public string Instance { get; set; }
     }
 
+    public class SubscriptionInfoPostBack : Forerunner.SSRS.Manager.SubscriptionInfo
+    {
+        public string Instance { get; set; }
+    }
+
     // Changed...
     [ExceptionLog]
     [AllowAnonymous]
@@ -45,11 +50,15 @@ namespace ReportManager.Controllers
         static private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         static private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
         static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
+        static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
+        static private bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
 
         // Changed...
         private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
         // ...Changed
 
+        static private string EmptyJSONObject = "{}";
+   
         static ReportManagerController()
         {
             ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
@@ -91,26 +100,106 @@ namespace ReportManager.Controllers
             
             return resp;
         }
-        // GET api/ReportMananger/GetItems
+
+        // "{}"
+        private HttpResponseMessage GetEmptyJSONResponse()
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(EmptyJSONObject), "text/JSON");
+        }
+
+        // 501
+        private HttpResponseMessage GetNotImplementedResponse()
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            resp.StatusCode = HttpStatusCode.NotImplemented;
+            return resp;
+        }
+
+        // 404
+        private HttpResponseMessage GetNotFoundResponse()
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            resp.StatusCode = HttpStatusCode.NotFound;
+            return resp;
+        }
+
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
             try
             {
-                string CatItems = new JavaScriptSerializer().Serialize(GetReportManager(instance).GetItems(view, path));
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(CatItems), "text/JSON");
+                IEnumerable<CatalogItem> items = GetReportManager(instance).GetItems(view, path);                
+                if (items == null)
+                {
+                    return GetEmptyJSONResponse();
+                }
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(items)), "text/JSON");
             }
             catch (Exception e)
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{\"error\": \"" + e.Message + "\"}"), "text/JSON");  
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage FindItems(string folder, string searchOperator, string searchCriteria, string instance = null) 
+        {
+            try
+            {
+                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
+        {
+            // This endpoint does not write to the Mobilizer DB and is therefore safe for all customers
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetItemProperty(path, propertyName)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        public class SaveReprotPropertyPostBack{
+            public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
+        }
+
+        [HttpPost]
+        [ActionName("SaveReportProperty")]
+        public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            { 
+                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
+                resp.StatusCode = HttpStatusCode.OK;
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.BadRequest;
             }
             
+            return resp;
         }
 
         [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+
             GetReportManager(instance).SaveThumbnail(ReportPath, SessionID);
             HttpResponseMessage resp = this.Request.CreateResponse();
             resp.StatusCode = HttpStatusCode.OK;
@@ -121,75 +210,173 @@ namespace ReportManager.Controllers
         [ActionName("Thumbnail")]
         public HttpResponseMessage Thumbnail(string ReportPath,string DefDate, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetNotFoundResponse();
+            }
             return GetResponseFromBytes(GetReportManager(instance).GetCatalogImage(ReportPath), "image/JPEG",true);            
+        }
+
+        [HttpGet]
+        [ActionName("HasPermission")]
+        public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
+        {
+            // This endpoint does not write to the ReportServer DB and is therefore safe for all customers
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetCatalogPermission(path, permission)), "text/JSON");
+        }
+
+        [HttpGet]
+        [ActionName("Resource")]
+        public HttpResponseMessage Resource(string path, string instance = null)
+        {
+            byte[] result = null;
+            string mimetype = null;
+            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            return GetResponseFromBytes(result, mimetype);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage SaveResource(SetResource setResource)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
+        }
+
+        [HttpGet]
+        [ActionName("DeleteCatalogItem")]
+        public HttpResponseMessage DeleteCatalogItem(string path, string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path)), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage IsFavorite(string path, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).IsFavorite(path)), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage GetUserParameters(string reportPath, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath)), "text/JSON");
         }
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage GetUserSettings(string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings()), "text/JSON");
         }
+
+        public HttpResponseMessage GetUserName(string instance = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserName()), "text/JSON");
+        }
+
         [HttpGet]
         public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings)), "text/JSON");
         }
 
         [HttpPost]
-        public HttpResponseMessage CreateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
+        public HttpResponseMessage CreateSubscription(SubscriptionInfoPostBack info)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).CreateSubscription(info)), "text/JSON");
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+            try
+            {
+                info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]
         public HttpResponseMessage GetSubscription(string subscriptionID, string instance = null)
         {
-            Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
+            Forerunner.SSRS.Manager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
         }
 
         [HttpPost]
-        public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info, string instance = null)
+        public HttpResponseMessage UpdateSubscription(SubscriptionInfoPostBack info)
         {
-           
-            GetReportManager(instance).SetSubscription(info);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+            try
+            {
+                GetReportManager(info.Instance).SetSubscription(info);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]
         public HttpResponseMessage DeleteSubscription(string subscriptionID, string instance = null)
         {
-            GetReportManager(instance).DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+            string retVal = GetReportManager(instance).DeleteSubscription(subscriptionID);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(retVal), "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage ListSubscriptions(string reportPath, string instance = null)
         {
-            /// Need to pass in current owner.
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             Subscription[] subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
         }
@@ -197,6 +384,10 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ListDeliveryExtensions(string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             Extension[] extensions = GetReportManager(instance).ListDeliveryExtensions();
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensions)), "text/JSON"); 
         }
@@ -204,6 +395,10 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetExtensionSettings(string extension, string instance = null)
         {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
             ExtensionParameter[] extensionSettings = GetReportManager(instance).GetExtensionSettings(extension);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensionSettings)), "text/JSON"); 
         }
@@ -211,8 +406,71 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ListSchedules(string instance = null)
         {
-            Schedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
+            SubscriptionSchedule[] schedules = GetReportManager(instance).ListSchedules(null);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetReportTags(string path, string instance = null)
+        {
+            if (UseMobilizerDB == false)
+            {
+                return GetEmptyJSONResponse();
+            }
+
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+        public class ReportTagsPostBack
+        {
+            public string reportTags { get; set; }
+            public string path { get; set; }
+            public string instance { get; set; }
+        }
+        [HttpPost]
+        public HttpResponseMessage SaveReportTags(ReportTagsPostBack postValue)
+        {
+            if (UseMobilizerDB == false)
+            {
+                return GetNotImplementedResponse();
+            }
+
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            {
+                GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
+                resp.StatusCode = HttpStatusCode.OK;
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.BadRequest;
+            }
+
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetMobilizerSetting(string instance = null)
+        {
+            // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
+            }
+            catch (Exception ex) 
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
         }
 
         private string ToString<T>(T value)

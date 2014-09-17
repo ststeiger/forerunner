@@ -13,7 +13,16 @@
     "favoriteFailed":"Manqué",
     "docmapShowFailed":"Manqué",
     "prepareActionFailed":"Manqué",
-    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport"
+    "bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport",
+    "saveDashboardFailed":"Enregistrer Dashboard Échec",
+    "saveDashboardSucceeded":"Enregistrer Dashboard Réussi",
+    "loadDashboardFailed":"Charge Dashboard Échec",
+    "loadDashboard":"frais Dashboard",
+    "createFailed":"Un tableau de bord avec ce nom existe déjà. Vous pouvez soit: 1) renommer votre tableau de bord ou 2) cochez la case de l'écrasement puis essayez à nouveau.",
+    "saveSearchFolderSucceeded":"Dossier de recherche Crée Réussi",
+    "saveSearchFolderFailed":"Dossier de recherche Créé en déroute",
+    "addTagsSucceeded":"Ajouter des mots clés Réussi",
+    "addTagsFailed":"Ajouter des mots clés perdus"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",
@@ -50,7 +59,15 @@
     "print":"Imprimer",
     "dsCredential":"Lettres de créance",
     "views":"vues",
-    "addToFavorites":"Ajouter aux favoris"
+    "addToFavorites":"Ajouter aux favoris",
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"enregistrer du tableau de bord",
+    "editDashboard":"Modifier Dashboard",
+    "viewDashboard":"Voir Tableau de bord",
+    "tags":"Mots clés",
+    "zoomPageWidth":"Toggle Ancho de página",
+    "zoomPercent":"Zoom al porcentaje",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Retour",
@@ -79,7 +96,14 @@
     "parameterSets":"Gérer jeux",
     "selectSet":"Sélectionnez Set",
     "dsCredential":"source de données d'identification",
-    "addToFavorites":"Ajouter aux favoris"
+    "addToFavorites":"Ajouter aux favoris",
+    "unzoom":"dézoomer",
+    "search":"recherche",
+    "createDashboard":"Créer Dashboard",
+    "editDashboard":"Modifier Dashboard",
+    "saveDashboard":"enregistrer du tableau de bord",
+    "viewDashboard":"Voir Tableau de bord",
+    "searchFolder":"dossier de recherche"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -99,7 +123,9 @@
     "title":"Paramètres de l'utilisateur",
     "submit":"Ok",
     "cancel":"Résilier",
-    "ResponsiveUI":"Interface utilisateur réactive"
+    "ResponsiveUI":"Interface utilisateur réactive",
+    "Email":"Email",
+    "AdminUI":"administrateur UI"
   },
   "paramPane": {
     "nullField":"Zéro",
@@ -109,7 +135,8 @@
     "viewReport":"Voir",
     "cancel":"Résilier",
     "datePicker":"Date",
-    "select":"Sélectionner"
+    "select":"Sélectionner",
+    "useDefault":"Utilisez par défaut"
   },
   "validateError": {
     "required":"Demandé",
@@ -126,7 +153,8 @@
     "range":"Entrez une valeur comprise entre {0} et {1}",
     "max":"Entrez une valeur inférieure ou égale à {0}",
     "min":"Entrez une valeur supérieure ou égale à {0}",
-    "invalid":"invalide"
+    "invalid":"invalide",
+    "invalidTree":"{0} non sélectionné"
   },
   "dialog": {
     "title":"invite",
@@ -176,5 +204,86 @@
     "username":"Connexion nom:",
     "password":"mot de passe:",
     "reset":"remettre"
+  },
+  "explorerSearch": {
+    "emptyError":"Critères de recherche ne peuvent pas être vide",
+    "notFound":"Aucun résultat ne correspond à vos critères de recherche, s'il vous plaît affiner votre recherche."
+  },
+  "createDashboard": {
+    "title":"créer Dashboard",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "dashboardName":"nom",
+    "namePlaceholder":"nom de tableau de bord",
+    "dashboardTemplate":"modèle",
+    "overwrite":"écraser"
+  },
+  "RDLExt": {
+    "title":"Extensions RDL",
+    "submit":"soumettre",
+    "cancel":"annuler",
+    "dialogTitle":"RDL Extension JSON"
+  },
+  "reportProperties": {
+    "title":"Propriétés du rapport",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "selectReport":"<sélectionnez rapport>",
+    "hideToolbar":"Masquer la barre d'outils",
+    "toolbar":"barre d'outils:",
+    "minimal":"Minimal",
+    "full":"plein",
+    "removeReport":"retirer rapport"
+  },
+  "tags": {
+    "title":"Mots clés",
+    "tags":"Mots clés",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "prompt":"Séparez les tags par des virgules.",
+    "yourPosition":"Vous êtes à"
+  },
+  "searchFolder": {
+    "title":"dossier de recherche",
+    "name":"nom",
+    "tags":"Mots clés",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "prompt":"Séparez les tags par des virgules.",
+    "homePage":"Page d'accueil",
+    "createTo":"créé en vertu de",
+    "namePlaceholder":"dossier de recherche nom"
+  },
+  "subscription": {
+    "email":"Email",
+    "cancel":"annuler",
+    "save":"sauver",
+    "manageSubscription":"Gestion de votre souscription",
+    "toPlaceholder":"à",
+    "subjectPlaceholder":"Sujet",
+    "descriptionPlaceholder":"Description",
+    "commentPlaceholder":"Commentaire",
+    "subject":"@ ReportName a été exécuté à @ ExecutionTime",
+    "description":"Envoyer un email à {0}",
+    "includeLink":"Inclure lien",
+    "includeReport":"Inclure rapport",
+    "schedule":"Calendrier ",
+    "format":"Format",
+    "saveFailed":"Abonnement sauver échoué ",
+    "addNew":"Créer",
+    "edit":"Modifier",
+    "deleteSubscription":"Effacer",
+    "deleteFailed":"Suppression abonnement qui a échoué"
+  },
+  "properties": {
+    "title":"propriétés",
+    "submit":"soumettre ",
+    "deleteItem":"soumettre",
+    "description":"description"
+  },
+  "contextMenu": {
+    "title":"Menu contextuel",
+    "delLabel":"effacer",
+    "properties":"propriétés"
   }
 }

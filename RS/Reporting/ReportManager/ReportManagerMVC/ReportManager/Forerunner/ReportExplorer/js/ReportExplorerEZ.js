@@ -46,6 +46,8 @@ $(function () {
      * @prop {Object} options.navigateTo - Optional, Callback function used to navigate to a selected report
      * @prop {Object} options.historyBack - Optional,Callback function used to go back in browsing history
 	 * @prop {Boolean} options.isFullScreen - Optional,Indicate is full screen mode default by true
+     * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation in the report
+     *                                          viewer toolbar. Defaults to true.
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Optional,Report service instance name
      * @example
@@ -56,6 +58,7 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
+            showBreadCrumb: true,
             explorerSettings: null,
             rsInstance: null,
         },
@@ -363,6 +366,10 @@ $(function () {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
 
+                if (me.options.showBreadCrumb === false) {
+                    me.DefaultAppTemplate.$linksection.hide();
+                }
+
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
@@ -425,6 +432,7 @@ $(function () {
                 if (urlOptions && !urlOptions.showToolbar) {
                     toolbarConfig = constants.toolbarConfigOption.hide;
                 }
+
                 layout.$mainviewport.reportViewerEZ({
                     DefaultAppTemplate: layout,
                     path: path,
@@ -436,7 +444,7 @@ $(function () {
                     savedParameters: params,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    showBreadCrumb: urlOptions ? urlOptions.isReportManager : true,
+                    showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
                     toolbarConfigOption: toolbarConfig,
                     zoom: urlOptions ? urlOptions.zoom : "100"

@@ -1069,7 +1069,6 @@ $(function () {
             
             // Make sure each new page has the zoom factor applied
             me.zoomToPercent();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -1378,7 +1377,8 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(curPage, false, null, paramList,true);
+            me._trigger(events.refresh);
+            me._loadPage(curPage, false, null, paramList, true);
         },
         /**
          * Navigates to the given page
@@ -6459,6 +6459,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearBtnStates();
+            });
+
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
@@ -6721,6 +6725,10 @@ $(function () {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearItemStates();
             });
             
             // Hook up the toolbar element events
@@ -12205,7 +12213,7 @@ $(function () {
                 }
 
                 //Add use default option
-                if (predefinedValue) {
+                if (me._hasDefaultValue(param)) {
                     $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
                 }
 
@@ -12270,24 +12278,26 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
 
-            $control.attr("allowblank", param.AllowBlank);
-            $control.attr("nullable", param.Nullable);
-            if (param.QueryParameter || ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false)) {
-                //For IE browser when set placeholder browser will trigger an input event if it's Chinese
-                //to avoid conflict (like auto complete) with other widget not use placeholder to do it
-                //Anyway IE native support placeholder property from IE10 on, so not big deal
-                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
-                $control.addClass("fr-param-required");
-                me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
+            $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
+
+            if (param.QueryParameter || (param.Nullable === false && param.AllowBlank === false)) {
+                me._addRequiredPrompt(param, $control);
             } else if (param.MultiValue) {
                 if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
-                    $control.attr("required", "true");
-                    $control.addClass("fr-param-required");
-                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
+                    me._addRequiredPrompt(param, $control);
                 }
             }
-            $control.attr("ErrorMessage", param.ErrorMessage);
+        },
+        _addRequiredPrompt: function (param, $control) {
+            var me = this;
+
+            //For IE browser when set placeholder browser will trigger an input event if it's Chinese
+            //to avoid conflict (like auto complete) with other widget not use placeholder to do it
+            //Anyway IE native support placeholder property from IE10 on, so not big deal
+            //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
+            $control.addClass("fr-param-required");
+            me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
         },
         _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;

@@ -439,7 +439,6 @@ $(function () {
             
             // Make sure each new page has the zoom factor applied
             me.zoomToPercent();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -748,7 +747,8 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(curPage, false, null, paramList,true);
+            me._trigger(events.refresh);
+            me._loadPage(curPage, false, null, paramList, true);
         },
         /**
          * Navigates to the given page

@@ -61,6 +61,10 @@
               var hashTag = null;
               if (urlParts.length > 1) {
                   hashTag = urlParts[1];
+              } else {
+                  hashTag = window.location.hash.replace("#","");
+              }
+              if (hashTag) {
                   hashTag = hashTag.replace("//", "/%2f");
                   hashTag = hashTag.replace("&", "%26");
               }

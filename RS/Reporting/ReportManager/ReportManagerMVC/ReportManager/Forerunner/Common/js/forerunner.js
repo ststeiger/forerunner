@@ -419,6 +419,11 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            refresh: "refresh",
+            /** widget + event, lowercase */
+            reportViewerRefresh: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.refresh).toLowerCase(); },
+
+            /** @constant */
             actionHistoryPop: "actionHistoryPop",
             /** widget + event, lowercase */
             reportViewerActionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },

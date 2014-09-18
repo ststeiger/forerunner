@@ -1069,7 +1069,6 @@ $(function () {
             
             // Make sure each new page has the zoom factor applied
             me.zoomToPercent();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -1378,7 +1377,8 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(curPage, false, null, paramList,true);
+            me._trigger(events.refresh);
+            me._loadPage(curPage, false, null, paramList, true);
         },
         /**
          * Navigates to the given page
@@ -6459,6 +6459,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearBtnStates();
+            });
+
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
@@ -6721,6 +6725,10 @@ $(function () {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearItemStates();
             });
             
             // Hook up the toolbar element events

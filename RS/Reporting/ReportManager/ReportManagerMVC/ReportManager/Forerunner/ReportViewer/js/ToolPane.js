@@ -134,6 +134,10 @@ $(function () {
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
             });
+
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearItemStates();
+            });
             
             // Hook up the toolbar element events
             //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,

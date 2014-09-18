@@ -3999,9 +3999,16 @@ $(function () {
                     return;
                 }
 
-                $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
+                var left = e.data.$tool.filter(":visible").offset().left -
+                           e.data.$tool.filter(":visible").offsetParent().offset().left;
+
+                var top = e.data.$tool.height() +
+                          e.data.$tool.filter(":visible").offset().top -
+                          e.data.$tool.filter(":visible").offsetParent().offset().top;
+
+                $dropdown.css("left", left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
-                $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
+                $dropdown.css("top", top);
                 $dropdown.toggle();
             });
 

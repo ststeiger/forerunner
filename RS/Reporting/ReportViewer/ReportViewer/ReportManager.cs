@@ -268,7 +268,12 @@ namespace Forerunner.SSRS.Manager
         // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
         private String GetDomainUserName()
         {
-            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+            if (credentials != null)
+            {
+                System.Net.NetworkCredential networkCredential = (System.Net.NetworkCredential)credentials;
+                return networkCredential.UserName;
+            }
+            else if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
             {
                 HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
                 FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);

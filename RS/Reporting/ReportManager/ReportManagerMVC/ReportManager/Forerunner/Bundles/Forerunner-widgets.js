@@ -3999,9 +3999,16 @@ $(function () {
                     return;
                 }
 
-                $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
+                var left = e.data.$tool.filter(":visible").offset().left -
+                           e.data.$tool.filter(":visible").offsetParent().offset().left;
+
+                var top = e.data.$tool.height() +
+                          e.data.$tool.filter(":visible").offset().top -
+                          e.data.$tool.filter(":visible").offsetParent().offset().top;
+
+                $dropdown.css("left", left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
-                $dropdown.css("top", e.data.$tool.height() + e.data.$tool.filter(":visible").offset().top);
+                $dropdown.css("top", top);
                 $dropdown.toggle();
             });
 
@@ -16266,6 +16273,8 @@ $(function () {
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 me.element.css("background-color", explorer.css("background-color"));
+
+                me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
         },
         _setLeftRightPaneStyle: function () {
@@ -16351,6 +16360,8 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
+
+                me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 
             me.element.css("background-color", "");
@@ -16387,6 +16398,8 @@ $(function () {
                 var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
                 $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
                 $dashboardEZ.dashboardEZ("enableEdit", enableEdit, true);
+
+                me._trigger(events.afterTransition, null, { type: "Dashboard", path: path, enableEdit: enableEdit });
             }, timeout);
 
             me.element.css("background-color", "");

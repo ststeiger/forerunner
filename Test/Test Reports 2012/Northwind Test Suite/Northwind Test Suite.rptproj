@@ -248,6 +248,10 @@
       <FullPath>ThreeMaps.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>TrainingComplianceReport.rdl</Name>
+      <FullPath>TrainingComplianceReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
@@ -268,8 +272,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>TrainingComplianceReport.rdl</Name>
-      <FullPath>TrainingComplianceReport.rdl</FullPath>
+      <Name>Copy of N0359-061-REP-0236.rdl</Name>
+      <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

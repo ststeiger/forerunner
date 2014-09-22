@@ -381,8 +381,8 @@ ORDER BY CategoryID </CommandText>
           <Value>ProductName</Value>
         </Values>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>ProductName</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>DataSet1</DataSetName>

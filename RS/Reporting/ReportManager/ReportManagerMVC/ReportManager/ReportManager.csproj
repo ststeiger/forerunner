@@ -439,6 +439,7 @@
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />
+    <Content Include="Scripts\App\login.js" />
     <Content Include="Scripts\App\mobilizer.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />

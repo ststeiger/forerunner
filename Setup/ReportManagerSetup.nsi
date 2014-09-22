@@ -394,6 +394,7 @@ Section "ReportManager" SEC01
   
   SetOutPath "$INSTDIR\Scripts\App"
   File "${LOCALROOT}\Scripts\App\mobilizer.js"
+  File "${LOCALROOT}\Scripts\App\login.js"
   SetOutPath "$INSTDIR\Views\Home"
   File "${LOCALROOT}\Views\Home\Index.cshtml"
   SetOutPath "$INSTDIR\Views\Login"
@@ -731,6 +732,7 @@ Section Uninstall
   Delete "$INSTDIR\Views\Login\Login.cshtml"
   Delete "$INSTDIR\Controllers\LoginController.cs"
   Delete "$INSTDIR\Scripts\App\mobilizer.js"
+  Delete "$INSTDIR\Scripts\App\login.js"
 
   Delete "$INSTDIR\sdk\ReportManagerController.cs"
   Delete "$INSTDIR\sdk\ReportViewerController.cs"

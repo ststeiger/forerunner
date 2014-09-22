@@ -2915,7 +2915,9 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) {
+                        me._writeError(jqXHR, textStatus, errorThrown, request);
+                    }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {

@@ -13,7 +13,11 @@ $(function () {
         }
 
         var url = $("#loginUrl").text();
-        url = url.replace("~", "http://" + window.location.host);
+        if (window.location.pathname.toLowerCase() === "/debug") {
+            url = url.replace("~", "http://" + window.location.host);
+        } else {
+            url = url.replace("~", "http://" + window.location.host + window.location.pathname);
+        }
 
         url += "?ReturnUrl=" + encodeURIComponent(returnUrl);
 

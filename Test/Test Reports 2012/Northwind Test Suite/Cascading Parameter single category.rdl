@@ -144,6 +144,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -533,7 +534,6 @@ WHERE        OrderID IN (@Orders)</CommandText>
     <ReportParameter Name="Product">
       <DataType>String</DataType>
       <Prompt>Product</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Product</DataSetName>

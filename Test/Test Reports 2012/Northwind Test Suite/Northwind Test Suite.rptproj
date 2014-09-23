@@ -55,8 +55,8 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>CS-Asset Management Dashboard.rdl</Name>
-      <FullPath>CS-Asset Management Dashboard.rdl</FullPath>
+      <Name>Copy of N0359-061-REP-0236.rdl</Name>
+      <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Customer Data.rdl</Name>
@@ -117,10 +117,6 @@
     <ProjectItem>
       <Name>images and subreports.rdl</Name>
       <FullPath>images and subreports.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Incident Health Dashboard Cube.rdl</Name>
-      <FullPath>Incident Health Dashboard Cube.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Justify.rdl</Name>
@@ -186,6 +182,10 @@
     <ProjectItem>
       <Name>ProductSales.rdl</Name>
       <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report1.rdl</Name>
+      <FullPath>Report1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Richtextbox.rdl</Name>
@@ -270,10 +270,6 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Copy of N0359-061-REP-0236.rdl</Name>
-      <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

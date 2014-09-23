@@ -534,6 +534,7 @@ WHERE        OrderID IN (@Orders)</CommandText>
       <DataType>String</DataType>
       <Nullable>true</Nullable>
       <Prompt>Product</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Products</DataSetName>

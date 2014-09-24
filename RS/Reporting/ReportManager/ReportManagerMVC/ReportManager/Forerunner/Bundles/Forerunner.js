@@ -2019,6 +2019,10 @@ $(function () {
 
     forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
         var me = this;
+
+        if (RDLExt === null || RDLExt === undefined)
+            return;
+
         var ActionExt = RDLExt[ObjName];
         var SharedActions = {};
 

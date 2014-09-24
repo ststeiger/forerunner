@@ -23,9 +23,6 @@ $(function () {
             } else {
                 hashTag = window.location.hash.replace("#", "");
             }
-            if (hashTag) {
-                hashTag = encodeURIComponent(hashTag);
-            }
             var action = $form.attr("action");
             urlParts = action.split("ReturnUrl=");
             action = urlParts[0] + "ReturnUrl=" + returnUrl;

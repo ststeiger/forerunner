@@ -518,7 +518,6 @@ $(function () {
                 }
             }
 
-
             if ($element !== undefined && bindingEnter) {
                 $element.on("keydown", function (e) {
                     if (e.keyCode === 13) {
@@ -529,7 +528,7 @@ $(function () {
 
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
-                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
+                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
             }
 
             $container.append($element);
@@ -559,9 +558,6 @@ $(function () {
             err[param.attr("name")] = errorString;
 
             if (errorString !== undefined) {
-                var err = {};
-
-                err[param.attr("name")] = errorString;
                 me.$form.validate().showErrors(err);
                 me.$form.validate().invalid[param.attr("name")] = true;
             }
@@ -2215,6 +2211,11 @@ $(function () {
                     me._parameterDefinitions[param.Name].isChild = true;
 
                     if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
+                        me._isDropdownTree = false;
+                    }
+
+                    //handle the hidden cascading parameter case, but I think it should not never happen.
+                    if (param.Prompt === "") {
                         me._isDropdownTree = false;
                     }
 

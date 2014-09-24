@@ -161,8 +161,9 @@ $(function () {
             } else if (data.name === "transitionToReportViewer") {
                 var parts = path.split("?");
                 path = parts[0];
+                data.args[0] = path;
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
-                var options = data.args.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(data.args[1]) : null;
+                var options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
                 me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
@@ -448,6 +449,7 @@ $(function () {
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
                     toolbarConfigOption: toolbarConfig,
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });

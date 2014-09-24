@@ -40,7 +40,8 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/icons128x128.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css",
-                "~/Forerunner/ReportExplorer/css/UserSettings.css"
+                "~/Forerunner/ReportExplorer/css/UserSettings.css",
+                "~/Forerunner/ReportExplorer/css/ManageMySubscriptions.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Lib/jsTree/themes/default/bundle").Include(

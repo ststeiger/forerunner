@@ -776,7 +776,7 @@ $(function () {
 
             if (me.options.showSubscriptionOnOpen) {
                 var subscriptionID = me.options.showSubscriptionOnOpen;
-                me.element.on(events.reportViewerSetPageDone(), function (e, data) {
+                $(me.element).on(events.reportViewerSetPageDone(), function (e, data) {
                     me.editEmailSubscription(subscriptionID);
                     delete me.options.showSubscriptionOnOpen;
                 });
@@ -12256,7 +12256,7 @@ $(function () {
             }
 
             //Add RDL Ext to parameters
-            if (me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
+            if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
                 forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
             }
 
@@ -15027,7 +15027,8 @@ $(function () {
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
-                zoom : me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             // Create / render the toolbar
@@ -15466,7 +15467,8 @@ $(function () {
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
                 toolbarConfigOption: me.options.toolbarConfigOption,
-                zoom: me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             initializer.render();
@@ -16449,6 +16451,7 @@ $(function () {
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
                     toolbarConfigOption: toolbarConfig,
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });

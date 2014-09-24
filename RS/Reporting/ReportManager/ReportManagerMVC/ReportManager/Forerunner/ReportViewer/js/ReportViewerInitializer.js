@@ -81,7 +81,8 @@ $(function () {
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
-                zoom : me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             // Create / render the toolbar

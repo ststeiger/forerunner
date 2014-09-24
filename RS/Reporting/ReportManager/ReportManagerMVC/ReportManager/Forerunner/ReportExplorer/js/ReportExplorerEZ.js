@@ -449,6 +449,7 @@ $(function () {
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
                     toolbarConfigOption: toolbarConfig,
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });

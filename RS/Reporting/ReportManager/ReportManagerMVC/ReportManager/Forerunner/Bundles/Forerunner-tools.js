@@ -1401,11 +1401,10 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-mms",
             imageClass: "fr-icons24x24-emailsubscription",
-            tooltip: "Manage My Subscirptions",
+            tooltip: locData.subscription.manageSubscription,
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showManageMySubscriptionsDialog");
-                    //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
                 }
             },
         },

@@ -148,6 +148,7 @@ $(function () {
                 var subscriptionID = me.options.showSubscriptionOnOpen;
                 me.element.on(events.reportViewerSetPageDone(), function (e, data) {
                     me.editEmailSubscription(subscriptionID);
+                    delete me.options.showSubscriptionOnOpen;
                 });
             }
         },

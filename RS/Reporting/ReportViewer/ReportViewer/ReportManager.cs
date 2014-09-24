@@ -1688,6 +1688,11 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public Management.Subscription[] ListMySubscriptions()
+        {
+            return ListSubscriptions(null, null);
+        }
+
         public Management.Subscription[] ListSubscriptions(string report, string owner)
         {
             rs.Credentials = GetCredentials();
@@ -1695,19 +1700,20 @@ namespace Forerunner.SSRS.Manager
             List<Management.Subscription> retVal = new List<Management.Subscription>();
             // Filter it out to only Forerunner managed subscription
             HashSet<string> subscriptionInfos = new HashSet<string>(); 
-            string IID = GetItemID(report);
+            string IID = report != null ? GetItemID(report) : null;
 
             Impersonator impersonator = null;
             string userName = GetDomainUserName();
             try
             {
                 impersonator = tryImpersonate();
-                string SQL = @"Select SubscriptionID From ForerunnerSubscriptions Where ItemID = @ItemID";
+                string SQL = @"Select SubscriptionID From ForerunnerSubscriptions" +  (report != null ? " Where ItemID = @ItemID" : "");
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    if (report != null)
+                        SQLComm.Parameters.AddWithValue("@ItemID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         while (SQLReader.Read())

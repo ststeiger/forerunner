@@ -1587,7 +1587,7 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer, RDLExt: me.getRDLExt() });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -2468,7 +2468,8 @@ $(function () {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
-                        $appContainer: me.options.$appContainer
+                        $appContainer: me.options.$appContainer,
+                        RDLExt: me.getRDLExt()
                     });
                     
                     if (submitForm === false) {
@@ -2527,7 +2528,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me.paramDefs = data;
-                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer,RDLExt :me.getRDLExt() });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -10026,6 +10027,10 @@ $(function () {
         
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
+
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
+            return;
+
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 
@@ -11714,7 +11719,8 @@ $(function () {
         options: {
             $reportViewer: null,
             pageNum: null,
-            $appContainer: null
+            $appContainer: null,
+            RDLExt : {}
         },
 
         $params: null,
@@ -12205,6 +12211,11 @@ $(function () {
                 });
             }
 
+            //Add RDL Ext to parameters
+            if (me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
+                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
+            }
+
             $container.append($element);
 
             //for cascading hidden elements, don't add null / use default checkbox constraint
@@ -12224,6 +12235,26 @@ $(function () {
                 
             $parent.append($label).append($container).append($optionsDiv);
             return $parent;
+        },
+        _setParamError:function(param,errorString)
+        {
+            var me = this;
+            var err = {};
+            err[param.attr("name")] = errorString;
+
+            if (errorString !== undefined) {
+                var err = {};
+
+                err[param.attr("name")] = errorString;
+                me.$form.validate().showErrors(err);
+                me.$form.validate().invalid[param.attr("name")] = true;
+            }
+            else {
+                delete me.$form.validate().invalid[param.attr("name")];
+                me.$form.validate().hideErrors();
+            
+            }
+   
         },
         _setParamValue: function (param, defaultValue, $element) {
             var me = this;
@@ -13627,6 +13658,19 @@ $(function () {
             data.Prompt = $input.attr("prompt");
             a.push(data);
         },
+        _getParamControls: function () {
+            var me = this;
+            var retval = {};
+
+            var params = $(".fr-param", me.$params);
+
+            for (var i = 0 ; i < params.length; i++) {
+                retval[$(params[i]).attr("name")] = $(params[i]);
+            }
+
+            return retval;
+        },
+        
         /**
          * Generate parameter value list into string and return
          *
@@ -13645,7 +13689,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() === true)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {

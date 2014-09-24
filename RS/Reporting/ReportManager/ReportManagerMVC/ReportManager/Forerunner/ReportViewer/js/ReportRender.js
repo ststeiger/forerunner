@@ -1266,6 +1266,10 @@ $(function () {
         
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
+
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
+            return;
+
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 

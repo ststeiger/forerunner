@@ -1,6 +1,15 @@
 ﻿
 [
 {
+"ID": "14",
+"Link": "http://www.pr.com/press-release/579681",
+"Title":"Forerunner Software Announces Availability of a New Unlimited Server License for Its Unique Mobilizer Which Unlocks SSRS for Mobile BI Across All Devices and Browsers",
+"Description":"Forerunner Software's Mobilizer is an easy to use, out of the box mobile business intelligence solution for all mobile devices and browsers with no per user charges. Now more cost effective than ever for organizations whose servers are capable of virtualization, Mobilizer is now available with a new Server License for unlimited cores.",
+"Release": "Redmond, WA, September 5, 2014",
+"Content": "<a href='http://www.pr.com/press-release/579681' target='_blank' >Full Article</a>"
+  },
+
+{
 "ID": "13",
 "Link": "http://sqlmag.com/sql-server-reporting-services/do-more-mobilizers-rdl-update-forerunner",
 "Title":"Do More with Mobilizer's RDL Update from Forerunner",

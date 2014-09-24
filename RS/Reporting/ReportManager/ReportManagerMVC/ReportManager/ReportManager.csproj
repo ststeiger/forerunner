@@ -137,6 +137,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Filters\LoginPrepAttribute.cs" />
     <Compile Include="sdk\ReportManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="sdk\ReportViewerController.cs" />
@@ -441,6 +442,8 @@
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />
+    <Content Include="Scripts\App\login.js" />
+    <Content Include="Scripts\App\loginprep.js" />
     <Content Include="Scripts\App\mobilizer.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
@@ -512,6 +515,7 @@
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Login\LoginPrep.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

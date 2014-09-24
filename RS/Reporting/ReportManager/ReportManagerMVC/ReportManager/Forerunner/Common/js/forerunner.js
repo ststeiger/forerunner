@@ -421,6 +421,11 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            refresh: "refresh",
+            /** widget + event, lowercase */
+            reportViewerRefresh: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.refresh).toLowerCase(); },
+
+            /** @constant */
             actionHistoryPop: "actionHistoryPop",
             /** widget + event, lowercase */
             reportViewerActionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
@@ -2011,6 +2016,66 @@ $(function () {
     forerunner.ssr.map = function(initialData) {
         // can pass initial data for the set in an object
         this.data = initialData || {};
+    };
+
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
+        var me = this;
+        var ActionExt = RDLExt[ObjName];
+        var SharedActions = {};
+
+        if (ActionExt !== undefined) {
+            SharedActions = RDLExt.SharedActions;
+            if (SharedActions === undefined) SharedActions = {};
+        }
+        else
+            ActionExt = {};
+
+
+        if (ActionExt.JavaScriptActions) {
+
+
+            for (var a = 0; a < ActionExt.JavaScriptActions.length; a++) {
+                var action = ActionExt.JavaScriptActions[a];
+                var actions;
+
+                if (action.SharedAction && SharedActions[action.SharedAction]) {
+                    actions = SharedActions[action.SharedAction].JavaScriptActions;
+                }
+                var sa = 0;
+                // if shared there can be many actions per share
+                while (true) {
+
+                    if (actions !== undefined && actions[sa]) {
+                        action = actions[sa++];
+                    }
+
+
+                    if (action.JavaFunc === undefined && action.Code !== undefined) {
+                        if (mapAreaOnly !== true || (mapAreaOnly === true && action.ImageMapArea === true)) {
+                            var newFunc;
+                            try {
+                                newFunc = new Function("e", action.Code);
+                            }
+                            catch (e) {
+                                console.log(e.message);
+                            }
+                            action.JavaFunc = newFunc;
+                            if (action.On === undefined)
+                                action.On = "click";
+
+                        }
+
+                    }
+                    if (action.On === "click")
+                        $Control.addClass("fr-core-cursorpointer");
+                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError }, action.JavaFunc);
+
+                    if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
+                        break;
+
+                }
+            }
+        }
     };
 
     forerunner.ssr.map.prototype = {

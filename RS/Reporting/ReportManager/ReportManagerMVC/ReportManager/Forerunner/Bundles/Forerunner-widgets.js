@@ -1077,7 +1077,6 @@ $(function () {
             
             // Make sure each new page has the zoom factor applied
             me.zoomToPercent();
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -1386,7 +1385,8 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(curPage, false, null, paramList,true);
+            me._trigger(events.refresh);
+            me._loadPage(curPage, false, null, paramList, true);
         },
         /**
          * Navigates to the given page
@@ -1595,7 +1595,7 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer, RDLExt: me.getRDLExt() });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -2476,7 +2476,8 @@ $(function () {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
-                        $appContainer: me.options.$appContainer
+                        $appContainer: me.options.$appContainer,
+                        RDLExt: me.getRDLExt()
                     });
                     
                     if (submitForm === false) {
@@ -2535,7 +2536,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me.paramDefs = data;
-                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer,RDLExt :me.getRDLExt() });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -2923,7 +2924,9 @@ $(function () {
                             me._saveThumbnail();
                         }
                     },
-                    fail: function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    fail: function (jqXHR, textStatus, errorThrown, request) {
+                        me._writeError(jqXHR, textStatus, errorThrown, request);
+                    }
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
@@ -6467,6 +6470,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearBtnStates();
+            });
+
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
@@ -6729,6 +6736,10 @@ $(function () {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
                 me.enableTools([tp.itemReportBack, tp.itemCredential, mi.itemFolders, tg.itemFolderGroup]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearItemStates();
             });
             
             // Hook up the toolbar element events
@@ -10060,6 +10071,10 @@ $(function () {
         
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
+
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
+            return;
+
             var ActionExt = me._getRDLExt(RIContext);
             var SharedActions = me._getRDLExtShared();
 
@@ -11748,7 +11763,8 @@ $(function () {
         options: {
             $reportViewer: null,
             pageNum: null,
-            $appContainer: null
+            $appContainer: null,
+            RDLExt : {}
         },
 
         $params: null,
@@ -12239,6 +12255,11 @@ $(function () {
                 });
             }
 
+            //Add RDL Ext to parameters
+            if (me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
+                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
+            }
+
             $container.append($element);
 
             //for cascading hidden elements, don't add null / use default checkbox constraint
@@ -12249,7 +12270,7 @@ $(function () {
                 }
 
                 //Add use default option
-                if (predefinedValue) {
+                if (me._hasDefaultValue(param)) {
                     $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
                 }
 
@@ -12258,6 +12279,26 @@ $(function () {
                 
             $parent.append($label).append($container).append($optionsDiv);
             return $parent;
+        },
+        _setParamError:function(param,errorString)
+        {
+            var me = this;
+            var err = {};
+            err[param.attr("name")] = errorString;
+
+            if (errorString !== undefined) {
+                var err = {};
+
+                err[param.attr("name")] = errorString;
+                me.$form.validate().showErrors(err);
+                me.$form.validate().invalid[param.attr("name")] = true;
+            }
+            else {
+                delete me.$form.validate().invalid[param.attr("name")];
+                me.$form.validate().hideErrors();
+            
+            }
+   
         },
         _setParamValue: function (param, defaultValue, $element) {
             var me = this;
@@ -12314,24 +12355,26 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
 
-            $control.attr("allowblank", param.AllowBlank);
-            $control.attr("nullable", param.Nullable);
-            if (param.QueryParameter || ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false)) {
-                //For IE browser when set placeholder browser will trigger an input event if it's Chinese
-                //to avoid conflict (like auto complete) with other widget not use placeholder to do it
-                //Anyway IE native support placeholder property from IE10 on, so not big deal
-                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
-                $control.addClass("fr-param-required");
-                me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
+            $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
+
+            if (param.QueryParameter || (param.Nullable === false && param.AllowBlank === false)) {
+                me._addRequiredPrompt(param, $control);
             } else if (param.MultiValue) {
                 if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
-                    $control.attr("required", "true");
-                    $control.addClass("fr-param-required");
-                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
+                    me._addRequiredPrompt(param, $control);
                 }
             }
-            $control.attr("ErrorMessage", param.ErrorMessage);
+        },
+        _addRequiredPrompt: function (param, $control) {
+            var me = this;
+
+            //For IE browser when set placeholder browser will trigger an input event if it's Chinese
+            //to avoid conflict (like auto complete) with other widget not use placeholder to do it
+            //Anyway IE native support placeholder property from IE10 on, so not big deal
+            //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
+            $control.addClass("fr-param-required");
+            me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
         },
         _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;
@@ -13659,6 +13702,19 @@ $(function () {
             data.Prompt = $input.attr("prompt");
             a.push(data);
         },
+        _getParamControls: function () {
+            var me = this;
+            var retval = {};
+
+            var params = $(".fr-param", me.$params);
+
+            for (var i = 0 ; i < params.length; i++) {
+                retval[$(params[i]).attr("name")] = $(params[i]);
+            }
+
+            return retval;
+        },
+        
         /**
          * Generate parameter value list into string and return
          *
@@ -13677,7 +13733,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() === true)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {

@@ -143,6 +143,10 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerRefresh(), function (e, data) {
+                me._clearBtnStates();
+            });
+
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);

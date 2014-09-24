@@ -518,7 +518,6 @@ $(function () {
                 }
             }
 
-
             if ($element !== undefined && bindingEnter) {
                 $element.on("keydown", function (e) {
                     if (e.keyCode === 13) {

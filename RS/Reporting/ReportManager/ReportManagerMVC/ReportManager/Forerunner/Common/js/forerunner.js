@@ -2024,8 +2024,9 @@ $(function () {
         if (RDLExt === null || RDLExt === undefined)
             return;
 
-        var SharedActions = {};
+        var ActionExt = RDLExt[ObjName];
 
+        var SharedActions = {};
         if (ActionExt) {
             SharedActions = RDLExt.SharedActions;
             if (SharedActions === undefined) SharedActions = {};
@@ -2035,8 +2036,6 @@ $(function () {
 
 
         if (ActionExt.JavaScriptActions) {
-
-
             for (var a = 0; a < ActionExt.JavaScriptActions.length; a++) {
                 var action = ActionExt.JavaScriptActions[a];
                 var actions;

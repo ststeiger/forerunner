@@ -35,7 +35,8 @@ $(function () {
         options: {
             $reportViewer: null,
             pageNum: null,
-            $appContainer: null
+            $appContainer: null,
+            RDLExt : {}
         },
 
         $params: null,
@@ -526,6 +527,11 @@ $(function () {
                 });
             }
 
+            //Add RDL Ext to parameters
+            if (me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
+                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
+            }
+
             $container.append($element);
 
             //for cascading hidden elements, don't add null / use default checkbox constraint
@@ -545,6 +551,26 @@ $(function () {
                 
             $parent.append($label).append($container).append($optionsDiv);
             return $parent;
+        },
+        _setParamError:function(param,errorString)
+        {
+            var me = this;
+            var err = {};
+            err[param.attr("name")] = errorString;
+
+            if (errorString !== undefined) {
+                var err = {};
+
+                err[param.attr("name")] = errorString;
+                me.$form.validate().showErrors(err);
+                me.$form.validate().invalid[param.attr("name")] = true;
+            }
+            else {
+                delete me.$form.validate().invalid[param.attr("name")];
+                me.$form.validate().hideErrors();
+            
+            }
+   
         },
         _setParamValue: function (param, defaultValue, $element) {
             var me = this;
@@ -1948,6 +1974,19 @@ $(function () {
             data.Prompt = $input.attr("prompt");
             a.push(data);
         },
+        _getParamControls: function () {
+            var me = this;
+            var retval = {};
+
+            var params = $(".fr-param", me.$params);
+
+            for (var i = 0 ; i < params.length; i++) {
+                retval[$(params[i]).attr("name")] = $(params[i]);
+            }
+
+            return retval;
+        },
+        
         /**
          * Generate parameter value list into string and return
          *
@@ -1966,7 +2005,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() === true)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {

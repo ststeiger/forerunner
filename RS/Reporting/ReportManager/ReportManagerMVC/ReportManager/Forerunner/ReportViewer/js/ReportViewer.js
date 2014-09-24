@@ -143,6 +143,13 @@ $(function () {
                     me._onModelSetChanged.call(me, e, args);
                 });
             }
+
+            if (me.options.showSubscriptionOnOpen) {
+                var subscriptionID = me.options.showSubscriptionOnOpen;
+                me.element.on(events.reportViewerSetPageDone(), function (e, data) {
+                    me.editEmailSubscription(subscriptionID);
+                });
+            }
         },
         _checkPermission: function (path) {
             var me = this;

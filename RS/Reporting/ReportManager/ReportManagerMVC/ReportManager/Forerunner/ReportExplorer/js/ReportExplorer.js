@@ -497,6 +497,10 @@ $(function () {
             }
             me._fetch(me.options.view, me.options.path);
 
+            if (!me.subscriptionModel) {
+                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+            }
+
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
                 $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -507,6 +511,19 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._userSettingsDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-mms-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.manageMySubscriptions({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    subscriptionModel: me.subscriptionModel
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._manageMySubscriptionsDialog = $dlg;
+
 
             $dlg = me.options.$appContainer.find(".fr-sf-section");
             if ($dlg.length === 0) {
@@ -570,6 +587,21 @@ $(function () {
         showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
+        },
+        /**
+         * Show the user settings modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showManageMySubscriptionsDialog
+         */
+        showManageMySubscriptionsDialog: function () {
+            var me = this;
+            me._manageMySubscriptionsDialog.manageMySubscriptions("listSubscriptions");
+            me._manageMySubscriptionsDialog.manageMySubscriptions("openDialog");
+        },
+
+        showSubscription: function(reportPath, subscriptionID) {
+            var me = this;
+            me.options.navigateTo("browse", reportPath + "?fr:showSubscriptionOnOpen=" + subscriptionID);
         },
         /**
          * Show the search folder modal dialog.

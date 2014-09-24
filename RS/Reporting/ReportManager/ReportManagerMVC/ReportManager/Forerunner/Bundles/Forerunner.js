@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -284,6 +284,8 @@ $(function () {
             subscriptionModel: "subscriptionModel",
             /** @constant */
             manageSubscription: "manageSubscription",
+            /** @constant */
+            manageMySubscriptions: "manageMySubscriptions",
             /** @constant */
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
@@ -2084,7 +2086,7 @@ $(function () {
             if (url == null)
                 return null;
 
-            var options = { "isReportManager" : true, "showBreadCrumb" : false, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
+            var options = { "isReportManager" : true, "showBreadCrumb" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
             var start = url.indexOf("?") + 1;
             var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -2097,6 +2099,8 @@ $(function () {
                     options.showBreadCrumb = !(value === "false");
                 else if (key === "fr:reportmanagersettings")
                     options.useReportManagerSettings = !(value === "false");
+                else if (key === "fr:showsubscriptiononopen")
+                    options.showSubscriptionOnOpen = value;
                 else if (key === "rc:toolbar")
                     options.showToolbar = !(value === "false");
                 else if (key === "rc:parameters")

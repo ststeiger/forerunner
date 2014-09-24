@@ -13942,6 +13942,11 @@ $(function () {
                         me._isDropdownTree = false;
                     }
 
+                    //handle the hidden cascading parameter case, but I think it should not never happen.
+                    if (param.Prompt === "") {
+                        me._isDropdownTree = false;
+                    }
+
                     $.each(param.Dependencies, function (index, dependence) {
                         me._parameterDefinitions[dependence].isParent = true;
                         //now we only support cascading tree to dropdown type, if either parent or children don't have validvalues

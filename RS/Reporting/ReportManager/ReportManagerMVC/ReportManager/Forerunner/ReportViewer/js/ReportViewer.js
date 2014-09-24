@@ -143,6 +143,14 @@ $(function () {
                     me._onModelSetChanged.call(me, e, args);
                 });
             }
+
+            if (me.options.showSubscriptionOnOpen) {
+                var subscriptionID = me.options.showSubscriptionOnOpen;
+                $(me.element).on(events.reportViewerSetPageDone(), function (e, data) {
+                    me.editEmailSubscription(subscriptionID);
+                    delete me.options.showSubscriptionOnOpen;
+                });
+            }
         },
         _checkPermission: function (path) {
             var me = this;
@@ -957,7 +965,7 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer });
+                        me.options.paramArea.reportParameter({ $reportViewer: me, $appContainer: me.options.$appContainer, RDLExt: me.getRDLExt() });
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
@@ -1838,7 +1846,8 @@ $(function () {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
-                        $appContainer: me.options.$appContainer
+                        $appContainer: me.options.$appContainer,
+                        RDLExt: me.getRDLExt()
                     });
                     
                     if (submitForm === false) {
@@ -1897,7 +1906,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me.paramDefs = data;
-                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer,RDLExt :me.getRDLExt() });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)

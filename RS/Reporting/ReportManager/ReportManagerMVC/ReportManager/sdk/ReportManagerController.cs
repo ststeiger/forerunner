@@ -364,6 +364,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage ListMySubscriptions(string instance = null)
+        {
+            Subscription[] subscriptions = GetReportManager(instance).ListMySubscriptions();
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON");
+        }
+
+        [HttpGet]
         public HttpResponseMessage ListDeliveryExtensions(string instance = null)
         {
             if (UseMobilizerDB == false)

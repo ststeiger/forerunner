@@ -285,6 +285,8 @@ $(function () {
             /** @constant */
             manageSubscription: "manageSubscription",
             /** @constant */
+            manageMySubscriptions: "manageMySubscriptions",
+            /** @constant */
             reportDeliveryOptions: "reportDeliveryOptions",
             /** @constant */
             subscriptionProcessingOptions: "subscriptionProcessingOptions",
@@ -2017,6 +2019,68 @@ $(function () {
         this.data = initialData || {};
     };
 
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
+        var me = this;
+
+        if (RDLExt === null || RDLExt === undefined)
+            return;
+
+        var ActionExt = RDLExt[ObjName];
+
+        var SharedActions = {};
+        if (ActionExt) {
+            SharedActions = RDLExt.SharedActions;
+            if (SharedActions === undefined) SharedActions = {};
+        }
+        else
+            ActionExt = {};
+
+
+        if (ActionExt.JavaScriptActions) {
+            for (var a = 0; a < ActionExt.JavaScriptActions.length; a++) {
+                var action = ActionExt.JavaScriptActions[a];
+                var actions;
+
+                if (action.SharedAction && SharedActions[action.SharedAction]) {
+                    actions = SharedActions[action.SharedAction].JavaScriptActions;
+                }
+                var sa = 0;
+                // if shared there can be many actions per share
+                while (true) {
+
+                    if (actions !== undefined && actions[sa]) {
+                        action = actions[sa++];
+                    }
+
+
+                    if (action.JavaFunc === undefined && action.Code !== undefined) {
+                        if (mapAreaOnly !== true || (mapAreaOnly === true && action.ImageMapArea === true)) {
+                            var newFunc;
+                            try {
+                                newFunc = new Function("e", action.Code);
+                            }
+                            catch (e) {
+                                console.log(e.message);
+                            }
+                            action.JavaFunc = newFunc;
+                            if (action.On === undefined)
+                                action.On = "click";
+
+                        }
+
+                    }
+                    if (action.On === "click")
+                        $Control.addClass("fr-core-cursorpointer");
+                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError }, action.JavaFunc);
+
+                    if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
+                        break;
+
+                }
+            }
+        }
+    };
+
     forerunner.ssr.map.prototype = {
         add: function (key, val) {
             if (typeof key === "object") {
@@ -2089,7 +2153,7 @@ $(function () {
             if (url == null)
                 return null;
 
-            var options = { "isReportManager" : true, "showBreadCrumb" : false, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
+            var options = { "isReportManager" : true, "showBreadCrumb" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
             var start = url.indexOf("?") + 1;
             var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -2102,6 +2166,8 @@ $(function () {
                     options.showBreadCrumb = !(value === "false");
                 else if (key === "fr:reportmanagersettings")
                     options.useReportManagerSettings = !(value === "false");
+                else if (key === "fr:showsubscriptiononopen")
+                    options.showSubscriptionOnOpen = value;
                 else if (key === "rc:toolbar")
                     options.showToolbar = !(value === "false");
                 else if (key === "rc:parameters")

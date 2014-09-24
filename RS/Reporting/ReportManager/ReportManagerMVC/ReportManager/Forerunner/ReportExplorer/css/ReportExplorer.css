@@ -42,7 +42,7 @@
 
 .fr-explorer-searchfolder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/SelectedFolder_Search.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff, .fr-rm-toolbar-find-group, .fr-rm-button-createdashboard { float: right; }
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-mms, .fr-rm-button-logOff, .fr-rm-toolbar-find-group, .fr-rm-button-createdashboard { float: right; }
 
 .fr-rm-button-fav { }
 

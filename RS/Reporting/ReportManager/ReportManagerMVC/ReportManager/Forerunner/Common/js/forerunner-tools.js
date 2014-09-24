@@ -1396,6 +1396,18 @@ $(function () {
             },
         },
         /** @member */
+        btnMySubscriptions: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-mms",
+            imageClass: "fr-icons24x24-emailsubscription",
+            tooltip: locData.subscription.manageSubscription,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showManageMySubscriptionsDialog");
+                }
+            },
+        },
+        /** @member */
         btnKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-keyword-textbox",

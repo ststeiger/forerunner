@@ -29,6 +29,22 @@ $(function () {
         schedules: null,
         _create: function () {
         },
+        getMySubscriptionList: function (reportPath) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions?instance=" + me.options.rsInstance;
+            var jqxhr = forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
+            .done(function (data) {
+                console.log("ListMySubscriptions succeeded.");
+            })
+            .fail(function (data) {
+                console.log("ListMySubscriptions call failed.");
+            });
+            return jqxhr;
+        },
         getSubscriptionList: function (reportPath) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;

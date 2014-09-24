@@ -187,7 +187,7 @@ namespace Forerunner
                         //either parameter name or type not match will be skipped.
                         //for saved parameter only matched parameter will be passed to the reporting service.
                         //this will make sure saved parameter won't break the execution when report parameter change.
-                        if (originalParams.Where(m => m.Name == paramName && m.Type.ToString().ToLower() == paramType.ToLower()).Count() == 0)
+                        if (paramType !="" && originalParams.Where(m => m.Name == paramName && m.Type.ToString().ToLower() == paramType.ToLower()).Count() == 0)
                         {
                             continue;
                         }

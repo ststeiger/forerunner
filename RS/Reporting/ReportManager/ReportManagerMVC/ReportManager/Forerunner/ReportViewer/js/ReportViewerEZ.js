@@ -94,7 +94,8 @@ $(function () {
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
                 toolbarConfigOption: me.options.toolbarConfigOption,
-                zoom: me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             initializer.render();

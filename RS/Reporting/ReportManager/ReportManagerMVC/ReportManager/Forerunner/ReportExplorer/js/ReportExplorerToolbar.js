@@ -90,6 +90,10 @@ $(function () {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }
+            if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnMySubscriptions);
+            }
 
             toolbarList.push(tb.btnRecent, tb.btnFav);
 

@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -2021,9 +2021,12 @@ $(function () {
 
     forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
         var me = this;
-        var ActionExt = RDLExt ? RDLExt[ObjName] : null;
-        var SharedActions = {};
 
+        if (RDLExt === null || RDLExt === undefined)
+            return;
+
+
+        var SharedActions = {};
         if (ActionExt) {
             SharedActions = RDLExt.SharedActions;
             if (SharedActions === undefined) SharedActions = {};
@@ -2033,8 +2036,6 @@ $(function () {
 
 
         if (ActionExt.JavaScriptActions) {
-
-
             for (var a = 0; a < ActionExt.JavaScriptActions.length; a++) {
                 var action = ActionExt.JavaScriptActions[a];
                 var actions;

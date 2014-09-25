@@ -2025,7 +2025,6 @@ $(function () {
         if (RDLExt === null || RDLExt === undefined)
             return;
 
-        var ActionExt = RDLExt[ObjName];
 
         var SharedActions = {};
         if (ActionExt) {

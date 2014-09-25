@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.

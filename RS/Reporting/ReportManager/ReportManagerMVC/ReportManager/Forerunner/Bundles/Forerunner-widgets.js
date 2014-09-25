@@ -773,6 +773,14 @@ $(function () {
                     me._onModelSetChanged.call(me, e, args);
                 });
             }
+
+            if (me.options.showSubscriptionOnOpen) {
+                var subscriptionID = me.options.showSubscriptionOnOpen;
+                $(me.element).on(events.reportViewerSetPageDone(), function (e, data) {
+                    me.editEmailSubscription(subscriptionID);
+                    delete me.options.showSubscriptionOnOpen;
+                });
+            }
         },
         _checkPermission: function (path) {
             var me = this;
@@ -7445,6 +7453,10 @@ $(function () {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }
+            if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnMySubscriptions);
+            }
 
             toolbarList.push(tb.btnRecent, tb.btnFav);
 
@@ -8132,6 +8144,10 @@ $(function () {
             }
             me._fetch(me.options.view, me.options.path);
 
+            if (!me.subscriptionModel) {
+                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+            }
+
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
                 $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
@@ -8142,6 +8158,19 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._userSettingsDialog = $dlg;
+
+            $dlg = me.options.$appContainer.find(".fr-mms-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.manageMySubscriptions({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    subscriptionModel: me.subscriptionModel
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._manageMySubscriptionsDialog = $dlg;
+
 
             $dlg = me.options.$appContainer.find(".fr-sf-section");
             if ($dlg.length === 0) {
@@ -8205,6 +8234,21 @@ $(function () {
         showUserSettingsDialog: function () {
             var me = this;
             me._userSettingsDialog.userSettings("openDialog");
+        },
+        /**
+         * Show the user settings modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showManageMySubscriptionsDialog
+         */
+        showManageMySubscriptionsDialog: function () {
+            var me = this;
+            me._manageMySubscriptionsDialog.manageMySubscriptions("listSubscriptions");
+            me._manageMySubscriptionsDialog.manageMySubscriptions("openDialog");
+        },
+
+        showSubscription: function(reportPath, subscriptionID) {
+            var me = this;
+            me.options.navigateTo("browse", reportPath + "?fr:showSubscriptionOnOpen=" + subscriptionID);
         },
         /**
          * Show the search folder modal dialog.
@@ -12202,7 +12246,6 @@ $(function () {
                 }
             }
 
-
             if ($element !== undefined && bindingEnter) {
                 $element.on("keydown", function (e) {
                     if (e.keyCode === 13) {
@@ -12213,7 +12256,7 @@ $(function () {
 
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
-                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () {return me._getParamControls.call(me); },function (c,m) { me._setParamError.call(me,c,m); } )
+                forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
             }
 
             $container.append($element);
@@ -12243,9 +12286,6 @@ $(function () {
             err[param.attr("name")] = errorString;
 
             if (errorString !== undefined) {
-                var err = {};
-
-                err[param.attr("name")] = errorString;
                 me.$form.validate().showErrors(err);
                 me.$form.validate().invalid[param.attr("name")] = true;
             }
@@ -13902,6 +13942,11 @@ $(function () {
                         me._isDropdownTree = false;
                     }
 
+                    //handle the hidden cascading parameter case, but I think it should not never happen.
+                    if (param.Prompt === "") {
+                        me._isDropdownTree = false;
+                    }
+
                     $.each(param.Dependencies, function (index, dependence) {
                         me._parameterDefinitions[dependence].isParent = true;
                         //now we only support cascading tree to dropdown type, if either parent or children don't have validvalues
@@ -14983,7 +15028,8 @@ $(function () {
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
                 showSubscriptionUI: (me.options.isReportManager || me.options.useReportManagerSettings) && forerunner.config.getCustomSettingsValue("showSubscriptionUI", "on") === "on",
-                zoom : me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             // Create / render the toolbar
@@ -15422,7 +15468,8 @@ $(function () {
                 useReportManagerSettings: me.options.useReportManagerSettings,
                 $unzoomtoolbar: layout.$unzoomsection,
                 toolbarConfigOption: me.options.toolbarConfigOption,
-                zoom: me.options.zoom
+                zoom: me.options.zoom,
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
             initializer.render();
@@ -16117,8 +16164,9 @@ $(function () {
             } else if (data.name === "transitionToReportViewer") {
                 var parts = path.split("?");
                 path = parts[0];
+                data.args[0] = path;
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
-                var options = data.args.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(data.args[1]) : null;
+                var options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
                 me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
@@ -16404,6 +16452,7 @@ $(function () {
                     handleWindowResize: false,
                     showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                    showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
                     toolbarConfigOption: toolbarConfig,
                     zoom: urlOptions ? urlOptions.zoom : "100"
                 });
@@ -16561,6 +16610,173 @@ $(function () {
         }
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportExplorer/js/ManageMySubscriptions.js
+/**
+ * @file Contains the manage subscription widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports objects
+forerunner.ajax = forerunner.ajax || {};
+forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.constants = forerunner.ssr.constants || {};
+forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
+
+$(function () {
+    var ssr = forerunner.ssr;
+    var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+    * Widget used to manage subscription
+    *
+    * @namespace $.forerunner.manageMySubscriptions
+    * @prop {Object} options - The options for manageSubscription
+    * @prop {String} options.reportPath - Current report path
+    * @prop {Object} options.$appContainer - Report page container
+    * @prop {Object} options.$reportViewer - The report viewer widget instance
+    * @prop {Object} options.subscriptionModel - Subscription model instance
+    *
+    * @example
+    * $("#subscription").manageMySubscriptions({
+    *  reportPath : path
+    *  $appContainer: $appContainer, 
+    *  subscriptionModel : subscriptionModel,
+    *  
+    * });
+    */
+    $.widget(widgets.getFullname(widgets.manageMySubscriptions), {
+        options: {
+            $appContainer: null,
+            $reportExplorer: null,
+            subscriptionModel: null
+        },
+        _subscriptionModel: null,
+        _createDiv : function(listOfClasses) {
+            return forerunner.helper.createDiv(listOfClasses);
+        },
+        _showDeletionFailure : function() {
+            console.log("Deletion failed");
+        },
+        _createListItem: function (subInfo) {
+            var me = this;
+            var $listItem = new $("<DIV />");
+            $listItem.addClass("fr-sub-listitem");
+            $listItem.append(subInfo.Path + " (" + subInfo.Description + ")");
+            var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
+            var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
+            $listItem.append($deleteIcon);
+            $deleteIcon.addClass("fr-sub-delete-icon");
+            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
+            $deleteIcon.on("click", function () {
+                me.options.subscriptionModel.subscriptionModel("deleteSubscription",
+                    subInfo.SubscriptionID,
+                    function () { me._renderList(); }, function () { me._showDeletionFailure(); });
+            });
+            $editIcon.addClass("fr-sub-edit-icon");
+            $editIcon.attr("title", locData.subscription.edit);
+            $editIcon.on("click", function () {
+                me._editSubscription(subInfo.Path, subInfo.SubscriptionID);
+            });
+            $listItem.append($editIcon);
+            return $listItem;
+        },
+        _editSubscription: function (reportPath, subscriptionID) {
+            var me = this;
+            me.options.$reportExplorer.reportExplorer("showSubscription", reportPath, subscriptionID);
+            me.closeDialog();
+        },
+        _renderList: function () {
+            var me = this;
+            me.$listcontainer.html("");
+            var $list = new $("<UL />");
+            $list.addClass("fr-sub-list");
+            $.when(me.options.subscriptionModel.subscriptionModel("getMySubscriptionList", me.options.reportPath)).done(function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var subInfo = data[i];
+                    var $li = new $("<LI />");
+                    var $listItem = me._createListItem(subInfo);
+                    $li.append($listItem);
+                    $list.append($li);
+                }
+                me.$listcontainer.append($list);
+            }).fail(
+                function (data) {
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
+                }
+            );
+        },
+        /**
+         * Load subscription data and generate manage subscription UI
+         *
+         * @function $.forerunner.manageMySubscriptions#listSubscriptions
+         *
+         */
+        listSubscriptions: function () {
+            var me = this;
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+            me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
+            me.$container.append(headerHtml);
+            // Make these async calls and cache the results before they are needed.
+            me.options.subscriptionModel.subscriptionModel("getSchedules");
+            me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
+            me.element.append(me.$container);
+            me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
+            me.$container.append(me.$listcontainer);
+            me.$theForm = me._createDiv(["fr-sub-form"]);
+            me.$container.append(me.$theForm);
+            me._renderList();
+
+            me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        /**
+         * Open manage subscription dialog
+         *
+         * @function $.forerunner.manageMySubscriptions#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close manage subscription dialog
+         *
+         * @function $.forerunner.manageMySubscriptions#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Removes the manage subscription functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.manageMySubscriptions#destroy
+         */
+        destroy: function () {
+            var me = this;
+            me.element.html("");
+            this._destroy();
+        }
+    });  // $.widget(
+});  // $(function ()
+
 ///#source 1 1 /Forerunner/ReportExplorer/js/CreateDashboard.js
 /**
  * @file Contains the create dashboard widget.
@@ -17464,6 +17680,22 @@ $(function () {
         extensionSettings: {},
         schedules: null,
         _create: function () {
+        },
+        getMySubscriptionList: function (reportPath) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions?instance=" + me.options.rsInstance;
+            var jqxhr = forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
+            .done(function (data) {
+                console.log("ListMySubscriptions succeeded.");
+            })
+            .fail(function (data) {
+                console.log("ListMySubscriptions call failed.");
+            });
+            return jqxhr;
         },
         getSubscriptionList: function (reportPath) {
             var me = this;

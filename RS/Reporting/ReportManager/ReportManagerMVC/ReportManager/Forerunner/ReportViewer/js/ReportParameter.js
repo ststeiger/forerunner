@@ -109,8 +109,9 @@ $(function () {
          * @param {Boolean} renderParamArea - Whether to make parameter area visible
          * @param {Boolean} isCascading - Cascading refresh or normal refresh
          * @param {Object} savedParam - User saved parameters
+         * @param {Object} paramMetadata - Report parameter metadata
          */
-        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam, paramMetadata) {
             var me = this;
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
             if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
@@ -133,7 +134,7 @@ $(function () {
             }
             else {
                 this.removeParameter();
-                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea, savedParam);
+                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata);
             }
 
             this._hasPostedBackWithoutSubmitForm = true;
@@ -164,16 +165,16 @@ $(function () {
          *
          * @param {Object} data - Original parameter data returned from reporting service
          * @param {Integer} pageNum - Current page number
-         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied.
-         * @param {Boolean} renderParamArea - Whether to make parameter area visible.
-         * @param {Object} savedParam - User saved parameter.
+         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible
+         * @param {Object} savedParam - User saved parameter
+         * @param {Object} paramMetadata - Report parameter metadata
          */
-        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
-
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
             me._submittedParamsList = null;
@@ -183,10 +184,11 @@ $(function () {
             me._dataPreprocess(data.ParametersList);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
+            var metadata = paramMetadata && paramMetadata.ParametersList;
             $.each(data.ParametersList, function (index, param) {
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
                     me._numVisibleParams += 1;
-                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
+                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
                 else
                     me._checkHiddenParam(param);
@@ -464,7 +466,7 @@ $(function () {
 
             return null;
         },
-        _writeParamControl: function (param, $parent, pageNum) {
+        _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
@@ -474,6 +476,7 @@ $(function () {
             var $optionsDiv = new $("<div class='fr-param-option-container'></div>");
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
+            var useDefaultParam = paramMetadata || param;
             
             if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
                 //only apply tree view to dropdown type
@@ -541,7 +544,7 @@ $(function () {
                 }
 
                 //Add use default option
-                if (me._hasDefaultValue(param)) {
+                if (useDefaultParam && me._hasDefaultValue(useDefaultParam)) {
                     $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
                 }
 
@@ -2001,7 +2004,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() && me.$form.validate().numberOfInvalids() <= 0)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {

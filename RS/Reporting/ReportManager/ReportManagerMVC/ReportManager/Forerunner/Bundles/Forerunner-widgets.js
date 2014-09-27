@@ -13756,7 +13756,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() && me.$form.validate().numberOfInvalids() <= 0)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0 && me.$form.valid())) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {

@@ -12116,7 +12116,7 @@ $(function () {
                 me._revertLock = true;
                 if (me._hasPostedBackWithoutSubmitForm) {
                     //refresh parameter on server side
-                    me.refreshParameters(me._submittedParamsList, false);
+                    me._refreshParameters(me._submittedParamsList, false);
                     me._hasPostedBackWithoutSubmitForm = false;
                     me.options.$reportViewer.invalidateReportContext();
                 }
@@ -12998,7 +12998,7 @@ $(function () {
                     
                     if ($li.children("ul").length === 0) {
                         $li.addClass("fr-param-tree-loading");
-                        me.refreshParameters(null, true);
+                        me._refreshParameters(null, true, param.Name);
                     }
                     else {
                         $li.children("ul").show();
@@ -13756,7 +13756,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.valid() && me.$form.validate().numberOfInvalids() <= 0)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0 && me.$form.valid())) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {
@@ -13938,7 +13938,9 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.on("change", function () { me.refreshParameters(null, true); });
+                    $targetElement.on("change", function () {
+                        me._refreshParameters(null, true, param.Name);
+                    });
                 });
             }
 
@@ -13994,24 +13996,37 @@ $(function () {
                 }
             });
         },
-        /**
-        * Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied
-        *
-        * @function $.forerunner.reportParameter#refreshParameters
-        *
-        * @param {String} savedParams - Saved parameter value list
-        * @param {Boolean} isCascading - Is cadcading parameter refresh or not
-        */
-        refreshParameters: function (savedParams, isCascading) {
+        //Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied        
+        _refreshParameters: function (savedParams, isCascading, parentName) {
             var me = this;
             //set false not to do form validate.
 
             var paramList = savedParams ? savedParams : me.getParamsList(true);
+
+            if (isCascading && parentName) {
+                paramList = me._removeChildParam(paramList, parentName);
+            }
+            
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
                 me.options.$reportViewer.refreshParameters(paramList, false, -1, false, isCascading);
             }
+        },
+        _removeChildParam: function (paramList, parentName) {
+            var me = this, result = null, pattern = null;
+
+            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
+            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
+                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+
+                result = paramList.replace(pattern, "");
+
+                if (me._dependencyList[children[i]]) {
+                    result = me._removeChildParam(result, children[i]);
+                }
+            }
+            return result;
         },
         _disabledSubSequenceControl: function ($control) {
             $control.attr("disabled", true).addClass("fr-param-disable");

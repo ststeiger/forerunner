@@ -539,6 +539,12 @@ Function VersionDetect
 		VersionEmpty: ; no exist version build
 			Goto Continue
 		Compare:
+			MessageBox MB_YESNO "Forerunner Mobilizer $R0 has been detected under this path, setup will overwrite the files under it. You can install the update version of Mobilizer or backup config files before continue. $\n$\nClick yes to continue, Click no to quit the setup." IDYES keepFullInstall IDNO quit
+				quit:
+					Quit
+				keepFullInstall:
+					Goto +1
+		
 			Push "$R0" ; installer build version number
 			Push "${BUILD_VERSION}" ; setup build version number
 			StrLen $R5 "$R0"

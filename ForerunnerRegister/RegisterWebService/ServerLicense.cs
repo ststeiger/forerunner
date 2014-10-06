@@ -227,17 +227,50 @@ namespace ForerunnerLicense
             }
         }
 
-
-        public void ExtendTrial(string LicenseKey)
+        const int TrialExtensionDays = 14;
+        public string ExtendTrial(string LicenseKey, int Hash)
         {
+            if (Hash != DateTime.Now.Month)
+            {
+                return String.Format(Response, "Fail", "400", "Incorrect Hash");
+            }
+
+            LicenseData licenseData = LoadLicenseFromServer(LicenseKey);
+            if (licenseData == null)
+            {
+                return String.Format(Response, "Fail", "404", "License key not found");
+            }
+
+            int Durration;
+            DateTime curExpiration = licenseData.PurchaseDate + TimeSpan.FromDays(licenseData.LicenseDuration);
+            if (DateTime.Now > curExpiration)
+            {
+                TimeSpan span = DateTime.Now - licenseData.PurchaseDate;
+                Durration = Convert.ToInt32(span.TotalDays + TrialExtensionDays);
+            }
+            else
+            {
+                TimeSpan span = curExpiration - licenseData.PurchaseDate;
+                Durration = Convert.ToInt32(span.TotalDays + TrialExtensionDays);
+            }
+
+            return ExtendTrialDuration(LicenseKey, licenseData.PurchaseDate, Durration);
+        }
+
+        private string ExtendTrialDuration(string LicenseKey, DateTime PurchaseDate, int Durration)
+        {
+            DateTime NewExpiration = PurchaseDate + TimeSpan.FromDays(Durration);
+            String returnString = String.Format(Response, "Success", "200", "Trial license extended to: " + NewExpiration.ToLocalTime().ToShortDateString());
+
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
 
-            string SQL = @"UPDATE License Set Duration = Duration+14 WHERE LicenseID = @LicenseID AND SKU = 'MobTrial'";
+            string SQL = @"UPDATE License Set Duration = @Durration WHERE LicenseID = @LicenseID AND SKU = 'MobTrial'";
             try
             {
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@Durration", Durration);
                 SQLComm.Parameters.AddWithValue("@LicenseID", LicenseKey);
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
@@ -246,7 +279,11 @@ namespace ForerunnerLicense
             {
                 if (SQLConn.State != System.Data.ConnectionState.Closed)
                     SQLConn.Close();
+
+                returnString = String.Format(Response, "Fail", "3", "Server Error - ExtendTrialDuration");
             }
+
+            return returnString;
         }
 
         private string ProcessActivate()
@@ -269,7 +306,7 @@ namespace ForerunnerLicense
                NewLD = LoadLicenseFromServer(NewLicenseKey);
                OldLD = LoadLicenseFromServer(OldLD.LicenseKey);
 
-                //retuen error after logging activation attempt
+                //return error after logging activation attempt
                 if (NewMachineData== null || NewLD == null)
                 {
                     Response = String.Format(Response, "Fail", "100", "Invalid License Key");
@@ -333,7 +370,7 @@ namespace ForerunnerLicense
                        }
                    }
 
-                  //this key is alrady activated, maybe lost HD allow activation on new machine if more than 90 days
+                  //this key is already activated, maybe lost HD allow activation on new machine if more than 90 days
                    else
                    {               
                        if (LicenseSpan.TotalDays < 90)

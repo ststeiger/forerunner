@@ -217,7 +217,7 @@ namespace ForerunnerLicense
                 SQLReader.Close();
                 return NewLD;
             }
-            catch(Exception e)
+            catch (Exception /*e*/)
             {
                 return NewLD;
             }

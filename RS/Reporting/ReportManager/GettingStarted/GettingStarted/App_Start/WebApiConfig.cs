@@ -10,7 +10,14 @@ namespace GettingStarted
         public static void Register(HttpConfiguration config)
         {
             config.Routes.MapHttpRoute(
-                name: "MobilizerAPI",
+                name: "MobilizerManagerAPI",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { controller = @"ReportManager" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "MobilizerViewerAPI",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional },
                 constraints: new { controller = @"ReportViewer" }

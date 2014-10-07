@@ -575,139 +575,6 @@
         
             
 <dt>
-    <h4 class="name" id="refreshParameters"><span class="type-signature"></span>refreshParameters<span class="signature">(savedParams, isCascading)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>savedParams</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Saved parameter value list</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>isCascading</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Is cadcading parameter refresh or not</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-       
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
     <h4 class="name" id="removeParameter"><span class="type-signature"></span>removeParameter<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
@@ -1098,7 +965,7 @@
         
             
 <dt>
-    <h4 class="name" id="updateParameterPanel"><span class="type-signature"></span>updateParameterPanel<span class="signature">(data, submitForm, pageNum, renderParamArea, isCascading, savedParam)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="updateParameterPanel"><span class="type-signature"></span>updateParameterPanel<span class="signature">(data, submitForm, pageNum, renderParamArea, isCascading, savedParam, paramMetadata)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1275,6 +1142,29 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>paramMetadata</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Report parameter metadata</td>
+        </tr>
+	
+	
 	</tbody>
 </table>
     
@@ -1323,7 +1213,7 @@
         
             
 <dt>
-    <h4 class="name" id="writeParameterPanel"><span class="type-signature"></span>writeParameterPanel<span class="signature">(data, pageNum, submitForm, renderParamArea, savedParam)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="writeParameterPanel"><span class="type-signature"></span>writeParameterPanel<span class="signature">(data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1427,7 +1317,7 @@
             
             
             
-            <td class="description last">Whether to submit form if all parameters are satisfied.</td>
+            <td class="description last">Whether to submit form if all parameters are satisfied</td>
         </tr>
 	
 	
@@ -1450,7 +1340,7 @@
             
             
             
-            <td class="description last">Whether to make parameter area visible.</td>
+            <td class="description last">Whether to make parameter area visible</td>
         </tr>
 	
 	
@@ -1473,7 +1363,30 @@
             
             
             
-            <td class="description last">User saved parameter.</td>
+            <td class="description last">User saved parameter</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>paramMetadata</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Report parameter metadata</td>
         </tr>
 	
 	
@@ -1537,7 +1450,7 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageMySubscriptions.html">manageMySubscriptions</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
 		</nav>
 	</div>
 </div>

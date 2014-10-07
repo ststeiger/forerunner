@@ -13,7 +13,16 @@
     "favoriteFailed":"失敗した",
     "docmapShowFailed":"失敗した",
     "prepareActionFailed":"失敗した",
-    "bookmarkNotFound":"レポートにブックマークを見つけることができません"
+    "bookmarkNotFound":"レポートにブックマークを見つけることができません",
+    "saveDashboardFailed":"ダッシュボードの失敗を保存",
+    "saveDashboardSucceeded":"成功しましたダッシュボードを保存",
+    "loadDashboardFailed":"負荷ダッシュに失敗しました",
+    "loadDashboard":"ロード·ダッシュボード",
+    "createFailed":"その名前を使用したダッシュボードは、すでに存在しています。次のいずれかを実行できます1）ダッシュボードの名前を変更するか、2）やり直して上書きチェックボックスをオンにします。",
+    "saveSearchFolderSucceeded":"検索フォルダ成功作成",
+    "saveSearchFolderFailed":"検索フォルダに失敗しました作成",
+    "addTagsSucceeded":"成功タグを追加する",
+    "addTagsFailed":"障害タグを追加する"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",
@@ -49,7 +58,15 @@
     "print":"刷る",
     "dsCredential":"資格情報",
     "views":"閲覧",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "RDLExt":"RDL拡張",
+    "saveDashboard":"ダッシュボードを保存",
+    "editDashboard":"編集ダッシュボード",
+    "tags":"タグ",
+    "viewDashboard":"ビューダッシュボード",
+    "zoomPageWidth":"トグルページ幅",
+    "zoomPercent":"パーセントにズーム",
+    "zoomDropdown":"ズーム"
   },
   "toolbar": {
     "back":"裏面",
@@ -60,6 +77,7 @@
     "firstPage":"最初",
     "home":"自宅",
     "keyword":"キーワード",
+    "logOff":"ログオフ",
     "lastPage":"最後の人",
     "menu":"メニュー",
     "navigation":"ナビゲーション",
@@ -77,7 +95,14 @@
     "parameterSets":"セットを管理",
     "selectSet":"セットを選択します。",
     "dsCredential":"データソースクレデンシャル",
-    "addToFavorites":"お気に入りに追加"
+    "addToFavorites":"お気に入りに追加",
+    "unzoom":"ズーム解除",
+    "search":"検索",
+    "createDashboard":"ダッシュボードの作成",
+    "editDashboard":"編集ダッシュボード",
+    "saveDashboard":"ダッシュボードを保存",
+    "searchFolder":"検索フォルダ",
+    "viewDashboard":"ビューダッシュボード"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -97,7 +122,9 @@
     "title":"ユーザー設定",
     "submit":"オーケー",
     "cancel":"キャンセル",
-    "ResponsiveUI":"レスポンシブUI"
+    "ResponsiveUI":"レスポンシブUI",
+    "Email":"Eメール",
+    "AdminUI":"管理UI"
   },
   "paramPane": {
     "nullField":"ゼロ",
@@ -107,7 +134,8 @@
     "viewReport":"ビュー",
     "cancel":"キャンセル",
     "datePicker":"日付",
-    "select":"選択する"
+    "select":"選択する",
+    "useDefault":"デフォルトを使用"
   },
   "validateError": {
     "required":"必修",
@@ -124,7 +152,8 @@
     "range":"{0}との間の値を入力して{1}",
     "max":"以下{0}に等しい値を入力してください",
     "min":"以上{0}に等しい値を入力します",
-    "invalid":"無効"
+    "invalid":"無効",
+    "invalidTree":"{0} 選択されていない"
   },
   "dialog": {
     "title":"プロンプト",
@@ -174,5 +203,86 @@
     "username":"ログイン名:",
     "password":"パスワード:",
     "reset":"リセット"
+  },
+  "explorerSearch": {
+    "emptyError":"検索基準は、空にすることはできません",
+    "notFound":"該当する結果が検索条件に一致しない、検索を絞り込んでください。"
+  },
+  "createDashboard": {
+    "title":"ダッシュボードの作成",
+    "cancel":"取り消す",
+    "submit":"提出する",
+    "dashboardName":"名前",
+    "namePlaceholder":"ダッシュボードの名前",
+    "dashboardTemplate":"テンプレート",
+    "overwrite":"上書きする"
+  },
+  "RDLExt": {
+    "title":"RDL拡張",
+    "submit":"提出する",
+    "cancel":"キャンセル",
+    "dialogTitle":"RDL拡張JSON形式"
+  },
+  "reportProperties": {
+    "title":"レポートのプロパティ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "selectReport":"<[レポート]を選択>",
+    "hideToolbar":"ツールバーを隠す",
+    "toolbar":"ツールバー:",
+    "minimal":"最小限の",
+    "full":"フル",
+    "removeReport":"レポートを削除する"
+  },
+  "tags": {
+    "title":"タグ",
+    "tags":"タグ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "prompt":"複数のタグはコンマで区切って.",
+    "yourPosition":"あなたがである"
+  },
+  "searchFolder": {
+    "title":"検索フォルダ",
+    "name":"名前",
+    "tags":"タグ",
+    "cancel":"キャンセル",
+    "submit":"提出する",
+    "prompt":"複数のタグはコンマで区切って.",
+    "homePage":"ホームページ",
+    "createTo":"下に作成",
+    "namePlaceholder":"検索フォルダ 名前"
+  },
+  "subscription": {
+    "email":"Eメール",
+    "cancel":"キャンセル",
+    "save":"保存",
+    "manageSubscription":"サブスクリプションを管理",
+    "toPlaceholder":"へ",
+    "subjectPlaceholder":"テーマ",
+    "descriptionPlaceholder":"説明",
+    "commentPlaceholder":"コメント",
+    "subject":"@ ReportNameのは@ EXECUTIONTIMEで実行されました",
+    "description":"にメールを送信して{0}",
+    "includeLink":"リンクを含める",
+    "includeReport":"レポートを含める",
+    "schedule":"スケジュール ",
+    "format":"フォーマット",
+    "saveFailed":"節約のサブスクリプションに失敗しました",
+    "addNew":"作る",
+    "edit":"編集",
+    "deleteSubscription":"削除",
+    "deleteFailed":"サブスクリプションの削除に失敗しました"
+  },
+  "properties": {
+    "title":"プロパティ",
+    "submit":"提出する",
+    "deleteItem":"削除",
+    "description":"説明"
+  },
+  "contextMenu": {
+    "title":"コンテキストメニュー",
+    "delLabel":"削除",
+    "properties":"プロパティ"
   }
 }

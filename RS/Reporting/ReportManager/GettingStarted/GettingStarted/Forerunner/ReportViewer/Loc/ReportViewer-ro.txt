@@ -13,7 +13,16 @@
     "favoriteFailed":"A eșuat",
     "docmapShowFailed":"A eșuat",
     "prepareActionFailed":"A eșuat",
-    "bookmarkNotFound":"Nu pot găsi marcajul în raport"
+    "bookmarkNotFound":"Nu pot găsi marcajul în raport",
+    "saveDashboardFailed":"Salvați Tabloul de bord a eșuat",
+    "saveDashboardSucceeded":"Salvați Tabloul de bord Urmat",
+    "loadDashboardFailed":"Încărcare Tabloul de bord a eșuat",
+    "loadDashboard":"încărcare Tablou de bord",
+    "createFailed":"Un tablou de bord cu acest nume există deja. Puteți fie: 1) redenumi tabloul de bord sau 2), bifați caseta de suprascriere, apoi încercați din nou.",
+    "saveSearchFolderSucceeded":"Folder de căutare Creat Urmat",
+    "saveSearchFolderFailed":"Folder de căutare Creat eșuată",
+    "addTagsSucceeded":"Adauga etichete Reușit",
+    "addTagsFailed":"Adauga Tag-uri eșuate"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
@@ -49,7 +58,15 @@
     "print":"se tipări",
     "dsCredential":"Acreditare",
     "views":"Vizualizari",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"Salvați Tablou de bord",
+    "editDashboard":"Edit Tablou de bord",
+    "tags":"Tag-uri",
+    "viewDashboard":"Vezi Tablou de bord",
+    "zoomPageWidth":"Toggle Page Lățime",
+    "zoomPercent":"Zoom la Procent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -58,6 +75,7 @@
     "favorites":"Favorite",
     "find":"Găseşte",
     "firstPage":"primul",
+    "logOff":"logoff",
     "home":"Acasă",
     "keyword":"Cuvinte cheie",
     "lastPage":"Ultima",
@@ -77,7 +95,14 @@
     "parameterSets":"Gestionați Seturi",
     "selectSet":"Selectați Set",
     "dsCredential":"DataSource acreditare",
-    "addToFavorites":"Adauga la Favorite"
+    "addToFavorites":"Adauga la Favorite",
+    "unzoom":"unzoom",
+    "search":"căutare",
+    "createDashboard":"crea Tablou de bord",
+    "editDashboard":"Edit Tablou de bord",
+    "saveDashboard":"Salvați Tablou de bord",
+    "searchFolder":"Folder de căutare",
+    "viewDashboard":"Vezi Tablou de bord"
   },
   "print": {
     "title":"imprima raportul",
@@ -97,17 +122,20 @@
     "title":"Setari utilizator",
     "submit":"bine",
     "cancel":"Anula",
-    "ResponsiveUI":"UI receptiv"
+    "ResponsiveUI":"UI receptiv",
+    "Email":"E-mail",
+    "AdminUI":"UI admin"
   },
   "paramPane": {
-    "nullField":"Null",
+    "nullField":"nul",
     "isTrue":"Adevărat",
-    "isFalse":"False",
+    "isFalse":"fals",
     "required":"Necesare",
     "viewReport":"Vedere",
     "cancel":"Anula",
     "datePicker":"Data",
-    "select":"Selecta"
+    "select":"Selecta",
+    "useDefault":"Utilizați Implicit"
   },
   "validateError": {
     "required":"Necesare",
@@ -124,7 +152,8 @@
     "range":"Introduceti o valoare între {0} şi {1}",
     "max":"Introduceti o valoare mai mică decât sau egală cu a {0}",
     "min":"Introduceti o valoare mai mare sau egal cu {0}",
-    "invalid":"Invalid"
+    "invalid":"Invalid",
+    "invalidTree":"{0} nu selectat"
   },
   "dialog": {
     "title":"prompt",
@@ -174,5 +203,86 @@
     "username":"nume de login:",
     "password":"parolă:",
     "reset":"restabili"
+  },
+  "explorerSearch": {
+    "emptyError":"Criterii de căutare nu poate fi gol",
+    "notFound":"Nu exista rezultate pentru criteriile de căutare, vă rugăm să rafinați căutarea."
+  },
+  "createDashboard": {
+    "title":"crea Tablou de bord",
+    "cancel":"anula",
+    "submit":"executa",
+    "dashboardName":"nume",
+    "namePlaceholder":"nume de tablou de bord",
+    "dashboardTemplate":"șablon",
+    "overwrite":"suprascriere"
+  },
+  "RDLExt": {
+    "title":"RDL Extension",
+    "submit":"executa",
+    "cancel":"anula",
+    "dialogTitle":"RDL Extension JSON"
+  },
+  "reportProperties": {
+    "title":"Raport Properties",
+    "cancel":"anula",
+    "submit":"executa",
+    "selectReport":"<selectați raport>",
+    "hideToolbar":"Ascunde Toolbar",
+    "toolbar":"Toolbar:",
+    "minimal":"minim",
+    "full":"complet",
+    "removeReport":"Scoateți Raport"
+  },
+  "tags": {
+    "title":"Tag-uri",
+    "tags":"Tag-uri",
+    "cancel":"Anula",
+    "submit":"Executa",
+    "prompt":"Tag-uri separate prin virgula.",
+    "yourPosition":"Esti la"
+  },
+  "searchFolder": {
+    "title":"Folder de căutare",
+    "name":"Nume",
+    "tags":"Tag-uri",
+    "cancel":"Anula",
+    "submit":"Executa",
+    "prompt":"Tag-uri separate prin virgula.",
+    "homePage":"pagina principală",
+    "createTo":"creat sub",
+    "namePlaceholder":"Folder de căutare Nume"
+  },
+  "subscription": {
+    "email":"E-mail",
+    "cancel":"Anula",
+    "save":"salva",
+    "manageSubscription":"Gestionați abonament",
+    "toPlaceholder":"la",
+    "subjectPlaceholder":"subiect",
+    "descriptionPlaceholder":"descriere",
+    "commentPlaceholder":"comentariu",
+    "subject":"@ ReportName a fost executat la @ ExecutionTime",
+    "description":"Trimite un email la {0}",
+    "includeLink":"include link-",
+    "includeReport":"Includeți raport",
+    "schedule":"program ",
+    "format":"Format",
+    "saveFailed":"Salvarea abonament eșuat",
+    "addNew":"crea",
+    "edit":"edita",
+    "deleteSubscription":"șterge",
+    "deleteFailed":"Ștergerea abonament eșuat"
+  },
+  "properties": {
+    "title":"Proprietăți",
+    "submit":"prezenta",
+    "deleteItem":"șterge",
+    "description":"descriere"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delLabel":"șterge",
+    "properties":"Proprietăți"
   }
 }

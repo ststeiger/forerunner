@@ -13,7 +13,16 @@
     "favoriteFailed":"失败",
     "docmapShowFailed":"失败",
     "prepareActionFailed":"失败",
-    "bookmarkNotFound":"在该报表中无法找到书签"
+    "bookmarkNotFound":"在该报表中无法找到书签",
+    "saveDashboardFailed":"保存指示板失败",
+    "saveDashboardSucceeded":"保存指示板成功",
+    "loadDashboardFailed":"加载指示板失败",
+    "loadDashboard":"加载指示板",
+    "createFailed":"同名指示板已经存在. 您可以: 1) 重命名指示板 或者 2) 选中覆盖并重试.",
+    "saveSearchFolderSucceeded":"搜索文件夹创建成功",
+    "saveSearchFolderFailed":"搜索文件夹创建失败",
+    "addTagsSucceeded":"添加标签成功",
+    "addTagsFailed":"添加标签失败"
   },
   "errorTag": {
     "moreDetail":"点击查看更多信息",
@@ -49,7 +58,15 @@
     "print":"打印",
     "dsCredential":"数据源验证",
     "views":"浏览",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "RDLExt":"RDL扩展",
+    "saveDashboard":"保存指示板",
+    "editDashboard":"编辑指示板",
+    "tags":"标签",
+    "viewDashboard":"查看指示板",
+    "zoomPageWidth":"切换页面宽度",
+    "zoomPercent":"缩放百分比",
+    "zoomDropdown":"缩放"
   },
   "toolbar": {
     "back":"返回",
@@ -58,6 +75,7 @@
     "favorites":"收藏",
     "find":"查找",
     "firstPage":"首页",
+    "logOff":"退出",
     "home":"主页",
     "keyword":"关键字",
     "lastPage":"末页",
@@ -77,7 +95,14 @@
     "parameterSets":"管理参数集",
     "selectSet":"选择参数集",
     "dsCredential":"数据源验证",
-    "addToFavorites":"添加到收藏"
+    "addToFavorites":"添加到收藏",
+    "unzoom":"取消缩放",
+    "search":"搜索",
+    "createDashboard":"创建指示板",
+    "editDashboard":"编辑指示板",
+    "saveDashboard":"保存指示板",
+    "searchFolder":"搜索文件夹",
+    "viewDashboard":"查看指示板"
   },
   "print": {
     "title":"打印报表",
@@ -97,7 +122,9 @@
     "title":"自定义设置",
     "submit":"保存",
     "cancel":"取消",
-    "ResponsiveUI":"动态UI"
+    "ResponsiveUI":"动态UI",
+    "Email":"电子邮件",
+    "AdminUI":"管理员UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -107,7 +134,8 @@
     "viewReport":"加载",
     "cancel":"取消",
     "datePicker":"日期",
-    "select":"选择"
+    "select":"选择",
+    "useDefault":"使用默认值"
   },
   "validateError": {
     "required":"必填",
@@ -124,7 +152,8 @@
     "range":"输入介于 {0}的{1} 值",
     "max":"输入小于等于{0}的数",
     "min":"输入大于等于{0}的数",
-    "invalid":"无效"
+    "invalid":"无效",
+    "invalidTree":"{0} 未选择"
   },
   "dialog": {
     "title":"提示",
@@ -153,7 +182,7 @@
     "dayNamesMin":["日", "一", "二", "三", "四", "五", "六"]},
   "parameterModel": {
     "defaultName":"默认",
-    "selectSet":"选择参数集"
+    "selectSet":"<选择参数集>"
   },
   "manageParamSets": {
     "manageSets":"管理参数集",
@@ -174,5 +203,86 @@
     "username":"登录名:",
     "password":"密码:",
     "reset":"重置"
+  },
+  "explorerSearch": {
+    "emptyError":"搜索条件不能为空",
+    "notFound":"没有结果符合您的搜索条件，请缩小搜寻范围。"
+  },
+  "RDLExt": {
+    "title":"RDL扩展",
+    "submit":"提交",
+    "cancel":"取消",
+    "dialogTitle":"RDL的JSON扩展"
+  },
+  "createDashboard": {
+    "title":"创建指示板",
+    "cancel":"取消",
+    "submit":"提交",
+    "dashboardName":"名称",
+    "namePlaceholder":"指示板名称",
+    "dashboardTemplate":"模板",
+    "overwrite":"覆盖"
+  },
+  "reportProperties": {
+    "title":"报表属性",
+    "cancel":"取消",
+    "submit":"提交",
+    "selectReport":"<选择报表>",
+    "hideToolbar":"隐藏工具栏",
+    "toolbar":"工具栏:",
+    "minimal":"最小化",
+    "full":"充满",
+    "removeReport":"移除报表"
+  },
+  "tags": {
+    "title":"标签",
+    "tags":"标签",
+    "cancel":"取消",
+    "submit":"提交",
+    "prompt":"使用逗号分隔标签.",
+    "yourPosition":"您当前在"
+  },
+  "searchFolder": {
+    "title":"搜索文件夹",
+    "name":"名称",
+    "tags":"标签",
+    "cancel":"取消",
+    "submit":"提交",
+    "prompt":"使用逗号分隔标签.",
+    "homePage":"主页",
+    "createTo":"创建到",
+    "namePlaceholder":"搜索文件夹名称"
+  },
+  "subscription": {
+    "email":"电子邮件",
+    "cancel":"取消",
+    "save":"保存",
+    "manageSubscription":"管理订阅",
+    "toPlaceholder":"发送到",
+    "subjectPlaceholder":"主题",
+    "descriptionPlaceholder":"描述",
+    "commentPlaceholder":"注释",
+    "subject":"@ReportName 运行于 @ExecutionTime",
+    "description":"发送邮件到 {0}",
+    "includeLink":"包含连接",
+    "includeReport":"包含报表",
+    "schedule":"计划",
+    "format":"格式",
+    "saveFailed":"保存订阅失败",
+    "addNew":"创建",
+    "edit":"编辑",
+    "deleteSubscription":"删除",
+    "deleteFailed":"删除订阅成功"
+  },
+  "properties": {
+    "title":"属性",
+    "submit":"提交",
+    "deleteItem":"删除",
+    "description":"描述"
+  },
+  "contextMenu": {
+    "title":"右键菜单",
+    "delLabel":"删除",
+    "properties":"属性"
   }
 }

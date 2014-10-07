@@ -13,7 +13,16 @@
     "favoriteFailed":"Fracasado",
     "docmapShowFailed":"Fracasado",
     "prepareActionFailed":"Fracasado",
-    "bookmarkNotFound":"Non devolveu o marcador no informe"
+    "bookmarkNotFound":"Non devolveu o marcador no informe",
+    "saveDashboardFailed":"Sábháil Ar Phainéal Theip",
+    "saveDashboardSucceeded":"Sábháil Ar Phainéal Comharba",
+    "loadDashboardFailed":"Painéal na Luchtaigh Theip",
+    "loadDashboard":"Painéal na Luchtaigh",
+    "createFailed":"Tá an Phainéil leis an ainm sin ann cheana. Is féidir leat ceachtar: 1) a athainmniú do Painéal na nIonstraimí nó 2) a sheiceáil sa bhosca forscríobh ansin déan iarracht eile.",
+    "saveSearchFolderSucceeded":"Cuardaigh Fillteán Cruthaithe Comharba",
+    "saveSearchFolderFailed":"Cuardaigh Fillteán Cruthaithe Theip",
+    "addTagsSucceeded":"Add Tags Comharba",
+    "addTagsFailed":"Add Tags Theip"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",
@@ -49,7 +58,15 @@
     "print":"Priontáil",
     "dsCredential":"Dintiúir",
     "views":"Radhairc",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "RDLExt":"RDL Síneadh",
+    "saveDashboard":"Sábháil Ar Phainéal",
+    "viewDashboard":"Féach ar Phainéil",
+    "editDashboard":"Painéal na Eagar",
+    "tags":"Clibeanna",
+    "zoomPageWidth":"Scoránaigh Leathanach Leithead",
+    "zoomPercent":"Súmáil go Céatadán",
+    "zoomDropdown":"Zúmáil"
   },
   "toolbar": {
     "back":"ar ais",
@@ -61,7 +78,8 @@
     "home":"Baile",
     "keyword":"Eochairfhocal",
     "lastPage":"Last",
-    "menu":"Menu",
+    "logOff":"logoff",
+    "menu":"roghchlár",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",
     "pageOf":"de",
@@ -77,7 +95,14 @@
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
     "dsCredential":"credential Datasource",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Add to Favorites",
+    "unzoom":"unzoom",
+    "search":"Cuardaigh",
+    "createDashboard":"Cruthaigh Phainéil",
+    "editDashboard":"Painéal na Eagar",
+    "saveDashboard":"Sábháil Ar Phainéal",
+    "searchFolder":"Cuardaigh Fillteán",
+    "viewDashboard":"Féach ar Phainéil"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -97,17 +122,20 @@
     "title":"Socruithe Úsáideoir",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"Chomhéadain sofhreagrach"
+    "ResponsiveUI":"Chomhéadain sofhreagrach",
+    "Email":"Email",
+    "AdminUI":"Chomhéadain Riarachán"
   },
   "paramPane": {
     "nullField":"Null",
-    "isTrue":"True",
+    "isTrue":"Fíor",
     "isFalse":"bréagach",
     "required":"Riachtanach",
     "viewReport":"Féach",
     "cancel":"Cancelar",
     "datePicker":"Dáta",
-    "select":"Roghnaigh"
+    "select":"Roghnaigh",
+    "useDefault":"Bain úsáid as Réamhshocrú"
   },
   "validateError": {
     "required":"Riachtanach",
@@ -124,7 +152,8 @@
     "range":"Iontráil luach idir {0} agus {1}",
     "max":"Iontráil luach níos lú ná nó cothrom le {0}",
     "min":"Iontráil luach níos mó ná nó cothrom le {0}",
-    "invalid":"neamhbhailí"
+    "invalid":"neamhbhailí",
+    "invalidTree":"{0} nach roghnaithe"
   },
   "dialog": {
     "title":"incitar",
@@ -174,5 +203,86 @@
     "username":"ainm Logáil isteach:",
     "password":"Pasfhocal:",
     "reset":"Athshocraigh"
+  },
+  "explorerSearch": {
+    "emptyError":"Ní féidir na critéir chuardaigh a bheith folamh",
+    "notFound":"Uimh torthaí a mheaitseáil do chritéir chuardaigh, le do thoil do chuardach a bheachtú."
+  },
+  "createDashboard": {
+    "title":"Cruthaigh Phainéil",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "dashboardName":"Ainm",
+    "namePlaceholder":"ainm painéal na nIonstraimí",
+    "dashboardTemplate":"teimpléad",
+    "overwrite":"forscríobh"
+  },
+  "RDLExt": {
+    "title":"RDL Síneadh",
+    "submit":"Cuir",
+    "cancel":"Cealaigh",
+    "dialogTitle":"RDL Síneadh JSON"
+  },
+  "reportProperties": {
+    "title":"Airíonna Tuarascáil",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "selectReport":"<tuarascáil roghnú>",
+    "hideToolbar":"Folaigh Barra Uirlisí",
+    "toolbar":"Toolbar:",
+    "minimal":"Íosráta",
+    "full":"Iomlán",
+    "removeReport":"Bain Tuarascáil"
+  },
+  "tags": {
+    "title":"Clibeanna",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "yourPosition":"Tá tú ag"
+  },
+  "searchFolder": {
+    "title":"Cuardaigh Fillteán",
+    "name":"Ainm",
+    "tags":"Clibeanna",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "prompt":"Clibeanna ar leith le camóga.",
+    "homePage":"leathanach baile",
+    "createTo":"cruthaithe faoi",
+    "namePlaceholder":"Cuardaigh Fillteán Ainm"
+  },
+  "subscription": {
+    "email":"Ríomhphost",
+    "cancel":"Cealaigh",
+    "save":"Sábháil",
+    "manageSubscription":"Bainistigh Síntiúis",
+    "toPlaceholder":"To",
+    "subjectPlaceholder":"Ábhar",
+    "descriptionPlaceholder":"Cur síos",
+    "commentPlaceholder":"Comment",
+    "subject":"@ Cuireadh chun báis ReportName ag @ ExecutionTime",
+    "description":"Seol r-phost chuig {0}",
+    "includeLink":"Cuir nasc",
+    "includeReport":"Cuir an tuarascáil",
+    "schedule":"Sceideal ",
+    "format":"Formáid",
+    "saveFailed":"Theip síntiús Shábháil",
+    "addNew":"Cruthaigh",
+    "edit":"Eagar",
+    "deleteSubscription":"Scrios",
+    "deleteFailed":"Theip scriosadh Síntiúis"
+  },
+  "properties": {
+    "title":"airíonna",
+    "submit":"Cuir",
+    "deleteItem":"Scrios",
+    "description":"Cur síos"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delLabel":"Scrios",
+    "properties":"airíonna"
   }
 }

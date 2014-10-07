@@ -13,7 +13,16 @@
     "favoriteFailed":"Misslyckades",
     "docmapShowFailed":"Misslyckades",
     "prepareActionFailed":"Misslyckades",
-    "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
+    "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten",
+    "saveDashboardFailed":"Spara Dashboard misslyckades",
+    "saveDashboardSucceeded":"Spara Dashboard Lyckades",
+    "loadDashboardFailed":"Lastinstrumentpanels Misslyckades",
+    "loadDashboard":"Lastinstrumentbräda",
+    "createFailed":"En Dashboard med det namnet finns redan. Du kan antingen: 1) byta namn på instrumentpanelen eller 2) kontrollerar överskrivnings rutan och försök igen.",
+    "saveSearchFolderSucceeded":"Sökmapp Skapad Efterföljande",
+    "saveSearchFolderFailed":"Sökmapp Skapad misslyckades",
+    "addTagsSucceeded":"Lägg till etiketter Efterföljande",
+    "addTagsFailed":"Lägg till etiketter Misslyckade"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",
@@ -49,7 +58,15 @@
     "print":"Skriv ut",
     "dsCredential":"Credential",
     "views":"Översikter",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "RDLExt":"RDL Extension",
+    "saveDashboard":"Spara Dashboard",
+    "editDashboard":"Redigera Instrumentbräda",
+    "tags":"Taggar",
+    "viewDashboard":"Se instrumentpanel",
+    "zoomPageWidth":"Växla Sidan Bredd",
+    "zoomPercent":"Zooma till Procent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"bakåt",
@@ -58,6 +75,7 @@
     "favorites":"favoriter",
     "find":"hitta",
     "firstPage":"Först",
+    "logOff":"Logga ut",
     "home":"Hem",
     "keyword":"Nyckelord",
     "lastPage":"Sista",
@@ -77,7 +95,14 @@
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Lägg till i favoriter"
+    "addToFavorites":"Lägg till i favoriter",
+    "unzoom":"Zooma ut",
+    "search":"Sökning",
+    "createDashboard":"Skapa Dashboard",
+    "editDashboard":"Redigera Instrumentbräda",
+    "saveDashboard":"Spara Dashboard",
+    "searchFolder":"sökmapp",
+    "viewDashboard":"Se instrumentpanel"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -97,7 +122,9 @@
     "title":"Användarinställningar",
     "submit":"Ok",
     "cancel":"Avbryta",
-    "ResponsiveUI":"Lyhörd UI"
+    "ResponsiveUI":"Lyhörd UI",
+    "Email":"e-post",
+    "AdminUI":"Admin UI"
   },
   "paramPane": {
     "nullField":"Noll",
@@ -107,12 +134,13 @@
     "viewReport":"Visa",
     "cancel":"Avbryta",
     "datePicker":"Datum",
-    "select":"Välj"
+    "select":"Välj",
+    "useDefault":"Använd standard"
   },
   "validateError": {
     "required":"krävs",
     "remote":"Vänligen fixa detta område",
-    "email":"Ogiltigt e-mail",
+    "email":"Ogiltig e-",
     "url":"Ogiltigt URL",
     "date":"Ogiltigt Datum",
     "dateISO":"Ogiltigt Datum (yyyy-mm-dd)",
@@ -124,7 +152,8 @@
     "range":"Ange ett värde mellan {0} och {1}",
     "max":"Ange ett värde mindre än eller lika med {0}",
     "min":"Ange ett värde som är större än eller lika med {0}",
-    "invalid":"Ogiltig"
+    "invalid":"Ogiltig",
+    "invalidTree":"{0} Ej valt"
   },
   "dialog": {
     "title":"föranleda",
@@ -153,7 +182,7 @@
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
     "defaultName":"Standard",
-    "selectSet":"<välj set>"
+    "selectSet":"<cvälj set>"
   },
   "manageParamSets": {
     "manageSets":"Hantera Satser",
@@ -174,5 +203,86 @@
     "username":"Inloggningsnamn:",
     "password":"lösenord:",
     "reset":"Återställ"
+  },
+  "explorerSearch": {
+    "emptyError":"Sökkriterier kan inte vara tomt",
+    "notFound":"Inga resultat matchar dina sökkriterier, finjustera din sökning."
+  },
+  "createDashboard": {
+    "title":"Skapa Dashboard",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "dashboardName":"Namn",
+    "namePlaceholder":"instrumentbräda namn",
+    "dashboardTemplate":"Mall",
+    "overwrite":"Skriv över"
+  },
+  "RDLExt": {
+    "title":"RDL Extensions",
+    "submit":"inkomma",
+    "cancel":"Avbryt",
+    "dialogTitle":"RDL Förlängnings JSON"
+  },
+  "reportProperties": {
+    "title":"Rapportera Egenskaper",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "selectReport":"<väljer rapport>",
+    "hideToolbar":"Hide Toolbar",
+    "toolbar":"Verktygsfält:",
+    "minimal":"Kortaste",
+    "full":"Fullständig",
+    "removeReport":"Avlägsna Rapportera"
+  },
+  "tags": {
+    "title":"Taggar",
+    "tags":"Taggar",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "prompt":"åtskilja taggar med kommatecken.",
+    "yourPosition":"Du är på"
+  },
+  "searchFolder": {
+    "title":"sökmapp",
+    "name":"Namn",
+    "tags":"Taggar",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "prompt":"åtskilja taggar med kommatecken.",
+    "homePage":"Hemsida",
+    "createTo":"Tillverkad enligt",
+    "namePlaceholder":"sökmapp Namn"
+  },
+  "subscription": {
+    "email":"e-post",
+    "cancel":"Avbryt",
+    "save":"Spara",
+    "manageSubscription":"Hantera prenumeration",
+    "toPlaceholder":"Till",
+    "subjectPlaceholder":"Ämne",
+    "descriptionPlaceholder":"Beskrivning",
+    "commentPlaceholder":"Kommentar",
+    "subject":"@ REPORT avrättades på @ ExecutionTime",
+    "description":"Skicka e-post till {0}",
+    "includeLink":"Inkludera länk",
+    "includeReport":"inkludera rapport",
+    "schedule":"tidtabell ",
+    "format":"Format",
+    "saveFailed":"Att spara abonnemang misslyckades",
+    "addNew":"Skapa",
+    "edit":"Redigera",
+    "deleteSubscription":"Radera",
+    "deleteFailed":"Prenumerations deletion misslyckades"
+  },
+  "properties": {
+    "title":"Egenskaper",
+    "submit":"Skicka in",
+    "deleteItem":"Radera",
+    "description":"Beskrivning"
+  },
+  "contextMenu": {
+    "title":"snabbmenyn",
+    "delLabel":"Radera",
+    "properties":"Egenskaper"
   }
 }

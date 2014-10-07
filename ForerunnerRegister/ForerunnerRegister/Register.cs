@@ -246,7 +246,7 @@ namespace ForerunnerRegister
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 SQLConn.Close();
             }
@@ -268,7 +268,7 @@ namespace ForerunnerRegister
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 SQLConn.Close();
             }
@@ -325,9 +325,9 @@ namespace ForerunnerRegister
 
                 SQLConn.Close();
             }
-           
 
-            catch (Exception e)
+
+            catch (Exception /*e*/)
             {
                 if (SQLConn.State == System.Data.ConnectionState.Open)
                 {

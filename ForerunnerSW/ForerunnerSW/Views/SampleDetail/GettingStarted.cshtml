@@ -11,6 +11,12 @@
         upon the "Internet Application" template with one additional page that shows a report using the Forerunner SDK.
     </p>
     <p>
+        You need to make sure you have the Mobilizer application installed and running properly. You will use the settings from
+        the web.config file from Mobilizer to confiure your application. Use the Mobilizer Config Tool to get your settings defined
+        and working. The config tool will write entries into web.config. So make sure Mobilizer is running properly before you
+        continue.
+    </p>
+    <p>
         If you already have a web application you can skip directly to the the section on enabling Forerunner support below.
     </p>
     <p><b>Step 1: Install Mobilizer</b></p>
@@ -35,8 +41,9 @@
     <p><b>Step 3: Enabling Forerunner SDK Support</b></p>
     <ul>
         <li>
-            Copy the "forerunner" folder from your Mobilizer installation into the root folder in your project. Typically
-            the Forerunner folder folder path would be something like:
+            Copy the "forerunner" folder from your Mobilizer installation into the root folder in your project. You will need
+            to add this folder and all files to your project. You can do this in one step by copying the folder and pasting it right
+            onto your project icon in the solution explorer. Typically the Forerunner folder folder path would be something like:
         </li><br />
         <ul><li>C:\Program Files (x86)\Forerunner\MobilizerV2\Forerunner</li></ul>
         <p>and the root folder of your application will contain your Web.config file.</p>
@@ -46,17 +53,24 @@
             into your own project folder hierarchy if you prefer.
         </li>
         <br />
+        <li>
+            Copy the "Custom" folder from your Mobilizer installation.
+        </li>
+        <br />
         <li>Copy the following files from your installation bin folder to your project bin folder and add references:</li>
         <ul>
             <li>Forerunner.Json.dll</li>
             <li>Forerunner.SQLReporting.dll</li>
+            <li>PdfSharp.dll</li>
         </ul>
-        <li>In the file: App_Start\WebApiConfig.cs add a second route template named MobilizerAPI</li>
+        <li>In the file: App_Start\WebApiConfig.cs add two new routes one for the Report Viewer and another for the Report Manager.
+            Make sure these routes are before any other routes (I.e., the Defaulte route), if not you will have problems.. 
+        </li>
         <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="WebApiConfig.cs"></div>
         <li>Make the following changes to your Web.config file</li>
         <ul>
             <p>Copy the Forerunner specific
-                &lt;appsettings&gt;
+                <span style="color:blue">&lt;</span><span style="color:brown">appsettings</span><span style="color:blue">&gt;</span>
                 from the installed Mobilized Web.config</p>
         </ul>
     </ul>
@@ -67,7 +81,7 @@
             <ul><li>"Add" > "View..."</li></ul>
         <li>In the "Add View" dialog:</li>
         <ul>
-            <li>Add a new view named "Report"</li>
+            <li>Add a new view named "<b><i>Report</i></b>"</li>
             <li>Select the  "Add" button</li>
         </ul>
         <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="Report.cshtml"></div>
@@ -79,11 +93,11 @@
             <ul><li>"Add" > "View..."</li></ul>
         <li>In the "Add View" dialog:</li>
         <ul>
-            <li>Add a new view named "_ReportLayout.cshtml"</li>
+            <li>Add a new view named "<b><i>_ReportLayout.cshtml</i></b>"</li>
             <li>Select the  "Add" button</li>
         </ul>
         <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="_ReportLayout.cshtml"></div>
-        <li>Add a link to the new report page into the _Layout.cshtml page</li>
+        <li>Add a link to the new report page into the <i>_Layout.cshtml</i> page</li>
         <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="_Layout.cshtml"></div>
     </ul>
 

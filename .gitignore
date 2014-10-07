@@ -706,6 +706,7 @@ Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Common/images/ToolbarIcons/Thumbs.db
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Phone_Leads_with_Transcription.rdl
 Test/Test Reports 2012/Northwind Test Suite/Phone_Leads_with_Transcription.rdl
+<<<<<<< HEAD
 Test/AdventureWorks Sample Reports/UpgradeLog.htm
 Test/AdventureWorks Sample Reports/UpgradeLog.XML
 Test/Test Reports 2012/Northwind Test Suite/CascadingParameter.rdl
@@ -714,3 +715,7 @@ Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/TrainingComplianceReport.rdl
 Test/Test Reports 2012/Northwind Test Suite/TrainingComplianceReport.rdl
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Copy of N0359-061-REP-0236.rdl
+=======
+ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.ProjectInstaller.resources
+ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.Worker.resources
+>>>>>>> c80011021770b426be40146e07ab2f77c7906125

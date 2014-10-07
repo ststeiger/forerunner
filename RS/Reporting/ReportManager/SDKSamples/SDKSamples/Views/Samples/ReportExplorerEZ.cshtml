@@ -34,8 +34,14 @@
             if (data.type === "ReportManager") {
                 // Remove the logout button from the report explorer toolbar
                 var $reportExplorerToolbar = $reportArea.reportExplorerEZ("getReportExplorerToolbar");
-                var reportExplorerTools = forerunner.ssr.tools.reportExplorerToolbar;
-                $reportExplorerToolbar.reportExplorerToolbar("hideTool", reportExplorerTools.btnLogOff.selectorClass);
+                var toolbarTools = forerunner.ssr.tools.reportExplorerToolbar;
+                $reportExplorerToolbar.reportExplorerToolbar("hideTool", toolbarTools.btnLogOff.selectorClass);
+
+                // Remove the logout button from the report explorer toolbar
+                var $reportExplorerToolpane = $reportArea.reportExplorerEZ("getReportExplorerToolpane");
+                var toolpaneTools = forerunner.ssr.tools.reportExplorerToolpane;
+                $reportExplorerToolpane.reportExplorerToolpane("hideTool", toolpaneTools.itemLogOff.selectorClass);
+
             } else if (data.type === "ReportViewer") {
                 // Remove the logout button from the report viewer tool pane
                 var $reportViewerEZ = $reportArea.find(".fr-layout-mainviewport");

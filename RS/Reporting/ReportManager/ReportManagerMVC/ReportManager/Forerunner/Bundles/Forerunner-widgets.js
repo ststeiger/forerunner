@@ -3527,6 +3527,7 @@ $(function () {
         _addNewSet: function (parameterList) {
             var me = this;
             var newSet = me.getNewSet(parameterList);
+            newSet.name = locData.parameterModel.defaultName;
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -3692,7 +3693,8 @@ $(function () {
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
-                        me._pushNewSet(locData.parameterModel.defaultName, (data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        var newSet = me._addNewSet((data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        newSet.name = locData.parameterModel.defaultName;
                     }
                     else if (data) {
                         me.serverData = data;

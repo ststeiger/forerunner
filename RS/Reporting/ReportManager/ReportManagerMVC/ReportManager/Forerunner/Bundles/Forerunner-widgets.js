@@ -3527,6 +3527,7 @@ $(function () {
         _addNewSet: function (parameterList) {
             var me = this;
             var newSet = me.getNewSet(parameterList);
+            newSet.name = locData.parameterModel.defaultName;
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -3692,7 +3693,8 @@ $(function () {
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
-                        me._pushNewSet(locData.parameterModel.defaultName, (data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        var newSet = me._addNewSet((data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        newSet.name = locData.parameterModel.defaultName;
                     }
                     else if (data) {
                         me.serverData = data;
@@ -12201,11 +12203,18 @@ $(function () {
             if (dpLoc)
                 $.datepicker.setDefaults(dpLoc);
 
-            $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png");
-                $(datePicker).datepicker("option", "buttonImageOnly", true);
-                $(datePicker).datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
-            });
+            me.$datepickers = me.element.find(".hasDatepicker");
+
+            if (me.$datepickers.length) {
+                $.each(me.$datepickers, function (index, datePicker) {
+                    $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
+                        .datepicker("option", "buttonImageOnly", true)
+                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
+                });
+
+                $(window).off("resize", me._paramWindowResize);
+                $(window).on("resize", { me: me }, me._paramWindowResize);
+            }
         },
         _getPredefinedValue: function (param) {
             var me = this;
@@ -12618,14 +12627,15 @@ $(function () {
                         //gotoCurrent: true,
                         dateFormat: forerunner.ssr._internal.getDateFormat(),
                         onClose: function () {
-                            $control.removeAttr("disabled");
+                            var $input = $control;
+                            $input.removeAttr("disabled").removeClass("datepicker-focus");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
 
                             if (me.getNumOfVisibleParameters() === 1)
                                 me._submitForm(pageNum);
                         },
-                        beforeShow: function () {
-                            $control.attr("disabled", true);
+                        beforeShow: function (input) {
+                            $(input).attr("disabled", true).addClass("datepicker-focus");
                         },
                     });
                     $control.attr("formattedDate", "true");
@@ -14046,6 +14056,14 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        //handle window resize action
+        _paramWindowResize: function (event, data) {
+            var me = event.data.me;
+
+            forerunner.helper.delay(me, function () {
+                me.$datepickers.filter(".datepicker-focus").datepicker("hide").datepicker("show");
+            }, 100, "_parameterDelayId");
+        },
         /**
         * Removes the report parameter functionality completely. This will return the element back to its pre-init state.
         *
@@ -14056,6 +14074,9 @@ $(function () {
 
             me.removeParameter();
             $(document).off("click", me._checkExternalClick);
+            if (me.$datepickers.length) {
+                $(window).off("resize", me._paramWindowResize);
+            }
 
             this._destroy();
         }

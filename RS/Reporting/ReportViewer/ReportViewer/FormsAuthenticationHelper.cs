@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Security;
 using System.Net;
+using System.Reflection;
 using System.Configuration;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
@@ -10,13 +11,25 @@ using Forerunner.Logging;
 
 namespace Forerunner.Security
 {
+    public interface ICustomLoginProvider
+    {
+        bool Login(string userName, string domain, string password);
+    }
+
     public class FormsAuthenticationHelper
     {
+        static Assembly loginProviderAssembly = null;
         static private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         static private int ReportServerTimeout = ForerunnerUtil.GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
+        static private string loginProvider = ConfigurationManager.AppSettings["Forerunner.LoginProvider"];
+        static private string loginProviderAssemblyPath = ConfigurationManager.AppSettings["Forerunner.LoginProviderAssemblyPath"];
 
-
+        static FormsAuthenticationHelper()
+        {
+            if (loginProvider != null && loginProviderAssemblyPath != null)
+                loginProviderAssembly = Assembly.LoadFile(loginProviderAssemblyPath);
+        }
         static private HttpCookie FindAuthCookie()
         {
             return HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -38,9 +51,40 @@ namespace Forerunner.Security
             }
             return "";
         }
+
+        static private bool CustomLogin(string userName, string domain, string password)
+        {
+            if (loginProvider == null)
+                return false;
+
+            try
+            {
+                Type type = loginProviderAssembly.GetType(loginProvider);
+                ICustomLoginProvider provider = (ICustomLoginProvider)Activator.CreateInstance(type);
+                return provider.Login(userName, domain, password);
+            }
+            catch(Exception e)
+            {
+                Logger.Trace(LogType.Error, "CustomLogin module failed " + e.ToString());
+            }
+            return false;
+        }
+
+        static public ICredentials GetCredentials()
+        {
+            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows || loginProviderAssembly != null)
+            {
+                return CredentialCache.DefaultNetworkCredentials;
+            }
+
+
+            HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+            return new NetworkCredential(authTicket.Name, authTicket.UserData);
+        }
         static public bool Login(string userNameAndDomain, string password, int timeout)
         {
-
             HttpCookie authCookie = FindAuthCookie();
             if (authCookie == null)
             {
@@ -63,12 +107,12 @@ namespace Forerunner.Security
 
                 try
                 {
-                    bool authenticated = Forerunner.Security.NativeMethods.LogonUser(
+                    bool authenticated = loginProvider == null? Forerunner.Security.NativeMethods.LogonUser(
                         userName,
                         domain,
                         password,
                         LOGON32_LOGON_NETWORK,
-                        LOGON32_PROVIDER_DEFAULT, ref token);
+                        LOGON32_PROVIDER_DEFAULT, ref token) : CustomLogin(userName, domain, password);
 
                     // This is the code path when we cannot authenticate with the Web Server.
                     // Have to make a call to RS.

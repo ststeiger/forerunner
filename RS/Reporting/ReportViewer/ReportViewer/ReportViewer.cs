@@ -148,16 +148,7 @@ namespace Forerunner.SSRS.Viewer
             if (credentials != null)
                 return credentials;
 
-            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
-            {                
-                return CredentialCache.DefaultNetworkCredentials;
-            }
-
-            // Get it from Cookies otherwise
-            HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
-            FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-
-            return new NetworkCredential(authTicket.Name, authTicket.UserData);
+            return FormsAuthenticationHelper.GetCredentials();
         }
 
         internal bool GetServerRendering()

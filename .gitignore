@@ -718,4 +718,9 @@ Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Copy of N0359-061-REP-0236
 =======
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.ProjectInstaller.resources
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.Worker.resources
+<<<<<<< HEAD
 >>>>>>> c80011021770b426be40146e07ab2f77c7906125
+=======
+Samples/CustomLoginProvider/CustomLoginProvider/bin/*
+Samples/CustomLoginProvider/CustomLoginProvider/obj/*
+>>>>>>> 63e9e6c577c05d1e58ef42444540737421d07d54

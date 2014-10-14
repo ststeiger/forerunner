@@ -708,3 +708,5 @@ Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Phone_Leads_with_Transcrip
 Test/Test Reports 2012/Northwind Test Suite/Phone_Leads_with_Transcription.rdl
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.ProjectInstaller.resources
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.Worker.resources
+Samples/CustomLoginProvider/CustomLoginProvider/bin/*
+Samples/CustomLoginProvider/CustomLoginProvider/obj/*

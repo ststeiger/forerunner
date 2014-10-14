@@ -254,15 +254,7 @@ namespace Forerunner.SSRS.Manager
             if (credentials != null)
                 return credentials;
 
-            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
-            {
-                return CredentialCache.DefaultNetworkCredentials;
-            }
-
-            HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
-            FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
-            
-            return new NetworkCredential(authTicket.Name, authTicket.UserData);
+            return FormsAuthenticationHelper.GetCredentials();
         }
 
         // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!

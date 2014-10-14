@@ -27,15 +27,34 @@
         });
 
         var events = forerunner.ssr.constants.events;
-        $reportArea.on(events.reportExplorerEZAfterTransition(), function (type) {
+        $reportArea.on(events.reportExplorerEZAfterTransition(), function (e, data) {
             // Note that code to remove buttons must be inside of the after transition event. This is because the
-            // function transitionToReportManager will create the widgets (E.g., reportExplorerToolbar) after a timer
-            // so this call cannot be synchronous
+            // transitionTo... functions create the widgets (E.g., reportExplorerToolbar) in response to a timer
+            // callback, so these calls cannot be synchronous
+            if (data.type === "ReportManager") {
+                // Remove the logout button from the report explorer toolbar
+                var $reportExplorerToolbar = $reportArea.reportExplorerEZ("getReportExplorerToolbar");
+                var toolbarTools = forerunner.ssr.tools.reportExplorerToolbar;
+                $reportExplorerToolbar.reportExplorerToolbar("hideTool", toolbarTools.btnLogOff.selectorClass);
 
-            // Remove the logout button
-            var $reportExplorerToolbar = $reportArea.reportExplorerEZ("getReportExplorerToolbar");
-            var reportExplorerTools = forerunner.ssr.tools.reportExplorerToolbar;
-            $reportExplorerToolbar.reportExplorerToolbar("hideTool", reportExplorerTools.btnLogOff.selectorClass);
+                // Remove the logout button from the report explorer toolbar
+                var $reportExplorerToolpane = $reportArea.reportExplorerEZ("getReportExplorerToolpane");
+                var toolpaneTools = forerunner.ssr.tools.reportExplorerToolpane;
+                $reportExplorerToolpane.reportExplorerToolpane("hideTool", toolpaneTools.itemLogOff.selectorClass);
+
+            } else if (data.type === "ReportViewer") {
+                // Remove the logout button from the report viewer tool pane
+                var $reportViewerEZ = $reportArea.find(".fr-layout-mainviewport");
+                var $toolPane = $reportViewerEZ.reportViewerEZ("getToolPane");
+                var mergedItems = forerunner.ssr.tools.mergedItems;
+                $toolPane.toolPane("hideTool", mergedItems.itemLogOff.selectorClass);
+
+                // Remove the logout from the report viewer toolbar. Remember that the report viewer toolbar
+                // is not the same as the report explorer toolbar
+                var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
+                var mergedButtons = forerunner.ssr.tools.mergedButtons;
+                $toolbar.toolbar("hideTool", mergedButtons.btnLogOff.selectorClass);
+            }
         });
 
         // Transition to the home catalog view

@@ -13,7 +13,16 @@
     "favoriteFailed":"Fracassado",
     "docmapShowFailed":"Fracassado",
     "prepareActionFailed":"Fracassado",
-    "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório"
+    "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório",
+    "saveDashboardFailed":"Salve Painel Falha",
+    "saveDashboardSucceeded":"Salve Painel Sucedido",
+    "loadDashboardFailed":"Carga Painel Falha",
+    "loadDashboard":"carga Painel",
+    "createFailed":"Um painel com esse nome já existe. Você pode: 1) mudar o nome do painel ou 2) marque a caixa de substituição, em seguida, tente novamente.",
+    "saveSearchFolderSucceeded":"Pasta de Pesquisa Criado Sucedido",
+    "saveSearchFolderFailed":"Pasta de Pesquisa Criado Failed",
+    "addTagsSucceeded":"Adicionar tags Sucedido",
+    "addTagsFailed":"Adicionar tags Falha"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
@@ -49,7 +58,15 @@
     "print":"Impressão",
     "dsCredential":"Credencial",
     "views":"Visualizações",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "RDLExt":"RDL Extensão",
+    "saveDashboard":"Salve o Dashboard",
+    "editDashboard":"Editar o Dashboard",
+    "tags":"Marcações",
+    "viewDashboard":"Ver o Dashboard",
+    "zoomPageWidth":"Alternar Largura da Página",
+    "zoomPercent":"Zoom para Percent",
+    "zoomDropdown":"Zoom"
   },
   "toolbar": {
     "back":"Volta",
@@ -61,6 +78,7 @@
     "home":"Em casa",
     "keyword":"Palavra-chave",
     "lastPage":"Último",
+    "logOff":"logoff",
     "menu":"Menu",
     "navigation":"Navegação",
     "next":"Próximo",
@@ -77,7 +95,14 @@
     "parameterSets":"Gerenciar conjuntos",
     "selectSet":"Selecione Definir",
     "dsCredential":"DataSource Credencial",
-    "addToFavorites":"Adicionar aos favoritos"
+    "addToFavorites":"Adicionar aos favoritos",
+    "unzoom":"unzoom",
+    "search":"pesquisa",
+    "createDashboard":"criar o Dashboard",
+    "editDashboard":"Editar o Dashboard",
+    "saveDashboard":"Salve o Dashboard",
+    "searchFolder":"pasta de Pesquisa",
+    "viewDashboard":"Ver o Dashboard"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -97,7 +122,9 @@
     "title":"Configurações do Usuário",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"UI Responsive"
+    "ResponsiveUI":"UI Responsive",
+    "Email":"Email",
+    "AdminUI":"UI Administrador"
   },
   "paramPane": {
     "nullField":"Nulo",
@@ -107,7 +134,8 @@
     "viewReport":"Exibir",
     "cancel":"Cancelar",
     "datePicker":"Data",
-    "select":"Selecionar"
+    "select":"Selecionar",
+    "useDefault":"Use padrão"
   },
   "validateError": {
     "required":"Necessário",
@@ -124,7 +152,8 @@
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
     "min":"Insira um valor maior ou igual a {0}",
-    "invalid":"inválido"
+    "invalid":"inválido",
+    "invalidTree":"{0} não selecionado"
   },
   "dialog": {
     "title":"incitar",
@@ -174,5 +203,86 @@
     "username":"nome de login:",
     "password":"senha:",
     "reset":"restabelecer"
+  },
+  "explorerSearch": {
+    "emptyError":"Critérios de busca não pode estar vazio",
+    "notFound":"Nenhum resultado correspondem aos seus critérios de busca, por favor refinar sua busca."
+  },
+  "createDashboard": {
+    "title":"criar o Dashboard",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "dashboardName":"nome",
+    "namePlaceholder":"nome dashboard",
+    "dashboardTemplate":"modelo",
+    "overwrite":"sobrescrever"
+  },
+  "RDLExt": {
+    "title":"RDL Extensões",
+    "submit":"submeter",
+    "cancel":"cancelar",
+    "dialogTitle":"RDL extensão JSON"
+  },
+  "reportProperties": {
+    "title":"Propriedades do Relatório",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "selectReport":"<selecione relatório>",
+    "hideToolbar":"Ocultar barra de ferramentas",
+    "toolbar":"Barra de Ferramentas:",
+    "minimal":"mínimo",
+    "full":"completo",
+    "removeReport":"Remover Relatório"
+  },
+  "tags": {
+    "title":"Marcações",
+    "tags":"Marcações",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "prompt":"Separe tags com vírgulas.",
+    "yourPosition":"Você está em"
+  },
+  "searchFolder": {
+    "title":"pasta de Pesquisa",
+    "name":"Nome",
+    "tags":"Marcações",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "prompt":"Separe tags com vírgulas.",
+    "homePage":"Home page",
+    "createTo":"Criado em",
+    "namePlaceholder":"pasta de Pesquisa Nome"
+  },
+  "subscription": {
+    "email":"e-mail",
+    "cancel":"cancelar",
+    "save":"salvar",
+    "manageSubscription":"Gerenciar Assinatura",
+    "toPlaceholder":"para",
+    "subjectPlaceholder":"assunto",
+    "descriptionPlaceholder":"descrição",
+    "commentPlaceholder":"comentário",
+    "subject":"@ ReportName foi executado em @ ExecutionTime",
+    "description":"Enviar e-mail para {0}",
+    "includeLink":"incluir ligação",
+    "includeReport":"incluir relatório",
+    "schedule":"horário ",
+    "format":"formato",
+    "saveFailed":"Salvando subscrição falhou",
+    "addNew":"criar",
+    "edit":"editar",
+    "deleteSubscription":"excluir",
+    "deleteFailed":"Exclusão Assinatura falhou"
+  },
+  "properties": {
+    "title":"Propriedades",
+    "submit":"submeter",
+    "deleteItem":"excluir",
+    "description":"descrição"
+  },
+  "contextMenu": {
+    "title":"Context Menu",
+    "delLabel":"excluir",
+    "properties":"Propriedades"
   }
 }

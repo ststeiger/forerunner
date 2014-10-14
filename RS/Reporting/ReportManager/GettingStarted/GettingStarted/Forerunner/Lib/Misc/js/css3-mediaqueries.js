@@ -1,4 +1,8 @@
-if(typeof Object.create!=="function"){
+/*
+ *
+ * Licensed under the MIT license */
+
+if (typeof Object.create !== "function") {
 Object.create=function(o){
 function F(){
 };

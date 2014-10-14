@@ -1,4 +1,4 @@
-﻿.fr-layout-docmapsection { position: absolute; top: 0; left: 0; z-index: 2; }
+﻿.fr-layout-docmapsection { position: absolute; top: 0; left: 0; z-index: 5; }
 
 .fr-docmap-panel { vertical-align: top; height: 100%; display: inline-block; border-right: 1px groove lightblue; background-color: rgba(53, 68, 104, .75); }
 .fr-docmap-item { width: 100%; min-width: 240px; cursor: pointer; margin-right: 6px; display: inline-block; vertical-align: middle; }

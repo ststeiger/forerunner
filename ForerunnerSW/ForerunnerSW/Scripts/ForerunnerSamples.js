@@ -145,7 +145,6 @@
         window.location.assign(url);
     }
 
-
     // This is global scope because it is called directly from the html page
     ToggleSourceCode = function (site, filename, id) {
         var $div = $("#" + id);

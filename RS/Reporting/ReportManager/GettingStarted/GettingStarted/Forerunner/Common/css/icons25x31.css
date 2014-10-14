@@ -1,10 +1,9 @@
 /*** IconGen - start automatically generated, do not hand modify ***/
-.fr-icons25x31 {
+/*.fr-icons25x31 {
   width:25px;
   height:31px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons25x31.png');
+  margin:5px; display:inline-block;
 }
 
 .fr-icons25x31-exportCSV {
@@ -33,6 +32,41 @@
 
 .fr-icons25x31-exportXML {
   background-position: 0 -62px;
-}
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
+
+/*Toolpane icons css code: Below is new style code which reference images separately*/ 
+.fr-icons25x31 {
+  width:25px;
+  height:31px;
+  margin:5px; 
+  display:inline-block;
+}
+.fr-icons25x31-exportCSV {
+  background-image:url(../images/ToolpaneIcons/csv.png);  
+}
+
+.fr-icons25x31-exportWord {
+  background-image:url(../images/ToolpaneIcons/doc.png);
+}
+
+.fr-icons25x31-exportMHT {
+  background-image:url(../images/ToolpaneIcons/mhtml.png);
+}
+
+.fr-icons25x31-exportPDF {
+  background-image:url(../images/ToolpaneIcons/pdf.png);
+}
+
+.fr-icons25x31-exportTIFF {
+  background-image:url(../images/ToolpaneIcons/tiff.png);
+}
+
+.fr-icons25x31-exportExcel {
+  background-image:url(../images/ToolpaneIcons/xls.png);
+}
+
+.fr-icons25x31-exportXML {
+  background-image:url(../images/ToolpaneIcons/xml.png);
+}
 

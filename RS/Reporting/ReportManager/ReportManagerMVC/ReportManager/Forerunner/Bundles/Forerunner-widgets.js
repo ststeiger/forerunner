@@ -2466,6 +2466,7 @@ $(function () {
         },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
+
             var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
 
@@ -2473,6 +2474,10 @@ $(function () {
                 submitForm = true;
 
             if (savedParams) {
+                //for the parameter report which has saved parameter, we need to get a original parameter copy
+                me.paramMetadata = null;
+                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
+
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
@@ -2486,16 +2491,15 @@ $(function () {
                     }
                     else
                         me.refreshParameters(savedParams, submitForm, pageNum, false);
-                        
                 }
             } else {
-                me._loadDefaultParameters(pageNum);
+                me._loadDefaultParameters(pageNum, me._showParameterCallback);
             }
         },
         _paramsToString: function (a) {
             return JSON.stringify(a);
         },
-        _loadDefaultParameters: function (pageNum) {
+        _loadDefaultParameters: function (pageNum, success) {
             var me = this;
             forerunner.ajax.ajax({
                 type: "POST",
@@ -2510,14 +2514,8 @@ $(function () {
                 dataType: "json",
                 async: false,
                 done: function (data) {
-                    if (data.Exception) {
-                        me._renderPageError(me.$reportContainer, data);
-                        me.removeLoadingIndicator();
-                    } else {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-                        me._addLoadingIndicator();
-                        me._showParameters(pageNum, data);
+                    if (typeof success === "function") {
+                        success.call(me, data, pageNum);
                     }
                 },
                 fail: function (jqXHR, textStatus, errorThrown, request) {
@@ -2525,7 +2523,29 @@ $(function () {
                 }
             });
         },
+        _showParameterCallback: function(data, pageNum){
+            var me = this;
 
+            if (data.Exception) {
+                me._renderPageError(me.$reportContainer, data);
+                me.removeLoadingIndicator();
+            } else {
+                if (data.SessionID)
+                    me.sessionID = data.SessionID;
+                me._addLoadingIndicator();
+                me._showParameters(pageNum, data);
+            }
+        },
+        _getParameterMetadata: function(data){
+            var me = this;
+
+            if (data.Exception) {
+                me.paramMetadata = null;
+            }
+            else {
+                me.paramMetadata = data;
+            }
+        },
         _showParameters: function (pageNum, data) {
             var me = this;
             
@@ -2536,7 +2556,13 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me.paramDefs = data;
-                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer,RDLExt :me.getRDLExt() });
+
+                    $paramArea.reportParameter({
+                        $reportViewer: this,
+                        $appContainer: me.options.$appContainer,
+                        RDLExt: me.getRDLExt()
+                    });
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -2603,7 +2629,7 @@ $(function () {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam, me.paramMetadata);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
@@ -2700,8 +2726,6 @@ $(function () {
             }
             
             me._resetViewer();
-            
-           
 
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;
@@ -3503,6 +3527,7 @@ $(function () {
         _addNewSet: function (parameterList) {
             var me = this;
             var newSet = me.getNewSet(parameterList);
+            newSet.name = locData.parameterModel.defaultName;
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -3668,7 +3693,8 @@ $(function () {
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
-                        me._pushNewSet(locData.parameterModel.defaultName, (data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        var newSet = me._addNewSet((data.ParamsList instanceof Array) ? data : data.ParamsList);
+                        newSet.name = locData.parameterModel.defaultName;
                     }
                     else if (data) {
                         me.serverData = data;
@@ -11837,8 +11863,9 @@ $(function () {
          * @param {Boolean} renderParamArea - Whether to make parameter area visible
          * @param {Boolean} isCascading - Cascading refresh or normal refresh
          * @param {Object} savedParam - User saved parameters
+         * @param {Object} paramMetadata - Report parameter metadata
          */
-        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam, paramMetadata) {
             var me = this;
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
             if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
@@ -11861,7 +11888,7 @@ $(function () {
             }
             else {
                 this.removeParameter();
-                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea, savedParam);
+                this.writeParameterPanel(data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata);
             }
 
             this._hasPostedBackWithoutSubmitForm = true;
@@ -11892,16 +11919,16 @@ $(function () {
          *
          * @param {Object} data - Original parameter data returned from reporting service
          * @param {Integer} pageNum - Current page number
-         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied.
-         * @param {Boolean} renderParamArea - Whether to make parameter area visible.
-         * @param {Object} savedParam - User saved parameter.
+         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible
+         * @param {Object} savedParam - User saved parameter
+         * @param {Object} paramMetadata - Report parameter metadata
          */
-        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
-
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
             me._submittedParamsList = null;
@@ -11911,10 +11938,11 @@ $(function () {
             me._dataPreprocess(data.ParametersList);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
+            var metadata = paramMetadata && paramMetadata.ParametersList;
             $.each(data.ParametersList, function (index, param) {
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
                     me._numVisibleParams += 1;
-                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
+                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
                 else
                     me._checkHiddenParam(param);
@@ -12090,7 +12118,7 @@ $(function () {
                 me._revertLock = true;
                 if (me._hasPostedBackWithoutSubmitForm) {
                     //refresh parameter on server side
-                    me.refreshParameters(me._submittedParamsList, false);
+                    me._refreshParameters(me._submittedParamsList, false);
                     me._hasPostedBackWithoutSubmitForm = false;
                     me.options.$reportViewer.invalidateReportContext();
                 }
@@ -12175,11 +12203,18 @@ $(function () {
             if (dpLoc)
                 $.datepicker.setDefaults(dpLoc);
 
-            $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png");
-                $(datePicker).datepicker("option", "buttonImageOnly", true);
-                $(datePicker).datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
-            });
+            me.$datepickers = me.element.find(".hasDatepicker");
+
+            if (me.$datepickers.length) {
+                $.each(me.$datepickers, function (index, datePicker) {
+                    $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
+                        .datepicker("option", "buttonImageOnly", true)
+                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
+                });
+
+                $(window).off("resize", me._paramWindowResize);
+                $(window).on("resize", { me: me }, me._paramWindowResize);
+            }
         },
         _getPredefinedValue: function (param) {
             var me = this;
@@ -12192,7 +12227,7 @@ $(function () {
 
             return null;
         },
-        _writeParamControl: function (param, $parent, pageNum) {
+        _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
@@ -12202,6 +12237,7 @@ $(function () {
             var $optionsDiv = new $("<div class='fr-param-option-container'></div>");
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
+            var useDefaultParam = paramMetadata || param;
             
             if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
                 //only apply tree view to dropdown type
@@ -12269,7 +12305,7 @@ $(function () {
                 }
 
                 //Add use default option
-                if (me._hasDefaultValue(param)) {
+                if (useDefaultParam && me._hasDefaultValue(useDefaultParam)) {
                     $optionsDiv.append(me._addUseDefaultOption(param, $element, predefinedValue));
                 }
 
@@ -12591,14 +12627,15 @@ $(function () {
                         //gotoCurrent: true,
                         dateFormat: forerunner.ssr._internal.getDateFormat(),
                         onClose: function () {
-                            $control.removeAttr("disabled");
+                            var $input = $control;
+                            $input.removeAttr("disabled").removeClass("datepicker-focus");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
 
                             if (me.getNumOfVisibleParameters() === 1)
                                 me._submitForm(pageNum);
                         },
-                        beforeShow: function () {
-                            $control.attr("disabled", true);
+                        beforeShow: function (input) {
+                            $(input).attr("disabled", true).addClass("datepicker-focus");
                         },
                     });
                     $control.attr("formattedDate", "true");
@@ -12971,7 +13008,7 @@ $(function () {
                     
                     if ($li.children("ul").length === 0) {
                         $li.addClass("fr-param-tree-loading");
-                        me.refreshParameters(null, true);
+                        me._refreshParameters(null, true, param.Name);
                     }
                     else {
                         $li.children("ul").show();
@@ -13729,7 +13766,7 @@ $(function () {
                 me._closeAllDropdown();
             }
             me._useDefault = false;
-            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0)) {
+            if ((me.$form && noValid) || (me.$form && me.$form.length !== 0 && me.$form.validate().numberOfInvalids() <= 0 && me.$form.valid())) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {
@@ -13911,7 +13948,9 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.on("change", function () { me.refreshParameters(null, true); });
+                    $targetElement.on("change", function () {
+                        me._refreshParameters(null, true, param.Name);
+                    });
                 });
             }
 
@@ -13967,24 +14006,37 @@ $(function () {
                 }
             });
         },
-        /**
-        * Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied
-        *
-        * @function $.forerunner.reportParameter#refreshParameters
-        *
-        * @param {String} savedParams - Saved parameter value list
-        * @param {Boolean} isCascading - Is cadcading parameter refresh or not
-        */
-        refreshParameters: function (savedParams, isCascading) {
+        //Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied        
+        _refreshParameters: function (savedParams, isCascading, parentName) {
             var me = this;
             //set false not to do form validate.
 
             var paramList = savedParams ? savedParams : me.getParamsList(true);
+
+            if (isCascading && parentName) {
+                paramList = me._removeChildParam(paramList, parentName);
+            }
+            
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
                 me.options.$reportViewer.refreshParameters(paramList, false, -1, false, isCascading);
             }
+        },
+        _removeChildParam: function (paramList, parentName) {
+            var me = this, result = null, pattern = null;
+
+            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
+            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
+                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+
+                result = paramList.replace(pattern, "");
+
+                if (me._dependencyList[children[i]]) {
+                    result = me._removeChildParam(result, children[i]);
+                }
+            }
+            return result;
         },
         _disabledSubSequenceControl: function ($control) {
             $control.attr("disabled", true).addClass("fr-param-disable");
@@ -14004,6 +14056,14 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
+        //handle window resize action
+        _paramWindowResize: function (event, data) {
+            var me = event.data.me;
+
+            forerunner.helper.delay(me, function () {
+                me.$datepickers.filter(".datepicker-focus").datepicker("hide").datepicker("show");
+            }, 100, "_parameterDelayId");
+        },
         /**
         * Removes the report parameter functionality completely. This will return the element back to its pre-init state.
         *
@@ -14014,6 +14074,9 @@ $(function () {
 
             me.removeParameter();
             $(document).off("click", me._checkExternalClick);
+            if (me.$datepickers.length) {
+                $(window).off("resize", me._paramWindowResize);
+            }
 
             this._destroy();
         }

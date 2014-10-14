@@ -1836,6 +1836,7 @@ $(function () {
         },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
+
             var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
 
@@ -1843,6 +1844,10 @@ $(function () {
                 submitForm = true;
 
             if (savedParams) {
+                //for the parameter report which has saved parameter, we need to get a original parameter copy
+                me.paramMetadata = null;
+                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
+
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
@@ -1856,16 +1861,15 @@ $(function () {
                     }
                     else
                         me.refreshParameters(savedParams, submitForm, pageNum, false);
-                        
                 }
             } else {
-                me._loadDefaultParameters(pageNum);
+                me._loadDefaultParameters(pageNum, me._showParameterCallback);
             }
         },
         _paramsToString: function (a) {
             return JSON.stringify(a);
         },
-        _loadDefaultParameters: function (pageNum) {
+        _loadDefaultParameters: function (pageNum, success) {
             var me = this;
             forerunner.ajax.ajax({
                 type: "POST",
@@ -1880,14 +1884,8 @@ $(function () {
                 dataType: "json",
                 async: false,
                 done: function (data) {
-                    if (data.Exception) {
-                        me._renderPageError(me.$reportContainer, data);
-                        me.removeLoadingIndicator();
-                    } else {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-                        me._addLoadingIndicator();
-                        me._showParameters(pageNum, data);
+                    if (typeof success === "function") {
+                        success.call(me, data, pageNum);
                     }
                 },
                 fail: function (jqXHR, textStatus, errorThrown, request) {
@@ -1895,7 +1893,29 @@ $(function () {
                 }
             });
         },
+        _showParameterCallback: function(data, pageNum){
+            var me = this;
 
+            if (data.Exception) {
+                me._renderPageError(me.$reportContainer, data);
+                me.removeLoadingIndicator();
+            } else {
+                if (data.SessionID)
+                    me.sessionID = data.SessionID;
+                me._addLoadingIndicator();
+                me._showParameters(pageNum, data);
+            }
+        },
+        _getParameterMetadata: function(data){
+            var me = this;
+
+            if (data.Exception) {
+                me.paramMetadata = null;
+            }
+            else {
+                me.paramMetadata = data;
+            }
+        },
         _showParameters: function (pageNum, data) {
             var me = this;
             
@@ -1906,7 +1926,13 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me.paramDefs = data;
-                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer,RDLExt :me.getRDLExt() });
+
+                    $paramArea.reportParameter({
+                        $reportViewer: this,
+                        $appContainer: me.options.$appContainer,
+                        RDLExt: me.getRDLExt()
+                    });
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -1973,7 +1999,7 @@ $(function () {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading, savedParam, me.paramMetadata);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
@@ -2070,8 +2096,6 @@ $(function () {
             }
             
             me._resetViewer();
-            
-           
 
             me.reportPath = reportPath ? reportPath : "/";
             me.pageNum = pageNum ? pageNum : 1;

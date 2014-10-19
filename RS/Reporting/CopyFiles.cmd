@@ -29,17 +29,17 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll" %Destination%\bin
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40" %Destination%\bin
 if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll" %Destination%\bin
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40" %Destination%\bin
 if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll" %Destination%\bin
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40" %Destination%\bin
 if ERRORLEVEL 8 (
 	goto :Error
 )

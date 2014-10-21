@@ -241,20 +241,15 @@ namespace ForerunnerLicense
                 return String.Format(Response, "Fail", "404", "License key not found");
             }
 
-            int Durration;
             DateTime curExpiration = licenseData.PurchaseDate + TimeSpan.FromDays(licenseData.LicenseDuration);
-            if (DateTime.Now > curExpiration)
+            DateTime newExpiration = DateTime.Now + TimeSpan.FromDays(TrialExtensionDays);
+            if (newExpiration > curExpiration)
             {
-                TimeSpan span = DateTime.Now - licenseData.PurchaseDate;
-                Durration = Convert.ToInt32(span.TotalDays + TrialExtensionDays);
-            }
-            else
-            {
-                TimeSpan span = curExpiration - licenseData.PurchaseDate;
-                Durration = Convert.ToInt32(span.TotalDays + TrialExtensionDays);
+                TimeSpan span = newExpiration - licenseData.PurchaseDate;
+                return ExtendTrialDuration(LicenseKey, licenseData.PurchaseDate, Convert.ToInt32(span.TotalDays));
             }
 
-            return ExtendTrialDuration(LicenseKey, licenseData.PurchaseDate, Durration);
+            return String.Format(Response, "Success", "200", "Trial license already greater than or equal to: " + TrialExtensionDays.ToString() + " days from now. Current Expiration: " + curExpiration.ToLocalTime().ToShortDateString());
         }
 
         private string ExtendTrialDuration(string LicenseKey, DateTime PurchaseDate, int Durration)
@@ -284,6 +279,27 @@ namespace ForerunnerLicense
             }
 
             return returnString;
+        }
+
+        public string Info(string LicenseKey)
+        {
+            LicenseData licenseData = LoadLicenseFromServer(LicenseKey);
+            if (licenseData == null)
+            {
+                return String.Format(Response, "Fail", "404", "License key not found");
+            }
+
+            DateTime curExpiration = licenseData.PurchaseDate + TimeSpan.FromDays(licenseData.LicenseDuration);
+
+            string Info = "<LicenseResponse>" +
+                            "<Status>{0}</Status>" +
+                            "<StatusCode>{1}</StatusCode>" +
+                            "<SKU>{2}</SKU>" +
+                            "<Expiration>{3}</Expiration>" +
+                            "<IsSubscription>{4}</IsSubscription>" +
+                            "<Quantity>{5}</Quantity>" +
+                          "</LicenseResponse>";
+            return String.Format(Info, "Success", "200", licenseData.SKU, curExpiration.ToLocalTime().ToShortDateString(), licenseData.IsSubscription, licenseData.Quantity);
         }
 
         private string ProcessActivate()

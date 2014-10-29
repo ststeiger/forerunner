@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -17143,10 +17143,9 @@ $(function () {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
-            $.when(me._initExtensionOptions(), me._initProcessingOptions()).done(function (data1, data2) {
+            $.when(me._initExtensionOptions()).done(function (data1) {
                 me._extensionSettings = data1;
                 me._initRenderFormat(data1[0]);
-                me._initSharedSchedule(data2[0]);
                 me.$includeReport.prop("checked", true);
                 me.$includeLink.prop("checked", true);
                 if (subscriptionID) {
@@ -17192,7 +17191,15 @@ $(function () {
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
-            }); 
+            });
+
+            $.when(me._initProcessingOptions()).done(function (data2) {
+                me._initSharedSchedule(data2[0]);
+                if (subscriptionID) {
+                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                }
+            });
         },
         _getSubscriptionInfo: function() {
             var me = this;

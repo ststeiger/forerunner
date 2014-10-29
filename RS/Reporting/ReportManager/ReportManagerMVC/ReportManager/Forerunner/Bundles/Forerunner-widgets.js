@@ -17145,7 +17145,7 @@ $(function () {
 
             $.when(me._initExtensionOptions()).done(function (data1) {
                 me._extensionSettings = data1;
-                me._initRenderFormat(data1[0]);
+                me._initRenderFormat(data1);
                 me.$includeReport.prop("checked", true);
                 me.$includeLink.prop("checked", true);
                 if (subscriptionID) {
@@ -17277,15 +17277,24 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
-
-                    setting.Value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
-
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    me.$renderFormat.val(setting.Value);
-                    me.$renderFormat.addClass(".fr-email-renderformat");
-                    me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
                 }
             }
+
+            if (!me.$renderFormat) {
+                for (var i = 0; i < data[0].length; i++) {
+                    var setting = data[0][i];
+                    if (setting.Name === "RenderFormat") {
+                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
+                    }
+                }
+            }
+
+            var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
+            me.$renderFormat.val(value);
+            me.$renderFormat.addClass(".fr-email-renderformat");
+            me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
+            
         },
         _initExtensionOptions: function () {
             var me = this;

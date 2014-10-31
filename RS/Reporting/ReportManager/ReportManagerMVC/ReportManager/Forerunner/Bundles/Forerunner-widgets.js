@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -4130,8 +4130,10 @@ $(function () {
                 if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
                     var $toolEl = me.element.find("." + Obj.selectorClass);
 
-                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
-                    me.hideTool(Obj.selectorClass);
+                    if (!$toolEl.hasClass("fr-toolbase-no-hide-id")) {
+                        me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
+                        me.hideTool(Obj.selectorClass);
+                    }
                 }
             });
         },

@@ -14024,10 +14024,12 @@ $(function () {
             }
         },
         _removeChildParam: function (paramList, parentName) {
-            var me = this, result = null, pattern = null;
+            var me = this, result = paramList, pattern = null;
 
             //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
+            children = me._dependencyList[parentName];
+            len = children ? children.length : 0;
+            for (var i = 0; i < len; i++) {
                 pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
 
                 result = paramList.replace(pattern, "");
@@ -17143,10 +17145,9 @@ $(function () {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
-            $.when(me._initExtensionOptions(), me._initProcessingOptions()).done(function (data1, data2) {
+            $.when(me._initExtensionOptions()).done(function (data1) {
                 me._extensionSettings = data1;
-                me._initRenderFormat(data1[0]);
-                me._initSharedSchedule(data2[0]);
+                me._initRenderFormat(data1);
                 me.$includeReport.prop("checked", true);
                 me.$includeLink.prop("checked", true);
                 if (subscriptionID) {
@@ -17192,7 +17193,15 @@ $(function () {
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
-            }); 
+            });
+
+            $.when(me._initProcessingOptions()).done(function (data2) {
+                me._initSharedSchedule(data2[0]);
+                if (subscriptionID) {
+                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                }
+            });
         },
         _getSubscriptionInfo: function() {
             var me = this;
@@ -17270,15 +17279,24 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
-
-                    setting.Value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
-
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    me.$renderFormat.val(setting.Value);
-                    me.$renderFormat.addClass(".fr-email-renderformat");
-                    me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
                 }
             }
+
+            if (!me.$renderFormat) {
+                for (var i = 0; i < data[0].length; i++) {
+                    var setting = data[0][i];
+                    if (setting.Name === "RenderFormat") {
+                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
+                    }
+                }
+            }
+
+            var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
+            me.$renderFormat.val(value);
+            me.$renderFormat.addClass(".fr-email-renderformat");
+            me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
+            
         },
         _initExtensionOptions: function () {
             var me = this;
@@ -17793,7 +17811,7 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-            return me.schedules || jqxhr;
+            return me.schedules ? [me.schedules] : jqxhr;
         },
         getDeliveryExtensions: function () {
             var me = this;
@@ -17817,8 +17835,10 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
+            if (me.extensionSettings[extensionName]) return [me.extensionSettings[extensionName]];
+            
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
-            return forerunner.ajax.ajax({
+            var jqxhr = forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: true
@@ -17835,6 +17855,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
+            return me.extensionSettings[extensionName] ? [me.extensionSettings[extensionName]] : jqxhr;
         },
         getSubscription: function (subscriptionID) {
             var me = this;

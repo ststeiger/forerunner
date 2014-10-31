@@ -74,10 +74,9 @@ $(function () {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
-            $.when(me._initExtensionOptions(), me._initProcessingOptions()).done(function (data1, data2) {
+            $.when(me._initExtensionOptions()).done(function (data1) {
                 me._extensionSettings = data1;
-                me._initRenderFormat(data1[0]);
-                me._initSharedSchedule(data2[0]);
+                me._initRenderFormat(data1);
                 me.$includeReport.prop("checked", true);
                 me.$includeLink.prop("checked", true);
                 if (subscriptionID) {
@@ -123,7 +122,15 @@ $(function () {
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
-            }); 
+            });
+
+            $.when(me._initProcessingOptions()).done(function (data2) {
+                me._initSharedSchedule(data2[0]);
+                if (subscriptionID) {
+                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                }
+            });
         },
         _getSubscriptionInfo: function() {
             var me = this;
@@ -201,15 +208,24 @@ $(function () {
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
-
-                    setting.Value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
-
                     me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    me.$renderFormat.val(setting.Value);
-                    me.$renderFormat.addClass(".fr-email-renderformat");
-                    me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
                 }
             }
+
+            if (!me.$renderFormat) {
+                for (var i = 0; i < data[0].length; i++) {
+                    var setting = data[0][i];
+                    if (setting.Name === "RenderFormat") {
+                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
+                    }
+                }
+            }
+
+            var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
+            me.$renderFormat.val(value);
+            me.$renderFormat.addClass(".fr-email-renderformat");
+            me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
+            
         },
         _initExtensionOptions: function () {
             var me = this;

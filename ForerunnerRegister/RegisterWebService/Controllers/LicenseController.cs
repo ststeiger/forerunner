@@ -24,20 +24,28 @@ namespace RegisterWebService.Controllers
 			return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
 		}
 
-		[HttpGet]
-		public HttpResponseMessage ExtendTrial(string Key, int Hash)
-		{
+        [HttpGet]
+        public HttpResponseMessage ExtendTrial(string Key, int Hash)
+        {
             string response = new ServerLicense().ExtendTrial(Key, Hash);
 
-			return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
-		}
-
+            return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
+        }
+    
         [HttpGet]
         public HttpResponseMessage RunTask(string Data, String taskType)
         {
             new TaskWorker().SaveTask(taskType, Data);
 
-            return WebSerivceHelper.GetResponseFromString("<h1>Saved</h1>", "text/xml", this.Request.CreateResponse());
+            return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
         }
-	}
+         [HttpGet]
+        public HttpResponseMessage Info(string Key)
+        {
+            string response = new ServerLicense().Info(Key);
+
+            return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
+        }
+
+    }
 }

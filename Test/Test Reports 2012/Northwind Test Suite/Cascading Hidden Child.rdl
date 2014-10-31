@@ -1,0 +1,857 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Tablix Name="table1">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>3in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.22in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="textbox2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Product ID</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>textbox2</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#4e0000</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="textbox3">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Product Name</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>textbox3</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#4e0000</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="textbox4">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Unit Price</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>textbox4</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#4e0000</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="textbox5">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>In Stock</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>textbox5</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#4e0000</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="textbox6">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>On Order</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontSize>11pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>textbox6</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#4e0000</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.21in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="OrderID">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!ProductID.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>OrderID</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="RequiredDate">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!ProductName.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>RequiredDate</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ShippedDate">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!UnitPrice.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ShippedDate</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ShipName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!UnitsInStock.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ShipName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ShipCity">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!UnitsOnOrder.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ShipCity</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <KeepWithGroup>After</KeepWithGroup>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
+              <KeepTogether>true</KeepTogether>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="table1_Details_Group">
+                <DataElementName>Detail</DataElementName>
+              </Group>
+              <TablixMembers>
+                <TablixMember />
+              </TablixMembers>
+              <DataElementName>Detail_Collection</DataElementName>
+              <DataElementOutput>Output</DataElementOutput>
+              <KeepTogether>true</KeepTogether>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>ReportData</DataSetName>
+        <Top>0.73in</Top>
+        <Height>0.43in</Height>
+        <Width>7in</Width>
+        <Style />
+      </Tablix>
+      <Textbox Name="textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Cascading Hidden Child</Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>16pt</FontSize>
+                  <Color>DarkRed</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Height>0.3in</Height>
+        <Width>7in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="TransLatedLabel">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Code.GetLabelTranslation(Parameters!LabelTranslation, "ReportTitle", 0)</Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <FontSize>12pt</FontSize>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <Top>0.365in</Top>
+        <Height>0.3in</Height>
+        <Width>7in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+    </ReportItems>
+    <Height>1.16in</Height>
+    <Style />
+  </Body>
+  <Width>8.70833in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="Northwind">
+      <DataSourceReference>Northwind</DataSourceReference>
+      <rd:SecurityType>DataBase</rd:SecurityType>
+      <rd:DataSourceID>f81c401e-8006-4071-a526-fa8757af4123</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="ReportData">
+      <Query>
+        <DataSourceName>Northwind</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProductID">
+            <Value>=Parameters!ProductID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT        ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued
+FROM            Products
+WHERE        (ProductID IN (@ProductID))</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProductID">
+          <DataField>ProductID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ProductName">
+          <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SupplierID">
+          <DataField>SupplierID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CategoryID">
+          <DataField>CategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="QuantityPerUnit">
+          <DataField>QuantityPerUnit</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="UnitsInStock">
+          <DataField>UnitsInStock</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="UnitsOnOrder">
+          <DataField>UnitsOnOrder</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="ReorderLevel">
+          <DataField>ReorderLevel</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Discontinued">
+          <DataField>Discontinued</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Cat">
+      <Query>
+        <DataSourceName>Northwind</DataSourceName>
+        <CommandText>SELECT        CategoryID, CategoryName, Description, Picture
+FROM            Categories</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="CategoryID">
+          <DataField>CategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CategoryName">
+          <DataField>CategoryName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Picture">
+          <DataField>Picture</DataField>
+          <rd:TypeName>System.Byte[]</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Product">
+      <Query>
+        <DataSourceName>Northwind</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@CatID">
+            <Value>=Parameters!CatID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT        ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued
+FROM            Products
+WHERE        (CategoryID IN (@CatID))</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="ProductID">
+          <DataField>ProductID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ProductName">
+          <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SupplierID">
+          <DataField>SupplierID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CategoryID">
+          <DataField>CategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="QuantityPerUnit">
+          <DataField>QuantityPerUnit</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="UnitsInStock">
+          <DataField>UnitsInStock</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="UnitsOnOrder">
+          <DataField>UnitsOnOrder</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="ReorderLevel">
+          <DataField>ReorderLevel</DataField>
+          <rd:TypeName>System.Int16</rd:TypeName>
+        </Field>
+        <Field Name="Discontinued">
+          <DataField>Discontinued</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Translations">
+      <Query>
+        <DataSourceName>Northwind</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@lang">
+            <Value>=Parameters!Language.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>WITH cte(LabelID, Language, Translation) AS (SELECT        'ReportTitle' AS 'LabelID', 'PL' AS 'Language', 'Otwarte należności wg sprzedawcy' AS 'Translation'
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'ReportTitle' AS Expr1, 'DE' AS Expr2, 'Offene Debitorenposten nach Verkäufer' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'ReportTitle' AS Expr1, 'EN' AS Expr2, 'Customer Open Items by Salesperson' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'ReportNo' AS Expr1, 'PL' AS Expr2, 'Nr raportu' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'ReportNo' AS Expr1, 'DE' AS Expr2, 'Bericht Nr.' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'ReportNo' AS Expr1, 'EN' AS Expr2, 'Report No.' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Customer' AS Expr1, 'PL' AS Expr2, 'Nabywca' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Customer' AS Expr1, 'DE' AS Expr2, 'Debitor' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Customer' AS Expr1, 'EN' AS Expr2, 'Customer' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'NumberOfDocuments' AS Expr1, 'PL' AS Expr2, 'Ilość dokumentów' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'NumberOfDocuments' AS Expr1, 'DE' AS Expr2, 'Anzahl Belege' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'NumberOfDocuments' AS Expr1, 'EN' AS Expr2, 'Number of Documents' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'OldestDocumentDueDate' AS Expr1, 'PL' AS Expr2, 'Najstarszy termin płatności' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'OldestDocumentDueDate' AS Expr1, 'DE' AS Expr2, 'Max. Fälligkeitsdatum' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'OldestDocumentDueDate' AS Expr1, 'EN' AS Expr2, 'Max. Due Date' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'AvgOverDue' AS Expr1, 'PL' AS Expr2, 'Śr. dni po terminie' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'AvgOverDue' AS Expr1, 'DE' AS Expr2, 'Durch. Fällig Tage' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'AvgOverDue' AS Expr1, 'EN' AS Expr2, 'Avg. Overdue Days' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Currency' AS Expr1, 'PL' AS Expr2, 'Waluta' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Currency' AS Expr1, 'DE' AS Expr2, 'Währung' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Currency' AS Expr1, 'EN' AS Expr2, 'Currency' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmt' AS Expr1, 'PL' AS Expr2, 'Kwota pozostała łącznie' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmt' AS Expr1, 'DE' AS Expr2, 'Restbetrag (gesamt)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmt' AS Expr1, 'EN' AS Expr2, 'Remaining Amount (Total)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmtPLN' AS Expr1, 'PL' AS Expr2, 'Kwota pozostała PLN (łącznie)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmtPLN' AS Expr1, 'DE' AS Expr2, 'Restbetrag PLN (Summe)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'TotalRemAmtPLN' AS Expr1, 'EN' AS Expr2, 'Remaining Amount PLN (Total)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmt' AS Expr1, 'PL' AS Expr2, 'Kwota pozostała' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmt' AS Expr1, 'DE' AS Expr2, 'Restbetrag' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmt' AS Expr1, 'EN' AS Expr2, 'Remaining Amount' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmtPLN' AS Expr1, 'PL' AS Expr2, 'Kwota pozostała (PLN)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmtPLN' AS Expr1, 'DE' AS Expr2, 'Restbetrag (PLN)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'RemAmtPLN' AS Expr1, 'EN' AS Expr2, 'Remaining Amount (PLN)' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentType' AS Expr1, 'PL' AS Expr2, 'Typ dokumentu' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentType' AS Expr1, 'DE' AS Expr2, 'Belegart' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentType' AS Expr1, 'EN' AS Expr2, 'Document Type' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Overdue' AS Expr1, 'PL' AS Expr2, 'Dni po terminie' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Overdue' AS Expr1, 'DE' AS Expr2, 'Tage fällig' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'Overdue' AS Expr1, 'EN' AS Expr2, 'Overdue Days' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DueDate' AS Expr1, 'PL' AS Expr2, 'Termin płatności' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DueDate' AS Expr1, 'DE' AS Expr2, 'Fälligkeitsdatum' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DueDate' AS Expr1, 'EN' AS Expr2, 'Due Date' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentNo' AS Expr1, 'PL' AS Expr2, 'Nr dokumentu' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentNo' AS Expr1, 'DE' AS Expr2, 'Beleg Nr.' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'DocumentNo' AS Expr1, 'EN' AS Expr2, 'Document No.' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'SalespersonName' AS Expr1, 'PL' AS Expr2, 'Sprzedawca' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'SalespersonName' AS Expr1, 'DE' AS Expr2, 'Verkäufer' AS Expr3
+                                                                                                   UNION ALL
+                                                                                                   SELECT        'SalespersonName' AS Expr1, 'EN' AS Expr2, 'Salesperson' AS Expr3)
+    SELECT        LabelID, Translation
+     FROM            cte AS cte_1
+     WHERE        (Language = @lang)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="LabelID">
+          <DataField>LabelID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Translation">
+          <DataField>Translation</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="Language">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>EN</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Language</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>PL</Value>
+            <Label>Polski</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>DE</Value>
+            <Label>Deutsch</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>EN</Value>
+            <Label>English</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="LabelTranslation">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Translations</DataSetName>
+          <ValueField>LabelID</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>LabelTranslation</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Translations</DataSetName>
+          <ValueField>LabelID</ValueField>
+          <LabelField>Translation</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="CatID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Cat</DataSetName>
+          <ValueField>CategoryID</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Category</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Cat</DataSetName>
+          <ValueField>CategoryID</ValueField>
+          <LabelField>CategoryName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ProductID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Product</DataSetName>
+          <ValueField>ProductID</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Products</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Product</DataSetName>
+          <ValueField>ProductID</ValueField>
+          <LabelField>ProductName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+  </ReportParameters>
+  <Code>Public Function GetLabelTranslation(Parm as Parameter, LabelID as String, _
+                Optional AddColon as Boolean=False) as String
+
+Dim t as Integer
+
+For t = 0 to Ubound(Parm.Value)
+   If (Parm.Value(t) = LabelID) Then
+      if AddColon = true then
+         Return Parm.Label(t) &amp; ":"
+      else
+         Return Parm.Label(t)
+      End if
+   End if
+Next t
+
+Return ""
+
+End Function
+</Code>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>fc8bd5ba-6767-4070-a948-9ce2230f94ff</rd:ReportID>
+</Report>

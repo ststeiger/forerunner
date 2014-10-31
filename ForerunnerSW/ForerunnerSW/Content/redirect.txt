@@ -20,3 +20,9 @@
 /trial-et4,/home/register?utm_source=TDM2&utm_medium=email&utm_campaign=V3Rel
 /video-et4,/home/video?utm_source=TDM2&utm_medium=email&utm_campaign=V3Rel
 /home-et4,/home/index?utm_source=TDM2&utm_medium=email&utm_campaign=V3Rel
+/video-eb4,/home/video?utm_source=BDM2&utm_medium=email&utm_campaign=V3Rel
+/home-eb4,/home/index?utm_source=BDM2&utm_medium=email&utm_campaign=V3Rel
+/trial-eb4,/home/register?utm_source=BDM2&utm_medium=email&utm_campaign=V3Rel
+/video-ed4,/home/video?utm_source=DEV&utm_medium=email&utm_campaign=V3Rel
+/home-ed4,/home/index?utm_source=DEV2&utm_medium=email&utm_campaign=V3Rel
+/trial-ed4,/home/register?utm_source=DEV2&utm_medium=email&utm_campaign=V3Rel

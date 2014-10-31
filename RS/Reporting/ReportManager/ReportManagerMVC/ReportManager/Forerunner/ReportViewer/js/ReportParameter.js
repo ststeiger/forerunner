@@ -657,7 +657,8 @@ $(function () {
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-null-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
-                    if ($checkbox[0].checked === false) {//uncheck
+
+                    if ($checkbox[0].checked !== true) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
 
                         //add validate arrtibutes to control when uncheck null checkbox
@@ -684,14 +685,19 @@ $(function () {
                     }
                 });
 
-                // Check it only if it is really null, not because nobody touched it
-                if (predefinedValue === null && param.State !== "MissingValidValue") $checkbox.trigger("click");
-
                 var $label = new $("<Label class='fr-param-option-label' />");
                 $label.html(me.options.$reportViewer.locData.paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
+
+                // Check it only if it is really null, not because nobody touched it
+                if (predefinedValue === null && param.State !== "MissingValidValue") {
+                    if (forerunner.device.isFirefox()) {
+                        $checkbox[0].checked = true;
+                    }
+                    $checkbox.trigger("click");
+                }
                 return $container;
             }
             else

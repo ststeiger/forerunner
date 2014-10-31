@@ -723,4 +723,9 @@ ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.Worker.resour
 =======
 Samples/CustomLoginProvider/CustomLoginProvider/bin/*
 Samples/CustomLoginProvider/CustomLoginProvider/obj/*
+<<<<<<< HEAD
 >>>>>>> 63e9e6c577c05d1e58ef42444540737421d07d54
+=======
+Test/Test Reports 2012/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Report Project1.suo
+>>>>>>> c5bc13ebe41d329db74b3808573f1f2594c66317

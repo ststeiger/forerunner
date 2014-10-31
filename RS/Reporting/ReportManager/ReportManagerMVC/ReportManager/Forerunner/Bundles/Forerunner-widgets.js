@@ -10098,57 +10098,8 @@ $(function () {
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
 
-            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
-            return;
-
-            var ActionExt = me._getRDLExt(RIContext);
-            var SharedActions = me._getRDLExtShared();
-
-            if (ActionExt.JavaScriptActions) {
-                
-
-                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
-                    var action = ActionExt.JavaScriptActions[a];
-                    var actions;
-
-                    if (action.SharedAction && SharedActions[action.SharedAction]) {
-                        actions = SharedActions[action.SharedAction].JavaScriptActions;
-                    }                    
-                    var sa = 0;
-                    // if shared there can be many actions per share
-                    while (true) {
-
-                        if (actions !== undefined && actions[sa]) {
-                            action = actions[sa++];
-                        }
-
-
-                        if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
-                                var newFunc;
-                                try {
-                                    newFunc = new Function("e", action.Code);
-                                }
-                                catch (e) {
-                                    console.log(e.message);
-                                }
-                                action.JavaFunc = newFunc;
-                                if (action.On === undefined)
-                                    action.On = "click";
-                               
-                            }
-
-                        }
-                        if (action.On === "click")
-                            $Control.addClass("fr-core-cursorpointer");
-                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
-
-                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
-                            break;
-
-                    }
-                }
-            }
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
+           
 
         },
         _writeAction: function (RIContext, Action, Control) {

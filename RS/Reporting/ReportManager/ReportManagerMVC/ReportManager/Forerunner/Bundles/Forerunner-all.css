@@ -85,6 +85,9 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-core-cursorpointer { cursor: pointer; }
 .fr-core-hidden { display: none; }
 
+.fr-core-float-right { float: right; }
+.fr-core-toolbar-text { width: 15px; color: white; line-height: 36px; text-align: center; }
+
 .fr-core-center { display: table; margin: 0 auto; }
 
 .fr-core-widget { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
@@ -1917,7 +1920,6 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-rtb-select-set { width: 156px; padding-left: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .fr-rtb-select-set option { }
 
-.fr-toolbar-pageOf-button { width: 15px; color: white; line-height: 36px; text-align: center; }
 .fr-toolbar-numPages-button { min-width: 10mm; max-width: 15mm; padding-left: 4px; color: white; line-height: 36px; }
 .fr-toolbar-sparator-text { color: white; line-height: 36px; text-align: center; }
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button { float: right; }

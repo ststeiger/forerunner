@@ -168,6 +168,7 @@ $(function () {
         btnPageOf: {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-pageOf-button",
+            sharedClass: "fr-core-toolbar-text",
             text: locData.toolbar.pageOf,
             visibilityOrder: 1
         },
@@ -873,6 +874,7 @@ $(function () {
         itemPageOf: {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-pageOf-button",
+            sharedClass: "fr-core-toolbar-text",
             text: locData.toolPane.pageOf
         },
         /** @member */

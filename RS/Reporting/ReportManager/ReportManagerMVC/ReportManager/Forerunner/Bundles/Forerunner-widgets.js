@@ -17811,7 +17811,7 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-            return me.schedules || jqxhr;
+            return me.schedules ? [me.schedules] : jqxhr;
         },
         getDeliveryExtensions: function () {
             var me = this;
@@ -17835,8 +17835,10 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
+            if (me.extensionSettings[extensionName]) return [me.extensionSettings[extensionName]];
+            
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
-            return forerunner.ajax.ajax({
+            var jqxhr = forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: true
@@ -17853,6 +17855,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
+            return me.extensionSettings[extensionName] ? [me.extensionSettings[extensionName]] : jqxhr;
         },
         getSubscription: function (subscriptionID) {
             var me = this;

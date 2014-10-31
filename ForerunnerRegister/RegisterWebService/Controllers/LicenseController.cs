@@ -33,11 +33,19 @@ namespace RegisterWebService.Controllers
         }
     
         [HttpGet]
+        public HttpResponseMessage RunTask(string Data, String taskType)
+        {
+            new TaskWorker().SaveTask(taskType, Data);
+
+            return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
+        }
+         [HttpGet]
         public HttpResponseMessage Info(string Key)
         {
             string response = new ServerLicense().Info(Key);
 
             return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
         }
+
     }
 }

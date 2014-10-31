@@ -3,7 +3,7 @@
 
 {
 "ID": "14",
-"Link": "/home/press?Article=15",
+"Link": "/home/press?Article=14",
 "Title":"Forerunner Software, a Leading Provider of Mobile Business Intelligence (BI) Solutions, Today Announces a Free 30 Day Trial of It's Unique Mobilizer 3.0",
 "Description":"Designed for IT and development professionals to quickly integrate a complete and cost effective mobile solution leveraging existing security policies and infrastructure and needing no additional development or training, Forerunner Software is now offering a free 30 Day Trial License of Mobilizer 3.0 to make it easy to transform and modernize your mobile BI programs by testing on your own SSRS Reports. Unlock SSRS for mobile BI now for free.",
 "Release": "Redmond, WA, September 26, 2014",

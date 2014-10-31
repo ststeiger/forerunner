@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -14024,10 +14024,12 @@ $(function () {
             }
         },
         _removeChildParam: function (paramList, parentName) {
-            var me = this, result = null, pattern = null;
+            var me = this, result = paramList, pattern = null;
 
             //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
+            children = me._dependencyList[parentName];
+            len = children ? children.length : 0;
+            for (var i = 0; i < len; i++) {
                 pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
 
                 result = paramList.replace(pattern, "");

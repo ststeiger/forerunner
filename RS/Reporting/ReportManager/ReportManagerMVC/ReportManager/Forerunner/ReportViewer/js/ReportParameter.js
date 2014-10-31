@@ -2270,12 +2270,10 @@ $(function () {
             }
         },
         _removeChildParam: function (paramList, parentName) {
-            var me = this, result = paramList, pattern = null;
+            var me = this, result = null, pattern = null;
 
             //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            children = me._dependencyList[parentName];
-            len = children ? children.length : 0;
-            for (var i = 0; i < len; i++) {
+            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
                 pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
 
                 result = paramList.replace(pattern, "");

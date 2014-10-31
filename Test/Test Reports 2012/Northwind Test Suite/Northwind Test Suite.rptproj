@@ -55,13 +55,8 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-<<<<<<< HEAD
       <Name>Copy of N0359-061-REP-0236.rdl</Name>
       <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
-=======
-      <Name>CS-Asset Management Dashboard.rdl</Name>
-      <FullPath>CS-Asset Management Dashboard.rdl</FullPath>
->>>>>>> c5bc13ebe41d329db74b3808573f1f2594c66317
     </ProjectItem>
     <ProjectItem>
       <Name>Customer Data.rdl</Name>
@@ -124,13 +119,6 @@
       <FullPath>images and subreports.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-<<<<<<< HEAD
-=======
-      <Name>Incident Health Dashboard Cube.rdl</Name>
-      <FullPath>Incident Health Dashboard Cube.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
->>>>>>> c5bc13ebe41d329db74b3808573f1f2594c66317
       <Name>Justify.rdl</Name>
       <FullPath>Justify.rdl</FullPath>
     </ProjectItem>
@@ -283,13 +271,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-<<<<<<< HEAD
-=======
-    <ProjectItem>
-      <Name>Cascading Hidden Child.rdl</Name>
-      <FullPath>Cascading Hidden Child.rdl</FullPath>
-    </ProjectItem>
->>>>>>> c5bc13ebe41d329db74b3808573f1f2594c66317
   </Reports>
   <Configurations>
     <Configuration>
@@ -298,11 +279,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-<<<<<<< HEAD
         <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
-=======
-        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
->>>>>>> c5bc13ebe41d329db74b3808573f1f2594c66317
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

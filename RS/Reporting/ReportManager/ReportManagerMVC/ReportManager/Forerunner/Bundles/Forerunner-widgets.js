@@ -4130,8 +4130,10 @@ $(function () {
                 if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
                     var $toolEl = me.element.find("." + Obj.selectorClass);
 
-                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
-                    me.hideTool(Obj.selectorClass);
+                    if (!$toolEl.hasClass("fr-toolbase-no-hide-id")) {
+                        me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
+                        me.hideTool(Obj.selectorClass);
+                    }
                 }
             });
         },
@@ -10098,57 +10100,8 @@ $(function () {
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
 
-            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
-            return;
-
-            var ActionExt = me._getRDLExt(RIContext);
-            var SharedActions = me._getRDLExtShared();
-
-            if (ActionExt.JavaScriptActions) {
-                
-
-                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
-                    var action = ActionExt.JavaScriptActions[a];
-                    var actions;
-
-                    if (action.SharedAction && SharedActions[action.SharedAction]) {
-                        actions = SharedActions[action.SharedAction].JavaScriptActions;
-                    }                    
-                    var sa = 0;
-                    // if shared there can be many actions per share
-                    while (true) {
-
-                        if (actions !== undefined && actions[sa]) {
-                            action = actions[sa++];
-                        }
-
-
-                        if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
-                                var newFunc;
-                                try {
-                                    newFunc = new Function("e", action.Code);
-                                }
-                                catch (e) {
-                                    console.log(e.message);
-                                }
-                                action.JavaFunc = newFunc;
-                                if (action.On === undefined)
-                                    action.On = "click";
-                               
-                            }
-
-                        }
-                        if (action.On === "click")
-                            $Control.addClass("fr-core-cursorpointer");
-                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
-
-                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
-                            break;
-
-                    }
-                }
-            }
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
+           
 
         },
         _writeAction: function (RIContext, Action, Control) {
@@ -10942,7 +10895,7 @@ $(function () {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
-                else
+                else if(Tablix.State.Row)
                     Tablix.State.Row.findUntil(".fr-render-respIcon",".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
@@ -12411,7 +12364,8 @@ $(function () {
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-null-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
-                    if ($checkbox[0].checked === false) {//uncheck
+
+                    if ($checkbox[0].checked !== true) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
 
                         //add validate arrtibutes to control when uncheck null checkbox
@@ -12438,14 +12392,19 @@ $(function () {
                     }
                 });
 
-                // Check it only if it is really null, not because nobody touched it
-                if (predefinedValue === null && param.State !== "MissingValidValue") $checkbox.trigger("click");
-
                 var $label = new $("<Label class='fr-param-option-label' />");
                 $label.html(me.options.$reportViewer.locData.paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
+
+                // Check it only if it is really null, not because nobody touched it
+                if (predefinedValue === null && param.State !== "MissingValidValue") {
+                    if (forerunner.device.isFirefox()) {
+                        $checkbox[0].checked = true;
+                    }
+                    $checkbox.trigger("click");
+                }
                 return $container;
             }
             else

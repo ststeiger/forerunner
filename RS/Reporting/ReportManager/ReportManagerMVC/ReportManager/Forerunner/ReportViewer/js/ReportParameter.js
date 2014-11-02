@@ -1779,6 +1779,24 @@ $(function () {
                             });
                         }
                     }
+                    else {
+                        var $parents = $(this).parents("table");
+                        var $selectAll = $parents.find("input[value='Select All']");
+                        if (this.checked === true) {
+                            // Being checked so we need to test if the select all needs to be checked
+                            var $notSelectAll = $parents.find("input[value!='Select All']");
+                            var isSelectAll = true;
+                            $notSelectAll.each(function (index, element) {
+                                if (element.checked === false) {
+                                    isSelectAll = false;
+                                }
+                            })
+                            $selectAll.prop("checked", isSelectAll);
+                        } else {
+                            // Being unchecked so we need to un-check the select all
+                            $selectAll.prop("checked", false);
+                        }
+                    }
                 });
 
                 var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);

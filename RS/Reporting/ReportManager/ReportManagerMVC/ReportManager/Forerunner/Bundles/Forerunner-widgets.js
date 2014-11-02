@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -13533,6 +13533,24 @@ $(function () {
                             $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
                                 this.checked = false;
                             });
+                        }
+                    }
+                    else {
+                        var $parents = $(this).parents("table");
+                        var $selectAll = $parents.find("input[value='Select All']");
+                        if (this.checked === true) {
+                            // Being checked so we need to test if the select all needs to be checked
+                            var $notSelectAll = $parents.find("input[value!='Select All']");
+                            var isSelectAll = true;
+                            $notSelectAll.each(function (index, element) {
+                                if (element.checked === false) {
+                                    isSelectAll = false;
+                                }
+                            })
+                            $selectAll.prop("checked", isSelectAll);
+                        } else {
+                            // Being unchecked so we need to un-check the select all
+                            $selectAll.prop("checked", false);
                         }
                     }
                 });

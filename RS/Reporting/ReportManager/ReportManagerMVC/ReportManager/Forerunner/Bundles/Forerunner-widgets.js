@@ -17164,8 +17164,6 @@ $(function () {
                             me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
                         }
                     }
-
-                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
                     me.$to.val(userName);

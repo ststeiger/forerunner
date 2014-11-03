@@ -45,10 +45,10 @@ $(function () {
             paramList: null
         },
         _extensionSettings: null,
-        _createDropDownForValidValues: function (validValues) {
+        _createDropDownForValidValues : function(validValues) {
             return forerunner.helper.createDropDownForValidValues(validValues);
         },
-        _createRadioButtonsForValidValues: function (validValues, index) {
+        _createRadioButtonsForValidValues : function(validValues, index) {
             return forerunner.helper.createRadioButtonsForValidValues(validValues, index);
         },
         _createDiv: function (listOfClasses) {
@@ -70,7 +70,7 @@ $(function () {
         },
         _subscriptionData: null,
         _canEditComment: false,
-        _setSubscriptionOrSetDefaults: function () {
+        _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
@@ -88,10 +88,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.val(extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.val(extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -116,21 +116,21 @@ $(function () {
                     }
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.val(userName);
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
             });
 
             $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2[0]);
+                me._initSharedSchedule(data2);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 }
             });
         },
-        _getSubscriptionInfo: function () {
+        _getSubscriptionInfo: function() {
             var me = this;
             var i;
             if (!me._subscriptionData) {
@@ -153,7 +153,7 @@ $(function () {
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(":checked") ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(":checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value": me.$renderFormat.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
                 me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
@@ -195,13 +195,13 @@ $(function () {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
                         }
                     } else {
-                        me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value });
+                        me._subscriptionData.Parameters.push({"Name": param.Parameter, "Value": param.Value});
                     }
                 }
             }
             return me._subscriptionData;
         },
-        _initRenderFormat: function (data) {
+        _initRenderFormat : function (data) {
             var me = this;
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
@@ -210,27 +210,17 @@ $(function () {
                 }
             }
 
-            if (!me.$renderFormat) {
-                for (var i = 0; i < data[0].length; i++) {
-                    var setting = data[0][i];
-                    if (setting.Name === "RenderFormat") {
-                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    }
-                }
-            }
-
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
             me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
-
         },
         _initExtensionOptions: function () {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getExtensionSettings", "Report Server Email");
         },
         _sharedSchedule: {},
-        _initSharedSchedule: function (data) {
+        _initSharedSchedule:function(data) {
             var me = this;
             var validValues = [];
             var i;
@@ -253,7 +243,7 @@ $(function () {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSchedules");
         },
-        _initSections: function () {
+        _initSections : function () {
             var me = this;
             me._setSubscriptionOrSetDefaults();
         },
@@ -308,7 +298,7 @@ $(function () {
             }
             return $cb;
         },
-        _init: function () {
+        _init : function () {
         },
         _subscriptionID: null,
         /**
@@ -318,7 +308,7 @@ $(function () {
          *
          * @return {Object} The xml http requeset for current report's subscription loading
          */
-        getSubscriptionList: function () {
+        getSubscriptionList : function() {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
         },
@@ -383,8 +373,8 @@ $(function () {
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
-
-
+            
+            
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.deleteSubscription);
@@ -422,10 +412,10 @@ $(function () {
             });
         },
 
-        _submit: function () {
+        _submit : function () {
             var me = this;
             var subscriptionInfo = me._getSubscriptionInfo();
-
+            
             me.options.subscriptionModel.subscriptionModel(
                 me._subscriptionID ? "updateSubscription" : "createSubscription",
                 subscriptionInfo,
@@ -464,7 +454,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
         },
         /**
          * Removes the email subscription functionality completely. This will return the element back to its pre-init state.

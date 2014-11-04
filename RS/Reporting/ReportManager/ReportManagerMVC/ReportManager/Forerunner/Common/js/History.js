@@ -551,6 +551,7 @@ $(function () {
         // returns `false`.
         loadUrl: function (fragment) {
             fragment = this.fragment = this.getFragment(fragment);
+            fragment = fragment.replace("%2f%2F", "/%2F");
             return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);

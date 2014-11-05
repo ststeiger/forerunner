@@ -123,7 +123,7 @@ $(function () {
             });
 
             $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2[0]);
+                me._initSharedSchedule(data2);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
@@ -210,20 +210,10 @@ $(function () {
                 }
             }
 
-            if (!me.$renderFormat) {
-                for (var i = 0; i < data[0].length; i++) {
-                    var setting = data[0][i];
-                    if (setting.Name === "RenderFormat") {
-                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    }
-                }
-            }
-
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
             me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
-            
         },
         _initExtensionOptions: function () {
             var me = this;

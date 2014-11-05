@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -552,6 +552,7 @@ $(function () {
         // returns `false`.
         loadUrl: function (fragment) {
             fragment = this.fragment = this.getFragment(fragment);
+            fragment = fragment.replace("%2f%2F", "/%2F");
             return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);
@@ -17212,7 +17213,7 @@ $(function () {
             });
 
             $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2[0]);
+                me._initSharedSchedule(data2);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
@@ -17299,20 +17300,10 @@ $(function () {
                 }
             }
 
-            if (!me.$renderFormat) {
-                for (var i = 0; i < data[0].length; i++) {
-                    var setting = data[0][i];
-                    if (setting.Name === "RenderFormat") {
-                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    }
-                }
-            }
-
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
             me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
-            
         },
         _initExtensionOptions: function () {
             var me = this;
@@ -17812,7 +17803,7 @@ $(function () {
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return [me.schedules];
+            if (me.schedules) return me.schedules;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -17827,11 +17818,15 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
+<<<<<<< HEAD
             return me.schedules || jqxhr;
+=======
+            return me.schedules ? me.schedules : jqxhr;
+>>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return [me.extensionList];
+            //if (me.extensionList) return [me.extensionList];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
@@ -17851,6 +17846,11 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
+<<<<<<< HEAD
+=======
+            if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
+            
+>>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                     url: url,
@@ -17869,6 +17869,10 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
+<<<<<<< HEAD
+=======
+            return me.extensionSettings[extensionName] ? me.extensionSettings[extensionName] : jqxhr;
+>>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
         },
         getSubscription: function (subscriptionID) {
             var me = this;

@@ -271,6 +271,10 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Cascading Hidden Child.rdl</Name>
+      <FullPath>Cascading Hidden Child.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -552,6 +552,7 @@ $(function () {
         // returns `false`.
         loadUrl: function (fragment) {
             fragment = this.fragment = this.getFragment(fragment);
+            fragment = fragment.replace("%2f%2F", "/%2F");
             return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);
@@ -4130,8 +4131,10 @@ $(function () {
                 if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
                     var $toolEl = me.element.find("." + Obj.selectorClass);
 
-                    me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
-                    me.hideTool(Obj.selectorClass);
+                    if (!$toolEl.hasClass("fr-toolbase-no-hide-id")) {
+                        me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
+                        me.hideTool(Obj.selectorClass);
+                    }
                 }
             });
         },
@@ -10098,9 +10101,57 @@ $(function () {
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
 
-            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
             return;
- 
+
+            var ActionExt = me._getRDLExt(RIContext);
+            var SharedActions = me._getRDLExtShared();
+
+            if (ActionExt.JavaScriptActions) {
+                
+
+                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
+                    var action = ActionExt.JavaScriptActions[a];
+                    var actions;
+
+                    if (action.SharedAction && SharedActions[action.SharedAction]) {
+                        actions = SharedActions[action.SharedAction].JavaScriptActions;
+                    }                    
+                    var sa = 0;
+                    // if shared there can be many actions per share
+                    while (true) {
+
+                        if (actions !== undefined && actions[sa]) {
+                            action = actions[sa++];
+                        }
+
+
+                        if (action.JavaFunc === undefined && action.Code !== undefined) {
+                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
+                                var newFunc;
+                                try {
+                                    newFunc = new Function("e", action.Code);
+                                }
+                                catch (e) {
+                                    console.log(e.message);
+                                }
+                                action.JavaFunc = newFunc;
+                                if (action.On === undefined)
+                                    action.On = "click";
+                               
+                            }
+
+                        }
+                        if (action.On === "click")
+                            $Control.addClass("fr-core-cursorpointer");
+                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
+
+                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
+                            break;
+
+                    }
+                }
+            }
 
         },
         _writeAction: function (RIContext, Action, Control) {
@@ -10894,7 +10945,7 @@ $(function () {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
-                else if (Tablix.State.Row)
+                else
                     Tablix.State.Row.findUntil(".fr-render-respIcon",".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
@@ -13488,6 +13539,24 @@ $(function () {
                             $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
                                 this.checked = false;
                             });
+                        }
+                    }
+                    else {
+                        var $parents = $(this).parents("table");
+                        var $selectAll = $parents.find("input[value='Select All']");
+                        if (this.checked === true) {
+                            // Being checked so we need to test if the select all needs to be checked
+                            var $notSelectAll = $parents.find("input[value!='Select All']");
+                            var isSelectAll = true;
+                            $notSelectAll.each(function (index, element) {
+                                if (element.checked === false) {
+                                    isSelectAll = false;
+                                }
+                            })
+                            $selectAll.prop("checked", isSelectAll);
+                        } else {
+                            // Being unchecked so we need to un-check the select all
+                            $selectAll.prop("checked", false);
                         }
                     }
                 });
@@ -17142,8 +17211,6 @@ $(function () {
                             me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
                         }
                     }
-                    
-                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 } else {
                     var userName = forerunner.ajax.getUserName();
                     me.$to.val( userName );
@@ -17153,7 +17220,7 @@ $(function () {
             });
 
             $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2[0]);
+                me._initSharedSchedule(data2);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
@@ -17240,20 +17307,10 @@ $(function () {
                 }
             }
 
-            if (!me.$renderFormat) {
-                for (var i = 0; i < data[0].length; i++) {
-                    var setting = data[0][i];
-                    if (setting.Name === "RenderFormat") {
-                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    }
-                }
-            }
-
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
             me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
-            
         },
         _initExtensionOptions: function () {
             var me = this;
@@ -17753,7 +17810,7 @@ $(function () {
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return [me.schedules];
+            if (me.schedules) return me.schedules;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -17768,11 +17825,11 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-            return me.schedules ? [me.schedules] : jqxhr;
+            return me.schedules ? me.schedules : jqxhr;
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return [me.extensionList];
+            //if (me.extensionList) return [me.extensionList];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
@@ -17792,7 +17849,7 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
-            if (me.extensionSettings[extensionName]) return [me.extensionSettings[extensionName]];
+            if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
             
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
@@ -17812,7 +17869,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
-            return me.extensionSettings[extensionName] ? [me.extensionSettings[extensionName]] : jqxhr;
+            return me.extensionSettings[extensionName] ? me.extensionSettings[extensionName] : jqxhr;
         },
         getSubscription: function (subscriptionID) {
             var me = this;

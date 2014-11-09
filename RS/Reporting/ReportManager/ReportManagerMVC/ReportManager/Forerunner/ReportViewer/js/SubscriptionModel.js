@@ -63,7 +63,7 @@ $(function () {
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return [me.schedules];
+            if (me.schedules) return me.schedules;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -78,11 +78,11 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-            return me.schedules ? [me.schedules] : jqxhr;
+            return me.schedules ? me.schedules : jqxhr;
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return [me.extensionList];
+            //if (me.extensionList) return [me.extensionList];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
@@ -102,7 +102,7 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
-            if (me.extensionSettings[extensionName]) return [me.extensionSettings[extensionName]];
+            if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
             
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
@@ -122,7 +122,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
-            return me.extensionSettings[extensionName] ? [me.extensionSettings[extensionName]] : jqxhr;
+            return me.extensionSettings[extensionName] ? me.extensionSettings[extensionName] : jqxhr;
         },
         getSubscription: function (subscriptionID) {
             var me = this;

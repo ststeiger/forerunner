@@ -6,7 +6,7 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>1.33333in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1in</Width>
@@ -232,7 +232,7 @@
         <Top>1.43625in</Top>
         <Left>1.86333in</Left>
         <Height>0.5in</Height>
-        <Width>3in</Width>
+        <Width>3.33333in</Width>
         <Style>
           <Border>
             <Style>None</Style>

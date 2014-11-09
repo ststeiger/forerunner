@@ -39,6 +39,10 @@
       <FullPath>bar chart with border and texture.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Cascading Hidden Child.rdl</Name>
+      <FullPath>Cascading Hidden Child.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Cascading Parameter single category.rdl</Name>
       <FullPath>Cascading Parameter single category.rdl</FullPath>
     </ProjectItem>
@@ -272,8 +276,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Cascading Hidden Child.rdl</Name>
-      <FullPath>Cascading Hidden Child.rdl</FullPath>
+      <Name>Learner Report.rdl</Name>
+      <FullPath>Learner Report.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

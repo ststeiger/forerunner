@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -10101,57 +10101,9 @@ $(function () {
         _writeRDLExtActions: function (RIContext, $Control,mapAreaOnly) {
             var me = this;
 
-            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name,me.RDLExt,$Control, mapAreaOnly,me.options.reportViewer.element, me._getInputsInRow,me._submitRow )
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
             return;
-
-            var ActionExt = me._getRDLExt(RIContext);
-            var SharedActions = me._getRDLExtShared();
-
-            if (ActionExt.JavaScriptActions) {
-                
-
-                for (var a = 0; a < ActionExt.JavaScriptActions.length; a++){
-                    var action = ActionExt.JavaScriptActions[a];
-                    var actions;
-
-                    if (action.SharedAction && SharedActions[action.SharedAction]) {
-                        actions = SharedActions[action.SharedAction].JavaScriptActions;
-                    }                    
-                    var sa = 0;
-                    // if shared there can be many actions per share
-                    while (true) {
-
-                        if (actions !== undefined && actions[sa]) {
-                            action = actions[sa++];
-                        }
-
-
-                        if (action.JavaFunc === undefined && action.Code !== undefined) {
-                            if (mapAreaOnly !==true || (mapAreaOnly === true && action.ImageMapArea === true)){
-                                var newFunc;
-                                try {
-                                    newFunc = new Function("e", action.Code);
-                                }
-                                catch (e) {
-                                    console.log(e.message);
-                                }
-                                action.JavaFunc = newFunc;
-                                if (action.On === undefined)
-                                    action.On = "click";
-                               
-                            }
-
-                        }
-                        if (action.On === "click")
-                            $Control.addClass("fr-core-cursorpointer");
-                        $Control.on(action.On, { reportViewer: me.options.reportViewer.element, element: $Control, getInputs: me._getInputsInRow, easySubmit: me._submitRow }, action.JavaFunc);
-
-                        if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
-                            break;
-
-                    }
-                }
-            }
+ 
 
         },
         _writeAction: function (RIContext, Action, Control) {
@@ -10945,7 +10897,7 @@ $(function () {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
-                else
+                else if (Tablix.State.Row)
                     Tablix.State.Row.findUntil(".fr-render-respIcon",".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;
@@ -13324,11 +13276,12 @@ $(function () {
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             var valids = param.ValidValues;
+            var i;
 
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -13339,7 +13292,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -13552,7 +13505,7 @@ $(function () {
                                 if (element.checked === false) {
                                     isSelectAll = false;
                                 }
-                            })
+                            });
                             $selectAll.prop("checked", isSelectAll);
                         } else {
                             // Being unchecked so we need to un-check the select all
@@ -13572,10 +13525,13 @@ $(function () {
             }
             $dropDownContainer.append($table);
 
-            if (predefinedValue) {
+            //If default value is not valid then dont set it as value
+            if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
             }
+            else
+                me._loadedForDefault = false;
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
@@ -13885,7 +13841,7 @@ $(function () {
         },
         _isNullChecked: function (param) {
             var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
-            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+            return $cb.length !== 0 && $cb.prop("checked");
         },
         _isParamNullable: function (param) {
             var me = this;
@@ -13955,6 +13911,20 @@ $(function () {
             }
             return false;
         },
+        _containsSome: function (array, validValues) {
+            var i = array.length;
+            var j;
+
+            while (i--) {
+                j = validValues.length;
+                while (j--) {
+                    if (array[i] === validValues[j].Value)
+                        return true;
+                }
+            }
+            return false;
+        },
+
         _hasDefaultValue: function (param) {
             var me = this;
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
@@ -13975,7 +13945,7 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.on("change", function () {
-                        me._refreshParameters(null, true, param.Name);
+                        me._refreshParameters(null, true, dependence);
                     });
                 });
             }
@@ -14038,7 +14008,6 @@ $(function () {
             //set false not to do form validate.
 
             var paramList = savedParams ? savedParams : me.getParamsList(true);
-
             if (isCascading && parentName) {
                 paramList = me._removeChildParam(paramList, parentName);
             }
@@ -14052,16 +14021,19 @@ $(function () {
         _removeChildParam: function (paramList, parentName) {
             var me = this, result = paramList, pattern = null;
 
-            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            children = me._dependencyList[parentName];
-            len = children ? children.length : 0;
-            for (var i = 0; i < len; i++) {
-                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+            var children = me._dependencyList[parentName];
 
-                result = paramList.replace(pattern, "");
+            if (children) {
+                var len = children.length;
+                //build a dynamic regular expression to replace the child parameters with empty in cascading case.
+                for (var i = 0; i < len; i++) {
+                    pattern = new RegExp(",\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
 
-                if (me._dependencyList[children[i]]) {
-                    result = me._removeChildParam(result, children[i]);
+                    result = paramList.replace(pattern, "");
+
+                    if (me._dependencyList[children[i]]) {
+                        result = me._removeChildParam(result, children[i]);
+                    }
                 }
             }
             return result;

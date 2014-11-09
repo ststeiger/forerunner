@@ -5312,7 +5312,7 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("showAllTools");
@@ -5380,7 +5380,7 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("hideAllTools");
@@ -13268,11 +13268,12 @@ $(function () {
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             var valids = param.ValidValues;
+            var i;
 
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -13283,7 +13284,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -14019,7 +14020,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp(',\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+                    pattern = new RegExp(",\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"])
 
                     result = paramList.replace(pattern, "");
 

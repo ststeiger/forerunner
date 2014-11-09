@@ -39,6 +39,10 @@
       <FullPath>bar chart with border and texture.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Cascading Hidden Child.rdl</Name>
+      <FullPath>Cascading Hidden Child.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Cascading Parameter single category.rdl</Name>
       <FullPath>Cascading Parameter single category.rdl</FullPath>
     </ProjectItem>
@@ -268,8 +272,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Cascading Hidden Child.rdl</Name>
-      <FullPath>Cascading Hidden Child.rdl</FullPath>
+      <Name>Customer Data - Empty.rdl</Name>
+      <FullPath>Customer Data - Empty.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -279,7 +283,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

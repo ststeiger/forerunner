@@ -375,17 +375,42 @@ FROM            Customers</CommandText>
   <ReportParameters>
     <ReportParameter Name="ReportParameter1">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>asdd</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
       <ValidValues>
-        <DataSetReference>
-          <DataSetName>Region</DataSetName>
-          <ValueField>Region</ValueField>
-          <LabelField>Region</LabelField>
-        </DataSetReference>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>ads</Value>
+            <Label>asd</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>qwe</Value>
+            <Label>qwe</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>yui</Value>
+            <Label>yui</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value />
+            <Label>sdf</Label>
+          </ParameterValue>
+        </ParameterValues>
       </ValidValues>
+      <MultiValue>true</MultiValue>
       <cl:ComponentMetadata xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition">
         <cl:HideUpdateNotifications>true</cl:HideUpdateNotifications>
       </cl:ComponentMetadata>
+    </ReportParameter>
+    <ReportParameter Name="ReportParameter2">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>ReportParameter2</Prompt>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

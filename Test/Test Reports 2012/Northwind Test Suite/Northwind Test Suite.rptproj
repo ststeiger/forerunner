@@ -276,8 +276,13 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+<<<<<<< HEAD
       <Name>Learner Report.rdl</Name>
       <FullPath>Learner Report.rdl</FullPath>
+=======
+      <Name>Customer Data - Empty.rdl</Name>
+      <FullPath>Customer Data - Empty.rdl</FullPath>
+>>>>>>> b322669afb33aa72f2b87b4b11950075c60902c6
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -287,7 +292,11 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
+<<<<<<< HEAD
         <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+=======
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+>>>>>>> b322669afb33aa72f2b87b4b11950075c60902c6
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

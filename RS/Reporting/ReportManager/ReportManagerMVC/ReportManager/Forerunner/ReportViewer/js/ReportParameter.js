@@ -36,7 +36,7 @@ $(function () {
             $reportViewer: null,
             pageNum: null,
             $appContainer: null,
-            RDLExt : {}
+            RDLExt: {}
         },
 
         $params: null,
@@ -289,7 +289,7 @@ $(function () {
         },
         _elementWidthCheck: function () {
             var me = this;
-            
+
             var containerWidth = me.options.$appContainer.width();
             var customRightPaneWidth = forerunner.config.getCustomSettingsValue("ParameterPaneWidth", 280);
             var parameterPaneWidth = customRightPaneWidth < containerWidth ? customRightPaneWidth : containerWidth;
@@ -484,12 +484,12 @@ $(function () {
             var $errorMsg = new $("<div class='fr-param-error-message'/>");
             var $element = null;
             var useDefaultParam = paramMetadata || param;
-            
+
             if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
-            
+
             if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
@@ -557,12 +557,11 @@ $(function () {
 
                 $container.append($errorMsg);
             }
-                
+
             $parent.append($label).append($container).append($optionsDiv);
             return $parent;
         },
-        _setParamError:function(param,errorString)
-        {
+        _setParamError: function (param, errorString) {
             var me = this;
             var err = {};
             err[param.attr("name")] = errorString;
@@ -574,14 +573,14 @@ $(function () {
             else {
                 delete me.$form.validate().invalid[param.attr("name")];
                 me.$form.validate().hideErrors();
-            
+
             }
-   
+
         },
         _setParamValue: function (param, defaultValue, $element) {
             var me = this;
             var $control;
-            
+
             if (me._isDropdownTree && me.enableCascadingTree && (param.isParent || param.isChild)) {
                 var isTopParent = param.isParent === true && param.isChild !== true;
                 //Revert cascading tree status: display text, backend value, tree UI
@@ -720,7 +719,7 @@ $(function () {
             else {
                 $control = param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
             }
-            
+
             var $container = new $("<div class='fr-param-option-div' />");
 
             var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-usedefault-checkbox' name='" + param.Name + "' />");
@@ -741,7 +740,7 @@ $(function () {
                 if ($nullCheckbox.length) {
                     $nullCheckbox.removeAttr("disabled");
                 }
-                
+
                 $control.removeAttr("disabled").removeClass("fr-usedefault");
 
                 if ($hidden && $hidden.length) {
@@ -756,9 +755,9 @@ $(function () {
 
                 if ($control.hasClass("fr-param-dropdown-input")) {
                     $control.parent().removeClass("fr-param-disable");
-                }                
+                }
                 $control.removeClass("fr-param-disable");
-               
+
 
                 //add validate arrtibutes to control when uncheck null checkbox
                 $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
@@ -793,7 +792,7 @@ $(function () {
                     $control.parent().addClass("fr-param-disable");
                 }
                 $control.addClass("fr-param-disable");
-                
+
 
                 //remove validate arrtibutes
                 $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
@@ -925,7 +924,7 @@ $(function () {
             }
 
         },
-        _setBigDropDownIndex: function(param, value, $control){
+        _setBigDropDownIndex: function (param, value, $control) {
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if ((value && value === param.ValidValues[i].Value) || (!value && i === 0)) {
                     $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
@@ -1175,13 +1174,13 @@ $(function () {
             var $container = null, $hidden = null;
 
             $container = me._createDiv(["fr-param-element-container"]);
-            
+
             $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
             $hidden.val("#");
             me._setTreeElementProperty(param, $hidden);
 
             me._setTreeDefaultValue(param, predefinedValue, null, $hidden);
-            
+
             $container.append($hidden);
             return $container;
         },
@@ -1207,7 +1206,7 @@ $(function () {
                     $list.attr("parent", param.Dependencies.join());
                     $list.addClass("fr-param-tree-child");
                 }
-                
+
                 for (var i = 0; i < length; i++) {
                     var isDefault = false;
                     if (predefinedValue) {
@@ -1222,7 +1221,7 @@ $(function () {
                             }
                         }
                     }
-                    
+
                     var item = me._getCascadingTreeItem(param, param.ValidValues[i], hasChild, i === length - 1, isDefault, level);
                     $list.append(item);
                 }
@@ -1234,7 +1233,7 @@ $(function () {
             var me = this;
             var $li = new $("<li/>");
             $li.addClass("fr-param-tree-item").attr("value", value.Value);
-            
+
             if (isLast) {
                 $li.addClass("fr-param-tree-item-last");
             }
@@ -1256,7 +1255,7 @@ $(function () {
                     }
 
                     me._setRuntimeTreeValues($li);
-                    
+
                     if ($li.children("ul").length === 0) {
                         $li.addClass("fr-param-tree-loading");
                         me._refreshParameters(null, true, param.Name);
@@ -1373,7 +1372,7 @@ $(function () {
                         }
                     }
                 }
-                
+
                 //if this node has child, either children not loaded or collapsed it will open child instead of select all
                 //in the same time clear all siblings selected status for single select parameter
                 if (hasChild && ($ul.length === 0 || $ul.is(":visible") === false)) {
@@ -1394,7 +1393,7 @@ $(function () {
                     for (var i = 0; i < children.length; i++) {
                         var subParam = me._parameterDefinitions[children[i]];
                         var $childList = me._getCascadingTree(subParam, level);
-                        
+
                         if ($childList) {
                             $li.append($childList);
                         }
@@ -1431,7 +1430,7 @@ $(function () {
                     $parent.addClass("fr-param-tree-item-selected");
                     $parentAnchor.addClass("fr-param-tree-anchor-selected");
                 }
-                
+
                 //else if ($ul.find("li a").filter(".fr-param-tree-anchor-selected").length === $ul.find("li a").length) {//all selected
                 //    $parent.addClass("fr-param-tree-item-selected");
                 //    $parentAnchor.removeClass("fr-param-tree-anchor-udm").addClass("fr-param-tree-anchor-selected");
@@ -1449,7 +1448,7 @@ $(function () {
                 me._setParentStatus($parent);
             }
         },
-        _setRuntimeTreeValues: function($item){
+        _setRuntimeTreeValues: function ($item) {
             var me = this;
 
             var $ul = $item.parent();
@@ -1572,7 +1571,7 @@ $(function () {
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for ( i = 0; i < valids.length; i++) {
+                    for (i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -1583,7 +1582,7 @@ $(function () {
                     }
                 }
                 else {
-                    for ( i = 0; i < valids.length; i++) {
+                    for (i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -1597,7 +1596,7 @@ $(function () {
             }
         },
         //set each tree item status by specify parameter value
-        _setTreeItemStatus:  function (param, defaultParam, isTopParent) {
+        _setTreeItemStatus: function (param, defaultParam, isTopParent) {
             var me = this;
             var $parent = me.element.find(".fr-param-tree ul[name='" + param.Name + "']");
             if (isTopParent) {
@@ -1630,10 +1629,10 @@ $(function () {
                     me._clearTreeItemStatus($(child));
                 });
             }
-            
+
             $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
             $parent.children("li.fr-param-tree-item-selected").removeClass("fr-param-tree-item-selected");
-            
+
             $parent.hide();
             $parent.parent("li").children(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected");
             $parent.parent("li").removeClass("fr-param-tree-item-selected").removeClass("fr-param-tree-item-open").addClass("fr-param-tree-item-close");
@@ -1732,7 +1731,7 @@ $(function () {
             $openDropDown.on("click", function () {
                 if ($multipleCheckBox.attr("disabled"))
                     return;
-                
+
                 me._popupDropDownPanel(param);
             });
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
@@ -1819,7 +1818,7 @@ $(function () {
             //If default value is not valid then dont set it as value
             if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
             }
             else
                 me._loadedForDefault = false;
@@ -1848,7 +1847,7 @@ $(function () {
             $openDropDown.on("click", function () {
                 if ($multipleTextArea.attr("disabled"))
                     return;
-                
+
                 me._popupDropDownPanel(param);
             });
 
@@ -2020,7 +2019,7 @@ $(function () {
 
             return retval;
         },
-        
+
         /**
          * Generate parameter value list into string and return
          *
@@ -2044,7 +2043,7 @@ $(function () {
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function (index, input) {
                     $input = $(input);
-                    
+
                     if ($input.hasClass("fr-usedefault")) {
                         me._useDefault = true;
                         me._pushParam(a, $input, { Parameter: input.name, UseDefault: "true" });
@@ -2145,7 +2144,7 @@ $(function () {
                 if ($param.attr("backendValue") === "" && $param.attr("nullable") === "true") {
                     return null;
                 }
-                return $param.attr("backendValue");                
+                return $param.attr("backendValue");
             } else if ($param.attr("allowblank") === "true" && $param.val() === "") {
                 //check allow blank
                 return "";
@@ -2302,7 +2301,7 @@ $(function () {
             if (isCascading && parentName) {
                 paramList = me._removeChildParam(paramList, parentName);
             }
-            
+
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
@@ -2310,15 +2309,9 @@ $(function () {
             }
         },
         _removeChildParam: function (paramList, parentName) {
-            var me = this, result = null, pattern = null;
+            var me = this, result = paramList, pattern = null;
 
-<<<<<<< HEAD
-            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
-                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
-=======
             var children = me._dependencyList[parentName];
->>>>>>> b322669afb33aa72f2b87b4b11950075c60902c6
 
             if (children) {
                 var len = children.length;

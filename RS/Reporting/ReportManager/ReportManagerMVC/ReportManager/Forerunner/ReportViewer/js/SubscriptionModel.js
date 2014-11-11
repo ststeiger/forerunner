@@ -78,11 +78,7 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-<<<<<<< HEAD
-            return me.schedules || jqxhr;
-=======
             return me.schedules ? me.schedules : jqxhr;
->>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
         },
         getDeliveryExtensions: function () {
             var me = this;
@@ -106,17 +102,14 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
-<<<<<<< HEAD
-=======
             if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
-            
->>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
-            return forerunner.ajax.ajax({
-                    url: url,
-                    dataType: "json",
-                    async: true
-                })
+            var jqxhr = forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: true
+            })
                 .done(
                     function (settings) {
                         me.extensionSettings[extensionName] = settings;
@@ -129,10 +122,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
-<<<<<<< HEAD
-=======
             return me.extensionSettings[extensionName] ? me.extensionSettings[extensionName] : jqxhr;
->>>>>>> 529c37a3ca743c73aed1e217d6be95fea3c7ec6c
         },
         getSubscription: function (subscriptionID) {
             var me = this;

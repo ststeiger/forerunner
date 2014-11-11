@@ -14027,9 +14027,14 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp(",\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
+
+                    //Remove comma if there is one left.
+                    if (result.slice(-3) === ",]}") {
+                        result = result.substring(0, result.length - 3) + "]}";
+                    }
 
                     if (me._dependencyList[children[i]]) {
                         result = me._removeChildParam(result, children[i]);

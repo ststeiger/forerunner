@@ -361,7 +361,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>action URL</ReportName>
+                          <ReportName>Cascading Parameter single category</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -373,7 +373,7 @@
                   <DataElementOutput>Output</DataElementOutput>
                 </ChartDataPoint>
               </ChartDataPoints>
-              <Subtype>PercentStacked</Subtype>
+              <Subtype>Stacked</Subtype>
               <Style />
               <ChartEmptyPoints>
                 <Style />
@@ -384,6 +384,12 @@
                   <Style />
                 </ChartDataLabel>
               </ChartEmptyPoints>
+              <CustomProperties>
+                <CustomProperty>
+                  <Name>DrawingStyle</Name>
+                  <Value>Cylinder</Value>
+                </CustomProperty>
+              </CustomProperties>
               <ValueAxisName>Primary</ValueAxisName>
               <CategoryAxisName>Primary</CategoryAxisName>
               <ChartSmartLabel>
@@ -543,6 +549,9 @@
                 </ChartAxisScaleBreak>
               </ChartAxis>
             </ChartValueAxes>
+            <ChartThreeDProperties>
+              <Enabled>true</Enabled>
+            </ChartThreeDProperties>
             <Style>
               <BackgroundGradientType>None</BackgroundGradientType>
             </Style>
@@ -594,8 +603,8 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>1.22097in</Top>
-        <Left>3.06944in</Left>
+        <Top>1.20708in</Top>
+        <Left>3.04167in</Left>
         <Height>3.54167in</Height>
         <Width>5.41542in</Width>
         <ZIndex>2</ZIndex>

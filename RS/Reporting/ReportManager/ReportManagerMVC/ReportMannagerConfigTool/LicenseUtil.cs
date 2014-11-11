@@ -284,7 +284,7 @@ namespace ForerunnerLicense
         public MachineId MachineData = null;
         public DateTime LastActivation;
         public DateTime FirstActivationDate;
-        public DateTime PurchaseDate;
+        //public DateTime PurchaseDate;
         public int Quantity = 0;
         public string SKU = null;
         public int IsSubscription = 0;

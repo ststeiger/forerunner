@@ -1,256 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <Description>Adventure Works sales for an individual employee. This report includes Sales Comparison and Current Month Sales Comparison charts in addition to a Current Month Order Summary table with drillthrough to individual orders. This report illustrates the use of multiple datasets, a line chart, a column chart with scale breaks, a table, drillthrough, and dynamic parameters.</Description>
-  <DataSources>
-    <DataSource Name="AdventureWorks2008">
-      <DataSourceReference>AdventureWorks2008</DataSourceReference>
-      <rd:DataSourceID>277af965-4584-4b8b-a18a-583cef155a7f</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="EmpSalesMonth">
-      <Fields>
-        <Field Name="Employee">
-          <DataField>Employee</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Year">
-          <DataField>Year</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="MonthNumber">
-          <DataField>MonthNumber</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Month">
-          <DataField>Month</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Sales">
-          <DataField>Sales</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>-- Employee sales by month
---DECLARE @ReportYear int
---DECLARE @ReportMonth int
---SET @ReportMonth = 7
---SET @ReportYear = 2003
---DECLARE @EmployeeID int
---SET @EmployeeID = 275
-
-SELECT PER.FirstName + ' ' + PER.LastName AS Employee, 
-   DATEPART(Year, SOH.OrderDate) AS [Year], 
-   DATEPART(Month, SOH.OrderDate) AS [MonthNumber], 
-   DATENAME(Month, SOH.OrderDate) AS [Month], 
-   PC.Name AS Category, SUM(DET.LineTotal) AS Sales
-FROM Sales.SalesOrderHeader SOH 
-   INNER JOIN [Sales].[SalesPerson] SP	ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
-   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
-   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
-   INNER JOIN [Person].[Person] PER ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
-   INNER JOIN Production.Product P ON DET.ProductID = P.ProductID 
-   INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
-   INNER JOIN Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
-WHERE
-   (DATEPART(Year, SOH.OrderDate) &lt;= @ReportYear) 
-   AND (DATEPART(Month, SOH.OrderDate) = @ReportMonth)  
-   AND (SOH.SalesPersonID = @EmployeeID)
-GROUP BY PER.FirstName + ' ' + PER.LastName, 
-   DATEPART(Year, SOH.OrderDate), DATEPART(Month, SOH.OrderDate), 
-   DATENAME(Month, SOH.OrderDate), PC.Name</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ReportYear">
-            <Value>=Parameters!ReportYear.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportMonth">
-            <Value>=Parameters!ReportMonth.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EmployeeID">
-            <Value>=Parameters!EmployeeID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="SalesEmployees">
-      <Fields>
-        <Field Name="BusinessEntityID">
-          <DataField>BusinessEntityID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Employee">
-          <DataField>Employee</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="JobTitle">
-          <DataField>JobTitle</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT s.[BusinessEntityID], p.[FirstName] + N' ' + p.LastName AS Employee, e.[JobTitle]
-FROM [Sales].[SalesPerson] s
-   INNER JOIN [HumanResources].[Employee] e ON e.[BusinessEntityID] = s.[BusinessEntityID]
-   INNER JOIN [Person].[Person] p ON p.[BusinessEntityID] = s.[BusinessEntityID]</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="EmployeeSalesYearOverYear">
-      <Fields>
-        <Field Name="Employee">
-          <DataField>Employee</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Year">
-          <DataField>Year</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="MonthNumber">
-          <DataField>MonthNumber</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Month">
-          <DataField>Month</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Sales">
-          <DataField>Sales</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>--  Employee sales
---DECLARE @ReportYear int
---DECLARE @ReportMonth int
---SET @ReportMonth = 7
---SET @ReportYear = 2003
---DECLARE @EmployeeID int
---SET @EmployeeID = 283
-
-SELECT   P.FirstName + ' ' + P.LastName AS Employee, 
-   DATEPART(Year, SOH.OrderDate) AS [Year], 
-   DATEPART(Month, SOH.OrderDate) AS MonthNumber, 
-   DATENAME(Month, SOH.OrderDate) AS [Month], 
-   SUM(DET.LineTotal) AS Sales
-FROM [Sales].[SalesPerson] SP 
-   INNER JOIN [Sales].[SalesOrderHeader] SOH ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
-   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
-   INNER JOIN [Sales].[SalesTerritory] ST ON SP.[TerritoryID] = ST.[TerritoryID] 
-   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
-   INNER JOIN [Person].[Person] P ON P.[BusinessEntityID] = SP.[BusinessEntityID]
-WHERE (DATEPART(Year, SOH.OrderDate) &lt;= @ReportYear - 1 OR
-   DATEPART(Year, SOH.OrderDate) = @ReportYear AND DATEPART(Month, SOH.OrderDate) &lt;= @ReportMonth) AND 
-   (SOH.SalesPersonID = (@EmployeeID))
-GROUP BY P.FirstName + ' ' + P.LastName, SOH.SalesPersonID, 
-   DATEPART(Year, SOH.OrderDate), DATEPART(Month, SOH.OrderDate), 
-   DATENAME(Month, SOH.OrderDate)</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ReportYear">
-            <Value>=Parameters!ReportYear.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportMonth">
-            <Value>=Parameters!ReportMonth.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EmployeeID">
-            <Value>=Parameters!EmployeeID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="EmployeeSalesDetail">
-      <Fields>
-        <Field Name="Employee">
-          <DataField>Employee</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Subcategory">
-          <DataField>Subcategory</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Sales">
-          <DataField>Sales</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderNumber">
-          <DataField>SalesOrderNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SalesOrderID">
-          <DataField>SalesOrderID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Product">
-          <DataField>Product</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="OrderQty">
-          <DataField>OrderQty</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="UnitPrice">
-          <DataField>UnitPrice</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>--Details
---DECLARE @ReportYear int
---DECLARE @ReportMonth int
---SET @ReportMonth = 7
---SET @ReportYear = 2003
---DECLARE @EmployeeID int
---SET @EmployeeID = 283
-
-SELECT PER.FirstName + ' ' + PER.LastName AS Employee,
-   PS.Name AS Subcategory, SUM(DET.LineTotal) AS Sales, 
-   SOH.SalesOrderID,  SOH.SalesOrderNumber, 
-   P.Name AS Product, 
-   SUM(DET.OrderQty) AS OrderQty, DET.UnitPrice, 
-   PC.Name AS Category
-FROM Sales.SalesOrderHeader SOH 
-   INNER JOIN [Sales].[SalesPerson] SP ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
-   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
-   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
-   INNER JOIN [Person].[Person] PER ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
-   INNER JOIN Production.Product P ON DET.ProductID = P.ProductID 
-   INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
-   INNER JOIN Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
-WHERE (DATEPART(Year, SOH.OrderDate) = @ReportYear) AND 
-   (DATEPART(Month, SOH.OrderDate) = @ReportMonth) AND 
-    (SOH.SalesPersonID = @EmployeeID)
-GROUP BY PER.FirstName + ' ' + PER.LastName, 
-   DATEPART(Month, SOH.OrderDate), SOH.SalesOrderID, SOH.SalesOrderNumber, 
-   P.Name, PS.Name, DET.UnitPrice, PC.Name</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ReportYear">
-            <Value>=Parameters!ReportYear.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportMonth">
-            <Value>=Parameters!ReportMonth.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EmployeeID">
-            <Value>=Parameters!EmployeeID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Image Name="Logo">
@@ -477,6 +226,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Maximum>NaN</Maximum>
                     <Angle>90</Angle>
                     <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -511,6 +263,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartCategoryAxes>
                 <ChartValueAxes>
@@ -547,6 +302,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <CrossAt>NaN</CrossAt>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -580,6 +338,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartValueAxes>
                 <Style>
@@ -749,6 +510,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Maximum>NaN</Maximum>
                     <Angle>90</Angle>
                     <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -783,6 +547,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartCategoryAxes>
                 <ChartValueAxes>
@@ -861,6 +628,9 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartValueAxes>
                 <Style>
@@ -1408,104 +1178,6 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
     <Height>8.03139in</Height>
     <Style />
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="ReportMonth">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>7</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Report Month</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>January</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>February</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>March</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>4</Value>
-            <Label>April</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>5</Value>
-            <Label>May</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>6</Value>
-            <Label>June</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>7</Value>
-            <Label>July </Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>8</Value>
-            <Label>August</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>9</Value>
-            <Label>September</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>10</Value>
-            <Label>October</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>11</Value>
-            <Label>November</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>12</Value>
-            <Label>December</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ReportYear">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>2003</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Report Year</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="EmployeeID">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>283</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Employee</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>SalesEmployees</DataSetName>
-          <ValueField>BusinessEntityID</ValueField>
-          <LabelField>Employee</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ShowDescription">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>False</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Description?</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-  </ReportParameters>
   <Width>8.4115in</Width>
   <Page>
     <PageHeader>
@@ -1605,6 +1277,357 @@ GROUP BY PER.FirstName + ' ' + PER.LastName,
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
+  <Description>Adventure Works sales for an individual employee. This report includes Sales Comparison and Current Month Sales Comparison charts in addition to a Current Month Order Summary table with drillthrough to individual orders. This report illustrates the use of multiple datasets, a line chart, a column chart with scale breaks, a table, drillthrough, and dynamic parameters.</Description>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="AdventureWorks2008">
+      <DataSourceReference>AdventureWorks2008</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>277af965-4584-4b8b-a18a-583cef155a7f</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="EmpSalesMonth">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportYear">
+            <Value>=Parameters!ReportYear.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ReportMonth">
+            <Value>=Parameters!ReportMonth.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@EmployeeID">
+            <Value>=Parameters!EmployeeID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>-- Employee sales by month
+--DECLARE @ReportYear int
+--DECLARE @ReportMonth int
+--SET @ReportMonth = 7
+--SET @ReportYear = 2003
+--DECLARE @EmployeeID int
+--SET @EmployeeID = 275
+
+SELECT PER.FirstName + ' ' + PER.LastName AS Employee, 
+   DATEPART(Year, SOH.OrderDate) AS [Year], 
+   DATEPART(Month, SOH.OrderDate) AS [MonthNumber], 
+   DATENAME(Month, SOH.OrderDate) AS [Month], 
+   PC.Name AS Category, SUM(DET.LineTotal) AS Sales
+FROM Sales.SalesOrderHeader SOH 
+   INNER JOIN [Sales].[SalesPerson] SP	ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
+   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
+   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
+   INNER JOIN [Person].[Person] PER ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
+   INNER JOIN Production.Product P ON DET.ProductID = P.ProductID 
+   INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
+   INNER JOIN Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
+WHERE
+   (DATEPART(Year, SOH.OrderDate) &lt;= @ReportYear) 
+   AND (DATEPART(Month, SOH.OrderDate) = @ReportMonth)  
+   AND (SOH.SalesPersonID = @EmployeeID)
+GROUP BY PER.FirstName + ' ' + PER.LastName, 
+   DATEPART(Year, SOH.OrderDate), DATEPART(Month, SOH.OrderDate), 
+   DATENAME(Month, SOH.OrderDate), PC.Name</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Employee">
+          <DataField>Employee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="MonthNumber">
+          <DataField>MonthNumber</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Month">
+          <DataField>Month</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Category">
+          <DataField>Category</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sales">
+          <DataField>Sales</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="SalesEmployees">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <CommandText>SELECT s.[BusinessEntityID], p.[FirstName] + N' ' + p.LastName AS Employee, e.[JobTitle]
+FROM [Sales].[SalesPerson] s
+   INNER JOIN [HumanResources].[Employee] e ON e.[BusinessEntityID] = s.[BusinessEntityID]
+   INNER JOIN [Person].[Person] p ON p.[BusinessEntityID] = s.[BusinessEntityID]</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="BusinessEntityID">
+          <DataField>BusinessEntityID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Employee">
+          <DataField>Employee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="JobTitle">
+          <DataField>JobTitle</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="EmployeeSalesYearOverYear">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportYear">
+            <Value>=Parameters!ReportYear.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ReportMonth">
+            <Value>=Parameters!ReportMonth.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@EmployeeID">
+            <Value>=Parameters!EmployeeID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--  Employee sales
+--DECLARE @ReportYear int
+--DECLARE @ReportMonth int
+--SET @ReportMonth = 7
+--SET @ReportYear = 2003
+--DECLARE @EmployeeID int
+--SET @EmployeeID = 283
+
+SELECT   P.FirstName + ' ' + P.LastName AS Employee, 
+   DATEPART(Year, SOH.OrderDate) AS [Year], 
+   DATEPART(Month, SOH.OrderDate) AS MonthNumber, 
+   DATENAME(Month, SOH.OrderDate) AS [Month], 
+   SUM(DET.LineTotal) AS Sales
+FROM [Sales].[SalesPerson] SP 
+   INNER JOIN [Sales].[SalesOrderHeader] SOH ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
+   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
+   INNER JOIN [Sales].[SalesTerritory] ST ON SP.[TerritoryID] = ST.[TerritoryID] 
+   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
+   INNER JOIN [Person].[Person] P ON P.[BusinessEntityID] = SP.[BusinessEntityID]
+WHERE (DATEPART(Year, SOH.OrderDate) &lt;= @ReportYear - 1 OR
+   DATEPART(Year, SOH.OrderDate) = @ReportYear AND DATEPART(Month, SOH.OrderDate) &lt;= @ReportMonth) AND 
+   (SOH.SalesPersonID = (@EmployeeID))
+GROUP BY P.FirstName + ' ' + P.LastName, SOH.SalesPersonID, 
+   DATEPART(Year, SOH.OrderDate), DATEPART(Month, SOH.OrderDate), 
+   DATENAME(Month, SOH.OrderDate)</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Employee">
+          <DataField>Employee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Year">
+          <DataField>Year</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="MonthNumber">
+          <DataField>MonthNumber</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Month">
+          <DataField>Month</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sales">
+          <DataField>Sales</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="EmployeeSalesDetail">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ReportYear">
+            <Value>=Parameters!ReportYear.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ReportMonth">
+            <Value>=Parameters!ReportMonth.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@EmployeeID">
+            <Value>=Parameters!EmployeeID.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--Details
+--DECLARE @ReportYear int
+--DECLARE @ReportMonth int
+--SET @ReportMonth = 7
+--SET @ReportYear = 2003
+--DECLARE @EmployeeID int
+--SET @EmployeeID = 283
+
+SELECT PER.FirstName + ' ' + PER.LastName AS Employee,
+   PS.Name AS Subcategory, SUM(DET.LineTotal) AS Sales, 
+   SOH.SalesOrderID,  SOH.SalesOrderNumber, 
+   P.Name AS Product, 
+   SUM(DET.OrderQty) AS OrderQty, DET.UnitPrice, 
+   PC.Name AS Category
+FROM Sales.SalesOrderHeader SOH 
+   INNER JOIN [Sales].[SalesPerson] SP ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
+   INNER JOIN Sales.SalesOrderDetail DET ON SOH.SalesOrderID = DET.SalesOrderID
+   INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
+   INNER JOIN [Person].[Person] PER ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
+   INNER JOIN Production.Product P ON DET.ProductID = P.ProductID 
+   INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
+   INNER JOIN Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
+WHERE (DATEPART(Year, SOH.OrderDate) = @ReportYear) AND 
+   (DATEPART(Month, SOH.OrderDate) = @ReportMonth) AND 
+    (SOH.SalesPersonID = @EmployeeID)
+GROUP BY PER.FirstName + ' ' + PER.LastName, 
+   DATEPART(Month, SOH.OrderDate), SOH.SalesOrderID, SOH.SalesOrderNumber, 
+   P.Name, PS.Name, DET.UnitPrice, PC.Name</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Employee">
+          <DataField>Employee</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Subcategory">
+          <DataField>Subcategory</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Sales">
+          <DataField>Sales</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderNumber">
+          <DataField>SalesOrderNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SalesOrderID">
+          <DataField>SalesOrderID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Product">
+          <DataField>Product</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OrderQty">
+          <DataField>OrderQty</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Category">
+          <DataField>Category</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="ReportMonth">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>7</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Report Month</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>January</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>February</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>March</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>April</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>May</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>6</Value>
+            <Label>June</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>7</Value>
+            <Label>July </Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>8</Value>
+            <Label>August</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>9</Value>
+            <Label>September</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>10</Value>
+            <Label>October</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>11</Value>
+            <Label>November</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>12</Value>
+            <Label>December</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ReportYear">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2003</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Report Year</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EmployeeID">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>283</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Employee</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>SalesEmployees</DataSetName>
+          <ValueField>BusinessEntityID</ValueField>
+          <LabelField>Employee</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ShowDescription">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>False</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Description?</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
   <EmbeddedImages>
     <EmbeddedImage Name="logo">
       <MIMEType>image/jpeg</MIMEType>
@@ -1618,6 +1641,6 @@ W1s+S+fHHb0o8y02kHooeNepYsLiyu7KKaxc19o9oEe0UbtGm2nRThRAca/mHPf8nd/48n9pdG5I5kOX
 AN2mdlXNHAPaSx4H2gUBPREQBERAEREAREQBERAEREAREQBERAEREAREQBERAF8SxxyxuilaHxvBa9rhUOadCCF9ogOd5v8ALedsjpsK8Pidr7tKaOb2NedCO/1qgby/zbYSHyLW6iceLoN2v2oyuxIgOURcnc25SRrrprmA6GW6k4eglzvUt/5Z5ebgLF1sJ33D5Hb5CdGB1KeBnR29auEQEDN4u1yuNms7ohrHDcJP4bm6tfr1fEuKst5JbkW0H30j3+XHsqd5rQbe9dE/MLmIWtv/ALNau+/uBW5I+ZEeDPt/F3qL+XXLvHOXTettm0/A+T5B6UBtPLWDiweMjtRQzu8dzJ9KQjX0DgFaSRMljdFK0PjkBa9rhUOB0IIX0soDneb/AC3nbI6bCvD4na+7Smjm9jXnQjv9aoG8v822Eh8i1uonHi6Ddr9qMrsSIDlEXJ3NuUka66a5gOhlupOHoJc71LcLblSTGcs32MtpnXVzdxv0cQ2Pe5tKMaTRvaelbOiA5H/IPNP/AKjf8WP+2ugcnYy8xWEZZ3zBHO2R7i0ODtHHTVpIV4iA0/mXkGDJTPvsc9tvdvO6WN34Uh+lpq1x6etaieV+bsXN5lvbzMkHCW2duNO+M1XXkQHKv9r5+ybfJn97MZ0LZpDGz0h5FVIl5C5gs7YCzcZrm4BbcCORscTYv4bt5a55cfQKdNdOmogNL5J5QucZcSZDKMa25b4LdgcH7QR4n1aSKngPSrHnayyuQxgs8fasuWvNZXOIEkW0tc0xhxHHUFbHREBx2y5M5iu5xD7o+3bWjpZhsY0ddTx9C6vicdFi8dBYQncyBu3cdC41q53pJJUtEBlERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAFgoiA8JPbP4f2uK9Y/YHD7PBEQH2iIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgP/Z</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
-  <rd:ReportID>5421c95a-1486-4218-80a1-e4376fd9fe69</rd:ReportID>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>5421c95a-1486-4218-80a1-e4376fd9fe69</rd:ReportID>
 </Report>

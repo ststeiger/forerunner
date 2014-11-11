@@ -51,7 +51,7 @@ namespace Forerunner.Thumbnail
                 }
         
             }
-            catch (Exception e)
+            catch (Exception /*e*/)
             {
                 //Logger.Trace(LogType.Error, "_GetScreenShot failed");
                 //ExceptionLogGenerator.LogException(e);

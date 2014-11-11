@@ -103,13 +103,13 @@ $(function () {
             if (extensionName === "NULL") return;
             var me = this;
             if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
-            
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
-                    url: url,
-                    dataType: "json",
-                    async: true
-                })
+                url: url,
+                dataType: "json",
+                async: true
+            })
                 .done(
                     function (settings) {
                         me.extensionSettings[extensionName] = settings;

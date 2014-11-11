@@ -262,7 +262,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 ClientLicense.Validate();
             }
-            catch (TypeInitializationException e)
+            catch (TypeInitializationException /*e*/)
             {
                 Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");
                 this.LicenseCheckException = LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "License Initialization failed");

@@ -59,8 +59,8 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>CS-Asset Management Dashboard.rdl</Name>
-      <FullPath>CS-Asset Management Dashboard.rdl</FullPath>
+      <Name>Copy of N0359-061-REP-0236.rdl</Name>
+      <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Customer Data.rdl</Name>
@@ -121,10 +121,6 @@
     <ProjectItem>
       <Name>images and subreports.rdl</Name>
       <FullPath>images and subreports.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Incident Health Dashboard Cube.rdl</Name>
-      <FullPath>Incident Health Dashboard Cube.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Justify.rdl</Name>
@@ -192,6 +188,10 @@
       <FullPath>ProductSales.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Report1.rdl</Name>
+      <FullPath>Report1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Richtextbox.rdl</Name>
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
@@ -252,6 +252,10 @@
       <FullPath>ThreeMaps.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>TrainingComplianceReport.rdl</Name>
+      <FullPath>TrainingComplianceReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
@@ -272,8 +276,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Customer Data - Empty.rdl</Name>
-      <FullPath>Customer Data - Empty.rdl</FullPath>
+      <Name>Learner Report.rdl</Name>
+      <FullPath>Learner Report.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -283,7 +287,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

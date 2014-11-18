@@ -515,6 +515,22 @@ namespace Forerunner.SSRS.Viewer
 
             try
             {
+                // The Forerunner.ParamterJSONFile flag is used to debug Reort Parameter widget validation bugs.
+                // First get a network response string from the api/ParameterJson end point from the customer and
+                // copy it into the C:\Test\ParamterJSON.txt file. Note that after you create the file, you will
+                // need to add a member like this:
+                //
+                //   "Debug": true, 
+                //
+                // See the code in the ReportViewer.js file to see how this Debug flag is used.
+                //
+                String ParamterJSONFile = ConfigurationManager.AppSettings["Forerunner.ParamterJSONFile"];
+                if (ParamterJSONFile.Length != 0 && File.Exists(ParamterJSONFile))
+                {
+                    System.IO.StreamReader streamReader = new System.IO.StreamReader(ParamterJSONFile);
+                    return streamReader.ReadToEnd();
+                }
+
                 rs.Credentials = GetCredentials();                
                 if (SessionID != "" && SessionID != null)
                 {

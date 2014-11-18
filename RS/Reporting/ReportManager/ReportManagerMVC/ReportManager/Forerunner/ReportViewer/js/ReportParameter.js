@@ -172,6 +172,10 @@ $(function () {
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
+            if (data.Debug) {
+                me._debug = data.Debug;
+            }
+
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
@@ -200,8 +204,9 @@ $(function () {
                 me._useDefaultCheck(savedParam);
             }
 
-            if (me._reportDesignError !== null)
+            if (me._reportDesignError !== null) {
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
+            }
 
             me.$form.validate({
                 ignoreTitle: true,
@@ -341,7 +346,11 @@ $(function () {
 
             var paramList = me.getParamsList();
             if (paramList) {
-                me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
+                if (me._debug) {
+                    me.options.$reportViewer.removeLoadingIndicator();
+                } else {
+                    me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
+                }
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }

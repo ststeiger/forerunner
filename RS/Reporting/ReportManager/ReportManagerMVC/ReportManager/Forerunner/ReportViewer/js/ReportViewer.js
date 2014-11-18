@@ -1884,6 +1884,12 @@ $(function () {
                 dataType: "json",
                 async: false,
                 done: function (data) {
+                    if (data.Debug) {
+                        // Fix up the ReportPath and SessionID if this data is from customer data
+                        data.ReportPath = me.reportPath;
+                        data.SessionID = me.getSessionID();
+                    }
+
                     if (typeof success === "function") {
                         success.call(me, data, pageNum);
                     }

@@ -552,6 +552,7 @@ $(function () {
         // returns `false`.
         loadUrl: function (fragment) {
             fragment = this.fragment = this.getFragment(fragment);
+            fragment = fragment.replace("%2f%2F", "/%2F");
             return any(this.handlers, function (handler) {
                 if (handler.route.test(fragment)) {
                     handler.callback(fragment);
@@ -5311,7 +5312,7 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("showAllTools");
@@ -5379,7 +5380,7 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("hideAllTools");
@@ -13268,11 +13269,12 @@ $(function () {
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             var valids = param.ValidValues;
+            var i;
 
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -13283,7 +13285,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -13516,10 +13518,13 @@ $(function () {
             }
             $dropDownContainer.append($table);
 
-            if (predefinedValue) {
+            //If default value is not valid then dont set it as value
+            if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
             }
+            else
+                me._loadedForDefault = false;
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
@@ -13829,7 +13834,7 @@ $(function () {
         },
         _isNullChecked: function (param) {
             var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
-            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+            return $cb.length !== 0 && $cb.prop("checked");
         },
         _isParamNullable: function (param) {
             var me = this;
@@ -13899,6 +13904,20 @@ $(function () {
             }
             return false;
         },
+        _containsSome: function (array, validValues) {
+            var i = array.length;
+            var j;
+
+            while (i--) {
+                j = validValues.length;
+                while (j--) {
+                    if (array[i] === validValues[j].Value)
+                        return true;
+                }
+            }
+            return false;
+        },
+
         _hasDefaultValue: function (param) {
             var me = this;
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
@@ -13919,7 +13938,7 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.on("change", function () {
-                        me._refreshParameters(null, true, param.Name);
+                        me._refreshParameters(null, true, dependence);
                     });
                 });
             }
@@ -13996,14 +14015,24 @@ $(function () {
         _removeChildParam: function (paramList, parentName) {
             var me = this, result = null, pattern = null;
 
-            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
-                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+            var children = me._dependencyList[parentName];
 
-                result = paramList.replace(pattern, "");
+            if (children) {
+                var len = children.length;
+                //build a dynamic regular expression to replace the child parameters with empty in cascading case.
+                for (var i = 0; i < len; i++) {
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"])
 
-                if (me._dependencyList[children[i]]) {
-                    result = me._removeChildParam(result, children[i]);
+                    result = paramList.replace(pattern, "");
+
+                    if (result.slice(-3) === ",]}") {
+                        result = result.substring(0, result.length - 3) + "]}";
+                    }
+
+
+                    if (me._dependencyList[children[i]]) {
+                        result = me._removeChildParam(result, children[i]);
+                    }
                 }
             }
             return result;
@@ -17073,10 +17102,10 @@ $(function () {
             paramList: null
         },
         _extensionSettings: null,
-        _createDropDownForValidValues: function (validValues) {
+        _createDropDownForValidValues : function(validValues) {
             return forerunner.helper.createDropDownForValidValues(validValues);
         },
-        _createRadioButtonsForValidValues: function (validValues, index) {
+        _createRadioButtonsForValidValues : function(validValues, index) {
             return forerunner.helper.createRadioButtonsForValidValues(validValues, index);
         },
         _createDiv: function (listOfClasses) {
@@ -17098,7 +17127,7 @@ $(function () {
         },
         _subscriptionData: null,
         _canEditComment: false,
-        _setSubscriptionOrSetDefaults: function () {
+        _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
@@ -17116,10 +17145,10 @@ $(function () {
                     var extensionSettings = subscriptionInfo.ExtensionSettings;
                     for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.val(extensionSettings.ParameterValues[i].Value);
+                            me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.val(extensionSettings.ParameterValues[i].Value);
+                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
                         if (extensionSettings.ParameterValues[i].Name === "Comment") {
                             me.$comment.val(extensionSettings.ParameterValues[i].Value);
@@ -17144,21 +17173,21 @@ $(function () {
                     }
                 } else {
                     var userName = forerunner.ajax.getUserName();
-                    me.$to.val(userName);
+                    me.$to.val( userName );
                     me.$desc.val(locData.subscription.description.format(userName));
                     me.$subject.val(locData.subscription.subject);
                 }
             });
 
             $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2[0]);
+                me._initSharedSchedule(data2);
                 if (subscriptionID) {
                     var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                     me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                 }
             });
         },
-        _getSubscriptionInfo: function () {
+        _getSubscriptionInfo: function() {
             var me = this;
             var i;
             if (!me._subscriptionData) {
@@ -17181,7 +17210,7 @@ $(function () {
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(":checked") ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(":checked") ? "True" : "False" });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value": me.$renderFormat.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "RenderFormat", "Value":  me.$renderFormat.val() });
             } else {
                 me._subscriptionData.Report = me.options.reportPath;
                 me._subscriptionData.Description = me.$desc.val();
@@ -17223,13 +17252,13 @@ $(function () {
                             me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value[j] });
                         }
                     } else {
-                        me._subscriptionData.Parameters.push({ "Name": param.Parameter, "Value": param.Value });
+                        me._subscriptionData.Parameters.push({"Name": param.Parameter, "Value": param.Value});
                     }
                 }
             }
             return me._subscriptionData;
         },
-        _initRenderFormat: function (data) {
+        _initRenderFormat : function (data) {
             var me = this;
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
@@ -17238,27 +17267,17 @@ $(function () {
                 }
             }
 
-            if (!me.$renderFormat) {
-                for (var i = 0; i < data[0].length; i++) {
-                    var setting = data[0][i];
-                    if (setting.Name === "RenderFormat") {
-                        me.$renderFormat = me._createDropDownForValidValues(setting.ValidValues);
-                    }
-                }
-            }
-
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
             me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
-
         },
         _initExtensionOptions: function () {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getExtensionSettings", "Report Server Email");
         },
         _sharedSchedule: {},
-        _initSharedSchedule: function (data) {
+        _initSharedSchedule:function(data) {
             var me = this;
             var validValues = [];
             var i;
@@ -17281,7 +17300,7 @@ $(function () {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSchedules");
         },
-        _initSections: function () {
+        _initSections : function () {
             var me = this;
             me._setSubscriptionOrSetDefaults();
         },
@@ -17336,7 +17355,7 @@ $(function () {
             }
             return $cb;
         },
-        _init: function () {
+        _init : function () {
         },
         _subscriptionID: null,
         /**
@@ -17346,7 +17365,7 @@ $(function () {
          *
          * @return {Object} The xml http requeset for current report's subscription loading
          */
-        getSubscriptionList: function () {
+        getSubscriptionList : function() {
             var me = this;
             return me.options.subscriptionModel.subscriptionModel("getSubscriptionList", me.options.reportPath);
         },
@@ -17411,8 +17430,8 @@ $(function () {
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
-
-
+            
+            
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
                 me.$deleteButton.val(locData.subscription.deleteSubscription);
@@ -17450,10 +17469,10 @@ $(function () {
             });
         },
 
-        _submit: function () {
+        _submit : function () {
             var me = this;
             var subscriptionInfo = me._getSubscriptionInfo();
-
+            
             me.options.subscriptionModel.subscriptionModel(
                 me._subscriptionID ? "updateSubscription" : "createSubscription",
                 subscriptionInfo,
@@ -17492,7 +17511,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);          
         },
         /**
          * Removes the email subscription functionality completely. This will return the element back to its pre-init state.
@@ -17751,7 +17770,7 @@ $(function () {
         },
         getSchedules: function () {
             var me = this;
-            if (me.schedules) return [me.schedules];
+            if (me.schedules) return me.schedules;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
@@ -17766,11 +17785,11 @@ $(function () {
                 function () {
                     console.log("ListSchedules call failed.");
                 });
-            return me.schedules ? [me.schedules] : jqxhr;
+            return me.schedules ? me.schedules : jqxhr;
         },
         getDeliveryExtensions: function () {
             var me = this;
-            if (me.extensionList) return [me.extensionList];
+            //if (me.extensionList) return [me.extensionList];
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
             return forerunner.ajax.ajax({
                 url: url,
@@ -17779,7 +17798,7 @@ $(function () {
             })
             .done(
                 function (data) {
-                    me.extensionList = data;
+                    me.extensionList = data; 
                 })
             .fail(function () {
                 console.log("ListDeliveryExtensions call failed.");
@@ -17790,14 +17809,14 @@ $(function () {
         getExtensionSettings: function (extensionName) {
             if (extensionName === "NULL") return;
             var me = this;
-            if (me.extensionSettings[extensionName]) return [me.extensionSettings[extensionName]];
-
+            if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
+            
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: true
-            })
+                    url: url,
+                    dataType: "json",
+                    async: true
+                })
                 .done(
                     function (settings) {
                         me.extensionSettings[extensionName] = settings;
@@ -17810,7 +17829,7 @@ $(function () {
                     function () {
                         me._extensionSettingsCount++;
                     });
-            return me.extensionSettings[extensionName] ? [me.extensionSettings[extensionName]] : jqxhr;
+            return me.extensionSettings[extensionName] ? me.extensionSettings[extensionName] : jqxhr;
         },
         getSubscription: function (subscriptionID) {
             var me = this;
@@ -17868,7 +17887,7 @@ $(function () {
                         if (exception.Exception) {
                             data = exception;
                         }
-                    } catch (e) {
+                    } catch(e) {
                         isException = false;
                     }
                     if (!isException && success && typeof (success) === "function") {

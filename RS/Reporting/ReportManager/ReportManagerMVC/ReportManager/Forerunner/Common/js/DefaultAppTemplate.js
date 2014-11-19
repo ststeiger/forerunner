@@ -658,7 +658,7 @@ $(function () {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("showAllTools");
@@ -726,7 +726,7 @@ $(function () {
                 }
                 
                 topdiv.addClass(className, delay);
-                for (key in me.$mainheadersection.data()) {
+                for (var key in me.$mainheadersection.data()) {
                     var widget = me.$mainheadersection.data()[key];
                     if (widget.widgetName) {
                         me.$mainheadersection[widget.widgetName]("hideAllTools");

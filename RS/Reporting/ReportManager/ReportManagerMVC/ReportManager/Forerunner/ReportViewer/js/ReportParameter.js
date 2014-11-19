@@ -1561,11 +1561,12 @@ $(function () {
         _setTreeDefaultValue: function (param, predefinedValue, $input, $hidden) {
             var me = this;
             var valids = param.ValidValues;
+            var i;
 
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -1576,7 +1577,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -1809,10 +1810,13 @@ $(function () {
             }
             $dropDownContainer.append($table);
 
-            if (predefinedValue) {
+            //If default value is not valid then dont set it as value
+            if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
             }
+            else
+                me._loadedForDefault = false;
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
@@ -2122,7 +2126,7 @@ $(function () {
         },
         _isNullChecked: function (param) {
             var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
-            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+            return $cb.length !== 0 && $cb.prop("checked");
         },
         _isParamNullable: function (param) {
             var me = this;
@@ -2192,6 +2196,20 @@ $(function () {
             }
             return false;
         },
+        _containsSome: function (array, validValues) {
+            var i = array.length;
+            var j;
+
+            while (i--) {
+                j = validValues.length;
+                while (j--) {
+                    if (array[i] === validValues[j].Value)
+                        return true;
+                }
+            }
+            return false;
+        },
+
         _hasDefaultValue: function (param) {
             var me = this;
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
@@ -2212,7 +2230,7 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.on("change", function () {
-                        me._refreshParameters(null, true, param.Name);
+                        me._refreshParameters(null, true, dependence);
                     });
                 });
             }
@@ -2289,14 +2307,24 @@ $(function () {
         _removeChildParam: function (paramList, parentName) {
             var me = this, result = null, pattern = null;
 
-            //build a dynamic regular expression to replace the child parameters with empty in cascading case.
-            for (var i = 0, children = me._dependencyList[parentName], len = children.length; i < len; i++) {
-                pattern = new RegExp('\{"Parameter":"' + children[i] + '.+?\},?', ["g"])
+            var children = me._dependencyList[parentName];
 
-                result = paramList.replace(pattern, "");
+            if (children) {
+                var len = children.length;
+                //build a dynamic regular expression to replace the child parameters with empty in cascading case.
+                for (var i = 0; i < len; i++) {
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"])
 
-                if (me._dependencyList[children[i]]) {
-                    result = me._removeChildParam(result, children[i]);
+                    result = paramList.replace(pattern, "");
+
+                    if (result.slice(-3) === ",]}") {
+                        result = result.substring(0, result.length - 3) + "]}";
+                    }
+
+
+                    if (me._dependencyList[children[i]]) {
+                        result = me._removeChildParam(result, children[i]);
+                    }
                 }
             }
             return result;

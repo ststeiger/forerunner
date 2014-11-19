@@ -12247,7 +12247,7 @@ $(function () {
             //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
-                if (!$element.find(".fr-param").hasClass("fr-param-required")) {
+                if (param.QueryParameter === false) {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
                 }
 
@@ -12336,13 +12336,8 @@ $(function () {
 
             $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
 
-            // Having the QueryParameter here caused a bug in the redi-learning installation.
-            if (/*param.QueryParameter || */(param.Nullable === false && param.AllowBlank === false)) {
+            if (param.AllowBlank === false) {
                 me._addRequiredPrompt(param, $control);
-            } else if (param.MultiValue) {
-                if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
-                    me._addRequiredPrompt(param, $control);
-                }
             }
         },
         _addRequiredPrompt: function (param, $control) {

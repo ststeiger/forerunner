@@ -2914,19 +2914,28 @@ $(function () {
             }
             me.togglePageNum = newPageNum;
 
+            var dsCredentials = me.getDataSourceCredential();
+            var reportJSONData = {
+                ReportPath: encodeURIComponent(me.reportPath),
+                SessionID: me.sessionID,
+                PageNumber: newPageNum,
+                ParameterList: paramList,
+                DSCredentials: dsCredentials,
+                instance: me.options.rsInstance
+            };
+
+            // Allow a handler to change the post data before we load the page
+            me._trigger(events.preLoadPage, null, {
+                viewer: me,
+                reportJSONData: reportJSONData
+            });
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
-                    data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
-                        SessionID: me.sessionID,
-                        PageNumber: newPageNum,
-                        ParameterList: paramList,
-                        DSCredentials: me.getDataSourceCredential(),
-                        instance: me.options.rsInstance,
-                    }, 
+                    data: reportJSONData, 
                     async: true,
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);

@@ -471,6 +471,9 @@ namespace ForerunnerLicense
         }
         internal string Serialize(bool Encrypt = true,bool backcompat = false)
         {
+            if (numberOfCores == 0)
+                numberOfCores = GetNumberOfCores();
+
             if (Encrypt)
             {
                 if (backcompat)

@@ -131,6 +131,10 @@
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Learner Report.rdl</Name>
+      <FullPath>Learner Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Line Chart 1.rdl</Name>
       <FullPath>Line Chart 1.rdl</FullPath>
     </ProjectItem>
@@ -275,10 +279,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Learner Report.rdl</Name>
-      <FullPath>Learner Report.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -287,7 +287,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

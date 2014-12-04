@@ -883,6 +883,11 @@ FROM            Categories</CommandText>
   <ReportParameters>
     <ReportParameter Name="Category">
       <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>Product Category</Prompt>
       <ValidValues>
         <DataSetReference>

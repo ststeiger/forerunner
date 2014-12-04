@@ -1,6 +1,37 @@
 ﻿
 [
+{
+"ID": "16",
+"Link": "/home/press?Article=16",
+"Title":"Forerunner Software’s Unique Mobilizer 3.0 Unveiled in Live Demonstrations at PASS Summit 2014",
+"Description":"PASS Summit 2014 attendees are among the first to witness the in person unveiling of Forerunner Software’s next generation, responsive Mobilizer 3.0, designed to extend Microsoft SQL Server Reporting Services (SSRS) across any device or browser.",
+"Release": "Redmond, WA, November 6, 2014",
+"Content": "Over 2,000 companies from around the world are currently attending PASS, the world’s largest conference for Microsoft SQL Server and BI professionals, in order to network and view new technology, as well as to receive top level training and share technical tips. As an exhibitor, Forerunner Software is showcasing its product offerings in booth #315 in the PASS Summit Exhibit Hall at the Washington State Convention Center in Seattle, WA, this week through November 7th.
 
+“It’s critical to us that we engage with and support this organization as PASS is truly the backbone of the Microsoft SQL Server community. We’re dedicated to attending key events like PASS Summit where we can gather valuable feedback from both our current and prospective customers and learn about other new technologies, like ours, which are impactful to them. This, in turn, helps us to better understand what we can do to succeed together in leveraging existing investments in SSRS for true mobile reporting,“ said Jason Carlson, Forerunner Software Founder.
+
+About Forerunner Software – Forerunner Software solutions power modern application environments by providing cost effective, robust, multiplatform data integration and data presentation capabilities for corporations and ISV’s. Forerunner Software is run by the team that originally brought you Microsoft SQL Server Reporting Services — no one understands the technology and the customers better.
+
+For more information about Forerunner Software's unique Mobilizer, please visit http://www.forerunnersw.com.
+
+For the latest updates from PASS Summit 2014, please visit the conference website at http://www.sqlpass.org/summit/2014/Home.aspx."
+  },
+  {
+"ID": "17",
+"Link": "/home/press?Article=17",
+"Title":"Leading Mobile BI Solutions Provider Forerunner Software Gears Up for the Premier Microsoft SQL Server Conference Focused on Empowering the Global SQL Server Communit",
+"Description":"Forerunner Software is taking its message of cost effective mobile BI for the masses to the Professional Association for SQL Server (PASS), when the world’s largest conference of SQL Server and BI professionals returns to the Washington State Convention & Trade Center in Seattle, WA, November 4-7, 2014.",
+"Release": "Redmond, WA, October 18, 2014",
+"Content": "The 14th anniversary conference of PASS brings together deep technical sessions, access to Microsoft’s SQL Server developers and top community leaders, and rich networking opportunities. PASS helps attendees cut IT costs in a difficult economy, leverage current SQL Server investments and increase ROI using Microsoft’s SQL Server.
+
+“PASS Summit is a great place to learn how to maximize your investment in SQL Server. For instance, you already have a mobile BI solution in place, you just don’t know it yet,” states Forerunner Founder Jason Carlson, adding that “Mobilizer supports all of SSRS functionality for viewing reports so you can design your reports any way you want and all of the features of Mobilizer work across all devices and browsers. What we’ve focused on from the beginning is completely optimizing the end user experience of SSRS in a very intuitive way with a user friendly look and feel.”
+
+Mobilizer is the brainchild of Jason Carlson, who is also the original architect of SSRS. Jason’s 15 years leading Microsoft’s SQL BI platform and services inspired him to create Forerunner Software in order to bring mobile BI to the masses and allow organizations to affordably transform with mobile BI that has no per user charges (Mobilizer is licensed the same as SQL Server - per core). Microsoft is also collaborating with Forerunner Software to continue to enhance the user experience of SQL Server Reporting Services. Mobilizer significantly expands the population of mobile BI users to include a more mainstream audience: you.
+
+“I am very excited to be attending the 2014 PASS conference,” states Jon Totton, Director of Development for Forerunner Software, adding that, “Mobilizer has come a long way this past year. I will be giving demonstrations of the key Mobilizer features that enable the viewing, exploring and management of SSRS reports across all browsers and devices in our newest version 3 release. I am really looking forward to this opportunity and can’t wait to show off the best version of Mobilizer yet.”
+
+About Forerunner Software - Forerunner Software solutions are responsive mobile applications designed to extend Microsoft SQL Server access on any mobile or tablet device and from any browser. Forerunner Software provides the next generation, mobile first, enterprise reporting and embedded Business Intelligence solutions. Forerunner Software solutions power modern application environments by providing robust, multiplatform data integration and data presentation capabilities for corporations and ISV’s. Forerunner Software is run by the team that originally brought you Microsoft SQL Server Reporting Services — no one understands the technology and the customers better. Visit www.forerunnersw.com and download your free 30 day trial version today."
+  },
 {
 "ID": "14",
 "Link": "/home/press?Article=14",

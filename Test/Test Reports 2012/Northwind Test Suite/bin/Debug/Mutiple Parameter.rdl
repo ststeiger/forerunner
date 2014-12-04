@@ -453,10 +453,9 @@ ORDER BY CategoryID</CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
-          <Value>ProductName</Value>
+          <Value>Chai</Value>
         </Values>
       </DefaultValue>
       <Prompt>ProductName</Prompt>
@@ -472,10 +471,20 @@ ORDER BY CategoryID</CommandText>
     <ReportParameter Name="IsCheap">
       <DataType>Boolean</DataType>
       <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
+        </Values>
+      </DefaultValue>
       <Prompt>Is Cheap</Prompt>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1/1/2001 12:00:00 AM</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>ProductionDate</Prompt>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
@@ -483,7 +492,7 @@ ORDER BY CategoryID</CommandText>
       <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
-          <Value>*</Value>
+          <Value>1</Value>
         </Values>
       </DefaultValue>
       <Prompt>IntegerTest</Prompt>
@@ -491,6 +500,11 @@ ORDER BY CategoryID</CommandText>
     <ReportParameter Name="MultipleValues">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>MultipleValues</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -521,21 +535,15 @@ ORDER BY CategoryID</CommandText>
     <ReportParameter Name="FloatTest">
       <DataType>String</DataType>
       <DefaultValue>
-        <DataSetReference>
-          <DataSetName>DataSet1</DataSetName>
-          <ValueField>ProductName</ValueField>
-        </DataSetReference>
+        <Values>
+          <Value>1.1</Value>
+        </Values>
       </DefaultValue>
       <Prompt>FloatTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="ReportParameter1">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />
-        </Values>
-      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
   </ReportParameters>

@@ -2515,6 +2515,12 @@ $(function () {
                 dataType: "json",
                 async: false,
                 done: function (data) {
+                    if (data.Debug) {
+                        // Fix up the ReportPath and SessionID if this data is from customer data
+                        data.ReportPath = me.reportPath;
+                        data.SessionID = me.getSessionID();
+                    }
+
                     if (typeof success === "function") {
                         success.call(me, data, pageNum);
                     }
@@ -2908,19 +2914,28 @@ $(function () {
             }
             me.togglePageNum = newPageNum;
 
+            var dsCredentials = me.getDataSourceCredential();
+            var reportJSONData = {
+                ReportPath: encodeURIComponent(me.reportPath),
+                SessionID: me.sessionID,
+                PageNumber: newPageNum,
+                ParameterList: paramList,
+                DSCredentials: dsCredentials,
+                instance: me.options.rsInstance
+            };
+
+            // Allow a handler to change the post data before we load the page
+            me._trigger(events.preLoadPage, null, {
+                viewer: me,
+                reportJSONData: reportJSONData
+            });
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
-                    data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
-                        SessionID: me.sessionID,
-                        PageNumber: newPageNum,
-                        ParameterList: paramList,
-                        DSCredentials: me.getDataSourceCredential(),
-                        instance: me.options.rsInstance,
-                    }, 
+                    data: reportJSONData, 
                     async: true,
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
@@ -11880,6 +11895,10 @@ $(function () {
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea, savedParam, paramMetadata) {
             var me = this;
+            if (data.Debug) {
+                me._debug = data.Debug;
+            }
+
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
@@ -11908,8 +11927,9 @@ $(function () {
                 me._useDefaultCheck(savedParam);
             }
 
-            if (me._reportDesignError !== null)
+            if (me._reportDesignError !== null) {
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
+            }
 
             me.$form.validate({
                 ignoreTitle: true,
@@ -12049,7 +12069,11 @@ $(function () {
 
             var paramList = me.getParamsList();
             if (paramList) {
-                me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
+                if (me._debug) {
+                    me.options.$reportViewer.removeLoadingIndicator();
+                } else {
+                    me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
+                }
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }
@@ -12254,7 +12278,7 @@ $(function () {
             //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
-                if (!$element.find(".fr-param").hasClass("fr-param-required")) {
+                if (param.QueryParameter === false) {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
                 }
 
@@ -12342,12 +12366,8 @@ $(function () {
 
             $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
 
-            if (param.QueryParameter || (param.Nullable === false && param.AllowBlank === false)) {
+            if (param.AllowBlank === false) {
                 me._addRequiredPrompt(param, $control);
-            } else if (param.MultiValue) {
-                if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
-                    me._addRequiredPrompt(param, $control);
-                }
             }
         },
         _addRequiredPrompt: function (param, $control) {
@@ -13366,7 +13386,7 @@ $(function () {
             $control.attr("nullable", param.Nullable);
             $control.addClass("fr-param-tree-hidden-input");
 
-            if (param.QueryParameter || (param.Nullable === false && param.AllowBlank === false)) {
+            if (param.AllowBlank === false) {
                 $control.attr("required");
                 $control.addClass("fr-param-required");
             }

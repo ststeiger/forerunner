@@ -525,7 +525,7 @@ namespace Forerunner.SSRS.Viewer
                 // See the code in the ReportViewer.js file to see how this Debug flag is used.
                 //
                 String ParamterJSONFile = ConfigurationManager.AppSettings["Forerunner.ParamterJSONFile"];
-                if (ParamterJSONFile.Length != 0 && File.Exists(ParamterJSONFile))
+                if (ParamterJSONFile != null && ParamterJSONFile.Length != 0 && File.Exists(ParamterJSONFile))
                 {
                     System.IO.StreamReader streamReader = new System.IO.StreamReader(ParamterJSONFile);
                     return streamReader.ReadToEnd();

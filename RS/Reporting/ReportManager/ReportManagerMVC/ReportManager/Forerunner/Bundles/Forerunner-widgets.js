@@ -10127,7 +10127,10 @@ $(function () {
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
                     me._stopDefaultEvent(e);
-                    location.href = e.data.HyperLink;
+                    if (forerunner.config.getCustomSettingsValue("URLActionNewTab", "off") === "on")
+                        window.open(e.data.HyperLink, "_blank");
+                    else
+                        location.href = e.data.HyperLink;
                 });
 
             }

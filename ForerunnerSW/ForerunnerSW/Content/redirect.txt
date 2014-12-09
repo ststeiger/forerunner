@@ -26,3 +26,9 @@
 /video-ed4,/home/video?utm_source=DEV&utm_medium=email&utm_campaign=V3Rel
 /home-ed4,/home/index?utm_source=DEV2&utm_medium=email&utm_campaign=V3Rel
 /trial-ed4,/home/register?utm_source=DEV2&utm_medium=email&utm_campaign=V3Rel
+/video-np1,/home/video?utm_source=DBA1&utm_medium=email&utm_campaign=Netp
+/home-np1,/home/index?utm_source=DBA1&utm_medium=email&utm_campaign=Netp
+/trial-np1,/home/register?utm_source=DBA1&utm_medium=email&utm_campaign=Netp
+/video-np2,/home/video?utm_source=BI1&utm_medium=email&utm_campaign=Netp
+/home-np2,/home/index?utm_source=BI1&utm_medium=email&utm_campaign=Netp
+/trial-np2,/home/register?utm_source=BI1&utm_medium=email&utm_campaign=Netp

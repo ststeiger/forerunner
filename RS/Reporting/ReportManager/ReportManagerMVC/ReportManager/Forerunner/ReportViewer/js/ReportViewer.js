@@ -1843,7 +1843,7 @@ $(function () {
             if (submitForm === undefined)
                 submitForm = true;
 
-            if (savedParams) {
+            if (savedParams && savedParams.ParamsList && savedParams.ParamsList.length > 0) {
                 //for the parameter report which has saved parameter, we need to get a original parameter copy
                 me.paramMetadata = null;
                 me._loadDefaultParameters(pageNum, me._getParameterMetadata);

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2474,7 +2474,7 @@ $(function () {
             if (submitForm === undefined)
                 submitForm = true;
 
-            if (savedParams) {
+            if (savedParams && savedParams.ParamsList && savedParams.ParamsList.length > 0) {
                 //for the parameter report which has saved parameter, we need to get a original parameter copy
                 me.paramMetadata = null;
                 me._loadDefaultParameters(pageNum, me._getParameterMetadata);
@@ -16308,7 +16308,7 @@ $(function () {
             //clear prior route link
             $linksection.html("");
 
-            var path = data.args[0];
+            var path = data.args[0] ? data.args[0].split("?")[0] : null;
             me._getLink(path, $linksection, 0, data.name);
             $linksection.show();
 

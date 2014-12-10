@@ -15,5 +15,6 @@
 	"ImageAreaHighlighBorderWidth": "2",
 	"HideDisabledTool":"on",
 	"WatermarkPostText":"",
-	"DefaultSubscriptionFormat":"MHTML"
+	"DefaultSubscriptionFormat":"MHTML",
+	"URLActionNewTab": "off"
 }

@@ -7751,6 +7751,7 @@ $.extend(Datepicker.prototype, {
 		    inst.currentYear = inst.drawYear = inst.selectedYear = date.getFullYear();
 		    if (inst.input) {
 		        inst.input.val(this._formatDate(inst, inst.selectedDay, inst.selectedMonth, inst.selectedYear));
+		        inst.input.trigger("change"); // fire the change event
 		    }
 		    this._updateAlternate(inst);
 		}

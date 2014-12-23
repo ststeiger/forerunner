@@ -4,8 +4,8 @@
 .fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
 .fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); cursor: pointer; }
 .fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); cursor: pointer; }
-.fr-email-form { padding-right: 15px;}
-.fr-email-table table, td, tr{ padding: 5px;}
+.fr-email-form { padding-right: 15px; }
+.fr-email-table table, .fr-email-table td, .fr-email-table tr{ padding: 5px;}
 .fr-email-description { width: 100%; border: 0px; float: left; }
 .fr-email-to { width: 100%; border: 0px; float: left; }
 .fr-email-to:disabled {background: transparent; color: grey;}

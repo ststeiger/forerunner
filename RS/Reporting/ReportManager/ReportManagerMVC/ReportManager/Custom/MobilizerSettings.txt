@@ -16,5 +16,6 @@
 	"HideDisabledTool":"on",
 	"WatermarkPostText":"",
 	"DefaultSubscriptionFormat":"MHTML",
-	"URLActionNewTab": "off"
+	"URLActionNewTab": "off",
+	"Debug":"off"
 }

@@ -2826,7 +2826,6 @@ $(function () {
         loadReportWithNewParameters: function (paramList, pageNum, useDefaultValue) {
             var me = this;
 
-
             if (me.isDebug) {
                 console.log("loadReportWithNewParameters", {
                     paramList: paramList

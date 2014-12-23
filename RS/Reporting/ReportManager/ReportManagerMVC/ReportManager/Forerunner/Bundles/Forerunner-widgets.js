@@ -13517,15 +13517,17 @@ $(function () {
 
             var keys = "";
             var values = "";
+            var $selectAllCheckbox = null;
+            var allItemsSelected = true;
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var key;
                 var value;
-                if (i === 0) {
-                    var SelectAll = param.ValidValues[param.ValidValues.length - 1];
-                    key = SelectAll.Key;
-                    value = SelectAll.Value;
-                }
-                else {
+                var isSelectAllItem = i === 0;
+                if (isSelectAllItem) {
+                    var valuePair = param.ValidValues[param.ValidValues.length - 1];
+                    key = valuePair.Key;
+                    value = valuePair.Value;
+                } else {
                     key = param.ValidValues[i - 1].Key;
                     value = param.ValidValues[i - 1].Value;
                 }
@@ -13537,10 +13539,16 @@ $(function () {
                 var $checkbox = me._createInput(param, "checkbox", false, ["fr-param-dropdown-checkbox", "fr-paramname-" + param.Name + "-dropdown-cb"]);
                 $checkbox.attr("value", value);
 
+                if (isSelectAllItem) {
+                    $selectAllCheckbox = $checkbox;
+                }
+
                 if (predefinedValue && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
                     keys += key + ",";
                     values += value + ",";
+                } else if (!isSelectAllItem) {
+                    allItemsSelected = false;
                 }
 
                 $checkbox.on("click", function () {
@@ -13585,6 +13593,9 @@ $(function () {
                 $row.append($col);
                 $table.append($row);
             }
+
+            $selectAllCheckbox.prop("checked", allItemsSelected);
+
             $dropDownContainer.append($table);
 
             //If default value is not valid then dont set it as value

@@ -2458,7 +2458,8 @@ $(function () {
 
                 if (me.isDebug) {
                     console.log("WritePage", {                      
-                            setPage: newPageNum
+                        setPage: newPageNum,
+                        pages:me.pages
                     });
                 }
                 me._setPage(newPageNum);
@@ -2474,6 +2475,13 @@ $(function () {
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
+
+            if (me.isDebug) {
+                console.log("RenderPage", {                  
+                    page: me.pages[pageNum]
+                });
+            }
+
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
@@ -2496,6 +2504,12 @@ $(function () {
             }
 
             me.pages[pageNum].isRendered = true;
+
+            if (me.isDebug) {
+                console.log("RenderPagePost", {
+                    page: me.pages[pageNum]
+                });
+            }
         },
         _renderPageError: function ($container, errorData) {
             var me = this;

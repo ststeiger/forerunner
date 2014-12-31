@@ -37,7 +37,7 @@ namespace RegisterWebService.Controllers
         {
             new TaskWorker().SaveTask(taskType, Data);
 
-            return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
+            return WebSerivceHelper.GetResponseFromString("<h1>Saved</h1>", "text/xml", this.Request.CreateResponse());
         }
          [HttpGet]
         public HttpResponseMessage Info(string Key)

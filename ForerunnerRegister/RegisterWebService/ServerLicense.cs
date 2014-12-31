@@ -291,15 +291,29 @@ namespace ForerunnerLicense
 
             DateTime curExpiration = licenseData.PurchaseDate + TimeSpan.FromDays(licenseData.LicenseDuration);
 
-            string Info = "<LicenseResponse>" +
-                            "<Status>{0}</Status>" +
-                            "<StatusCode>{1}</StatusCode>" +
-                            "<SKU>{2}</SKU>" +
-                            "<Expiration>{3}</Expiration>" +
-                            "<IsSubscription>{4}</IsSubscription>" +
-                            "<Quantity>{5}</Quantity>" +
-                          "</LicenseResponse>";
-            return String.Format(Info, "Success", "200", licenseData.SKU, curExpiration.ToLocalTime().ToShortDateString(), licenseData.IsSubscription, licenseData.Quantity);
+            string Info =
+                "<LicenseResponse>" +
+                "  <Status>{0}</Status>" +
+                "  <StatusCode>{1}</StatusCode>" +
+                "  <SKU>{2}</SKU>" +
+                "  <Expiration>{3}</Expiration>" +
+                "  <IsSubscription>{4}</IsSubscription>" +
+                "  <Quantity>{5}</Quantity>" +
+                "  <MachineData>" +
+                "    <HostName>{6}</HostName>" +
+                "    <NumberOfCores>{7}</NumberOfCores>" +
+                "  </MachineData>" +
+                "</LicenseResponse>";
+
+            return String.Format(Info,
+                                 "Success",
+                                 "200",
+                                 licenseData.SKU,
+                                 curExpiration.ToLocalTime().ToShortDateString(),
+                                 licenseData.IsSubscription,
+                                 licenseData.Quantity,
+                                 licenseData.MachineData.hostName,
+                                 licenseData.MachineData.numberOfCores);
         }
 
         private string ProcessActivate()

@@ -297,11 +297,12 @@ namespace ForerunnerLicense
                 "  <StatusCode>{1}</StatusCode>" +
                 "  <SKU>{2}</SKU>" +
                 "  <Expiration>{3}</Expiration>" +
-                "  <IsSubscription>{4}</IsSubscription>" +
-                "  <Quantity>{5}</Quantity>" +
+                "  <LastActivation>{4}</LastActivation>" +
+                "  <IsSubscription>{5}</IsSubscription>" +
+                "  <Quantity>{6}</Quantity>" +
                 "  <MachineData>" +
-                "    <HostName>{6}</HostName>" +
-                "    <NumberOfCores>{7}</NumberOfCores>" +
+                "    <HostName>{7}</HostName>" +
+                "    <NumberOfCores>{8}</NumberOfCores>" +
                 "  </MachineData>" +
                 "</LicenseResponse>";
 
@@ -310,6 +311,7 @@ namespace ForerunnerLicense
                                  "200",
                                  licenseData.SKU,
                                  curExpiration.ToLocalTime().ToShortDateString(),
+                                 licenseData.LastActivation.ToLocalTime().ToShortDateString(),
                                  licenseData.IsSubscription,
                                  licenseData.Quantity,
                                  licenseData.MachineData.hostName,

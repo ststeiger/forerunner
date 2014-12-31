@@ -2018,7 +2018,7 @@ $(function () {
                                     ParameterList: paramList,
                                     DSCredentials: me.getDataSourceCredential(),
                                     instance: me.options.rsInstance,
-                                    data: date
+                                    data: data
                                 });
                             }
                             if (data.SessionID)

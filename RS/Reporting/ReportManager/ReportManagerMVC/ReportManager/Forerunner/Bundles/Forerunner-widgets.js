@@ -6340,17 +6340,28 @@ $(function () {
          *
          * @function $.forerunner.contextMenuBase#openMenu
          *
-         * @param {number} client x position from the event
-         * @param {number} client /y position from the event
+         * @param {number} page x position from the event
+         * @param {number} page /y position from the event
          */
-        openMenu: function (clientX, clientY) {
+        openMenu: function (pageX, pageY) {
             var me = this;
-            var margin = 10;
-            var offScreenRight = Math.max(0, clientX + me.element.width() + margin - me.options.$appContainer.width());
-            var offScreenBottom = Math.max(0, clientY + me.element.height() + margin - me.options.$appContainer.height());
 
-            var left = clientX + me.options.$appContainer.scrollLeft() - offScreenRight;
-            var top = clientY + me.options.$appContainer.scrollTop() - offScreenBottom;
+            /*
+            The problem here was that in IE I was not getting a scroll top during the "contextmenu" event. So I had to
+            pass in pageY instead of clientY which generally made the positioning work. But the code here that shifted if
+            the context menu was off screen did not work in IE any longer. So simply removing it was a good choice because
+            it is an edge case to click so far to the right or bottom.
+
+            var margin = 10;
+            var offScreenRight = Math.max(0, pageX + me.element.width() + margin - me.options.$appContainer.width());
+            var offScreenBottom = Math.max(0, pageY + me.element.height() + margin - me.options.$appContainer.height());
+            */
+
+            var offScreenRight = 0;
+            var offScreenBottom = 0;
+
+            var left = pageX - offScreenRight;
+            var top = pageY - offScreenBottom;
             me.element.css({
                 left: left + "px",
                 top: top + "px",
@@ -7838,8 +7849,8 @@ $(function () {
                     function (event) {
                         var data = {
                             catalogItem: catalogItem,
-                            clientX: event.gesture.touches[0].clientX,
-                            clientY: event.gesture.touches[0].clientY
+                            pageX: event.gesture.touches[0].clientX + me.options.$appContainer.scrollLeft(),
+                            pageY: event.gesture.touches[0].clientY + me.options.$appContainer.scrollTop()
                         };
                         me._onContextMenu.call(me, event, data);
                         event.stopPropagation();
@@ -7851,9 +7862,11 @@ $(function () {
                     // Steal the bowser context menu if we click on a report explorer item
                     var data = {
                         catalogItem: catalogItem,
-                        clientX: event.clientX,
-                        clientY: event.clientY
-                    };
+                        pageX: event.pageX,
+                        pageY: event.pageY
+                        //clientX: event.clientX,
+                        //clientY: event.clientY
+                };
                     me._onContextMenu.call(me, event, data);
 
                     // Return false here so as to steal the right click from
@@ -7983,7 +7996,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.reportExplorerContextMenu("openMenu", data.clientX, data.clientY);
+            me._contextMenu.reportExplorerContextMenu("openMenu", data.pageX, data.pageY);
         },
         _renderPCView: function (catalogItems) {
             var me = this;

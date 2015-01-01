@@ -146,8 +146,8 @@ $(function () {
                     function (event) {
                         var data = {
                             catalogItem: catalogItem,
-                            clientX: event.gesture.touches[0].clientX,
-                            clientY: event.gesture.touches[0].clientY
+                            pageX: event.gesture.touches[0].clientX + me.options.$appContainer.scrollLeft(),
+                            pageY: event.gesture.touches[0].clientY + me.options.$appContainer.scrollTop()
                         };
                         me._onContextMenu.call(me, event, data);
                         event.stopPropagation();
@@ -159,9 +159,11 @@ $(function () {
                     // Steal the bowser context menu if we click on a report explorer item
                     var data = {
                         catalogItem: catalogItem,
-                        clientX: event.clientX,
-                        clientY: event.clientY
-                    };
+                        pageX: event.pageX,
+                        pageY: event.pageY
+                        //clientX: event.clientX,
+                        //clientY: event.clientY
+                };
                     me._onContextMenu.call(me, event, data);
 
                     // Return false here so as to steal the right click from
@@ -291,7 +293,7 @@ $(function () {
                 rsInstance: me.options.rsInstance,
                 catalogItem: data.catalogItem
             });
-            me._contextMenu.reportExplorerContextMenu("openMenu", data.clientX, data.clientY);
+            me._contextMenu.reportExplorerContextMenu("openMenu", data.pageX, data.pageY);
         },
         _renderPCView: function (catalogItems) {
             var me = this;

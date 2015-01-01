@@ -2649,7 +2649,7 @@ $(function () {
                                     ParameterList: paramList,
                                     DSCredentials: me.getDataSourceCredential(),
                                     instance: me.options.rsInstance,
-                                    data: date
+                                    data: data
                                 });
                             }
                             if (data.SessionID)
@@ -3089,7 +3089,8 @@ $(function () {
 
                 if (me.isDebug) {
                     console.log("WritePage", {                      
-                            setPage: newPageNum
+                        setPage: newPageNum,
+                        pages:me.pages
                     });
                 }
                 me._setPage(newPageNum);
@@ -3105,6 +3106,13 @@ $(function () {
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
+
+            if (me.isDebug) {
+                console.log("RenderPage", {                  
+                    page: me.pages[pageNum]
+                });
+            }
+
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
@@ -3127,6 +3135,12 @@ $(function () {
             }
 
             me.pages[pageNum].isRendered = true;
+
+            if (me.isDebug) {
+                console.log("RenderPagePost", {
+                    page: me.pages[pageNum]
+                });
+            }
         },
         _renderPageError: function ($container, errorData) {
             var me = this;
@@ -12030,6 +12044,14 @@ $(function () {
                 me._cancelForm();
             });
 
+            if (me.options.$reportViewer.isDebug) {
+                console.log("writeParameterPanel", {
+                    submitForm: submitForm,
+                    DefaultValueCount: data.DefaultValueCount,
+                    DataCount: parseInt(data.Count, 10),
+                    LoadedForDefault:me._loadedForDefault
+                });
+            }
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
@@ -13587,7 +13609,7 @@ $(function () {
                                 if (element.checked === false) {
                                     isSelectAll = false;
                                 }
-                            })
+                            });
                             $selectAll.prop("checked", isSelectAll);
                         } else {
                             // Being unchecked so we need to un-check the select all
@@ -14113,7 +14135,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"])
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
 

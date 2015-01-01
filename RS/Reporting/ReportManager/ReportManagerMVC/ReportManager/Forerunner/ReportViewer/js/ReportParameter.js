@@ -236,6 +236,14 @@ $(function () {
                 me._cancelForm();
             });
 
+            if (me.options.$reportViewer.isDebug) {
+                console.log("writeParameterPanel", {
+                    submitForm: submitForm,
+                    DefaultValueCount: data.DefaultValueCount,
+                    DataCount: parseInt(data.Count, 10),
+                    LoadedForDefault:me._loadedForDefault
+                });
+            }
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
@@ -1793,7 +1801,7 @@ $(function () {
                                 if (element.checked === false) {
                                     isSelectAll = false;
                                 }
-                            })
+                            });
                             $selectAll.prop("checked", isSelectAll);
                         } else {
                             // Being unchecked so we need to un-check the select all
@@ -2319,7 +2327,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"])
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
 

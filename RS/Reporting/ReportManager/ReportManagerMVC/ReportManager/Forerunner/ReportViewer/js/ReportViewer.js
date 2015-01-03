@@ -293,7 +293,6 @@ $(function () {
         },
         _setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
-         
             var me = this;
             if (!$rowHeader)
                 return;
@@ -307,7 +306,6 @@ $(function () {
             else {
                 $rowHeader.css("visibility", "hidden");
             }
-            
         },
         _addLoadingIndicator: function () {
             var me = this;
@@ -368,9 +366,9 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     page.needsLayout = true;
-                });                
-                me._reLayoutPage(me.curPage, force);
-                
+                });
+
+                me._reLayoutPage(me.curPage, force);                
             }
         },
         /**
@@ -717,13 +715,11 @@ $(function () {
                                 me._navToPage(me.curPage - 1);
                                 break;
                             }
-                            
 
                             if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
-                   
                 }
             );
         },
@@ -940,7 +936,7 @@ $(function () {
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
-                               
+                me.paramMetadata = action.paramMetadata;
 
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
@@ -1067,7 +1063,6 @@ $(function () {
                     success: function (data) {
                         //console.log("Saved");
                     }
-
                 });
             }
         },
@@ -1492,11 +1487,23 @@ $(function () {
                 parameterModel = me.options.parameterModel.parameterModel("getModel");
 
             me.actionHistory.push({
-                ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
-                reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
-                parameterModel: parameterModel
+                ReportPath: me.reportPath,
+                SessionID: me.sessionID,
+                CurrentPage: me.curPage,
+                ScrollTop: top,
+                ScrollLeft: left,
+                FlushCache: flushCache,
+                paramLoaded: me.paramLoaded,
+                savedParams: savedParams,
+                reportStates: me.reportStates,
+                renderTime: me.renderTime,
+                reportPages: me.pages,
+                paramDefs: me.paramDefs,
+                credentialDefs: me.credentialDefs,
+                savedCredential: me.datasourceCredentials,
+                renderError: me.renderError,
+                parameterModel: parameterModel,
+                paramMetadata: me.paramMetadata
             });
 
             me._clearReportViewerForDrill();
@@ -1844,10 +1851,6 @@ $(function () {
                 submitForm = true;
 
             if (savedParams && savedParams.ParamsList && savedParams.ParamsList.length > 0) {
-                //for the parameter report which has saved parameter, we need to get a original parameter copy
-                me.paramMetadata = null;
-                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
-
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
@@ -1975,6 +1978,12 @@ $(function () {
             if (pageNum === -1) {
                 pageNum = me.getCurPage();
             }
+
+            //for the parameter report which has saved parameter, we need to get a original parameter copy
+            if (!me.paramMetadata) {
+                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
+            }
+
             if (paramList) {
                 forerunner.ajax.ajax({
                     type: "POST",
@@ -2034,6 +2043,7 @@ $(function () {
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
                 me.RDLExtProperty = null;
+                me.paramMetadata = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -2044,7 +2054,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;            
+            me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
 
             if (!isSameReport) {

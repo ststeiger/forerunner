@@ -582,7 +582,7 @@ $(function () {
         _setParamValue: function (param, defaultValue, $element) {
             var me = this;
             var $control;
-            
+
             if (me._isDropdownTree && me.enableCascadingTree && (param.isParent || param.isChild)) {
                 var isTopParent = param.isParent === true && param.isChild !== true;
                 //Revert cascading tree status: display text, backend value, tree UI
@@ -733,7 +733,8 @@ $(function () {
         },
         _triggerUseDefaultClick: function (param, $control, $checkbox, preDefinedValue, $hidden) {
             var me = this;
-            var $nullCheckbox = $(".fr-null-checkbox").filter("[name='" + param.Name + "']");
+            var $nullCheckbox = $(".fr-null-checkbox").filter("[name='" + param.Name + "']"),
+                customVal;
 
             if ($checkbox[0].checked === false) {//uncheck
                 if ($nullCheckbox.length) {
@@ -741,6 +742,8 @@ $(function () {
                 }
                 
                 $control.removeAttr("disabled").removeClass("fr-usedefault");
+                customVal = $control.attr("data-custom");
+                $control.val(customVal).attr("data-custom", "");
 
                 if ($hidden && $hidden.length) {
                     $hidden.removeClass("fr-usedefault");
@@ -776,6 +779,9 @@ $(function () {
 
                 $control.attr("disabled", true).addClass("fr-usedefault");
 
+                customVal = $control.val();
+                $control.attr('data-custom', customVal).val("");
+
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -790,6 +796,7 @@ $(function () {
                 if ($control.hasClass("fr-param-dropdown-input")) {
                     $control.parent().addClass("fr-param-disable");
                 }
+
                 $control.addClass("fr-param-disable");
                 
 

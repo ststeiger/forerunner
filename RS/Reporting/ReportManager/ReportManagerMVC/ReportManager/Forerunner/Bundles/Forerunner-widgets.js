@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -9064,10 +9064,12 @@ $(function () {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
                 me.element.html($("<div class='Page' >" +
                     "<div class='fr-render-error-license Page'>" +
-                    "<div class='fr-render-error-license-container'>" +
-                    "<div class='fr-render-error-license-title'></div><br/>" +
-                    "<div class='fr-render-error-license-content'></div>" +
-                    "</div></div>"));
+                        "<div class='fr-render-error-license-container'>" +
+                            "<p class='fr-render-error-license-title'></p>" +
+                            "<br/>" +
+                            "<p class='fr-render-error-license-content'></p>" +
+                        "</div>" +
+                    "</div>"));
                 if (me.options.reportViewer) {
                     $cell = me.element.find(".fr-render-error-license-title");
                     $cell.html(errorTag.licenseErrorTitle);

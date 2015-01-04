@@ -17,5 +17,5 @@
 	"WatermarkPostText":"",
 	"DefaultSubscriptionFormat":"MHTML",
 	"URLActionNewTab": "off",
-	"Debug":"on"
+	"Debug":"off"
 }

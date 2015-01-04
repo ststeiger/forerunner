@@ -2346,9 +2346,7 @@ $(function () {
             var me = this, result = paramList, pattern = null;
 
             var children = me._dependencyList[parentName];
-
-            var children = me._dependencyList[parentName];
-
+           
             if (children) {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
@@ -2364,8 +2362,7 @@ $(function () {
 
                     if (me._dependencyList[children[i]]) {
                         result = me._removeChildParam(result, children[i]);
-                    }
-                    }
+                    }            
                 }
             }
             return result;

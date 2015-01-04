@@ -7,7 +7,14 @@
     <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW, ARCHIVE" />
     <title>@ViewBag.Title</title>
     
-    <meta name="description=" content="@ViewBag.Description">
+@if(ViewBag.Description!=null)
+{
+    <meta name="description" content="@ViewBag.Description" />
+}
+@if(ViewBag.Keywords!=null)
+{
+    <meta name="keywords" content="@ViewBag.Keywords" />
+}
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")

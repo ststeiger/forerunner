@@ -32,3 +32,6 @@
 /video-np2,/home/video?utm_source=BI1&utm_medium=email&utm_campaign=Netp
 /home-np2,/home/index?utm_source=BI1&utm_medium=email&utm_campaign=Netp
 /trial-np2,/home/register?utm_source=BI1&utm_medium=email&utm_campaign=Netp
+/video-all1,/home/video?utm_source=All1&utm_medium=email&utm_campaign=Netp
+/home-all1,/home/index?utm_source=All1&utm_medium=email&utm_campaign=Netp
+/trial-all1,/home/register?utm_source=All1&utm_medium=email&utm_campaign=Netp

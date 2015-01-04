@@ -202,8 +202,8 @@ $(function () {
                 me.element.html($("<div class='Page' >" +
                     "<div class='fr-render-error-license Page'>" +
                         "<div class='fr-render-error-license-container'>" +
-                            "<p class='fr-render-error-license-title'></p>" +
-                            "<br/>" +
+                    "<p class='fr-render-error-license-title'></p><br/>" +
+                    "<p class='fr-render-error-license-content'></p>" +
                             "<p class='fr-render-error-license-content'></p>" +
                         "</div>" +
                     "</div>"));
@@ -1269,8 +1269,7 @@ $(function () {
             var me = this;
 
             forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
-            return;
-
+           
 
         },
         _writeAction: function (RIContext, Action, Control) {
@@ -1279,11 +1278,11 @@ $(function () {
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
-                    me._stopDefaultEvent(e);
+                    me._stopDefaultEvent(e);               
                     if (forerunner.config.getCustomSettingsValue("URLActionNewTab", "off") === "on")
                         window.open(e.data.HyperLink, "_blank");
                     else
-                        location.href = e.data.HyperLink;
+                        location.href = e.data.HyperLink;                    
                 });
 
             }
@@ -2067,7 +2066,7 @@ $(function () {
                     Tablix.$Tablix.append(Tablix.State.ExtRow);
                     Tablix.State.ExtRow.hide();
                 }
-                else if (Tablix.State.Row)
+                else if(Tablix.State.Row)
                     Tablix.State.Row.findUntil(".fr-render-respIcon", ".fr-render-tablix").hide();
 
                 Tablix.BigTablixDone = true;

@@ -1708,7 +1708,7 @@ $(function () {
         isMSIE8: function () {
             var ua = navigator.userAgent;
 
-            var ret = (ua.match(/(MSIE 8)/) !== null) || (ua.match(/(MSIE 7)/) !== null)
+            var ret = (ua.match(/(MSIE 8)/) !== null) || (ua.match(/(MSIE 7)/) !== null);
             return ret;
         },
         /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
@@ -2153,7 +2153,7 @@ $(function () {
         },
 
         getOptionsFromURL: function (url) {
-            if (url == null)
+            if (url === null)
                 return null;
 
             var options = { "isReportManager" : true, "showBreadCrumb" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};

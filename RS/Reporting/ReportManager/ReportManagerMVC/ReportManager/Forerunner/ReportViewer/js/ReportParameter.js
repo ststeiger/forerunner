@@ -241,6 +241,14 @@ $(function () {
                 me._cancelForm();
             });
 
+            if (me.options.$reportViewer.isDebug) {
+                console.log("writeParameterPanel", {
+                    submitForm: submitForm,
+                    DefaultValueCount: data.DefaultValueCount,
+                    DataCount: parseInt(data.Count, 10),
+                    LoadedForDefault:me._loadedForDefault
+                });
+            }
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);
@@ -668,7 +676,8 @@ $(function () {
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-option-checkbox fr-null-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
-                    if ($checkbox[0].checked === false) {//uncheck
+
+                    if ($checkbox[0].checked !== true) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
 
                         //add validate arrtibutes to control when uncheck null checkbox
@@ -787,6 +796,9 @@ $(function () {
                 customVal = $control.val();
                 $control.attr('data-custom', customVal).val("");
 
+                customVal = $control.val();
+                $control.attr('data-custom', customVal).val("");
+
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -801,6 +813,7 @@ $(function () {
                 if ($control.hasClass("fr-param-dropdown-input")) {
                     $control.parent().addClass("fr-param-disable");
                 }
+
                 $control.addClass("fr-param-disable");
 
 
@@ -1581,7 +1594,7 @@ $(function () {
             if (predefinedValue) {
                 if (param.MultiValue) {
                     var keys = [];
-                    for (i = 0; i < valids.length; i++) {
+                    for ( i = 0; i < valids.length; i++) {
                         if (me._contains(predefinedValue, valids[i].Value)) {
                             keys.push(valids[i].Key);
                         }
@@ -1592,7 +1605,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (i = 0; i < valids.length; i++) {
+                    for (var i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -1765,8 +1778,7 @@ $(function () {
                     var valuePair = param.ValidValues[param.ValidValues.length - 1];
                     key = valuePair.Key;
                     value = valuePair.Value;
-                }
-                else {
+                } else {
                     key = param.ValidValues[i - 1].Key;
                     value = param.ValidValues[i - 1].Value;
                 }
@@ -1840,7 +1852,7 @@ $(function () {
             //If default value is not valid then dont set it as value
             if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
             }
             else
                 me._loadedForDefault = false;
@@ -2335,6 +2347,8 @@ $(function () {
 
             var children = me._dependencyList[parentName];
 
+            var children = me._dependencyList[parentName];
+
             if (children) {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
@@ -2343,13 +2357,14 @@ $(function () {
 
                     result = paramList.replace(pattern, "");
 
-                    //Remove comma if there is one left.
                     if (result.slice(-3) === ",]}") {
                         result = result.substring(0, result.length - 3) + "]}";
                     }
 
+
                     if (me._dependencyList[children[i]]) {
                         result = me._removeChildParam(result, children[i]);
+                    }
                     }
                 }
             }

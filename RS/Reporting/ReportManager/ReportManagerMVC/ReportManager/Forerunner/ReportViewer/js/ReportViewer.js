@@ -119,7 +119,8 @@ $(function () {
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
-            me.RDLExtProperty = null;            
+            me.RDLExtProperty = null;
+            me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -416,6 +417,12 @@ $(function () {
                 me._removeDocMap();
             }
             else {
+                if (me.isDebug) {
+                    console.log("SetPage", {
+                        curPage: me.$reportAreaContainer.find(".Page"),
+                        newPage: me._getPageContainer(pageNum)
+                    });
+                }
                 me.$reportAreaContainer.find(".Page").detach();
                 me.$reportAreaContainer.append(me._getPageContainer(pageNum));
                
@@ -1380,6 +1387,9 @@ $(function () {
             me._addLoadingIndicator();
             me._resetContextIfInvalid();
             me._prepareAction();
+            if (me.isDebug) {
+                console.log("DrillThough", { session: me.sessionID, drillThrough: drillthroughID});
+            }
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.drillThrough,
@@ -1404,6 +1414,9 @@ $(function () {
                             me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, true);
 
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
+                        if (me.isDebug) {
+                            console.log("DrillThough", { drillReport: data.ReportPath, data: data });
+                        }
                         if (data.CredentialsRequired) {
                             me.$reportAreaContainer.find(".Page").detach();
                             me._setScrollLocation(0, 0);
@@ -1928,11 +1941,17 @@ $(function () {
         _showParameters: function (pageNum, data) {
             var me = this;
             
+            if (me.isDebug) {
+                console.log("showParameters", { loadPage: pageNum,data:data });
+            }
             if (data.Type === "Parameters") {
                 me._removeParameters();
                 me.$reportContainer.find(".Page").detach();
                 
                 var $paramArea = me.options.paramArea;
+                if (me.isDebug) {
+                    console.log("showParameters", { paramArea: $paramArea });
+                }
                 if ($paramArea) {
                     me.paramDefs = data;
 
@@ -1944,6 +1963,10 @@ $(function () {
 
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
+
+                    if (me.isDebug) {
+                        console.log("showParameters", { numOfVisibleParameters: me.$numOfVisibleParameters });
+                    }
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                     else {
@@ -2002,6 +2025,17 @@ $(function () {
                             me._renderPageError(me.$reportContainer, data);
                             me.removeLoadingIndicator();
                         } else {
+                            
+                            if (me.isDebug) {
+                                console.log("refreshParameters", {
+                                    ReportPath: encodeURIComponent(me.reportPath),
+                                    SessionID: me.getSessionID(),
+                                    ParameterList: paramList,
+                                    DSCredentials: me.getDataSourceCredential(),
+                                    instance: me.options.rsInstance,
+                                    data: data
+                                });
+                            }
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
                             me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading, paramList);
@@ -2172,10 +2206,16 @@ $(function () {
          *
          * @param {Object} paramList - Parameter list object
          * @param {Integer} pageNum - The page to load
-         * @param {useDefaultValue} pageNum - Whether use default parameter value on server side
+         * @param {Boolean} useDefaultValue - Whether use default parameter value on server side
          */
         loadReportWithNewParameters: function (paramList, pageNum, useDefaultValue) {
             var me = this;
+
+            if (me.isDebug) {
+                console.log("loadReportWithNewParameters", {
+                    paramList: paramList
+                });
+            }
 
             if (useDefaultValue) {
                 me.sessionID = "";
@@ -2303,6 +2343,16 @@ $(function () {
                 instance: me.options.rsInstance
             };
 
+            if (me.isDebug) {
+                console.log("LoadPage", {
+                    ReportPath: encodeURIComponent(me.reportPath),
+                    SessionID: me.sessionID,
+                    PageNumber: newPageNum,
+                    ParameterList: paramList,
+                    DSCredentials: me.getDataSourceCredential(),
+                    instance: me.options.rsInstance,
+                });
+            }
             // Allow a handler to change the post data before we load the page
             me._trigger(events.preLoadPage, null, {
                 viewer: me,
@@ -2317,6 +2367,7 @@ $(function () {
                     data: reportJSONData, 
                     async: true,
                     done: function (data) {
+ 
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
                             if (data.ReportContainer) {
@@ -2379,6 +2430,12 @@ $(function () {
         },
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
+
+            if (me.isDebug) {
+                console.log("writePage", {
+                    data:data
+                });
+            }
             //Error, need to handle this better
             if (!data) return;
             
@@ -2416,7 +2473,20 @@ $(function () {
             } 
 
             if (!loadOnly) {
+
+                if (me.isDebug) {
+                    console.log("WritePage", {
+                        renderPage: newPageNum
+                    });
+                }
                 me._renderPage(newPageNum);
+
+                if (me.isDebug) {
+                    console.log("WritePage", {                      
+                        setPage: newPageNum,
+                        pages:me.pages
+                    });
+                }
                 me._setPage(newPageNum);
             }
         },
@@ -2430,6 +2500,13 @@ $(function () {
         _renderPage: function (pageNum) {
             //Write Style
             var me = this;
+
+            if (me.isDebug) {
+                console.log("RenderPage", {                  
+                    page: me.pages[pageNum]
+                });
+            }
+
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
@@ -2452,6 +2529,12 @@ $(function () {
             }
 
             me.pages[pageNum].isRendered = true;
+
+            if (me.isDebug) {
+                console.log("RenderPagePost", {
+                    page: me.pages[pageNum]
+                });
+            }
         },
         _renderPageError: function ($container, errorData) {
             var me = this;

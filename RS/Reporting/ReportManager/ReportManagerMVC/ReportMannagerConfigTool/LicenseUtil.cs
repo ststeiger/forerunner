@@ -473,7 +473,7 @@ namespace ForerunnerLicense
         {
             if (numberOfCores == 0)
                 numberOfCores = GetNumberOfCores();
-
+            
             if (Encrypt)
             {
                 if (backcompat)

@@ -1973,7 +1973,7 @@ $(function () {
                 me.removeLoadingIndicator();
             }
             else {
-                me._loadPage(pageNum, false, null, null, true);
+                me._loadPage(pageNum, false, null, null, true); 
             }
         },
         /**

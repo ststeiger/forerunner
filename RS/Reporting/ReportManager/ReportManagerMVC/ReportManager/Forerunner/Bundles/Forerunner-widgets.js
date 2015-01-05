@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2604,7 +2604,7 @@ $(function () {
                 me.removeLoadingIndicator();
             }
             else {
-                me._loadPage(pageNum, false, null, null, true);
+                me._loadPage(pageNum, false, null, null, true); 
             }
         },
         /**

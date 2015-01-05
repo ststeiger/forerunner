@@ -49,6 +49,7 @@ namespace Forerunner.SSRS.Manager
         static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
+        static bool SeperateDB = ForerunnerUtil.GetAppSetting("Forerunner.SeperateDB", false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
         private static readonly object SettingLockObj = new object();
@@ -76,6 +77,46 @@ namespace Forerunner.SSRS.Manager
             return retval;
         }
 
+        private static bool isForerunnerDB(SqlConnection conn, Credentials DBCredentials)
+        {
+            string SQL = "SELECT * FROM sysobjects WHERE name = 'ForerunnerDBVersion'";
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate(DBCredentials);
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(SQL, conn))
+                {
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (!rdr.Read())
+                    {
+                        conn.Close();
+                        Logger.Trace(LogType.Error, "Not a Forerunner database for connectionString " + conn.ConnectionString);
+                        return false;
+                    }
+                    conn.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Logger.Trace(LogType.Error, "An exception happened while validating the Forerunner database.  Connection string: " + conn.ConnectionString);
+                ExceptionLogGenerator.LogException(e);
+                return false;
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Dispose();
+                }
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            return true;
+        }
+
         private static bool isReportServerDB(SqlConnection conn, Credentials DBCredentials)
         {
             string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
@@ -98,7 +139,7 @@ namespace Forerunner.SSRS.Manager
             }
             catch (SqlException e)
             {
-                Logger.Trace(LogType.Error, "An exception happens while validating the report server database.  Connection string: " + conn.ConnectionString);
+                Logger.Trace(LogType.Error, "An exception happened while validating the report server database.  Connection string: " + conn.ConnectionString);
                 ExceptionLogGenerator.LogException(e);
                 return false;
             }
@@ -114,7 +155,7 @@ namespace Forerunner.SSRS.Manager
             return true;
         }
 
-        public static bool ValidateConfig(string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
+        public static bool ValidateConfig(string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool isRSDB = true)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
@@ -133,9 +174,14 @@ namespace Forerunner.SSRS.Manager
 
             SqlConnection conn = new SqlConnection(builder.ConnectionString);
 
-            if (ReportManager.isReportServerDB(conn, DBCredentials))
+            if (isRSDB && ReportManager.isReportServerDB(conn, DBCredentials))
             {
                 Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+                return true;
+            }
+            else if (!isRSDB && ReportManager.isForerunnerDB(conn, DBCredentials))
+            {
+                Logger.Trace(LogType.Info, "Validation of the Forerunner database succeeded.");
                 return true;
             }
             else
@@ -459,19 +505,14 @@ namespace Forerunner.SSRS.Manager
             return impersonator;
         }
 
-        void CheckSchema()
+        private static void CreateDB(SqlConnection conn, Credentials DBCredentials)
         {
-            if (GetServerInfo().isSchemaChecked)
-                return;
-
-            if (UseMobilizerDB == false)
-                return;
 
             Impersonator impersonator = null;
             try
             {
-                impersonator = tryImpersonate();
-                //This should move to the install program
+                impersonator = tryImpersonate(DBCredentials);
+                
                 string SQL = @"
 
                            DECLARE @DBVersion varchar(200) 
@@ -546,12 +587,10 @@ namespace Forerunner.SSRS.Manager
                                 UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
                              
                             ";
-                OpenSQLConn();
-
-                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+   
+                using (SqlCommand SQLComm = new SqlCommand(SQL, conn))
                 {
                     SQLComm.ExecuteNonQuery();
-                    GetServerInfo().isSchemaChecked = true;
                 }
             }
             finally
@@ -560,8 +599,18 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Dispose();
                 }
-                CloseSQLConn();
             }
+        }
+        void CheckSchema()
+        {
+            //Moved to CreateDB, to be called from config tool.
+
+            if (GetServerInfo().isSchemaChecked)
+                return;
+
+            if (UseMobilizerDB == false)
+                return;
+           
         }
 
         public string SaveFavorite(string path)
@@ -579,11 +628,18 @@ namespace Forerunner.SSRS.Manager
                             BEGIN
 	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
                             END";
+
+                if (SeperateDB)
+                    SQL = @" IF NOT EXISTS (SELECT * FROM ForerunnerFavorites WHERE UserID = @DomainUser AND ItemID = @ItemPath)
+                            BEGIN
+	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @ItemPath,@DomainUser
+                            END";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -636,11 +692,19 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID IS NULL AND ItemID = @IID
                             ";
+                if (SeperateDB)
+                    SQL = @"
+                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID IS NULL AND ItemID = @ItemPath)
+	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @ItemPath,NULL,@Params 
+                            ELSE
+                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID IS NULL AND ItemID = @ItemPath
+                            ";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -673,11 +737,18 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = @UID AND ItemID = @IID
                             ";
+
+                if (SeperateDB)
+                    SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID = @DomainUser AND ItemID = @ItemPath)
+	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @ItemPath,@DomainUser,@Params 
+                            ELSE
+                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = @DomainUser AND ItemID = @ItemPath
+                            ";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
@@ -714,11 +785,15 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT SavedParameters, UserID FROM ForerunnerUserItemProperties WHERE (UserID = @UID OR UserID IS NULL) AND ItemID = @IID";
+
+                if (SeperateDB)
+                    SQL = @"SELECT SavedParameters, UserID FROM ForerunnerUserItemProperties WHERE (UserID = @DomainUser OR UserID IS NULL) AND ItemID = @ItemPath";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
@@ -768,6 +843,13 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserSettings SET Settings = @Params WHERE UserID = @UID
                             ";
+                if (SeperateDB)
+                    SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerUserSettings WHERE UserID = @DomainUser)
+	                            INSERT ForerunnerUserSettings (UserID, Settings) SELECT @DomainUser, @Params
+                            ELSE
+                                UPDATE ForerunnerUserSettings SET Settings = @Params WHERE UserID = @DomainUser
+                            ";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -800,6 +882,10 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT Settings FROM ForerunnerUserSettings WHERE UserID = @UID";
+                
+                if (SeperateDB)
+                    SQL = @"SELECT Settings FROM ForerunnerUserSettings WHERE UserID = @DomainUser";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -828,7 +914,9 @@ namespace Forerunner.SSRS.Manager
             }
         }
         private string GetItemID(string path)
-        {            
+        {
+            if (SeperateDB)
+                return "";
 
             return GetProperty(path,"ID");
 
@@ -880,12 +968,16 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
+                if (SeperateDB)
+                    SQL = @" SELECT * FROM ForerunnerFavorites WHERE UserID = @DomainUser AND ItemID = @ItemPath";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
+                    
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         isFav = SQLReader.HasRows;
@@ -952,28 +1044,47 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+
+                if (SeperateDB)
+                {
+                    SQL = @"SELECT DISTINCT ItemID FROM ForerunnerFavorites f WHERE f.UserID = @DomainUser";                    
+                }
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
-                        while (SQLReader.Read())
+                        if (SeperateDB)
                         {
-                            c = new CatalogItem();
-                            c.Path = GetPath(SQLReader.GetString(0));
-                            c.Name = SQLReader.GetString(1);
-                            c.ModifiedDate = SQLReader.GetDateTime(2);
-                            c.ModifiedDateSpecified = true;
-                            c.Type = ItemTypeEnum.Report;
-                            c.ID = SQLReader.GetGuid(3).ToString();
-                            c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
-                            c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
-                            list.Add(c);
+                            List<string> items = new List<string>();
+                            while (SQLReader.Read())
+                            {
+                                items.Add(GetPath(SQLReader.GetString(0)));
+
+                            }
+                            return GetItemsFromPaths(items.ToArray());
+                        }
+                        else
+                        {
+                            while (SQLReader.Read())
+                            {
+                                c = new CatalogItem();
+                                c.Path = GetPath(SQLReader.GetString(0));
+                                c.Name = SQLReader.GetString(1);
+                                c.ModifiedDate = SQLReader.GetDateTime(2);
+                                c.ModifiedDateSpecified = true;
+                                c.Type = ItemTypeEnum.Report;
+                                c.ID = SQLReader.GetGuid(3).ToString();
+                                c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                                c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                                list.Add(c);
+                            }
+                            return list.ToArray();
                         }
                     }
                 }
-                return list.ToArray();
             }
             finally
             {
@@ -988,6 +1099,9 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] GetRecentReports()
         {
             if (UseMobilizerDB == false)
+                return null;
+
+            if (SeperateDB)
                 return null;
 
             Impersonator impersonator = null;
@@ -1055,11 +1169,14 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
+                if (SeperateDB)
+                    SQL = @"DELETE ForerunnerFavorites WHERE ItemID = @ItemPath AND UserID =  @DomainUser";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@IID", IID);
 
                     SQLComm.ExecuteNonQuery();
@@ -1142,6 +1259,31 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
+
+            if (SeperateDB)
+            {
+                SQL = @" BEGIN TRAN t1
+                                                                                        
+                            IF (@UserSpecific = 1)
+                                BEGIN
+                                    DELETE ForerunnerCatalog WHERE UserID = @DomainUser AND ItemID = @Path
+                                END
+                            ELSE
+                                BEGIN
+                                    DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @Path
+                                END";
+
+                if (image == null)
+                    SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @Path,@DomainUser,NULL, GETDATE() ";
+                else
+                    SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @Path,@DomainUser,@Image, GETDATE()  ";
+                SQL += @"      IF @@error <> 0
+                                ROLLBACK TRAN t1
+                            ELSE
+                                COMMIT TRAN t1        
+                            ";
+            }
+
             Impersonator impersonator = null;
             try
             {
@@ -1206,6 +1348,11 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.ItemID = @IID AND c.ModifiedDate <= f.SaveDate";
+
+                //TODO:  Get the modified date from SSRS and pass in
+                if (SeperateDB)
+                    SQL = @"SELECT ThumbnailImage FROM ForerunnerCatalog f  WHERE (f.UserID IS NULL OR f.UserID = @DomainUser) AND f.ItemID = @Path";
+
 
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
@@ -1527,6 +1674,15 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerSubscriptions SET ScheduleID = @ScheduleID WHERE SubscriptionID = @SubscriptionID
                             ";
+
+                if (SeperateDB)
+                    SQL = @" 
+                            IF NOT EXISTS (SELECT * FROM ForerunnerSubscriptions WHERE SubscriptionID = @SubscriptionID)
+	                            INSERT ForerunnerSubscriptions (SubscriptionID, ScheduleID, ItemID) Values (@SubscriptionID, @ScheduleID, @ItemPath)
+                            ELSE
+                                UPDATE ForerunnerSubscriptions SET ScheduleID = @ScheduleID WHERE SubscriptionID = @SubscriptionID
+                            ";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
@@ -1534,6 +1690,7 @@ namespace Forerunner.SSRS.Manager
                     SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
                     SQLComm.Parameters.AddWithValue("@ScheduleID", scheduleID);
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.ExecuteNonQuery();
                 }
             }
@@ -1700,12 +1857,19 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
                 string SQL = @"Select SubscriptionID From ForerunnerSubscriptions" +  (report != null ? " Where ItemID = @ItemID" : "");
+                
+                if (SeperateDB)
+                    SQL = @"Select SubscriptionID From ForerunnerSubscriptions" + (report != null ? " Where ItemID = @ItemPath" : "");
+                
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
                     if (report != null)
+                    {
                         SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                        SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(report));
+                    }
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
                         while (SQLReader.Read())
@@ -1755,10 +1919,15 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 string tags = string.Empty;
                 string SQL = @"SELECT Tags FROM ForerunnerItemTags WHERE ItemID = @ItemID";
+                
+                if (SeperateDB)
+                    SQL = @"SELECT Tags FROM ForerunnerItemTags WHERE ItemID = @ItemPath";
+
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
 
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
@@ -1811,10 +1980,16 @@ namespace Forerunner.SSRS.Manager
                                ELSE
                                   UPDATE ForerunnerItemTags SET Tags = @Tags WHERE ItemID = @ItemID";
 
+                if (SeperateDB)
+                    SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerItemTags WHERE ItemID = @ItemPath)
+                                  INSERT ForerunnerItemTags (ItemID, Tags) SELECT @ItemPath, @Tags
+                               ELSE
+                                  UPDATE ForerunnerItemTags SET Tags = @Tags WHERE ItemID = @ItemPath";
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
+                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
                     SQLComm.Parameters.AddWithValue("@Tags", tags);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -1833,8 +2008,7 @@ namespace Forerunner.SSRS.Manager
         {
             if (UseMobilizerDB == false)
                 return null;
-
-            //string tags = GetProperty(path, "ForerunnerTags");
+            
             string mimeType;
             string content = Encoding.UTF8.GetString(GetCatalogResource(path, out mimeType));
             string tags = JsonUtility.GetSearchFolderTags(content);
@@ -1848,14 +2022,20 @@ namespace Forerunner.SSRS.Manager
                 string[] tagsList = tags.Split(',');
 
                 StringBuilder SQL = new StringBuilder();
-                SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+
+                // TODO: Fix for Seperate DB
+                if (!SeperateDB)
+                    SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+                else
+                    SQL.Append(@"SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
 
                 for (int i = 1; i < tagsList.Length; i++)
                 {
                     SQL.Append(" or Tags LIKE '%' + @tag" + (i + 1).ToString() + " + '%'");
                 }
 
-                SQL.Append(") e ON C.ItemID=e.ItemID");
+                if (!SeperateDB)
+                    SQL.Append(") e ON C.ItemID=e.ItemID");
 
                 OpenSQLConn();
                 using (SqlCommand SQLComm = new SqlCommand(SQL.ToString(), SQLConn))
@@ -1864,30 +2044,41 @@ namespace Forerunner.SSRS.Manager
                     {
                         SQLComm.Parameters.AddWithValue("@tag" + i, tagsList[i - 1]);
                     }
-
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
-                        while (SQLReader.Read())
+                        if (SeperateDB)
                         {
-                            string itemPath = GetPath(SQLReader.GetString(0));
-                            int itemType = SQLReader.GetInt32(3);
-
-                            item = new CatalogItem();
-                            item.Path = itemPath;
-                            item.Name = SQLReader.GetString(1);
-                            item.ModifiedDate = SQLReader.GetDateTime(2);
-                            item.ModifiedDateSpecified = true;
-                            item.Type = (ItemTypeEnum)itemType;
-                            item.ID = SQLReader.GetGuid(4).ToString();
-                            item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
-                            item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
-                            list.Add(item);
+                            List<string> items = new List<string>();
+                            while (SQLReader.Read())
+                            {
+                                items.Add(GetPath(SQLReader.GetString(0)));
+                        
+                            }
+                            return GetItemsFromPaths(items.ToArray());
                         }
-                    }
+                        else
+                        {
+                           while (SQLReader.Read())
+                            {
+                                string itemPath = GetPath(SQLReader.GetString(0));
+                                int itemType = SQLReader.GetInt32(3);
 
-                }
-                return list.ToArray();
-            }
+                                item = new CatalogItem();
+                                item.Path = itemPath;
+                                item.Name = SQLReader.GetString(1);
+                                item.ModifiedDate = SQLReader.GetDateTime(2);
+                                item.ModifiedDateSpecified = true;
+                                item.Type = (ItemTypeEnum)itemType;
+                                item.ID = SQLReader.GetGuid(4).ToString();
+                                item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                                item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
+                                list.Add(item);
+                            }
+                            return list.ToArray();
+                        }                  
+                   
+                }  
+                }}  
             finally
             {
                 CloseSQLConn();
@@ -1897,8 +2088,38 @@ namespace Forerunner.SSRS.Manager
                     impersonator.Dispose();
                 }
             }
-        }
+        }      
 
+        public CatalogItem[] GetItemsFromPaths(string[] path)
+        {
+
+            List<CatalogItem> list = new List<CatalogItem>();
+            rs.Credentials = GetCredentials();
+
+            // TODO: change this to SQL2010 API and use in condition
+ 
+            for (int i = 0; i < path.Length; i++)
+            {
+                Management.Native.SearchCondition[] sca = new Management.Native.SearchCondition[1];
+                sca[0] = new Management.Native.SearchCondition();
+
+                sca[0].Condition = Management.Native.ConditionEnum.Equals;
+                sca[0].Name = "Name";
+                sca[0].Value = sca[0].Value + path[i].Split('/').Last();
+                string ItemPath = path[i].Substring(0, path[i].LastIndexOf('/'));
+                if (ItemPath == "")
+                    ItemPath = "/";
+                try
+                {
+                    list.AddRange(rs.FindItems(ItemPath, Management.Native.BooleanOperatorEnum.And, sca));
+                }
+                catch
+                {
+                }
+            }
+            return list.ToArray();
+           
+        }
         public string ReadMobilizerSetting(string path)
         {
             if (MobilizerSetting == String.Empty)

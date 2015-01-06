@@ -706,7 +706,6 @@ Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Common/images/ToolbarIcons/Thumbs.db
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Phone_Leads_with_Transcription.rdl
 Test/Test Reports 2012/Northwind Test Suite/Phone_Leads_with_Transcription.rdl
-<<<<<<< HEAD
 Test/AdventureWorks Sample Reports/UpgradeLog.htm
 Test/AdventureWorks Sample Reports/UpgradeLog.XML
 Test/Test Reports 2012/Northwind Test Suite/CascadingParameter.rdl
@@ -715,15 +714,14 @@ Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/TrainingComplianceReport.rdl
 Test/Test Reports 2012/Northwind Test Suite/TrainingComplianceReport.rdl
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Copy of N0359-061-REP-0236.rdl
-=======
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.ProjectInstaller.resources
 ForerunnerRegister/ForerunnerRegister/obj/Debug/ForerunnerRegister.Worker.resources
-<<<<<<< HEAD
->>>>>>> c80011021770b426be40146e07ab2f77c7906125
-=======
 Samples/CustomLoginProvider/CustomLoginProvider/bin/*
 Samples/CustomLoginProvider/CustomLoginProvider/obj/*
->>>>>>> 63e9e6c577c05d1e58ef42444540737421d07d54
 Test/AdventureWorks Sample Reports/TrainingComplianceReport.rdl
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Learner Report.rdl
 Test/Test Reports 2012/Northwind Test Suite/Learner Report.rdl
+RS/Reporting/ReportViewer/PDFsharp/code/PdfSharp/bin/codeanalysis/*
+utilities/SetupUtil/SetupUtil/bin/*
+utilities/SetupUtil/SetupUtil/obj/*
+utilities/timebomb/timebomb/bin/*

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -536,6 +536,11 @@ $(function () {
             preLoadReport: "preLoadReport",
             /** widget + event, lowercase */
             reportViewerPreLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadReport).toLowerCase(); },
+
+            /** @constant */
+            preLoadReport: "preLoadPage",
+            /** widget + event, lowercase */
+            reportViewerPreLoadPage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadPage).toLowerCase(); },
 
             /** @constant */
             afterLoadReport: "afterLoadReport",

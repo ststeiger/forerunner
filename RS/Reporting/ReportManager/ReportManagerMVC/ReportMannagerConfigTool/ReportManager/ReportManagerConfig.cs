@@ -287,6 +287,8 @@ namespace ReportMannagerConfigTool
             GetAppSettingNode(xmlDoc, defaultUserDomain).SetAppSettingValue(defaultuserdomain);
 
             xmlDoc.Save(filePath);
+
+
         }
 
         /// <summary>

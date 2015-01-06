@@ -148,8 +148,10 @@ $(function () {
             if (me.options.showSubscriptionOnOpen) {
                 var subscriptionID = me.options.showSubscriptionOnOpen;
                 $(me.element).on(events.reportViewerSetPageDone(), function (e, data) {
-                    me.editEmailSubscription(subscriptionID);
-                    delete me.options.showSubscriptionOnOpen;
+                    if (me.options.showSubscriptionOnOpen) {
+                        delete me.options.showSubscriptionOnOpen;
+                        me.editEmailSubscription(subscriptionID);
+                    }
                 });
             }
         },
@@ -1741,13 +1743,15 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (me.paramLoaded) {
-                    var $paramArea = me.options.paramArea;
-                    //get current parameter list without validate
-                    paramList = $paramArea.reportParameter("getParamsList", true);
+                if (!subscriptionID) {
+                    if (me.paramLoaded) {
+                        var $paramArea = me.options.paramArea;
+                        //get current parameter list without validate
+                        paramList = $paramArea.reportParameter("getParamsList", true);
+                    }
+                    if (paramList)
+                        me.$emailSub.emailSubscription("option", "paramList", paramList);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -1857,13 +1861,21 @@ $(function () {
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
 
-            var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
-                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
+            var subscriptionParameters = null;
+            if (me.options.showSubscriptionOnOpen) {
+                subscriptionParameters = me._loadSubscriptionParameters(me.options.showSubscriptionOnOpen);
+            }
 
+            var savedParams = me._getSavedParams([subscriptionParameters, savedParamFromHistory, me.savedParameters,
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
+            var savedParamsObj = null;
+            if (savedParams) {
+                savedParamsObj = JSON.parse(savedParams);
+            }
             if (submitForm === undefined)
                 submitForm = true;
 
-            if (savedParams && savedParams.ParamsList && savedParams.ParamsList.length > 0) {
+            if (savedParamsObj && savedParamsObj.ParamsList && savedParamsObj.ParamsList.length > 0) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
@@ -1884,6 +1896,21 @@ $(function () {
         },
         _paramsToString: function (a) {
             return JSON.stringify(a);
+        },
+        _loadSubscriptionParameters: function (subscriptionID) {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var subscriptionInfo = me.$emailSub.emailSubscription("getSubscriptionInfo", subscriptionID);
+                var parameters = subscriptionInfo.Parameters;
+                var transformedParams = [];
+                for (var i = 0; i < parameters.length; i++) {
+                    transformedParams.push({ "Parameter": parameters[i].Name, "Value": parameters[i].Value, "IsMultiple": "false", Type: "" });
+                }
+
+                return JSON.stringify({ "ParamsList": transformedParams });
+            }
+            return null;
         },
         _loadDefaultParameters: function (pageNum, success) {
             var me = this;

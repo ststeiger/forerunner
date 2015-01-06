@@ -1997,7 +1997,7 @@ $(function () {
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                     else {
-                        me._loadPage(pageNum, false);
+                        me._loadPage(pageNum, false, null, null, true);
                     }
 
                     me.paramLoaded = true;
@@ -2009,7 +2009,7 @@ $(function () {
                 me.removeLoadingIndicator();
             }
             else {
-                me._loadPage(pageNum, false);
+                me._loadPage(pageNum, false, null, null, true);
             }
         },
         /**

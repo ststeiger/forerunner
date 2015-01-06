@@ -505,92 +505,44 @@ namespace Forerunner.SSRS.Manager
             return impersonator;
         }
 
-        private static void CreateDB(SqlConnection conn, Credentials DBCredentials)
+
+        void CheckSchema()
         {
+            //Moved to CreateDB, to be called from config tool.
+
+            string version = "no version";
+            if (GetServerInfo().isSchemaChecked)
+                return;
+
+            if (UseMobilizerDB == false)
+                return;
 
             Impersonator impersonator = null;
             try
             {
-                impersonator = tryImpersonate(DBCredentials);
-                
-                string SQL = @"
+                impersonator = tryImpersonate();
 
-                           DECLARE @DBVersion varchar(200) 
-                           DECLARE @DBVersionPrev varchar(200) 
-                           
-                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
-                            BEGIN	                            
-	                            CREATE TABLE dbo.ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
-                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.3','0'
-                            END
-
-
-                           SELECT @DBVersion = Version, @DBVersionPrev =PreviousVersion  FROM ForerunnerDBVersion                                                        
-                            
-
-
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
-                            BEGIN	                            
-	                            CREATE TABLE dbo.ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
-                            END
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
-                            BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
-                            END
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
-                            BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), CONSTRAINT uip_PK UNIQUE (ItemID,UserID))
-                            END
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
-                            BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
-                            END
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerSubscriptions')
-                            BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerSubscriptions(SubscriptionID uniqueidentifier NOT NULL, ScheduleID uniqueidentifier not null, ItemID uniqueidentifier NOT NULL)
-                            END
-                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerItemTags')
-                            BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL, PRIMARY KEY (ItemID))
-                            END
-
-                           /*  Version update Code */
-                           IF @DBVersionPrev = '1.1'
-                            BEGIN
-                                DECLARE @PKName varchar(200) 
-                                select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
-                                IF @PKName IS NOT NULL
-                                BEGIN
-                                    DECLARE @SQL VARCHAR(1000)
-                                    SET @SQL = 'ALTER TABLE ForerunnerUserItemProperties DROP CONSTRAINT ' + @PKName
-	                                EXEC (@SQL)
-                                END
-
-	                            ALTER TABLE ForerunnerUserItemProperties ALTER COLUMN UserID uniqueidentifier NULL
-
-                                IF NOT EXISTS(SELECT * FROM sysobjects WHERE xtype = 'UQ' AND name = 'uc_uip_ItemUser')
-                                BEGIN
-                                    ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
-                                END
-
-                                SELECT @DBVersionPrev = '1.2'
-                            END
-
-                            
-                            IF @DBVersionPrev ='1.2' 
-                                BEGIN
-                                    ALTER TABLE ForerunnerCatalog ALTER COLUMN ThumbnailImage Image NULL
-                                    SELECT @DBVersionPrev = '1.3'
-                                END
-
-                            IF @DBVersion <> '1.3'
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
-                             
+                string SQL = @"SELECT  Version, PreviousVersion  FROM ForerunnerDBVersion  
                             ";
-   
-                using (SqlCommand SQLComm = new SqlCommand(SQL, conn))
+
+                OpenSQLConn();
+
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SQLComm.ExecuteNonQuery();
+
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            version = SQLReader.GetString(0);
+                            if (version == "S.1.3" || version == "1.3")
+                                continue;
+                            else
+                                throw new Exception("Incorrect DB Schema expected 1.3 found " + version); 
+                        }
+                    }
+
+                    GetServerInfo().isSchemaChecked = true;
                 }
             }
             finally
@@ -599,18 +551,8 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Dispose();
                 }
+                CloseSQLConn();
             }
-        }
-        void CheckSchema()
-        {
-            //Moved to CreateDB, to be called from config tool.
-
-            if (GetServerInfo().isSchemaChecked)
-                return;
-
-            if (UseMobilizerDB == false)
-                return;
-           
         }
 
         public string SaveFavorite(string path)

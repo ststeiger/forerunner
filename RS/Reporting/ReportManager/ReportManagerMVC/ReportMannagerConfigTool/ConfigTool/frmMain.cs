@@ -242,7 +242,25 @@ namespace ReportMannagerConfigTool
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
                     rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName),
                     winform.getTextBoxValue(txtDefaultUserDomain));
-                
+
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                builder.DataSource = winform.getTextBoxValue(txtServerName);
+                builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
+                if (!rdoDomain.Checked)
+                {
+                    builder.UserID = winform.getTextBoxValue(txtUser);
+                    builder.Password = winform.getTextBoxValue(txtPWD);
+                }
+                else
+                {
+                    builder.IntegratedSecurity = true;
+                }
+
+                System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
+                string result;
+
+                result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD), rdoDomain.Checked);
+           
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
             catch

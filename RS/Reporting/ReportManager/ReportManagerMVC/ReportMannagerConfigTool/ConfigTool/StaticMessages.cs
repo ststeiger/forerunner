@@ -12,7 +12,7 @@
         public static readonly string deploySuccess = "Deploy to {0} success!";
         public static readonly string connectDBSuccess = "Connection test success!";
 
-        public static readonly string ssrsUpdateSuccess = "SSRS Connection config file update success!";
+        public static readonly string ssrsUpdateSuccess = "SSRS Connection config file and DB Schema update success!";
         public static readonly string updateError = "Error occured when update, please try later!";
 
         public static readonly string reportServerPathEmpty = "Please select report server folder!";

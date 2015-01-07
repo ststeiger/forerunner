@@ -775,7 +775,6 @@ $(function () {
                 }
                 $control.removeClass("fr-param-disable");
 
-
                 //add validate arrtibutes to control when uncheck null checkbox
                 $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                     $control.attr(attribute, "true");
@@ -783,7 +782,7 @@ $(function () {
 
                 if (param.Type === "DateTime") { $control.datepicker("enable"); }
             }
-            else {
+            else { // check use default
                 if ($nullCheckbox.length) {
                     if ($nullCheckbox[0].checked === true) {
                         $nullCheckbox[0].checked = false;
@@ -796,9 +795,6 @@ $(function () {
                 customVal = $control.val();
                 $control.attr('data-custom', customVal).val("");
 
-                customVal = $control.val();
-                $control.attr('data-custom', customVal).val("");
-
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -808,6 +804,9 @@ $(function () {
                     $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
                         $(".fr-paramname-" + childname).addClass("fr-usedefault");
                     });
+
+                    $control.removeClass("fr-param-cascadingtree-error");
+                    $control.valid();
                 }
 
                 if ($control.hasClass("fr-param-dropdown-input")) {

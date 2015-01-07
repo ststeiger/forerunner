@@ -796,9 +796,6 @@ $(function () {
                 customVal = $control.val();
                 $control.attr('data-custom', customVal).val("");
 
-                customVal = $control.val();
-                $control.attr('data-custom', customVal).val("");
-
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -808,6 +805,9 @@ $(function () {
                     $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
                         $(".fr-paramname-" + childname).addClass("fr-usedefault");
                     });
+
+                    $control.removeClass("fr-param-cascadingtree-error");
+                    $control.valid();
                 }
 
                 if ($control.hasClass("fr-param-dropdown-input")) {

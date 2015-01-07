@@ -2630,7 +2630,6 @@ $(function () {
                     else {
                         me._loadPage(pageNum, false, null, null, true);
                     }
-
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }

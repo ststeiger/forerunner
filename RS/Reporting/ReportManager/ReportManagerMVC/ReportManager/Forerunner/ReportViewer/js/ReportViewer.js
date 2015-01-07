@@ -1952,6 +1952,7 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 
@@ -1963,7 +1964,6 @@ $(function () {
                     else {
                         me._loadPage(pageNum, false, null, null, true);
                     }
-
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }

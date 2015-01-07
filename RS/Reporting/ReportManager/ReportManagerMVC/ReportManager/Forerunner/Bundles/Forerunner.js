@@ -538,6 +538,11 @@ $(function () {
             reportViewerPreLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadReport).toLowerCase(); },
 
             /** @constant */
+            preLoadReport: "preLoadPage",
+            /** widget + event, lowercase */
+            reportViewerPreLoadPage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadPage).toLowerCase(); },
+
+            /** @constant */
             afterLoadReport: "afterLoadReport",
             /** widget + event, lowercase */
             reportViewerAfterLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.afterLoadReport).toLowerCase(); },

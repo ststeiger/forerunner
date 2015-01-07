@@ -106,10 +106,10 @@ $(function () {
             
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
             var jqxhr = forerunner.ajax.ajax({
-                    url: url,
-                    dataType: "json",
-                    async: true
-                })
+                url: url,
+                dataType: "json",
+                async: true
+            })
                 .done(
                     function (settings) {
                         me.extensionSettings[extensionName] = settings;

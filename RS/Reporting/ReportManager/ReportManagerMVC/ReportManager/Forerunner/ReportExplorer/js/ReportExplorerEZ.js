@@ -219,7 +219,7 @@ $(function () {
             //clear prior route link
             $linksection.html("");
 
-            var path = data.args[0];
+            var path = data.args[0] ? data.args[0].split("?")[0] : null;
             me._getLink(path, $linksection, 0, data.name);
             $linksection.show();
 

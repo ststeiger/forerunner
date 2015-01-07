@@ -70,6 +70,10 @@ $(function () {
         },
         _subscriptionData: null,
         _canEditComment: false,
+        getSubscriptionInfo: function (subscriptionID) {
+            var me = this;
+            return me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+        },
         _setSubscriptionOrSetDefaults : function() {
             var me = this;
             var subscriptionID = me._subscriptionID;
@@ -200,6 +204,16 @@ $(function () {
                 }
             }
             return me._subscriptionData;
+        },
+        getParamsList: function () {
+            var me = this;
+            var paramList = { "ParamsList": [] };
+            if (me._subscriptionData) {
+                for (var i = 0; i < me._subscriptionData.Parameters.length; i++) {
+                    paramList.ParamsList.push({ "Parameter": me._subscriptionData.Parameters[i].Name, "Value": me._subscriptionData.Parameters[i].Value });
+                }
+            }
+            return paramList.ParamsList.length > 0 ? JSON.stringify(paramList) : null;
         },
         _initRenderFormat : function (data) {
             var me = this;

@@ -148,8 +148,10 @@ $(function () {
             if (me.options.showSubscriptionOnOpen) {
                 var subscriptionID = me.options.showSubscriptionOnOpen;
                 $(me.element).on(events.reportViewerSetPageDone(), function (e, data) {
-                    me.editEmailSubscription(subscriptionID);
-                    delete me.options.showSubscriptionOnOpen;
+                    if (me.options.showSubscriptionOnOpen) {
+                        delete me.options.showSubscriptionOnOpen;
+                        me.editEmailSubscription(subscriptionID);
+                    }
                 });
             }
         },
@@ -294,7 +296,6 @@ $(function () {
         },
         _setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
-         
             var me = this;
             if (!$rowHeader)
                 return;
@@ -308,7 +309,6 @@ $(function () {
             else {
                 $rowHeader.css("visibility", "hidden");
             }
-            
         },
         _addLoadingIndicator: function () {
             var me = this;
@@ -369,9 +369,9 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     page.needsLayout = true;
-                });                
-                me._reLayoutPage(me.curPage, force);
-                
+                });
+
+                me._reLayoutPage(me.curPage, force);                
             }
         },
         /**
@@ -724,13 +724,11 @@ $(function () {
                                 me._navToPage(me.curPage - 1);
                                 break;
                             }
-                            
 
                             if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
-                   
                 }
             );
         },
@@ -947,7 +945,7 @@ $(function () {
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
-                               
+                me.paramMetadata = action.paramMetadata;
 
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
@@ -1074,7 +1072,6 @@ $(function () {
                     success: function (data) {
                         //console.log("Saved");
                     }
-
                 });
             }
         },
@@ -1505,11 +1502,23 @@ $(function () {
                 parameterModel = me.options.parameterModel.parameterModel("getModel");
 
             me.actionHistory.push({
-                ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
-                reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
-                parameterModel: parameterModel
+                ReportPath: me.reportPath,
+                SessionID: me.sessionID,
+                CurrentPage: me.curPage,
+                ScrollTop: top,
+                ScrollLeft: left,
+                FlushCache: flushCache,
+                paramLoaded: me.paramLoaded,
+                savedParams: savedParams,
+                reportStates: me.reportStates,
+                renderTime: me.renderTime,
+                reportPages: me.pages,
+                paramDefs: me.paramDefs,
+                credentialDefs: me.credentialDefs,
+                savedCredential: me.datasourceCredentials,
+                renderError: me.renderError,
+                parameterModel: parameterModel,
+                paramMetadata: me.paramMetadata
             });
 
             me._clearReportViewerForDrill();
@@ -1734,13 +1743,15 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (me.paramLoaded) {
-                    var $paramArea = me.options.paramArea;
-                    //get current parameter list without validate
-                    paramList = $paramArea.reportParameter("getParamsList", true);
+                if (!subscriptionID) {
+                    if (me.paramLoaded) {
+                        var $paramArea = me.options.paramArea;
+                        //get current parameter list without validate
+                        paramList = $paramArea.reportParameter("getParamsList", true);
+                    }
+                    if (paramList)
+                        me.$emailSub.emailSubscription("option", "paramList", paramList);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -1850,17 +1861,21 @@ $(function () {
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
 
-            var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
-                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
+            var subscriptionParameters = null;
+            if (me.options.showSubscriptionOnOpen) {
+                subscriptionParameters = me._loadSubscriptionParameters(me.options.showSubscriptionOnOpen);
+            }
 
+            var savedParams = me._getSavedParams([subscriptionParameters, savedParamFromHistory, me.savedParameters,
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
+            var savedParamsObj = null;
+            if (savedParams) {
+                savedParamsObj = JSON.parse(savedParams);
+            }
             if (submitForm === undefined)
                 submitForm = true;
 
-            if (savedParams) {
-                //for the parameter report which has saved parameter, we need to get a original parameter copy
-                me.paramMetadata = null;
-                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
-
+            if (savedParamsObj && savedParamsObj.ParamsList && savedParamsObj.ParamsList.length > 0) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
                         $reportViewer: this,
@@ -1882,6 +1897,21 @@ $(function () {
         _paramsToString: function (a) {
             return JSON.stringify(a);
         },
+        _loadSubscriptionParameters: function (subscriptionID) {
+            var me = this;
+            me._setEmailSubscriptionUI();
+            if (me.$emailSub) {
+                var subscriptionInfo = me.$emailSub.emailSubscription("getSubscriptionInfo", subscriptionID);
+                var parameters = subscriptionInfo.Parameters;
+                var transformedParams = [];
+                for (var i = 0; i < parameters.length; i++) {
+                    transformedParams.push({ "Parameter": parameters[i].Name, "Value": parameters[i].Value, "IsMultiple": "false", Type: "" });
+                }
+
+                return JSON.stringify({ "ParamsList": transformedParams });
+            }
+            return null;
+        },
         _loadDefaultParameters: function (pageNum, success) {
             var me = this;
             forerunner.ajax.ajax({
@@ -1897,6 +1927,12 @@ $(function () {
                 dataType: "json",
                 async: false,
                 done: function (data) {
+                    if (data.Debug) {
+                        // Fix up the ReportPath and SessionID if this data is from customer data
+                        data.ReportPath = me.reportPath;
+                        data.SessionID = me.getSessionID();
+                    }
+
                     if (typeof success === "function") {
                         success.call(me, data, pageNum);
                     }
@@ -1973,7 +2009,7 @@ $(function () {
                 me.removeLoadingIndicator();
             }
             else {
-                me._loadPage(pageNum, false, null, null, true); 
+                me._loadPage(pageNum, false, null, null, true);
             }
         },
         /**
@@ -1992,6 +2028,12 @@ $(function () {
             if (pageNum === -1) {
                 pageNum = me.getCurPage();
             }
+
+            //for the parameter report which has saved parameter, we need to get a original parameter copy
+            if (!me.paramMetadata) {
+                me._loadDefaultParameters(pageNum, me._getParameterMetadata);
+            }
+
             if (paramList) {
                 forerunner.ajax.ajax({
                     type: "POST",
@@ -2062,6 +2104,7 @@ $(function () {
                 me._removeAutoRefreshTimeout();
                 me.SaveThumbnail = false;
                 me.RDLExtProperty = null;
+                me.paramMetadata = null;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -2072,7 +2115,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
-            me.renderError = false;            
+            me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
 
             if (!isSameReport) {
@@ -2317,6 +2360,16 @@ $(function () {
             }
             me.togglePageNum = newPageNum;
 
+            var dsCredentials = me.getDataSourceCredential();
+            var reportJSONData = {
+                ReportPath: encodeURIComponent(me.reportPath),
+                SessionID: me.sessionID,
+                PageNumber: newPageNum,
+                ParameterList: paramList,
+                DSCredentials: dsCredentials,
+                instance: me.options.rsInstance
+            };
+
             if (me.isDebug) {
                 console.log("LoadPage", {
                     ReportPath: encodeURIComponent(me.reportPath),
@@ -2327,19 +2380,18 @@ $(function () {
                     instance: me.options.rsInstance,
                 });
             }
+            // Allow a handler to change the post data before we load the page
+            me._trigger(events.preLoadPage, null, {
+                viewer: me,
+                reportJSONData: reportJSONData
+            });
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
-                    data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
-                        SessionID: me.sessionID,
-                        PageNumber: newPageNum,
-                        ParameterList: paramList,
-                        DSCredentials: me.getDataSourceCredential(),
-                        instance: me.options.rsInstance,
-                    }, 
+                    data: reportJSONData, 
                     async: true,
                     done: function (data) {
  

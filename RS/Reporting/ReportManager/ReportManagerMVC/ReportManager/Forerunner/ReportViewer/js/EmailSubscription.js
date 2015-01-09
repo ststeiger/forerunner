@@ -187,7 +187,7 @@ $(function () {
                     }
                 }
             }
-            if (me.options.paramList) {
+            if (me.options.paramList && !me._subscriptionData.Parameters) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {

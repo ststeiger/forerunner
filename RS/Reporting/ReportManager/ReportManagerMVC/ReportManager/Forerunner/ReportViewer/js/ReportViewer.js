@@ -1743,15 +1743,14 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (!subscriptionID) {
-                    if (me.paramLoaded) {
-                        var $paramArea = me.options.paramArea;
-                        //get current parameter list without validate
-                        paramList = $paramArea.reportParameter("getParamsList", true);
-                    }
-                    if (paramList)
-                        me.$emailSub.emailSubscription("option", "paramList", paramList);
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
                 }
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }

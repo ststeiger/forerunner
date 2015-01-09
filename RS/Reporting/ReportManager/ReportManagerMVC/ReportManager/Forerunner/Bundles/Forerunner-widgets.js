@@ -2374,15 +2374,14 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (!subscriptionID) {
-                    if (me.paramLoaded) {
-                        var $paramArea = me.options.paramArea;
-                        //get current parameter list without validate
-                        paramList = $paramArea.reportParameter("getParamsList", true);
-                    }
-                    if (paramList)
-                        me.$emailSub.emailSubscription("option", "paramList", paramList);
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
                 }
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -17445,7 +17444,7 @@ $(function () {
                     }
                 }
             }
-            if (me.options.paramList) {
+            if (me.options.paramList && !me._subscriptionData.Parameters) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {

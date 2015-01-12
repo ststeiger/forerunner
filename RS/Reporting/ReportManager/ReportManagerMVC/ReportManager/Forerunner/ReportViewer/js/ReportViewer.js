@@ -2429,7 +2429,6 @@ $(function () {
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
             var me = this;
-
             var data = { Exception: 
                 {
                     DetailMessage: errorThrown,

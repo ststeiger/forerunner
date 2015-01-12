@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -3060,7 +3060,6 @@ $(function () {
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {
             var me = this;
-
             var data = { Exception: 
                 {
                     DetailMessage: errorThrown,

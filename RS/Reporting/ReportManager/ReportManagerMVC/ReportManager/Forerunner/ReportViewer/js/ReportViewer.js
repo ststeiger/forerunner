@@ -1987,6 +1987,7 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 
@@ -2383,6 +2384,10 @@ $(function () {
                 viewer: me,
                 reportJSONData: reportJSONData
             });
+
+            //If not loaded load RDLExt
+            if (!me.RDLExtProperty)
+                me._getRDLExtProp();
 
             forerunner.ajax.ajax(
                 {

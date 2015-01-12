@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2618,6 +2618,7 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 
@@ -3014,6 +3015,10 @@ $(function () {
                 viewer: me,
                 reportJSONData: reportJSONData
             });
+
+            //If not loaded load RDLExt
+            if (!me.RDLExtProperty)
+                me._getRDLExtProp();
 
             forerunner.ajax.ajax(
                 {

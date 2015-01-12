@@ -2619,7 +2619,6 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
-
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 

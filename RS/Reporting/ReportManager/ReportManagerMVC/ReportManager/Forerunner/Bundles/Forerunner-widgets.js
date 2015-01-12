@@ -11920,7 +11920,7 @@ $(function () {
         _init: function () {
             var me = this;
             me.element.html(null);
-            me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
+            me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "off") === "on";
         },
         _render: function () {
             var me = this;

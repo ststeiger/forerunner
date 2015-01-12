@@ -2385,6 +2385,10 @@ $(function () {
                 reportJSONData: reportJSONData
             });
 
+            //If not loaded load RDLExt
+            if (!me.RDLExtProperty)
+                me._getRDLExtProp();
+
             forerunner.ajax.ajax(
                 {
                     type: "POST",

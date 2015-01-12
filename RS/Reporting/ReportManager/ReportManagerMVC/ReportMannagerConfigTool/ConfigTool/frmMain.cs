@@ -258,8 +258,6 @@ namespace ReportMannagerConfigTool
 
                 System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
                 string result;
-
-                result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD), rdoDomain.Checked);
            
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -571,6 +569,23 @@ namespace ReportMannagerConfigTool
         }
 
         private void tabActivation_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnUpdateSchema_Click(object sender, EventArgs e)
+        {
+            frmDBLogin frm = new frmDBLogin();
+            frm.ShowDialog();
+            
+        }
+
+        private void frmMain_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rdoDomain_CheckedChanged(object sender, EventArgs e)
         {
 
         }

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -2298,6 +2298,8 @@ $(function () {
             $.validator.addMethod(
                 "formattedDate",
                 function (value, element) {
+                    if ($.trim(value) === "") return true;
+
                     return moment(value, forerunner.ssr._internal.getMomentDateFormat(), true).isValid();
                 },
                 error.date

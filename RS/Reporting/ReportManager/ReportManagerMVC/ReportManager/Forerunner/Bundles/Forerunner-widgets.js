@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2374,15 +2374,13 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (!subscriptionID) {
-                    if (me.paramLoaded) {
-                        var $paramArea = me.options.paramArea;
-                        //get current parameter list without validate
-                        paramList = $paramArea.reportParameter("getParamsList", true);
-                    }
-                    if (paramList)
-                        me.$emailSub.emailSubscription("option", "paramList", paramList);
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
                 }
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -12660,9 +12658,6 @@ $(function () {
                 customVal = $control.val();
                 $control.attr('data-custom', customVal).val("");
 
-                customVal = $control.val();
-                $control.attr('data-custom', customVal).val("");
-
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -12672,6 +12667,9 @@ $(function () {
                     $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
                         $(".fr-paramname-" + childname).addClass("fr-usedefault");
                     });
+
+                    $control.removeClass("fr-param-cascadingtree-error");
+                    $control.valid();
                 }
 
                 if ($control.hasClass("fr-param-dropdown-input")) {
@@ -17449,7 +17447,7 @@ $(function () {
                     }
                 }
             }
-            if (me.options.paramList) {
+            if (me.options.paramList && !me._subscriptionData.Parameters) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {

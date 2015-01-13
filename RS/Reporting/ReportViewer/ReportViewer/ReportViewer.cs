@@ -869,7 +869,7 @@ namespace Forerunner.SSRS.Viewer
                 String exePath = Path.Combine(start.WorkingDirectory, start.FileName);
                 if (!File.Exists(exePath))
                 {
-                    Exception e = new System.IO.FileNotFoundException(Path.Combine(start.WorkingDirectory, start.FileName));
+                    Exception e = new System.IO.FileNotFoundException(exePath);
                     throw (e);
                 }
                 start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;

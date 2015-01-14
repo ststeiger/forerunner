@@ -325,6 +325,8 @@ $(function () {
             contextMenuBase: "contextMenuBase",
             /** @constant */
             reportExplorerContextMenu: "reportExplorerContextMenu",
+            /** @constant */
+            viewerBase: "viewerBase",
 
             /** @constant */
             namespace: "forerunner",

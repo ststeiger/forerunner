@@ -113,6 +113,11 @@ $(function () {
             $propertySection.addClass("fr-properties-section");
             me.$propertySection = $propertySection;
             $container.append($propertySection);
+            //Security Dialog Section
+            var $securitySection = new $("<div />");
+            $securitySection.addClass("fr-security-section");
+            me.$securitySection = $securitySection;
+            $container.append($securitySection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
@@ -120,6 +125,7 @@ $(function () {
             $mainviewport.append(me.$unzoomsection);
 
             me._initPropertiesDialog();
+            me._initSecurityDialog();
 
             me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
             //dashboard report toolbar height, used for each report floating header
@@ -165,6 +171,16 @@ $(function () {
             me.$propertySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
 
             me.$propertySection.forerunnerProperties({
+                $appContainer: me.$container,
+                $reportViewer: me.$mainviewport,
+                $reportExplorer: me.$mainsection
+            });
+        },
+        _initSecurityDialog: function () {
+            var me = this;
+            me.$securitySection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$securitySection.forerunnerSecurity({
                 $appContainer: me.$container,
                 $reportViewer: me.$mainviewport,
                 $reportExplorer: me.$mainsection

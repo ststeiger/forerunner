@@ -62,12 +62,12 @@ namespace ReportManager.Controllers
             //rm.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));            
             return rm;
         }
-        
-        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
+
+        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
-            if (result == null || result.Length ==0)
+            if (result == null || result.Length == 0)
             {
                 resp.StatusCode = HttpStatusCode.NotFound;
             }
@@ -78,8 +78,7 @@ namespace ReportManager.Controllers
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
-            
-            
+
             return resp;
         }
 
@@ -446,6 +445,73 @@ namespace ReportManager.Controllers
             }
 
             return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetItemPolicies(string itemPath, string instance = null)
+        {
+            try
+            {
+                string result = GetReportManager(instance).GetItemPolicies(itemPath);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        public class SetPolicy
+        {
+            public string itemPath { get; set; }
+            public string policies { get; set; }
+            public string instance { get; set; }
+        }
+        [HttpPost]
+        public HttpResponseMessage SetItemPolicies(SetPolicy policy)
+        {
+            try
+            {
+                var result = GetReportManager(policy.instance).SetItemPolicies(policy.itemPath, policy.policies);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ListRoles(string type, string itemPath, string instance = null)
+        {
+            try
+            {
+                var result = GetReportManager(instance).ListRoles(type, itemPath);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
+        public class InheritSecurity
+        {
+            public string itemPath { get; set; }
+            public string instance { get; set; }
+        }
+        [HttpPost]
+        public HttpResponseMessage InheritParentSecurity(InheritSecurity inheritParent)
+        {
+            try
+            {
+                var result = GetReportManager(inheritParent.instance).InheritParentSecurity(inheritParent.itemPath);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]

@@ -78,6 +78,8 @@ $(function () {
                 me._setPropertiesTabs(path, propertyListMap.searchFolder);
             }
 
+            me._setSecurity(path);
+
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
             if (showmainesection)
@@ -563,6 +565,10 @@ $(function () {
         _setPropertiesTabs: function (path, propertyList) {
             var me = this;
             me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
+        },
+        _setSecurity: function (path) {
+            var me = this;
+            me.DefaultAppTemplate.$securitySection.forerunnerSecurity("setData", path, "Catalog");
         },
         /**
          * Get report explorer object

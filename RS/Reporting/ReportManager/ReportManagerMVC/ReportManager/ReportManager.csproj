@@ -181,6 +181,7 @@
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
+    <Content Include="Forerunner\Common\css\ForerunnerSecurity.css" />
     <Content Include="Forerunner\Common\css\MessageBox.css" />
     <Content Include="Forerunner\Common\css\Login.css" />
     <Content Include="Forerunner\Common\css\ReportManager.css" />
@@ -200,6 +201,7 @@
     <Content Include="Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png" />
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
+    <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />

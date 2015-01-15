@@ -70,6 +70,18 @@ $(function () {
                 me._$properties.addClass("fr-core-cursorpointer");
             }
 
+            me._$security.off("click");
+            if (!me.permissions["Update Security Policies"]) {
+                me._$security.addClass("fr-toolbase-disabled");
+                me._$security.removeClass("fr-core-cursorpointer");
+            } else {
+                me._$security.on("click", function (event, data) {
+                    me._onClickSecurity.apply(me, arguments);
+                });
+                me._$security.removeClass("fr-toolbase-disabled");
+                me._$security.addClass("fr-core-cursorpointer");
+            }
+
             // Call contextMenuBase._init()
             me._super();
         },
@@ -82,6 +94,7 @@ $(function () {
             me.addHeader();
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
+            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -131,8 +144,33 @@ $(function () {
                 // Restore the previous settings
                 if (previous && previous.path && previous.propertyList) {
                     $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+
+                    previous = null;
                 }
                 me.options.$reportExplorer.reportExplorer("refresh");
+            });
+            me.closeMenu();
+        },
+        _onClickSecurity: function (event, data) {
+            var me = this;
+
+            var $securityDlg = me.options.$appContainer.find(".fr-security-section");
+            if (!$securityDlg || $securityDlg.length === 0) {
+                console.log("Error - fr-security-section not found");
+                return;
+            }
+
+            var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
+
+            $securityDlg.forerunnerSecurity("setData", me.options.catalogItem.Path, "Catalog");
+            $securityDlg.forerunnerSecurity("openDialog");
+
+            $securityDlg.one(events.forerunnerSecurityClose(), function (event, data) {
+                if (previous) {
+                    $securityDlg.forerunnerSecurity("setCurPolicy", previous);
+
+                    previous = null;
+                }
             });
             me.closeMenu();
         }

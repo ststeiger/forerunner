@@ -1,4 +1,10 @@
 ﻿{
+  "common" : {
+	"submit":"Submit",
+	"cancel":"Cancel",
+	"delete":"Delete",
+	"edit":"Edit"
+  },
   "messages": {
     "loading":"Loading...",
     "completeFind":"The entire report has been searched",
@@ -283,6 +289,16 @@
   "contextMenu":{
     "title":"Context Menu",
     "delLabel": "Delete",
-    "properties": "Properties"
+    "properties": "Properties",
+	"security":"Security"
+  },
+  "security": {
+	"title": "Security",
+	"newPolicy":"New",
+	"reset":"Reset",
+	"roles":"Roles",
+	"desp":"Description",
+	"groupuser":"Group or User",
+	"prompt":"Select the roles you want to assign"
   }
 }

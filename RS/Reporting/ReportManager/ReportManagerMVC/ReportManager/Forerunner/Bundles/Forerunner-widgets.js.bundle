@@ -9,6 +9,7 @@
     <file>/Forerunner/Common/js/DefaultAppTemplate.js</file>
     <file>/Forerunner/Common/js/DashboardModel.js</file>
     <file>/Forerunner/Common/js/ForerunnerProperties.js</file>
+    <file>/Forerunner/Common/js/ForerunnerSecurity.js</file>
     <file>/Forerunner/Common/js/ContextMenuBase.js</file>
     <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
     <file>/Forerunner/ReportViewer/js/ToolPane.js</file>

@@ -11,6 +11,7 @@
   <file>/Forerunner/Common/css/ToolBase.css</file>
   <file>/Forerunner/Common/css/ForerunnerProperties.css</file>
   <file>/Forerunner/Common/css/ContextMenuBase.css</file>
+  <file>/Forerunner/Common/css/ForerunnerSecurity.css</file>
   <file>/Forerunner/ReportExplorer/css/ReportExplorer.css</file>
   <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
   <file>/Forerunner/ReportExplorer/css/ManageMySubscriptions.css</file>

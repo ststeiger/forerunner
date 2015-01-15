@@ -246,5 +246,49 @@ namespace Forerunner.SSRS.Management
             else
                 RSSPS.DeleteSubscription(SubscriptionID);
         }
+
+        public Policy[] GetPolicies(string itemPath, out bool inheritParent)
+        {
+            if (IsNative)
+                return RSNative.GetPolicies(itemPath, out inheritParent);
+            else
+                return RSSPS.GetPolicies(itemPath, out inheritParent);
+        }
+
+        public void SetPolicies(string itemPath, Policy[] policies)
+        {
+            if (IsNative)
+                RSNative.SetPolicies(itemPath, policies);
+            else
+                RSSPS.SetPolicies(itemPath, policies);
+
+            return;
+        }
+
+        public Role[] ListRoles(string type, string itemPath)
+        {
+            if (IsNative)
+            {
+                Native.SecurityScopeEnum securityScope = (Native.SecurityScopeEnum)Enum.Parse(typeof(Native.SecurityScopeEnum), type, true);
+
+                return RSNative.ListRoles(securityScope);
+            }
+            else
+            {
+                SecurityScopeEnum securityScope = (SecurityScopeEnum)Enum.Parse(typeof(SecurityScopeEnum), type, true);
+
+                return RSSPS.ListRoles(securityScope, itemPath);
+            }
+        }
+
+        public void InheridParentSecurity(string itemPath)
+        {
+            if (IsNative)
+                RSNative.InheritParentSecurity(itemPath);
+            else
+                RSSPS.InheritParentSecurity(itemPath);
+
+            return;
+        }
     }
 }

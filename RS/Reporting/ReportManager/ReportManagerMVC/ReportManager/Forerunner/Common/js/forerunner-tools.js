@@ -1667,7 +1667,7 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-searchfolder"]);
                 }
             }
-        }
+        }       
     };
 
     /**
@@ -1818,6 +1818,21 @@ $(function () {
                     var $propertyDlg = e.data.me.options.$appContainer.children(".fr-properties-section");
                     $propertyDlg.forerunnerProperties("openDialog");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-tags"]);
+                }
+            }
+        },
+        /** @member */
+        itemSecurity: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-security",
+            imageClass: "fr-icons24x24-tags",
+            sharedClass: "fr-hide-if-disable",
+            text: "Security",//locData.properties.title,
+            events: {
+                click: function (e) {
+                    var $propertyDlg = e.data.me.options.$appContainer.children(".fr-security-section");
+                    $propertyDlg.forerunnerSecurity("openDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-security"]);
                 }
             }
         }

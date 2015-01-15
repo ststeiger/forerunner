@@ -88,6 +88,27 @@ $(function () {
             
         },
         /**
+        * Show the properties modal dialog.
+        *
+        * @function $.forerunner.forerunnerProperties#openDialog
+        */
+        openDialog: function () {
+            var me = this;
+            // me._beforeOpenDialog();
+
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close the properties modal dialog.
+         *
+         * @function $.forerunner.forerunnerProperties#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        /**
          * Returns the current path and propertyList
          *
          * @function $.forerunner.forerunnerProperties#getProperties
@@ -297,27 +318,6 @@ $(function () {
             if (result === true) {
                 me.closeDialog();
             }
-        },
-        /**
-         * Show the properties modal dialog.
-         *
-         * @function $.forerunner.forerunnerProperties#openDialog
-         */
-        openDialog: function () {
-            var me = this;
-           // me._beforeOpenDialog();
-            
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-        },
-        /**
-         * Close the properties modal dialog.
-         *
-         * @function $.forerunner.forerunnerProperties#closeDialog
-         */
-        closeDialog: function () {
-            var me = this;
-            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _preprocess: null,
         _addPreprocess: function (func) {

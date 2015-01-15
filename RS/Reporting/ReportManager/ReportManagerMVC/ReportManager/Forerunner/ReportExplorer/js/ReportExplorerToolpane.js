@@ -110,6 +110,7 @@ $(function () {
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
+                toolpaneItems.push(mi.itemSecurity);
             }
 
             toolpaneItems.push(tg.explorerItemFindGroup);
@@ -141,15 +142,23 @@ $(function () {
             var me = this;
 
             // Then we start out disabled and enable if needed
-            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty]);
+            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty, mi.itemSecurity]);
 
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
 
-                if (lastFetched.view === "catalog" && permissions["Create Resource"]) {
-                    me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
-                    me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                if (lastFetched.view === "catalog") {
+                    
+                    if (permissions["Create Resource"]) {
+                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                        me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                    }
+
+                    if (permissions["Update Security Policies"]) {
+                        me.enableTools([mi.itemSecurity]);
+                        me.removeHideDisable([mi.itemSecurity]);
+                    }
                 }
 
                 if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {

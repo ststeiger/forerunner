@@ -866,6 +866,12 @@ namespace Forerunner.SSRS.Viewer
                 System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
                 start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
                 start.FileName = @"Forerunner.Thumbnail.exe";
+                String exePath = Path.Combine(start.WorkingDirectory, start.FileName);
+                if (!File.Exists(exePath))
+                {
+                    Exception e = new System.IO.FileNotFoundException(exePath);
+                    throw (e);
+                }
                 start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 start.Arguments = fileName;
                 Process p = System.Diagnostics.Process.Start(start);

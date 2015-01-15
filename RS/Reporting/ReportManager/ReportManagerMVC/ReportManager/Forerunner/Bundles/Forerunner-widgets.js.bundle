@@ -2,6 +2,7 @@
 <bundle minify="true" runOnBuild="true" output="Forerunner-widgets.js">
     <!--The order of the <file> elements determines the order of them when bundled.-->
     <file>/Forerunner/Common/js/History.js</file>
+    <file>/Forerunner/Common/js/Viewerbase.js</file>
     <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
     <file>/Forerunner/ReportExplorer/js/ParameterModel.js</file>
     <file>/Forerunner/Common/js/Toolbase.js</file>

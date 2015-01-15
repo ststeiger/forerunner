@@ -200,6 +200,7 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\Tags.png" />
     <Content Include="Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png" />
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
+    <Content Include="Forerunner\Common\js\Viewerbase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />

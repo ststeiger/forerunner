@@ -78,6 +78,12 @@
       <Link>Impersonator.cs</Link>
     </Compile>
     <Compile Include="ClientLicense.cs" />
+    <Compile Include="ConfigTool\frmDBLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigTool\frmDBLogin.Designer.cs">
+      <DependentUpon>frmDBLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigTool\frmActivation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,6 +117,9 @@
     <Compile Include="RenderExtension\RenderExtensionConfig.cs" />
     <Compile Include="ReportManager\ReportManagerConfig.cs" />
     <Compile Include="WebServer\WebServerConfig.cs" />
+    <EmbeddedResource Include="ConfigTool\frmDBLogin.resx">
+      <DependentUpon>frmDBLogin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigTool\frmActivation.resx">
       <DependentUpon>frmActivation.cs</DependentUpon>
     </EmbeddedResource>

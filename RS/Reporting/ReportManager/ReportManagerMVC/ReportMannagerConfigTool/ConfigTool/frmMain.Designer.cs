@@ -89,6 +89,7 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
+            this.btnUpdateSchema = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -111,6 +112,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btnUpdateSchema);
             this.tabPage2.Controls.Add(this.gbSSRS);
             this.tabPage2.Controls.Add(this.gbDBLoginInfo);
             this.tabPage2.Controls.Add(this.btnTest);
@@ -253,6 +255,7 @@
             this.rdoDomain.TabStop = true;
             this.rdoDomain.Tag = "DomainAccount";
             this.rdoDomain.UseVisualStyleBackColor = true;
+            this.rdoDomain.CheckedChanged += new System.EventHandler(this.rdoDomain_CheckedChanged);
             // 
             // txtDBName
             // 
@@ -529,6 +532,13 @@
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
             // 
+            // btnUpdateSchema
+            // 
+            resources.ApplyResources(this.btnUpdateSchema, "btnUpdateSchema");
+            this.btnUpdateSchema.Name = "btnUpdateSchema";
+            this.btnUpdateSchema.UseVisualStyleBackColor = true;
+            this.btnUpdateSchema.Click += new System.EventHandler(this.btnUpdateSchema_Click);
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -537,6 +547,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "frmMain";
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.tabMain.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.gbSSRS.ResumeLayout(false);
@@ -617,6 +628,7 @@
         private System.Windows.Forms.Label lblDefaultUserDomain;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnSplit;
+        private System.Windows.Forms.Button btnUpdateSchema;
     }
 }
 

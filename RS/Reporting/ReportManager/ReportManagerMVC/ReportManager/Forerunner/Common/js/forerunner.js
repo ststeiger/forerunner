@@ -327,6 +327,8 @@ $(function () {
             reportExplorerContextMenu: "reportExplorerContextMenu",
             /** @constant */
             forerunnerSecurity: "forerunnerSecurity",
+            /** @constant */
+            viewerBase: "viewerBase",
 
             /** @constant */
             namespace: "forerunner",

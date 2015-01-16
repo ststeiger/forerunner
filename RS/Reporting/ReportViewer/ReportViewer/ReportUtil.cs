@@ -14,6 +14,7 @@ using Forerunner.SSRS.Viewer;
 using Forerunner.SSRS.Manager;
 using Forerunner.Config;
 using Forerunner.Logging;
+using Management = Forerunner.SSRS.Management;
 using Native = Forerunner.SSRS.Management.Native;
 
 namespace Forerunner
@@ -498,6 +499,7 @@ namespace Forerunner
 
             
         }
+
         internal static string GetDocMapJSON(DocumentMapNode DocumentMap)
         {
             JsonWriter w = new JsonTextWriter();
@@ -511,6 +513,7 @@ namespace Forerunner
 
             return w.ToString();
         }
+
         internal static string GetMimeTypeFromBytes(byte[] data)
         {
             string mime = "application/octet-stream"; //DEFAULT UNKNOWN MIME TYPE
@@ -618,6 +621,7 @@ namespace Forerunner
             }
             return list.ToArray();
         }
+
         internal static string GetDataSourceCredentialJSON(DataSourcePrompt[] prompts, string reportPath, string sessionID, string numPages = "1")
         {
             JsonWriter w = new JsonTextWriter();
@@ -697,6 +701,81 @@ namespace Forerunner
                 //JsonString tags = jsonObj["tags"] as JsonString;
                 return jsonObj["tags"].ToString();
             }
+        }
+
+        //convert json string to the Policy array
+        public static Management.Policy[] GetPoliciesFromJson(string jsonStr)
+        {
+            List<Management.Policy> policies = new List<Management.Policy>();
+
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(jsonStr)))
+            {
+                JsonArray policyArray = new JsonArray();
+                policyArray.Import(reader);                
+                
+                foreach (JsonObject obj in policyArray)
+                {
+                    Management.Policy policy = new Management.Policy();
+
+                    policy.GroupUserName = obj["GroupUserName"].ToString();
+
+                    JsonArray roleArray = obj["Roles"] as JsonArray;
+
+                    List<Management.Role> roleList = new List<Management.Role>();
+
+                    foreach (JsonObject jsonRole in roleArray)
+                    {
+                        Management.Role role = new Management.Role();
+
+                        role.Name = jsonRole["Name"].ToString();
+
+                        roleList.Add(role);
+                    }
+
+                    policy.Roles = roleList.ToArray();
+
+                    policies.Add(policy);
+                }
+            }
+
+            return policies.ToArray();
+        }
+
+        public static string GetPoliciesJson(Management.Policy[] policy, bool isInheritParent)
+        {
+            JsonWriter w = new JsonTextWriter();
+
+            w.WriteStartObject();
+            w.WriteMember("isInheritParent");
+            w.WriteBoolean(isInheritParent);
+
+            w.WriteMember("policyArr");
+            w.WriteStartArray();
+            for (int i = 0; i < policy.Length; i++)
+            {
+                w.WriteStartObject();
+                w.WriteMember("GroupUserName");
+                w.WriteString(policy[i].GroupUserName);
+
+                w.WriteMember("Roles");
+                w.WriteStartArray();
+                for (int j = 0; j < policy[i].Roles.Length; j++)
+                {
+                    w.WriteStartObject();
+                    w.WriteMember("Name");
+                    w.WriteString(policy[i].Roles[j].Name);
+                    w.WriteMember("Description");
+                    w.WriteString(policy[i].Roles[j].Description);
+                    w.WriteEndObject();
+                }
+                w.WriteEndArray();
+
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            w.WriteEndObject();
+
+            return w.ToString();
         }
     }
 }

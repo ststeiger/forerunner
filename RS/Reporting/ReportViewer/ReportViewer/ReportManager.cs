@@ -2100,6 +2100,55 @@ namespace Forerunner.SSRS.Manager
             return MobilizerSetting;
         }
 
+        /*
+         * get the exist policy for the specific item path
+         */
+        public string GetItemPolicies(string itemPath)
+        {
+            bool isInheritParent;
+
+            rs.Credentials = GetCredentials();
+
+            var policyArr = rs.GetPolicies(HttpUtility.UrlDecode(itemPath), out isInheritParent);
+
+            return JsonUtility.GetPoliciesJson(policyArr, isInheritParent);
+        }
+
+        /*
+         * get all available roles base on the specific item type ( All, Catalog, Model, System)
+         * 
+         * in the sharepoint model need to pass item path
+         */
+        public Role[] ListRoles(string type, string itemPath)
+        {
+            rs.Credentials = GetCredentials();
+
+            return rs.ListRoles(type, HttpUtility.UrlDecode(itemPath));
+        }
+
+        /*
+         * reset current item policy to its parent
+         */
+        public string InheritParentSecurity(string itemPath)
+        {
+            rs.Credentials = GetCredentials();
+            rs.InheridParentSecurity(HttpUtility.UrlDecode(itemPath));
+            return getReturnSuccess();
+        }
+
+        /*
+         * set the policits to the specific item
+         */
+        public string SetItemPolicies(string itemPath, string policies)
+        {
+            rs.Credentials = GetCredentials();
+            Policy[] policyArray = JsonUtility.GetPoliciesFromJson(policies);
+
+            rs.SetPolicies(HttpUtility.HtmlDecode(itemPath), policyArray);
+
+            return getReturnSuccess();
+        }
+
         void MobilizerWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             MobilizerSetting = "{}";

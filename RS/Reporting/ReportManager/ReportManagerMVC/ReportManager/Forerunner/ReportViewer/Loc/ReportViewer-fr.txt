@@ -284,6 +284,22 @@
   "contextMenu": {
     "title":"Menu contextuel",
     "delLabel":"effacer",
-    "properties":"propriétés"
+    "properties":"propriétés",
+    "security":"Security"
+  },
+  "common": {
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit"
+  },
+  "security": {
+    "title":"",
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   }
 }

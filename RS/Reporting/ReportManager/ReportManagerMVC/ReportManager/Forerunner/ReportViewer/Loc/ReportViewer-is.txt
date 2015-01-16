@@ -283,6 +283,22 @@
   "contextMenu": {
     "title":"samhengi Matseðill",
     "delLabel":"eyða",
-    "properties":"eiginleikar"
+    "properties":"eiginleikar",
+    "security":"Security"
+  },
+  "common": {
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit"
+  },
+  "security": {
+    "title":"",
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   }
 }

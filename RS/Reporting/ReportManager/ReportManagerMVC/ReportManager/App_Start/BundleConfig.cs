@@ -20,6 +20,7 @@ namespace ReportManager
                   "~/Forerunner/Common/css/DefaultAppTemplate.css",
                   "~/Forerunner/Common/css/Forerunner-core.css",
                   "~/Forerunner/Common/css/ForerunnerProperties.css",
+                  "~/Forerunner/Common/css/ForerunnerSecurity.css",
                   "~/Forerunner/Common/css/Login.css",
                   "~/Forerunner/Common/css/MessageBox.css",
                   "~/Forerunner/Common/css/ReportManager.css",

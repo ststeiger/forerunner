@@ -326,6 +326,8 @@ $(function () {
             /** @constant */
             reportExplorerContextMenu: "reportExplorerContextMenu",
             /** @constant */
+            forerunnerSecurity: "forerunnerSecurity",
+            /** @constant */
             viewerBase: "viewerBase",
 
             /** @constant */
@@ -573,6 +575,8 @@ $(function () {
             userSettingsClose: function () { return (forerunner.ssr.constants.widgets.userSettings + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",

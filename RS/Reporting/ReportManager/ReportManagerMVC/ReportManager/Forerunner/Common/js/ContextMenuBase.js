@@ -74,7 +74,7 @@ $(function () {
                 return me.permissionList;
             }
 
-            return ["Delete", "Update Properties"];
+            return ["Delete", "Update Properties", "Update Security Policies"];
         },
         /*
          * Gets the permissions defined by the call to setPermissionsList

@@ -39,7 +39,7 @@ $(function () {
      *    explorerSettings: explorerSettings
      * });
      */
-    $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
+    $.widget(widgets.getFullname(widgets.reportExplorer), $.forerunner.viewerBase, /** @lends $.forerunner.reportViewer */ {
         options: {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             forerunnerPath: forerunner.config.forerunnerFolder(),
@@ -479,6 +479,13 @@ $(function () {
                 }
             }
         },
+        // Constructor
+        _create: function () {
+            var me = this;
+
+            // Make sure the viewerBase _create gets called
+            me._super();
+        },
         _init: function () {
             var me = this;
             me.$RMList = null;
@@ -488,7 +495,11 @@ $(function () {
             me.selectedItem = 0;
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
+            me._super(me.$explorer);
+            me.$viewerContainer = me.$explorer;
             me.$selectedItem = null;
+
+            me.showLoadingIndictator();
 
             if (me.options.view === "catalog" || me.options.view === "searchfolder") {
                 me._checkPermission();
@@ -537,6 +548,8 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._searchFolderDialog = $dlg;
+
+            me.removeLoadingIndicator();
         },
         _checkPermission: function () {
             var me = this;

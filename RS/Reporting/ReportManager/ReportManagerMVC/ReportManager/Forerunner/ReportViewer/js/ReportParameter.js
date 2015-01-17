@@ -61,7 +61,8 @@ $(function () {
         _render: function () {
             var me = this;
 
-            me.element.html(null);
+            me.element.children().remove();
+
             var $params = new $("<div class='" + paramContainerClass + " fr-core-widget'>" +
                 "<form class='fr-param-form' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
@@ -1854,6 +1855,9 @@ $(function () {
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
+            $control.delegate('label', 'click', function (e) {
+                $(this).siblings('.fr-param-dropdown-checkbox').trigger('click');
+            });
             return $control;
         },
         _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
@@ -2216,7 +2220,7 @@ $(function () {
             me._parameterDefinitions = null;
             me._dependencyList = null;
 
-            $("." + paramContainerClass, me.element).detach();
+            $("." + paramContainerClass, me.element).remove();
         },
         _getDefaultHTMLTable: function () {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");
@@ -2262,7 +2266,15 @@ $(function () {
 
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
-                    var $targetElement = $(".fr-paramname-" + dependence, me.$params);
+                    //exclude hidden element
+                    var $targetElement = $(".fr-paramname-" + dependence, me.$params).not("[type='hidden']");
+                    /*
+                        if more than one parameter depend on the same parameter, then this 
+                        parent parameter will bind change event more than once
+                        so need to off change event first and bind
+                    */
+                    $targetElement.off("change");
+
                     $targetElement.on("change", function () {
                         me._refreshParameters(null, true, dependence);
                     });
@@ -2291,16 +2303,23 @@ $(function () {
                 }
 
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
+                    /*
+                       For cascading tree component, only support 1 to 1 relationship
+                       for 1-many, many-1, many-many cases show them in standard mode
+                    */
+                    if (me._isDropdownTree && param.Dependencies.length > 1) {
+                        me._isDropdownTree = false;
+                    }
                     me._dependencyList = me._dependencyList || {};
 
                     me._parameterDefinitions[param.Name].isChild = true;
 
-                    if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
+                    if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
                         me._isDropdownTree = false;
                     }
 
                     //handle the hidden cascading parameter case, but I think it should not never happen.
-                    if (param.Prompt === "") {
+                    if (me._isDropdownTree && param.Prompt === "") {
                         me._isDropdownTree = false;
                     }
 
@@ -2308,7 +2327,7 @@ $(function () {
                         me._parameterDefinitions[dependence].isParent = true;
                         //now we only support cascading tree to dropdown type, if either parent or children don't have validvalues
                         //then we don't apply tree to the element
-                        if (me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
+                        if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
                             me._isDropdownTree = false;
                         }
 
@@ -2319,6 +2338,10 @@ $(function () {
 
                         if (!me._contains(me._dependencyList[dependence], param.Name)) {
                             me._dependencyList[dependence].push(param.Name);
+
+                            if (me._dependencyList[dependence].length > 1) {
+                                me._isDropdownTree = false;
+                            }
                         }
                     });
                 }
@@ -2330,6 +2353,7 @@ $(function () {
             //set false not to do form validate.
 
             var paramList = savedParams ? savedParams : me.getParamsList(true);
+
             if (isCascading && parentName) {
                 paramList = me._removeChildParam(paramList, parentName);
             }

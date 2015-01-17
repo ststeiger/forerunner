@@ -155,6 +155,10 @@ $(function () {
                 });
             }
         },
+        _init: function () {
+            var me = this;
+            me._super(me.$reportContainer);
+        },
         _checkPermission: function (path) {
             var me = this;
             //Create Subscription: create subscription
@@ -1213,7 +1217,7 @@ $(function () {
                 return;
             me.lock = 1;
 
-            me._addLoadingIndicator();
+            me.showLoadingIndictator();
             me._resetContextIfInvalid();
             me._prepareAction();
             
@@ -1333,7 +1337,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._addLoadingIndicator();
+            me.showLoadingIndictator();
             me._resetContextIfInvalid();
             me._prepareAction();
             if (me.isDebug) {
@@ -1815,7 +1819,7 @@ $(function () {
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
             var savedParamsObj = null;
             if (savedParams) {
-                savedParamsObj = JSON.parse(savedParams);
+                savedParamsObj =forerunner.helper.JSONParse(savedParams);
             }
             if (submitForm === undefined)
                 submitForm = true;
@@ -1896,7 +1900,7 @@ $(function () {
             } else {
                 if (data.SessionID)
                     me.sessionID = data.SessionID;
-                me._addLoadingIndicator();
+                me.showLoadingIndictator();
                 me._showParameters(pageNum, data);
             }
         },
@@ -2246,7 +2250,7 @@ $(function () {
             if (!me.element.is(":visible") && !loadOnly)
                 me.element.show(); //scrollto does not work with the slide in functions:(
 
-            me._addLoadingIndicator();
+            me.showLoadingIndictator();
             me.togglePageNum = newPageNum;
             forerunner.ajax.ajax(
                 {
@@ -2300,7 +2304,7 @@ $(function () {
             if (!paramList) paramList = "";
 
             if (!loadOnly) {
-                me._addLoadingIndicator();
+                me.showLoadingIndictator();
             }
             me.togglePageNum = newPageNum;
 

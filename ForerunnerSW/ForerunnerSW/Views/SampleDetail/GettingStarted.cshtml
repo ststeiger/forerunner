@@ -57,11 +57,12 @@
             Copy the "Custom" folder from your Mobilizer installation.
         </li>
         <br />
-        <li>Copy the following files from your installation bin folder to your project bin folder and add references:</li>
+        <li>Copy the following files from your installation bin folder to your project bin folder and add references to the .dll files:</li>
         <ul>
             <li>Forerunner.Json.dll</li>
             <li>Forerunner.SQLReporting.dll</li>
             <li>PdfSharp.dll</li>
+            <li>Forerunner.Thumbnail.exe</li>
         </ul>
         <li>In the file: App_Start\WebApiConfig.cs add two new routes one for the Report Viewer and another for the Report Manager.
             Make sure these routes are before any other routes (I.e., the Defaulte route), if not you will have problems.. 

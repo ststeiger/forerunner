@@ -6573,6 +6573,7 @@ $(function () {
             me.curLayer = 2;
 
             if (!isNew) {
+                //merge the exist roles with the role list, set the exist role checkbox to checked by default
                 var existRole = {},
                     $chks = me.$layer2.find('.acc-chk'),
                     i, j;
@@ -6584,7 +6585,6 @@ $(function () {
                         }
                         break;
                     }
-                    continue;
                 }
 
                 for (i = 0; i < me.cachedRoles.length; i++) {
@@ -6598,8 +6598,8 @@ $(function () {
 
             me.$layer1.hide(function () {
                 me.$operate1.hide();
-                
-                !isNew && me.$groupuser.val(groupuser).attr("readonly", true);
+                //for edit assign the account to the input and add title to show full text
+                !isNew && me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
 
                 me.$layer2.show();
                 me.$operate2.show();
@@ -6621,7 +6621,7 @@ $(function () {
                     }
                     
                     me.$operate2.hide();
-                    me.$groupuser.val('').removeAttr('readonly');
+                    me.$groupuser.val('').removeAttr('title').removeAttr('readonly');
 
                     me.$layer1.show();
                     me.$operate1.show();

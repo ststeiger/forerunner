@@ -185,7 +185,7 @@ $(function () {
             me._numVisibleParams = 0;
 
             me._render();
-            me._dataPreprocess(data.ParametersList);
+            me._dataPreprocess(data.ParametersList, true);
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             var metadata = paramMetadata && paramMetadata.ParametersList;
@@ -664,7 +664,7 @@ $(function () {
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
             $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
             $control.addClass("fr-param-required");
-            me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
+            me._paramValidation[param.Name].push("required");
         },
         _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;
@@ -681,7 +681,7 @@ $(function () {
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
 
                         //add validate arrtibutes to control when uncheck null checkbox
-                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                        $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.attr(attribute, "true");
                         });
 
@@ -693,7 +693,7 @@ $(function () {
                         $control.attr("disabled", true).addClass("fr-param-disable");
 
                         //remove validate arrtibutes
-                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                        $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.removeAttr(attribute);
                         });
 
@@ -776,7 +776,7 @@ $(function () {
                 $control.removeClass("fr-param-disable");
 
                 //add validate arrtibutes to control when uncheck null checkbox
-                $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                $.each(me._paramValidation[param.Name], function (index, attribute) {
                     $control.attr(attribute, "true");
                 });
 
@@ -795,6 +795,11 @@ $(function () {
                 customVal = $control.val();
                 $control.attr('data-custom', customVal).val("");
 
+                //remove validate arrtibutes                
+                for (var i = 0, arr = me._paramValidation[param.Name], len = arr.length; i < len; i++) {
+                    $control.removeAttr(arr[i]);
+                }
+
                 if ($hidden && $hidden.length) {
                     $hidden.addClass("fr-usedefault");
                 }
@@ -804,9 +809,6 @@ $(function () {
                     $.each(me._getTreeItemChildren(param.Name), function (index, childname) {
                         $(".fr-paramname-" + childname).addClass("fr-usedefault");
                     });
-
-                    $control.removeClass("fr-param-cascadingtree-error");
-                    $control.valid();
                 }
 
                 if ($control.hasClass("fr-param-dropdown-input")) {
@@ -814,13 +816,6 @@ $(function () {
                 }
 
                 $control.addClass("fr-param-disable");
-
-
-                //remove validate arrtibutes
-                $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
-                    $control.removeAttr(attribute);
-                });
-
                 if (param.Type === "DateTime") {
                     //set delay to 100 since datepicker need time to generate image for the first time
                     setTimeout(function () { $control.datepicker("disable"); }, 100);
@@ -828,7 +823,7 @@ $(function () {
 
                 //not reset the default value, since it may always change on the server side like current date.
                 //me._setParamValue(param, preDefinedValue, $control);
-                //$control.valid();
+                $control.valid();
             }
         },
         _setRadioButton: function (s, v) {
@@ -911,7 +906,7 @@ $(function () {
                         },
                     });
                     $control.attr("formattedDate", "true");
-                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("formattedDate");
+                    me._paramValidation[param.Name].push("formattedDate");
 
                     if (predefinedValue) {
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -920,7 +915,7 @@ $(function () {
                 case "Integer":
                 case "Float":
                     $control.attr("number", "true");
-                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("number");
+                    me._paramValidation[param.Name].push("number");
 
                     if (predefinedValue) {
                         $control.val(predefinedValue);
@@ -968,7 +963,7 @@ $(function () {
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
-            me._parameterDefinitions[param.Name].ValidatorAttrs.push("autoCompleteDropdown");
+            me._paramValidation[param.Name].push("autoCompleteDropdown");
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
@@ -2277,7 +2272,7 @@ $(function () {
 
             return disabled;
         },
-        _dataPreprocess: function (parametersList) {
+        _dataPreprocess: function (parametersList, isRender) {
             var me = this;
 
             //clean cached data
@@ -2287,9 +2282,13 @@ $(function () {
 
             $.each(parametersList, function (index, param) {
                 me._parameterDefinitions = me._parameterDefinitions || {};
+                me._paramValidation = me._paramValidation || {};
 
                 me._parameterDefinitions[param.Name] = param;
-                me._parameterDefinitions[param.Name].ValidatorAttrs = [];
+                //me._paramValidation[param.Name] = [];
+                if (isRender) {
+                    me._paramValidation[param.Name] = [];
+                }
 
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                     me._dependencyList = me._dependencyList || {};

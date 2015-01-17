@@ -131,6 +131,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\css\ContextMenuBase.css"
   File "${LOCALROOT}\Forerunner\Common\css\DefaultAppTemplate.css"
   File "${LOCALROOT}\Forerunner\Common\css\ForerunnerProperties.css"
+  File "${LOCALROOT}\Forerunner\Common\css\ForerunnerSecurity.css"
   SetOutPath "$INSTDIR\Forerunner\Common\Images"
   File "${LOCALROOT}\Forerunner\Common\images\icons24x24.png"
   File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
@@ -830,6 +831,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\css\ContextMenuBase.css"
   Delete "$INSTDIR\Forerunner\Common\css\DefaultAppTemplate.css"
   Delete "$INSTDIR\Forerunner\Common\css\ForerunnerProperties.css"
+  Delete "$INSTDIR\Forerunner\Common\css\ForerunnerSecurity.css"
+  
   Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"

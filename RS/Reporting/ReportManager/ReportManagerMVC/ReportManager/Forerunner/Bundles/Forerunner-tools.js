@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -1828,7 +1828,7 @@ $(function () {
             selectorClass: "fr-item-security",
             imageClass: "fr-icons24x24-tags",
             sharedClass: "fr-hide-if-disable",
-            text: "Security",//locData.properties.title,
+            text: locData.security.title,
             events: {
                 click: function (e) {
                     var $propertyDlg = e.data.me.options.$appContainer.children(".fr-security-section");

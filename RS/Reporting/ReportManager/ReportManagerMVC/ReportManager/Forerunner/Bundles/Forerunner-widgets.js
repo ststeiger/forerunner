@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2537,7 +2537,7 @@ $(function () {
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
             var savedParamsObj = null;
             if (savedParams) {
-                savedParamsObj = JSON.parse(savedParams);
+                savedParamsObj =forerunner.helper.JSONParse(savedParams);
             }
             if (submitForm === undefined)
                 submitForm = true;
@@ -12833,7 +12833,7 @@ $(function () {
         _useDefaultCheck: function (savedParam) {
             var me = this;
 
-            var params = JSON.parse(savedParam);
+            var params = forerunner.helper.JSONParse(savedParam);
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {

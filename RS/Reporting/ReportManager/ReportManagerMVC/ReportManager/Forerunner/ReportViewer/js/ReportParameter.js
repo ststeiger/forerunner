@@ -319,7 +319,7 @@ $(function () {
         _useDefaultCheck: function (savedParam) {
             var me = this;
 
-            var params = JSON.parse(savedParam);
+            var params = forerunner.helper.JSONParse(savedParam);
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {

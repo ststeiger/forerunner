@@ -32,10 +32,10 @@
     $(document).ready(function () {
       var events = forerunner.ssr.constants.events;
       var toolTypes = forerunner.ssr.constants.toolTypes;
-      var $parameterModel = $({}).parameterModel({});
+      //var $parameterModel = $({}).parameterModel({});
 
       // Get a reference to the default parameter list
-      var defaultParamsList = $parameterModel.parameterModel("getCurrentParameterList");
+      //var defaultParamsList = $parameterModel.parameterModel("getCurrentParameterList");
 
       // Create a reportViewerEZ widget to view the report
       var $reportViewerEZ = $('body').reportViewerEZ({
@@ -54,7 +54,10 @@
       // problem will not happen.
       //
       // After the report is loaded you can use the call to "refreshParameters".
-      // See below.
+        // See below.
+
+      var defaultParamsList = { "ParametersList": [{ "Name": "ProductCategory", "Type": "Integer", "TypeSpecified": true, "Nullable": false, "NullableSpecified": true, "AllowBlank": false, "AllowBlankSpecified": true, "MultiValue": false, "MultiValueSpecified": true, "QueryParameter": true, "QueryParameterSpecified": true, "Prompt": "Category:", "PromptUser": true, "PromptUserSpecified": true, "ValidValuesQueryBased": true, "ValidValuesQueryBasedSpecified": true, "DefaultValuesQueryBased": false, "DefaultValuesQueryBasedSpecified": true, "State": "HasValidValue", "StateSpecified": true, "ErrorMessage": null, "DefaultValues": ["1"], "Dependencies": "", "ValidValues": [{ "Key": "Accessories", "Value": "4" }, { "Key": "Bikes", "Value": "1" }, { "Key": "Clothing", "Value": "3" }, { "Key": "Components", "Value": "2" }] }, { "Name": "ProductSubcategory", "Type": "Integer", "TypeSpecified": true, "Nullable": false, "NullableSpecified": true, "AllowBlank": false, "AllowBlankSpecified": true, "MultiValue": true, "MultiValueSpecified": true, "QueryParameter": true, "QueryParameterSpecified": true, "Prompt": "Subcategory:", "PromptUser": true, "PromptUserSpecified": true, "ValidValuesQueryBased": true, "ValidValuesQueryBasedSpecified": true, "DefaultValuesQueryBased": false, "DefaultValuesQueryBasedSpecified": true, "State": "HasValidValue", "StateSpecified": true, "ErrorMessage": null, "DefaultValues": ["2"], "Dependencies": ["ProductCategory"], "ValidValues": [{ "Key": "Mountain Bikes", "Value": "1" }, { "Key": "Road Bikes", "Value": "2" }, { "Key": "Touring Bikes", "Value": "3" }] }, { "Name": "StartDate", "Type": "DateTime", "TypeSpecified": true, "Nullable": false, "NullableSpecified": true, "AllowBlank": false, "AllowBlankSpecified": true, "MultiValue": false, "MultiValueSpecified": true, "QueryParameter": true, "QueryParameterSpecified": true, "Prompt": "", "PromptUser": true, "PromptUserSpecified": true, "ValidValuesQueryBased": false, "ValidValuesQueryBasedSpecified": true, "DefaultValuesQueryBased": false, "DefaultValuesQueryBasedSpecified": true, "State": "HasValidValue", "StateSpecified": true, "ErrorMessage": null, "DefaultValues": ["1/1/2003 12:00:00 AM"], "Dependencies": "", "ValidValues": "" }, { "Name": "EndDate", "Type": "DateTime", "TypeSpecified": true, "Nullable": false, "NullableSpecified": true, "AllowBlank": true, "AllowBlankSpecified": true, "MultiValue": false, "MultiValueSpecified": true, "QueryParameter": true, "QueryParameterSpecified": true, "Prompt": "End Date:", "PromptUser": true, "PromptUserSpecified": true, "ValidValuesQueryBased": false, "ValidValuesQueryBasedSpecified": true, "DefaultValuesQueryBased": false, "DefaultValuesQueryBasedSpecified": true, "State": "HasValidValue", "StateSpecified": true, "ErrorMessage": null, "DefaultValues": ["12/31/2003 12:00:00 AM"], "Dependencies": "", "ValidValues": "" }, { "Name": "ShowDescription", "Type": "Boolean", "TypeSpecified": true, "Nullable": false, "NullableSpecified": true, "AllowBlank": false, "AllowBlankSpecified": true, "MultiValue": false, "MultiValueSpecified": true, "QueryParameter": false, "QueryParameterSpecified": true, "Prompt": "", "PromptUser": true, "PromptUserSpecified": true, "ValidValuesQueryBased": false, "ValidValuesQueryBasedSpecified": true, "DefaultValuesQueryBased": false, "DefaultValuesQueryBasedSpecified": true, "State": "HasValidValue", "StateSpecified": true, "ErrorMessage": null, "DefaultValues": ["False"], "Dependencies": "", "ValidValues": "" }], "DefaultValueExist": true, "DefaultValueCount": 5 }
+
       var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
       $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
 

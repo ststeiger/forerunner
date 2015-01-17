@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -966,6 +966,30 @@ $(function () {
             }
             return $div;
         },
+        /**
+         * Returns a JS bject for he gen stringor object
+         *
+         * @objStr {Object} - Object or String t Parse
+         *
+         * @member
+         */
+        JSONParse: function (objStr) {
+            try {
+                if ($.type(objStr)=== "string" && $.trim(objStr) !== ""){
+                    return jQuery.parseJSON(objStr);                
+                }
+                else if ($.type(objStr)=== "object"){
+                    return objStr;
+                }                    
+                else {
+                    return {};
+                }
+            }
+            catch (e) {
+                return {};
+            }
+        },
+
         /**
         * Returns a checkbox dropdown list for the valid values
         *

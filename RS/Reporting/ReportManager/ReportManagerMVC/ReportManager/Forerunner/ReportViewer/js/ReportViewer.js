@@ -1815,7 +1815,7 @@ $(function () {
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
             var savedParamsObj = null;
             if (savedParams) {
-                savedParamsObj = JSON.parse(savedParams);
+                savedParamsObj =forerunner.helper.JSONParse(savedParams);
             }
             if (submitForm === undefined)
                 submitForm = true;

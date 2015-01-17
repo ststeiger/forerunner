@@ -972,6 +972,7 @@ $(function () {
          *
          * @member
          */
+
         JSONParse: function (objStr) {
             try {
                 if ($.type(objStr)=== "string" && $.trim(objStr) !== ""){

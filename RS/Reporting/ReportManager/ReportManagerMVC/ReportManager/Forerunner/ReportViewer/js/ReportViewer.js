@@ -1743,15 +1743,14 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (!subscriptionID) {
-                    if (me.paramLoaded) {
-                        var $paramArea = me.options.paramArea;
-                        //get current parameter list without validate
-                        paramList = $paramArea.reportParameter("getParamsList", true);
-                    }
-                    if (paramList)
-                        me.$emailSub.emailSubscription("option", "paramList", paramList);
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
                 }
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -1988,6 +1987,7 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 
@@ -1999,7 +1999,6 @@ $(function () {
                     else {
                         me._loadPage(pageNum, false, null, null, true);
                     }
-
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }
@@ -2385,6 +2384,10 @@ $(function () {
                 viewer: me,
                 reportJSONData: reportJSONData
             });
+
+            //If not loaded load RDLExt
+            if (!me.RDLExtProperty)
+                me._getRDLExtProp();
 
             forerunner.ajax.ajax(
                 {

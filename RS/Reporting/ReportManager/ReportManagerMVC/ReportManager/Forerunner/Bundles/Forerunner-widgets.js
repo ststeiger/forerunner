@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2374,15 +2374,14 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
 
                 var paramList = null;
-                if (!subscriptionID) {
-                    if (me.paramLoaded) {
-                        var $paramArea = me.options.paramArea;
-                        //get current parameter list without validate
-                        paramList = $paramArea.reportParameter("getParamsList", true);
-                    }
-                    if (paramList)
-                        me.$emailSub.emailSubscription("option", "paramList", paramList);
+                if (me.paramLoaded) {
+                    var $paramArea = me.options.paramArea;
+                    //get current parameter list without validate
+                    paramList = $paramArea.reportParameter("getParamsList", true);
                 }
+                if (paramList)
+                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -2619,6 +2618,7 @@ $(function () {
                         RDLExt: me.getRDLExt()
                     });
 
+
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
 
@@ -2630,7 +2630,6 @@ $(function () {
                     else {
                         me._loadPage(pageNum, false, null, null, true);
                     }
-
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }
@@ -3016,6 +3015,10 @@ $(function () {
                 viewer: me,
                 reportJSONData: reportJSONData
             });
+
+            //If not loaded load RDLExt
+            if (!me.RDLExtProperty)
+                me._getRDLExtProp();
 
             forerunner.ajax.ajax(
                 {
@@ -11917,7 +11920,7 @@ $(function () {
         _init: function () {
             var me = this;
             me.element.html(null);
-            me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
+            me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "off") === "on";
         },
         _render: function () {
             var me = this;
@@ -17444,7 +17447,7 @@ $(function () {
                     }
                 }
             }
-            if (me.options.paramList) {
+            if (me.options.paramList && !me._subscriptionData.Parameters) {
                 me._subscriptionData.Parameters = [];
                 var paramListObj = JSON.parse(me.options.paramList);
                 for (i = 0; i < paramListObj.ParamsList.length; i++) {

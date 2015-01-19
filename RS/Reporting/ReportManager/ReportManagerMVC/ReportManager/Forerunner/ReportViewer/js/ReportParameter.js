@@ -298,7 +298,8 @@ $(function () {
             var hasMembers = false;
 
             $.each(params.ParamsList, function (index, item) {
-                paramObj[item.Parameter] = item;
+                var index = item.Parameter ? item.Parameter : item.Name;
+                paramObj[index] = item;
                 hasMembers = true;
             });
 

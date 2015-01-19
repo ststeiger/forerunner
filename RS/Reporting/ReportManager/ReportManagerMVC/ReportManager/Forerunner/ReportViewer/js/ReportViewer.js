@@ -2040,7 +2040,7 @@ $(function () {
                     data : {
                         ReportPath: encodeURIComponent(me.reportPath),
                         SessionID: me.getSessionID(),
-                        ParameterList: paramList,
+                        ParameterList: typeof (paramList) === "string" ? paramList : JSON.stringify(paramList),
                         DSCredentials: me.getDataSourceCredential(),
                         instance: me.options.rsInstance,
                     },

@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -13086,6 +13086,9 @@ $(function () {
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
                 forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
+                //$.each(me._paramValidation[param.Name], function (index, attribute) {
+                //    $element.removeAttr(attribute);
+                //});
             }
 
             $container.append($element);

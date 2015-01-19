@@ -967,13 +967,12 @@ $(function () {
             return $div;
         },
         /**
-         * Returns a JS bject for he gen stringor object
+         * Returns a JS object for the given string or object
          *
-         * @objStr {Object} - Object or String t Parse
+         * @objStr {Object} - Object or String to Parse
          *
          * @member
          */
-
         JSONParse: function (objStr) {
             try {
                 if ($.type(objStr)=== "string" && $.trim(objStr) !== ""){

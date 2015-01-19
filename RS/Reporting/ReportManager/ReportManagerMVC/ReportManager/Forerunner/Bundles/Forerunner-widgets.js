@@ -12894,7 +12894,8 @@ $(function () {
 
             $.each(params.ParamsList, function (index, param) {
                 if (param.UseDefault && param.UseDefault.toLowerCase() === "true") {
-                    var $checkbox = $useDefaults.filter("[name='" + param.Parameter + "']");
+                    var name = param.Parameter ? param.Parameter : param.Name;
+                    var $checkbox = $useDefaults.filter("[name='" + name + "']");
                     if ($checkbox.length) {
                         $checkbox.trigger("click");
                     }
@@ -12963,7 +12964,8 @@ $(function () {
 
                 for (var i = 0; i < list.length; i++) {
                     var savedParam = list[i];
-                    var param = me._parameterDefinitions[savedParam.Parameter];
+                    var index = savedParam.Parameter ? savedParam.Parameter : savedParam.Name;
+                    var param = me._parameterDefinitions[index];
                     me._setParamValue(param, savedParam.Value);
                     //if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
 

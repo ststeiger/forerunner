@@ -12154,6 +12154,10 @@ $(function () {
         },
         _getParamMap: function (savedParam) {
             var paramObj = {};
+
+            if (!savedParam) {
+                return paramObj;
+            }
             var params = forerunner.helper.JSONParse(savedParam);
             var hasMembers = false;
 

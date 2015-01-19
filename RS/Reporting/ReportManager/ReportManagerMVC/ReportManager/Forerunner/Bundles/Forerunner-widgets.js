@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2500,7 +2500,7 @@ $(function () {
                 me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
             var savedParamsObj = null;
             if (savedParams) {
-                savedParamsObj = JSON.parse(savedParams);
+                savedParamsObj = forerunner.helper.JSONParse(savedParams);
             }
             if (submitForm === undefined)
                 submitForm = true;
@@ -12184,7 +12184,7 @@ $(function () {
         _useDefaultCheck: function (savedParam) {
             var me = this;
 
-            var params = JSON.parse(savedParam);
+            var params = forerunner.helper.JSONParse(savedParam);
             var $useDefaults = me.element.find(".fr-usedefault-checkbox");
 
             $.each(params.ParamsList, function (index, param) {
@@ -12421,6 +12421,9 @@ $(function () {
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
                 forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
+                //$.each(me._paramValidation[param.Name], function (index, attribute) {
+                //    $element.removeAttr(attribute);
+                //});
             }
 
             $container.append($element);

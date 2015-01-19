@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -855,6 +855,30 @@ $(function () {
                 array.sort(function (a, b) { return b - a;});
             return array;
         },
+        /**
+         * Returns a JS object for the given string or object
+         *
+         * @objStr {Object} - Object or String to Parse
+         *
+         * @member
+         */
+        JSONParse: function (objStr) {
+            try {
+                if ($.type(objStr) === "string" && $.trim(objStr) !== "") {
+                    return jQuery.parseJSON(objStr);
+                }
+                else if ($.type(objStr) === "object") {
+                    return objStr;
+                }
+                else {
+                    return {};
+                }
+            }
+            catch (e) {
+                return {};
+            }
+        },
+
         /**
          * Returns the number of elements or properties in an object
          *

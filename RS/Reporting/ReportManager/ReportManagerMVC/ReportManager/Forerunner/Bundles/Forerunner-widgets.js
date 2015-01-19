@@ -12054,13 +12054,15 @@ $(function () {
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             var metadata = paramMetadata && paramMetadata.ParametersList;
+            var savedParamMap = me._getParamMap(savedParam);
             $.each(data.ParametersList, function (index, param) {
-                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
+                var mergedParam = me._getMergedParam(param, savedParamMap);
+                if (mergedParam.Prompt !== "" && (mergedParam.PromptUserSpecified ? mergedParam.PromptUser : true)) {
                     me._numVisibleParams += 1;
-                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum, metadata ? metadata[index] : null));
+                    $eleBorder.append(me._writeParamControl(mergedParam, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
                 else
-                    me._checkHiddenParam(param);
+                    me._checkHiddenParam(mergedParam);
             });
             //resize the textbox width when custom right pane width is big
             me._elementWidthCheck();
@@ -12149,6 +12151,39 @@ $(function () {
                 me._writeParamDoneCallback();
                 me._writeParamDoneCallback = null;
             }
+        },
+        _getParamMap: function (savedParam) {
+            var paramObj = {};
+            var params = forerunner.helper.JSONParse(savedParam);
+            var hasMembers = false;
+
+            $.each(params.ParamsList, function (index, item) {
+                paramObj[item.Parameter] = item;
+                hasMembers = true;
+            });
+
+            return hasMembers ? paramObj : null;
+        },
+        _getMergedParam: function (param, savedParamMap) {
+            var newParam = param;
+
+            if (savedParamMap) {
+                var savedParam = savedParamMap[param.Name];
+                if (savedParam && typeof(savedParam.Prompt) === "string") {
+                    newParam.Prompt = savedParam.Prompt;
+                    if (newParam.Prompt === "") {
+                        // Must have just removed this param so fix up the related members
+                        newParam.PromptUser = false;
+                        newParam.PromptUserSpecified = false;
+                    }
+
+                    if (savedParam.ValidValues) {
+                        newParam.ValidValues = savedParam.ValidValues;
+                    }
+                }
+            }
+
+            return newParam;
         },
         _addWriteParamDoneCallback: function (func) {
             if (typeof (func) !== "function") return;

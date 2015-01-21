@@ -22,7 +22,7 @@
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
 <meta name="viewport" content="width=device-width" />
 <title><?php wp_title( '|', true, 'right' ); ?></title>
-<link href="/content/site.css" rel="stylesheet"/>';
+<link href="/content/site.css" rel="stylesheet"/>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <?php // Loads HTML5 JavaScript file to add support for HTML5 elements in older IE versions. ?>
@@ -32,7 +32,7 @@
 <?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class(); ?>
 
 
      <!-- Header ================================================== -->
@@ -52,13 +52,14 @@
                         <div class="Navbar TopNavbar">
                             <div style="float:right;">
                                 <ul>            
-                                    <li id="Index" class="Navitem TopNavitem"><a href="/Home">HOME</a></li>
-                                    <li id="Features" class="Navitem TopNavitem"><a href="/home/features">FEATURES</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem"><a href="/home/developers">DEVELOPERS</a></li>
-                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/home/pricing">PRICING</a></li>
-                                    <li id="Demo" class="Navitem TopNavitem"><a href="/home/demo">DEMO</a></li>
-                                    <li id="Support" class="Navitem TopNavitem"><a href="/home/support">SUPPORT</a></li>
-                                    <li id="About" class="Navitem TopNavitem"><a href="/home/about">ABOUT</a></li>
+                                    <li id="Index" class="Navitem TopNavitem"><a href="/">HOME</a></li>
+                                    <li id="Features" class="Navitem TopNavitem"><a href="/features">FEATURES</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="/developers">DEVELOPERS</a></li>
+                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/pricing">PRICING</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="/demo">DEMO</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="/support">SUPPORT</a></li>
+									<li id="BLOG" class="Navitem TopNavitem"><a href="/BLOG">BLOG</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="/about">ABOUT</a></li>
                                     <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
                                 </ul>
                             </div>                            

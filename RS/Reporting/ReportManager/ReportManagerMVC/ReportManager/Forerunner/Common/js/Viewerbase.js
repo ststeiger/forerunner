@@ -27,12 +27,17 @@ $(function () {
         _create: function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-            me.$loadingIndicator = new $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
-            me.element.append(me.$loadingIndicator);
             me.loadLock = 0;
         },
         _init: function ($viewerContainer) {
             var me = this;
+
+            me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
+            if (me.$loadingIndicator.length === 0) {
+                me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
+                me.element.append(me.$loadingIndicator);
+            }
+
             me.$viewerContainer = $viewerContainer;
         },
         /**

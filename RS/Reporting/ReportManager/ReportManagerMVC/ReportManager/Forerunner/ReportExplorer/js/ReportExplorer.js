@@ -17,8 +17,6 @@ $(function () {
      * @prop {Object} options - The options for reportExplorer
      * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
      * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
-     * @prop {String} options.path - Path passed to the GetItems REST call
-     * @prop {String} options.view - View passed to the GetItems REST call
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
@@ -43,8 +41,6 @@ $(function () {
         options: {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             forerunnerPath: forerunner.config.forerunnerFolder(),
-            path: null,
-            view: null,
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null,
@@ -317,10 +313,6 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer fr-core-widget'></div>");
-            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
-                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
-            }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
@@ -401,7 +393,33 @@ $(function () {
 
             return null;
         },
-        /*
+        /**
+         * Will load the given view / path combination
+         *
+         * @function $.forerunner.reportExplorer#load
+         * @param {String} view - View passed to the GetItems REST call
+         * @param {String} path - Path passed to the GetItems REST call
+         */
+        load: function (view, path) {
+            var me = this;
+            me.view = view;
+            me.path = path;
+
+            if (me.view === "catalog" || me.view === "searchfolder") {
+                me._checkPermission();
+            }
+
+            if (me.options.explorerSettings) {
+                me._initOverrides();
+            }
+
+            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
+                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
+            }
+
+            me._fetch(view, path);
+        },
+        /**
          * Will refresh the current report explorer view from the server
          *
          * @function $.forerunner.reportExplorer#refresh
@@ -418,6 +436,8 @@ $(function () {
             };
             me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
+            me.showLoadingIndictator();
+
             if (view === "resource") {
                 me._renderResource(path);
                 return;
@@ -430,7 +450,7 @@ $(function () {
 
             me.parentPath = null;
             if (view === "searchfolder") {
-                me.parentPath = forerunner.helper.getParentPath(me.options.path) || "/";
+                me.parentPath = forerunner.helper.getParentPath(me.path) || "/";
             }
 
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -438,7 +458,7 @@ $(function () {
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
-                async: false,
+                async: true,
                 data: {
                     view: view,
                     path: path
@@ -451,8 +471,11 @@ $(function () {
                      else {
                          me._render(data);
                      }
+
+                     me.removeLoadingIndicator();
                  }).fail(
                 function (jqXHR, textStatus, errorThrown) {
+                    me.removeLoadingIndicator();
                     console.log(textStatus);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
                 });
@@ -464,7 +487,7 @@ $(function () {
         _initOverrides: function () {
             var me = this;
             if (me.options.explorerSettings.CustomColors) {
-                var decodedPath = decodeURIComponent(me.options.path);
+                var decodedPath = decodeURIComponent(me.path);
                 var colorOverrideSettings = me.options.explorerSettings.CustomColors[decodedPath];
                 if (colorOverrideSettings) {
                     me.colorOverrideSettings = colorOverrideSettings;
@@ -499,16 +522,14 @@ $(function () {
             me.$viewerContainer = me.$explorer;
             me.$selectedItem = null;
 
-            me.showLoadingIndictator();
-
-            if (me.options.view === "catalog" || me.options.view === "searchfolder") {
-                me._checkPermission();
+            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
+            if ($reportExplorerContainer.length === 0) {
+                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
+                me.element.append($reportExplorerContainer);
             }
 
-            if (me.options.explorerSettings) {
-                me._initOverrides();
-            }
-            me._fetch(me.options.view, me.options.path);
+            // Make sure the view base has the explorer container
+            me._super($reportExplorerContainer);
 
             if (!me.subscriptionModel) {
                 me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
@@ -548,8 +569,6 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._searchFolderDialog = $dlg;
-
-            me.removeLoadingIndicator();
         },
         _checkPermission: function () {
             var me = this;
@@ -557,7 +576,7 @@ $(function () {
             //update properties: update report properties (tags)
             //for more properties, add to the list
             var permissionList = ["Create Resource", "Update Properties", "Update Security Policies"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+            me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
         },
         /**
          * Get user permission for current path
@@ -645,7 +664,7 @@ $(function () {
                 dataType: "text",
                 data: {
                     resourceName: searchFolder.searchFolderName,
-                    parentFolder: me.parentPath || me.options.path,
+                    parentFolder: me.parentPath || me.path,
                     contents: JSON.stringify(searchFolder.content),
                     mimetype: "json/forerunner-searchfolder",
                     instance: me.options.rsInstance,
@@ -740,7 +759,7 @@ $(function () {
          */
         getCurrentPath: function () {
             var me = this;
-            return decodeURIComponent(me.options.path);
+            return decodeURIComponent(me.path);
         },
         /**
          * Get current explorer page view
@@ -749,7 +768,7 @@ $(function () {
          */
         getCurrentView: function () {
             var me = this;
-            return me.options.view;
+            return me.view;
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null,

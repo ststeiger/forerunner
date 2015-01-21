@@ -62,23 +62,9 @@ $(function () {
             explorerSettings: null,
             rsInstance: null,
         },
-        _createReportExplorer: function (path, view, showmainesection) {
+        _createReportExplorer: function (showmainesection) {
             var me = this;
-            var path0 = path;
             var layout = me.DefaultAppTemplate;
-
-            if (!path) {// root page
-                path = "/";
-            }
-            if (!view) {// general catalog page
-                view = "catalog";
-                me._setPropertiesTabs(path, propertyListMap.normal);
-            }
-            else if (view === "searchfolder") {
-                me._setPropertiesTabs(path, propertyListMap.searchFolder);
-            }
-
-            me._setSecurity(path);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -90,8 +76,6 @@ $(function () {
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder(),
-                path: path,
-                view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
@@ -334,7 +318,7 @@ $(function () {
             //To resolved bug 494 on android
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me._createReportExplorer(path, view, true);
+                me._createReportExplorer(true);
 
                 var $toolbar = layout.$mainheadersection;
                 //add this class to distinguish explorer toolbar and viewer toolbar
@@ -357,6 +341,29 @@ $(function () {
                     $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
                 }
 
+                if (me.options.showBreadCrumb === false) {
+                    me.DefaultAppTemplate.$linksection.hide();
+                }
+
+                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                var explorer = $(".fr-report-explorer", me.$reportExplorer);
+                me.element.css("background-color", explorer.css("background-color"));
+
+                if (!path) {// root page
+                    path = "/";
+                }
+                if (!view) {// general catalog page
+                    view = "catalog";
+                    me._setPropertiesTabs(path, propertyListMap.normal);
+                }
+                else if (view === "searchfolder") {
+                    me._setPropertiesTabs(path, propertyListMap.searchFolder);
+                }
+
+                me._setSecurity(path);
+
+                me.$reportExplorer.reportExplorer("load", view, path);
+
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
                     navigateTo: me.options.navigateTo,
@@ -368,14 +375,6 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
-
-                if (me.options.showBreadCrumb === false) {
-                    me.DefaultAppTemplate.$linksection.hide();
-                }
-
-                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $(".fr-report-explorer", me.$reportExplorer);
-                me.element.css("background-color", explorer.css("background-color"));
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);

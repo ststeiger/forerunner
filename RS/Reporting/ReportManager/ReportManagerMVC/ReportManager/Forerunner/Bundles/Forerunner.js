@@ -379,7 +379,7 @@ $(function () {
             allowZoom: "allowZoom",
             /** widget + event, lowercase */
             reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
-
+           
 
             /** @constant */
             menuClick: "menuclick",

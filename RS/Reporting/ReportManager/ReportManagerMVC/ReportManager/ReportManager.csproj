@@ -202,7 +202,10 @@
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
+    <Content Include="Forerunner\Lib\Misc\css\ParamUtil.css" />
+    <Content Include="Forerunner\Lib\Misc\images\GetParams.png" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />
+    <Content Include="Forerunner\Lib\Misc\js\ParamUtil.js" />
     <Content Include="Forerunner\ReportExplorer\css\ManageMySubscriptions.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />

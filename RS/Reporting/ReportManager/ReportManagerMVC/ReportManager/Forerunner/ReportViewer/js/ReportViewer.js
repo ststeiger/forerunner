@@ -73,6 +73,7 @@ $(function () {
             showSubscriptionUI: false,
             zoom: "100",
             exportCallback: undefined
+
         },
 
         // Constructor

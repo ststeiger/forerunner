@@ -380,7 +380,6 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
 
-
             /** @constant */
             menuClick: "menuclick",
             /** widget + event, lowercase */
@@ -394,8 +393,12 @@ $(function () {
 
             /** @constant */
             beforeFetch: "beforefetch",
+            /** @constant */
+            afterFetch: "afterfetch",
             /** widget + event, lowercase */
             reportExplorerBeforeFetch: function () { return (forerunner.ssr.constants.widgets.reportExplorer + this.beforeFetch).toLowerCase(); },
+            /** widget + event, lowercase */
+            reportExplorerAfterFetch: function () { return (forerunner.ssr.constants.widgets.reportExplorer + this.afterFetch).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",

@@ -336,6 +336,14 @@ $(function () {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
                 }
 
+                me.$reportExplorer.one(events.reportExplorerBeforeFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("disableAllTools");
+                });
+
+                me.$reportExplorer.one(events.reportExplorerAfterFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("enableAllTools");
+                });
+
                 var $lefttoolbar = layout.$leftheader;
                 if ($lefttoolbar !== null) {
                     $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
@@ -529,6 +537,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;

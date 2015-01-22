@@ -472,9 +472,11 @@ $(function () {
                          me._render(data);
                      }
 
+                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                      me.removeLoadingIndicator();
                  }).fail(
                 function (jqXHR, textStatus, errorThrown) {
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                     me.removeLoadingIndicator();
                     console.log(textStatus);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);

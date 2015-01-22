@@ -8955,9 +8955,11 @@ $(function () {
                          me._render(data);
                      }
 
+                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                      me.removeLoadingIndicator();
                  }).fail(
                 function (jqXHR, textStatus, errorThrown) {
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                     me.removeLoadingIndicator();
                     console.log(textStatus);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
@@ -17352,6 +17354,14 @@ $(function () {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
                 }
 
+                me.$reportExplorer.one(events.reportExplorerBeforeFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("disableAllTools");
+                });
+
+                me.$reportExplorer.one(events.reportExplorerAfterFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("enableAllTools");
+                });
+
                 var $lefttoolbar = layout.$leftheader;
                 if ($lefttoolbar !== null) {
                     $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
@@ -17545,6 +17555,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;

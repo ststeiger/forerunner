@@ -676,6 +676,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @prop {String} options.zoom - Zoom factor, default to 100.
+     * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -701,7 +702,9 @@ $(function () {
             viewerID: null,
             rsInstance: null,
             showSubscriptionUI: false,
-            zoom: "100"
+            zoom: "100",
+            exportCallback: undefined
+
         },
 
         // Constructor
@@ -2346,7 +2349,11 @@ $(function () {
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+
+            if (me.options.exportCallback !== undefined)
+                me.options.exportCallback(url);
+            else
+                window.open(url);
         },       
         /**
          * Show print dialog, close it if opened

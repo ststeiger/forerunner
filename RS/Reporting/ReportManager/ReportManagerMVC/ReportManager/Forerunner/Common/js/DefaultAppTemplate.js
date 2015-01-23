@@ -231,7 +231,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For mobile touch devices, update the header only on scrollstop. Note that on touch enabled PC devices the release
                 // with a velocity of 0 is never hit on a mouse drag event. So we only do this for mobile devices
-                if (isTouch && forerunner.device.isMobile()) {
+                if (isTouch && forerunner.device.isMobile() && !forerunner.device.isiOS() ) {
                     me.$container.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
                     function (ev) {
                         if (!ev.gesture) return;

@@ -133,6 +133,17 @@ $(function () {
         _onRoute: function (event, data) {
             var me = this;
 
+            //check the build version on the server each time when route happen
+            //if not match then force refresh the browser
+            var newVersion = forerunner.ajax.getBuildVersion();
+
+            if (me.buildVersion && me.buildVersion !== newVersion) {
+                window.location.reload(true);
+                return;
+            } else {
+                me.buildVersion = newVersion;
+            }
+
             if (forerunner.device.isAllowZoom()) {
                 forerunner.device.allowZoom(false);
                 window.location.reload();

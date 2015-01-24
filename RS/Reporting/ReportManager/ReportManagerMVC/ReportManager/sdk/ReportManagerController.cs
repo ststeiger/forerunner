@@ -45,6 +45,7 @@ namespace ReportManager.Controllers
         static private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
         static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
         static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
+        static private string MobilizerVersionPath = ConfigurationManager.AppSettings["Forerunner.VersionPath"];        
         static private bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
 
         static private string EmptyJSONObject = "{}";
@@ -523,6 +524,20 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
             }
             catch (Exception ex) 
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetMobilizerVersion(string instance = null)
+        {
+            // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerVersion(MobilizerVersionPath)), "text/plain");
+            }
+            catch (Exception ex)
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
             }

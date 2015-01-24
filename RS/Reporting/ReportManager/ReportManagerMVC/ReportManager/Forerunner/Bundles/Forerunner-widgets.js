@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -9377,7 +9377,7 @@ $(function () {
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
-            var buildVersion = me._getBuildVersion();
+            var buildVersion = forerunner.ajax.getBuildVersion();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -9439,27 +9439,6 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },
-        _getBuildVersion: function () {
-            var me = this;
-            var url = forerunner.config.forerunnerFolder() + "version.txt";
-            var buildVersion = null;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "text",
-                async: false,
-                success: function (data) {
-                    buildVersion = data;
-                },
-                fail: function (data) {
-                    console.log(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-            });
-
-            return buildVersion;
         },
         _getSettings: function () {
             var me = this;
@@ -17150,6 +17129,17 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
+
+            //check the build version on the server each time when route happen
+            //if not match then force refresh the browser
+            var newVersion = forerunner.ajax.getBuildVersion();
+
+            if (me.buildVersion && me.buildVersion !== newVersion) {
+                window.location.reload(true);
+                return;
+            } else {
+                me.buildVersion = newVersion;
+            }
 
             if (forerunner.device.isAllowZoom()) {
                 forerunner.device.allowZoom(false);

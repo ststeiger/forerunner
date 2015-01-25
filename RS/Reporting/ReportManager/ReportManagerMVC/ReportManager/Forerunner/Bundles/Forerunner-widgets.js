@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -658,12 +658,17 @@ $(function () {
         _create: function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-            me.$loadingIndicator = new $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
-            me.element.append(me.$loadingIndicator);
             me.loadLock = 0;
         },
         _init: function ($viewerContainer) {
             var me = this;
+
+            me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
+            if (me.$loadingIndicator.length === 0) {
+                me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
+                me.element.append(me.$loadingIndicator);
+            }
+
             me.$viewerContainer = $viewerContainer;
         },
         /**
@@ -2691,11 +2696,11 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshParameters
          *
-         * @param {String} Parameter list.
-         * @param {Boolean} Submit form if the parameters are satisfied.
-         * @param {Integer} The page to load.  Specify -1 to load the current page.
-         * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
-         * @param {Boolean} Indicate it's a cascading refresh or whole refresh
+         * @param {Object} paramList - Parameter list (type may be string or object).
+         * @param {Boolean} submitForm - Submit form if the parameters are satisfied.
+         * @param {Integer} pageNum - The page to load.  Specify -1 to load the current page.
+         * @param {Boolean} renderParamArea - Whether to trigger show parameter area event if there are visible parameters.
+         * @param {Boolean} isCascading - Indicate it's a cascading refresh or whole refresh
          */
         refreshParameters: function (paramList, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
@@ -2817,7 +2822,7 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
-         * @param {Object} parameters - Optional parameters
+         * @param {Object} parameters - Optional parameters  (type may be string or object)
          * @param {Object} sessionID - Optional SessionID for existing execution
          */
         loadReport: function (reportPath, pageNum, parameters,sessionID) {
@@ -5082,7 +5087,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For mobile touch devices, update the header only on scrollstop. Note that on touch enabled PC devices the release
                 // with a velocity of 0 is never hit on a mouse drag event. So we only do this for mobile devices
-                if (isTouch && forerunner.device.isMobile()) {
+                if (isTouch && forerunner.device.isMobile() && !forerunner.device.isiOS() ) {
                     me.$container.hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
                     function (ev) {
                         if (!ev.gesture) return;
@@ -8501,8 +8506,6 @@ $(function () {
      * @prop {Object} options - The options for reportExplorer
      * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
      * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
-     * @prop {String} options.path - Path passed to the GetItems REST call
-     * @prop {String} options.view - View passed to the GetItems REST call
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
@@ -8527,8 +8530,6 @@ $(function () {
         options: {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             forerunnerPath: forerunner.config.forerunnerFolder(),
-            path: null,
-            view: null,
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null,
@@ -8801,10 +8802,6 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer fr-core-widget'></div>");
-            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
-                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
-            }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
@@ -8885,7 +8882,33 @@ $(function () {
 
             return null;
         },
-        /*
+        /**
+         * Will load the given view / path combination
+         *
+         * @function $.forerunner.reportExplorer#load
+         * @param {String} view - View passed to the GetItems REST call
+         * @param {String} path - Path passed to the GetItems REST call
+         */
+        load: function (view, path) {
+            var me = this;
+            me.view = view;
+            me.path = path;
+
+            if (me.view === "catalog" || me.view === "searchfolder") {
+                me._checkPermission();
+            }
+
+            if (me.options.explorerSettings) {
+                me._initOverrides();
+            }
+
+            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
+                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
+            }
+
+            me._fetch(view, path);
+        },
+        /**
          * Will refresh the current report explorer view from the server
          *
          * @function $.forerunner.reportExplorer#refresh
@@ -8902,6 +8925,8 @@ $(function () {
             };
             me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
+            me.showLoadingIndictator();
+
             if (view === "resource") {
                 me._renderResource(path);
                 return;
@@ -8914,7 +8939,7 @@ $(function () {
 
             me.parentPath = null;
             if (view === "searchfolder") {
-                me.parentPath = forerunner.helper.getParentPath(me.options.path) || "/";
+                me.parentPath = forerunner.helper.getParentPath(me.path) || "/";
             }
 
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -8922,7 +8947,7 @@ $(function () {
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
-                async: false,
+                async: true,
                 data: {
                     view: view,
                     path: path
@@ -8935,8 +8960,13 @@ $(function () {
                      else {
                          me._render(data);
                      }
+
+                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                     me.removeLoadingIndicator();
                  }).fail(
                 function (jqXHR, textStatus, errorThrown) {
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                    me.removeLoadingIndicator();
                     console.log(textStatus);
                     forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
                 });
@@ -8948,7 +8978,7 @@ $(function () {
         _initOverrides: function () {
             var me = this;
             if (me.options.explorerSettings.CustomColors) {
-                var decodedPath = decodeURIComponent(me.options.path);
+                var decodedPath = decodeURIComponent(me.path);
                 var colorOverrideSettings = me.options.explorerSettings.CustomColors[decodedPath];
                 if (colorOverrideSettings) {
                     me.colorOverrideSettings = colorOverrideSettings;
@@ -8983,16 +9013,14 @@ $(function () {
             me.$viewerContainer = me.$explorer;
             me.$selectedItem = null;
 
-            me.showLoadingIndictator();
-
-            if (me.options.view === "catalog" || me.options.view === "searchfolder") {
-                me._checkPermission();
+            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
+            if ($reportExplorerContainer.length === 0) {
+                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
+                me.element.append($reportExplorerContainer);
             }
 
-            if (me.options.explorerSettings) {
-                me._initOverrides();
-            }
-            me._fetch(me.options.view, me.options.path);
+            // Make sure the view base has the explorer container
+            me._super($reportExplorerContainer);
 
             if (!me.subscriptionModel) {
                 me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
@@ -9032,8 +9060,6 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._searchFolderDialog = $dlg;
-
-            me.removeLoadingIndicator();
         },
         _checkPermission: function () {
             var me = this;
@@ -9041,7 +9067,7 @@ $(function () {
             //update properties: update report properties (tags)
             //for more properties, add to the list
             var permissionList = ["Create Resource", "Update Properties", "Update Security Policies"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+            me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
         },
         /**
          * Get user permission for current path
@@ -9129,7 +9155,7 @@ $(function () {
                 dataType: "text",
                 data: {
                     resourceName: searchFolder.searchFolderName,
-                    parentFolder: me.parentPath || me.options.path,
+                    parentFolder: me.parentPath || me.path,
                     contents: JSON.stringify(searchFolder.content),
                     mimetype: "json/forerunner-searchfolder",
                     instance: me.options.rsInstance,
@@ -9224,7 +9250,7 @@ $(function () {
          */
         getCurrentPath: function () {
             var me = this;
-            return decodeURIComponent(me.options.path);
+            return decodeURIComponent(me.path);
         },
         /**
          * Get current explorer page view
@@ -9233,7 +9259,7 @@ $(function () {
          */
         getCurrentView: function () {
             var me = this;
-            return me.options.view;
+            return me.view;
         },
         _getFileTypeClass: function (mimeType) {
             var fileTypeClass = null,
@@ -9357,7 +9383,7 @@ $(function () {
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
-            var buildVersion = me._getBuildVersion();
+            var buildVersion = forerunner.ajax.getBuildVersion();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -9419,27 +9445,6 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },
-        _getBuildVersion: function () {
-            var me = this;
-            var url = forerunner.config.forerunnerFolder() + "version.txt";
-            var buildVersion = null;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "text",
-                async: false,
-                success: function (data) {
-                    buildVersion = data;
-                },
-                fail: function (data) {
-                    console.log(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-            });
-
-            return buildVersion;
         },
         _getSettings: function () {
             var me = this;
@@ -17060,23 +17065,9 @@ $(function () {
             explorerSettings: null,
             rsInstance: null,
         },
-        _createReportExplorer: function (path, view, showmainesection) {
+        _createReportExplorer: function (showmainesection) {
             var me = this;
-            var path0 = path;
             var layout = me.DefaultAppTemplate;
-
-            if (!path) {// root page
-                path = "/";
-            }
-            if (!view) {// general catalog page
-                view = "catalog";
-                me._setPropertiesTabs(path, propertyListMap.normal);
-            }
-            else if (view === "searchfolder") {
-                me._setPropertiesTabs(path, propertyListMap.searchFolder);
-            }
-
-            me._setSecurity(path);
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
@@ -17088,8 +17079,6 @@ $(function () {
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder(),
-                path: path,
-                view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
@@ -17146,6 +17135,17 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
+
+            //check the build version on the server each time when route happen
+            //if not match then force refresh the browser
+            var newVersion = forerunner.ajax.getBuildVersion();
+
+            if (me.buildVersion && me.buildVersion !== newVersion) {
+                window.location.reload(true);
+                return;
+            } else {
+                me.buildVersion = newVersion;
+            }
 
             if (forerunner.device.isAllowZoom()) {
                 forerunner.device.allowZoom(false);
@@ -17332,7 +17332,7 @@ $(function () {
             //To resolved bug 494 on android
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                me._createReportExplorer(path, view, true);
+                me._createReportExplorer(true);
 
                 var $toolbar = layout.$mainheadersection;
                 //add this class to distinguish explorer toolbar and viewer toolbar
@@ -17350,10 +17350,41 @@ $(function () {
                     $toolbar.reportExplorerToolbar("setSearchKeyword", path);
                 }
 
+                me.$reportExplorer.one(events.reportExplorerBeforeFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("disableAllTools");
+                });
+
+                me.$reportExplorer.one(events.reportExplorerAfterFetch(), function (e, data) {
+                    $toolbar.reportExplorerToolbar("enableAllTools");
+                });
+
                 var $lefttoolbar = layout.$leftheader;
                 if ($lefttoolbar !== null) {
                     $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
                 }
+
+                if (me.options.showBreadCrumb === false) {
+                    me.DefaultAppTemplate.$linksection.hide();
+                }
+
+                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                var explorer = $(".fr-report-explorer", me.$reportExplorer);
+                me.element.css("background-color", explorer.css("background-color"));
+
+                if (!path) {// root page
+                    path = "/";
+                }
+                if (!view) {// general catalog page
+                    view = "catalog";
+                    me._setPropertiesTabs(path, propertyListMap.normal);
+                }
+                else if (view === "searchfolder") {
+                    me._setPropertiesTabs(path, propertyListMap.searchFolder);
+                }
+
+                me._setSecurity(path);
+
+                me.$reportExplorer.reportExplorer("load", view, path);
 
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
@@ -17366,14 +17397,6 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
-
-                if (me.options.showBreadCrumb === false) {
-                    me.DefaultAppTemplate.$linksection.hide();
-                }
-
-                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $(".fr-report-explorer", me.$reportExplorer);
-                me.element.css("background-color", explorer.css("background-color"));
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
@@ -17528,6 +17551,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;

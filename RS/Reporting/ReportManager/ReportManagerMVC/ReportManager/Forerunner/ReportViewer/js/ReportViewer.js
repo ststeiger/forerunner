@@ -1971,11 +1971,11 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshParameters
          *
-         * @param {String} Parameter list.
-         * @param {Boolean} Submit form if the parameters are satisfied.
-         * @param {Integer} The page to load.  Specify -1 to load the current page.
-         * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
-         * @param {Boolean} Indicate it's a cascading refresh or whole refresh
+         * @param {Object} paramList - Parameter list (type may be string or object).
+         * @param {Boolean} submitForm - Submit form if the parameters are satisfied.
+         * @param {Integer} pageNum - The page to load.  Specify -1 to load the current page.
+         * @param {Boolean} renderParamArea - Whether to trigger show parameter area event if there are visible parameters.
+         * @param {Boolean} isCascading - Indicate it's a cascading refresh or whole refresh
          */
         refreshParameters: function (paramList, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
@@ -2097,7 +2097,7 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
-         * @param {Object} parameters - Optional parameters
+         * @param {Object} parameters - Optional parameters  (type may be string or object)
          * @param {Object} sessionID - Optional SessionID for existing execution
          */
         loadReport: function (reportPath, pageNum, parameters,sessionID) {

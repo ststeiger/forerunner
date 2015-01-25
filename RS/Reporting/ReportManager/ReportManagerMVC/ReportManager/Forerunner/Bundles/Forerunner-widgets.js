@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -2504,6 +2504,7 @@ $(function () {
                 pif.hide();
                 me.element.append(pif);
             }
+
         },
         _setPrint: function (pageLayout) {
             var me = this;

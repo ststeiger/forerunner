@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -379,7 +379,7 @@ $(function () {
             allowZoom: "allowZoom",
             /** widget + event, lowercase */
             reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
-           
+
             /** @constant */
             menuClick: "menuclick",
             /** widget + event, lowercase */

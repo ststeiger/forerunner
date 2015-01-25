@@ -1779,6 +1779,7 @@ $(function () {
                 pif.hide();
                 me.element.append(pif);
             }
+
         },
         _setPrint: function (pageLayout) {
             var me = this;

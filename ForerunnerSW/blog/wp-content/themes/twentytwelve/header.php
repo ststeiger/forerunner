@@ -40,7 +40,7 @@
         <div class="ForerunnerPage Center" style="">
 
             <div class="" style="display:block; width: 100%;">
-                <div class="HeaderFont" style="display:block;width: 100%;text-align:right;color:#0b86c6;"><span style="font-size:30px;">855.367.3511</span> | <a style="font-size:14px;" href="/home/contact">CONTACT US</a> </div>
+                <div class="HeaderFont" style="display:block;width: 100%;text-align:right;color:#0b86c6;"><span style="font-size:30px;">855.367.3511</span> | <a style="font-size:14px;" href="/contact">CONTACT US</a> </div>
 
                 <div class="" style="display: table; width: 100%;">
                     <div class="ForerunnerTD " style="max-width:350px;">
@@ -58,9 +58,9 @@
                                     <li id="Pricing" class="Navitem TopNavitem"><a href="/pricing">PRICING</a></li>
                                     <li id="Demo" class="Navitem TopNavitem"><a href="/demo">DEMO</a></li>
                                     <li id="Support" class="Navitem TopNavitem"><a href="/support">SUPPORT</a></li>
-									<li id="BLOG" class="Navitem TopNavitem"><a href="/BLOG">BLOG</a></li>
+									<li id="BLOG" class="Navitem TopNavitem"><a  rel="canonical" href="/blog">BLOG</a></li>
                                     <li id="About" class="Navitem TopNavitem"><a href="/about">ABOUT</a></li>
-                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
+                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/registerTrial">FREE TRIAL</a></li>                                                            
                                 </ul>
                             </div>                            
                         </div>

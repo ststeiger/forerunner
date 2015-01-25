@@ -2,7 +2,7 @@
 [
 {
 "ID": "16",
-"Link": "/home/press?Article=16",
+"Link": "/press?Article=16",
 "Title":"Forerunner Software’s Unique Mobilizer 3.0 Unveiled in Live Demonstrations at PASS Summit 2014",
 "Description":"PASS Summit 2014 attendees are among the first to witness the in person unveiling of Forerunner Software’s next generation, responsive Mobilizer 3.0, designed to extend Microsoft SQL Server Reporting Services (SSRS) across any device or browser.",
 "Release": "Redmond, WA, November 6, 2014",
@@ -18,7 +18,7 @@ For the latest updates from PASS Summit 2014, please visit the conference websit
   },
   {
 "ID": "17",
-"Link": "/home/press?Article=17",
+"Link": "/press?Article=17",
 "Title":"Leading Mobile BI Solutions Provider Forerunner Software Gears Up for the Premier Microsoft SQL Server Conference Focused on Empowering the Global SQL Server Communit",
 "Description":"Forerunner Software is taking its message of cost effective mobile BI for the masses to the Professional Association for SQL Server (PASS), when the world’s largest conference of SQL Server and BI professionals returns to the Washington State Convention & Trade Center in Seattle, WA, November 4-7, 2014.",
 "Release": "Redmond, WA, October 18, 2014",
@@ -34,7 +34,7 @@ About Forerunner Software - Forerunner Software solutions are responsive mobile 
   },
 {
 "ID": "14",
-"Link": "/home/press?Article=14",
+"Link": "/press?Article=14",
 "Title":"Forerunner Software, a Leading Provider of Mobile Business Intelligence (BI) Solutions, Today Announces a Free 30 Day Trial of It's Unique Mobilizer 3.0",
 "Description":"Designed for IT and development professionals to quickly integrate a complete and cost effective mobile solution leveraging existing security policies and infrastructure and needing no additional development or training, Forerunner Software is now offering a free 30 Day Trial License of Mobilizer 3.0 to make it easy to transform and modernize your mobile BI programs by testing on your own SSRS Reports. Unlock SSRS for mobile BI now for free.",
 "Release": "Redmond, WA, September 26, 2014",
@@ -57,13 +57,13 @@ The features of Mobilizer 3.0 include:
 
 “With no per user charges, Mobilizer now cost effectively and significantly expands the population of mobile BI users to include a more mainstream audience: you,” said Forerunner Founder Jason Carlson, adding, “Try it today—the 30 day trial license is free on our website at www.forerunnersw.com and we also include development and test licenses for free with every production license.”
 
-Download/ Free License Request: https://www.forerunnersw.com/Home/register
+Download/ Free License Request: https://www.forerunnersw.com/registerTrial
 
 About Forerunner Software - Forerunner Software solutions are responsive mobile applications designed to extend Microsoft SQL Server access on any mobile or tablet device and from any browser. Forerunner Software provides the next generation, mobile first, enterprise reporting and embedded Business Intelligence solutions. Forerunner Software solutions power modern application environments by providing robust, multiplatform data integration and data presentation capabilities for corporations and ISV’s. Forerunner Software is run by the team that originally brought you Microsoft SQL Server Reporting Services — no one understands the technology and the customers better. www.forerunnersw.com."
   },
 {
 "ID": "15",
-"Link": "/home/press?Article=15",
+"Link": "/press?Article=15",
 "Title":"Forerunner Software Announces Availability of a New Unlimited Server License for Its Unique Mobilizer Which Unlocks SSRS for Mobile BI Across All Devices and Browsers",
 "Description":"Forerunner Software's Mobilizer is an easy to use, out of the box mobile business intelligence solution for all mobile devices and browsers with no per user charges. Now more cost effective than ever for organizations whose servers are capable of virtualization, Mobilizer is now available with a new Server License for unlimited cores.",
 "Release": "Redmond, WA, September 5, 2014",
@@ -90,7 +90,7 @@ See how Forerunner Mobilizer can help you by downloading your free 30 day trial 
   },
 {
 "ID": "12",
-"Link": "/home/press?Article=12",
+"Link": "/press?Article=12",
 "Title":"Forerunner Software Announces the Addition of Patent Pending Technology to Its Portfolio Which Extends the Power of Mobilizer’s Unique Design for True Mobile Reporting",
 "Description":"Forerunner Software’s Mobilizer unlocks the power of Microsoft’s SQL Server by allowing users access to mobile business intelligence quickly and easily across all devices and browsers. It is an easy to use out of the box solution that leverages your existing investment in SSRS and eliminates the need for additional development or user training.",
 "Release": "Redmond, WA, July 26, 2014",
@@ -108,7 +108,7 @@ Extremely cost effective with no per user charges and no need for additional dev
   },
   {
 "ID": "11",
-"Link": "/home/press?Article=11",
+"Link": "/press?Article=11",
 "Title":"Today Forerunner Software, a Leading Provider of Mobile BI Solutions, Announces an Updated Version of the Public Beta of Mobilizer 3.0 with Many New Features",
 "Description":"Forerunner Software's Mobilizer 3.0 works by unlocking the power of SQL Server Reporting Services across all devices and all browsers. Created by the original architect of SSRS, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI to gain and sustain competitive advantage.",
 "Release": "Redmond, WA, July 16, 2014",
@@ -129,7 +129,7 @@ Visit www.forerunnersw.com to download your free trial version of Mobilizer toda
   },
 {
 "ID": "10",
-"Link": "/home/press?Article=10",
+"Link": "/press?Article=10",
 "Title":"Multinational Chip Maker Leverages the Power of Forerunner Software’s Unique Mobilizer to Access Data from Anywhere, on Any Browser or Mobile Device",
 "Description":"In order to support the demand of business users they have recently chosen Forerunner Software’s innovative Mobilizer to deliver a key part of their mobile BI initiative.",
 "Release": "Redmond, WA, July 10, 2014",
@@ -150,7 +150,7 @@ Download your free trial of Mobilizer now at www.forerunnersw.com to see Mobiliz
 
 {
 "ID": "1",
-"Link": "/home/press?Article=1",
+"Link": "/press?Article=1",
 "Title":"Forerunner Software, a Leading Provider of Mobile Business Intelligence (BI) Solutions, Today Announces the Public Beta Availability of Mobilizer 3.0",
 "Description":"Forerunner Software's Mobilizer 3.0 uniquely unlocks the power of SQL Server Reporting Services across all devices and all browsers. With no per user charges, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI to gain and sustain competitive advantage.",
 "Release": "Redmond, WA, June 27, 2014",
@@ -173,7 +173,7 @@ Visit <a href='http://www.forerunnersw.com'>www.forerunnersw.com</a> to download
   },
   {
   "ID": "2",
-  "Link": "/home/press?Article=2",
+  "Link": "/press?Article=2",
 "Title":"Forerunner Software's Unique Mobilizer for Mobile BI is Now More Affordable Than Ever with Volume Pricing and Discounts for Public Sector and Non-Profits",
 "Description":"Forerunner Software's Mobilizer is an easy to use, cost effective, out of the box mobile business intelligence solution for all mobile devices and browsers with no per user charges. As if that’s not enough, Mobilizer is now more affordable than ever with volume pricing and discounts for public sector and non-profits",
 "Release": "Redmond, WA — 14 June 2014",
@@ -192,7 +192,7 @@ Forerunner Founder Jason Carlson states, “Public sector and non- profit’s al
   ,
   {
   "ID": "3",
-  "Link": "/home/press?Article=3",
+  "Link": "/press?Article=3",
 "Title":"SQL Server Pro Spotlights Forerunner Software’s CEO and Founder Jason Carlson for His Groundbreaking Work in Creating Mobilizer for Cost Effective Mobile BI",
 "Description":"Forerunner Founder Jason Carlson was previously the chief architect of SSRS and ran the SQL Server Reporting Services division for 8 of the 15 years he worked at Microsoft. Now Jason has created a unique solution unlike any other for mobile business intelligence across any device or browser. ",
 "Release": "Redmond, WA— 31 May 2014",
@@ -224,7 +224,7 @@ To read the entire article go <a href='http://sqlmag.com/sql-server-reporting-se
   },
   {
   "ID": "6",
-   "Link": "/home/press?Article=6",
+   "Link": "/press?Article=6",
 "Title":"Announcing the Release of Forerunner Software’s Mobilizer Version 2.0",
 "Description":"Forerunner Software, the leading provider of next generation, mobile first, enterprise reporting and embedded business intelligence solutions, today announced the release of Mobilizer version 2.0.",
 "Release": "REDMOND, WA — 4 April 2014",
@@ -240,7 +240,7 @@ Forerunner Software Founder Jason Carlson utilizes his experience in leading tea
   },
   {
   "ID": "7",
-   "Link": "/home/press?Article=7",
+   "Link": "/press?Article=7",
 "Title":"Increasing Adoption of Mobile Devices Fuels Demand for Forerunner Software’s Innovative Mobilizer to Unlock the Power of SQL Server Across All Devices and Browsers",
 "Description":"Forerunner Software is continuing to accelerate growth amidst the explosive adoption of mobile devices which create user need to access core business intelligence anywhere.",
 "Release": "REDMOND, WA — 22 March 2014",
@@ -258,7 +258,7 @@ Jason’s 15 years heading Microsoft’s SQL platform and services inspired him 
   },
   {
   "ID": "8",
-   "Link": "/home/press?Article=8",
+   "Link": "/press?Article=8",
 "Title":"Forerunner Software Launches Forerunner Mobilizer to Extend Power of SQL Server Reporting Services",
 "Description":"Forerunner Software launches Forerunner Mobilizer, an optimized, responsive mobile application built to extend the power of Microsoft SQL Server Reporting Services. Designed to unlock SQL Server across all communication devices and browsers, Mobilizer allows users access to core business intelligence anywhere. Corporate mobility is a reality, and maintaining security and protection is paramount as the workspace extends outside of an office.",
 "Release": "REDMOND, WA — 15 October 2013",

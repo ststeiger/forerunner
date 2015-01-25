@@ -1,2 +1,21 @@
 User-agent: *
 Allow: /
+Disallow: /home/
+Disallow: /page/
+Disallow: /wp-login.php
+Disallow: /2015/
+Disallow: /2014/
+Disallow: /comments/feed/
+Disallow: /wp-admin/
+Disallow: /wp-includes/
+Disallow: /wp-content/plugins/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /junk/
+Disallow: /images/
+Disallow: /index
+Disallow: /category/
+Disallow: /author/admin/
+Disallow: /pr/
+
+

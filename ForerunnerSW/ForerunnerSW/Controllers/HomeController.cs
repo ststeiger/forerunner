@@ -55,7 +55,7 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
-        public ActionResult Register()
+        public ActionResult RegisterTrial()
         {
             return View();
         }

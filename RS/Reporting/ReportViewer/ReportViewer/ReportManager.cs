@@ -52,7 +52,9 @@ namespace Forerunner.SSRS.Manager
         static bool SeperateDB = ForerunnerUtil.GetAppSetting("Forerunner.SeperateDB", false);
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
+        static string VersionNumber = string.Empty;
         private static readonly object SettingLockObj = new object();
+        private static readonly object VersionLockObj = new object();
 
         private class SSRSServer
         {
@@ -2062,6 +2064,12 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
            
         }
+
+        /// <summary>
+        /// add the mobilizer setting txt file eventlistener, if it change do related logic
+        /// </summary>
+        /// <param name="path">file path</param>
+        /// <returns>mobilizer setting file content</returns>
         public string ReadMobilizerSetting(string path)
         {
             if (MobilizerSetting == String.Empty)
@@ -2098,6 +2106,46 @@ namespace Forerunner.SSRS.Manager
                 }
             }
             return MobilizerSetting;
+        }
+
+        public string ReadMobilizerVersion(string path)
+        {
+            if (VersionNumber == null || VersionNumber == String.Empty)
+            {
+                lock (VersionLockObj)
+                {
+                    if (VersionNumber == String.Empty)
+                    {
+                        if (path == null || path == "")
+                            path = "Forerunner/version.txt";
+
+                        string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + path;
+                        VersionNumber = ReadTXTFile(filePath);
+
+                        //watch the version file.
+                        if (File.Exists(filePath))
+                        {
+                            FileSystemWatcher watcher = new FileSystemWatcher();
+
+                            watcher.Path = Path.GetDirectoryName(filePath);
+                            watcher.Filter = Path.GetFileName(filePath);
+
+                            //if the file change re-read the content and set the version number
+                            watcher.Changed += new FileSystemEventHandler(MobilizerVersion_OnChange);
+
+                            //begin watching.
+                            watcher.EnableRaisingEvents = true;
+                        }
+                    }
+                }
+            }
+
+            return VersionNumber;
+        }
+
+        private void MobilizerVersion_OnChange(object sender, FileSystemEventArgs e)
+        {
+            VersionNumber = ReadTXTFile(e.FullPath);
         }
 
         /*

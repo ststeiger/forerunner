@@ -25,6 +25,7 @@
     <add key="Forerunner.IgnoreSSLErrors" value="true" />
     <add key="Forerunner.QueueThumbnails" value="false" />
     <add key="Forerunner.MobilizerSettingPath" value="Custom\MobilizerSettings.txt"/>
+	<add key="Forerunner.VersionPath" value="Forerunner\version.txt" />
   </appSettings>
   <system.net>
     <defaultProxy enabled="true" useDefaultCredentials="true" >

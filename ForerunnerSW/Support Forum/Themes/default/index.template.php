@@ -190,13 +190,14 @@ echo '
                         <div class="Navbar TopNavbar">
                             <div style="float:right;">
                                 <ul>            
-                                    <li id="Index" class="Navitem TopNavitem"><a href="/Home">HOME</a></li>
-                                    <li id="Features" class="Navitem TopNavitem"><a href="/home/features">FEATURES</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem"><a href="/home/developers">DEVELOPERS</a></li>
-                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/home/pricing">PRICING</a></li>
-                                    <li id="Demo" class="Navitem TopNavitem"><a href="/home/demo">DEMO</a></li>
-                                    <li id="Support" class="Navitem TopNavitem"><a href="/home/support">SUPPORT</a></li>
-                                    <li id="About" class="Navitem TopNavitem"><a href="/home/about">ABOUT</a></li>
+                                    <li id="Index" class="Navitem TopNavitem"><a href="/">HOME</a></li>
+                                    <li id="Features" class="Navitem TopNavitem"><a href="/features">FEATURES</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="/developers">DEVELOPERS</a></li>
+                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/pricing">PRICING</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="/demo">DEMO</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="/support">SUPPORT</a></li>
+                                    <li id="BLOG" class="Navitem TopNavitem"><a href="/BLOG">BLOG</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="/about">ABOUT</a></li>
                                     <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
                                 </ul>
                             </div>                            

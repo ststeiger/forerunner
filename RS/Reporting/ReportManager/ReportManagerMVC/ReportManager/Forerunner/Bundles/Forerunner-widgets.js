@@ -765,6 +765,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @prop {String} options.zoom - Zoom factor, default to 100.
+     * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -790,7 +791,8 @@ $(function () {
             viewerID: null,
             rsInstance: null,
             showSubscriptionUI: false,
-            zoom: "100"
+            zoom: "100",
+            exportCallback: undefined
         },
 
         // Constructor
@@ -2386,7 +2388,11 @@ $(function () {
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+
+            if (me.options.exportCallback !== undefined)
+                me.options.exportCallback(url);
+            else
+                window.open(url);
         },       
         /**
          * Show print dialog, close it if opened
@@ -2493,6 +2499,7 @@ $(function () {
                 pif.hide();
                 me.element.append(pif);
             }
+
         },
         _setPrint: function (pageLayout) {
             var me = this;
@@ -9372,7 +9379,7 @@ $(function () {
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
-            var buildVersion = me._getBuildVersion();
+            var buildVersion = forerunner.ajax.getBuildVersion();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -9434,27 +9441,6 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },
-        _getBuildVersion: function () {
-            var me = this;
-            var url = forerunner.config.forerunnerFolder() + "version.txt";
-            var buildVersion = null;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "text",
-                async: false,
-                success: function (data) {
-                    buildVersion = data;
-                },
-                fail: function (data) {
-                    console.log(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-            });
-
-            return buildVersion;
         },
         _getSettings: function () {
             var me = this;
@@ -17145,6 +17131,17 @@ $(function () {
         },
         _onRoute: function (event, data) {
             var me = this;
+
+            //check the build version on the server each time when route happen
+            //if not match then force refresh the browser
+            var newVersion = forerunner.ajax.getBuildVersion();
+
+            if (me.buildVersion && me.buildVersion !== newVersion) {
+                window.location.reload(true);
+                return;
+            } else {
+                me.buildVersion = newVersion;
+            }
 
             if (forerunner.device.isAllowZoom()) {
                 forerunner.device.allowZoom(false);

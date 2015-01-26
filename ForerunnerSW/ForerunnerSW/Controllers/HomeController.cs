@@ -32,6 +32,13 @@ namespace ForerunnerSW.Controllers
         }
         public ActionResult About()
         {
+            
+            ViewData["Press"] = getAllPress();
+            return View();
+        }
+
+        private string getAllPress()
+        {
             PressRelease[] prs;
             JavaScriptSerializer releases = new JavaScriptSerializer();
 
@@ -45,17 +52,16 @@ namespace ForerunnerSW.Controllers
 
             foreach (PressRelease pr in prs)
             {
-                allNews+=  String.Format(news, pr.Title, pr.Release, pr.Description, pr.Link);                    
-               
+                allNews += String.Format(news, pr.Title, pr.Release, pr.Description, pr.Link);
+
             }
-            ViewData["Press"] = allNews;
-            return View();
+            return allNews;
         }
         public ActionResult Contact()
         {
             return View();
         }
-        public ActionResult Register()
+        public ActionResult RegisterTrial()
         {
             return View();
         }
@@ -110,14 +116,19 @@ namespace ForerunnerSW.Controllers
                 prs = releases.Deserialize<PressRelease[]>(System.IO.File.ReadAllText(Server.MapPath("~") + "/Content/Press/PressReleases.txt"));
             }
 
-            foreach (PressRelease pr in prs)
+            if (Article == "" || Article == null)
+                ViewData["Press"]= getAllPress();
+            else
             {
-                if (pr.ID == Article)
+                foreach (PressRelease pr in prs)
                 {
-                    ViewData["Title"] = pr.Title;
-                    ViewData["Description"] = pr.Description;
-                    ViewData["Content"] = pr.Content.Replace("\r\n","<br/>");
-                    ViewData["Release"] = pr.Release;
+                    if (pr.ID == Article)
+                    {
+                        ViewData["Title"] = pr.Title;
+                        ViewData["Description"] = pr.Description;
+                        ViewData["Content"] = pr.Content.Replace("\r\n","<br/>");
+                        ViewData["Release"] = pr.Release;
+                    }
                 }
             }
             return View();

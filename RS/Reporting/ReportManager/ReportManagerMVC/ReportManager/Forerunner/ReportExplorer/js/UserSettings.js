@@ -36,7 +36,7 @@ $(function () {
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
-            var buildVersion = me._getBuildVersion();
+            var buildVersion = forerunner.ajax.getBuildVersion();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -98,27 +98,6 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-        },
-        _getBuildVersion: function () {
-            var me = this;
-            var url = forerunner.config.forerunnerFolder() + "version.txt";
-            var buildVersion = null;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "text",
-                async: false,
-                success: function (data) {
-                    buildVersion = data;
-                },
-                fail: function (data) {
-                    console.log(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log(errorThrown);
-                },
-            });
-
-            return buildVersion;
         },
         _getSettings: function () {
             var me = this;

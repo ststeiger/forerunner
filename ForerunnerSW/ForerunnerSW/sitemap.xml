@@ -7,43 +7,37 @@
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/about</loc>
+    <loc>https://forerunnersw.com/about</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/index</loc>
+    <loc>https://forerunnersw.com/contact</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/contact</loc>
+    <loc>https://forerunnersw.com/support</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/support</loc>
+    <loc>https://forerunnersw.com/blog</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/blog</loc>
+    <loc>https://forerunnersw.com/developers</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/developers</loc>
-    <lastmod>2014-07-17</lastmod>
-    <changefreq>Daily</changefreq>
-    <priority>1</priority>
-  </url>
-  <url>
-    <loc>http://forerunnersw.com/home/Samples</loc>
+    <loc>http://forerunnersw.com/Samples</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
@@ -61,31 +55,31 @@
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/demo</loc>
+    <loc>https://forerunnersw.com/demo</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/register</loc>
+    <loc>https://forerunnersw.com/registerTrial</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
    <url>
-    <loc>https://forerunnersw.com/home/features</loc>
+    <loc>https://forerunnersw.com/features</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
  <url>
-    <loc>https://forerunnersw.com/home/Pricing</loc>
+    <loc>https://forerunnersw.com/Pricing</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://forerunnersw.com/home/press</loc>
+    <loc>https://forerunnersw.com/press</loc>
     <lastmod>2014-07-17</lastmod>
     <changefreq>Daily</changefreq>
     <priority>1</priority>

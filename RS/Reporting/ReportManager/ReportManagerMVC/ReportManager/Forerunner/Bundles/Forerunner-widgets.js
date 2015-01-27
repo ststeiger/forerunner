@@ -681,13 +681,10 @@ $(function () {
             if (me.loadLock === 0) {
                 me.loadLock = 1;
                 setTimeout(function () { me._showLoadingIndictator(); }, me.options.loadDelay);
-                console.log("showLoadingIndictator()");
             }
         },
         _showLoadingIndictator: function () {
             var me = this;
-
-            console.log("_showLoadingIndictator() - me.loadLock: " + me.loadLock);
 
             if (me.loadLock === 1) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
@@ -708,8 +705,6 @@ $(function () {
          * @function $.forerunner.reportViewer#removeLoadingIndicator
          */
         removeLoadingIndicator: function () {
-            console.log("removeLoadingIndicator()");
-
             var me = this;
             me.loadLock = 0;
             var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
@@ -1313,7 +1308,7 @@ $(function () {
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
-                me.options.onInputBlur();
+                me.options.onInputBlur.call(me);
         },
         /**
          * Function execute when input element focus
@@ -1323,7 +1318,7 @@ $(function () {
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
-                me.options.onInputFocus();
+                me.options.onInputFocus.call(me);
         },
 
         _allowSwipe: true,

@@ -588,7 +588,7 @@ $(function () {
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
-                me.options.onInputBlur();
+                me.options.onInputBlur.call(me);
         },
         /**
          * Function execute when input element focus
@@ -598,7 +598,7 @@ $(function () {
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
-                me.options.onInputFocus();
+                me.options.onInputFocus.call(me);
         },
 
         _allowSwipe: true,

@@ -52,7 +52,7 @@ namespace ForerunnerSW.Controllers
 
             foreach (PressRelease pr in prs)
             {
-                allNews += String.Format(news, pr.Title, pr.Release, pr.Description, pr.Link);
+                allNews += String.Format(news, pr.Title, pr.Release, pr.Description, "/press?Article=" + pr.Title.Replace(" ","-"));
 
             }
             return allNews;
@@ -120,9 +120,10 @@ namespace ForerunnerSW.Controllers
                 ViewData["Press"]= getAllPress();
             else
             {
+                Article = Article.Replace("-", " ");
                 foreach (PressRelease pr in prs)
                 {
-                    if (pr.ID == Article)
+                    if (pr.ID == Article || pr.Title == Article)
                     {
                         ViewData["Title"] = pr.Title;
                         ViewData["Description"] = pr.Description;

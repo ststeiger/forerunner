@@ -2176,8 +2176,7 @@ $(function () {
                 me.flushCache();
                 me.hideDocMap();
                 me.element.unmask();
-            }
-            
+            }            
             me._resetViewer();
 
             me.reportPath = reportPath ? reportPath : "/";

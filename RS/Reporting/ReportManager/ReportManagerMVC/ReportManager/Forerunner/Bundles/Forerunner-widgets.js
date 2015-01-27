@@ -2887,7 +2887,7 @@ $(function () {
             
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
-            if (!pageNum) {
+            if (!pageNum || Number.isInteger(pageNum) === false) {
                 pageNum = 1;
             }
             if (paramList && typeof paramList === "object")

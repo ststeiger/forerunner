@@ -13,6 +13,12 @@ namespace ForerunnerSW
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapRoute(
+             name: "PressPath",
+             url: "press/{id}",
+             defaults: new { controller = "Home", action = "PressPath", id = UrlParameter.Optional }
+         );
+            
             routes.MapRoute( "ActionOnly", "{action}", new { controller = "Home" });
 
             routes.MapRoute(

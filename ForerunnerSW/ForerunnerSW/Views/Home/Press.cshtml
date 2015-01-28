@@ -7,8 +7,8 @@
 <div  id="Page" data-page="" class="ForerunnerPort" style="">
     <div  class="ForerunnerPage Center" style="padding-bottom:200px;">
         @*<div  class="ForerunnerPageTitle" style="">@ViewData["Title"] </div>*@
-        <div class="PressTitle" style="">@ViewData["Title"]</div>  
-        <div class="PressDescription" style="">@ViewData["Description"]</div>  
+        <div class="PressTitle" style="">@ViewData["PressTitle"]</div>  
+        <div class="PressDescription" style="">@ViewData["PressDescription"]</div>  
 
         <div class="PressContent"><b>@ViewData["Release"]</b> @Html.Raw(ViewData["Content"])</div>
         @Html.Raw(ViewData["Press"])

@@ -86,7 +86,7 @@ See how Forerunner Mobilizer can help you by downloading your free 30 day trial 
 "Title":"Do More with Mobilizer’s RDL Update from Forerunner",
 "Description":"Forerunner Software, previously featured on SQL Server Pro (SQL Server Spotlight: Forerunner Software CEO and Founder, Jason Carlson), has released a new update for its product, Mobilizer.",
 "Release": "Redmond, WA, August 07, 2014",
-"Content": "<a href=’http://sqlmag.com/sql-server-reporting-services/do-more-mobilizers-rdl-update-forerunner’ target=’_blank’ >Full Article</a>"
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/do-more-mobilizers-rdl-update-forerunner' target='_blank' >Full Article</a>"
   },
 {
 "ID": "12",
@@ -204,7 +204,7 @@ Working in conjunction with Microsoft, Carlson explains in the article how Mobil
 
 SQL Server Pro also reported Mobilizer is the first of many products from Forerunner Software and quoted Carlson’s statement, “We want to help companies reach all of their employees with the critical information they need to run their business in today’s hyper-competitive environment where decisions need to be made in real-time, not when you get back to your desk.”
 
-To read the entire article go <a href=’http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson’>here</a>."
+To read the entire article go <a href='http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson'>here</a>."
   },
   {
   "ID": "4",
@@ -212,7 +212,7 @@ To read the entire article go <a href=’http://sqlmag.com/sql-server-reporting-
 "Title":"SQL Server Spotlight: Forerunner Software CEO and Founder, Jason Carlson",
 "Description":"Recently, I had the chance to sit down with Jason Carlson, CEO and founder of Forerunner Software. Jason got me up-to-speed on what he’s being doing with the company’s Mobilizer 2.0 product, which leverages SQL Server Reporting Services (SSRS) ",
 "Release": "Fort Collins, CO — 18 April 2014",
-"Content": "<a href=’http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson’ target=’_blank’ >Full Article</a>"
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/sql-server-spotlight-forerunner-software-ceo-and-founder-jason-carlson' target='_blank' >Full Article</a>"
   },
   {
   "ID": "5",
@@ -220,7 +220,7 @@ To read the entire article go <a href=’http://sqlmag.com/sql-server-reporting-
 "Title":"SQLMag Article: Gain Insights Into Your SQL Server Databases on Any Browser, Mobile Device",
 "Description":"Forerunner Software has recently announced the release of its Mobilizer 2.0 enterprise reporting and business intelligence (BI) solution. Mobilizer provides a modern application experiences and works in conjunction with SQL Server. By leveraging SQL Server Reporting Services (SSRS), users have access to the status and health of their databases on any browser or device.",
 "Release": "Fort Collins, CO — 17 April 2014",
-"Content": "<a href=’http://sqlmag.com/sql-server-reporting-services/gain-insights-your-sql-server-databases-any-browser-mobile-device’ target=’_blank’ >Full Article</a>"
+"Content": "<a href='http://sqlmag.com/sql-server-reporting-services/gain-insights-your-sql-server-databases-any-browser-mobile-device' target='blank' >Full Article</a>"
   },
   {
   "ID": "6",

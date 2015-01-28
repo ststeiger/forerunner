@@ -52,7 +52,7 @@ namespace ForerunnerSW.Controllers
 
             foreach (PressRelease pr in prs)
             {
-                allNews += String.Format(news, pr.Title, pr.Release, pr.Description, "/press?Article=" + pr.Title.Replace(" ","-"));
+                allNews += String.Format(news, pr.Title, pr.Release, pr.Description, "/press/" + pr.Title.Replace(" ", "-").Replace("’", "").Replace("'", "").Replace(".", "").Replace(":", ""));
 
             }
             return allNews;
@@ -87,7 +87,18 @@ namespace ForerunnerSW.Controllers
             public string Content;
 
         }
-        public ActionResult Press(string Article)
+        public ActionResult PressPath(string id)
+        {
+            string[] article = Request.QueryString.GetValues("Article");
+
+            if (article != null && article.Length > 0)
+                ProcessPress(article[0]);
+            else
+                ProcessPress(id);
+            return View("Press");
+        }
+
+        public void ProcessPress(string Article)
         {
             if (watcher == null)
             {
@@ -117,23 +128,28 @@ namespace ForerunnerSW.Controllers
             }
 
             if (Article == "" || Article == null)
-                ViewData["Press"]= getAllPress();
+                ViewData["Press"] = getAllPress();
             else
             {
                 Article = Article.Replace("-", " ");
                 foreach (PressRelease pr in prs)
                 {
-                    if (pr.ID == Article || pr.Title == Article)
+                    if (pr.ID == Article || pr.Title.Replace("’", "").Replace("'", "").Replace(".", "").Replace(":", "") == Article)
                     {
-                        ViewData["Title"] = pr.Title;
-                        ViewData["Description"] = pr.Description;
-                        ViewData["Content"] = pr.Content.Replace("\r\n","<br/>");
+                        ViewData["PressTitle"] = pr.Title;
+                        ViewData["PressDescription"] = pr.Description;
+                        ViewData["Content"] = pr.Content.Replace("\r\n", "<br/>");
                         ViewData["Release"] = pr.Release;
                     }
                 }
             }
+        }
+        public ActionResult Press(string Article)
+        {
+            ProcessPress(Article);
             return View();
         }
+       
         public ActionResult Support()
         {
             return View();

@@ -2205,7 +2205,7 @@ $(function () {
             
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
-            if (!pageNum) {
+            if (!pageNum || parseInt(pageNum) !== pageNum) {
                 pageNum = 1;
             }
             if (paramList && typeof paramList === "object")

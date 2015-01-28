@@ -439,7 +439,7 @@ namespace Forerunner.SSRS.Manager
             return getReturnSuccess();
         }
 
-        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = false)
+        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
         {
             Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
             List<CatalogItem> list = new List<CatalogItem>();
@@ -862,7 +862,7 @@ namespace Forerunner.SSRS.Manager
             if (SeperateDB)
                 return "";
 
-            return GetProperty(path,"ID");
+            return GetProperty(path, "ID");
 
         }
         public string GetItemProperty(string path, string propName)
@@ -877,15 +877,22 @@ namespace Forerunner.SSRS.Manager
         }
         public string GetProperty(string path,string propName)
         {
-            Property[] props = new Property[1];
-            Property retrieveProp = new Property();
-            retrieveProp.Name = propName;
-            props[0] = retrieveProp;
+            string[] propertyArray = propName.Split(',');
+
+            Property[] props = new Property[propertyArray.Length];
+            for (int i = 0; i < propertyArray.Length; i++)
+            {
+                Property retrieveProp = new Property();
+                retrieveProp.Name = propertyArray[i];
+                props[i] = retrieveProp;
+            }            
 
             Property[] properties = callGetProperties(path, props);
 
-            if (properties.Length > 0)
+            if (properties.Length == 1) // adapt prior case, only one property query
                 return properties[0].Value;
+            else if (properties.Length > 1) // this should return mumtiple property but the Api always return one property which is the value of the last property
+                return JsonUtility.GetPropertyJson(properties);
             else
                 return "";
         }
@@ -898,7 +905,7 @@ namespace Forerunner.SSRS.Manager
 
             props[0] = retrieveProp;
 
-            callSetProperties(path, props);            
+            callSetProperties(path, props);
         }
         public string IsFavorite(string path)
         {

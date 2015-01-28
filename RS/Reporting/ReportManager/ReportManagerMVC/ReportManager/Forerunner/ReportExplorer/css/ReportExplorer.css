@@ -19,6 +19,8 @@
 .fr-explorer-item-center { display: block; margin-left: auto; margin-right: auto; }
 
 .fr-report-item-image-block { width: 200px; height: 250px; position: relative; }
+.fr-explorer-item.fr-explorer-hidden-item .fr-report-item-image-block,
+.fr-explorer-item.fr-explorer-hidden-item .fr-explorer-item-earcorner  { background-color: #d3d3d3; }
 
 .fr-report-item-image-base { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background-repeat: no-repeat; background-position: center; }
 

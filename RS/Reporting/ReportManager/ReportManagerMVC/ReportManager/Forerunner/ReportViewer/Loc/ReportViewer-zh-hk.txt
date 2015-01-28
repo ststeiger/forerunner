@@ -284,7 +284,7 @@
     "title":"右鍵菜單",
     "delLabel":"刪除",
     "properties":"屬性",
-      "security":"安全性"
+    "security":"安全性"
   },
   "common": {
     "submit":"提交",
@@ -300,5 +300,10 @@
     "desp":"說明",
     "groupuser":"域名帳號",
     "prompt":"選擇妳要分配的角色"
+  },
+  "visibility": {
+    "title":"隱藏",
+    "label":"在普通視圖下隱藏",
+    "prompt":"設置隱藏後在普通視圖下不會顯示該項, 您可以在管理員視圖下恢復其可見性."
   }
 }

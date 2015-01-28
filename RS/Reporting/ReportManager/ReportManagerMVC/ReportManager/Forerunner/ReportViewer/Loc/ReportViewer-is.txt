@@ -300,5 +300,10 @@
     "desp":"Description",
     "groupuser":"Group or User",
     "prompt":"Select the roles you want to assign"
+  },
+  "visibility": {
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   }
 }

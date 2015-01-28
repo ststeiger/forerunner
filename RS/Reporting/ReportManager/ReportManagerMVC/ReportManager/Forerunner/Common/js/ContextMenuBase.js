@@ -20,15 +20,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags],
+        1: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags],
+        3: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // LinkedReport
         4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
     };
 
     /**

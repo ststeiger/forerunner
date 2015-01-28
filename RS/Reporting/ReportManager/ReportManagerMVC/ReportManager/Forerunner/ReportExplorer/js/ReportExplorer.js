@@ -306,6 +306,7 @@ $(function () {
             var me = this;
 
             me.$UL = me.element.find(".fr-report-explorer");
+            me.$UL.html("");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             

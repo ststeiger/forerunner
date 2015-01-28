@@ -120,7 +120,7 @@ if (iref) {
 }
 
 if ($("#register")) {
-    $("#register").attr("href", "../home/register?ref=" + GetRef());
+    $("#register").attr("href", "/registerTrial?ref=" + GetRef());
 }
 
 $(document).ready(function () {

@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    ViewBag.Title = "News | Forerunner Software";
+    ViewBag.Description = "Forerunner software provides SQL Business Intelligence and Reporting Tools. Call us @ 855.367.3511";
+    ViewBag.Keywords = "SSRS Mobile, Mobile Reporting, Forerunner Mobilizer, Forerunner Software, SQL BI, SSRS, Reporting Services, Mobile business intelligence";
+}
 
 <div  id="Page" data-page="" class="ForerunnerPort" style="">
     <div  class="ForerunnerPage Center" style="padding-bottom:200px;">
@@ -6,7 +10,8 @@
         <div class="PressTitle" style="">@ViewData["Title"]</div>  
         <div class="PressDescription" style="">@ViewData["Description"]</div>  
 
-        <div class="PressContent"><b>@ViewData["Release"]</b> -@Html.Raw(ViewData["Content"])</div>
+        <div class="PressContent"><b>@ViewData["Release"]</b> @Html.Raw(ViewData["Content"])</div>
+        @Html.Raw(ViewData["Press"])
     </div>
 </div>
 

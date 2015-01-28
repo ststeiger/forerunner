@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -681,13 +681,10 @@ $(function () {
             if (me.loadLock === 0) {
                 me.loadLock = 1;
                 setTimeout(function () { me._showLoadingIndictator(); }, me.options.loadDelay);
-                console.log("showLoadingIndictator()");
             }
         },
         _showLoadingIndictator: function () {
             var me = this;
-
-            console.log("_showLoadingIndictator() - me.loadLock: " + me.loadLock);
 
             if (me.loadLock === 1) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
@@ -708,8 +705,6 @@ $(function () {
          * @function $.forerunner.reportViewer#removeLoadingIndicator
          */
         removeLoadingIndicator: function () {
-            console.log("removeLoadingIndicator()");
-
             var me = this;
             me.loadLock = 0;
             var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
@@ -770,6 +765,7 @@ $(function () {
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @prop {String} options.zoom - Zoom factor, default to 100.
+     * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -795,7 +791,8 @@ $(function () {
             viewerID: null,
             rsInstance: null,
             showSubscriptionUI: false,
-            zoom: "100"
+            zoom: "100",
+            exportCallback: undefined
         },
 
         // Constructor
@@ -1311,7 +1308,7 @@ $(function () {
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
-                me.options.onInputBlur();
+                me.options.onInputBlur.call(me);
         },
         /**
          * Function execute when input element focus
@@ -1321,7 +1318,7 @@ $(function () {
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
-                me.options.onInputFocus();
+                me.options.onInputFocus.call(me);
         },
 
         _allowSwipe: true,
@@ -2391,7 +2388,11 @@ $(function () {
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
-            window.open(url);
+
+            if (me.options.exportCallback !== undefined)
+                me.options.exportCallback(url);
+            else
+                window.open(url);
         },       
         /**
          * Show print dialog, close it if opened
@@ -2498,6 +2499,7 @@ $(function () {
                 pif.hide();
                 me.element.append(pif);
             }
+           
         },
         _setPrint: function (pageLayout) {
             var me = this;
@@ -8778,6 +8780,7 @@ $(function () {
             var me = this;
 
             me.$UL = me.element.find(".fr-report-explorer");
+            me.$UL.html("");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             

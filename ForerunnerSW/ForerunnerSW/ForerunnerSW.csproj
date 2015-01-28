@@ -302,7 +302,7 @@
     <Content Include="Views\Home\Demo.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Register.cshtml" />
+    <Content Include="Views\Home\RegisterTrial.cshtml" />
     <Content Include="Views\Home\Thankyou.cshtml" />
     <Content Include="Views\Home\Press.cshtml" />
     <Content Include="Views\Home\Support.cshtml" />

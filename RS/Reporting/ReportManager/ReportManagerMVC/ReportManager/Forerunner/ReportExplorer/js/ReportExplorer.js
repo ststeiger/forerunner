@@ -68,6 +68,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    me.refresh();
                 },
                 error: function (data) {
                     console.log(data);
@@ -94,8 +95,13 @@ $(function () {
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
-            if (isSelected)
+            if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
+            }
+
+            if (catalogItem.Hidden) {
+                $item.addClass("fr-explorer-hidden-item");
+            }
 
             var $anchor = new $("<a />");
             $anchor.addClass("fr-explorer-item-image-link");
@@ -210,7 +216,12 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
-                corner.css("background-color", me.$UL.css("background-color"));
+
+                //only draw the page background when it not hidden
+                if (!catalogItem.Hidden) {
+                    corner.css("background-color", me.$UL.css("background-color"));
+                }
+
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
@@ -295,11 +306,17 @@ $(function () {
             var me = this;
 
             me.$UL = me.element.find(".fr-report-explorer");
+            me.$UL.html("");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
+                //if it's hidden and not in admin mode, not draw it
+                if (catalogItem.Hidden && !me.getUserSettings().adminUI) {
+                    continue;
+                }
+
                 var isSelected = false;
                 if (decodedPath && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
@@ -426,6 +443,7 @@ $(function () {
          */
         refresh: function() {
             var me = this;
+
             me._fetch(me.lastFetched.view, me.lastFetched.path);
         },
         _fetch: function (view, path) {

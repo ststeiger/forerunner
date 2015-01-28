@@ -676,7 +676,8 @@ $(function () {
             description: "description",
             rdlExtension: "rdlExtension",
             tags: "tags",
-            searchFolder: "searchFolder"
+            searchFolder: "searchFolder",
+            visibility: "visibility"
         }
     };
 

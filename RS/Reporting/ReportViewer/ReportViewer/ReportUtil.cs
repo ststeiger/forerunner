@@ -777,5 +777,20 @@ namespace Forerunner
 
             return w.ToString();
         }
+
+        public static string GetPropertyJson(Management.Property [] properties)
+        {
+            JsonWriter w = new JsonTextWriter();
+
+            w.WriteStartObject();
+            for (int i = 0; i < properties.Length; i++)
+            {
+                w.WriteMember(properties[i].Name);
+                w.WriteString(properties[i].Value);
+            }
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
     }
 }

@@ -125,7 +125,7 @@ $(function () {
                 if (me.options.DefaultAppTemplate === null) {
                     //init property dialog in reportviewer
                     layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
-                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);
                 }
             });
 

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -5863,6 +5863,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+
             me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -5892,6 +5893,7 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
+            me.cached = null;
 
             me.$tabs.find("div").remove();
             me.$tabsUL.find("li").remove();
@@ -5916,18 +5918,30 @@ $(function () {
                 switch (me._propertyList[i]) {
                     case propertyEnums.description:
                         me._createDescription();
-                        me._addPreprocess(me._descriptionPreloading());
+                        me._addPreprocess(function () {
+                            me._descriptionPreloading();
+                        });
                         break;
                     case propertyEnums.rdlExtension:
                         me._createRDLExtension();
                         break;
                     case propertyEnums.tags:
                         me._createTags();
-                        me._addPreprocess(me._tagsPreloading);
+                        me._addPreprocess(function () {
+                            me._tagsPreloading();
+                        });
                         break;
                     case propertyEnums.searchFolder:
                         me._createSearchFolder();
-                        me._addPreprocess(me._searchFolderPreloading);
+                        me._addPreprocess(function () {
+                            me._searchFolderPreloading();
+                        });
+                        break;
+                    case propertyEnums.visibility:
+                        me._createVisibility();
+                        me._addPreprocess(function () {
+                            me._visibilityPreloading();
+                        });
                         break;
                 }
             }
@@ -5945,7 +5959,7 @@ $(function () {
             me.$tabs.tabs();
 
             if (typeof me._preprocess === "function") {
-                me._preprocess();
+                me._preprocess.call(me);
                 me._preprocess = null;
             }
         },
@@ -5997,7 +6011,7 @@ $(function () {
                     "</div>" +
                     "<div class='fr-tag-prompt-div'>" +
                         "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
-                    "<div>" +
+                    "</div>" +
                 "</div>");
 
             me.$tagInput = $tagsDiv.find(".fr-tag-text");
@@ -6053,6 +6067,25 @@ $(function () {
             me.$tabsUL.append($li);
             me.$tabs.append($searchfolderDiv);
         },
+        _createVisibility: function () {
+            var me = this;
+            var $li = new $("<li name='" + propertyEnums.visibility + "'><a href='#" + me.guid + "_" + "visibility" + "'>" + locData.visibility.title + "</a></li>");
+
+            var $visibilityDiv = new $(
+                "<div id='" + me.guid + "_" + "visibility" + "' class='fr-property-container fr-visibility-container'>" +
+                    //"<input type='checkbox' class='fr-property-visibility'>" +
+                    "<label class='fr-visibility-label'><input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + "</label>" +
+                    "<div class='fr-visibility-prompt-div'>" +
+                        "<label class='fr-visibility-label-prompt'>" + locData.visibility.prompt + "</label>" +
+                    "</div>" +
+                "</div>");
+
+            me.$isHidden = $visibilityDiv.find(".fr-property-visibility");
+
+            me.$tabsUL.append($li);
+            me.$tabs.append($visibilityDiv);
+        },
+
         _generalSubmit: function () {
             var me = this;
 
@@ -6070,6 +6103,9 @@ $(function () {
                     break;
                 case propertyEnums.searchFolder:
                     result = me._setSearchFolder();
+                    break;
+                case propertyEnums.visibility:
+                    me._setVisibility();
                     break;
             }
 
@@ -6174,11 +6210,16 @@ $(function () {
         _description: null,
         _descriptionPreloading: function () {
             var me = this;
+            me._description = null;
 
-            var des = me._getDescription(me.curPath, "Description");
-            if (des) {
-                me.$desInput.val(des);
-            }
+            me._getProperties(me.curPath, function (data) {
+                var me = this;
+
+                if (typeof data === "object") {
+                    me._description = data["Description"];
+                    me.$desInput.val(me._description);
+                }
+            }, me);
         },
         _setDescription: function () {
             var me = this;
@@ -6214,32 +6255,11 @@ $(function () {
                 return false;
             }
         },
-        _getDescription: function (path) {
-            var me = this;
-            me._description = null;
-
-            forerunner.ajax.ajax({
-                type: "GET",
-                dataType: "text",
-                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty",
-                async: false,
-                data: {
-                    path: path,
-                    propertyName: "Description",
-                    instance: me.options.rsInstance,
-                },
-                success: function (data) {
-                    if (data && data !== "{}") {
-                        me._description = forerunner.helper.htmlDecode(data);
-                    }
-                },
-                fail: function (data) {
-                    
-                },
-            });
-
-            return me._description;
-        },
+        //_getDescription: function (path) {
+        //    var me = this;
+        //    me._description = me._getProperties(path, "Description");
+        //    return me._description;
+        //},
 
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
@@ -6277,7 +6297,7 @@ $(function () {
 
             forerunner.ajax.ajax({
                 url: url,
-                async: false,
+                async: true,
                 type: "GET",
                 dataType: "text",
                 data: {
@@ -6321,6 +6341,110 @@ $(function () {
             else {
                 return false;
             }
+        },
+
+        _isHidden: null,
+        _visibilityPreloading: function () {
+            var me = this;
+            me._isHidden = false;
+            
+            me._getProperties(me.curPath, function (data) {
+                var me = this;
+
+                if (typeof data === "string" && data.toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                    return;
+                }
+
+                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                }
+            }, me);
+        },
+        _setVisibility: function () {
+            var me = this;
+            try {
+                var isHidden = me.$isHidden[0].checked ? "True" : "False";
+
+                if (isHidden !== me._isHidden) {
+                    forerunner.ajax.ajax({
+                        type: "POST",
+                        dataType: "text",
+                        url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                        data: {
+                            value: isHidden,
+                            path: me.curPath,
+                            propertyName: "Hidden",
+                            instance: me.options.rsInstance,
+                        },
+                        success: function (data) {
+                            //return true;
+                        },
+                        fail: function (data) {
+                            me._description = null;
+                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                        },
+                        async: false
+                    });
+                }
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
+                return false;
+            }
+        },
+        //_getVisibility: function (path) {
+        //    var me = this;
+        //    me._isHidden = me._getProperties(path, "Hidden");
+        //    return me._isHidden;
+        //},
+        _getProperties: function (path, callback, context) {
+            var me = this;
+
+            if (me.cached) {
+                if (typeof callback === "function") {
+                    callback.call(context || me, me.cached);
+                }
+                return;
+            }
+
+            forerunner.ajax.ajax({
+                type: "GET",
+                dataType: "text",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty",
+                async: true,
+                data: {
+                    path: path,
+                    propertyName: "Description,Hidden",
+                    instance: me.options.rsInstance,
+                },
+                success: function (data) {
+                    try {
+                        me.cached = JSON.parse(data);
+                    } catch (e) {
+                        me.cached = data;
+                    }
+
+                    if (typeof callback === "function") {
+                        callback.call(context || me, me.cached);
+                    }
+                    return;
+                },
+                fail: function (data) {
+
+                },
+            });
+            //me.timer && clearTimeout(me.timer);
+            //me.timer = setTimeout(function () {
+            //    if (me.cached) {
+            //        me.timer = null;
+            //        return me.cached[property] || "";
+            //    }
+
+            //    me._getProperties(property);
+            //});
         }
     });
 });
@@ -6899,15 +7023,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags],
+        1: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags],
+        3: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // LinkedReport
         4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
     };
 
     /**
@@ -8033,15 +8157,15 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags],
+        1: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags],
+        3: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
@@ -8553,6 +8677,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
+                    me.refresh();
                 },
                 error: function (data) {
                     console.log(data);
@@ -8579,8 +8704,13 @@ $(function () {
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
-            if (isSelected)
+            if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
+            }
+
+            if (catalogItem.Hidden) {
+                $item.addClass("fr-explorer-hidden-item");
+            }
 
             var $anchor = new $("<a />");
             $anchor.addClass("fr-explorer-item-image-link");
@@ -8695,7 +8825,12 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
-                corner.css("background-color", me.$UL.css("background-color"));
+
+                //only draw the page background when it not hidden
+                if (!catalogItem.Hidden) {
+                    corner.css("background-color", me.$UL.css("background-color"));
+                }
+
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
@@ -8786,6 +8921,11 @@ $(function () {
             
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
+                //if it's hidden and not in admin mode, not draw it
+                if (catalogItem.Hidden && !me.getUserSettings().adminUI) {
+                    continue;
+                }
+
                 var isSelected = false;
                 if (decodedPath && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
@@ -8912,6 +9052,7 @@ $(function () {
          */
         refresh: function() {
             var me = this;
+
             me._fetch(me.lastFetched.view, me.lastFetched.path);
         },
         _fetch: function (view, path) {
@@ -16495,7 +16636,7 @@ $(function () {
                 if (me.options.DefaultAppTemplate === null) {
                     //init property dialog in reportviewer
                     layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
-                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension]);
+                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);
                 }
             });
 
@@ -17031,11 +17172,11 @@ $(function () {
 
     var propertyListMap = {
         // Normal explorer folder and resource files except search folder
-        normal: [propertyEnums.description, propertyEnums.tags],
+        normal: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
         // Report/Linked Report
-        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
     };
 
     /**

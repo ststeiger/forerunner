@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -677,7 +677,8 @@ $(function () {
             description: "description",
             rdlExtension: "rdlExtension",
             tags: "tags",
-            searchFolder: "searchFolder"
+            searchFolder: "searchFolder",
+            visibility: "visibility"
         }
     };
 

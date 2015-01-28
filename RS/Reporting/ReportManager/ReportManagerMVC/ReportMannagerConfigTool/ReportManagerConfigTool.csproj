@@ -41,6 +41,9 @@
   <PropertyGroup>
     <ApplicationIcon>Config.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Web.Administration, Version=7.9.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -147,6 +150,7 @@
     <Content Include="Manual Activation.rtf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="app.manifest" />
     <None Include="Forerunner.snk" />
     <None Include="Mobilizer License.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

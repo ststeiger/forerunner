@@ -2807,8 +2807,7 @@ $(function () {
                 me.flushCache();
                 me.hideDocMap();
                 me.element.unmask();
-            }
-            
+            }            
             me._resetViewer();
 
             me.reportPath = reportPath ? reportPath : "/";
@@ -2887,7 +2886,7 @@ $(function () {
             
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
-            if (!pageNum) {
+            if (!pageNum || parseInt(pageNum) !== pageNum) {
                 pageNum = 1;
             }
             if (paramList && typeof paramList === "object")
@@ -10535,6 +10534,8 @@ $(function () {
             if (RIContext.CurrObj.ColumnWidths) {
                 var colgroup = $("<colgroup/>");
                 var viewerWidth = me._convertToMM(me._currentWidth + "px");
+                var rowHeadColGroup = $("<colgroup/>");
+                var fixColWidth = 0;
                 //var tablixwidth = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex).Width;
                 var tablixwidth = RIContext.CurrLocation.Width;
                 var cols;
@@ -10635,6 +10636,19 @@ $(function () {
 
                     if (respCols.Columns[cols].show) {
                         colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+
+                        //Count the number of fixed columns
+                        if (RIContext.CurrObj.ColumnWidths.Columns[cols].FixColumn === 1) {
+                            var cw = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width);
+
+                            // add .25 for the right border
+                            if (RIContext.CurrObj.ColumnWidths.Columns[cols + 1].FixColumn === 0) {
+                                cw += .25;
+                            }
+
+                            fixColWidth += me._getWidth(cw);
+                            rowHeadColGroup.append($("<col/>").css("width", cw + "mm"));
+                        }
                     }
                 }
 
@@ -10654,6 +10668,9 @@ $(function () {
                 $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 $FixedColHeader.attr("Style", Style);
+                $FixedRowHeader.css("width", fixColWidth + "mm");
+                $FixedRowHeader.css("min-width", fixColWidth + "mm");
+                $FixedRowHeader.css("max-width", fixColWidth + "mm");
 
             }
 

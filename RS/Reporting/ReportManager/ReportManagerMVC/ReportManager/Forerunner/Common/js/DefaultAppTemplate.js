@@ -302,8 +302,12 @@ $(function () {
             if (me.options.isFullScreen)
                 return;
             
-            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - me.$topdiv.outerHeight() - me.outerToolbarHeight);
-            diff += me.outerToolbarHeight;
+            var scrolledContainerTop = $(window).scrollTop() - me.$container.offset().top + me.outerToolbarHeight;
+            var containerHeightLessTopDiv = me.$container.height() - me.$topdiv.outerHeight();
+            var diff = scrolledContainerTop;
+            if (me.isFullScreen) {
+                diff = containerHeightLessTopDiv;
+            }
 
             var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 

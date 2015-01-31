@@ -461,6 +461,7 @@ $(function () {
                     path: path,
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
+                    isFullScreen: me.options.isFullScreen,
                     isReportManager: urlOptions ? urlOptions.isReportManager : true,
                     useReportManagerSettings: urlOptions? urlOptions.useReportManagerSettings : true,
                     rsInstance: me.options.rsInstance,

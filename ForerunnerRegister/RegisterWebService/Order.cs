@@ -216,6 +216,7 @@ namespace ForerunnerWebService
                 LicensesText += "</b><br/> License Key: <b>";
                 LicensesText += SQLReader.GetString(0);
                 LicensesText += "</b><br/>";
+                LicensesText += "</b><br/>";
             }
             SQLReader.Close();
             SQLConn.Close();

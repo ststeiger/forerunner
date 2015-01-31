@@ -327,6 +327,7 @@
     <Content Include="Views\PR\Dev.cshtml" />
     <Content Include="Views\Shared\Video.cshtml" />
     <Content Include="Views\Shared\_PRLayout.cshtml" />
+    <Content Include="Views\Home\Partners.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

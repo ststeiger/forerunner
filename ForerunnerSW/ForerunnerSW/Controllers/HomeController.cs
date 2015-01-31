@@ -154,6 +154,10 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Partners()
+        {
+            return View();
+        }
         public ActionResult Developers()
         {
             return View();

@@ -79,9 +79,9 @@ $(function () {
         openDialog: function (msg, caption) {
             var me = this;
 
-            me.element.find(".fr-messagebox-msg").text(msg);
+            me.element.find(".fr-messagebox-msg").html(msg);
             if (caption) {
-                me.element.find(".fr-messagebox-title").text(caption);
+                me.element.find(".fr-messagebox-title").html(caption);
             }
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);

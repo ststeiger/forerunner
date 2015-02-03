@@ -25731,6 +25731,10 @@ $(function () {
 
             $item.html("");
 
+            // Add a placeholder size so when either the placeholder does not have a report
+            // or the report needs parameters before it can load, then placeholder has a size
+            $item.addClass("fr-dashboard-placeholder-size");
+
             // If we have a report definition, load the report
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
@@ -25746,6 +25750,7 @@ $(function () {
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
+                    $item.removeClass("fr-dashboard-placeholder-size");
                     data.reportId = reportId;
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
@@ -25765,6 +25770,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
+                $item.removeClass("fr-dashboard-placeholder-size");
                 $item.css("display", "none");
             }
         },

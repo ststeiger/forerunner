@@ -2285,10 +2285,10 @@ $(function () {
     $(document).ready(function () {
         //show element when touch screen rule for toolbase
         var touchShowRule = {
-            selector: ".fr-toolbase-show-if-touch",
+            selector: ".fr-toolbase-show-if-mobile",
             properties: function () {
                 var pairs = { display: "none" };
-                if (forerunner.device.isTouch()) {
+                if (forerunner.device.isMobile()) {
                     pairs.display = null;
                 }
                 return pairs;
@@ -2296,10 +2296,10 @@ $(function () {
         };
         //show element when touch screen rule for toolpane
         var touchShowRuleTp = {
-            selector: ".fr-toolpane .fr-toolbase-show-if-touch",
+            selector: ".fr-toolpane .fr-toolbase-show-if-mobile",
             properties: function () {
                 var pairs = { display: "none" };
-                if (forerunner.device.isTouch()) {
+                if (forerunner.device.isMobile()) {
                     pairs.display = null;
                 }
                 return pairs;
@@ -2307,21 +2307,21 @@ $(function () {
         };
         //hide element when touch screen rule for toolbase
         var touchHideRule = {
-            selector: ".fr-toolbase-hide-if-touch",
+            selector: ".fr-toolbase-hide-if-mobile",
             properties: function () {
                 var pairs = { display: null };
-                if (forerunner.device.isTouch()) {
+                if (forerunner.device.isMobile()) {
                     pairs.display = "none";
                 }
                 return pairs;
             }
         };
-        //hide element when touch screen rule for toolpane
+        //hide element when touch screen rule for tool pane
         var touchHideRuleTp = {
-            selector: ".fr-toolpane .fr-toolbase-hide-if-touch",
+            selector: ".fr-toolpane .fr-toolbase-hide-if-mobile",
             properties: function () {
                 var pairs = { display: null };
-                if (forerunner.device.isTouch()) {
+                if (forerunner.device.isMobile()) {
                     pairs.display = "none";
                 }
                 return pairs;

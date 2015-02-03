@@ -9,7 +9,7 @@
   .fr-dashboard-toolpane .fr-item-folders-group { display: block; }
   .fr-dashboard-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
   .fr-dashboard-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
-  .fr-dashboard-toolpane .fr-toolbase-hide-if-touch {  }
-  .fr-dashboard-toolpane .fr-toolbase-show-if-touch { display:none; }
+  .fr-dashboard-toolpane .fr-toolbase-hide-if-mobile {  }
+  .fr-dashboard-toolpane .fr-toolbase-show-if-mobile { display:none; }
 
 .fr-dashboardtoolpane-dropdown-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }

@@ -254,12 +254,12 @@ namespace Forerunner.SSRS.JSONRender
         }
 
         Exception LicenseCheckException = null;
-
+       
         private void ValidateLicense(object context)
         {
             AutoResetEvent waitHandle =  (AutoResetEvent)context;
             try
-            {
+            {             
                 ClientLicense.Validate();
             }
             catch (TypeInitializationException e)
@@ -276,6 +276,8 @@ namespace Forerunner.SSRS.JSONRender
                 waitHandle.Set();
             }
         }
+        
+        private static Semaphore _lock = new Semaphore(1, 1);
         public StringWriter RPLToJSON(int NumPages)
         {
 
@@ -289,83 +291,95 @@ namespace Forerunner.SSRS.JSONRender
                 throw (this.LicenseCheckException);
             
 //#endif
-
-            LicenseData License = ClientLicense.GetLicense();
-
-            RPL.position = 0;
-
-            //CreateStyle object           
-            s.WriteStartObject();
-
-
-            w.WriteStartObject();
             
-            w.WriteMember("SKU");
-            w.WriteString(License.SKU);
-            w.WriteMember("Trial");
-            w.WriteNumber(License.IsTrial);
+                LicenseData License = ClientLicense.GetLicense();
 
-            w.WriteMember("RPLStamp");
-            w.WriteString(RPL.ReadString());
-            w.WriteMember("NumPages");
-            w.WriteNumber(NumPages);
+                if (License.SKU.IndexOf("Dev") >= 0 && !_lock.WaitOne(1))
+                    throw LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "Too Many connections on Dev License");
+                else if (License.SKU.IndexOf("Dev") >= 0)
+                    Thread.Sleep(500);
+                try
+                {
+                RPL.position = 0;
 
-            //Version
-            WriteJSONVersion();
+                //CreateStyle object           
+                s.WriteStartObject();
 
-            //Report Start
-            if (RPL.ReadByte() == 0x00)
-            {
-                w.WriteMember("Report");
+
                 w.WriteStartObject();
 
-                //Report Porperties            
-                WriteJSONRepProp();
+                w.WriteMember("SKU");
+                w.WriteString(License.SKU);
+                w.WriteMember("Trial");
+                w.WriteNumber(License.IsTrial);
 
-                //Report Content
-                WriteJSONReportContent();
+                w.WriteMember("RPLStamp");
+                w.WriteString(RPL.ReadString());
+                w.WriteMember("NumPages");
+                w.WriteNumber(NumPages);
 
-                //Do not need these, but read to end of stream
-                w.SetShouldWrite(false);
-                //OffSet
-                WriteJSONArrayOffset();
-                WriteJSONReportElementEnd();
                 //Version
                 WriteJSONVersion();
-                w.SetShouldWrite(true);               
 
-                //End Report
-                w.WriteEndObject();
+                //Report Start
+                if (RPL.ReadByte() == 0x00)
+                {
+                    w.WriteMember("Report");
+                    w.WriteStartObject();
+
+                    //Report Porperties            
+                    WriteJSONRepProp();
+
+                    //Report Content
+                    WriteJSONReportContent();
+
+                    //Do not need these, but read to end of stream
+                    w.SetShouldWrite(false);
+                    //OffSet
+                    WriteJSONArrayOffset();
+                    WriteJSONReportElementEnd();
+                    //Version
+                    WriteJSONVersion();
+                    w.SetShouldWrite(true);
+
+                    //End Report
+                    w.WriteEndObject();
+                }
+
+
+                //close Style object
+                //s.WriteEndArray();
+                s.WriteEndObject();
+
+
+                w.WriteMember("SharedElements");
+                //JsonReader r = new JsonBufferReader(JsonBuffer.From(s.ToString()));
+                //w.WriteFromReader(r);
+
+                StringWriter sw = (w as JsonTextWriter).InnerWriter as StringWriter;
+
+                //Write shared Styles
+                StringWriter styles = new StringWriter();
+                styles.Write("{");
+                int count = 0;
+                foreach (KeyValuePair<string, string> entry in SharedStyles)
+                {
+                    styles.Write("\"" + entry.Key + "\":" + entry.Value);
+                    if (++count < SharedStyles.Count)
+                        styles.Write(",");
+                }
+
+                //Add styles to reports and and object
+                sw.Write(styles);
+                sw.Write("}}");
+                return sw;
             }
 
-            
-            //close Style object
-            //s.WriteEndArray();
-            s.WriteEndObject();
-
-            
-            w.WriteMember("SharedElements");
-            //JsonReader r = new JsonBufferReader(JsonBuffer.From(s.ToString()));
-            //w.WriteFromReader(r);
-            
-            StringWriter sw = (w as JsonTextWriter).InnerWriter as StringWriter;
-            
-            //Write shared Styles
-            StringWriter styles = new StringWriter();
-            styles.Write("{");
-            int count = 0;
-            foreach (KeyValuePair<string, string> entry in SharedStyles)
-            {                
-                styles.Write( "\"" + entry.Key + "\":" + entry.Value);
-                if (++count < SharedStyles.Count)
-                    styles.Write(",");
+            finally
+            {
+                if (!_lock.WaitOne(0))
+                    _lock.Release();
             }
-
-            //Add styles to reports and and object
-            sw.Write(styles);
-            sw.Write("}}");
-            return sw;
-            
 
         }
 

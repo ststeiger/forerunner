@@ -3091,7 +3091,6 @@ $(function () {
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
-
                             //$(window).scrollLeft(me.scrollLeft);
                             //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {

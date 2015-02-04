@@ -1650,7 +1650,6 @@ $(function () {
                                 cw += .25;
                             }
 
-
                             fixColWidth += me._getWidth(cw);
                             rowHeadColGroup.append($("<col/>").css("width", cw + "mm"));
                         }

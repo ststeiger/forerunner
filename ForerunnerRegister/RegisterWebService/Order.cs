@@ -91,8 +91,11 @@ namespace ForerunnerWebService
                                     {                                        
                                         GroupID = Guid.NewGuid().ToString();
                                         WriteLicense(GroupID, SKU,ProductName, Quantity);
-                                        WriteLicense(GroupID, SKU + "-Dev",ProductName, Quantity);
-                                        WriteLicense(GroupID, SKU + "-Test",ProductName, Quantity);
+                                        if (SKU.IndexOf("Dev") == -1 && SKU.IndexOf("Test") == -1)
+                                        {
+                                            WriteLicense(GroupID, SKU + "-Dev", ProductName, Quantity);
+                                            WriteLicense(GroupID, SKU + "-Test", ProductName, Quantity);
+                                        }
                                         Task.SaveTask("SendLicenseEmail", "<LicenseMail><OrderNumber>" + OrderNumber + "</OrderNumber><Email>" + Email + "</Email><GroupID>" + GroupID + "</GroupID></LicenseMail>");
                                         break;
                                     }

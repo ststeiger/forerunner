@@ -174,7 +174,7 @@ Visit <a href=’http://www.forerunnersw.com’>www.forerunnersw.com</a> to down
   {
   "ID": "2",
   "Link": "/press?Article=2",
-"Title":"Forerunner Software’s Unique Mobilizer for Mobile BI is Now More Affordable Than Ever with Volume Pricing and Discounts for Public Sector and Non-Profits",
+"Title":"Forerunner Software’s Unique Mobilizer for Mobile BI is Now More Affordable Than Ever with Volume Pricing and Discounts for Public Sector and Non Profits",
 "Description":"Forerunner Software’s Mobilizer is an easy to use, cost effective, out of the box mobile business intelligence solution for all mobile devices and browsers with no per user charges. As if that’s not enough, Mobilizer is now more affordable than ever with volume pricing and discounts for public sector and non-profits",
 "Release": "Redmond, WA — 14 June 2014",
 "Content": "Forerunner Software, the creator of Mobilizer, a cost effective, easy to use, next generation enterprise reporting and mobile business intelligence solution. Today Forerunner Software announced special pricing for public sector and non-profit organizations.

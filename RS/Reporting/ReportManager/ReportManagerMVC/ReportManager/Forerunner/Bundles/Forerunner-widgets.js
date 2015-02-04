@@ -1346,28 +1346,30 @@ $(function () {
             // Touch Events
             var me = this;
 
-            $(me.element).hammer().on("pinchin", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * 0.99);
-                    //me.hide().show(0);
-                }
-            });
-            $(me.element).hammer().on("pinchout", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * 1.01);
-                    //me.hide().show(0);
-                }
+            if (!forerunner.device.isWindowsPhone()) {
+                $(me.element).hammer().on("pinchin", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(me._zoomFactor * 0.99);
+                        //me.hide().show(0);
+                    }
+                });
+                $(me.element).hammer().on("pinchout", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(me._zoomFactor * 1.01);
+                        //me.hide().show(0);
+                    }
 
-            });
-            $(me.element).hammer().on("doubletap", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(100);
-                    me.hide().show(0);
-                }
-            });  
+                });
+                $(me.element).hammer().on("doubletap", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(100);
+                        me.hide().show(0);
+                    }
+                });
+            }
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
@@ -25729,6 +25731,10 @@ $(function () {
 
             $item.html("");
 
+            // Add a placeholder size so when either the placeholder does not have a report
+            // or the report needs parameters before it can load, then placeholder has a size
+            $item.addClass("fr-dashboard-placeholder-size");
+
             // If we have a report definition, load the report
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
@@ -25744,6 +25750,7 @@ $(function () {
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
+                    $item.removeClass("fr-dashboard-placeholder-size");
                     data.reportId = reportId;
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
@@ -25763,6 +25770,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
+                $item.removeClass("fr-dashboard-placeholder-size");
                 $item.css("display", "none");
             }
         },

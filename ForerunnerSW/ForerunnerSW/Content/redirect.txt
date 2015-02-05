@@ -1,6 +1,8 @@
 ﻿/home/register,/registerTrial
 /home,/home/index
 /home/Press,/Press
+/pass,/pr/mobilizer?utm_source=Banner&utm_medium=web&utm_campaign=PASS
+/passdev,/pr/dev?utm_source=Banner&utm_medium=web&utm_campaign=PASS
 /mob3,/pr/mobilizer?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
 /dev3,/pr/dev?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel
 /trial3,/registerTrial?utm_source=PR&utm_medium=PPR&utm_campaign=V3Rel

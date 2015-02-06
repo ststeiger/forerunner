@@ -354,10 +354,13 @@ $(function () {
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
             me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.descriptionPlaceholder);
+            me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
             me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.toPlaceholder);
+            me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
             me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subjectPlaceholder);
+            me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");

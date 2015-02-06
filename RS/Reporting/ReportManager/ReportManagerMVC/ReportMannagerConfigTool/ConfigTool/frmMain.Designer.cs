@@ -32,6 +32,7 @@
             this.folderSSRS = new System.Windows.Forms.FolderBrowserDialog();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnUpdateSchema = new System.Windows.Forms.Button();
             this.gbSSRS = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtDefaultUserDomain = new System.Windows.Forms.TextBox();
@@ -89,7 +90,6 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
-            this.btnUpdateSchema = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -121,6 +121,13 @@
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
+            // 
+            // btnUpdateSchema
+            // 
+            resources.ApplyResources(this.btnUpdateSchema, "btnUpdateSchema");
+            this.btnUpdateSchema.Name = "btnUpdateSchema";
+            this.btnUpdateSchema.UseVisualStyleBackColor = true;
+            this.btnUpdateSchema.Click += new System.EventHandler(this.btnUpdateSchema_Click);
             // 
             // gbSSRS
             // 
@@ -531,13 +538,6 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
-            // 
-            // btnUpdateSchema
-            // 
-            resources.ApplyResources(this.btnUpdateSchema, "btnUpdateSchema");
-            this.btnUpdateSchema.Name = "btnUpdateSchema";
-            this.btnUpdateSchema.UseVisualStyleBackColor = true;
-            this.btnUpdateSchema.Click += new System.EventHandler(this.btnUpdateSchema_Click);
             // 
             // frmMain
             // 

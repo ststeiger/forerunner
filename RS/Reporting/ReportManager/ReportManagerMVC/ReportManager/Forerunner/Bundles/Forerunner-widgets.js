@@ -4855,7 +4855,7 @@ $(function () {
             $container.append($mainviewport);
             //top div
             var $topdiv = new $("<div />");
-            $topdiv.addClass("fr-layout-topdiv");
+            $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
             $mainviewport.append($topdiv);
             //route path link
@@ -4868,7 +4868,7 @@ $(function () {
             me.$mainheadersection = $mainheadersection;
             $topdiv.append($mainheadersection);
             var $topdivspacer = new $("<div />");
-            $topdivspacer.addClass("fr-layout-topdivspacer");
+            $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
             me.$topdivspacer = $topdivspacer;
             $mainviewport.append($topdivspacer);
             // Page section
@@ -5040,7 +5040,7 @@ $(function () {
                             case "touch":
                                 if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
-                                me.$topdiv.hide();
+                                me._showTopDiv(true);
                                 break;
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn"t seem to fire
 
@@ -5125,9 +5125,13 @@ $(function () {
 
             me.$topdiv.css({ "top": floatingTop, "left": floatingLeft });
 
-            if (!me.isZoomed()) {
-                me.$topdiv.show();
-            }
+            // This code cannot be here. This is because on iOS devices at or after iOS8 the new scroll model makes
+            // This code get called immediately after enabling pinch zoom. Which in turn makes the toolbar visible,
+            // which is wrong. The toolbar needs to be made visible only in response to a _allowZoom() call.
+            // 
+            //if (!me.isZoomed()) {
+            //    me._showTopDiv(false);
+            //}
         },
         
         toggleZoom: function () {
@@ -5154,6 +5158,21 @@ $(function () {
                     me.$topdiv.fadeOut(10).fadeIn(10);
                 }
             }
+        },
+        _allowZoom: function (zoom) {
+            var me = this;
+            if (!forerunner.device.isWindowsPhone()) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("allowZoom", zoom);
+                } else {
+                    forerunner.device.allowZoom(zoom);
+                }
+            }
+        },
+        showUnZoomPane: function () {
+            var me = this;
+            me.showTopDiv(true);
+            me.$unzoomsection.show();
         },
         wasZoomed: false,
         isZoomed: function(){
@@ -5242,21 +5261,33 @@ $(function () {
             me.$rightpanecontent.width(parameterPaneWidth);
         },
 
-        showTopDiv: function (isEnabled) {
+        // removeTopDiv will set the topdiv (I.e., the tool bar) to be permanently hidden
+        removeTopDiv: function (removeDiv) {
+            var me = this;
+            me.topDivRemoved = removeDiv;
+            me._showTopDiv(removeDiv);
+        },
+        // _showTopDiv will set the topdiv visibility
+        //
+        //  hideTopDiv === true, hidden
+        //  hideTopDiv === false, shown
+        _showTopDiv: function (hideTopDiv) {
             var me = this;
 
-            var top = isEnabled ? 0 : me.$topdiv.outerHeight();
+            var top = hideTopDiv ? 0 : me.$topdiv.outerHeight();
             if (me.isDashboard) {
                 top += me.outerToolbarHeight;
             }
 
-            if (isEnabled === true) {
-                me.$topdiv.hide();
-                me.$viewer.reportViewer("option", "toolbarHeight", top);
+            me.$viewer.reportViewer("option", "toolbarHeight", top);
+
+            if ((me.topDivRemoved && me.topDivRemoved === true) || hideTopDiv === true) {
+                me.$topdiv.addClass("fr-core-hidden").removeClass("fr-core-block");
+                me.$topdivspacer.addClass("fr-core-hidden").removeClass("fr-core-block");
             }
             else {
-                me.$topdiv.show();
-                me.$viewer.reportViewer("option", "toolbarHeight", top);
+                me.$topdiv.addClass("fr-core-block").removeClass("fr-core-hidden");
+                me.$topdivspacer.addClass("fr-core-block").removeClass("fr-core-hidden");
             }
         },
 
@@ -5302,7 +5333,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
-                me.showTopDiv.call(me, data.isEnabled);
+                me._showTopDiv.call(me, data.isEnabled);
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -5488,21 +5519,6 @@ $(function () {
                 }
                 me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
-        },
-        _allowZoom: function (zoom) {
-            var me = this;
-            if (!forerunner.device.isWindowsPhone() ) {
-                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", zoom);
-                } else {
-                    forerunner.device.allowZoom(zoom);
-                }
-            }
-        },
-        showUnZoomPane: function () {
-            var me = this;
-            me.showTopDiv(true);
-            me.$unzoomsection.show();
         },
         showSlideoutPane: function (toolbarWidgetName, isLeftPane) {
             var me = this;
@@ -15863,6 +15879,10 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
+
+            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                layout.removeTopDiv(true);
+            }
         },
         _create: function () {
             var me = this;

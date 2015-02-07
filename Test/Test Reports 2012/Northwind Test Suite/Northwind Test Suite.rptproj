@@ -279,6 +279,22 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Northwind Sales.rdl</Name>
+      <FullPath>Northwind Sales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustUpdate.rdl</Name>
+      <FullPath>CustUpdate.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustDel.rdl</Name>
+      <FullPath>CustDel.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustIns.rdl</Name>
+      <FullPath>CustIns.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

@@ -183,7 +183,14 @@ namespace Forerunner
                             continue;
                         }
 
-                        string paramName = obj["Parameter"].ToString(), paramType = obj["Type"].ToString();
+                        string paramName = obj["Parameter"].ToString();
+                        string paramType = "";
+                        string isMultiple = "false";
+
+                        if (obj["Type"] != null)
+                            paramType= obj["Type"].ToString();
+                        if (obj["IsMultiple"] != null)
+                            isMultiple = obj["IsMultiple"].ToString();
 
                         //either parameter name or type not match will be skipped.
                         //for saved parameter only matched parameter will be passed to the reporting service.
@@ -193,7 +200,7 @@ namespace Forerunner
                             continue;
                         }
 
-                        if (obj["IsMultiple"].ToString().ToLower() == "true")
+                        if (isMultiple.ToLower() == "true")
                         {
                             if (obj["Value"] == null)
                             {
@@ -217,7 +224,7 @@ namespace Forerunner
                         else
                         {
                             //Handle case of invalid parameters.  Do not add invalid, get error from SSRS
-                            if ((obj["Type"].ToString() != "String") && obj["Value"] == "")
+                            if ((paramType != "String") && obj["Value"] == "")
                             {
                                 // do nothing
                             }

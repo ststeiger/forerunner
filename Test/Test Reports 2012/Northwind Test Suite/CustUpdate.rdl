@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <Height>2in</Height>
+    <Style />
+  </Body>
+  <Width>6.5in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>Northwind</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>176666d6-888c-433d-8b62-eb6e058589f4</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Addr">
+            <Value>=Parameters!Addr.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@City">
+            <Value>=Parameters!City.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Region">
+            <Value>=Parameters!Region.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Zip">
+            <Value>=Parameters!Zip.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Phone">
+            <Value>=Parameters!Phone.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@CustID">
+            <Value>=Parameters!CustID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@CompName">
+            <Value>=Parameters!CompName.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>if (exists(select * from customers Where CustomerID = @CustID))
+
+UPDATE       Customers
+SET                Address =ISNULL(@Addr,Address) ,City =ISNULL(@City,City), Region =ISNULL(@Region,Region), PostalCode =ISNULL(@Zip,PostalCode), Phone =ISNULL(@Phone,Phone),CompanyName =ISNULL(@CompName,CompanyName)
+Where CustomerID = @CustID
+
+ELSE
+INSERT INTO Customers
+                         (CustomerID, CompanyName, Address, City, Region, PostalCode, Phone)
+SELECT        @CustID AS Expr1, @CompName AS Expr7, @Addr AS Expr2, @City AS Expr3, @Region AS Expr4, @Zip AS Expr5, @Phone AS Expr6
+</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="Addr">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Addr</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="City">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>City</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Region">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Region</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Zip">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Zip</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Phone">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Phone</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="CustID">
+      <DataType>String</DataType>
+      <Prompt>Cust ID</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="CompName">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Comp Name</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>a6ec3f0f-a505-449b-846b-bdaf3503e6aa</rd:ReportID>
+</Report>

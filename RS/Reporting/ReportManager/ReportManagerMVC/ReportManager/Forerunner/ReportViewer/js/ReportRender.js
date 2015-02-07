@@ -734,6 +734,18 @@ $(function () {
             return rdlExt;
 
         },
+        _writeEasySubmit: function (control, Ext) {
+            var me = this;
+
+            //Handle EasySubmit
+            if (Ext.EasySubmitURL && Ext.EasySubmitType) {
+                control.on("click", { reportViewer: me.options.reportViewer.element, element: control, getInputs: me._getInputsInRow, easySubmit: me._submitRow, veryEasySubmit: me._easySubmit, deleteCurrentRow: me._delCurrentRow, insertNewRow: me._insNewRow }, function (e) {
+                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySuccessFail,Ext.EasySubmitReportPath);
+                });
+                control.addClass("fr-core-cursorpointer");
+            }
+        },
+        
         _writeRichText: function (RIContext) {
             var Style = RIContext.Style;
             var $TextObj = $("<div/>");
@@ -775,13 +787,11 @@ $(function () {
                 if (textExt.InputSubmit)
                     $TextObj.attr("data-submitType", textExt.InputSubmit);
                 $TextObj.addClass("fr-input-" + textExt.InputType);
-                //Handle EasySubmit
-                if (textExt.EasySubmitURL && textExt.EasySubmitType) {
-                    $TextObj.on("click", { reportViewer: me.options.reportViewer.element, element: $TextObj, getInputs: me._getInputsInRow, easySubmit: me._submitRow, veryEasySubmit: me._easySubmit }, function (e) {
-                        e.data.veryEasySubmit(e, textExt.EasySubmitType, textExt.EasySubmitURL, textExt.EasySubmitDatatype, textExt.EasySubmitSuccess, textExt.EasySuccessFail);
-                    });
-                }
+
             }
+
+            // Handel Easy Submit
+            me._writeEasySubmit($TextObj, textExt);
 
             // RDL Extension
             if (textExt.Align === "justify") {
@@ -1110,6 +1120,10 @@ $(function () {
             NewImage.attr("src", this._getImageURL(RIContext.RS, ImageName));
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
+
+            // Handel Easy Submit
+            me._writeEasySubmit($(NewImage), Ext);
+
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
 
@@ -1179,6 +1193,111 @@ $(function () {
             return RIContext.$HTMLParent;
         },
 
+        _delCurrentRow: function (element) {
+            var me = this;
+
+            var row = $(element).parent().parent().parent();
+
+            //Handle image in talix
+            if (row.is("td") === true) {
+                row = row.parent();
+            }
+
+            var nextRow;
+
+            if (row.hasClass("fr-render-row")) {
+                nextRow = row.next();
+                if (nextRow.hasClass("fr-render-respRow"))
+                    $(nextRow).remove();
+            }
+            else {
+                nextRow = row.prev();
+                if (nextRow.hasClass("fr-render-row"))
+                    $(nextRow).remove();
+            }
+
+
+            $(row).remove();
+        },
+        
+        _insNewRow: function (element,options) {
+            var me = this;
+
+            var row = $(element).parent().parent().parent();
+            var nextRow;
+            var newRow;
+            var inputs;
+
+            //Handle image in talix
+            if (row.is("td") === true) {
+                row = row.parent();
+            }
+
+            //Handle header special
+            if (row.hasClass("fr-render-colHeader")) {
+                row = row.next();
+                if (row && row.hasClass("fr-render-respRow"))
+                    row = row.next();
+            }
+
+            //get main row
+            if (row && !row.hasClass("fr-render-row")) {
+                row = row.next();         
+            }
+
+            //copy the row and appy options
+            if (row) {
+                nextRow = row.next();
+                row.before(row.clone(true, true));
+                newRow = row.prev();
+                inputs =  newRow.find("*").filter(":input").not("input[type=button], :input[type=submit], :input[type=reset]");
+                if (options.indexOf("clearInputs") >= 0) {
+                    inputs.val("");
+                    inputs.attr("data-origval", "");
+                }
+                if (options.indexOf("removeReadOnly") >= 0)
+                    inputs.attr("readonly", false);
+            }
+
+            //if resp row copy the row and appy options
+            if (nextRow && nextRow.hasClass("fr-render-respRow")) {
+                newRow.after(nextRow.clone(true, true));
+                newRow = newRow.next();
+                inputs = newRow.find("*").filter(":input").not("input[type=button], :input[type=submit], :input[type=reset]");
+                if (options.indexOf("clearInputs") >= 0) {
+                    inputs.val("");
+                    inputs.attr("data-origval", "");
+                }
+                if (options.indexOf("removeReadOnly") >= 0)
+                    inputs.attr("readonly", false);
+
+                //hook up drill
+                var $Drilldown = newRow.prev().find(".fr-render-respIcon");
+                $Drilldown.off("click");
+                
+                $Drilldown.on("click", { icon: $Drilldown, ExtRow: newRow }, function (e) {
+
+                    var show = !e.data.ExtRow.is(":visible");
+                  
+                    if (show) {
+                        e.data.ExtRow.show();
+                        $(e.data.icon).addClass("fr-render-respTablix-collapse");
+                        $(e.data.icon).removeClass("fr-render-respTablix-expand");
+                    }
+                    else {
+                        e.data.ExtRow.hide();
+                        $(e.data.icon).removeClass("fr-render-respTablix-collapse");
+                        $(e.data.icon).addClass("fr-render-respTablix-expand");
+                    }
+            
+                });
+
+
+            }
+
+                    
+        },
+
         _getInputsInRow: function (element, filter) {
             var me = this;
             var data = [];
@@ -1187,6 +1306,11 @@ $(function () {
             if (filter === undefined) filter = "auto";
 
             var row = $(element).parent().parent().parent();
+
+            //Handle image in talix
+            if (row.is("td") === true) {
+                row = row.parent();
+            }
             if (row.is("tr") === false) {
                 return data;
             }
@@ -1196,11 +1320,15 @@ $(function () {
 
                 $.each(row.find("input, textarea"), function (index, input) {
                     var obj = {};
+                   
                     obj.name = $(input).attr("name");
                     obj.value = $(input).val();
                     obj.origionalValue = $(input).attr("data-origVal");
                     obj.type = $(input).attr("type");
                     obj.submitType = $(input).attr("data-submitType");
+
+                    if (!obj.origionalValue)
+                        obj.origionalValue = "";
 
                     if (filter === "all")
                         data.push(obj);
@@ -1226,33 +1354,76 @@ $(function () {
             return data;
         },
 
-        _submitRow: function (inputs, type, url, datatype, done, fail) {
+        _submitRow: function (inputs, type, url, datatype, done, fail, reportPath) {
             var me = this;
             var data = {};
 
-            for (var i = 0; i < inputs.length; i++) {
-                data[inputs[i].name] = inputs[i].value;
+            if (reportPath) {
+                data.ReportPath = reportPath;
+                var ParamsList = {};
+                ParamsList.ParamsList = new Array(inputs.length);
+                for (var i = 0; i < inputs.length; i++) {
+                    ParamsList.ParamsList[i] = { Parameter: inputs[i].name, Value: inputs[i].value };
+                }
+                data.ParameterList = JSON.stringify(ParamsList);
             }
-            if (datatype === "json")
-                data = JSON.stringify(data);
+            else {
+
+                for (var i = 0; i < inputs.length; i++) {
+                    data[inputs[i].name] = inputs[i].value;
+                }
+                if (datatype === "json")
+                    data = JSON.stringify(data);
+            }
+
+            
 
             forerunner.ajax.ajax({
                 type: type,
-                dataType: datatype,
+                
                 url: url,
                 data: data,
                 async: true
-            }).done(done).fail(fail);
+            }).done(function (retdata) {
+
+                if (reportPath && JSON.parse(retdata).Exception)
+                    fail();
+                else
+                    done();
+            }).fail(fail);
 
         },
 
-        _easySubmit: function (e, type, url, datatype, successText, failText) {
-            if (!successText) successText = "Saved";
-            if (!failText) failText = "Failed";
+        _easySubmit: function (e, type, url, datatype, success, fail,reportPath) {
+            if (!success) success = "alert('Success');";
+            if (!fail) fail = "alert('Failed');";
 
-            var data = e.data.getInputs(e.data.element, "auto");
+            var func;
+            try {
+                func = new Function("e",success);
+                success = func;
+            }
+            catch(err){
+                func = undefined;
+            }
+            try {
+                func = new Function("e", fail);
+                fail = func;
+            }
+            catch (err) {
+                func = undefined;
+            }
 
-            e.data.easySubmit(data, type, url, datatype, function () { alert(successText); }, function () { alert(failText); });
+            var successFun = function (data, textStatus) {
+                success(e);                
+            };
+            var failFun = function (data, textStatus) {
+                fail(e);
+            };
+                       
+            var data = e.data.getInputs(e.currentTarget, "auto");
+
+            e.data.easySubmit(data, type, url, datatype,successFun,failFun, reportPath);
 
         },
 
@@ -1268,7 +1439,7 @@ $(function () {
         _writeRDLExtActions: function (RIContext, $Control, mapAreaOnly) {
             var me = this;
 
-            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow);
+            forerunner.ssr._writeRDLExtActions(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Name, me.RDLExt, $Control, mapAreaOnly, me.options.reportViewer.element, me._getInputsInRow, me._submitRow, undefined, undefined, me._delCurrentRow, me._insNewRow);
            
 
         },
@@ -1779,7 +1950,7 @@ $(function () {
 
 
                 //Handle fixed col header
-                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
+                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {                    
                     $FixedColHeader.append($Row.clone(true, true));
                 }
 
@@ -1835,6 +2006,9 @@ $(function () {
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
 
 
+                    //Mark as header
+                    if (respCols.ColHeaderRow === Obj.RowIndex)
+                        $Row.addClass("fr-render-colHeader");
 
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
                     $Drilldown = undefined;

@@ -2084,7 +2084,7 @@ $(function () {
         this.data = initialData || {};
     };
 
-    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError,deleteCurrentRow,insertNewRow) {
         var me = this;
 
         if (RDLExt === null || RDLExt === undefined)
@@ -2135,7 +2135,7 @@ $(function () {
                     }
                     if (action.On === "click")
                         $Control.addClass("fr-core-cursorpointer");
-                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError }, action.JavaFunc);
+                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError, deleteCurrentRow: deleteCurrentRow, insertNewRow: insertNewRow }, action.JavaFunc);
 
                     if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
                         break;

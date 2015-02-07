@@ -328,6 +328,8 @@ $(function () {
             /** @constant */
             forerunnerSecurity: "forerunnerSecurity",
             /** @constant */
+            forerunnerLinkedReport: "forerunnerLinkedReport",
+            /** @constant */
             viewerBase: "viewerBase",
 
             /** @constant */
@@ -580,6 +582,8 @@ $(function () {
             forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            forerunnerLinkedReportClose: function () { return (forerunner.ssr.constants.widgets.forerunnerLinkedReport + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",
@@ -678,7 +682,19 @@ $(function () {
             tags: "tags",
             searchFolder: "searchFolder",
             visibility: "visibility"
-        }
+        },
+
+        // itemType is the number returned in the CatalogItem.Type member
+        itemType: {
+            unknown: 0,
+            folder: 1,
+            report: 2,
+            resource: 3,
+            linkedReport: 4,
+            dataSource: 5,
+            model: 6,
+            site: 7
+        },
     };
 
     /**

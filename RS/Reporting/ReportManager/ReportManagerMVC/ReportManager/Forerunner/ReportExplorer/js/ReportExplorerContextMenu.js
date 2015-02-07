@@ -36,6 +36,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            var catalog = me.options.catalogItem;
 
             // Get the permissions for the path define in the catalogItem option
             me.fetchPermissions();
@@ -46,40 +47,49 @@ $(function () {
             // Delete item
             me._$delete.off("click");
             if (!me.permissions["Delete"]) {
-                me._$delete.addClass("fr-toolbase-disabled");
-                me._$delete.removeClass("fr-core-cursorpointer");
+                me._$delete.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$delete.on("click", function (event, data) {
                     me._onClickDelete.apply(me, arguments);
                 });
-                me._$delete.removeClass("fr-toolbase-disabled");
-                me._$delete.addClass("fr-core-cursorpointer");
+                me._$delete.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
             // Properties
             me._$properties.off("click");
             if (!me.permissions["Update Properties"] &&
                 propertyListMap[me.options.catalogItem.Type]) {
-                me._$properties.addClass("fr-toolbase-disabled");
-                me._$properties.removeClass("fr-core-cursorpointer");
+                me._$properties.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$properties.on("click", function (event, data) {
                     me._onClickProperties.apply(me, arguments);
                 });
-                me._$properties.removeClass("fr-toolbase-disabled");
-                me._$properties.addClass("fr-core-cursorpointer");
+                me._$properties.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
             me._$security.off("click");
             if (!me.permissions["Update Security Policies"]) {
-                me._$security.addClass("fr-toolbase-disabled");
-                me._$security.removeClass("fr-core-cursorpointer");
+                me._$security.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$security.on("click", function (event, data) {
                     me._onClickSecurity.apply(me, arguments);
                 });
-                me._$security.removeClass("fr-toolbase-disabled");
-                me._$security.addClass("fr-core-cursorpointer");
+                me._$security.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+            }
+
+            me._$linkedReport.off("click").hide();
+            //type=2: report, type=4: linked report
+            //now only show the linked report entry on the normal report context menu
+            if (catalog.Type === 2) {
+                if (!me.permissions["Create Link"]) {
+                    me._$linkedReport.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
+                } else {
+                    me._$linkedReport.on("click", function (event, data) {
+                        me._onClickLinkedReport.apply(me, arguments);
+                    });
+                    me._$linkedReport.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+                }
+                me._$linkedReport.show();
             }
 
             // Call contextMenuBase._init()
@@ -87,7 +97,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
-
+           
             // Call contextMenuBase._create()
             me._super();
 
@@ -95,6 +105,7 @@ $(function () {
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
             me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -171,6 +182,29 @@ $(function () {
 
                     previous = null;
                 }
+            });
+            me.closeMenu();
+        },
+        _onClickLinkedReport: function (event, data) {
+            var me = this;
+
+            var $linkedReportDlg = me.options.$appContainer.find(".fr-linked-section");
+            if (!$linkedReportDlg || $linkedReportDlg.length === 0) {
+                console.log("Error - fr-security-section not found");
+                return;
+            }
+
+            //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
+            console.log(me.options.catalogItem);
+            $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem.Type, me.options.catalogItem.Path);
+            $linkedReportDlg.forerunnerLinkedReport("openDialog", me.options.catalogItem.Path);
+
+            $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
+                //if (previous) {
+                //    $linkedReportDlg.forerunnerLinkedReport("setCurPolicy", previous);
+
+                //    previous = null;
+                //}
             });
             me.closeMenu();
         }

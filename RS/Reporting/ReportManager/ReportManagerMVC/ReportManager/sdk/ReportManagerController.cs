@@ -543,6 +543,58 @@ namespace ReportManager.Controllers
             }
         }
 
+        [HttpGet]
+        public HttpResponseMessage GetReportLink(string path, string instance = null)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportLink(path)), "text/JSON");
+            }
+            catch (Exception ex)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
+        public class SetLinkedReport
+        {
+            public string name { set; get; }
+            public string link { set; get; }
+            public string instance { set; get; }
+        }
+        [HttpPost]
+        public HttpResponseMessage SetReportLink(LinkedReport linkedReport)
+        {
+            try
+            {
+                string result = GetReportManager(linkedReport.instance).SetReportLink(linkedReport.name, linkedReport.link);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+            }
+            catch (Exception ex)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+        public class LinkedReport
+        {
+            public string name { set; get; }
+            public string parent { set; get; }
+            public string link { set; get; }
+            public string instance { set; get; }
+        }
+        [HttpPost]
+        public HttpResponseMessage CreateLinkedReport(LinkedReport linkedReport)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).CreateLinkedReport(linkedReport.name, linkedReport.parent, linkedReport.link)), "text/JSON");
+            }
+            catch (Exception ex)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
         private string ToString<T>(T value)
         {
             StringBuilder buffer = new StringBuilder();

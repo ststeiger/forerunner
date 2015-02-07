@@ -135,6 +135,10 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
+
+            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                layout.removeTopDiv(true);
+            }
         },
         _create: function () {
             var me = this;

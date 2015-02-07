@@ -55,7 +55,7 @@ $(function () {
             var me = this;
             var $listItem = new $("<DIV />");
             $listItem.addClass("fr-sub-listitem");
-            $listItem.append(subInfo.Description);
+            $listItem.append( me._createDiv(["fr-sub-descr"]).text(subInfo.Description));
             var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);

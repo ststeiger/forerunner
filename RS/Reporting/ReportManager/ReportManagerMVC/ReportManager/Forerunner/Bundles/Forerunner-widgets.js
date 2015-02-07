@@ -1346,28 +1346,30 @@ $(function () {
             // Touch Events
             var me = this;
 
-            $(me.element).hammer().on("pinchin", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * 0.99);
-                    //me.hide().show(0);
-                }
-            });
-            $(me.element).hammer().on("pinchout", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(me._zoomFactor * 1.01);
-                    //me.hide().show(0);
-                }
+            if (!forerunner.device.isWindowsPhone()) {
+                $(me.element).hammer().on("pinchin", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(me._zoomFactor * 0.99);
+                        //me.hide().show(0);
+                    }
+                });
+                $(me.element).hammer().on("pinchout", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(me._zoomFactor * 1.01);
+                        //me.hide().show(0);
+                    }
 
-            });
-            $(me.element).hammer().on("doubletap", function (ev) {
-                if (me._allowSwipe === true) {
-                    ev.preventDefault();
-                    me.zoomToPercent(100);
-                    me.hide().show(0);
-                }
-            });  
+                });
+                $(me.element).hammer().on("doubletap", function (ev) {
+                    if (me._allowSwipe === true) {
+                        ev.preventDefault();
+                        me.zoomToPercent(100);
+                        me.hide().show(0);
+                    }
+                });
+            }
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
@@ -4812,9 +4814,9 @@ $(function () {
         openDialog: function (msg, caption) {
             var me = this;
 
-            me.element.find(".fr-messagebox-msg").text(msg);
+            me.element.find(".fr-messagebox-msg").html(msg);
             if (caption) {
-                me.element.find(".fr-messagebox-title").text(caption);
+                me.element.find(".fr-messagebox-title").html(caption);
             }
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
@@ -4891,7 +4893,7 @@ $(function () {
             $container.append($mainviewport);
             //top div
             var $topdiv = new $("<div />");
-            $topdiv.addClass("fr-layout-topdiv");
+            $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
             $mainviewport.append($topdiv);
             //route path link
@@ -4904,7 +4906,7 @@ $(function () {
             me.$mainheadersection = $mainheadersection;
             $topdiv.append($mainheadersection);
             var $topdivspacer = new $("<div />");
-            $topdivspacer.addClass("fr-layout-topdivspacer");
+            $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
             me.$topdivspacer = $topdivspacer;
             $mainviewport.append($topdivspacer);
             // Page section
@@ -5092,7 +5094,7 @@ $(function () {
                             case "touch":
                                 if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
-                                me.$topdiv.hide();
+                                me._showTopDiv(true);
                                 break;
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn"t seem to fire
 
@@ -5177,9 +5179,13 @@ $(function () {
 
             me.$topdiv.css({ "top": floatingTop, "left": floatingLeft });
 
-            if (!me.isZoomed()) {
-                me.$topdiv.show();
-            }
+            // This code cannot be here. This is because on iOS devices at or after iOS8 the new scroll model makes
+            // This code get called immediately after enabling pinch zoom. Which in turn makes the toolbar visible,
+            // which is wrong. The toolbar needs to be made visible only in response to a _allowZoom() call.
+            // 
+            //if (!me.isZoomed()) {
+            //    me._showTopDiv(false);
+            //}
         },
         
         toggleZoom: function () {
@@ -5206,6 +5212,21 @@ $(function () {
                     me.$topdiv.fadeOut(10).fadeIn(10);
                 }
             }
+        },
+        _allowZoom: function (zoom) {
+            var me = this;
+            if (!forerunner.device.isWindowsPhone()) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("allowZoom", zoom);
+                } else {
+                    forerunner.device.allowZoom(zoom);
+                }
+            }
+        },
+        showUnZoomPane: function () {
+            var me = this;
+            me._showTopDiv(true);
+            me.$unzoomsection.show();
         },
         wasZoomed: false,
         isZoomed: function(){
@@ -5293,22 +5314,33 @@ $(function () {
             me.$rightheader.width(parameterPaneWidth);
             me.$rightpanecontent.width(parameterPaneWidth);
         },
-
-        showTopDiv: function (isEnabled) {
+        // removeTopDiv will set the topdiv (I.e., the tool bar) to be permanently hidden
+        removeTopDiv: function (removeDiv) {
+            var me = this;
+            me.topDivRemoved = removeDiv;
+            me._showTopDiv(removeDiv);
+        },
+        // _showTopDiv will set the topdiv visibility
+        //
+        //  hideTopDiv === true, hidden
+        //  hideTopDiv === false, shown
+        _showTopDiv: function (hideTopDiv) {
             var me = this;
 
-            var top = isEnabled ? 0 : me.$topdiv.outerHeight();
+            var top = hideTopDiv ? 0 : me.$topdiv.outerHeight();
             if (me.isDashboard) {
                 top += me.outerToolbarHeight;
             }
 
-            if (isEnabled === true) {
-                me.$topdiv.hide();
-                me.$viewer.reportViewer("option", "toolbarHeight", top);
+            me.$viewer.reportViewer("option", "toolbarHeight", top);
+
+            if ((me.topDivRemoved && me.topDivRemoved === true) || hideTopDiv === true) {
+                me.$topdiv.addClass("fr-core-hidden").removeClass("fr-core-block");
+                me.$topdivspacer.addClass("fr-core-hidden").removeClass("fr-core-block");
             }
             else {
-                me.$topdiv.show();
-                me.$viewer.reportViewer("option", "toolbarHeight", top);
+                me.$topdiv.addClass("fr-core-block").removeClass("fr-core-hidden");
+                me.$topdivspacer.addClass("fr-core-block").removeClass("fr-core-hidden");
             }
         },
 
@@ -5354,7 +5386,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
-                me.showTopDiv.call(me, data.isEnabled);
+                me._showTopDiv.call(me, data.isEnabled);
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -5540,21 +5572,6 @@ $(function () {
                 }
                 me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
-        },
-        _allowZoom: function (zoom) {
-            var me = this;
-            if (!forerunner.device.isWindowsPhone() ) {
-                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", zoom);
-                } else {
-                    forerunner.device.allowZoom(zoom);
-                }
-            }
-        },
-        showUnZoomPane: function () {
-            var me = this;
-            me.showTopDiv(true);
-            me.$unzoomsection.show();
         },
         showSlideoutPane: function (toolbarWidgetName, isLeftPane) {
             var me = this;
@@ -16669,6 +16686,10 @@ $(function () {
             }
 
             me.DefaultAppTemplate.bindViewerEvents();
+
+            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                layout.removeTopDiv(true);
+            }
         },
         _create: function () {
             var me = this;
@@ -18547,10 +18568,13 @@ $(function () {
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
             me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.descriptionPlaceholder);
+            me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
             me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.toPlaceholder);
+            me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
             me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subjectPlaceholder);
+            me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
@@ -18734,7 +18758,7 @@ $(function () {
             var me = this;
             var $listItem = new $("<DIV />");
             $listItem.addClass("fr-sub-listitem");
-            $listItem.append(subInfo.Description);
+            $listItem.append( me._createDiv(["fr-sub-descr"]).text(subInfo.Description));
             var $deleteIcon = me._createDiv(["fr-sub-icon18x18"]);
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
@@ -25728,6 +25752,10 @@ $(function () {
 
             $item.html("");
 
+            // Add a placeholder size so when either the placeholder does not have a report
+            // or the report needs parameters before it can load, then placeholder has a size
+            $item.addClass("fr-dashboard-placeholder-size");
+
             // If we have a report definition, load the report
             if (reportProperties && reportProperties.catalogItem) {
                 $item.reportViewerEZ({
@@ -25743,6 +25771,7 @@ $(function () {
                 var $reportViewer = $item.reportViewerEZ("getReportViewer");
 
                 $reportViewer.one(events.reportViewerAfterLoadReport(), function (e, data) {
+                    $item.removeClass("fr-dashboard-placeholder-size");
                     data.reportId = reportId;
                     data.$reportViewerEZ = $item;
                     me._onAfterReportLoaded.apply(me, arguments);
@@ -25762,6 +25791,7 @@ $(function () {
                     me._onReportParameterSubmit.apply(me, arguments);
                 });
             } else if (hideMissing) {
+                $item.removeClass("fr-dashboard-placeholder-size");
                 $item.css("display", "none");
             }
         },

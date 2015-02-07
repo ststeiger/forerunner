@@ -19,7 +19,7 @@
 
 .fr-layout-topdiv { border: 0px; position: fixed; top: 0px; left: 0px; width: 100%; height: 38px; margin: 0px; padding: 0px; background-color: transparent; z-index: 1; }
 
-.fr-layout-topdivspacer { height: 38px; display: block; }
+.fr-layout-topdivspacer { height: 38px; }
 
 .fr-layout-rightheader { display: block; right: 0px; position: fixed; }
 
@@ -84,6 +84,7 @@ div.fr-layout-position-absolute { position: absolute; }
 
 .fr-core-cursorpointer { cursor: pointer; }
 .fr-core-hidden { display: none; }
+.fr-core-block { display: block; }
 
 .fr-core-float-right { float: right; }
 .fr-core-toolbar-text { width: 15px; color: white; line-height: 36px; text-align: center; }
@@ -848,8 +849,8 @@ table, td, tr div {
 .fr-toolbase-state { background-color: transparent; }
 .fr-toolbase-persistent-active-state { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
 .fr-toolbase-persistent-active-light { background-color: #D8D8D8; }
-.fr-toolbase-hide-if-touch {  }
-.fr-toolbase-show-if-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
+.fr-toolbase-hide-if-mobile {  }
+.fr-toolbase-show-if-mobile { /* Note: After the document is ready, this "display: none" will be removed if the device is a mobile device.  */ display: none; }
 .fr-toolbase-overlayed-button { position: absolute; border:4px solid transparent; top: 6px; right:0px; }
 .fr-toolbase-zoom-icon { height: 16px; width: 16px; background-image: url(../Images/zoomIcon.png); background-repeat: no-repeat; }
 .fr-toolbase-find-icon { height: 16px; width: 16px; background-image: url(../Images/search.png); background-repeat: no-repeat; }
@@ -1209,7 +1210,8 @@ table, td, tr div {
 
 .fr-sub-form {min-width: 200px; min-height: 300px;}
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
-.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width: 100%;}
+.fr-sub-descr{ max-width:300px;white-space: nowrap; overflow:hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis;text-overflow: ellipsis;text-overflow:ellipsis;}
+.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width:100%; }
 .fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
 .fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); cursor: pointer; }
 .fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); cursor: pointer; }
@@ -2050,8 +2052,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-toolpane .fr-item-folders-group { display: block; }
   .fr-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
   .fr-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
-    .fr-toolpane .fr-toolbase-hide-if-touch {  }
-    .fr-toolpane .fr-toolbase-show-if-touch { display:none; }
+    .fr-toolpane .fr-toolbase-hide-if-mobile {  }
+    .fr-toolpane .fr-toolbase-show-if-mobile { display:none; }
   .fr-toolpane .fr-toolbase-input-invalid { border-width: thin; border-color: red; }
 
 .fr-toolpane-dropdown-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }
@@ -2122,7 +2124,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-dashboard { width: 100%; background-color: rgb(210, 223, 237); }
 .fr-dashboard-full-width-table { width: 100%; }
 
-.fr-dashboard-report-container { display: table-cell; vertical-align: top; min-width:320px; min-height:320px; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
+.fr-dashboard-report-container { display: table-cell; vertical-align: top; box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
+.fr-dashboard-placeholder-size { min-width:320px; height: 320px; min-height:320px; width: 320px; }
 .fr-dashboard-btn { height: 89px; width: 89px; background-image: url(../images/Edit_Widget.png); background-repeat: no-repeat; background-position: center; border:none; }
 .fr-dashboard-mask { opacity: 0.3; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
@@ -2160,8 +2163,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-dashboard-toolpane .fr-item-folders-group { display: block; }
   .fr-dashboard-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
   .fr-dashboard-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
-  .fr-dashboard-toolpane .fr-toolbase-hide-if-touch {  }
-  .fr-dashboard-toolpane .fr-toolbase-show-if-touch { display:none; }
+  .fr-dashboard-toolpane .fr-toolbase-hide-if-mobile {  }
+  .fr-dashboard-toolpane .fr-toolbase-show-if-mobile { display:none; }
 
 .fr-dashboardtoolpane-dropdown-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }
 

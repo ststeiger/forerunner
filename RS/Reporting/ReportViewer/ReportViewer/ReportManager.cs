@@ -524,7 +524,10 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
 
-                string SQL = @"SELECT  Version, PreviousVersion  FROM ForerunnerDBVersion  
+                string SQL = @"IF EXISTS(SELECT * FROM sysobjects where name = 'ForerunnerDBVersion')
+                                SELECT  Version, PreviousVersion  FROM ForerunnerDBVersion  
+                              ELSE
+                                SELECT Verion = 'No Mobilizer Schema Installed'
                             ";
 
                 OpenSQLConn();
@@ -540,7 +543,7 @@ namespace Forerunner.SSRS.Manager
                             if (version == "S.1.3" || version == "1.3")
                                 continue;
                             else
-                                throw new Exception("Incorrect DB Schema expected 1.3 found " + version); 
+                                throw new Exception("Incorrect DB Schema!  <br />Expected 1.3  <br /><br />Found <br />" + version + "<br /><br />Please use the configuration tool to install or update the Mobilizer Schema."); 
                         }
                     }
 

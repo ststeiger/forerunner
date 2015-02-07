@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
-Disallow: /home/
-Disallow: /page/
+Disallow: /home/*
+Disallow: /page/*
 Disallow: /wp-login.php
 Disallow: /2015/
 Disallow: /2014/
@@ -14,8 +14,11 @@ Disallow: /tmp/
 Disallow: /junk/
 Disallow: /images/
 Disallow: /index
+Disallow: /index.php?
+Disallow: /index/
 Disallow: /category/
 Disallow: /author/admin/
 Disallow: /pr/
-
-
+Disallow: /shop
+Disallow: /docs/
+Disallow: /dev3

@@ -8,6 +8,7 @@ body {font-family:'Segoe UI',Arial, Helvetica, sans-serif; color: #333333; backg
 input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;font-family:'Segoe UI'}
 .Rounded {-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;}
 .Center{ margin: 0 auto;}
+
 .CenterText {text-align: center;}
 .InlineBlock{display:inline-block;}
 .TableCell{display:table-cell;}
@@ -22,6 +23,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .GreyBackgrouud{background-color:#F0F0F0}
 .OrangeBackground{background-color:#ff6600;}
 .SectionHeader{font-size:52px;color:#087cb9;text-align:center;}
+.PartnerTitle{font-size:36px;color:#087cb9;text-align:left;}
+.PartnerDetail{font-size:18px;color:#666666;text-align:left;}
 
 .ForerunnerPort{width:100%;}
 .ForerunnerPage{width:1200px;max-width:1200px;}
@@ -56,11 +59,14 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .TopNavSelected a{color:#333333;font-weight:bold;border-bottom: 5px solid #0E92D5;}
 .TopNavitem a:hover{color:#333333;}
 .BottomNavbar a{color: white;}
-.BottomNavitem a:hover{color:#13A3EB;}
+.BottomNavitem{font-size:14px;}
+.BottomNavitem a:hover{color:#13A3EB}
 
 .ForerunnerImage { width:100%; }
 .ForerunnerHomeImage{max-width:300px;vertical-align:middle;}
 .ForerunnerMobImage{max-height:300px;vertical-align:middle;}
+
+.CenterAll{display:inline-block;vertical-align: middle;height:100%;width:100%;max-width:100%;}
 
 .PressTitle{font-size:24px;margin-bottom:20px;font-weight:bold;}
 .PressDescription{font-size:24px;font-style:italic;  margin-bottom :20px;}

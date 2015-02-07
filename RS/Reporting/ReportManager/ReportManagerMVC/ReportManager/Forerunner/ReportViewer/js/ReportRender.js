@@ -1276,7 +1276,6 @@ $(function () {
                 $Drilldown.off("click");
                 
                 $Drilldown.on("click", { icon: $Drilldown, ExtRow: newRow }, function (e) {
-
                     var show = !e.data.ExtRow.is(":visible");
                   
                     if (show) {

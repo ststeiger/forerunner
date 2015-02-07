@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -2132,7 +2132,6 @@ $(function () {
                     if (actions !== undefined && actions[sa]) {
                         action = actions[sa++];
                     }
-
 
                     if (action.JavaFunc === undefined && action.Code !== undefined) {
                         if (mapAreaOnly !== true || (mapAreaOnly === true && action.ImageMapArea === true)) {

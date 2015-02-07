@@ -2132,7 +2132,6 @@ $(function () {
                         action = actions[sa++];
                     }
 
-
                     if (action.JavaFunc === undefined && action.Code !== undefined) {
                         if (mapAreaOnly !== true || (mapAreaOnly === true && action.ImageMapArea === true)) {
                             var newFunc;

@@ -1359,14 +1359,16 @@ namespace Forerunner.SSRS.Manager
 
             foreach (string per in permissions.Split(','))
             {
-                bool hasPermission = false;
                 w.WriteMember(per);
                 if (allPermission.Contains(per))
                 {
-                    hasPermission = true;
+                    w.WriteBoolean(true);
                 }
-                w.WriteBoolean(hasPermission);
-            }            
+                else
+                {
+                    w.WriteBoolean(false);
+                }
+            }         
             w.WriteEndObject();
             return w.ToString();
         }
@@ -1861,6 +1863,16 @@ namespace Forerunner.SSRS.Manager
             return w.ToString();
         }
 
+        private string getReturnFailed()
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Failed");
+            w.WriteEndObject();
+            return w.ToString();
+        }
+
         public string GetReportTags(string path)
         {
             string IID = GetItemID(path);
@@ -2219,7 +2231,7 @@ namespace Forerunner.SSRS.Manager
         {
             //re-loaded the setting file if file created, change
             MobilizerSetting = ReadTXTFile(e.FullPath);
-        }
+        }        
 
         string ReadTXTFile(string path)
         {
@@ -2233,6 +2245,42 @@ namespace Forerunner.SSRS.Manager
             else
             {
                 return "{}";
+            }
+        }
+
+        public string CreateLinkedReport(string linkedReportName, string parentPath, string link)
+        {
+            //not support set property when create a new linked report so far,
+            //user can set property with property dialog
+            try
+            {
+                rs.Credentials = GetCredentials();
+                rs.CreateLinkedReport(linkedReportName, parentPath, link, null);
+                return getReturnSuccess();
+            }
+            catch (Exception ex)
+            {
+                return getReturnFailed();
+            }
+        }
+
+        public string GetReportLink(string linkedReportPath)
+        {
+            rs.Credentials = GetCredentials();
+            return rs.GetReportLink(linkedReportPath);
+        }
+
+        public string SetReportLink(string linkedReportPath, string newLink)
+        {
+            try
+            {
+                rs.Credentials = GetCredentials();
+                rs.SetReportLink(linkedReportPath, newLink);
+                return getReturnSuccess();
+            }
+            catch (Exception ex)
+            {
+                return getReturnFailed();
             }
         }
 

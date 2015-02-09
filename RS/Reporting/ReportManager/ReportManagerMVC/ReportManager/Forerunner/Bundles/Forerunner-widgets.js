@@ -12303,8 +12303,9 @@ $(function () {
                 return;
             }
 
-            var paramList = me.getParamsList();
-            if (paramList) {
+            if (me.formIsValid()) {
+                var paramList = me.getParamsList();
+
                 if (me._debug) {
                     me.options.$reportViewer.removeLoadingIndicator();
                 } else {
@@ -14005,7 +14006,18 @@ $(function () {
 
             return retval;
         },
-
+        /**
+         * Returns a boolean that indicates if the form fields are all valid. Note a form with
+         * no fields is considered valid.
+         *
+         * @function $.forerunner.reportParameter#formIsValid
+         *
+         * @return {Boolean} - true if the all fields of the from are valid
+         */
+        formIsValid: function () {
+            var me = this;
+            return (me.$form && me.$form.length === 0) || (me.$form && me.$form.validate().numberOfInvalids() <= 0 && me.$form.valid());
+        },
         /**
          * Generate parameter value list into string and return
          *

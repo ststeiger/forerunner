@@ -1,8 +1,12 @@
 ﻿@{
     ViewBag.Title = "Test";
+    Layout = "../Shared/_RMLayout.cshtml";    
 }
 
-   
+@section styles {
+    <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+    <link href="~/Custom/Mobilizer.css" rel="stylesheet"/>
+}
 
 @section scripts{
   
@@ -80,25 +84,22 @@
                 "Parameter":"StartDate",
                 "IsMultiple":"false",
                 "Type":"DateTime",
-                "Value":"2003-07-07",
-                "Prompt":"Start Date:"
+                "Value":"2003-07-07"
             },{
                 "Parameter":"EndDate",
                 "IsMultiple":"false",
                 "Type":"DateTime",
-                "Value":"2004-07-07",
-                "Prompt":"End Date:"
+                "Value":"2004-07-07"
             },{
                 "Parameter":"ProductCategory",
                 "IsMultiple":"false",
                 "Type":"Integer",
-                "Value":"1","Prompt":"Category:"
+                "Value":"1"
             },{
                 "Parameter":"ProductSubcategory",
                 "IsMultiple":"true",
                 "Type":"Integer",
-                "Value":["2"],
-                "Prompt":"Subcategory:"
+                "Value":["2"]
             }]
         }
  

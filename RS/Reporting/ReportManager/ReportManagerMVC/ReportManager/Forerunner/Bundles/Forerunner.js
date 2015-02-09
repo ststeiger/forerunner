@@ -208,8 +208,7 @@ jQuery.fn.extend({
         }
     },
     
-    findUntil: function (selector, until) {
-        
+    findUntil: function (selector, until) {        
         var coll = [];
         this.addUntil(until, coll);
 

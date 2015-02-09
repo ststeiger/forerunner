@@ -10731,7 +10731,6 @@ $(function () {
         },
 
 
-
         _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State, respCols) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
@@ -12309,7 +12308,8 @@ $(function () {
                 if (me._debug) {
                     me.options.$reportViewer.removeLoadingIndicator();
                 } else {
-                    me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum, me._useDefault);
+                    // Hard code to page number 1, we should always go back to page 1
+                    me.options.$reportViewer.loadReportWithNewParameters(paramList, 1, me._useDefault);
                 }
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);

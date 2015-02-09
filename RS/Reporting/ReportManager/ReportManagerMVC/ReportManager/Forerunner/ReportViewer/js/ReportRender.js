@@ -1717,7 +1717,6 @@ $(function () {
         },
 
 
-
         _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State, respCols) {
             var me = this;
             var LastRowIndex = State.LastRowIndex;

@@ -206,6 +206,7 @@
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />
+    <Content Include="Forerunner\ReportExplorer\css\LinkedReport.css" />
     <Content Include="Forerunner\ReportExplorer\css\ManageMySubscriptions.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\DashboardEdit.png" />
@@ -348,6 +349,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\SelectedFolder_Search.png" />
+    <Content Include="Forerunner\ReportExplorer\js\LinkedReport.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerContextMenu.js" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />
     <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />

@@ -328,6 +328,8 @@ $(function () {
             /** @constant */
             forerunnerSecurity: "forerunnerSecurity",
             /** @constant */
+            forerunnerLinkedReport: "forerunnerLinkedReport",
+            /** @constant */
             viewerBase: "viewerBase",
 
             /** @constant */
@@ -580,6 +582,8 @@ $(function () {
             forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            forerunnerLinkedReportClose: function () { return (forerunner.ssr.constants.widgets.forerunnerLinkedReport + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",
@@ -678,7 +682,19 @@ $(function () {
             tags: "tags",
             searchFolder: "searchFolder",
             visibility: "visibility"
-        }
+        },
+
+        // itemType is the number returned in the CatalogItem.Type member
+        itemType: {
+            unknown: 0,
+            folder: 1,
+            report: 2,
+            resource: 3,
+            linkedReport: 4,
+            dataSource: 5,
+            model: 6,
+            site: 7
+        },
     };
 
     /**
@@ -2084,7 +2100,7 @@ $(function () {
         this.data = initialData || {};
     };
 
-    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError) {
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError,deleteCurrentRow,insertNewRow) {
         var me = this;
 
         if (RDLExt === null || RDLExt === undefined)
@@ -2116,7 +2132,6 @@ $(function () {
                         action = actions[sa++];
                     }
 
-
                     if (action.JavaFunc === undefined && action.Code !== undefined) {
                         if (mapAreaOnly !== true || (mapAreaOnly === true && action.ImageMapArea === true)) {
                             var newFunc;
@@ -2135,7 +2150,7 @@ $(function () {
                     }
                     if (action.On === "click")
                         $Control.addClass("fr-core-cursorpointer");
-                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError }, action.JavaFunc);
+                    $Control.on(action.On, { reportViewer: reportViewer, element: $Control, getInputs: getInputs, easySubmit: easySubmit, getParameters: getParameters, setParamError: setParamError, deleteCurrentRow: deleteCurrentRow, insertNewRow: insertNewRow }, action.JavaFunc);
 
                     if (actions === undefined || (actions !== undefined && actions[sa]) === undefined)
                         break;

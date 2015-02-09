@@ -555,40 +555,7 @@ $(function () {
                 me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
             }
 
-            var $dlg = me.options.$appContainer.find(".fr-us-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.userSettings({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._userSettingsDialog = $dlg;
-
-            $dlg = me.options.$appContainer.find(".fr-mms-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.manageMySubscriptions({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element,
-                    subscriptionModel: me.subscriptionModel
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._manageMySubscriptionsDialog = $dlg;
-
-
-            $dlg = me.options.$appContainer.find(".fr-sf-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.reportExplorerSearchFolder({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._searchFolderDialog = $dlg;
+            me._initExplorerDialogs();
         },
         _checkPermission: function () {
             var me = this;
@@ -608,6 +575,59 @@ $(function () {
         getPermission: function () {
             var me = this;
             return me.permissions;
+        },
+        _initExplorerDialogs: function(){
+            var me = this;
+
+            //init user setting dialog
+            var $dlg = me.options.$appContainer.find(".fr-us-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.userSettings({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._userSettingsDialog = $dlg;
+
+            //init my subscription dialog
+            $dlg = me.options.$appContainer.find(".fr-mms-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.manageMySubscriptions({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    subscriptionModel: me.subscriptionModel
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._manageMySubscriptionsDialog = $dlg;
+
+            //init search folder dialog
+            $dlg = me.options.$appContainer.find(".fr-sf-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.reportExplorerSearchFolder({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._searchFolderDialog = $dlg;
+
+            //init linked report dialog
+            $dlg = me.options.$appContainer.find(".fr-linked-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-linked-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerLinkedReport({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    reportManagerAPI: me.options.reportManagerAPI
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._linkedReportDialog = $dlg;
         },
         /**
          * Show the create dashboard modal dialog.

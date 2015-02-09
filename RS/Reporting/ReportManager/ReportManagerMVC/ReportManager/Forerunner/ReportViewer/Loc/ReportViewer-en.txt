@@ -3,7 +3,9 @@
 	"submit":"Submit",
 	"cancel":"Cancel",
 	"delete":"Delete",
-	"edit":"Edit"
+	"edit":"Edit",
+	"name":"Name",
+	"description":"Description"
   },
   "messages": {
     "loading":"Loading...",
@@ -290,7 +292,8 @@
     "title":"Context Menu",
     "delLabel": "Delete",
     "properties": "Properties",
-	"security":"Security"
+	"security":"Security",
+	"linkedReport":"Linked Report"
   },
   "security": {
 	"title": "Security",
@@ -305,5 +308,10 @@
 	"title":"Hidden",
 	"label":"Hidden in normal mode",
 	"prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+  },
+  "linkedReport":{
+	"title":"Linked Report",
+	"prompt":"Created new linked report based on {0}",
+	"location":"Location"
   }
 }

@@ -70,11 +70,12 @@ $(function () {
         },
         _getPermissionsList: function () {
             var me = this;
+
             if (me.permissionList) {
                 return me.permissionList;
             }
 
-            return ["Delete", "Update Properties", "Update Security Policies"];
+            return ["Delete", "Update Properties", "Update Security Policies", "Create Link"];
         },
         /*
          * Gets the permissions defined by the call to setPermissionsList

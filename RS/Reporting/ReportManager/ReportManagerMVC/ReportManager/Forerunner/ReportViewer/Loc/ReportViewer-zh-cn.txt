@@ -284,13 +284,16 @@
     "title":"右键菜单",
     "delLabel":"删除",
     "properties":"属性",
-    "security":"安全性"
+    "security":"安全性",
+    "linkedReport":"链接报表"
   },
   "common": {
     "submit":"提交",
     "cancel":"取消",
     "delete":"删除",
-    "edit":"编辑"
+    "edit":"编辑",
+    "name":"Name",
+    "description":"描述"
   },
   "security": {
     "title":"安全性",
@@ -305,5 +308,10 @@
     "title":"隐藏",
     "label":"在普通视图下隐藏",
     "prompt":"设置隐藏后在普通视图下不会显示该项, 您可以在管理员视图下恢复其可见性."
+  },
+  "linkedReport": {
+    "title":"链接报表",
+    "prompt":"创建基于{0}的链接报表",
+    "location":"地址"
   }
 }

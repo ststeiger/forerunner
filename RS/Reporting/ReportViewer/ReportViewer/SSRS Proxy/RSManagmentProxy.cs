@@ -290,5 +290,41 @@ namespace Forerunner.SSRS.Management
 
             return;
         }
+
+        public void CreateLinkedReport(string linkedReportName, string parentPath, string link, Property[] properties)
+        {
+            if (IsNative)
+            {
+                RSNative.CreateLinkedReport(linkedReportName, parentPath, link, properties);
+            }
+            else
+            {
+                // sharepoint not have this Api
+            }
+        }
+
+        public string GetReportLink(string linkedReportPath)
+        {
+            if (IsNative)
+            {
+                return RSNative.GetReportLink(linkedReportPath);
+            }
+            else
+            {
+                return string.Empty; // sharepoint not have this Api
+            }
+        }
+
+        public void SetReportLink(string linkedReportPath, string link)
+        {
+            if (IsNative)
+            {
+                RSNative.SetReportLink(linkedReportPath, link);
+            }
+            else
+            {
+                // sharepoint not have this Api
+            }
+        }
     }
 }

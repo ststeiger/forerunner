@@ -284,13 +284,16 @@
     "title":"右鍵菜單",
     "delLabel":"刪除",
     "properties":"屬性",
-    "security":"安全性"
+    "security":"安全性",
+    "linkedReport":"鏈接報表"
   },
   "common": {
     "submit":"提交",
     "cancel":"取消",
     "delete":"刪除",
-    "edit":"編輯"
+    "edit":"編輯",
+    "name":"Name",
+    "description":"描述"
   },
   "security": {
     "title":"安全性",
@@ -305,5 +308,10 @@
     "title":"隱藏",
     "label":"在普通視圖下隱藏",
     "prompt":"設置隱藏後在普通視圖下不會顯示該項, 您可以在管理員視圖下恢復其可見性."
+  },
+  "linkedReport": {
+    "title":"鏈接報表",
+    "prompt":"創建基於{0}的鏈接報表",
+    "location":"地址"
   }
 }

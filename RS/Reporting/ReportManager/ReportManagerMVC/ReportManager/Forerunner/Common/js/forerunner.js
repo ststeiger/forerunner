@@ -81,20 +81,28 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
     },
-    mask: function (onClick, maskHeight) {
+    mask: function (onClick, maskHeight, maskWidth) {
         var $mask = $(this).find(".fr-core-mask");
 
         if ($mask.length === 0) {
             $mask = $("<div class='fr-core-mask'></div>");
-            if (maskHeight) {
-                $mask.height(maskHeight);
-            }
-            else {
-                $mask.height($(this).height());
-            }
-
             $(this).append($mask);
         }
+
+        if (maskHeight) {
+            $mask.height(maskHeight);
+        }
+        else {
+            $mask.height($(this).height());
+        }
+
+        if (maskWidth) {
+            $mask.width(maskWidth);
+        }
+        else {
+            $mask.width($(this).width());
+        }
+
         if (onClick !== undefined)
             $mask.on("click", onClick);
         return $(this);
@@ -1933,8 +1941,8 @@ $(function () {
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
             setTimeout(function () {
-                $appContainer.mask(undefined, document.body.scrollHeight);
-                target.element.css({ top: $(window).scrollTop() }).show();
+                $appContainer.mask(undefined, document.body.scrollHeight, document.body.scrollWidth);
+                target.element.css({ top: $(window).scrollTop(), left: $(window).scrollLeft() }).show();
 
                 //reset modal dialog position when window resize happen or orientation change
                 me._removeEventsBinding();
@@ -1954,7 +1962,7 @@ $(function () {
             var me = this;
             
             me._removeEventsBinding();
-            target.element.hide();
+            target.element.css({ top: "", left: "" }).hide();
             $appContainer.unmask();
 
             if (!forerunner.device.isWindowsPhone())
@@ -2066,13 +2074,13 @@ $(function () {
 
             forerunner.helper.delay(me,
                 function () {
-                    var maskSize = { height: document.body.scrollHeight };
+                    var maskSize = { height: document.body.scrollHeight, width: document.body.scrollWidth };
                     var $mask = $(".fr-core-mask:first");
                     if ($mask.length) {
                         $mask.css(maskSize);
                     }
 
-                    target.element.css({ top: $(window).scrollTop() });
+                    target.element.css({ top: $(window).scrollTop(), left: $(window).scrollLeft() });
                 },
             50, "_dialogTimerId");
         },

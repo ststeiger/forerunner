@@ -6701,8 +6701,9 @@ $(function () {
                 me._initCallbacks();
             }
 
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -7644,8 +7645,6 @@ $(function () {
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -7681,6 +7680,9 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _create: function () {
         }

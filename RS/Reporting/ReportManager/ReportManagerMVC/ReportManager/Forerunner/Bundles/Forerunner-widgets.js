@@ -16784,14 +16784,24 @@ $(function () {
             layout.$topdiv.css({ height: topDivHeight });
             layout.$topdivspacer.css({ height: topDivHeight });
 
-            layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
+            layout.$rightheader.css({ height: toolpaneheaderheight });
+            layout.$leftheader.css({ height: toolpaneheaderheight });
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$rightheaderspacer.css({ height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ height: toolpaneheaderheight });
 
-            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
-            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            if (me.options.isFullScreen) {
+                // Full screen is position fixed so top style is needed. Otherwise the top will
+                // be set automatically
+                layout.$rightheader.css({ top: offset });
+                layout.$leftheader.css({ top: offset });
+
+                layout.$rightheaderspacer.css({ top: offset });
+                layout.$leftheaderspacer.css({ top: offset });
+
+                layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+                layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            }
         },
         _getUserSettings: function () {
             var me = this;

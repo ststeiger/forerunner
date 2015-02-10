@@ -1910,11 +1910,10 @@ $(function () {
                 $ExtRow.hide();
             }
 
-            if (State.Row === undefined)
+            if (State.Row === undefined) {
                 $Row = new $("<TR/>");
-
-            if ($Row.hasClass("fr-render-row") === false)
                 $Row.addClass("fr-render-row");
+            }
 
             var Colspans = State.Colspans;
             var Rowspans = State.Rowspans;
@@ -1935,8 +1934,6 @@ $(function () {
 
             //TODO: need to do Col spans
 
-
-
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
@@ -1953,6 +1950,8 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
+                $Row.addClass("fr-render-row");
+
                 if (respCols.isResp) {
                     $ExtRow = new $("<TR/>");
                     $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);

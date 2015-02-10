@@ -554,7 +554,7 @@ $(function () {
             reportViewerPreLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadReport).toLowerCase(); },
 
             /** @constant */
-            preLoadReport: "preLoadPage",
+            preLoadPage: "preLoadPage",
             /** widget + event, lowercase */
             reportViewerPreLoadPage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadPage).toLowerCase(); },
 
@@ -2262,7 +2262,7 @@ $(function () {
                     options.zoom = value;
                 else if (key === "rc:section")
                     try {
-                        options.section = parseInt(value);
+                        options.section = parseInt(value,10);
                     } catch (e) {
                         options.section = 1;
                     }

@@ -1367,8 +1367,8 @@ $(function () {
             }
             else {
 
-                for (var i = 0; i < inputs.length; i++) {
-                    data[inputs[i].name] = inputs[i].value;
+                for (var j = 0; j < inputs.length; j++) {
+                    data[inputs[j].name] = inputs[j].value;
                 }
                 if (datatype === "json")
                     data = JSON.stringify(data);
@@ -1817,7 +1817,7 @@ $(function () {
 
                             // add .25 for the right border
                             if (RIContext.CurrObj.ColumnWidths.Columns[cols+1].FixColumn ===0){
-                                cw += .25;
+                                cw += 0.25;
                             }
 
                             fixColWidth += me._getWidth(cw);

@@ -10998,7 +10998,7 @@ $(function () {
             //Handle EasySubmit
             if (Ext.EasySubmitURL && Ext.EasySubmitType) {
                 control.on("click", { reportViewer: me.options.reportViewer.element, element: control, getInputs: me._getInputsInRow, easySubmit: me._submitRow, veryEasySubmit: me._easySubmit, deleteCurrentRow: me._delCurrentRow, insertNewRow: me._insNewRow }, function (e) {
-                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySuccessFail,Ext.EasySubmitReportPath);
+                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySubmitFail,Ext.EasySubmitReportPath);
                 });
                 control.addClass("fr-core-cursorpointer");
             }

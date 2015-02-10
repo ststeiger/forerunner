@@ -2124,7 +2124,6 @@ $(function () {
         else
             ActionExt = {};
 
-
         if (ActionExt.JavaScriptActions) {
             for (var a = 0; a < ActionExt.JavaScriptActions.length; a++) {
                 var action = ActionExt.JavaScriptActions[a];

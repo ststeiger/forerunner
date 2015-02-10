@@ -1204,7 +1204,6 @@ $(function () {
             }
 
             var nextRow;
-
             if (row.hasClass("fr-render-row")) {
                 nextRow = row.next();
                 if (nextRow.hasClass("fr-render-respRow"))

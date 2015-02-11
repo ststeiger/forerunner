@@ -7431,8 +7431,8 @@ $(function () {
                 me._initCallbacks();
             }
 
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -8446,8 +8446,6 @@ $(function () {
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -8483,6 +8481,9 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _create: function () {
         }
@@ -10998,7 +10999,7 @@ $(function () {
             //Handle EasySubmit
             if (Ext.EasySubmitURL && Ext.EasySubmitType) {
                 control.on("click", { reportViewer: me.options.reportViewer.element, element: control, getInputs: me._getInputsInRow, easySubmit: me._submitRow, veryEasySubmit: me._easySubmit, deleteCurrentRow: me._delCurrentRow, insertNewRow: me._insNewRow }, function (e) {
-                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySuccessFail,Ext.EasySubmitReportPath);
+                    e.data.veryEasySubmit(e, Ext.EasySubmitType, Ext.EasySubmitURL, Ext.EasySubmitDatatype, Ext.EasySubmitSuccess, Ext.EasySubmitFail,Ext.EasySubmitReportPath);
                 });
                 control.addClass("fr-core-cursorpointer");
             }
@@ -11462,7 +11463,6 @@ $(function () {
             }
 
             var nextRow;
-
             if (row.hasClass("fr-render-row")) {
                 nextRow = row.next();
                 if (nextRow.hasClass("fr-render-respRow"))
@@ -11626,8 +11626,8 @@ $(function () {
             }
             else {
 
-                for (var i = 0; i < inputs.length; i++) {
-                    data[inputs[i].name] = inputs[i].value;
+                for (var j = 0; j < inputs.length; j++) {
+                    data[inputs[j].name] = inputs[j].value;
                 }
                 if (datatype === "json")
                     data = JSON.stringify(data);
@@ -12076,7 +12076,7 @@ $(function () {
 
                             // add .25 for the right border
                             if (RIContext.CurrObj.ColumnWidths.Columns[cols+1].FixColumn ===0){
-                                cw += .25;
+                                cw += 0.25;
                             }
 
                             fixColWidth += me._getWidth(cw);
@@ -12169,11 +12169,10 @@ $(function () {
                 $ExtRow.hide();
             }
 
-            if (State.Row === undefined)
+            if (State.Row === undefined) {
                 $Row = new $("<TR/>");
-
-            if ($Row.hasClass("fr-render-row") === false)
                 $Row.addClass("fr-render-row");
+            }
 
             var Colspans = State.Colspans;
             var Rowspans = State.Rowspans;
@@ -12194,8 +12193,6 @@ $(function () {
 
             //TODO: need to do Col spans
 
-
-
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
@@ -12212,6 +12209,8 @@ $(function () {
                 }
 
                 $Row = new $("<TR/>");
+                $Row.addClass("fr-render-row");
+
                 if (respCols.isResp) {
                     $ExtRow = new $("<TR/>");
                     $ExtCell = new $("<TD/>").attr("colspan", respCols.ColumnCount).css("background-color", respCols.BackgroundColor);
@@ -18220,14 +18219,24 @@ $(function () {
             layout.$topdiv.css({ height: topDivHeight });
             layout.$topdivspacer.css({ height: topDivHeight });
 
-            layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
+            layout.$rightheader.css({ height: toolpaneheaderheight });
+            layout.$leftheader.css({ height: toolpaneheaderheight });
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$rightheaderspacer.css({ height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ height: toolpaneheaderheight });
 
-            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
-            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            if (me.options.isFullScreen) {
+                // Full screen is position fixed so top style is needed. Otherwise the top will
+                // be set automatically
+                layout.$rightheader.css({ top: offset });
+                layout.$leftheader.css({ top: offset });
+
+                layout.$rightheaderspacer.css({ top: offset });
+                layout.$leftheaderspacer.css({ top: offset });
+
+                layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+                layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            }
         },
         _getUserSettings: function () {
             var me = this;

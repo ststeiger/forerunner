@@ -1949,6 +1949,7 @@ $(function () {
         explorerFindGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-rm-toolbar-find-group",
+            visibilityNoWidth: true,
             tools: [ret.btnKeyword,
                     ret.btnFind]
         },

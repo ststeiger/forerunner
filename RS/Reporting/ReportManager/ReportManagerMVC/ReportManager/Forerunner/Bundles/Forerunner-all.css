@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -907,7 +907,7 @@ table, td, tr div {
 }
 
 .fr-rdl-label, .fr-description-label, .fr-tag-label {
-    margin: 0 11px 16px 0; 
+    margin: 0 11px 10px 0; 
     display: block;
 }
 .fr-property-visibility {
@@ -935,6 +935,9 @@ table, td, tr div {
 .fr-properties-form, .fr-sf-error {
     border-width: thin; 
     border-color: red;
+}
+.fr-visibility-container {
+    margin: 10px 0px 6px -2px;
 }
 
 @media only screen and (max-width : 479px) {

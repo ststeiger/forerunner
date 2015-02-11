@@ -899,15 +899,9 @@ namespace Forerunner.SSRS.Manager
             else
                 return "";
         }
-        public void SetProperty(string path, string propName,string value)
+        public void SetProperty(string path, string properties)
         {
-            Property[] props = new Property[1];
-            Property retrieveProp = new Property();
-            retrieveProp.Name = propName;
-            retrieveProp.Value = value;
-
-            props[0] = retrieveProp;
-
+            Property[] props = JsonUtility.GetPropertiesList(properties);
             callSetProperties(path, props);
         }
         public string IsFavorite(string path)

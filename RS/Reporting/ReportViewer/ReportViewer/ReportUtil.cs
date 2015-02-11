@@ -799,5 +799,28 @@ namespace Forerunner
 
             return w.ToString();
         }
+
+        public static Management.Property[] GetPropertiesList(string propertyJson)
+        {
+            List<Management.Property> propertyList = new List<Management.Property>();
+
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(propertyJson)))
+            {
+                JsonArray policyArray = new JsonArray();
+                policyArray.Import(reader);
+
+                foreach (JsonObject obj in policyArray)
+                {
+                    Management.Property property = new Management.Property();
+
+                    property.Name = obj["name"].ToString();
+                    property.Value = obj["value"].ToString();
+
+                    propertyList.Add(property);
+                }
+            }
+
+            return propertyList.ToArray();
+        }
     }
 }

@@ -161,7 +161,8 @@ $(function () {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(function () {
-                            me._descriptionPreloading();
+                            me._descriptionAndHiddenPreloading();
+                            //me.visibilityPreloadingAndHidden();
                         });
                         break;
                     case propertyEnums.rdlExtension:
@@ -179,11 +180,11 @@ $(function () {
                             me._searchFolderPreloading();
                         });
                         break;
-                    case propertyEnums.visibility:
-                        me._createVisibility();
-                        me._addPreprocess(function () {
-                            me._visibilityPreloading();
-                        });
+                    //case propertyEnums.visibility:
+                    //    me._createVisibility();
+                    //    me._addPreprocess(function () {
+                    //        me.visibilityPreloadingAndHidden();
+                    //    });
                         break;
                 }
             }
@@ -213,9 +214,15 @@ $(function () {
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
                     "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
+                    "<div class='fr-visibility-container'>" +
+                        "<label class='fr-visibility-label'>"+
+                            "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + 
+                        "</label>" +
+                    "</div>" +
                 "</div>");
 
             me.$desInput = $descriptionDiv.find(".fr-description-text");
+            me.$isHidden = $descriptionDiv.find(".fr-property-visibility");
 
             me.$tabsUL.append($li);
             me.$tabs.append($descriptionDiv);
@@ -309,24 +316,24 @@ $(function () {
             me.$tabsUL.append($li);
             me.$tabs.append($searchfolderDiv);
         },
-        _createVisibility: function () {
-            var me = this;
-            var $li = new $("<li name='" + propertyEnums.visibility + "'><a href='#" + me.guid + "_" + "visibility" + "'>" + locData.visibility.title + "</a></li>");
+        //_createVisibility: function () {
+        //    var me = this;
+        //    var $li = new $("<li name='" + propertyEnums.visibility + "'><a href='#" + me.guid + "_" + "visibility" + "'>" + locData.visibility.title + "</a></li>");
 
-            var $visibilityDiv = new $(
-                "<div id='" + me.guid + "_" + "visibility" + "' class='fr-property-container fr-visibility-container'>" +
-                    //"<input type='checkbox' class='fr-property-visibility'>" +
-                    "<label class='fr-visibility-label'><input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + "</label>" +
-                    "<div class='fr-visibility-prompt-div'>" +
-                        "<label class='fr-visibility-label-prompt'>" + locData.visibility.prompt + "</label>" +
-                    "</div>" +
-                "</div>");
+        //    var $visibilityDiv = new $(
+        //        "<div id='" + me.guid + "_" + "visibility" + "' class='fr-property-container fr-visibility-container'>" +
+        //            //"<input type='checkbox' class='fr-property-visibility'>" +
+        //            "<label class='fr-visibility-label'><input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + "</label>" +
+        //            "<div class='fr-visibility-prompt-div'>" +
+        //                "<label class='fr-visibility-label-prompt'>" + locData.visibility.prompt + "</label>" +
+        //            "</div>" +
+        //        "</div>");
 
-            me.$isHidden = $visibilityDiv.find(".fr-property-visibility");
+        //    me.$isHidden = $visibilityDiv.find(".fr-property-visibility");
 
-            me.$tabsUL.append($li);
-            me.$tabs.append($visibilityDiv);
-        },
+        //    me.$tabsUL.append($li);
+        //    me.$tabs.append($visibilityDiv);
+        //},
 
         _generalSubmit: function () {
             var me = this;
@@ -335,7 +342,7 @@ $(function () {
             var result = true;
             switch (tabName) {
                 case propertyEnums.description:
-                    me._setDescription();
+                    me._setDescriptionAndHidden();
                     break;
                 case propertyEnums.rdlExtension:
                     me._setRDLExtension();
@@ -346,9 +353,9 @@ $(function () {
                 case propertyEnums.searchFolder:
                     result = me._setSearchFolder();
                     break;
-                case propertyEnums.visibility:
-                    me._setVisibility();
-                    break;
+                //case propertyEnums.visibility:
+                //    me._setVisibility();
+                //    break;
             }
 
             if (result === true) {
@@ -450,35 +457,58 @@ $(function () {
         },
 
         _description: null,
-        _descriptionPreloading: function () {
+        _descriptionAndHiddenPreloading: function () {
             var me = this;
+
             me._description = null;
+            me._isHidden = null;
 
             me._getProperties(me.curPath, function (data) {
                 var me = this;
 
+                //all items has the hidden property but not all has description
+                //so if the return data is string type then it's hidden property
+                if (typeof data === "string" && data.toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                }
+
+                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                }
+
                 if (typeof data === "object") {
                     me._description = data["Description"];
+
                     me.$desInput.val(me._description);
                 }
             }, me);
         },
-        _setDescription: function () {
+        _setDescriptionAndHidden: function () {
             var me = this;
             try {
                 var descriptionInput = $.trim(me.$desInput.val());
+               
+                if (descriptionInput !== me._description || isHidden !== me._isHidden) {
+                    var description = forerunner.helper.htmlEncode(descriptionInput),
+                        isHidden = me.$isHidden[0].checked ? "True" : "False";
 
-                if (descriptionInput !== me._description) {
-                    var description = forerunner.helper.htmlEncode(descriptionInput);
+                    var properties = [{
+                        name: "Description",
+                        value: descriptionInput
+                    }, {
+                        name: "Hidden",
+                        value: isHidden
+                    }];
 
                     forerunner.ajax.ajax({
                         type: "POST",
                         dataType: "text",
                         url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                        data: {
-                            value: description,
+                        data: {                            
                             path: me.curPath,
-                            propertyName: "Description",
+                            properties: JSON.stringify(properties),
                             instance: me.options.rsInstance,
                         },
                         success: function (data) {
@@ -497,12 +527,58 @@ $(function () {
                 return false;
             }
         },
-        //_getDescription: function (path) {
-        //    var me = this;
-        //    me._description = me._getProperties(path, "Description");
-        //    return me._description;
-        //},
+        _isHidden: null,
+        visibilityPreloadingAndHidden: function () {
+            var me = this;
+            me._isHidden = false;
 
+            me._getProperties(me.curPath, function (data) {
+                var me = this;
+
+                if (typeof data === "string" && data.toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                    return;
+                }
+
+                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
+                    me._isHidden = true;
+                    me.$isHidden.attr("checked", true);
+                }
+            }, me);
+        },
+        //_setVisibility: function () {
+        //    var me = this;
+        //    try {
+        //        var isHidden = me.$isHidden[0].checked ? "True" : "False";
+
+        //        if (isHidden !== me._isHidden) {
+        //            forerunner.ajax.ajax({
+        //                type: "POST",
+        //                dataType: "text",
+        //                url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+        //                data: {
+        //                    value: isHidden,
+        //                    path: me.curPath,
+        //                    propertyName: "Hidden",
+        //                    instance: me.options.rsInstance,
+        //                },
+        //                success: function (data) {
+        //                    //return true;
+        //                },
+        //                fail: function (data) {
+        //                    me._description = null;
+        //                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+        //                },
+        //                async: false
+        //            });
+        //        }
+        //    }
+        //    catch (e) {
+        //        forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
+        //        return false;
+        //    }
+        //},
         _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
 
@@ -584,64 +660,6 @@ $(function () {
                 return false;
             }
         },
-
-        _isHidden: null,
-        _visibilityPreloading: function () {
-            var me = this;
-            me._isHidden = false;
-            
-            me._getProperties(me.curPath, function (data) {
-                var me = this;
-
-                if (typeof data === "string" && data.toLowerCase() === "true") {
-                    me._isHidden = true;
-                    me.$isHidden.attr("checked", true);
-                    return;
-                }
-
-                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
-                    me._isHidden = true;
-                    me.$isHidden.attr("checked", true);
-                }
-            }, me);
-        },
-        _setVisibility: function () {
-            var me = this;
-            try {
-                var isHidden = me.$isHidden[0].checked ? "True" : "False";
-
-                if (isHidden !== me._isHidden) {
-                    forerunner.ajax.ajax({
-                        type: "POST",
-                        dataType: "text",
-                        url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                        data: {
-                            value: isHidden,
-                            path: me.curPath,
-                            propertyName: "Hidden",
-                            instance: me.options.rsInstance,
-                        },
-                        success: function (data) {
-                            //return true;
-                        },
-                        fail: function (data) {
-                            me._description = null;
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
-                        },
-                        async: false
-                    });
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-        },
-        //_getVisibility: function (path) {
-        //    var me = this;
-        //    me._isHidden = me._getProperties(path, "Hidden");
-        //    return me._isHidden;
-        //},
         _getProperties: function (path, callback, context) {
             var me = this;
 
@@ -659,7 +677,7 @@ $(function () {
                 async: true,
                 data: {
                     path: path,
-                    propertyName: "Description,Hidden",
+                    propertyName: "Hidden,Description",
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {

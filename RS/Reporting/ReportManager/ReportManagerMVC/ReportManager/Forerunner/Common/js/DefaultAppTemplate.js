@@ -299,16 +299,16 @@ $(function () {
             me.setBackgroundLayout();
         },
         _updateTopDiv: function (me) {
-            if (me.options.isFullScreen)
+
+            //IOS8 bug, top div width changing to report width.
+            if (me.options.isFullScreen) {
+                me.$topdiv.css("width", $(window).width());
                 return;
+            }
             
             var scrolledContainerTop = $(window).scrollTop() - me.$container.offset().top + me.outerToolbarHeight;
             var containerHeightLessTopDiv = me.$container.height() - me.$topdiv.outerHeight();
-            var diff = scrolledContainerTop;
-            if (me.isFullScreen) {
-                diff = containerHeightLessTopDiv;
-            }
-
+            var diff = scrolledContainerTop;      
             var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 
             //if it is a dashboard report, then not update top div and left/right toolpane top position, scroll it with report
@@ -607,7 +607,7 @@ $(function () {
                     if (me.options.isFullScreen)
                         me._makePositionFixed();
 
-                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                    if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
                         me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                         me.$container.removeClass("fr-layout-container-noscroll");
                     }
@@ -615,7 +615,8 @@ $(function () {
                     $(window).scrollTop(0);
                     $(window).scrollLeft(0);
 
-                    me.ResetSize();
+                    if (me.ResetSize)
+                        me.ResetSize(); 
                 }, 50);
             }
         },

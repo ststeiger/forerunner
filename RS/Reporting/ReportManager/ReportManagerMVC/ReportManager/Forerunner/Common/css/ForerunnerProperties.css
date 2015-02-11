@@ -44,7 +44,7 @@
 }
 
 .fr-rdl-label, .fr-description-label, .fr-tag-label {
-    margin: 0 11px 16px 0; 
+    margin: 0 11px 10px 0; 
     display: block;
 }
 .fr-property-visibility {
@@ -72,6 +72,9 @@
 .fr-properties-form, .fr-sf-error {
     border-width: thin; 
     border-color: red;
+}
+.fr-visibility-container {
+    margin: 10px 0px 6px -2px;
 }
 
 @media only screen and (max-width : 479px) {

@@ -2873,9 +2873,8 @@ $(function () {
                    dataType: "text",
                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                    data: {
-                       value: RDL,
                        path: me.reportPath,
-                       propertyName: "ForerunnerRDLExt",
+                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
                        instance: me.options.rsInstance,
                    },
                    success: function (data) {

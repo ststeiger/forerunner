@@ -31,11 +31,11 @@ $(function () {
 
     var propertyListMap = {
         // Normal explorer folder and resource files except search folder
-        normal: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
+        normal: [propertyEnums.description, propertyEnums.tags],
         // Report/Linked Report
-        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
+        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
 
     /**

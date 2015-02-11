@@ -20,15 +20,17 @@ $(function () {
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
+        1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
+        //2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: [propertyEnums.description, propertyEnums.tags],
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags, propertyEnums.visibility],
+        3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility],
+        //4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        4: [propertyEnums.description, propertyEnums.tags],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description, propertyEnums.visibility],
+        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
@@ -143,6 +145,7 @@ $(function () {
 
             // Set the new settings based upon the catalogItem and show the dialog
             var propertyList = propertyListMap[me.options.catalogItem.Type];
+
             // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
             if (me.options.catalogItem.Type === 3) {
                 propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;

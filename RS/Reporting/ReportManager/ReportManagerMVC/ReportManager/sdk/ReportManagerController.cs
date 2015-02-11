@@ -152,7 +152,9 @@ namespace ReportManager.Controllers
         }
 
         public class SaveReprotPropertyPostBack{
-            public string value { get; set; } public string path { get; set; } public string propertyName { get; set; } public string instance { get; set; }
+            public string path { get; set; }
+            public string properties { get; set; } 
+            public string instance { get; set; }
         }
 
         [HttpPost]
@@ -162,7 +164,7 @@ namespace ReportManager.Controllers
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
             { 
-                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.propertyName, postValue.value);
+                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
                 resp.StatusCode = HttpStatusCode.OK;
             }
             catch

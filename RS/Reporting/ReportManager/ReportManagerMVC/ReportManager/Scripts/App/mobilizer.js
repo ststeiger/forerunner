@@ -7,7 +7,6 @@ $(function () {
 
         this.explorer = $("body").reportExplorerEZ({
             explorerSettings: explorerSettings,
-            isFullScreen: forerunner.device.isiOS() ? false : true
         });
     });
 });

@@ -6712,8 +6712,9 @@ $(function () {
                 me._initCallbacks();
             }
 
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];
@@ -7655,8 +7656,6 @@ $(function () {
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
             me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
         },
         _init: function () {
             var me = this;
@@ -7692,6 +7691,9 @@ $(function () {
             var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
             var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
             me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _create: function () {
         }
@@ -12313,8 +12315,9 @@ $(function () {
                 return;
             }
 
-            var paramList = me.getParamsList();
-            if (paramList) {
+            if (me.formIsValid()) {
+                var paramList = me.getParamsList();
+
                 if (me._debug) {
                     me.options.$reportViewer.removeLoadingIndicator();
                 } else {
@@ -14016,7 +14019,18 @@ $(function () {
 
             return retval;
         },
-
+        /**
+         * Returns a boolean that indicates if the form fields are all valid. Note a form with
+         * no fields is considered valid.
+         *
+         * @function $.forerunner.reportParameter#formIsValid
+         *
+         * @return {Boolean} - true if the all fields of the from are valid
+         */
+        formIsValid: function () {
+            var me = this;
+            return (me.$form && me.$form.length === 0) || (me.$form && me.$form.validate().numberOfInvalids() <= 0 && me.$form.valid());
+        },
         /**
          * Generate parameter value list into string and return
          *
@@ -16792,14 +16806,24 @@ $(function () {
             layout.$topdiv.css({ height: topDivHeight });
             layout.$topdivspacer.css({ height: topDivHeight });
 
-            layout.$rightheader.css({ height: toolpaneheaderheight, top: offset });
-            layout.$leftheader.css({ height: toolpaneheaderheight, top: offset });
+            layout.$rightheader.css({ height: toolpaneheaderheight });
+            layout.$leftheader.css({ height: toolpaneheaderheight });
 
-            layout.$rightheaderspacer.css({ top: offset, height: toolpaneheaderheight });
-            layout.$leftheaderspacer.css({ top: offset, height: toolpaneheaderheight });
+            layout.$rightheaderspacer.css({ height: toolpaneheaderheight });
+            layout.$leftheaderspacer.css({ height: toolpaneheaderheight });
 
-            layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
-            layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            if (me.options.isFullScreen) {
+                // Full screen is position fixed so top style is needed. Otherwise the top will
+                // be set automatically
+                layout.$rightheader.css({ top: offset });
+                layout.$leftheader.css({ top: offset });
+
+                layout.$rightheaderspacer.css({ top: offset });
+                layout.$leftheaderspacer.css({ top: offset });
+
+                layout.$leftpanecontent.css({ top: (toolpaneheaderheight + offset) });
+                layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
+            }
         },
         _getUserSettings: function () {
             var me = this;

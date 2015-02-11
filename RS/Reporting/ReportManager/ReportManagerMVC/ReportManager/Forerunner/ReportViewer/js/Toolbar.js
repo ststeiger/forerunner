@@ -167,8 +167,9 @@ $(function () {
                 me._initCallbacks();
             }
 
-            //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _viewerButtons: function (allButtons) {
             var listOfButtons = [tb.btnMenu];

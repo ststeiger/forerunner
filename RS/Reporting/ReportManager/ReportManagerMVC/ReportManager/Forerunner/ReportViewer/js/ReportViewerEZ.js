@@ -231,6 +231,7 @@ $(function () {
                 me.getToolbar().toolbar("windowResize");
                 }, 100, "_toolbarDelayId");
             }
+
         },
         /**
          * Get report viewer page navigation section

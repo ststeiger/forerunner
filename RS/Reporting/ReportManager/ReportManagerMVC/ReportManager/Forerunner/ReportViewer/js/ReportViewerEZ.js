@@ -226,6 +226,7 @@ $(function () {
                 $reportViewer.reportViewer("scrollReportBody");
             }
 
+
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
                 helper.delay(me, function () {

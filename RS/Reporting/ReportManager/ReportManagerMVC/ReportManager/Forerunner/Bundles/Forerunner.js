@@ -427,7 +427,6 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerChangePage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changePage).toLowerCase(); },
 
-
             /** @constant */
             drillThrough: "drillThrough",
             /** widget + event, lowercase */

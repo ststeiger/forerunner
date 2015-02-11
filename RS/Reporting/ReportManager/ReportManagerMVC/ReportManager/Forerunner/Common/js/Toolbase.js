@@ -475,9 +475,9 @@ $(function () {
          * Show/Hide buttons when window resize
          * @function $.forerunner.toolBase#windowResize
          */
-        windowResize: function () {
+        windowResize: function () {           
             var me = this;
-
+         
             var toolbarWidth = me.element.width();
             var tools = me._getOrderedList();
 

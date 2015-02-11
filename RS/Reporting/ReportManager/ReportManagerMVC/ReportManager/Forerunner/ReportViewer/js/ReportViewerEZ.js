@@ -129,6 +129,13 @@ $(function () {
                 }
             });
 
+            $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                   $viewer.reportViewer("scrollReportBody");
+                }
+            });
+            
+
             if (me.options.historyBack){
                 layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                 layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
@@ -205,14 +212,20 @@ $(function () {
          * @function $.forerunner.reportViewerEZ#windowResize
          */
         windowResize: function () {
+            
             var me = this;
-            if (me.options.DefaultAppTemplate === null) {
+            if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
             var $reportViewer = me.getReportViewer();
             if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
                 $reportViewer.reportViewer("windowResize");
             }
+
+            if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                $reportViewer.reportViewer("scrollReportBody");
+            }
+
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
                 helper.delay(me, function () {

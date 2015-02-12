@@ -229,7 +229,7 @@ $(function () {
                 // This needs to be delayed for the dashboard case where the size of the report
                 // will dictate the size of the report area and therefore the size of the toolbar
                 me.getToolbar().toolbar("windowResize");
-                }, 100, "_toolbarDelayId");
+                }, 1000, "_toolbarDelayId");
             }
 
         },

@@ -189,7 +189,7 @@ $(function () {
             visibilityOrder: 4,
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", parseInt(e.data.$reportViewer.reportViewer("getCurPage"),10) + 1);
+                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
                 }
             }
         },

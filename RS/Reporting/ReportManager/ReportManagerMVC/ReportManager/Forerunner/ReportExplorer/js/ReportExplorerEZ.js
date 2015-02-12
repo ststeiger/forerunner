@@ -474,6 +474,8 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
 
+                layout.$mainviewport.reportViewerEZ("windowResize");
+
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 

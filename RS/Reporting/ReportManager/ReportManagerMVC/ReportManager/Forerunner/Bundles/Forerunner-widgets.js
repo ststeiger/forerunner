@@ -836,7 +836,7 @@ $(function () {
          */
         getCurPage: function () {
             var me = this;
-            return me.curPage;
+            return parseInt(me.curPage,10);
         },
         /**
          * Get current number of pages
@@ -1002,7 +1002,7 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
-                    page.needsLayout = true;
+                    if (Page) page.needsLayout = true;
                 });
 
                 me._reLayoutPage(me.curPage, force);                
@@ -1044,10 +1044,12 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            me.$reportAreaContainer.css("display", "block");
-            me.$reportAreaContainer.css("width", $(window).width());
-            me.$reportAreaContainer.css("height", $(window).height());
-            me.$reportAreaContainer.css("overflow", "auto");
+            if (me.$reportAreaContainer) {
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height());
+                me.$reportAreaContainer.css("overflow", "auto");
+            }
         },
 
         _setPage: function (pageNum) {
@@ -1079,10 +1081,11 @@ $(function () {
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
 
-            //relayout page if needed
-            me._reLayoutPage(pageNum);
+           
 
             if (!me.renderError) {
+                //relayout page if needed
+                me._reLayoutPage(pageNum);
                 me.curPage = pageNum;
                 me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
             }
@@ -2647,7 +2650,7 @@ $(function () {
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                     else {
-                        me._loadPage(pageNum, false, null, null, true);
+                       // me._loadPage(pageNum, false, null, null, true);
                     }
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
@@ -3116,7 +3119,8 @@ $(function () {
                 });
             }
             //Error, need to handle this better
-            if (!data) return;
+            if (!data || (data.Exception && loadOnly))
+                return;
             
             if (data.CredentialsRequired) {
                 me._writeDSCredential(data);
@@ -3167,6 +3171,8 @@ $(function () {
                     });
                 }
                 me._setPage(newPageNum);
+                if (data.Exception)
+                    me.pages[newPageNum] = null;
             }
         },
 
@@ -9231,8 +9237,7 @@ $(function () {
                         "<div class='fr-render-error-license-container'>" +
                     "<p class='fr-render-error-license-title'></p><br/>" +
                     "<p class='fr-render-error-license-content'></p>" +
-                            "<p class='fr-render-error-license-content'></p>" +
-                        "</div>" +
+                         "</div>" +
                     "</div>"));
                 if (me.options.reportViewer) {
                     $cell = me.element.find(".fr-render-error-license-title");
@@ -9508,6 +9513,9 @@ $(function () {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }
+
+            if (!me._rectangles)
+                return;
 
             for (var r = 0; r < me._rectangles.length; r++) {
                 var rec = me._rectangles[r];
@@ -16888,6 +16896,8 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
+
+                layout.$mainviewport.reportViewerEZ("windowResize");
 
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);

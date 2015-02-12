@@ -1083,10 +1083,12 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            me.$reportAreaContainer.css("display", "block");
-            me.$reportAreaContainer.css("width", $(window).width());
-            me.$reportAreaContainer.css("height", $(window).height());
-            me.$reportAreaContainer.css("overflow", "auto");
+            if (me.$reportAreaContainer) {
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height());
+                me.$reportAreaContainer.css("overflow", "auto");
+            }
         },
 
         _setPage: function (pageNum) {
@@ -4905,6 +4907,9 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
+            if (me.options.isFullScreen) {
+                me.$topdiv.css("width", $(window).width());                
+            }
             $mainviewport.append($topdiv);
             //route path link
             var $linksection = new $("<div />");
@@ -18349,7 +18354,7 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
-
+                layout.$mainviewport.reportViewerEZ("windowResize");
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 

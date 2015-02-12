@@ -363,10 +363,12 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            me.$reportAreaContainer.css("display", "block");
-            me.$reportAreaContainer.css("width", $(window).width());
-            me.$reportAreaContainer.css("height", $(window).height());
-            me.$reportAreaContainer.css("overflow", "auto");
+            if (me.$reportAreaContainer) {
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height());
+                me.$reportAreaContainer.css("overflow", "auto");
+            }
         },
 
         _setPage: function (pageNum) {

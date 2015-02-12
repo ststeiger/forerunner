@@ -37,7 +37,7 @@ $(function () {
 
         _create: function () {
             var me = this;
-            console.log('linked report widget is created.');
+
             var linked = locData.linkedReport,
                 common = locData.common;
 

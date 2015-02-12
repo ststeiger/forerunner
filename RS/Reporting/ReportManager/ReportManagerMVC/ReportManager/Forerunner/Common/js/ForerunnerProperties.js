@@ -162,11 +162,13 @@ $(function () {
                         me._createDescription();
                         me._addPreprocess(function () {
                             me._descriptionAndHiddenPreloading();
-                            //me.visibilityPreloadingAndHidden();
                         });
                         break;
                     case propertyEnums.rdlExtension:
                         me._createRDLExtension();
+                        me._addPreprocess(function () {
+                            me._RDLExtensionPreloading();
+                        });
                         break;
                     case propertyEnums.tags:
                         me._createTags();
@@ -179,12 +181,6 @@ $(function () {
                         me._addPreprocess(function () {
                             me._searchFolderPreloading();
                         });
-                        break;
-                    //case propertyEnums.visibility:
-                    //    me._createVisibility();
-                    //    me._addPreprocess(function () {
-                    //        me.visibilityPreloadingAndHidden();
-                    //    });
                         break;
                 }
             }
@@ -239,11 +235,11 @@ $(function () {
 
             me.$rdlInput = $rdlDiv.find(".fr-rdl-text");
             
-            me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (event, data) {
-                if (data.RDLExtProperty) {
-                    me._RDLExtensionPreloading(data.RDLExtProperty);
-                }
-            });
+            //me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (event, data) {
+            //    if (data.RDLExtProperty) {
+            //        me._RDLExtensionPreloading(data.RDLExtProperty);
+            //    }
+            //});
 
             me.$tabsUL.append($li);
             me.$tabs.append($rdlDiv);
@@ -316,24 +312,6 @@ $(function () {
             me.$tabsUL.append($li);
             me.$tabs.append($searchfolderDiv);
         },
-        //_createVisibility: function () {
-        //    var me = this;
-        //    var $li = new $("<li name='" + propertyEnums.visibility + "'><a href='#" + me.guid + "_" + "visibility" + "'>" + locData.visibility.title + "</a></li>");
-
-        //    var $visibilityDiv = new $(
-        //        "<div id='" + me.guid + "_" + "visibility" + "' class='fr-property-container fr-visibility-container'>" +
-        //            //"<input type='checkbox' class='fr-property-visibility'>" +
-        //            "<label class='fr-visibility-label'><input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + "</label>" +
-        //            "<div class='fr-visibility-prompt-div'>" +
-        //                "<label class='fr-visibility-label-prompt'>" + locData.visibility.prompt + "</label>" +
-        //            "</div>" +
-        //        "</div>");
-
-        //    me.$isHidden = $visibilityDiv.find(".fr-property-visibility");
-
-        //    me.$tabsUL.append($li);
-        //    me.$tabs.append($visibilityDiv);
-        //},
 
         _generalSubmit: function () {
             var me = this;
@@ -380,24 +358,23 @@ $(function () {
             }
         },
 
-        _tags: null,
         _tagsPreloading: function () {
             var me = this;
-            var tags = me._getTags(me.curPath);
-            me.$tagInput.val(tags);
+
+            me._getTags(me.curPath);
         },
         _getTags: function (path) {
             var me = this;
 
             if (me.path !== path) {
-                me._tags = null;
+                me._tags = "";
                 me.path = null;
 
                 forerunner.ajax.ajax({
                     type: "GET",
                     dataType: "JSON",
                     url: forerunner.config.forerunnerAPIBase() + "ReportManager/GetReportTags",
-                    async: false,
+                    async: true,
                     data: {
                         path: path,
                         instance: me.options.rsInstance,
@@ -407,18 +384,15 @@ $(function () {
 
                         if (data.Tags && data.Tags !== "NotFound") {
                             me._tags = data.Tags.join(",");
+                            me._tags = me._tags.replace(/"/g, '');
+
+                            me.$tagInput.val(me._tags);
                         }
                     },
                     fail: function (data) {
                     },
                 });
             }
-
-            if (me._tags) {
-                me._tags = me._tags.replace(/"/g, '');
-            }
-
-            return me._tags;
         },
         _saveTags: function () {
             var me = this;
@@ -438,6 +412,7 @@ $(function () {
                 {
                     type: "POST",
                     dataType: "text",
+                    async: true,
                     url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportTags/",
                     data: {
                         reportTags: tags,
@@ -450,18 +425,16 @@ $(function () {
                     fail: function (data) {
                         me._tags = null;
                         forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
-                    },
-                    async: false
+                    }
                 });
             }
         },
 
-        _description: null,
         _descriptionAndHiddenPreloading: function () {
             var me = this;
 
-            me._description = null;
-            me._isHidden = null;
+            me._description = "";
+            me._isHidden = "False";
 
             me._getProperties(me.curPath, function (data) {
                 var me = this;
@@ -469,12 +442,12 @@ $(function () {
                 //all items has the hidden property but not all has description
                 //so if the return data is string type then it's hidden property
                 if (typeof data === "string" && data.toLowerCase() === "true") {
-                    me._isHidden = true;
+                    me._isHidden = "True";
                     me.$isHidden.attr("checked", true);
                 }
 
                 if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
-                    me._isHidden = true;
+                    me._isHidden = "True";
                     me.$isHidden.attr("checked", true);
                 }
 
@@ -488,11 +461,11 @@ $(function () {
         _setDescriptionAndHidden: function () {
             var me = this;
             try {
-                var descriptionInput = $.trim(me.$desInput.val());
+                var descriptionInput = $.trim(me.$desInput.val()),
+                    isHidden = me.$isHidden[0].checked ? "True" : "False";
                
                 if (descriptionInput !== me._description || isHidden !== me._isHidden) {
-                    var description = forerunner.helper.htmlEncode(descriptionInput),
-                        isHidden = me.$isHidden[0].checked ? "True" : "False";
+                    var description = forerunner.helper.htmlEncode(descriptionInput);
 
                     var properties = [{
                         name: "Description",
@@ -505,6 +478,7 @@ $(function () {
                     forerunner.ajax.ajax({
                         type: "POST",
                         dataType: "text",
+                        async: true,
                         url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                         data: {                            
                             path: me.curPath,
@@ -515,10 +489,10 @@ $(function () {
                             //return true;
                         },
                         fail: function (data) {
-                            me._description = null;
+                            me._description = "";
+                            me._isHidden = "False";
                             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
-                        },
-                        async: false
+                        }
                     });
                 }
             }
@@ -527,69 +501,72 @@ $(function () {
                 return false;
             }
         },
-        _isHidden: null,
-        visibilityPreloadingAndHidden: function () {
+
+        _RDLExtensionPreloading: function (RDLExtension) {
             var me = this;
-            me._isHidden = false;
+            me._rdl = "";
 
             me._getProperties(me.curPath, function (data) {
                 var me = this;
 
-                if (typeof data === "string" && data.toLowerCase() === "true") {
-                    me._isHidden = true;
-                    me.$isHidden.attr("checked", true);
-                    return;
-                }
-
-                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
-                    me._isHidden = true;
-                    me.$isHidden.attr("checked", true);
+                if (typeof data === "object" && data["ForerunnerRDLExt"]) {
+                    me._rdl = data["ForerunnerRDLExt"];
+                    me.$rdlInput.val(me._rdl);
                 }
             }, me);
         },
-        //_setVisibility: function () {
-        //    var me = this;
-        //    try {
-        //        var isHidden = me.$isHidden[0].checked ? "True" : "False";
-
-        //        if (isHidden !== me._isHidden) {
-        //            forerunner.ajax.ajax({
-        //                type: "POST",
-        //                dataType: "text",
-        //                url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-        //                data: {
-        //                    value: isHidden,
-        //                    path: me.curPath,
-        //                    propertyName: "Hidden",
-        //                    instance: me.options.rsInstance,
-        //                },
-        //                success: function (data) {
-        //                    //return true;
-        //                },
-        //                fail: function (data) {
-        //                    me._description = null;
-        //                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
-        //                },
-        //                async: false
-        //            });
-        //        }
-        //    }
-        //    catch (e) {
-        //        forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-        //        return false;
-        //    }
-        //},
-        _RDLExtensionPreloading: function (RDLExtension) {
-            var me = this;
-
-            var RDL = JSON.stringify(RDLExtension);
-            me.$rdlInput.val(RDL);
-        },
         _setRDLExtension: function () {
             var me = this;
-
             var rdl = me.$rdlInput.val();
-            me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+
+            if (rdl !== me._rdl) {
+                me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+            }
+        },
+        /**
+        * Save RDL Extension
+        *
+        * @function $.forerunner.reportViewer#getRDLExt
+        *
+        * @param {String} RDL - RDL Extension string
+        *
+        * @return {Object} XML http request return object
+        */
+        saveRDLExt: function (RDL) {
+            var me = this;
+
+            try {
+                if ($.trim(RDL) !== "") {
+                    me.RDLExtProperty = jQuery.parseJSON(RDL);
+                }
+                else {
+                    me.RDLExtProperty = {};
+                }
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
+                return false;
+            }
+
+            return forerunner.ajax.ajax(
+               {
+                   type: "POST",
+                   dataType: "text",
+                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                   data: {
+                       path: me.reportPath,
+                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
+                       instance: me.options.rsInstance,
+                   },
+                   success: function (data) {
+                       me._ReRender(true);
+                       return true;
+                   },
+                   fail: function (data) {
+                       return false;
+                   },
+                   async: false
+               });
         },
 
         _searchFolder: null,
@@ -660,6 +637,7 @@ $(function () {
                 return false;
             }
         },
+
         _getProperties: function (path, callback, context) {
             var me = this;
 
@@ -674,10 +652,10 @@ $(function () {
                 type: "GET",
                 dataType: "text",
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty",
-                async: true,
+                async: false,
                 data: {
                     path: path,
-                    propertyName: "Hidden,Description",
+                    propertyName: "Hidden,Description,ForerunnerRDLExt",
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
@@ -696,15 +674,6 @@ $(function () {
 
                 },
             });
-            //me.timer && clearTimeout(me.timer);
-            //me.timer = setTimeout(function () {
-            //    if (me.cached) {
-            //        me.timer = null;
-            //        return me.cached[property] || "";
-            //    }
-
-            //    me._getProperties(property);
-            //});
         }
     });
 });

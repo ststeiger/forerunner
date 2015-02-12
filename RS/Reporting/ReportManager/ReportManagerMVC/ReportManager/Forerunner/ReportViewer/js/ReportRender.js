@@ -137,8 +137,7 @@ $(function () {
 
             me.element.append(bgLayer);
         },
-        _getWatermark: function () {
-
+        _getWatermark: function () {            
             var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");

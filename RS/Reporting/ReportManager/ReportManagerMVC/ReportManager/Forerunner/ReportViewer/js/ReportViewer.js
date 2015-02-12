@@ -352,6 +352,25 @@ $(function () {
                 }
             }
         },
+
+
+        /**
+        * This is a total hack to get IOS and fixed headers to work correctly
+        * Currently this needs to be called on iOS8 when in full screen viewer mode
+        *
+        * @function $.forerunner.reportViewer#scrollReportBody
+        */
+        scrollReportBody: function () {
+            var me = this;
+
+            if (me.$reportAreaContainer) {
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height());
+                me.$reportAreaContainer.css("overflow", "auto");
+            }
+        },
+
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
@@ -367,22 +386,15 @@ $(function () {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
+              
                 me._touchNav();
                 me._removeDocMap();
             }
             else {
-                if (me.isDebug) {
-                    console.log("SetPage", {
-                        curPage: me.$reportAreaContainer.find(".Page"),
-                        newPage: me._getPageContainer(pageNum)
-                    });
-                }
-                me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
-               
-            }
-
+                me.$reportAreaContainer.find(".Page").detach();                  
+            }          
+            
+            me.$reportAreaContainer.append(me._getPageContainer(pageNum));            
             me._removeCSS();
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
@@ -620,6 +632,7 @@ $(function () {
             }
         },
         _touchNav: function () {
+            
             if (!forerunner.device.isTouch())
                 return;
 

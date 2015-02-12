@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -1072,6 +1072,25 @@ $(function () {
                 }
             }
         },
+
+
+        /**
+        * This is a total hack to get IOS and fixed headers to work correctly
+        * Currently this needs to be called on iOS8 when in full screen viewer mode
+        *
+        * @function $.forerunner.reportViewer#scrollReportBody
+        */
+        scrollReportBody: function () {
+            var me = this;
+
+            if (me.$reportAreaContainer) {
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height());
+                me.$reportAreaContainer.css("overflow", "auto");
+            }
+        },
+
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
@@ -1087,22 +1106,15 @@ $(function () {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
+              
                 me._touchNav();
                 me._removeDocMap();
             }
             else {
-                if (me.isDebug) {
-                    console.log("SetPage", {
-                        curPage: me.$reportAreaContainer.find(".Page"),
-                        newPage: me._getPageContainer(pageNum)
-                    });
-                }
-                me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me._getPageContainer(pageNum));
-               
-            }
-
+                me.$reportAreaContainer.find(".Page").detach();                  
+            }          
+            
+            me.$reportAreaContainer.append(me._getPageContainer(pageNum));            
             me._removeCSS();
 
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
@@ -1340,6 +1352,7 @@ $(function () {
             }
         },
         _touchNav: function () {
+            
             if (!forerunner.device.isTouch())
                 return;
 
@@ -4464,9 +4477,9 @@ $(function () {
          * Show/Hide buttons when window resize
          * @function $.forerunner.toolBase#windowResize
          */
-        windowResize: function () {
+        windowResize: function () {           
             var me = this;
-
+         
             var toolbarWidth = me.element.width();
             var tools = me._getOrderedList();
 
@@ -4894,6 +4907,9 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
+            if (me.options.isFullScreen) {
+                me.$topdiv.css("width", $(window).width());                
+            }
             $mainviewport.append($topdiv);
             //route path link
             var $linksection = new $("<div />");
@@ -5150,17 +5166,21 @@ $(function () {
             me.ResetSize();
             me._updateTopDiv(me);
             me.setBackgroundLayout();
+       
+                
         },
         _updateTopDiv: function (me) {
-            if (me.options.isFullScreen)
+
+            //IOS8 bug, top div width changing to report width.
+            if (me.options.isFullScreen) {
+                me.$topdiv.css("width", $(window).width());
                 return;
+            }
 
             var scrolledContainerTop = $(window).scrollTop() - me.$container.offset().top + me.outerToolbarHeight;
             var containerHeightLessTopDiv = me.$container.height() - me.$topdiv.outerHeight();
             var diff = scrolledContainerTop;
-            if (me.isFullScreen) {
-                diff = containerHeightLessTopDiv;
-            }
+
             
             var linkSectionHeight = me.$linksection.is(":visible") ? me.$linksection.outerHeight() : 0;
 
@@ -5459,7 +5479,7 @@ $(function () {
                     if (me.options.isFullScreen)
                         me._makePositionFixed();
 
-                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                    if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
                         me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                         me.$container.removeClass("fr-layout-container-noscroll");
                     }
@@ -5467,7 +5487,8 @@ $(function () {
                     $(window).scrollTop(0);
                     $(window).scrollLeft(0);
 
-                    me.ResetSize();
+                    if (me.ResetSize)
+                        me.ResetSize();
                 }, 50);
             }
         },
@@ -10416,8 +10437,7 @@ $(function () {
 
             me.element.append(bgLayer);
         },
-        _getWatermark: function () {
-
+        _getWatermark: function () {            
             var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
@@ -17322,6 +17342,13 @@ $(function () {
                 }
             });
 
+            $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                   $viewer.reportViewer("scrollReportBody");
+                }
+            });
+            
+
             if (me.options.historyBack){
                 layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                 layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
@@ -17398,14 +17425,21 @@ $(function () {
          * @function $.forerunner.reportViewerEZ#windowResize
          */
         windowResize: function () {
+            
             var me = this;
-            if (me.options.DefaultAppTemplate === null) {
+            if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
             var $reportViewer = me.getReportViewer();
             if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
                 $reportViewer.reportViewer("windowResize");
             }
+
+            if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                $reportViewer.reportViewer("scrollReportBody");
+            }
+
+
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
                 helper.delay(me, function () {
@@ -18320,7 +18354,7 @@ $(function () {
                     layout.$mainsection.fadeIn("fast");
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
-
+                layout.$mainviewport.reportViewerEZ("windowResize");
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 

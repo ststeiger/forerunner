@@ -202,8 +202,7 @@ $(function () {
                     "<div class='fr-render-error-license Page'>" +
                         "<div class='fr-render-error-license-container'>" +
                     "<p class='fr-render-error-license-title'></p><br/>" +
-                    "<p class='fr-render-error-license-content'></p>" +
-                            "<p class='fr-render-error-license-content'></p>" +
+                    "<p class='fr-render-error-license-content'></p>" +                            
                         "</div>" +
                     "</div>"));
                 if (me.options.reportViewer) {
@@ -480,6 +479,10 @@ $(function () {
                 me._currentWidth = renderWidth;
                 me._reRender();
             }
+
+            //This is an error page
+            if (!me._rectangles)
+                return;
 
             for (var r = 0; r < me._rectangles.length; r++) {
                 var rec = me._rectangles[r];

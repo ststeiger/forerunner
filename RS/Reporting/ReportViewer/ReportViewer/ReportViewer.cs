@@ -42,7 +42,7 @@ namespace Forerunner.SSRS.Viewer
         private byte[] imageResult = null;
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
-        static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
+        static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();        
 
         private class SSRSServer
         {
@@ -843,7 +843,7 @@ namespace Forerunner.SSRS.Viewer
         private void GenerateImage(Object context)
         {
             try
-            {
+            {               
                 byte[] result = (byte[])context;
                 string fileName = Path.GetTempPath() + Path.GetRandomFileName();
                 if (!GetServerInfo().MHTMLRendering)
@@ -862,6 +862,15 @@ namespace Forerunner.SSRS.Viewer
                 start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                 start.Arguments = fileName;
                 Process p = System.Diagnostics.Process.Start(start);
+
+                // Allow it to run for .1 seconds
+                p.WaitForExit(100);
+                if (!p.HasExited)
+                {
+                    // If it is still running then reduce the process priority
+                    p.PriorityClass = ProcessPriorityClass.BelowNormal;
+                }
+
                 p.WaitForExit();
 
                 result = System.IO.File.ReadAllBytes(fileName + ".jpg");
@@ -888,7 +897,6 @@ namespace Forerunner.SSRS.Viewer
             Warning[] warnings = null;
             string[] streamIDs = null;
             string NewSession;
-
 
             if (SessionID == null)
                 NewSession = "";

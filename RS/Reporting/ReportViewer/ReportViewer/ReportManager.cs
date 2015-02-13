@@ -1179,25 +1179,47 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        static private List<string> ThumbnailsInProcess = new List<string>();
         public void SaveThumbnail(string Path, String SessionID)
         {
             byte[] retval = null;
             int isUserSpecific = 0;
             string IID = null;
 
-            retval = GetDBImage(Path);
-            if (retval == null || retval.Length == 0)
+            try
             {
-
-                using (ReportViewer rep = new ReportViewer(this.URL))
+                lock (ThumbnailsInProcess)
                 {
-                    retval = rep.GetThumbnail(Path, SessionID, "1", 1.2);
-                    isUserSpecific = IsUserSpecific(Path);
-                    rep.Dispose();
+                    if (ThumbnailsInProcess.Contains(Path))
+                        return;
+                    ThumbnailsInProcess.Add(Path);
                 }
 
-                IID = GetItemID(Path);
-                SaveImage(retval, Path, HttpContext.Current.User.Identity.Name, IID, isUserSpecific);
+                retval = GetDBImage(Path);
+                if (retval == null || retval.Length == 0)
+                {
+
+                    using (ReportViewer rep = new ReportViewer(this.URL))
+                    {
+                        retval = rep.GetThumbnail(Path, SessionID, "1", 1.2);
+                        isUserSpecific = IsUserSpecific(Path);
+                        rep.Dispose();
+                    }
+
+                    IID = GetItemID(Path);
+                    SaveImage(retval, Path, HttpContext.Current.User.Identity.Name, IID, isUserSpecific);
+                }
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                lock (ThumbnailsInProcess)
+                {
+                    ThumbnailsInProcess.Remove(Path);
+                }
             }
 
         }

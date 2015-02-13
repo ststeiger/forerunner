@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -10773,7 +10773,6 @@ $(function () {
                             RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                         else
                             RecLayout.ReportItems[Index].NewHeight = me._getHeight(rec.ReportItems[Index].HTMLElement);
-
                     }
 
                     // If I grew I may be the new bottom

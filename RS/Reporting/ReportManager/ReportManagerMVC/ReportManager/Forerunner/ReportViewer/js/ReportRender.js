@@ -502,7 +502,6 @@ $(function () {
                             RecLayout.ReportItems[Index].NewHeight = rec.Measurements[Index].Height;
                         else
                             RecLayout.ReportItems[Index].NewHeight = me._getHeight(rec.ReportItems[Index].HTMLElement);
-
                     }
 
                     // If I grew I may be the new bottom

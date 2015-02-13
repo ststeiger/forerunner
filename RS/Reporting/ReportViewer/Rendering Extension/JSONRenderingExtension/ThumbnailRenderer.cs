@@ -96,6 +96,15 @@ namespace Forerunner.RenderingExtensions
                     start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
                     start.Arguments = fileName;
                     Process p = System.Diagnostics.Process.Start(start);
+
+                    // Allow it to run for .1 seconds
+                    p.WaitForExit(100);
+                    if (!p.HasExited)
+                    {
+                        // If it is still running then reduce the process priority
+                        p.PriorityClass = ProcessPriorityClass.BelowNormal;
+                    }
+                    p.WaitForExit();
                     p.WaitForExit();
 
                     byte[] jpg = System.IO.File.ReadAllBytes(fileName + ".jpg");

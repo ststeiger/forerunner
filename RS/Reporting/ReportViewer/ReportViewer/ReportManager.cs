@@ -52,6 +52,7 @@ namespace Forerunner.SSRS.Manager
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
         private static readonly object SettingLockObj = new object();
+        static private List<string> ThumbnailsInProcess = new List<string>();
 
         private class SSRSServer
         {
@@ -1179,7 +1180,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        static private List<string> ThumbnailsInProcess = new List<string>();
+        
         public void SaveThumbnail(string Path, String SessionID)
         {
             byte[] retval = null;
@@ -1317,7 +1318,6 @@ namespace Forerunner.SSRS.Manager
                 {
                     if (retval == null && QueueThumbnails)
                     {
-
                         sqlImpersonator = tryImpersonate(true);
                         context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, true /*!GetServerRendering()*/);
                         this.SetCredentials(context.NetworkCredential);

@@ -57,6 +57,9 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
+            if (me.options.isFullScreen) {
+                me.$topdiv.css("width", $(window).width());
+            }
             $mainviewport.append($topdiv);
             //route path link
             var $linksection = new $("<div />");

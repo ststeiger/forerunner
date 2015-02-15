@@ -876,6 +876,11 @@ $(function () {
                     }
                 });
             }
+
+            me.options.$appContainer.off(events.saveRDLDone);
+            me.options.$appContainer.on(events.saveRDLDone, function (e, data) {
+                me._updateRDLExt(data);
+            });
         },
         _init: function () {
             var me = this;
@@ -1038,7 +1043,7 @@ $(function () {
         },
         _ReRender: function (force) {
             var me = this;
-
+           
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     if (page) page.needsLayout = true;
@@ -2918,6 +2923,40 @@ $(function () {
                });
         },
         /**
+        * Get RDL Extension
+        *
+        * @function $.forerunner.reportViewer#getRDLExt
+        * @return {Object} RDL extension object for current report
+        */
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        _updateRDLExt: function (data) {
+            var me = this;
+
+            if (me.isDestroy === true) {
+                return;
+            }
+
+            try {
+                if ($.trim(data.newRDL) !== "") {
+                    me.RDLExtProperty = jQuery.parseJSON(data.newRDL);
+                }
+                else {
+                    me.RDLExtProperty = {};
+                }
+
+                me._ReRender(true);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
+                return false;
+            }
+        },
+        /**
          * Load current report with the given parameter list
          *
          * @function $.forerunner.reportViewer#loadReportWithNewParameters
@@ -3555,67 +3594,7 @@ $(function () {
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
-        },
-        /**
-         * Get RDL Extension
-         *
-         * @function $.forerunner.reportViewer#getRDLExt
-         * @return {Object} RDL extension object for current report
-         */
-        getRDLExt: function () {
-            var me = this;
-
-            return me.RDLExtProperty;
-
-        },
-        /**
-         * Save RDL Extension
-         *
-         * @function $.forerunner.reportViewer#getRDLExt
-         *
-         * @param {String} RDL - RDL Extension string
-         *
-         * @return {Object} XML http request return object
-         */
-        saveRDLExt: function (RDL) {
-            var me = this;
-
-            try {
-                if ($.trim(RDL) !== "") {
-                    me.RDLExtProperty = jQuery.parseJSON(RDL);
-                }
-                else {
-                    me.RDLExtProperty = {};
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-
-            return forerunner.ajax.ajax(
-               {
-                   type: "POST",
-                   dataType: "text",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me._ReRender(true);
-                       return true;
-                   },
-                   fail: function (data) {
-                       return false;
-                   },
-                   async: false
-               });
-
-
-        },
-
+        },       
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -3633,6 +3612,8 @@ $(function () {
         destroy: function () {
             var me = this;
 
+            me.isDestroy = true;
+
             me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
@@ -3647,6 +3628,9 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+
+            //off gloabl event bind from appContainer
+            me.options.$appContainer.off(events.saveRDLDone);
             
             //console.log('report viewer destory is invoked')
 
@@ -6134,9 +6118,6 @@ $(function () {
                 case propertyEnums.searchFolder:
                     result = me._setSearchFolder();
                     break;
-                //case propertyEnums.visibility:
-                //    me._setVisibility();
-                //    break;
             }
 
             if (result === true) {
@@ -6323,55 +6304,34 @@ $(function () {
             var rdl = me.$rdlInput.val();
 
             if (rdl !== me._rdl) {
-                me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                var properties = [{
+                    name: "ForerunnerRDLExt",
+                    value: rdl
+                }];
+
+                //me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                forerunner.ajax.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    async: true,
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                    data: {
+                        path: me.curPath,
+                        properties: JSON.stringify(properties),
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+                        me._rdl = rdl;
+                        me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
+                    },
+                    fail: function (data) {
+                        me._rdl = "";
+                        //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                    }
+                });
             }
         },
-        /**
-        * Save RDL Extension
-        *
-        * @function $.forerunner.reportViewer#getRDLExt
-        *
-        * @param {String} RDL - RDL Extension string
-        *
-        * @return {Object} XML http request return object
-        */
-        saveRDLExt: function (RDL) {
-            var me = this;
-
-            try {
-                if ($.trim(RDL) !== "") {
-                    me.RDLExtProperty = jQuery.parseJSON(RDL);
-                }
-                else {
-                    me.RDLExtProperty = {};
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-
-            return forerunner.ajax.ajax(
-               {
-                   type: "POST",
-                   dataType: "text",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me._ReRender(true);
-                       return true;
-                   },
-                   fail: function (data) {
-                       return false;
-                   },
-                   async: false
-               });
-        },
-
+        
         _searchFolder: null,
         _searchFolderPreloading: function () {
             var me = this;
@@ -8192,11 +8152,11 @@ $(function () {
         // Folder
         1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
         3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
         searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };

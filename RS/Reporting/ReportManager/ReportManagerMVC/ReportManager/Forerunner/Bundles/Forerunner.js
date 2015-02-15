@@ -602,6 +602,8 @@ $(function () {
             afterTransition: "aftertransition",
             /** widget + event, lowercase */
             reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
+
+            saveRDLDone: "saveRDLDone"
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

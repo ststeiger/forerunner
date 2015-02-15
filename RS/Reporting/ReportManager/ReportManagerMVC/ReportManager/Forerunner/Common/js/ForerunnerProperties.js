@@ -331,9 +331,6 @@ $(function () {
                 case propertyEnums.searchFolder:
                     result = me._setSearchFolder();
                     break;
-                //case propertyEnums.visibility:
-                //    me._setVisibility();
-                //    break;
             }
 
             if (result === true) {
@@ -520,55 +517,34 @@ $(function () {
             var rdl = me.$rdlInput.val();
 
             if (rdl !== me._rdl) {
-                me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                var properties = [{
+                    name: "ForerunnerRDLExt",
+                    value: rdl
+                }];
+
+                //me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                forerunner.ajax.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    async: true,
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                    data: {
+                        path: me.curPath,
+                        properties: JSON.stringify(properties),
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+                        me._rdl = rdl;
+                        me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
+                    },
+                    fail: function (data) {
+                        me._rdl = "";
+                        //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                    }
+                });
             }
         },
-        /**
-        * Save RDL Extension
-        *
-        * @function $.forerunner.reportViewer#getRDLExt
-        *
-        * @param {String} RDL - RDL Extension string
-        *
-        * @return {Object} XML http request return object
-        */
-        saveRDLExt: function (RDL) {
-            var me = this;
-
-            try {
-                if ($.trim(RDL) !== "") {
-                    me.RDLExtProperty = jQuery.parseJSON(RDL);
-                }
-                else {
-                    me.RDLExtProperty = {};
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-
-            return forerunner.ajax.ajax(
-               {
-                   type: "POST",
-                   dataType: "text",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me._ReRender(true);
-                       return true;
-                   },
-                   fail: function (data) {
-                       return false;
-                   },
-                   async: false
-               });
-        },
-
+        
         _searchFolder: null,
         _searchFolderPreloading: function () {
             var me = this;

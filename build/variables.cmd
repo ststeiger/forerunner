@@ -5,7 +5,7 @@ REM
 set PATH=%PATH%;%windir%\Microsoft.Net\Framework\v4.0.30319
 set EnableNuGetPackageRestore=true
 set BRANCH=master
-set GITHUBSSH=git@github.com:forerunnersw/Forerunner.git
+set GITHUBSSH=
 set PROJECT_NAME=Forerunner
 set HOME=%HOMEDRIVE%%HOMEPATH%
 set SPSITE=https://forerunnersw.sharepoint.com

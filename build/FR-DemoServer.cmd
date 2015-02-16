@@ -1,4 +1,4 @@
-set DROP_ROOT=C:\GitHub\%PROJECT_NAME%
+set DROP_ROOT=C:\GitHub\Release\%PROJECT_NAME%
 set HOME=C:\GitHub\BuildBot
 
 set SECRETS_ROOT=%HOME%\%PROJECT_NAME%

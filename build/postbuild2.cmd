@@ -20,8 +20,8 @@ if ERRORLEVEL 1 (
 type %BUILD_RELEASE%\NSIS.log >> %POSTBUILD_LOG%
 
 
-echo Code Signing Update Packages... >> %POSTBUILD_LOG%
-%~dp0sign.cmd %BUILD_RELEASE%\Setup\ForerunnerMobilizerUpdate.exe >> %POSTBUILD_LOG%
+REM echo Code Signing Update Packages... >> %POSTBUILD_LOG%
+REM %~dp0sign.cmd %BUILD_RELEASE%\Setup\ForerunnerMobilizerUpdate.exe >> %POSTBUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

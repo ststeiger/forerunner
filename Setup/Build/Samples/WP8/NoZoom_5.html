@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--
+    Approach:
+      NoZomm_5 will try to set the @-ms-viewport tag when the document is ready. Then dynamically
+      reload the page and change the user-zoom setting when the page loads based upon a sessionStorage
+      value.
+
+    Result:
+      Success.
+    -->
+<head>
+    <title>NoZoom_5</title>
+</head>
+<body>
+  <script type="text/javascript" src="../../Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../../Forerunner/Bundles/forerunner.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      var $viewportStyle = null;
+      var $status = $("#status");
+
+      if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+        if (window.sessionStorage.forerunnerswUserZoom === undefined) {
+          window.sessionStorage.forerunnerswUserZoom = "fixed";
+        }
+        $viewportStyle = $("<style>@-ms-viewport {width:device-width; user-zoom:" + window.sessionStorage.forerunnerswUserZoom + ";}</style>");
+        $status.text("user-zoom: " + window.sessionStorage.forerunnerswUserZoom);
+        $("head").slice(0).append($viewportStyle);
+      }
+
+      toggleZoom = function () {
+        if (window.sessionStorage.forerunnerswUserZoom === "zoom") {
+          window.sessionStorage.forerunnerswUserZoom = "fixed";
+        } else {
+          window.sessionStorage.forerunnerswUserZoom = "zoom";
+        }
+        window.location.reload();
+      };
+    });
+  </script>
+
+  <input type="button" onclick="toggleZoom()" value="Toggle"/><br />
+  No Zoom Page 5
+  <p id="status"/>
+</body>
+</html>

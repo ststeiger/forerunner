@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+      @Styles.Render("~/Forerunner/Common/css/bundle", "~/Forerunner/ReportExplorer/css/bundle", "~/Forerunner/Dashboard/css/bundle", "~/Forerunner/Lib/jsTree/themes/default/bundle", "~/Forerunner/ReportViewer/css/bundle")    
+    @RenderSection("styles", required:false)
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>

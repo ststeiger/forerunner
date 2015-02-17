@@ -1120,7 +1120,8 @@ body .ui-tooltip {
 	cursor: default;
     margin-left:1px;
     max-height:200px;
-    max-width:176px;
+    max-width:180px;
+    min-width:180px;
     overflow-y:auto;    
     white-space:pre-wrap;
     word-wrap:break-word;

@@ -1,0 +1,106 @@
+﻿.fr-linked-section {
+    display: none;
+}
+.fr-linked-container {
+    width:450px;
+    margin-bottom:20px;
+    position:relative;
+}
+.fr-linked-section .fr-linked-form {
+    min-height:220px;
+}
+    .fr-linked-container .fr-linked-input {
+        padding-left: 4px;
+        width: 300px;
+    }
+    .fr-linked-container .fr-linked-textarea {
+        width: 300px;
+        padding: 0 0 0 4px;
+        height: auto;
+        resize: none;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 1em;
+    }
+    .fr-linked-container .fr-linked-prompt {
+        padding:4px 4px 8px;
+        /*font-style: italic;*/
+        font-size: 12px;
+        display: block;
+        font-weight: 500;
+    }
+    .fr-linked-container .fr-linked-input-container,
+    .fr-linked-container .fr-linked-dropdown-container {
+        display: inline-block;
+        padding: 2px 4px 8px;
+    }
+    .fr-linked-container .fr-linked-dropdown-container {
+        position: relative;
+    }
+        .fr-linked-container .fr-linked-input-container .fr-linked-label {
+            padding-left:4px;
+            width: 90px;
+            display: inline-block;
+        }
+        .fr-linked-container .fr-linked-input-container .fr-linked-desp-label {
+            display: inline-block;
+            padding-top: 0;
+            float: left;
+            width: 90px;
+            padding-left: 4px;
+        }
+        .fr-linked-container .fr-linked-error {
+            border: 1px solid red;
+        }
+        .fr-linked-container .fr-linked-error-span {
+            display: block;
+            padding-top: 4px;
+            padding-left: 94px;
+            font-size: 10pt;
+        }
+        .fr-linked-container .fr-linked-dropdown-iconcontainer {
+            position: absolute;
+            right: 8px;
+            top: 6px;
+        }
+        .fr-linked-container .fr-linked-dropdown-icon {
+            height: 18px;
+            width: 18px;
+            background-image: url(../../Common/Images/OpenDropDown.png);
+            background-repeat: no-repeat;
+        }
+        .fr-linked-container .fr-linked-popup-container {
+            position: absolute;
+            right:4px;
+            border: 1px solid #424242;
+            background-color: #fff;
+        }
+        .fr-linked-container .fr-linked-tree-container {
+            max-height: 130px;
+            overflow: auto;
+        }
+
+.fr-linked-submit-container {
+    margin:0px;
+    margin-top:60px;
+}
+    .fr-linked-submit-container input {
+        width: 130px;
+        margin: 0px 20px;
+    }
+@media only screen and (max-width : 479px) {
+    .fr-linked-container {
+        width: 320px;        
+    }
+    .fr-linked-layer {
+        min-height: 140px;
+        max-height: 240px;
+    }
+    .fr-linked-container .fr-linked-input, .fr-linked-container .fr-linked-textarea {
+        padding-left: 4px;
+        width: 180px;
+    }
+    .fr-linked-submit-container input {
+        width: 100px;
+        margin: 0px 10px;
+    }
+}

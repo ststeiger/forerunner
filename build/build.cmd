@@ -70,18 +70,18 @@ if ERRORLEVEL 1 (
 
 pushd %~dp0\..
 echo Cleaning Tree >> %BUILD_LOG%
-msbuild dirs.proj /t:Clean /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\build.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\build.err /property:Configuration=Release
+msbuild dirs.proj /t:Clean /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\build.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\build.err /property:Configuration=Release /p:Platform=AnyCPU
 if ERRORLEVEL 1 (
 	goto :Error
 )
 echo Building Tree >> %BUILD_LOG%
-msbuild dirs.proj /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\build.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\build.err /property:Configuration=Release
+msbuild dirs.proj /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\build.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\build.err /property:Configuration=Release /p:Platform=AnyCPU
 if ERRORLEVEL 1 (
 	goto :Error
 )
 
 echo Running Code Analysis >> %BUILD_LOG%
-msbuild dirs.proj /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\codeanalysis.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\codeanalysis.err /t:CodeAnalysisRebuild /property:Configuration=Release
+msbuild dirs.proj /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\codeanalysis.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\codeanalysis.err /t:CodeAnalysisRebuild /property:Configuration=Release /p:Platform=AnyCPU
 if ERRORLEVEL 1 (
 	goto :Error
 )

@@ -560,16 +560,16 @@ namespace ReportManager.Controllers
 
         public class SetLinkedReport
         {
-            public string name { set; get; }
-            public string link { set; get; }
+            public string linkedReportPath { set; get; }
+            public string newLink { set; get; }
             public string instance { set; get; }
         }
         [HttpPost]
-        public HttpResponseMessage SetReportLink(LinkedReport linkedReport)
+        public HttpResponseMessage SetReportLink(SetLinkedReport linkedReport)
         {
             try
             {
-                string result = GetReportManager(linkedReport.instance).SetReportLink(linkedReport.name, linkedReport.link);
+                string result = GetReportManager(linkedReport.instance).SetReportLink(linkedReport.linkedReportPath, linkedReport.newLink);
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
             }
             catch (Exception ex)

@@ -311,8 +311,10 @@
     "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Linked Report",
-    "prompt":"Created new linked report based on {0}",
-    "location":"Location"
+   "title":"Linked Report",
+	"create":"Create a new linked report for {0}",
+	"edit":"Edit linked report {0}, select the report you want to link",
+	"location":"Location",
+	"report":"Report"
   }
 }

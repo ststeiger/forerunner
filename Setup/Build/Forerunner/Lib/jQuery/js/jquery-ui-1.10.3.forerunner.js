@@ -531,7 +531,7 @@ $.Widget.prototype = {
 		this.element = $( element );
 		this.uuid = uuid++;
 		this.eventNamespace = "." + this.widgetName + this.uuid;
-		this.options = $.widget.extend( {},
+		this.options = $.widget.extend({},
 			this.options,
 			this._getCreateOptions(),
 			options );
@@ -6065,8 +6065,9 @@ $.widget( "ui.autocomplete", {
 					previous = this.previous;
 
 				// only trigger when focus was lost (click on menu)
-				if ( this.element[0] !== this.document[0].activeElement ) {
-					this.element.focus();
+				if (this.element[0] !== this.document[0].activeElement) {
+                    //remove element focus when menu select -- forerunner
+					//this.element.focus();
 					this.previous = previous;
 					// #6109 - IE triggers two focus events and the second
 					// is asynchronous, so we need to reset the previous
@@ -7201,10 +7202,12 @@ $.extend(Datepicker.prototype, {
 
 		nodeName = target.nodeName.toLowerCase();
 		if (nodeName === "input") {
-			target.disabled = true;
-			inst.trigger.filter("button").
-				each(function() { this.disabled = true; }).end().
-				filter("img").css({opacity: "0.5", cursor: "default"});
+		    target.disabled = true;
+		    if (inst) {
+		        inst.trigger.filter("button").
+                    each(function () { this.disabled = true; }).end().
+                    filter("img").css({ opacity: "0.5", cursor: "default" });
+		    }
 		} else if (nodeName === "div" || nodeName === "span") {
 			inline = $target.children("." + this._inlineClass);
 			inline.children().addClass("ui-state-disabled");
@@ -7748,6 +7751,7 @@ $.extend(Datepicker.prototype, {
 		    inst.currentYear = inst.drawYear = inst.selectedYear = date.getFullYear();
 		    if (inst.input) {
 		        inst.input.val(this._formatDate(inst, inst.selectedDay, inst.selectedMonth, inst.selectedYear));
+		        inst.input.trigger("change"); // fire the change event
 		    }
 		    this._updateAlternate(inst);
 		}
@@ -9033,7 +9037,8 @@ $.widget( "ui.dialog", {
 	},
 
 	open: function() {
-		var that = this;
+	    var that = this;
+
 		if ( this._isOpen ) {
 			if ( this._moveToTop() ) {
 				this._focusTabbable();
@@ -9054,6 +9059,10 @@ $.widget( "ui.dialog", {
 		});
 
 		this._trigger("open");
+	},
+
+	resetPosition: function(){
+	    this._position();
 	},
 
 	_focusTabbable: function() {
@@ -9350,6 +9359,7 @@ $.widget( "ui.dialog", {
 		if ( !isVisible ) {
 			this.uiDialog.show();
 		}
+
 		this.uiDialog.position( this.options.position );
 		if ( !isVisible ) {
 			this.uiDialog.hide();
@@ -9623,6 +9633,7 @@ if ( $.uiBackCompat !== false ) {
 			if ( !isVisible ) {
 				this.uiDialog.show();
 			}
+
 			this.uiDialog.position( position );
 			if ( !isVisible ) {
 				this.uiDialog.hide();

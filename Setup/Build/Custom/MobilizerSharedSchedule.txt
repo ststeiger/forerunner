@@ -1,0 +1,29 @@
+{
+"SharedSubscriptions":
+[
+{
+"ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c2",
+"Name": "Everyday at 2AM",
+"MatchData": "<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?><ScheduleDefinition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><StartDateTime>2013-12-30T02:00:00-08:00</StartDateTime><WeeklyRecurrence><WeeksInterval>1</WeeksInterval><DaysOfWeek><Sunday>true</Sunday><Monday>true</Monday><Tuesday>true</Tuesday><Wednesday>true</Wednesday><Thursday>true</Thursday><Friday>true</Friday><Saturday>true</Saturday></DaysOfWeek></WeeklyRecurrence></ScheduleDefinition>",
+"IsMobilizerSchedule": "True"
+},
+{
+"ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c3",
+"Name": "Every Monday at 6AM",
+"MatchData": "<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?><ScheduleDefinition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><StartDateTime>2013-12-30T06:00:00-08:00</StartDateTime><WeeklyRecurrence><WeeksInterval>1</WeeksInterval><DaysOfWeek><Sunday>false</Sunday><Monday>true</Monday><Tuesday>false</Tuesday><Wednesday>false</Wednesday><Thursday>false</Thursday><Friday>false</Friday><Saturday>false</Saturday></DaysOfWeek></WeeklyRecurrence></ScheduleDefinition>",
+"IsMobilizerSchedule": "True"
+},
+{
+"ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c4",
+"Name": "Every Monday, Wednesday and Friday at 6AM",
+"MatchData": "<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?><ScheduleDefinition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><StartDateTime>2013-12-30T06:00:00-08:00</StartDateTime><WeeklyRecurrence><WeeksInterval>1</WeeksInterval><DaysOfWeek><Sunday>false</Sunday><Monday>true</Monday><Tuesday>false</Tuesday><Wednesday>true</Wednesday><Thursday>false</Thursday><Friday>true</Friday><Saturday>false</Saturday></DaysOfWeek></WeeklyRecurrence></ScheduleDefinition>",
+"IsMobilizerSchedule": "True"
+},
+{
+"ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c5",
+"Name": "Every Friday at 6PM",
+"MatchData": "<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?><ScheduleDefinition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><StartDateTime>2013-12-30T18:00:00-08:00</StartDateTime><WeeklyRecurrence><WeeksInterval>1</WeeksInterval><DaysOfWeek><Sunday>false</Sunday><Monday>false</Monday><Tuesday>false</Tuesday><Wednesday>false</Wednesday><Thursday>false</Thursday><Friday>true</Friday><Saturday>false</Saturday></DaysOfWeek></WeeklyRecurrence></ScheduleDefinition>",
+"IsMobilizerSchedule": "True"
+}
+]
+}

@@ -1,0 +1,7 @@
+﻿@media screen and (orientation:portrait) {
+  @-ms-viewport {width:device-width; user-zoom:fixed;}
+}
+
+@media screen and (orientation:landscape) {
+  @-ms-viewport {width:device-width; user-zoom:zoom;}
+}

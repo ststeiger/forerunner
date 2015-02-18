@@ -1,10 +1,9 @@
 /*** IconGen - start automatically generated, do not hand modify ***/
-.fr-icons24x24 {
+/*.fr-icons24x24 {
   width:24px;
   height:24px;
-  margin:5px;
-  display:inline-block;
   background-image:url('../images/icons24x24.png');
+  margin:5px; display:inline-block;
 }
 
 .fr-icons24x24-menu {
@@ -32,119 +31,319 @@
 }
 
 .fr-icons24x24-paramarea {
-  background-position: 0 -24px;
+  background-position: -144px 0;
 }
 
 .fr-icons24x24-documentmap {
-  background-position: -24px -24px;
+  background-position: 0 -24px;
 }
 
 .fr-icons24x24-lastpage {
-  background-position: -48px -24px;
+  background-position: -24px -24px;
 }
 
 .fr-icons24x24-next {
-  background-position: -72px -24px;
+  background-position: -48px -24px;
 }
 
 .fr-icons24x24-prev {
-  background-position: -96px -24px;
+  background-position: -72px -24px;
 }
 
 .fr-icons24x24-refresh {
-  background-position: -120px -24px;
+  background-position: -96px -24px;
 }
 
 .fr-icons24x24-firstpage {
-  background-position: 0 -48px;
+  background-position: -120px -24px;
 }
 
 .fr-icons24x24-export {
-  background-position: -24px -48px;
+  background-position: -144px -24px;
 }
 
 .fr-icons24x24-exportCSV {
-  background-position: -48px -48px;
+  background-position: 0 -48px;
 }
 
 .fr-icons24x24-exportExcel {
-  background-position: -72px -48px;
+  background-position: -24px -48px;
 }
 
 .fr-icons24x24-exportMHT {
-  background-position: -96px -48px;
+  background-position: -48px -48px;
 }
 
 .fr-icons24x24-exportPDF {
-  background-position: -120px -48px;
+  background-position: -72px -48px;
 }
 
 .fr-icons24x24-exportTIFF {
-  background-position: 0 -72px;
+  background-position: -96px -48px;
 }
 
 .fr-icons24x24-exportWord {
-  background-position: -24px -72px;
+  background-position: -120px -48px;
 }
 
 .fr-icons24x24-exportXML {
-  background-position: -48px -72px;
+  background-position: -144px -48px;
 }
 
 .fr-icons24x24-zoom {
-  background-position: -72px -72px;
+  background-position: 0 -72px;
 }
 
 .fr-icons24x24-printreport {
-  background-position: -96px -72px;
+  background-position: -24px -72px;
 }
 
 .fr-icons24x24-favorites {
-  background-position: -120px -72px;
+  background-position: -48px -72px;
 }
 
 .fr-icons24x24-favoritesBlue {
-  background-position: 0 -96px;
+  background-position: -72px -72px;
 }
 
 .fr-icons24x24-favorite-plus {
-  background-position: -24px -96px;
+  background-position: -96px -72px;
 }
 
 .fr-icons24x24-favorite-minus {
-  background-position: -48px -96px;
+  background-position: -120px -72px;
 }
 
 .fr-icons24x24-save-param {
-  background-position: -72px -96px;
+  background-position: -144px -72px;
 }
 
 .fr-icons24x24-recent {
-  background-position: -96px -96px;
+  background-position: 0 -96px;
 }
 
 .fr-icons24x24-recentBlue {
-  background-position: -120px -96px;
+  background-position: -24px -96px;
 }
 
 .fr-icons24x24-setup {
-  background-position: 0 -120px;
+  background-position: -48px -96px;
 }
 
 .fr-icons24x24-parameterSets {
-  background-position: -24px -120px;
+  background-position: -72px -96px;
 }
 
 .fr-icons24x24-folders {
-  background-position: -48px -120px;
+  background-position: -96px -96px;
 }
 
 .fr-icons24x24-dataSourceCred {
-  background-position: -72px -120px;
+  background-position: -120px -96px;
 }
 
 .fr-icons24x24-logout {
-  background-position: -96px -120px;
+  background-position: -144px -96px;
 }
+
+.fr-icons24x24-unzoom {
+  background-position: 0 -120px;
+}
+
+.fr-icons24x24-createdashboard {
+  background-position: -24px -120px;
+}
+
+.fr-icons24x24-editdashboard {
+  background-position: -48px -120px;
+}*/
 /*** IconGen - end automatically generated, do not hand modify ***/
 
+
+
+/*Toolbar icons css code: Below is new style code which reference images separately*/ 
+.fr-icons24x24 {
+  width:24px;
+  height:24px;
+  margin:5px; 
+  display:inline-block;
+}
+.fr-icons24x24-menu {
+  background-image:url(../images/ToolbarIcons/align_just_icon.png);
+}
+
+.fr-icons24x24-back {
+  background-image:url(../images/ToolbarIcons/BackOff.png);
+}
+
+.fr-icons24x24-reportback {
+  background-image:url(../images/ToolbarIcons/BackOff.png);
+}
+
+.fr-icons24x24-nav {
+  background-image:url(../images/ToolbarIcons/PageNavOff.png);
+}
+
+.fr-icons24x24-home {
+  background-image:url(../images/ToolbarIcons/HomeOff.png);
+}
+
+.fr-icons24x24-homeBlue {
+  background-image:url(../images/ToolbarIcons/HomeBlue.png);
+}
+
+.fr-icons24x24-paramarea {
+  background-image:url(../images/ToolbarIcons/Parameters.png);
+}
+
+.fr-icons24x24-documentmap {
+  background-image:url(../images/ToolbarIcons/DocMapOff.png);
+}
+
+.fr-icons24x24-lastpage {
+  background-image:url(../images/ToolbarIcons/LastPageOff.png);
+}
+
+.fr-icons24x24-next {
+  background-image:url(../images/ToolbarIcons/ForwardPageOff.png);
+}
+
+.fr-icons24x24-prev {
+  background-image:url(../images/ToolbarIcons/BackPageOff.png);
+}
+
+.fr-icons24x24-refresh {
+  background-image:url(../images/ToolbarIcons/Refresh.png);
+}
+
+.fr-icons24x24-firstpage {
+  background-image:url(../images/ToolbarIcons/FirstPageOff.png);
+}
+
+.fr-icons24x24-export {
+  background-image:url(../images/ToolbarIcons/ExportOff.png);
+}
+
+.fr-icons24x24-exportCSV {
+  background-image:url(../images/ToolbarIcons/CSV.png);
+}
+
+.fr-icons24x24-exportExcel {
+  background-image:url(../images/ToolbarIcons/Excel.png);
+}
+
+.fr-icons24x24-exportMHT {
+  background-image:url(../images/ToolbarIcons/MHT.png);
+}
+
+.fr-icons24x24-exportPDF {
+  background-image:url(../images/ToolbarIcons/PDF.png);
+}
+
+.fr-icons24x24-exportTIFF {
+  background-image:url(../images/ToolbarIcons/tiff.png);
+}
+
+.fr-icons24x24-exportWord {
+  background-image:url(../images/ToolbarIcons/Word.png);
+}
+
+.fr-icons24x24-exportXML {
+  background-image:url(../images/ToolbarIcons/XML.png);
+}
+
+.fr-icons24x24-zoom {
+  background-image:url(../images/ToolbarIcons/ZoomOff.png);
+}
+
+.fr-icons24x24-zoom-blue {
+  background-image:url(../images/ToolbarIcons/ZoomOffBlue.png);
+}
+
+.fr-icons24x24-printreport {
+  background-image:url(../images/ToolbarIcons/PrintOff.png);
+}
+
+.fr-icons24x24-favorites {
+  background-image:url(../images/ToolbarIcons/favorites.png);
+}
+
+.fr-icons24x24-favoritesBlue {
+  background-image:url(../images/ToolbarIcons/FavoritesBlue.png);
+}
+
+.fr-icons24x24-favorite-plus {
+  background-image:url(../images/ToolbarIcons/FavPlusOff.png);
+}
+
+.fr-icons24x24-favorite-minus {
+  background-image:url(../images/ToolbarIcons/FavMinusOff.png);
+}
+
+.fr-icons24x24-save-param {
+  background-image:url(../images/ToolbarIcons/SaveParameters.png);
+}
+
+.fr-icons24x24-recent {
+  background-image:url(../images/ToolbarIcons/recent.png);
+}
+
+.fr-icons24x24-recentBlue {
+  background-image:url(../images/ToolbarIcons/RecentBlue.png);
+}
+
+.fr-icons24x24-setup {
+  background-image:url(../images/ToolbarIcons/setup.png);
+}
+
+.fr-icons24x24-parameterSets {
+  background-image:url(../images/ToolbarIcons/ParameterSets.png);
+}
+
+.fr-icons24x24-folders {
+  background-image:url(../images/ToolbarIcons/Folders.png);
+}
+
+.fr-icons24x24-dataSourceCred {
+  background-image:url(../images/ToolbarIcons/DataSourceCred.png);
+}
+
+.fr-icons24x24-logout {
+  background-image:url(../images/ToolbarIcons/Logout.png);
+}
+
+.fr-icons24x24-unzoom {
+  background-image:url(../images/ToolbarIcons/UnZoom.png);
+}
+
+.fr-icons24x24-createdashboard {
+  background-image:url(../images/ToolbarIcons/Dashboard.png);
+}
+
+.fr-icons24x24-editdashboard {
+  background-image:url(../images/ToolbarIcons/DashboardEdit.png);
+}
+
+.fr-icons24x24-rdlextension {
+    background-image:url(../images/ToolbarIcons/RDLExtension.png);
+}
+
+.fr-icons24x24-emailsubscription {
+    background-image:url(../images/ToolbarIcons/EmailSubscription.png);
+}
+
+.fr-icons24x24-managesubscription {
+    background-image:url(../images/ToolpaneIcons/ManageSubscription.png);
+}
+
+.fr-icons24x24-tags{
+    background-image:url(../images/ToolbarIcons/Tags.png);
+}
+
+.fr-icons24x24-searchfolder{
+    background-image:url(../images/ToolbarIcons/SearchFolder_icon.png);
+}
+
+.fr-icons24x24-zoom-to-page-width{
+    background-image:url(../images/ToolbarIcons/ZoomToPageWidth.png);
+}

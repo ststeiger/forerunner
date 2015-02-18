@@ -1,0 +1,4 @@
+﻿.fr-dashboard-toolbar { }
+    .fr-dashboard-toolbar .fr-core-hidden {display: none; }
+
+.fr-dashboard-button-home, .fr-dashboard-button-recent, .fr-dashboard-button-favorite, .fr-dashboard-button-logOff { float: right; }

@@ -18927,6 +18927,16 @@ $(function () {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
                             me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
+                        if (extensionSettings.ParameterValues[i].Name === "CC") {
+                            me.$cc.val(extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "BCC") {
+                            me.$bcc.val(extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                            me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
+                        }
+
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
                             me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
@@ -18985,6 +18995,9 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
@@ -19003,6 +19016,16 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
                     }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "CC") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$cc.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "BCC") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$bcc.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$replyTo.val();
+                    }
+
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
@@ -19186,25 +19209,45 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.descriptionPlaceholder);
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "");  //locData.subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$desc.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.toPlaceholder);
+
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "");  //locData.subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$to.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subjectPlaceholder);
+
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
+
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
+
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "");  //locData.subscription.toPlaceholder
+            me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
+
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "");  // locData.subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$subject.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
+
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
             me.$includeReport = me._createCheckBox();
             me.$includeReport.addClass("fr-email-include");
             me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
             me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
+
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
             me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
-            me.$to.prop("required", true);
-            me.$subject.prop("required", true);
+            
+            
+
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
                 me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();
@@ -19220,7 +19263,7 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "submit");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
@@ -19238,6 +19281,7 @@ $(function () {
             me.$theForm.on("submit", function () { return false; });
 
             me.element.find(".fr-email-submit-id").on("click", function (e) {
+                
                 me._submit();
             });
 
@@ -19253,26 +19297,31 @@ $(function () {
                 me.closeDialog();
             });
 
-            me.element.on(events.modalDialogGenericSubmit, function () {
+            me.element.on(events.modalDialogGenericSubmit, function () {             
                 me._submit();
             });
 
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+
+            me.options.$appContainer.trigger("subscriptionFormInit");
         },
 
         _submit : function () {
             var me = this;
-            var subscriptionInfo = me._getSubscriptionInfo();
-            
-            me.options.subscriptionModel.subscriptionModel(
-                me._subscriptionID ? "updateSubscription" : "createSubscription",
-                subscriptionInfo,
-                function () { me.closeDialog(); },
-                function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
-                });
+
+            if (me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
+                var subscriptionInfo = me._getSubscriptionInfo();
+
+                me.options.subscriptionModel.subscriptionModel(
+                    me._subscriptionID ? "updateSubscription" : "createSubscription",
+                    subscriptionInfo,
+                    function () { me.closeDialog(); },
+                    function (data) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                    });
+            }
         },
 
         _createNew: function () {

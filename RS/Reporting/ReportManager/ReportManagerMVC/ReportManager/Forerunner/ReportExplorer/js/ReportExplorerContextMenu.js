@@ -80,7 +80,7 @@ $(function () {
             me._$linkedReport.off("click").hide();
             //type=2: report, type=4: linked report
             //now only show the linked report entry on the normal report context menu
-            if (catalog.Type === 2) {
+            if (catalog.Type === 2 || catalog.Type === 4) {
                 if (!me.permissions["Create Link"]) {
                     me._$linkedReport.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
                 } else {
@@ -196,9 +196,8 @@ $(function () {
             }
 
             //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
-            console.log(me.options.catalogItem);
-            $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem.Type, me.options.catalogItem.Path);
-            $linkedReportDlg.forerunnerLinkedReport("openDialog", me.options.catalogItem.Path);
+            $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
+            $linkedReportDlg.forerunnerLinkedReport("openDialog");
 
             $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
                 //if (previous) {

@@ -292,7 +292,7 @@
     "cancel":"取消",
     "delete":"刪除",
     "edit":"編輯",
-    "name":"Name",
+    "name":"名稱",
     "description":"描述"
   },
   "security": {
@@ -311,7 +311,9 @@
   },
   "linkedReport": {
     "title":"鏈接報表",
-    "prompt":"創建基於{0}的鏈接報表",
-    "location":"地址"
+	"create":"創建基於{0}的鏈接報表",
+	"edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
+	"location":"保存地址",
+	"report":"報表"
   }
 }

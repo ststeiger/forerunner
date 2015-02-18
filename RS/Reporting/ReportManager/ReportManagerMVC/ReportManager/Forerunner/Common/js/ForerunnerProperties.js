@@ -460,18 +460,24 @@ $(function () {
             try {
                 var descriptionInput = $.trim(me.$desInput.val()),
                     isHidden = me.$isHidden[0].checked ? "True" : "False";
-               
-                if (descriptionInput !== me._description || isHidden !== me._isHidden) {
-                    var description = forerunner.helper.htmlEncode(descriptionInput);
 
-                    var properties = [{
+                var properties = [];
+
+                if(descriptionInput !== me._description) {
+                    properties.push({
                         name: "Description",
                         value: descriptionInput
-                    }, {
+                    });
+                }
+
+                if (isHidden !== me._isHidden) {
+                    properties.push({
                         name: "Hidden",
                         value: isHidden
-                    }];
-
+                    })
+                }
+               
+                if (properties.length) {
                     forerunner.ajax.ajax({
                         type: "POST",
                         dataType: "text",

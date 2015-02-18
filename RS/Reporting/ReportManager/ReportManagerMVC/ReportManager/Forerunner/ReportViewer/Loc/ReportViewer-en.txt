@@ -311,7 +311,9 @@
   },
   "linkedReport":{
 	"title":"Linked Report",
-	"prompt":"Created new linked report based on {0}",
-	"location":"Location"
+	"create":"Create a new linked report for {0}",
+	"edit":"Edit linked report {0}, select the report you want to link",
+	"location":"Location",
+	"report":"Report"
   }
 }

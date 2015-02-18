@@ -1746,7 +1746,11 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
                     .done(function (data) {
-                        if (data.length === 0) {
+
+                        if (forerunner.config.getCustomSettingsValue("ManageSubscriptionUI", "default") === "always") {
+                            me.manageSubscription();
+                        }
+                        else if (data.length === 0) {
                             me.editEmailSubscription(null);
                         } else if (data.length === 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);

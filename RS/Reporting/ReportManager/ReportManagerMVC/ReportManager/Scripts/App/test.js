@@ -3,7 +3,7 @@
 $(function () {
     // This call starts the Mobilizer application
     $(document).ready(function () {
-        $("body").on("subscriptionFormInit", function (e, s) {
+        $("body").on(forerunner.ssr.constants.events.subscriptionFormInit, function (e, s) {
 
             $(".fr-email-to").on("blur", function (e) {
 

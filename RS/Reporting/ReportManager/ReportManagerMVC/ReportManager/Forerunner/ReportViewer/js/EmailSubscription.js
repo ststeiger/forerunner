@@ -472,7 +472,7 @@ $(function () {
                 me.closeDialog();
             });
 
-            me.options.$appContainer.trigger("subscriptionFormInit");
+            me.options.$appContainer.trigger(events.subscriptionFormInit);
         },
 
         _submit : function () {

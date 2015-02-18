@@ -876,6 +876,11 @@ $(function () {
                     }
                 });
             }
+
+            me.options.$appContainer.off(events.saveRDLDone);
+            me.options.$appContainer.on(events.saveRDLDone, function (e, data) {
+                me._updateRDLExt(data);
+            });
         },
         _init: function () {
             var me = this;
@@ -1038,7 +1043,7 @@ $(function () {
         },
         _ReRender: function (force) {
             var me = this;
-
+           
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
                     if (page) page.needsLayout = true;
@@ -2461,7 +2466,11 @@ $(function () {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
                 $.when(me.$emailSub.emailSubscription("getSubscriptionList"))
                     .done(function (data) {
-                        if (data.length === 0) {
+
+                        if (forerunner.config.getCustomSettingsValue("ManageSubscriptionUI", "default") === "always") {
+                            me.manageSubscription();
+                        }
+                        else if (data.length === 0) {
                             me.editEmailSubscription(null);
                         } else if (data.length === 1) {
                             me.editEmailSubscription(data[0].SubscriptionID);
@@ -2916,6 +2925,40 @@ $(function () {
                    },
                    async: false
                });
+        },
+        /**
+        * Get RDL Extension
+        *
+        * @function $.forerunner.reportViewer#getRDLExt
+        * @return {Object} RDL extension object for current report
+        */
+        getRDLExt: function () {
+            var me = this;
+
+            return me.RDLExtProperty;
+
+        },
+        _updateRDLExt: function (data) {
+            var me = this;
+
+            if (me.isDestroy === true) {
+                return;
+            }
+
+            try {
+                if ($.trim(data.newRDL) !== "") {
+                    me.RDLExtProperty = jQuery.parseJSON(data.newRDL);
+                }
+                else {
+                    me.RDLExtProperty = {};
+                }
+
+                me._ReRender(true);
+            }
+            catch (e) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
+                return false;
+            }
         },
         /**
          * Load current report with the given parameter list
@@ -3555,67 +3598,7 @@ $(function () {
 
                 //console.log('add settimeout, period: ' + period + "s");
             }
-        },
-        /**
-         * Get RDL Extension
-         *
-         * @function $.forerunner.reportViewer#getRDLExt
-         * @return {Object} RDL extension object for current report
-         */
-        getRDLExt: function () {
-            var me = this;
-
-            return me.RDLExtProperty;
-
-        },
-        /**
-         * Save RDL Extension
-         *
-         * @function $.forerunner.reportViewer#getRDLExt
-         *
-         * @param {String} RDL - RDL Extension string
-         *
-         * @return {Object} XML http request return object
-         */
-        saveRDLExt: function (RDL) {
-            var me = this;
-
-            try {
-                if ($.trim(RDL) !== "") {
-                    me.RDLExtProperty = jQuery.parseJSON(RDL);
-                }
-                else {
-                    me.RDLExtProperty = {};
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-
-            return forerunner.ajax.ajax(
-               {
-                   type: "POST",
-                   dataType: "text",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me._ReRender(true);
-                       return true;
-                   },
-                   fail: function (data) {
-                       return false;
-                   },
-                   async: false
-               });
-
-
-        },
-
+        },       
         _removeAutoRefreshTimeout: function () {
             var me = this;
 
@@ -3633,6 +3616,8 @@ $(function () {
         destroy: function () {
             var me = this;
 
+            me.isDestroy = true;
+
             me._removeAutoRefreshTimeout();
             me.autoRefreshID = undefined;
 
@@ -3647,6 +3632,9 @@ $(function () {
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
+
+            //off gloabl event bind from appContainer
+            me.options.$appContainer.off(events.saveRDLDone);
             
             //console.log('report viewer destory is invoked')
 
@@ -6134,9 +6122,6 @@ $(function () {
                 case propertyEnums.searchFolder:
                     result = me._setSearchFolder();
                     break;
-                //case propertyEnums.visibility:
-                //    me._setVisibility();
-                //    break;
             }
 
             if (result === true) {
@@ -6266,18 +6251,24 @@ $(function () {
             try {
                 var descriptionInput = $.trim(me.$desInput.val()),
                     isHidden = me.$isHidden[0].checked ? "True" : "False";
-               
-                if (descriptionInput !== me._description || isHidden !== me._isHidden) {
-                    var description = forerunner.helper.htmlEncode(descriptionInput);
 
-                    var properties = [{
+                var properties = [];
+
+                if(descriptionInput !== me._description) {
+                    properties.push({
                         name: "Description",
                         value: descriptionInput
-                    }, {
+                    });
+                }
+
+                if (isHidden !== me._isHidden) {
+                    properties.push({
                         name: "Hidden",
                         value: isHidden
-                    }];
-
+                    })
+                }
+               
+                if (properties.length) {
                     forerunner.ajax.ajax({
                         type: "POST",
                         dataType: "text",
@@ -6323,55 +6314,34 @@ $(function () {
             var rdl = me.$rdlInput.val();
 
             if (rdl !== me._rdl) {
-                me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                var properties = [{
+                    name: "ForerunnerRDLExt",
+                    value: rdl
+                }];
+
+                //me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
+                forerunner.ajax.ajax({
+                    type: "POST",
+                    dataType: "text",
+                    async: true,
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
+                    data: {
+                        path: me.curPath,
+                        properties: JSON.stringify(properties),
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+                        me._rdl = rdl;
+                        me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
+                    },
+                    fail: function (data) {
+                        me._rdl = "";
+                        //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                    }
+                });
             }
         },
-        /**
-        * Save RDL Extension
-        *
-        * @function $.forerunner.reportViewer#getRDLExt
-        *
-        * @param {String} RDL - RDL Extension string
-        *
-        * @return {Object} XML http request return object
-        */
-        saveRDLExt: function (RDL) {
-            var me = this;
-
-            try {
-                if ($.trim(RDL) !== "") {
-                    me.RDLExtProperty = jQuery.parseJSON(RDL);
-                }
-                else {
-                    me.RDLExtProperty = {};
-                }
-            }
-            catch (e) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
-                return false;
-            }
-
-            return forerunner.ajax.ajax(
-               {
-                   type: "POST",
-                   dataType: "text",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
-                   data: {
-                       path: me.reportPath,
-                       properties: JSON.stringify([{ name: "ForerunnerRDLExt", value: RDL }]),
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       me._ReRender(true);
-                       return true;
-                   },
-                   fail: function (data) {
-                       return false;
-                   },
-                   async: false
-               });
-        },
-
+        
         _searchFolder: null,
         _searchFolderPreloading: function () {
             var me = this;
@@ -8192,11 +8162,11 @@ $(function () {
         // Folder
         1: [propertyEnums.description, propertyEnums.tags],
         // Report
-        2: [propertyEnums.description, propertyEnums.tags],
+        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Resource
         3: [propertyEnums.description, propertyEnums.tags],
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags],
+        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
         searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
     };
@@ -8250,7 +8220,7 @@ $(function () {
             me._$linkedReport.off("click").hide();
             //type=2: report, type=4: linked report
             //now only show the linked report entry on the normal report context menu
-            if (catalog.Type === 2) {
+            if (catalog.Type === 2 || catalog.Type === 4) {
                 if (!me.permissions["Create Link"]) {
                     me._$linkedReport.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
                 } else {
@@ -8366,9 +8336,8 @@ $(function () {
             }
 
             //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
-            console.log(me.options.catalogItem);
-            $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem.Type, me.options.catalogItem.Path);
-            $linkedReportDlg.forerunnerLinkedReport("openDialog", me.options.catalogItem.Path);
+            $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
+            $linkedReportDlg.forerunnerLinkedReport("openDialog");
 
             $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
                 //if (previous) {
@@ -9947,7 +9916,7 @@ $(function () {
                             "<div class='fr-linked-prompt'></div>" +
                              // Dropdown container
                             "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
-                                "<label class='fr-linked-label' >" + linked.location + "</label>" +
+                                "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +
 	                            "<input type='text' name='location' class='fr-core-input fr-linked-input fr-linked-location fr-core-cursorpointer' readonly='true' required='true' allowblank='false' nullable='false'/>" +
 	                            "<div class='fr-linked-dropdown-iconcontainer fr-core-cursorpointer'>" +
 		                            "<div class='fr-linked-dropdown-icon'></div>" +
@@ -9985,14 +9954,9 @@ $(function () {
             me.$popup = me.element.find(".fr-linked-popup-container");
             me.$tree = me.element.find(".fr-linked-tree-container");
 
-            me.$tree.on("changed.jstree", function (e, data) {
-                me._onChangedjsTree.apply(me, arguments);
-            });
-
             me.$name = me.element.find(".fr-linked-name");
-            //me.$description = me.element.find(".fr-linked-desp");
             me.$location = me.element.find(".fr-linked-location");
-            me.$dpIcon = me.element.find(".fr-linked-dropdown-icon");
+            me.$treeLabel = me.element.find(".fr-linked-tree-label");
 
             me._bindEvents();
 
@@ -10003,12 +9967,10 @@ $(function () {
 
             me._reset();
 
-            var treeData = me._createJSData(me.rootPath);
-            me.$tree.jstree({
-                core: {
-                    data: treeData
-                }
-            });
+            //var treeData = me._createJSData(me.rootPath);
+            me._createJSData(me.rootPath);
+
+            me.$tree.jstree();
         },
         _bindEvents: function () {
             var me = this;
@@ -10020,7 +9982,7 @@ $(function () {
                 me._openPopup.call(me)
             });
 
-            me.$dpIcon.on("click", function () {
+            me.element.find(".fr-linked-dropdown-icon").on("click", function () {
                 me._openPopup.call(me)
             });
 
@@ -10040,17 +10002,39 @@ $(function () {
                 me.closeDialog();
             });
         },
+        _submit: function () {
+            var me = this;
+
+            if (!me.$form.valid()) {
+                return;
+            }
+
+            me.isLinkedReport ? me._setReportLink() : me._createLinkedReport();
+        },
+        _reset: function () {
+            var me = this;
+
+            me.$name.val('');
+            me.$location.removeAttr("title").val('');
+
+            me.$tree.jstree("close_all");
+            me.$tree.jstree("open_node", "j1_1");
+            me.$tree.jstree("deselect_all", true);
+
+            //make sure the popup is hidden
+            me.$popup.addClass("fr-core-hidden");
+        },
         _openPopup: function () {
             var me = this;
 
             //handle border width
-            var width = me.$location.width() + 4;
+            var width = me.$location.width() + 4 + 24;
             me.$popup.css({ width: width });
             me.$popup.toggleClass("fr-core-hidden");
         },
         _createJSData: function (path) {
             var me = this;
-            var nodeTree = {
+            me.fullTreeData = {
                 text: path,
                 state: {
                     opened: true
@@ -10058,8 +10042,25 @@ $(function () {
                 children: []
             };
 
-            me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree];
+            me._createTreeItems(me.fullTreeData, "catalog", path);
+            
+            me.cagalogTreeData = me._createCatalogData($.extend(true, {}, me.fullTreeData));
+            //return [me.cagalogTreeData];
+        },
+        _createCatalogData: function (nodeData) {
+            var me = this;
+
+            for (var i = 0, child; i < nodeData.children.length; i++) {
+                child = nodeData.children[i];
+                if (child.children.length !== 0) {
+                    me._createCatalogData(child);
+                }
+                else if(child.li_attr.dataCatalogItem.Type !== 1) {
+                    nodeData.children.splice(i, 1);
+                    i = i - 1;
+                }
+            }
+            return nodeData;
         },
         _createTreeItems: function (curNode, view, path) {
             var me = this;
@@ -10078,6 +10079,10 @@ $(function () {
                 if (item.Type === forerunner.ssr.constants.itemType.folder) {
                     curNode.children.push(newNode);
                     me._createTreeItems(newNode, view, item.Path);
+                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
+                    curNode.children.push(newNode);
+                    newNode.icon = "jstree-file";
+                    newNode.li_attr.dataReport = true;
                 }
             });
         },
@@ -10103,50 +10108,76 @@ $(function () {
 
             return items;
         },
-        _onChangedjsTree: function (e, data) {
-            var me = this;
-            var location = data.node.text === me.rootPath ? me.rootPath : data.node.li_attr.dataCatalogItem.Path;
+        setData: function (catalogItem){
+            var me = this,
+                prompt,
+                treeLabel;
 
-            me.$location.val(location).valid();
-            me.$popup.addClass("fr-core-hidden");
-        },
-        _validateForm: function ($form) {
-            $form.validate({
-                errorPlacement: function (error, element) {
-                    error.appendTo($(element).siblings(".fr-linked-error-span"));
-                },
-                highlight: function (element) {
-                    $(element).addClass("fr-linked-error");
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass("fr-linked-error");
-                }
-            });
-        },
-        setData: function (type, curPath){
-            var me = this;
+            me.reportType = catalogItem.Type;
+            me.curPath = catalogItem.Path;
+            me.linkedReportName = catalogItem.Name;
 
-            me.reportType = type;
-            me.curPath = curPath;
+            me.isLinkedReport = me.reportType === forerunner.ssr.constants.itemType.linkedReport ? true : false;
 
             me._reset();
 
-            var prompt = locData.linkedReport.prompt.format(me.curPath);
-            me.$prompt.text(prompt);
-
-            if (me.reportType == forerunner.ssr.constants.itemType.linkedReport) {
-                //Todo.. not expose this function now.
+            //destroy prior tree if exist and re-create with right data
+            if (me.$tree.is(":jstree")) {
+                me.$tree.jstree().destroy();
             }
+
+            if (me.isLinkedReport) {
+                me._getReportLink();
+                me.$name.attr("disabled", true);
+                prompt = locData.linkedReport.edit.format(me.curPath);
+                treeLabel = locData.linkedReport.report;
+
+                //Todo.. not expose this function now.
+                me.$tree.jstree({
+                    core: {
+                        data: me.fullTreeData
+                    }
+                });
+            } else {
+                me.$name.removeAttr("disabled");
+                prompt = locData.linkedReport.create.format(me.curPath);
+                treeLabel = locData.linkedReport.locatiton;
+
+                me.$tree.jstree({
+                    core: {
+                        data: me.cagalogTreeData
+                    }
+                });
+            }
+
+            me.$prompt.text(prompt);
+            me.$treeLabel.text(treeLabel);
+
+            me.$tree.on("changed.jstree", function (e, data) {
+                me._onChangedjsTree.apply(me, arguments);
+            });
+        },
+        _onChangedjsTree: function (e, data) {
+            var me = this;
+
+            if (me.isLinkedReport) {
+                if (data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+                    me.$tree.jstree("toggle_node", data.node.id);
+                    return;
+                }
+            }
+
+            var location = data.node.text === me.rootPath ? me.rootPath : data.node.li_attr.dataCatalogItem.Path;
+            me.$location.attr("title", location).val(location).valid();
+            me.$popup.addClass("fr-core-hidden");
         },
         /**
          * Show the linked report modal dialog.
          *
          * @function $.forerunner.forerunnerProperties#openDialog
          */
-        openDialog: function (curPath) {
+        openDialog: function () {
             var me = this;
-            //current path which is the link report path
-            me.curPath = curPath;
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
@@ -10160,51 +10191,6 @@ $(function () {
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
-        _submit: function () {
-            var me = this,
-                fileLocation,
-                linkedName;
-
-            if (me.$form.valid()) {
-                linkedName = $.trim(me.$name.val());
-                fileLocation = $.trim(me.$location.val());
-
-                forerunner.ajax.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/CreateLinkedReport",
-                    async: true,
-                    data: {
-                        name: linkedName,
-                        parent: fileLocation,
-                        link: me.curPath
-                    },
-                    success: function (data) {
-                        if (data.Status === "Failed") {
-                            console.log('Create linked report wrong.', data.Exception);
-                            return;
-                        }
-
-                        me.closeDialog();
-                    },
-                    fail: function (data) {
-                    },
-                });
-            }
-        },
-        _reset: function () {
-            var me = this;
-
-            me.$name.val('');
-            me.$location.val('');
-
-            me.$tree.jstree("close_all");
-            me.$tree.jstree("open_node", "j1_1");
-            me.$tree.jstree("deselect_all", true);
-
-            //make sure the popup is hidden
-            me.$popup.addClass("fr-core-hidden");
-        },
         _getReportLink: function () {
             var me = this;
 
@@ -10214,47 +10200,82 @@ $(function () {
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/GetReportLink",
                 async: false,
                 data: {
-                    name: linkedName,
-                    parent: fileLocation,
-                    link: me.curPath
+                    path: me.curPath
                 },
                 success: function (data) {
-                    console.log(data);
+                    me.$location.attr("title", data.linkedReport).val(data.linkedReport);
+                    me.$name.val(me.linkedReportName);
                 },
                 fail: function (data) {
+
                 },
             });
         },
         _setReportLink: function () {
             var me = this,
-               fileLocation,
-               linkedName;
-
-            if (me.$form.valid()) {
-                linkedName = $.trim(me.$name.val());
                 fileLocation = $.trim(me.$location.val());
 
-                forerunner.ajax.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SetReportLink",
-                    async: true,
-                    data: {
-                        name: linkedName,
-                        link: me.curPath
-                    },
-                    success: function (data) {
-                        if (data.Status === "Failed") {
-                            console.log('Create linked report wrong.', data.Exception);
-                            return;
-                        }
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/SetReportLink",
+                async: true,
+                data: {
+                    linkedReportPath: me.curPath,
+                    newLink: fileLocation
+                },
+                success: function (data) {
+                    if (data.Status === "Failed") {
+                        console.log('Set linked report wrong.', data.Exception);
+                        return;
+                    }
 
-                        me.closeDialog();
-                    },
-                    fail: function (data) {
-                    },
-                });
-            }
+                    me.closeDialog();
+                },
+                fail: function (data) {
+                },
+            });
+        },
+        _createLinkedReport: function () {
+            var me = this,
+                fileLocation = $.trim(me.$location.val()),
+                linkedName = $.trim(me.$name.val());
+
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/CreateLinkedReport",
+                async: true,
+                data: {
+                    name: linkedName,
+                    parent: fileLocation,
+                    link: me.curPath
+                },
+                success: function (data) {
+                    if (data.Status === "Failed") {
+                        console.log('Create linked report wrong.', data.Exception);
+                        return;
+                    }
+
+                    me.closeDialog();
+                },
+                fail: function (data) {
+                },
+            });
+
+        },
+        _validateForm: function ($form) {
+            $form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).siblings(".fr-linked-error-span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-linked-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-linked-error");
+                }
+            });
         },
         _resetValidateMessage: function () {
             var me = this;
@@ -18967,6 +18988,16 @@ $(function () {
                         if (extensionSettings.ParameterValues[i].Name === "TO") {
                             me.$to.val( extensionSettings.ParameterValues[i].Value);
                         }
+                        if (extensionSettings.ParameterValues[i].Name === "CC") {
+                            me.$cc.val(extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "BCC") {
+                            me.$bcc.val(extensionSettings.ParameterValues[i].Value);
+                        }
+                        if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                            me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
+                        }
+
                         if (extensionSettings.ParameterValues[i].Name === "Subject") {
                             me.$subject.val( extensionSettings.ParameterValues[i].Value);
                         }
@@ -19025,6 +19056,9 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
+                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
@@ -19043,6 +19077,16 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "TO") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$to.val();
                     }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "CC") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$cc.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "BCC") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$bcc.val();
+                    }
+                    if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$replyTo.val();
+                    }
+
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
@@ -19226,25 +19270,45 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", locData.subscription.descriptionPlaceholder);
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "");  //locData.subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$desc.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", locData.subscription.toPlaceholder);
+
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "");  //locData.subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$to.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", locData.subscription.subjectPlaceholder);
+
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
+
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
+
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "");  //locData.subscription.toPlaceholder
+            me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
+
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "");  // locData.subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
+            me.$subject.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
+
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
             me.$includeReport = me._createCheckBox();
             me.$includeReport.addClass("fr-email-include");
             me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
             me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
+
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
             me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
-            me.$to.prop("required", true);
-            me.$subject.prop("required", true);
+            
+            
+
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
                 me.$to.prop("disabled", true);
                 me.$subject.parent().parent().hide();
@@ -19260,7 +19324,7 @@ $(function () {
             me.$theTable.append(me.$lastRow);
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
-            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "button");
+            me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "submit");
             me.$submitButton.val(locData.subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
@@ -19278,6 +19342,7 @@ $(function () {
             me.$theForm.on("submit", function () { return false; });
 
             me.element.find(".fr-email-submit-id").on("click", function (e) {
+                
                 me._submit();
             });
 
@@ -19293,26 +19358,31 @@ $(function () {
                 me.closeDialog();
             });
 
-            me.element.on(events.modalDialogGenericSubmit, function () {
+            me.element.on(events.modalDialogGenericSubmit, function () {             
                 me._submit();
             });
 
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+
+            me.options.$appContainer.trigger(events.subscriptionFormInit);
         },
 
         _submit : function () {
             var me = this;
-            var subscriptionInfo = me._getSubscriptionInfo();
-            
-            me.options.subscriptionModel.subscriptionModel(
-                me._subscriptionID ? "updateSubscription" : "createSubscription",
-                subscriptionInfo,
-                function () { me.closeDialog(); },
-                function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
-                });
+
+            if (me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
+                var subscriptionInfo = me._getSubscriptionInfo();
+
+                me.options.subscriptionModel.subscriptionModel(
+                    me._subscriptionID ? "updateSubscription" : "createSubscription",
+                    subscriptionInfo,
+                    function () { me.closeDialog(); },
+                    function (data) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                    });
+            }
         },
 
         _createNew: function () {

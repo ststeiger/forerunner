@@ -564,6 +564,11 @@ $(function () {
             reportViewerAfterLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.afterLoadReport).toLowerCase(); },
 
             /** @constant */
+            subscriptionFormInit: "subscriptionFormInit",
+            /** widget + event, lowercase */
+            reportViewersubscriptionFormInit: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.subscriptionFormInit).toLowerCase(); },
+
+            /** @constant */
             find: "find",
             /** widget + event, lowercase */
             reportViewerFind: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.find).toLowerCase(); },
@@ -602,6 +607,8 @@ $(function () {
             afterTransition: "aftertransition",
             /** widget + event, lowercase */
             reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
+
+            saveRDLDone: "saveRDLDone"
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

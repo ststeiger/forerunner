@@ -58,7 +58,7 @@ $(function () {
                             "<div class='fr-linked-prompt'></div>" +
                              // Dropdown container
                             "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
-                                "<label class='fr-linked-label' >" + linked.location + "</label>" +
+                                "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +
 	                            "<input type='text' name='location' class='fr-core-input fr-linked-input fr-linked-location fr-core-cursorpointer' readonly='true' required='true' allowblank='false' nullable='false'/>" +
 	                            "<div class='fr-linked-dropdown-iconcontainer fr-core-cursorpointer'>" +
 		                            "<div class='fr-linked-dropdown-icon'></div>" +
@@ -96,14 +96,9 @@ $(function () {
             me.$popup = me.element.find(".fr-linked-popup-container");
             me.$tree = me.element.find(".fr-linked-tree-container");
 
-            me.$tree.on("changed.jstree", function (e, data) {
-                me._onChangedjsTree.apply(me, arguments);
-            });
-
             me.$name = me.element.find(".fr-linked-name");
-            //me.$description = me.element.find(".fr-linked-desp");
             me.$location = me.element.find(".fr-linked-location");
-            me.$dpIcon = me.element.find(".fr-linked-dropdown-icon");
+            me.$treeLabel = me.element.find(".fr-linked-tree-label");
 
             me._bindEvents();
 
@@ -114,12 +109,10 @@ $(function () {
 
             me._reset();
 
-            var treeData = me._createJSData(me.rootPath);
-            me.$tree.jstree({
-                core: {
-                    data: treeData
-                }
-            });
+            //var treeData = me._createJSData(me.rootPath);
+            me._createJSData(me.rootPath);
+
+            me.$tree.jstree();
         },
         _bindEvents: function () {
             var me = this;
@@ -131,7 +124,7 @@ $(function () {
                 me._openPopup.call(me)
             });
 
-            me.$dpIcon.on("click", function () {
+            me.element.find(".fr-linked-dropdown-icon").on("click", function () {
                 me._openPopup.call(me)
             });
 
@@ -151,17 +144,39 @@ $(function () {
                 me.closeDialog();
             });
         },
+        _submit: function () {
+            var me = this;
+
+            if (!me.$form.valid()) {
+                return;
+            }
+
+            me.isLinkedReport ? me._setReportLink() : me._createLinkedReport();
+        },
+        _reset: function () {
+            var me = this;
+
+            me.$name.val('');
+            me.$location.removeAttr("title").val('');
+
+            me.$tree.jstree("close_all");
+            me.$tree.jstree("open_node", "j1_1");
+            me.$tree.jstree("deselect_all", true);
+
+            //make sure the popup is hidden
+            me.$popup.addClass("fr-core-hidden");
+        },
         _openPopup: function () {
             var me = this;
 
             //handle border width
-            var width = me.$location.width() + 4;
+            var width = me.$location.width() + 4 + 24;
             me.$popup.css({ width: width });
             me.$popup.toggleClass("fr-core-hidden");
         },
         _createJSData: function (path) {
             var me = this;
-            var nodeTree = {
+            me.fullTreeData = {
                 text: path,
                 state: {
                     opened: true
@@ -169,8 +184,25 @@ $(function () {
                 children: []
             };
 
-            me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree];
+            me._createTreeItems(me.fullTreeData, "catalog", path);
+            
+            me.cagalogTreeData = me._createCatalogData($.extend(true, {}, me.fullTreeData));
+            //return [me.cagalogTreeData];
+        },
+        _createCatalogData: function (nodeData) {
+            var me = this;
+
+            for (var i = 0, child; i < nodeData.children.length; i++) {
+                child = nodeData.children[i];
+                if (child.children.length !== 0) {
+                    me._createCatalogData(child);
+                }
+                else if(child.li_attr.dataCatalogItem.Type !== 1) {
+                    nodeData.children.splice(i, 1);
+                    i = i - 1;
+                }
+            }
+            return nodeData;
         },
         _createTreeItems: function (curNode, view, path) {
             var me = this;
@@ -189,6 +221,10 @@ $(function () {
                 if (item.Type === forerunner.ssr.constants.itemType.folder) {
                     curNode.children.push(newNode);
                     me._createTreeItems(newNode, view, item.Path);
+                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
+                    curNode.children.push(newNode);
+                    newNode.icon = "jstree-file";
+                    newNode.li_attr.dataReport = true;
                 }
             });
         },
@@ -214,50 +250,76 @@ $(function () {
 
             return items;
         },
-        _onChangedjsTree: function (e, data) {
-            var me = this;
-            var location = data.node.text === me.rootPath ? me.rootPath : data.node.li_attr.dataCatalogItem.Path;
+        setData: function (catalogItem){
+            var me = this,
+                prompt,
+                treeLabel;
 
-            me.$location.val(location).valid();
-            me.$popup.addClass("fr-core-hidden");
-        },
-        _validateForm: function ($form) {
-            $form.validate({
-                errorPlacement: function (error, element) {
-                    error.appendTo($(element).siblings(".fr-linked-error-span"));
-                },
-                highlight: function (element) {
-                    $(element).addClass("fr-linked-error");
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass("fr-linked-error");
-                }
-            });
-        },
-        setData: function (type, curPath){
-            var me = this;
+            me.reportType = catalogItem.Type;
+            me.curPath = catalogItem.Path;
+            me.linkedReportName = catalogItem.Name;
 
-            me.reportType = type;
-            me.curPath = curPath;
+            me.isLinkedReport = me.reportType === forerunner.ssr.constants.itemType.linkedReport ? true : false;
 
             me._reset();
 
-            var prompt = locData.linkedReport.prompt.format(me.curPath);
-            me.$prompt.text(prompt);
-
-            if (me.reportType == forerunner.ssr.constants.itemType.linkedReport) {
-                //Todo.. not expose this function now.
+            //destroy prior tree if exist and re-create with right data
+            if (me.$tree.is(":jstree")) {
+                me.$tree.jstree().destroy();
             }
+
+            if (me.isLinkedReport) {
+                me._getReportLink();
+                me.$name.attr("disabled", true);
+                prompt = locData.linkedReport.edit.format(me.curPath);
+                treeLabel = locData.linkedReport.report;
+
+                //Todo.. not expose this function now.
+                me.$tree.jstree({
+                    core: {
+                        data: me.fullTreeData
+                    }
+                });
+            } else {
+                me.$name.removeAttr("disabled");
+                prompt = locData.linkedReport.create.format(me.curPath);
+                treeLabel = locData.linkedReport.locatiton;
+
+                me.$tree.jstree({
+                    core: {
+                        data: me.cagalogTreeData
+                    }
+                });
+            }
+
+            me.$prompt.text(prompt);
+            me.$treeLabel.text(treeLabel);
+
+            me.$tree.on("changed.jstree", function (e, data) {
+                me._onChangedjsTree.apply(me, arguments);
+            });
+        },
+        _onChangedjsTree: function (e, data) {
+            var me = this;
+
+            if (me.isLinkedReport) {
+                if (data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+                    me.$tree.jstree("toggle_node", data.node.id);
+                    return;
+                }
+            }
+
+            var location = data.node.text === me.rootPath ? me.rootPath : data.node.li_attr.dataCatalogItem.Path;
+            me.$location.attr("title", location).val(location).valid();
+            me.$popup.addClass("fr-core-hidden");
         },
         /**
          * Show the linked report modal dialog.
          *
          * @function $.forerunner.forerunnerProperties#openDialog
          */
-        openDialog: function (curPath) {
+        openDialog: function () {
             var me = this;
-            //current path which is the link report path
-            me.curPath = curPath;
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
@@ -271,51 +333,6 @@ $(function () {
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
-        _submit: function () {
-            var me = this,
-                fileLocation,
-                linkedName;
-
-            if (me.$form.valid()) {
-                linkedName = $.trim(me.$name.val());
-                fileLocation = $.trim(me.$location.val());
-
-                forerunner.ajax.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/CreateLinkedReport",
-                    async: true,
-                    data: {
-                        name: linkedName,
-                        parent: fileLocation,
-                        link: me.curPath
-                    },
-                    success: function (data) {
-                        if (data.Status === "Failed") {
-                            console.log('Create linked report wrong.', data.Exception);
-                            return;
-                        }
-
-                        me.closeDialog();
-                    },
-                    fail: function (data) {
-                    },
-                });
-            }
-        },
-        _reset: function () {
-            var me = this;
-
-            me.$name.val('');
-            me.$location.val('');
-
-            me.$tree.jstree("close_all");
-            me.$tree.jstree("open_node", "j1_1");
-            me.$tree.jstree("deselect_all", true);
-
-            //make sure the popup is hidden
-            me.$popup.addClass("fr-core-hidden");
-        },
         _getReportLink: function () {
             var me = this;
 
@@ -325,47 +342,82 @@ $(function () {
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/GetReportLink",
                 async: false,
                 data: {
-                    name: linkedName,
-                    parent: fileLocation,
-                    link: me.curPath
+                    path: me.curPath
                 },
                 success: function (data) {
-                    console.log(data);
+                    me.$location.attr("title", data.linkedReport).val(data.linkedReport);
+                    me.$name.val(me.linkedReportName);
                 },
                 fail: function (data) {
+
                 },
             });
         },
         _setReportLink: function () {
             var me = this,
-               fileLocation,
-               linkedName;
-
-            if (me.$form.valid()) {
-                linkedName = $.trim(me.$name.val());
                 fileLocation = $.trim(me.$location.val());
 
-                forerunner.ajax.ajax({
-                    type: "POST",
-                    dataType: "JSON",
-                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/SetReportLink",
-                    async: true,
-                    data: {
-                        name: linkedName,
-                        link: me.curPath
-                    },
-                    success: function (data) {
-                        if (data.Status === "Failed") {
-                            console.log('Create linked report wrong.', data.Exception);
-                            return;
-                        }
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/SetReportLink",
+                async: true,
+                data: {
+                    linkedReportPath: me.curPath,
+                    newLink: fileLocation
+                },
+                success: function (data) {
+                    if (data.Status === "Failed") {
+                        console.log('Set linked report wrong.', data.Exception);
+                        return;
+                    }
 
-                        me.closeDialog();
-                    },
-                    fail: function (data) {
-                    },
-                });
-            }
+                    me.closeDialog();
+                },
+                fail: function (data) {
+                },
+            });
+        },
+        _createLinkedReport: function () {
+            var me = this,
+                fileLocation = $.trim(me.$location.val()),
+                linkedName = $.trim(me.$name.val());
+
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/CreateLinkedReport",
+                async: true,
+                data: {
+                    name: linkedName,
+                    parent: fileLocation,
+                    link: me.curPath
+                },
+                success: function (data) {
+                    if (data.Status === "Failed") {
+                        console.log('Create linked report wrong.', data.Exception);
+                        return;
+                    }
+
+                    me.closeDialog();
+                },
+                fail: function (data) {
+                },
+            });
+
+        },
+        _validateForm: function ($form) {
+            $form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).siblings(".fr-linked-error-span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-linked-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-linked-error");
+                }
+            });
         },
         _resetValidateMessage: function () {
             var me = this;

@@ -18,5 +18,6 @@
 	"DefaultSubscriptionFormat":"MHTML",
 	"URLActionNewTab": "off",
 	"Debug":"off",
-	"SubscriptionInputSize":"30"
+	"SubscriptionInputSize":"50",
+	"ManageSubscriptionUI":"default"
 }

@@ -447,6 +447,7 @@
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />
+    <Content Include="Scripts\App\test.js" />
     <Content Include="Scripts\App\login.js" />
     <Content Include="Scripts\App\loginprep.js" />
     <Content Include="Scripts\App\mobilizer.js" />

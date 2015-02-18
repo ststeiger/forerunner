@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <!--Problem:
+        If you simply stringify then parse an object using JSON, you loose any / all functions defined
+
+      Solution:
+        The correct solution is to not use methods on object that we will stringify. JSON strings / objects
+        are best used for pure data.
+     -->
+<head>
+    <title>Stringify Test</title>
+</head>
+<body>
+  <script type="text/javascript" src="../../Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      var obj = function () {
+        this.value = 7;
+      }
+      obj.prototype = {
+        saySomething: function () {
+          alert("something");
+        }
+      }
+      Stringify = function (e) {
+        // The following works because the extend adds the prototype methods back
+        // into the object
+        var foo = new obj();
+        var fooString = JSON.stringify(foo);
+        var fooObj = JSON.parse(fooString);
+        $.extend(fooObj, new obj());
+      }
+    });
+  </script>
+
+  <input type="button" onclick="Stringify()" value="Toggle"/><br />
+</body>
+</html>

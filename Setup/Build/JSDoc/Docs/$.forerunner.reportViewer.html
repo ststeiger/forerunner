@@ -13,38 +13,57 @@
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 
  	<link href="/content/site.css" rel="stylesheet">
+	    <script>
+         
+         (function (i, s, o, g, r, a, m) {
+             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                 (i[r].q = i[r].q || []).push(arguments)
+             }, i[r].l = 1 * new Date(); a = s.createElement(o),
+             m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+         ga('create', 'UA-43757818-1', 'forerunnersw.com');
+         ga('send', 'pageview');
+
+     </script>
 </head>
 
 <body>
 
- <!-- Header ================================================== -->
+   <!-- Header ================================================== -->
     <div class="ForerunnerPort Header" style="">
         <div class="ForerunnerPage Center" style="">
-            <table class="" style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="ForerunnerTDLeft ForerunnerLogo">
-                                <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
-                            </div>
-                        </td>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="Navbar TopNavbar">
-                                <ul>
-                                    <li id="Contact" class="Navitem TopNavitem"><a href="../home/contact">Contact</a></li>
-                                    <li id="About" class="Navitem TopNavitem"><a href="../home/about">About</a></li>
-                                    <li id="Support" class="Navitem TopNavitem"><a href="../home/support">Support</a></li>
-                                    <li id="Demo" class="Navitem TopNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem TopNavSelected"><a href="../Docs/index.html">Developers</a></li>
-                                    <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
-                                    <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
+
+            <div class="" style="display:block; width: 100%;">
+                <div class="HeaderFont" style="display:block;width: 100%;text-align:right;color:#0b86c6;"><span style="font-size:30px;">855.367.3511</span> | <a style="font-size:14px;" href="/home/contact">CONTACT US</a> </div>
+
+                <div class="" style="display: table; width: 100%;">
+                    <div class="ForerunnerTD " style="max-width:350px;">
+                        <div class="ForerunnerTD ForerunnerLogo">
+                            <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Software" />
+                        </div>
+                    </div>
+                    <div class="ForerunnerTD " style="width:100%;">
+                        <div class="Navbar TopNavbar">
+                            <div style="float:right;">
+                                <ul>            
+                                    <li id="Index" class="Navitem TopNavitem"><a href="/Home">HOME</a></li>
+                                    <li id="Features" class="Navitem TopNavitem"><a href="/home/features">FEATURES</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="/home/developers">DEVELOPERS</a></li>
+                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/home/pricing">PRICING</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="/home/demo">DEMO</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="/home/support">SUPPORT</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="/home/about">ABOUT</a></li>
+                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
                                 </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>                                    
+            </div>
+        
+      
+        </div>        
     </div>
     <div style="clear: both"></div>
 
@@ -76,7 +95,7 @@
     
     
         
-            <div class="description">The main toobar used for the reportViewer</div>
+            <div class="description">Widget used to view a report</div>
         
         
         
@@ -115,7 +134,7 @@
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
             
@@ -173,59 +192,13 @@
 	
         <tr>
             
-                <td class="name"><code>reportPath</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Path to the specific report</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>pageNum</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Starting page number</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
                 <td class="name"><code>pingInterval</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -248,7 +221,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
             
@@ -271,7 +244,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -294,7 +267,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -317,7 +290,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -328,6 +301,236 @@
             
             
             <td class="description last">jQuery selector object that defineds the Document Map widget</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>userSettings</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">User settings used for user specific options</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>onInputBlur</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Callback function used to handle input blur event</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>onInputFocus</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Function</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Callback function used to handle input focus event</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$appContainer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Report container</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parameterModel</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Parameter model</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>savePosition</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Saved report page scroll position</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>viewerID</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Current report viewer id.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rsInstance</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Report service instance name</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>showSubscriptionUI</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Show Subscription UI if the user has permissions.  Default to false.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>zoom</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Zoom factor, default to 100.</td>
         </tr>
 	
 	
@@ -356,14 +559,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 28
-    </li></ul></dd>
-    
+       
     
     
     
@@ -376,7 +572,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>$("#reportViewerId").reportViewer({ reportPath: "/Northwind Test Reports/bar chart"});</code></pre>
+    <pre class="prettyprint"><code>$("#reportViewerId").reportViewer();$("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);</code></pre>
 
         
     
@@ -400,7 +596,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="back"><span class="type-signature"></span>back<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="actionHistoryDepth"><span class="type-signature"></span>actionHistoryDepth<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
     
     
 </dt>
@@ -408,7 +604,7 @@
     
     
     <div class="description">
-        Either: Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
+        Returns the number of actions in history for the back event
     </div>
     
 
@@ -436,14 +632,311 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 552
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Action history length
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Integer</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="allowSwipe"><span class="type-signature"></span>allowSwipe<span class="signature">(isEnabled)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set swipe enable or disable
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>isEnabled</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">True to enable swipe, False to disable</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="allowZoom"><span class="type-signature"></span>allowZoom<span class="signature">(isEnabled)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set zoom enable or disable
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>isEnabled</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">True to enable zoom, False to disable</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="back"><span class="type-signature"></span>back<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -483,7 +976,7 @@
         
             
 <dt>
-    <h4 class="name" id="backupCurPage"><span class="type-signature"></span>backupCurPage<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="backupCurPage"><span class="type-signature"></span>backupCurPage<span class="signature">(flushCache, useSavedLocation)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -491,7 +984,140 @@
     
     
     <div class="description">
-        Push the current page onto the action history stack
+        Push the current page into the action history stack
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>flushCache</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Specify flushCache status</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>useSavedLocation</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Whether used saved location</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="destroy"><span class="type-signature"></span>destroy<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
     </div>
     
 
@@ -519,14 +1145,117 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1005
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="editEmailSubscription"><span class="type-signature"></span>editEmailSubscription<span class="signature">(subscriptionID)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Edit email subscription
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>subscriptionID</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">subscription ID</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -560,7 +1289,7 @@
     
     
     <div class="description">
-        Export the report in the given format
+        Export the report in a specify format
     </div>
     
 
@@ -636,14 +1365,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1189
-    </li></ul></dd>
-    
+       
     
     
     
@@ -676,7 +1398,7 @@
         
             
 <dt>
-    <h4 class="name" id="find"><span class="type-signature"></span>find<span class="signature">(keyword, startPage, endPage)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="find"><span class="type-signature"></span>find<span class="signature">(keyword, startPage, endPage, findInNewPage)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -684,7 +1406,7 @@
     
     
     <div class="description">
-        Find the given keyword. Find will always find the first occurance
+        Find the given keyword
     </div>
     
 
@@ -747,7 +1469,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -770,7 +1492,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -784,110 +1506,16 @@
         </tr>
 	
 	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1040
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="findNext"><span class="type-signature"></span>findNext<span class="signature">(keyword)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Find the next occurance of the given keyword
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
 	
         <tr>
             
-                <td class="name"><code>keyword</code></td>
+                <td class="name"><code>findInNewPage</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -897,7 +1525,7 @@
             
             
             
-            <td class="description last">Keyword to find</td>
+            <td class="description last">Find in new page or current page</td>
         </tr>
 	
 	
@@ -923,14 +1551,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1114
-    </li></ul></dd>
-    
+       
     
     
     
@@ -992,14 +1613,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 632
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1025,12 +1639,16 @@
         
             
 <dt>
-    <h4 class="name" id="getCurPage"><span class="type-signature"></span>getCurPage<span class="signature">()</span><span class="type-signature"> &rarr; {int}</span></h4>
+    <h4 class="name" id="getCurPage"><span class="type-signature"></span>getCurPage<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
     
     
 </dt>
 <dd>
     
+    
+    <div class="description">
+        Get current page number
+    </div>
     
 
     
@@ -1057,14 +1675,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 128
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1087,7 +1698,7 @@
     
             
 <div class="param-desc">
-    Current page number
+    - Current page number
 </div>
 
 
@@ -1098,7 +1709,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
 	</dd>
@@ -1112,12 +1723,16 @@
         
             
 <dt>
-    <h4 class="name" id="getHasDocMap"><span class="type-signature"></span>getHasDocMap<span class="signature">()</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    <h4 class="name" id="getDataSourceCredential"><span class="type-signature"></span>getDataSourceCredential<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
     
 </dt>
 <dd>
     
+    
+    <div class="description">
+        Get datasource credentials data
+    </div>
     
 
     
@@ -1144,14 +1759,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 168
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1174,7 +1782,7 @@
     
             
 <div class="param-desc">
-    true if there is a document map
+    Datasource credential if saved datasource credential exist; return null if not
 </div>
 
 
@@ -1185,7 +1793,7 @@
 	</dt>
 	<dd>
 		
-<span class="param-type">bool</span>
+<span class="param-type">Object</span>
 
 
 	</dd>
@@ -1199,12 +1807,16 @@
         
             
 <dt>
-    <h4 class="name" id="getNumPages"><span class="type-signature"></span>getNumPages<span class="signature">()</span><span class="type-signature"> &rarr; {int}</span></h4>
+    <h4 class="name" id="getHasDocMap"><span class="type-signature"></span>getHasDocMap<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
     
 </dt>
 <dd>
     
+    
+    <div class="description">
+        Get current report contain document map or not
+    </div>
     
 
     
@@ -1231,14 +1843,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 136
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1261,7 +1866,7 @@
     
             
 <div class="param-desc">
-    Current number of pages
+    - Whether document map exist
 </div>
 
 
@@ -1272,7 +1877,391 @@
 	</dt>
 	<dd>
 		
-<span class="param-type">int</span>
+<span class="param-type">Boolean</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getNumPages"><span class="type-signature"></span>getNumPages<span class="signature">()</span><span class="type-signature"> &rarr; {Integer}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get current number of pages
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Current number of pages
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Integer</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getPermission"><span class="type-signature"></span>getPermission<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get current user permission
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - permission jQuery object
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getRDLExt"><span class="type-signature"></span>getRDLExt<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get RDL Extension
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    RDL extension object for current report
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getRDLExt"><span class="type-signature"></span>getRDLExt<span class="signature">(RDL)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Save RDL Extension
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>RDL</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">RDL Extension string</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    XML http request return object
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
 
 
 	</dd>
@@ -1293,6 +2282,10 @@
 <dd>
     
     
+    <div class="description">
+        Get current report path
+    </div>
+    
 
     
     
@@ -1318,14 +2311,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 152
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1348,7 +2334,7 @@
     
             
 <div class="param-desc">
-    Path to current report path
+    - Path to current report path
 </div>
 
 
@@ -1380,6 +2366,10 @@
 <dd>
     
     
+    <div class="description">
+        Get report viewer API path
+    </div>
+    
 
     
     
@@ -1405,14 +2395,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 144
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1435,7 +2418,7 @@
     
             
 <div class="param-desc">
-    Path to the report viewer API
+    - Path to the report viewer API
 </div>
 
 
@@ -1467,6 +2450,10 @@
 <dd>
     
     
+    <div class="description">
+        Get current report session ID
+    </div>
+    
 
     
     
@@ -1492,14 +2479,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 160
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1522,7 +2502,7 @@
     
             
 <div class="param-desc">
-    Session ID
+    - Session ID
 </div>
 
 
@@ -1554,6 +2534,10 @@
 <dd>
     
     
+    <div class="description">
+        Get current user settings
+    </div>
+    
 
     
     
@@ -1579,14 +2563,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 121
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1609,7 +2586,7 @@
     
             
 <div class="param-desc">
-    Current user settings
+    - Current user settings
 </div>
 
 
@@ -1627,6 +2604,68 @@
 </dl>
 
         
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getZoomFactor"><span class="type-signature"></span>getZoomFactor<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Get the current zoom factor
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
     
     
 </dd>
@@ -1670,14 +2709,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 500
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1703,7 +2735,69 @@
         
             
 <dt>
-    <h4 class="name" id="isDrillThoughReport"><span class="type-signature"></span>isDrillThoughReport<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="invalidateReportContext"><span class="type-signature"></span>invalidateReportContext<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Set isReportContextValid to false
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isDrillThoughReport"><span class="type-signature"></span>isDrillThoughReport<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
     
 </dt>
@@ -1739,14 +2833,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 911
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1765,6 +2852,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - True if current report is the result of a drillthough action, false else
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Boolean</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -1772,7 +2881,7 @@
         
             
 <dt>
-    <h4 class="name" id="loadReport"><span class="type-signature"></span>loadReport<span class="signature">(reportPath, pageNum)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadReport"><span class="type-signature"></span>loadReport<span class="signature">(reportPath, pageNum, parameters, sessionID)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1780,7 +2889,7 @@
     
     
     <div class="description">
-        Load the given report
+        Load report with pass path, page number and parameters
     </div>
     
 
@@ -1843,7 +2952,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -1853,7 +2962,53 @@
             
             
             
-            <td class="description last">starting page number</td>
+            <td class="description last">Starting page number</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional parameters</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>sessionID</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional SessionID for existing execution</td>
         </tr>
 	
 	
@@ -1879,14 +3034,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1360
-    </li></ul></dd>
-    
+       
     
     
     
@@ -1912,7 +3060,117 @@
         
             
 <dt>
-    <h4 class="name" id="loadReportWithNewParameters"><span class="type-signature"></span>loadReportWithNewParameters<span class="signature">(paramList, pageNum)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="loadReportWithCustomDSCredential"><span class="type-signature"></span>loadReportWithCustomDSCredential<span class="signature">(credentialList)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Load current report with the given datasource credential list
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>credentialList</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">datasource credential list object</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="loadReportWithNewParameters"><span class="type-signature"></span>loadReportWithNewParameters<span class="signature">(paramList, pageNum, pageNum)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1970,7 +3228,7 @@
             
             
             
-            <td class="description last">Paramter list object</td>
+            <td class="description last">Parameter list object</td>
         </tr>
 	
 	
@@ -1983,7 +3241,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -1994,6 +3252,29 @@
             
             
             <td class="description last">The page to load</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>pageNum</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">useDefaultValue</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Whether use default parameter value on server side</td>
         </tr>
 	
 	
@@ -2019,14 +3300,69 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1376
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="manageSubscription"><span class="type-signature"></span>manageSubscription<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Show manage subscription dialog
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -2136,14 +3472,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 870
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2253,14 +3582,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 975
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2344,7 +3666,7 @@
             
             
             
-            <td class="description last">Id of the item</td>
+            <td class="description last">Id of the drill through item</td>
         </tr>
 	
 	
@@ -2370,14 +3692,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 924
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2451,7 +3766,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Ingeter</span>
 
 
             
@@ -2487,14 +3802,131 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 428
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onInputBlur"><span class="type-signature"></span>onInputBlur<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Function execute when input element blur
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onInputFocus"><span class="type-signature"></span>onInputFocus<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Function execute when input element focus
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -2528,7 +3960,7 @@
     
     
     <div class="description">
-        print current reprot in custom PDF format
+        Show report print layout in PDF viewer and do print on that
     </div>
     
 
@@ -2568,7 +4000,7 @@
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">String</span>
 
 
             
@@ -2578,7 +4010,7 @@
             
             
             
-            <td class="description last">custom print page layout option</td>
+            <td class="description last">Page layout option</td>
         </tr>
 	
 	
@@ -2604,14 +4036,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1211
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2637,7 +4062,7 @@
         
             
 <dt>
-    <h4 class="name" id="refreshParameters"><span class="type-signature"></span>refreshParameters<span class="signature">(The, Submit, The, Whether)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="refreshParameters"><span class="type-signature"></span>refreshParameters<span class="signature">(Parameter, Submit, The, Whether, Indicate)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2679,13 +4104,13 @@
 	
         <tr>
             
-                <td class="name"><code>The</code></td>
+                <td class="name"><code>Parameter</code></td>
             
             
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
             
@@ -2695,7 +4120,7 @@
             
             
             
-            <td class="description last">JSON string for the list of parameters.</td>
+            <td class="description last">list.</td>
         </tr>
 	
 	
@@ -2708,7 +4133,7 @@
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -2731,7 +4156,7 @@
             <td class="type">
             
                 
-<span class="param-type">int</span>
+<span class="param-type">Integer</span>
 
 
             
@@ -2754,7 +4179,7 @@
             <td class="type">
             
                 
-<span class="param-type">boolean</span>
+<span class="param-type">Boolean</span>
 
 
             
@@ -2765,6 +4190,29 @@
             
             
             <td class="description last">to trigger show parameter area event if there are visible parameters.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>Indicate</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">it's a cascading refresh or whole refresh</td>
         </tr>
 	
 	
@@ -2790,14 +4238,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1294
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2823,7 +4264,7 @@
         
             
 <dt>
-    <h4 class="name" id="refreshReport"><span class="type-signature"></span>refreshReport<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="refreshReport"><span class="type-signature"></span>refreshReport<span class="signature">(curPage)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2831,7 +4272,7 @@
     
     
     <div class="description">
-        Refreshes the current report
+        Refreshes current report
     </div>
     
 
@@ -2839,6 +4280,54 @@
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>curPage</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Integer</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Current page number</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
     
     
     
@@ -2859,14 +4348,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 405
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2892,7 +4374,7 @@
         
             
 <dt>
-    <h4 class="name" id="removeLoadingIndicator"><span class="type-signature"></span>removeLoadingIndicator<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="removeLoadingIndicator"><span class="type-signature"></span>removeLoadingIndicator<span class="signature">(force)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -2909,6 +4391,54 @@
     
     
     
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>force</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Force remove loading indicator if it's true</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
     
     
 <dl class="details">
@@ -2928,14 +4458,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 245
-    </li></ul></dd>
-    
+       
     
     
     
@@ -2997,131 +4520,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1177
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="setFindHighlight"><span class="type-signature"></span>setFindHighlight<span class="signature">(keyword)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Highlights the first matched keyword
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>keyword</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Keyword to highlight</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1157
-    </li></ul></dd>
-    
+       
     
     
     
@@ -3155,7 +4554,7 @@
     
     
     <div class="description">
-        Shows the visibility of the Document Map
+        Shows Document Map
     </div>
     
 
@@ -3183,14 +4582,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 516
-    </li></ul></dd>
-    
+       
     
     
     
@@ -3216,7 +4608,7 @@
         
             
 <dt>
-    <h4 class="name" id="showLoadingIndictator"><span class="type-signature"></span>showLoadingIndictator<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="showDSCredential"><span class="type-signature"></span>showDSCredential<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3224,7 +4616,7 @@
     
     
     <div class="description">
-        Shows the loading Indicator
+        Show datasource credential dialog
     </div>
     
 
@@ -3252,14 +4644,227 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 226
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="showEmailSubscription"><span class="type-signature"></span>showEmailSubscription<span class="signature">(subscriptionID)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Show email subscription dialog
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>subscriptionID</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">subscription ID</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="showLoadingIndictator"><span class="type-signature"></span>showLoadingIndictator<span class="signature">(force)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Shows the loading Indicator
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>force</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Force show loading indicator if it's true</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -3293,7 +4898,7 @@
     
     
     <div class="description">
-        Shows the Page =igation pane
+        Shows the page navigation pane
     </div>
     
 
@@ -3321,14 +4926,81 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 584
-    </li></ul></dd>
     
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="forerunner.ssr.constants.events.html">forerunner.ssr.constants.events</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li>event:reportviewershowNav</li>
+    </ul>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="showPrint"><span class="type-signature"></span>showPrint<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Show print dialog, close it if opened
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -3354,7 +5026,7 @@
         
             
 <dt>
-    <h4 class="name" id="showPrint"><span class="type-signature"></span>showPrint<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="showSubscriptionUI"><span class="type-signature"></span>showSubscriptionUI<span class="signature">()</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
     
     
 </dt>
@@ -3362,7 +5034,7 @@
     
     
     <div class="description">
-        show print modal dialog, close it if opened
+        Get the flag to indicate whether to show subscription UI
     </div>
     
 
@@ -3390,14 +5062,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1202
-    </li></ul></dd>
-    
+       
     
     
     
@@ -3416,6 +5081,28 @@
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - Flag to indicate whether to show subscription UI
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Boolean</span>
+
+
+	</dd>
+</dl>
+
+        
     
     
 </dd>
@@ -3481,7 +5168,7 @@
             
             
             
-            <td class="description last">sort direction</td>
+            <td class="description last">Sort direction</td>
         </tr>
 	
 	
@@ -3504,7 +5191,7 @@
             
             
             
-            <td class="description last">sort item id</td>
+            <td class="description last">Sort item id</td>
         </tr>
 	
 	
@@ -3527,7 +5214,7 @@
             
             
             
-            <td class="description last">clear existing sort flag</td>
+            <td class="description last">Clear existing sort flag</td>
         </tr>
 	
 	
@@ -3553,14 +5240,7 @@
     
     
     
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 694
-    </li></ul></dd>
-    
+       
     
     
     
@@ -3568,7 +5248,7 @@
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="forerunner.ssr.constants.html">forerunner.ssr.constants</a></li>
+            <li><a href="forerunner.ssr.constants.html#sortDirection">forerunner.ssr.constants.sortDirection</a></li>
         </ul>
     </dd>
     
@@ -3593,7 +5273,7 @@
         
             
 <dt>
-    <h4 class="name" id="toggleItem"><span class="type-signature"></span>toggleItem<span class="signature">(toggleID)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="toggleItem"><span class="type-signature"></span>toggleItem<span class="signature">(toggleID, scrollID)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -3601,7 +5281,7 @@
     
     
     <div class="description">
-        Sorts the current report
+        Toggle specify item of the report
     </div>
     
 
@@ -3655,6 +5335,29 @@
         </tr>
 	
 	
+	
+        <tr>
+            
+                <td class="name"><code>scrollID</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The element to scroll to after the toggle</td>
+        </tr>
+	
+	
 	</tbody>
 </table>
     
@@ -3677,14 +5380,69 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 802
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toggleZoomPageWidth"><span class="type-signature"></span>toggleZoomPageWidth<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Toggles the Zoom To Page width on or off
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -3717,6 +5475,10 @@
 <dd>
     
     
+    <div class="description">
+        Trigger an report viewer event
+    </div>
+    
 
     
     
@@ -3742,14 +5504,325 @@
     
     
     
+       
     
     
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 176
-    </li></ul></dd>
     
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="windowResize"><span class="type-signature"></span>windowResize<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Re-layout the report
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="zoomToPageWidth"><span class="type-signature"></span>zoomToPageWidth<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Zoom To Page width
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="zoomToPercent"><span class="type-signature"></span>zoomToPercent<span class="signature">(percent)</span><span class="type-signature"> &rarr; {bool}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Zoom to the specified percent value
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>percent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">percentage (I.e., 100 = 100%)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - true = zoom factor change, false = percent not a number
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">bool</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="zoomToWhoePage"><span class="type-signature"></span>zoomToWhoePage<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Zoom To show the whole page
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
     
     
@@ -3787,41 +5860,38 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.models.html">models</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-GettingStarted.html">GettingStarted</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
 		</nav>
 	</div>
 </div>
 
-    <!-- Footer ================================================== -->
+ <!-- Footer ================================================== -->
+
+ <div style="clear: both"></div>
     <div class="ForerunnerPort Footer" style="">
         <div class="ForerunnerPage Center" style="">
-            <table class="" style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="ForerunnerTDLeft FooterLeft">
-                                <div class="FooterContent ">� 2013 Forerunner Software</div>
-                                <div class="FooterContent ">855-367-3511 (855-FORE511) </div>
-                            </div>
-                        </td>
-                        <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="Navbar BottomNavbar">
-                                <ul>
-                                    <li class="Navitem BottomNavitem"><a href="../home/contact">Contact</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../home/about">About</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../home/support">Support</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../Docs/index.html">Developers</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../Home">Home</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="" style="width: 100%;">
+                <div class="Navbar BottomNavbar DetailFont" style="float: right;font-size:18px;">
+                    <ul>
+                        <li id="" class="Navitem BottomNavitem"><a href="/Home">HOME</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/features">FEATURES</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/developers">DEVELOPERS</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/pricing">PRICING</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/demo">DEMO</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/support">SUPPORT</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/home/about">ABOUT</a></li>
+                        <li id="" class=" DownloadButton Navitem BottomNavitem  Rounded"><a href="/Home/register">FREE TRIAL</a></li>
+                    </ul>
+                </div>
+
+                <div class="" style="display: block; float: left; padding-top: 20px;">
+                    <div class="FooterContent ">� 2014 Forerunner Software All rights reserved</div>
+                    <div class="FooterContent ">855-367-3511 (855-FORE511) </div>
+                </div>
+            </div>
         </div>
     </div>
+    
     <!-- Footer ================================================== -->
 
 <script> prettyPrint(); </script>

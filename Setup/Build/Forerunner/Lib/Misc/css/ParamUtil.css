@@ -1,0 +1,27 @@
+﻿.fr-putil-section { min-width: 769px; display:none; height:auto; }
+  /* set the dialog position to the upper left (not centered) for this dialog */
+  .fr-putil-section .fr-core-dialog-innerPage { top: 16px; min-height: 85%; min-width: 90%; }
+  .fr-putil-section .fr-core-center { margin: 0 16px; }
+
+.fr-putil-form { margin-right: 16px; }
+  .fr-putil-form .fr-core-center { margin: 0 auto; }
+  .fr-putil-form .fr-putil-normal-text { font-weight:normal; font-size: small; }
+
+.fr-putil-plist { }
+  .fr-putil-plist textarea { width: 95%; min-height: 160px; }
+
+.fr-putil-methods { }
+
+.fr-putil-error-span { margin: 2px 0 0 4px; text-align: right; font-size: 10pt; }
+.fr-putil-error-position { display: inline-block; }
+.fr-putil-error { border-width: thin; border-color: red; }
+
+.fr-putil-getparams-btn { background-position: 0 0; }
+
+.fr-putil-getparams24x24 { 
+    width:24px;
+    height:24px;
+    margin:5px;
+    display:inline-block;
+    background-image:url('../images/GetParams.png');
+}

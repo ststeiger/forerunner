@@ -8,6 +8,7 @@
 }
 .fr-linked-section .fr-linked-form {
     min-height:220px;
+    margin-bottom: 0;
 }
     .fr-linked-container .fr-linked-input {
         padding-left: 4px;
@@ -21,12 +22,18 @@
         font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 1em;
     }
+    .fr-linked-container .fr-linked-location {
+        width: 276px;
+        padding-right: 24px;
+    }
     .fr-linked-container .fr-linked-prompt {
-        padding:4px 4px 8px;
+        padding:0 4px 8px;
         /*font-style: italic;*/
         font-size: 12px;
         display: block;
         font-weight: 500;
+        line-height:16px;
+        color:gray;
     }
     .fr-linked-container .fr-linked-input-container,
     .fr-linked-container .fr-linked-dropdown-container {
@@ -75,13 +82,14 @@
             background-color: #fff;
         }
         .fr-linked-container .fr-linked-tree-container {
-            max-height: 130px;
+            height: 130px;
             overflow: auto;
         }
 
 .fr-linked-submit-container {
     margin:0px;
     margin-top:60px;
+    margin-bottom: 16px;
 }
     .fr-linked-submit-container input {
         width: 130px;
@@ -97,10 +105,20 @@
     }
     .fr-linked-container .fr-linked-input, .fr-linked-container .fr-linked-textarea {
         padding-left: 4px;
-        width: 180px;
+        width: 284px;
+    }
+    .fr-linked-container .fr-linked-location {
+        width: 260px;
     }
     .fr-linked-submit-container input {
         width: 100px;
         margin: 0px 10px;
+    }
+    .fr-linked-container .fr-linked-input-container .fr-linked-label {
+        padding-left: 0;
+        display: block;
+    }
+    .fr-linked-container .fr-linked-dropdown-iconcontainer {
+        top: 27px;
     }
 }

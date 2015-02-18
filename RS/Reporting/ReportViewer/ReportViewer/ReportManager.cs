@@ -2286,7 +2286,13 @@ namespace Forerunner.SSRS.Manager
         public string GetReportLink(string linkedReportPath)
         {
             rs.Credentials = GetCredentials();
-            return rs.GetReportLink(linkedReportPath);
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("linkedReport");
+            w.WriteString(rs.GetReportLink(linkedReportPath));
+            w.WriteEndObject();
+
+            return w.ToString();
         }
 
         public string SetReportLink(string linkedReportPath, string newLink)

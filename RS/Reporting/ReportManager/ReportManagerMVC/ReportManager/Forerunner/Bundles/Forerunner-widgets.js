@@ -1002,7 +1002,7 @@ $(function () {
 
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 $.each(me.pages, function (index, page) {
-                    if (Page) page.needsLayout = true;
+                    if (page) page.needsLayout = true;
                 });
 
                 me._reLayoutPage(me.curPage, force);                

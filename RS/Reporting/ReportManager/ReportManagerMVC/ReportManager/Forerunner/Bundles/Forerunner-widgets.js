@@ -12339,6 +12339,7 @@ $(function () {
                 me._trigger(events.submit);
             }
             me._hasPostedBackWithoutSubmitForm = false;
+
         },
         /**
          * Revert any unsubmitted parameters, called in two scenario: 

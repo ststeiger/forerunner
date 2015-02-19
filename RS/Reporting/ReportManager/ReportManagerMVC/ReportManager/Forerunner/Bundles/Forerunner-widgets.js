@@ -14366,7 +14366,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + "\".+?\},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
 

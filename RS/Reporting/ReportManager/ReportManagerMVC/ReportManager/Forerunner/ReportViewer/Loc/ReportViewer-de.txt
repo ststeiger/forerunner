@@ -27,7 +27,7 @@
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
     "serverError":"Ausnahme vom Server geworfen",
-    "type":"Type",
+    "type":"Art",
     "targetSite":"targeSite",
     "source":"Ursprung",
     "message":"Information",
@@ -54,7 +54,7 @@
     "docMap":"Dokument anzeigen",
     "find":"Finden",
     "next":"nächster",
-    "zoom":"Zoomen",
+    "zoom":"Aktivieren Pinch Zoom",
     "print":"Drucken",
     "dsCredential":"Credential",
     "views":"Ansichten",
@@ -200,7 +200,7 @@
     "title":"Datenquelle Credential",
     "cancel":"Abbestellen",
     "submit":"einreichen",
-    "username":"Login name:",
+    "username":"Loginname:",
     "password":"Passwort:",
     "reset":"rücksetzen"
   },
@@ -263,7 +263,7 @@
     "descriptionPlaceholder":"Beschreibung",
     "commentPlaceholder":"Kommentar",
     "subject":"@ Report wurde unter @ ExecutionTime ausgeführt",
-    "description":"E-Mail an {0}",
+    "description":"Senden Sie E-Mail an {0}",
     "includeLink":"Fügen Link",
     "includeReport":"Fügen Bericht",
     "schedule":"Zeitplan",
@@ -272,7 +272,10 @@
     "addNew":"Schaffen ",
     "edit":"Edieren",
     "deleteSubscription":"Löschen ",
-    "deleteFailed":"Abonnement Löschung gescheitert"
+    "deleteFailed":"Abonnement Löschung gescheitert",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Antwort an"
   },
   "properties": {
     "title":"Eigenschaften",
@@ -284,36 +287,36 @@
     "title":"Kontextmenü",
     "delLabel":"löschen",
     "properties":"Eigenschaften",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"Sicherheit",
+    "linkedReport":"Verknüpften Berichts"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
+    "submit":"einreichen",
+    "cancel":"stornieren",
+    "delete":"löschen",
+    "edit":"bearbeiten",
     "name":"Name",
-    "description":"Description"
+    "description":"Beschreibung"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "newPolicy":"Neu",
+    "reset":"rücksetzen",
+    "roles":"Rollen",
+    "desp":"Beschreibung",
+    "groupuser":"Gruppe oder Benutzer",
+    "prompt":"Wählen Sie die Rollen, die Sie zuweisen möchten"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"versteckt",
+    "label":"Im Normalmodus verborgenen",
+    "prompt":"Zu versteckten Stellen wird dieses Produkt im normalen Modus nicht angezeigt, können Sie sie im Admin-Modus zurück."
   },
   "linkedReport": {
-   "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"verknüpften Berichts",
+    "create":"Erstellen Sie einen neuen verknüpften Bericht für {0}",
+    "edit":"Bearbeiten verknüpften Bericht {0}, wählen Sie den Bericht, den Sie verknüpfen möchten",
+    "location":"Lage",
+    "report":"Sich Melden"
   }
 }

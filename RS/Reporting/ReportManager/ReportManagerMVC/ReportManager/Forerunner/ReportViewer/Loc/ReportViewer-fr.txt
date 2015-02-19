@@ -273,7 +273,10 @@
     "addNew":"Créer",
     "edit":"Modifier",
     "deleteSubscription":"Effacer",
-    "deleteFailed":"Suppression abonnement qui a échoué"
+    "deleteFailed":"Suppression abonnement qui a échoué",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To"
   },
   "properties": {
     "title":"propriétés",
@@ -285,36 +288,36 @@
     "title":"Menu contextuel",
     "delLabel":"effacer",
     "properties":"propriétés",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"sécurité",
+    "linkedReport":"Rapport Lié"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
+    "submit":"Soumettre",
+    "cancel":"annuler",
+    "delete":"effacer",
+    "edit":"éditer",
+    "name":"nom",
     "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
+    "newPolicy":"nouveau",
+    "reset":"remettre",
+    "roles":"rôles",
     "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "groupuser":"Groupe ou utilisateur",
+    "prompt":"Sélectionnez les rôles que vous voulez attribuer"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"caché",
+    "label":"Caché dans le mode normal",
+    "prompt":"Set pour hiddien ne sera pas afficher cet objet dans le mode normal, vous pouvez rallumer en mode admin."
   },
   "linkedReport": {
-   "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"Rapport Lié",
+    "create":"Créer un nouveau rapport lié pour {0}",
+    "edit":"Modifier liée rapport {0}, sélectionnez le rapport que vous voulez lier",
+    "location":"emplacement",
+    "report":"rapport"
   }
 }

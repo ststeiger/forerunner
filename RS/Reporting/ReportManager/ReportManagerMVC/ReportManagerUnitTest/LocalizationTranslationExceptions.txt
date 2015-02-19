@@ -4,9 +4,9 @@
   },
   "errorTag": {
     "type": [],
-    "message": ["ro"],
-    "stackTrace": [],
-    "targetSite": []
+    "message": ["ro","de"],
+    "stackTrace": ["de","fr","ga","is","it","pt","ro","sv"],
+    "targetSite": ["ga","is","it","pt","ro","sv"]
   },
   "exportType": {
     "xml": [],
@@ -29,13 +29,14 @@
     "editDashboard":["fr"],
     "tags":["is"],
     "RDLExt":["fr","it","ro", "sv"],
+    "views": ["is"],
     "zoomDropdown":["de", "es", "fr", "is", "it", "pt", "ro", "sv"]
   },
   "toolbar": {
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
     "lastPage": ["ga"],
-    "logOff": ["ga", "it", "ro", "pt"],
+    "logOff": ["ga", "it", "ro"],
     "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
@@ -65,8 +66,8 @@
   },
   "paramPane": {
     "nullField": ["ga", "is"],
-    "isTrue": ["ga", "is"],
-    "isFalse": ["is", "ro"],
+    "isTrue": ["ga"],
+    "isFalse": ["ro"],
      "cancel": ["ro"],
     "datePicker": ["fr"]
     },
@@ -152,10 +153,13 @@
     "subjectPlaceholder":["is"],
     "descriptionPlaceholder":[],
     "commentPlaceholder":["ga"],
-    "subject":["fr"],
+    "subject":["fr","is"],
     "description":[],
     "includeLink":[],
     "includeReport":[],
+    "ccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv"],
+    "bccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv"],
+     "replyToPlaceholder":["fr","it","ru"],
     "format":["de", "fr", "sv", "pt", "is", "ro"]
     },
   "searchFolder": {
@@ -163,6 +167,25 @@
        "homePage":["it", "pt"],
        "name": ["de"]
    },
+    "common": {
+    "name":["de","fr","is","sv"],
+    "description":["fr"]
+   
+    },
+    "visibility": {
+    "title":["ga"],
+    "label":[],
+    "prompt":[]
+  },
+     "security": {
+    "title":[],
+    "newPolicy":["is"],
+    "reset":["it"],
+    "roles":["es","pt"],
+    "desp":["fr"],
+    "groupuser":[],
+    "prompt":[]
+    },
   "RDLExt": {
       "title":["ro", "sv", "it"],
       "dialogTitle":["fr", "ro"]
@@ -171,7 +194,15 @@
     "description":["fr"]
   },
   "contextMenu": {
-    "title":["ga", "it", "pt", "ro"]
+    "title":["ga", "it", "pt", "ro","sv"]
+    },
+    "linkedReport": {
+    "title":[],
+    "create":[],
+    "edit":[],
+    "location":["is"],
+    "report":[]
+  
   }
 }
 

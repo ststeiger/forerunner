@@ -272,7 +272,10 @@
     "addNew":"創建",
     "edit":"編輯",
     "deleteSubscription":"刪除",
-    "deleteFailed":"刪除訂閱成功"
+    "deleteFailed":"刪除訂閱成功",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To"
   },
   "properties": {
     "title":"屬性",
@@ -311,9 +314,9 @@
   },
   "linkedReport": {
     "title":"鏈接報表",
-	"create":"創建基於{0}的鏈接報表",
-	"edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
-	"location":"保存地址",
-	"report":"報表"
+    "create":"創建基於{0}的鏈接報表",
+    "edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
+    "location":"保存地址",
+    "report":"報表"
   }
 }

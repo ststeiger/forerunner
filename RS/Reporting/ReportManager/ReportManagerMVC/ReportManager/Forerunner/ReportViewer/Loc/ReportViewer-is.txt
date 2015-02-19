@@ -80,7 +80,7 @@
     "lastPage":"síðast",
     "logOff":"nafnplata",
     "menu":"Valmynd",
-    "navigation":"Navigation",
+    "navigation":"flakk",
     "next":"Næsta",
     "pageOf":"af",
     "paramarea":"breytur",
@@ -128,8 +128,8 @@
   },
   "paramPane": {
     "nullField":"Zero",
-    "isTrue":"True",
-    "isFalse":"False",
+    "isTrue":"sannur",
+    "isFalse":"rangur",
     "required":"krafist",
     "viewReport":"Skoða",
     "cancel":"Hætta",
@@ -272,7 +272,10 @@
     "addNew":"Búa",
     "edit":"Breyta",
     "deleteSubscription":"Eyða",
-    "deleteFailed":"Áskrift eyða mistókst"
+    "deleteFailed":"Áskrift eyða mistókst",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Svara-til"
   },
   "properties": {
     "title":"eiginleikar ",
@@ -284,36 +287,36 @@
     "title":"samhengi Matseðill",
     "delLabel":"eyða",
     "properties":"eiginleikar",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"Öryggi",
+    "linkedReport":"tengd Report"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
+    "submit":"leggja",
+    "cancel":"Hætta",
+    "delete":"eyða",
+    "edit":"Breyta",
     "name":"Name",
-    "description":"Description"
+    "description":"lýsing"
   },
   "security": {
     "title":"",
     "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "reset":"endurstilla",
+    "roles":"hlutverk",
+    "desp":"lýsing",
+    "groupuser":"Group eða User",
+    "prompt":"Veldu hlutverk sem þú vilt tengja"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"falinn",
+    "label":"Falin í venjulegri stillingu",
+    "prompt":"Setja falið mun ekki sýna þetta atriði í venjulegri stillingu, getur þú skipt aftur í admin ham."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"tengd Report",
+    "create":"Búa til nýjan tengd skýrslu fyrir {0}",
+    "edit":"Breyta tengd skýrslu {0} Veldu skýrsluna sem þú vilt tengja",
+    "location":"Location",
+    "report":"Skýrsla"
   }
 }

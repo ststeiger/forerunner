@@ -78,7 +78,7 @@
     "home":"Em casa",
     "keyword":"Palavra-chave",
     "lastPage":"Último",
-    "logOff":"logoff",
+    "logOff":"sair",
     "menu":"Menu",
     "navigation":"Navegação",
     "next":"Próximo",
@@ -272,7 +272,10 @@
     "addNew":"criar",
     "edit":"editar",
     "deleteSubscription":"excluir",
-    "deleteFailed":"Exclusão Assinatura falhou"
+    "deleteFailed":"Exclusão Assinatura falhou",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Responder para"
   },
   "properties": {
     "title":"Propriedades",
@@ -284,36 +287,36 @@
     "title":"Context Menu",
     "delLabel":"excluir",
     "properties":"Propriedades",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"segurança",
+    "linkedReport":"Relatório Linked"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"submeter",
+    "cancel":"cancelar",
+    "delete":"excluir",
+    "edit":"editar",
+    "name":"nome",
+    "description":"descrição"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
+    "newPolicy":"novo",
+    "reset":"restabelecer",
     "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "desp":"descrição",
+    "groupuser":"Grupo ou Usuário",
+    "prompt":"Selecione as funções que você deseja atribuir"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"oculto",
+    "label":"Escondido em modo normal",
+    "prompt":"Defina como escondido não vai exibir este item no modo normal, você pode ligá-lo de volta no modo de administrador."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"Relatório Linked",
+    "create":"Criar um novo relatório vinculado para {0}",
+    "edit":"Editar ligada relatório {0}, selecione o relatório que você deseja vincular",
+    "location":"localização",
+    "report":"relatório"
   }
 }

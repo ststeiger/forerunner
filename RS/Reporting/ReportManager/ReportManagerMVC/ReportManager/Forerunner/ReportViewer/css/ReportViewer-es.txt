@@ -273,7 +273,10 @@
     "addNew":"Crear",
     "edit":"Editar",
     "deleteSubscription":"Borrar",
-    "deleteFailed":"Eliminación Suscripción fallado"
+    "deleteFailed":"Eliminación Suscripción fallado",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Responder a"
   },
   "properties": {
     "title":"Propiedades",
@@ -285,36 +288,36 @@
     "title":"Menú contextual",
     "delLabel":"borrar",
     "properties":"Propiedades",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"seguridad",
+    "linkedReport":"informe vinculado"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"presentar",
+    "cancel":"cancelar",
+    "delete":"borrar",
+    "edit":"editar",
+    "name":"nombre",
+    "description":"descripción"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
+    "newPolicy":"Nuevo",
+    "reset":"Reajustar",
     "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "desp":"Descripción",
+    "groupuser":"Grupo o Usuario",
+    "prompt":"Seleccione las funciones que desea asignar"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"oculto",
+    "label":"Escondido en modo normal",
+    "prompt":"Configurado como oculto no mostrará este elemento en el modo normal, se puede cambiar de nuevo en el modo administrador."
   },
   "linkedReport": {
-   "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"informe vinculado",
+    "create":"Crear un nuevo informe vinculado para {0}",
+    "edit":"Editar vinculado informe {0}, seleccione el informe que desea establecer el vínculo",
+    "location":"ubicación",
+    "report":"informe"
   }
 }

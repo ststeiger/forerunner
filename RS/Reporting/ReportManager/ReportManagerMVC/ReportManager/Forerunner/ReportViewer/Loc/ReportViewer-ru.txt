@@ -272,7 +272,10 @@
     "addNew":"создавать",
     "edit":"редактировать",
     "deleteSubscription":"удалять",
-    "deleteFailed":"Подписка Ошибка удаления"
+    "deleteFailed":"Подписка Ошибка удаления",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To"
   },
   "properties": {
     "title":"свойства",
@@ -284,36 +287,36 @@
     "title":"Контекстное меню",
     "delLabel":"удалять",
     "properties":"свойства",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"безопасность",
+    "linkedReport":"Связанный отчет"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"представлять",
+    "cancel":"отменить",
+    "delete":"удалять",
+    "edit":"редактировать",
+    "name":"имя",
+    "description":"описание"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "newPolicy":"новый",
+    "reset":"сброс",
+    "roles":"Роли",
+    "desp":"описание",
+    "groupuser":"Пользователь или группа пользователей",
+    "prompt":"Выберите роли, которые необходимо присвоить"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"скрытый",
+    "label":"Скрытые в нормальном режиме",
+    "prompt":"Установите скрыты не покажет этот пункт в нормальном режиме, вы можете переключить его обратно в режим администратора."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"Связанный отчет",
+    "create":"Создайте новый связанный отчет для {0}",
+    "edit":"Редактировать связанного отчета {0}, выберите отчет, который вы хотите связать",
+    "location":"расположение",
+    "report":"отчет"
   }
 }

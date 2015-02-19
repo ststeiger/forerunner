@@ -50,7 +50,7 @@
     "navigation":"navigazione",
     "favorites":"Preferiti",
     "back":"indietro",
-    "refresh":"Refresh",
+    "refresh":"rinfrescare",
     "docMap":"Mappa documento",
     "find":"trovare",
     "next":"Successivo",
@@ -78,7 +78,7 @@
     "home":"Casa",
     "keyword":"parola chiave",
     "lastPage":"Ultimo",
-    "logOff":"logoff",
+    "logOff":"disconnettersi",
     "menu":"Menu",
     "navigation":"Navigazione",
     "next":"seguente",
@@ -86,7 +86,7 @@
     "paramarea":"Parametri",
     "previousPage":"precedente",
     "recent":"Recenti",
-    "refresh":"Refresh",
+    "refresh":"rinfrescare",
     "reportPage":"Pagina",
     "zoom":"Abilita Zoom",
     "print":"Stampare",
@@ -272,7 +272,10 @@
     "addNew":"Creare",
     "edit":"Modifica",
     "deleteSubscription":"Cancellare ",
-    "deleteFailed":"Eliminazione di abbonamento fallito"
+    "deleteFailed":"Eliminazione di abbonamento fallito",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To"
   },
   "properties": {
     "title":"proprietà",
@@ -285,35 +288,35 @@
     "delLabel":"cancellare",
     "properties":"proprietà",
     "security":"Security",
-    "linkedReport":"Linked Report"
+    "linkedReport":"Rapporto collegato"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"presentare",
+    "cancel":"cancellare",
+    "delete":"annullare",
+    "edit":"Modifica",
+    "name":"nome",
+    "description":"descrizione"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
+    "newPolicy":"nuovo",
     "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "roles":"ruoli",
+    "desp":"descrizione",
+    "groupuser":"Gruppo o utente",
+    "prompt":"Selezionare i ruoli che si desidera assegnare"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"nascosto",
+    "label":"Nascosto in modalità normale",
+    "prompt":"Impostare nascosto non mostrerà questa voce in modalità normale, è possibile passare di nuovo in modalità amministratore."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"Rapporto collegato",
+    "create":"Creare un nuovo report collegato per {0}",
+    "edit":"Modifica legata relazione {0}, selezionare il report che si desidera collegare",
+    "location":"posizione",
+    "report":"relazione"
   }
 }

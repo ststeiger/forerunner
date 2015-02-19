@@ -63,6 +63,14 @@
       <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>CustDel.rdl</Name>
+      <FullPath>CustDel.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustIns.rdl</Name>
+      <FullPath>CustIns.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Customer Data.rdl</Name>
       <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
@@ -77,6 +85,10 @@
     <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustUpdate.rdl</Name>
+      <FullPath>CustUpdate.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Dynamic hidden cells.rdl</Name>
@@ -172,6 +184,10 @@
       <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Northwind Sales.rdl</Name>
+      <FullPath>Northwind Sales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Parameter by Category.rdl</Name>
       <FullPath>Parameter by Category.rdl</FullPath>
     </ProjectItem>
@@ -256,10 +272,6 @@
       <FullPath>ThreeMaps.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>TrainingComplianceReport.rdl</Name>
-      <FullPath>TrainingComplianceReport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
@@ -278,22 +290,6 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Northwind Sales.rdl</Name>
-      <FullPath>Northwind Sales.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>CustUpdate.rdl</Name>
-      <FullPath>CustUpdate.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>CustDel.rdl</Name>
-      <FullPath>CustDel.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>CustIns.rdl</Name>
-      <FullPath>CustIns.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

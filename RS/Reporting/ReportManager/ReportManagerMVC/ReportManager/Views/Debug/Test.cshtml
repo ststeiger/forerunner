@@ -112,8 +112,17 @@
                  }
         });
 
-        $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
-
+        //$reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
+        $reportViewer.reportViewer("loadReport", "/Northwind Test Suite/Simple Parameter", 1, {
+            "ParamsList": [{
+                "Parameter": "CategoryID",
+                "Value": "1"
+            },
+            {
+                "Parameter": "SecondParam",
+                "UseDefault": "true"
+            }]
+        });
     });
       
   </script>

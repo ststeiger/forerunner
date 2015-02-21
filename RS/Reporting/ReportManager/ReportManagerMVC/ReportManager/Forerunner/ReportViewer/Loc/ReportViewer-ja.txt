@@ -272,7 +272,10 @@
     "addNew":"作る",
     "edit":"編集",
     "deleteSubscription":"削除",
-    "deleteFailed":"サブスクリプションの削除に失敗しました"
+    "deleteFailed":"サブスクリプションの削除に失敗しました",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"返信先"
   },
   "properties": {
     "title":"プロパティ",
@@ -284,36 +287,36 @@
     "title":"コンテキストメニュー",
     "delLabel":"削除",
     "properties":"プロパティ",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"セキュリティ",
+    "linkedReport":"リンクされたレポート"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"提出する",
+    "cancel":"キャンセル",
+    "delete":"削除",
+    "edit":"編集",
+    "name":"名前",
+    "description":"説明"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "newPolicy":"新しい",
+    "reset":"リセット",
+    "roles":"役割",
+    "desp":"説明",
+    "groupuser":"グループまたはユーザー",
+    "prompt":"割り当てるロールを選択"
   },
   "visibility": {
-    "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "title":"隠された",
+    "label":"通常モードに隠された",
+    "prompt":"通常モードでのこの項目を表示しません隠さに設定し、あなたが戻って管理モードでそれを切り替えることができます."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"リンクされたレポート",
+    "create":"のための新しいリンクされたレポートを作成します{0}",
+    "edit":"編集には{0}、あなたがリンクしたいレポートを選択し、レポートをリンクさ",
+    "location":"場所",
+    "report":"レポート"
   }
 }

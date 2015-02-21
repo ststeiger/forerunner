@@ -5308,6 +5308,8 @@ $(function () {
             if (me.options.isFullScreen) {
                 me.$leftpane.css({ height: heightValues.max });
                 me.$rightpane.css({ height: heightValues.max });
+                me.$topdiv.css("width", $(window).width());
+                
             } else {
                 me.$leftpane.css({ height: heightValues.containerHeight });
                 me.$rightpane.css({ height: heightValues.containerHeight });
@@ -5353,6 +5355,16 @@ $(function () {
                 me.$topdiv.addClass("fr-core-block").removeClass("fr-core-hidden");
                 me.$topdivspacer.addClass("fr-core-block").removeClass("fr-core-hidden");
             }
+        },
+
+
+        bindExplorerEvents: function () {
+            var me = this;
+
+            //resize after explorer fetch to account for scrool bar if there
+            me.$container.on(events.reportExplorerAfterFetch(), function (e, data) {
+                me.ResetSize();
+            });
         },
 
         bindViewerEvents: function () {
@@ -5413,6 +5425,12 @@ $(function () {
                 me.$pagesection.show();
             });
 
+            //resize after pageloaded to account for scrool bar if there
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                me.ResetSize();
+            });
+            
+                        
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
             $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
                 var timeout = 0;
@@ -15792,7 +15810,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + ".+?\},?", ["g"]);
+                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + "\".+?\},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
 
@@ -17940,6 +17958,8 @@ $(function () {
                 onInputBlur: layout.onInputBlur,
                 userSettings: me._getUserSettings()
             });
+
+            me.DefaultAppTemplate.bindExplorerEvents();
         },
 
         // Initalize our internal navigateTo processing
@@ -18041,6 +18061,7 @@ $(function () {
             } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
+            
         },
         _lastAction: null,
         _navigateTo: function (action, path) {
@@ -18349,6 +18370,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
                 layout.$mainviewport.reportViewerEZ("windowResize");
+
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 

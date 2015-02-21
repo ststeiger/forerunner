@@ -85,6 +85,8 @@ $(function () {
                 onInputBlur: layout.onInputBlur,
                 userSettings: me._getUserSettings()
             });
+
+            me.DefaultAppTemplate.bindExplorerEvents();
         },
 
         // Initalize our internal navigateTo processing
@@ -186,6 +188,7 @@ $(function () {
             } else if (data.name === "transitionToOpenDashboard") {
                 me.transitionToOpenDashboard(path);
             }
+            
         },
         _lastAction: null,
         _navigateTo: function (action, path) {
@@ -494,6 +497,7 @@ $(function () {
                     $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
                 }
                 layout.$mainviewport.reportViewerEZ("windowResize");
+
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 

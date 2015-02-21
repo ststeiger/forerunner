@@ -94,7 +94,7 @@
     "saveParam":"Sábháil Paraiméadair",
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
-    "dsCredential":"credential Datasource",
+    "dsCredential":"Datasource credential",
     "addToFavorites":"Add to Favorites",
     "unzoom":"unzoom",
     "search":"Cuardaigh",
@@ -197,7 +197,7 @@
     "newSet":"Socraigh Nua"
   },
   "dsCredential": {
-    "title":"credential Datasource",
+    "title":"Datasource credential",
     "cancel":"Cealaigh",
     "submit":"Cuir",
     "username":"ainm Logáil isteach:",
@@ -229,7 +229,7 @@
     "submit":"Cuir",
     "selectReport":"<tuarascáil roghnú>",
     "hideToolbar":"Folaigh Barra Uirlisí",
-    "toolbar":"Toolbar:",
+    "toolbar":"Barra Uirlisí:",
     "minimal":"Íosráta",
     "full":"Iomlán",
     "removeReport":"Bain Tuarascáil"
@@ -258,7 +258,7 @@
     "cancel":"Cealaigh",
     "save":"Sábháil",
     "manageSubscription":"Bainistigh Síntiúis",
-    "toPlaceholder":"To",
+    "toPlaceholder":"Go",
     "subjectPlaceholder":"Ábhar",
     "descriptionPlaceholder":"Cur síos",
     "commentPlaceholder":"Comment",
@@ -272,7 +272,10 @@
     "addNew":"Cruthaigh",
     "edit":"Eagar",
     "deleteSubscription":"Scrios",
-    "deleteFailed":"Theip scriosadh Síntiúis"
+    "deleteFailed":"Theip scriosadh Síntiúis",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Freagair-A"
   },
   "properties": {
     "title":"airíonna",
@@ -281,39 +284,39 @@
     "description":"Cur síos"
   },
   "contextMenu": {
-    "title":"Context Menu",
+    "title":"Comhthéacs Menu",
     "delLabel":"Scrios",
     "properties":"airíonna",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+    "security":"Slándáil",
+    "linkedReport":"Tuairisc nasctha"
   },
   "common": {
-    "submit":"Submit",
-    "cancel":"Cancel",
-    "delete":"Delete",
-    "edit":"Edit",
-    "name":"Name",
-    "description":"Description"
+    "submit":"Cuir isteach",
+    "cancel":"Cealaigh",
+    "delete":"Scrios",
+    "edit":"eagar",
+    "name":"an t-ainm",
+    "description":"Cur síos"
   },
   "security": {
     "title":"",
-    "newPolicy":"New",
-    "reset":"Reset",
-    "roles":"Roles",
-    "desp":"Description",
-    "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "newPolicy":"nua",
+    "reset":"Athshocraigh",
+    "roles":"rólanna",
+    "desp":"Cur síos",
+    "groupuser":"Grúpa nó Úsáideoir",
+    "prompt":"Roghnaigh na róil is mian leat a shannadh"
   },
   "visibility": {
     "title":"Hidden",
-    "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "label":"Hidden i mód gnáth",
+    "prompt":"Socraigh do bhfolach Ní bheidh a thaispeáint mhír seo ar an modh gnáth, is féidir leat athrú ar ais ar an modh admin."
   },
   "linkedReport": {
-    "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "title":"Tuairisc nasctha",
+    "create":"Cruthaigh tuarascáil nua nasctha do {0}",
+    "edit":"Cuir nasctha tuarascáil {0}, roghnaigh an tuarascáil is mian leat a nascadh",
+    "location":"suíomh",
+    "report":"Tuairisc"
   }
 }

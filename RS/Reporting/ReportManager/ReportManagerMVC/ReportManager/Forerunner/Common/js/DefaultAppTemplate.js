@@ -466,6 +466,8 @@ $(function () {
             if (me.options.isFullScreen) {
                 me.$leftpane.css({ height: heightValues.max });
                 me.$rightpane.css({ height: heightValues.max });
+                me.$topdiv.css("width", $(window).width());
+                
             } else {
                 me.$leftpane.css({ height: heightValues.containerHeight });
                 me.$rightpane.css({ height: heightValues.containerHeight });
@@ -511,6 +513,16 @@ $(function () {
                 me.$topdiv.addClass("fr-core-block").removeClass("fr-core-hidden");
                 me.$topdivspacer.addClass("fr-core-block").removeClass("fr-core-hidden");
             }
+        },
+
+
+        bindExplorerEvents: function () {
+            var me = this;
+
+            //resize after explorer fetch to account for scrool bar if there
+            me.$container.on(events.reportExplorerAfterFetch(), function (e, data) {
+                me.ResetSize();
+            });
         },
 
         bindViewerEvents: function () {
@@ -571,6 +583,12 @@ $(function () {
                 me.$pagesection.show();
             });
 
+            //resize after pageloaded to account for scrool bar if there
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                me.ResetSize();
+            });
+            
+                        
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
             $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
                 var timeout = 0;

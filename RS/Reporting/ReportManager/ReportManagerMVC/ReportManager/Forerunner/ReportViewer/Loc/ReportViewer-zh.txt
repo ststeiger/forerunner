@@ -272,7 +272,10 @@
     "addNew":"创建",
     "edit":"编辑",
     "deleteSubscription":"删除",
-    "deleteFailed":"删除订阅成功"
+    "deleteFailed":"删除订阅成功",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To"
   },
   "properties": {
     "title":"属性",
@@ -311,9 +314,9 @@
   },
   "linkedReport": {
     "title":"链接报表",
-	"create":"创建基于{0}的链接报表",
-	"edit":"编辑链接报表 {0}, 选择您希望链接到的报表",
-	"location":"保存地址",
-	"report":"报表"
+    "create":"创建基于{0}的链接报表",
+    "edit":"编辑链接报表 {0}, 选择您希望链接到的报表",
+    "location":"保存地址",
+    "report":"报表"
   }
 }

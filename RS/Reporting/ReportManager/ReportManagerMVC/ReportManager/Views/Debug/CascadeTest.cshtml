@@ -1,11 +1,12 @@
 ﻿@{
     ViewBag.Title = "Test";
-    Layout = "../Shared/_RMLayout.cshtml";    
+    Layout = "../Shared/_RMLayout.cshtml";
 }
 
 @section styles {
-    <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
-    <link href="~/Custom/Mobilizer.css" rel="stylesheet"/>
+  <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+  <link href="~/Custom/Mobilizer.css" rel="stylesheet"/>
+  <link href="~/Forerunner/Lib/misc/css/ParamUtil.css" rel="stylesheet"/>
 }
 
 @section scripts{
@@ -57,6 +58,7 @@
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/ReportExplorerEZ.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/jsTree/jstree.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/misc/js/jquery.FRmaphilight.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/misc/js/ParamUtil.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardEZ.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardToolbar.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardToolPane.js"></script>
@@ -80,49 +82,19 @@
         });
 
         var defaultParamsList = {
-            "ParamsList":[{
-                "Parameter":"StartDate",
-                "IsMultiple":"false",
-                "Type":"DateTime",
-                "Value":"2003-07-07"
-            },{
-                "Parameter":"EndDate",
-                "IsMultiple":"false",
-                "Type":"DateTime",
-                "Value":"2004-07-07"
-            },{
-                "Parameter":"ProductCategory",
-                "IsMultiple":"false",
-                "Type":"Integer",
-                "Value":"1"
-            },{
-                "Parameter":"ProductSubcategory",
-                "IsMultiple":"true",
-                "Type":"Integer",
-                "Value":["2"]
-            }]
+          "ParamsList": [{
+            "Parameter": "TypeValue",
+            "IsMultiple": "false",
+            "Type": "String",
+            "Value": "1",
+            "Prompt": "Type Values"
+          }]
         }
  
         var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
 
-        $reportViewer.reportViewer("option", {
-            exportCallback:
-                 function (url) {
-                     alert(url);
-                 }
-        });
+        $reportViewer.reportViewer("loadReport", "/Northwind Test Suite/Cascading Parameter Sticky", 1, defaultParamsList);
 
-        //$reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
-        $reportViewer.reportViewer("loadReport", "/Northwind Test Suite/Simple Parameter", 1, {
-            "ParamsList": [{
-                "Parameter": "CategoryID",
-                "Value": "1"
-            },
-            {
-                "Parameter": "SecondParam",
-                "UseDefault": "true"
-            }]
-        });
     });
       
   </script>

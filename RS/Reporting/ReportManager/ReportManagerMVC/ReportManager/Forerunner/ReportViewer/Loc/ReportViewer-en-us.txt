@@ -310,7 +310,7 @@
   "visibility": {
     "title":"Hidden",
     "label":"Hidden in normal mode",
-    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
+    "prompt":"Set to hidden will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
     "title":"Linked Report",

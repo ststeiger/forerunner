@@ -399,7 +399,6 @@
     <Content Include="Forerunner\ReportViewer\js\SubscriptionModel.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
-    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ga.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-is.txt" />
@@ -519,6 +518,7 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Views\Debug\CascadeTest.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

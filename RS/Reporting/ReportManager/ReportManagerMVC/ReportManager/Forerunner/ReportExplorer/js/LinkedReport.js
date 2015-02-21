@@ -109,7 +109,6 @@ $(function () {
 
             me._reset();
 
-            //var treeData = me._createJSData(me.rootPath);
             me._createJSData(me.rootPath);
 
             me.$tree.jstree();
@@ -174,20 +173,74 @@ $(function () {
             me.$popup.css({ width: width });
             me.$popup.toggleClass("fr-core-hidden");
         },
-        _createJSData: function (path) {
+        _createJSData: function (rootPath) {
             var me = this;
+
             me.fullTreeData = {
-                text: path,
+                text: rootPath,
                 state: {
                     opened: true
                 },
                 children: []
             };
 
-            me._createTreeItems(me.fullTreeData, "catalog", path);
-            
-            me.cagalogTreeData = me._createCatalogData($.extend(true, {}, me.fullTreeData));
-            //return [me.cagalogTreeData];
+            me._getItems(rootPath, function (items) {
+                me._createTreeItems.call(me, me.fullTreeData, items.children);
+                me.catalogTreeData = me._createCatalogData.call(me, $.extend(true, {}, me.fullTreeData));
+            });
+        },
+        _createTreeItems: function (curNode, items) {
+            var me = this;
+
+            $.each(items, function (index, item) {
+                var newNode = {
+                    text: item.Name,
+                    li_attr: {
+                        dataCatalogItem: {
+                            Path: item.Path,
+                            Name: item.Name,
+                            Type: item.Type
+                        }
+                    },
+                    children: []
+                };
+                
+                //only add fole to the tree
+                if (item.Type === forerunner.ssr.constants.itemType.folder) {
+                    curNode.children.push(newNode);
+
+                    me._createTreeItems(newNode, item.children);
+                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
+                    curNode.children.push(newNode);
+                    newNode.icon = "jstree-file";
+                    newNode.li_attr.dataReport = true;
+                }
+            });
+        },
+        _getItems: function (rootPath, callback) {
+            var me = this;
+            //var items = null;
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: me.options.reportManagerAPI + "/GetCatalog",
+                async: true,
+                data: {
+                    rootPath: rootPath,
+                    showLinkedReport: false
+                },
+                success: function (data) {
+                    //items = data;
+                    if (typeof callback === "function") {
+                        callback.call(me, data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+            //return items;
         },
         _createCatalogData: function (nodeData) {
             var me = this;
@@ -197,58 +250,12 @@ $(function () {
                 if (child.children.length !== 0) {
                     me._createCatalogData(child);
                 }
-                else if(child.li_attr.dataCatalogItem.Type !== 1) {
+                else if (child.li_attr.dataCatalogItem.Type !== 1) {
                     nodeData.children.splice(i, 1);
                     i = i - 1;
                 }
             }
             return nodeData;
-        },
-        _createTreeItems: function (curNode, view, path) {
-            var me = this;
-            var items = me._getItems(view, path);
-
-            $.each(items, function (index, item) {
-                var newNode = {
-                    text: item.Name,
-                    li_attr: {
-                        dataCatalogItem: item
-                    },
-                    children: []
-                };
-                
-                //only add fole to the tree
-                if (item.Type === forerunner.ssr.constants.itemType.folder) {
-                    curNode.children.push(newNode);
-                    me._createTreeItems(newNode, view, item.Path);
-                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
-                    curNode.children.push(newNode);
-                    newNode.icon = "jstree-file";
-                    newNode.li_attr.dataReport = true;
-                }
-            });
-        },
-        _getItems: function (view, path) {
-            var me = this;
-            var items = null;
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
-                async: false,
-                data: {
-                    view: view,
-                    path: path
-                },
-                success: function (data) {
-                    items = data;
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-
-            return items;
         },
         setData: function (catalogItem){
             var me = this,
@@ -287,7 +294,7 @@ $(function () {
 
                 me.$tree.jstree({
                     core: {
-                        data: me.cagalogTreeData
+                        data: me.catalogTreeData
                     }
                 });
             }

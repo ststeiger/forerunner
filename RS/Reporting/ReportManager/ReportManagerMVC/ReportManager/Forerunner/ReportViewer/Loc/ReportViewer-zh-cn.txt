@@ -273,9 +273,9 @@
     "edit":"编辑",
     "deleteSubscription":"删除",
     "deleteFailed":"删除订阅成功",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To"
+    "ccPlaceholder":"抄送",
+    "bccPlaceholder":"秘密抄送",
+    "replyToPlaceholder":"答复"
   },
   "properties": {
     "title":"属性",

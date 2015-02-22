@@ -44,7 +44,7 @@
     "previousPage": ["fr"],
     "reportPage": ["is","fr"],
     "zoom": ["ru"],
- 	"dsCredential":["sv"],
+ 	"dsCredential":["sv","ga"],
     "reportPage":["fr"],
     "lastPage":["ga"],
     "logOff":["ga", "it", "pt", "ro"],
@@ -157,8 +157,8 @@
     "description":[],
     "includeLink":[],
     "includeReport":[],
-    "ccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv"],
-    "bccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv"],
+    "ccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv", "it"],
+    "bccPlaceholder":["de","es","fr","ga","is","ja","pt","ro","ru","sv","it"],
      "replyToPlaceholder":["fr","it","ru"],
     "format":["de", "fr", "sv", "pt", "is", "ro"]
     },
@@ -169,11 +169,12 @@
    },
     "common": {
     "name":["de","fr","is","sv"],
-    "description":["fr"]
+    "description":["fr"],
+    "submit": ["sv"]
    
     },
     "visibility": {
-    "title":["ga"],
+    "title":["ga","sv"],
     "label":[],
     "prompt":[]
   },

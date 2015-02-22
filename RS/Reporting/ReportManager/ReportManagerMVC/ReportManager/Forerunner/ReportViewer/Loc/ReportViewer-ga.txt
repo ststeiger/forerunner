@@ -197,7 +197,7 @@
     "newSet":"Socraigh Nua"
   },
   "dsCredential": {
-    "title":"Datasource credential",
+    "title":"credential Datasource",
     "cancel":"Cealaigh",
     "submit":"Cuir",
     "username":"ainm Logáil isteach:",

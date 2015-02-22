@@ -452,7 +452,9 @@ $(function () {
         ResetSize: function () {
             var me = this;
             
+            $(window).resize();
             var heightValues = me.getHeightValues();
+
 
             // Setting the min-height allows the iPhone to scroll the left and right panes
             // properly even when the report has not been loaded due to paramters not being

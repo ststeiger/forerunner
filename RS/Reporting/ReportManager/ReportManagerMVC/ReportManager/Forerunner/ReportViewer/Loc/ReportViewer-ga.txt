@@ -305,7 +305,8 @@
     "roles":"rólanna",
     "desp":"Cur síos",
     "groupuser":"Grúpa nó Úsáideoir",
-    "prompt":"Roghnaigh na róil is mian leat a shannadh"
+    "prompt":"Roghnaigh na róil is mian leat a shannadh",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"Hidden",

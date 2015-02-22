@@ -104,18 +104,23 @@ jQuery.fn.extend({
             $mask.width($(this).width());
         }
 
-        if (onClick !== undefined)
+        if (onClick && typeof onClick === "function") {
             $mask.on("click", onClick);
+        }
+
         return $(this);
     },
     unmask: function (onClick) {
         var $mask = $(this).find(".fr-core-mask");
+
         if ($mask.length === 0) {
             return $(this);
         }
 
-        if (onClick !== undefined)
+        if (onClick && typeof onClick === "function") {
             $mask.on("click", onClick);
+        }
+
         $mask.remove();
 
         return $(this);
@@ -595,8 +600,6 @@ $(function () {
             forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
-            /** widget + event, lowercase */
-            forerunnerLinkedReportClose: function () { return (forerunner.ssr.constants.widgets.forerunnerLinkedReport + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",
@@ -1933,14 +1936,15 @@ $(function () {
     * @namespace
     */
     forerunner.dialog = {
+        dialogLock: false,
         /**
-       * Show a modal dialog with appContainer and target dialog container specify
-       *
-       * @function forerunner.dialog#showModalDialog
-       * @prop {Object} options.$appContainer - The container jQuery object that holds the application
-       * @param {Object} target - object that modal dialog apply to
-       * @member
-       */
+         * Show a modal dialog with appContainer and target dialog container specify
+         *
+         * @function forerunner.dialog#showModalDialog
+         * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+         * @param {Object} target - object that modal dialog apply to
+         * @member
+         */
         showModalDialog: function ($appContainer, target) {
             var me = this;
 
@@ -1968,8 +1972,14 @@ $(function () {
         closeModalDialog: function ($appContainer, target) {
             var me = this;
             
-            me._removeEventsBinding();
             target.element.css({ top: "", left: "" }).hide();
+
+            //in some cases there are multiple dialogs show up at one time
+            //like message box and other dialog, so the main dialog will set dialogLock to true
+            //to make sure the mask background will be there until it get closed
+            if (forerunner.dialog.dialogLock) return;
+
+            me._removeEventsBinding();
             $appContainer.unmask();
 
             if (!forerunner.device.isWindowsPhone())

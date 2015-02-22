@@ -4832,7 +4832,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            $(".fr-messagebox-msg").val();
+            $(".fr-messagebox-msg").html("");
             
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         }
@@ -5294,7 +5294,9 @@ $(function () {
         ResetSize: function () {
             var me = this;
             
+            $(window).resize();
             var heightValues = me.getHeightValues();
+
 
             // Setting the min-height allows the iPhone to scroll the left and right panes
             // properly even when the report has not been loaded due to paramters not being
@@ -6676,6 +6678,8 @@ $(function () {
                 me._refreshUI();
             }
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -6685,6 +6689,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            forerunner.dialog.dialogLock = false;
             me._trigger(events.close, null, { $forerunnerSecurity: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -6813,7 +6818,10 @@ $(function () {
         _submit: function () {
             var me = this;
 
-            var policyArr = me._generatePostData();            
+            var policyArr = me._generatePostData();
+
+            if (policyArr === null) return;
+
             me._setPolicy(policyArr);
         },
         _generatePostData: function () {
@@ -6822,6 +6830,11 @@ $(function () {
                 Roles = [];
 
             var groupuser = me.$groupuser.val();
+
+            if ($.trim(groupuser) === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.accountMsg);
+                return null;
+            }
 
             $.each(me.$layer2.find('.acc-chk'), function (i, obj) {
                 if (obj.checked) {
@@ -6915,6 +6928,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('update item policy wrong', data.Exception);
                         return;
                     }
@@ -6941,6 +6956,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('inherit parent policy wrong', data.Exception);
                         return;
                     }
@@ -8353,17 +8370,9 @@ $(function () {
                 return;
             }
 
-            //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
             $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
             $linkedReportDlg.forerunnerLinkedReport("openDialog");
 
-            $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
-                //if (previous) {
-                //    $linkedReportDlg.forerunnerLinkedReport("setCurPolicy", previous);
-
-                //    previous = null;
-                //}
-            });
             me.closeMenu();
         }
     }); //$.widget
@@ -9985,7 +9994,6 @@ $(function () {
 
             me._reset();
 
-            //var treeData = me._createJSData(me.rootPath);
             me._createJSData(me.rootPath);
 
             me.$tree.jstree();
@@ -10050,20 +10058,74 @@ $(function () {
             me.$popup.css({ width: width });
             me.$popup.toggleClass("fr-core-hidden");
         },
-        _createJSData: function (path) {
+        _createJSData: function (rootPath) {
             var me = this;
+
             me.fullTreeData = {
-                text: path,
+                text: rootPath,
                 state: {
                     opened: true
                 },
                 children: []
             };
 
-            me._createTreeItems(me.fullTreeData, "catalog", path);
-            
-            me.cagalogTreeData = me._createCatalogData($.extend(true, {}, me.fullTreeData));
-            //return [me.cagalogTreeData];
+            me._getItems(rootPath, function (items) {
+                me._createTreeItems.call(me, me.fullTreeData, items.children);
+                me.catalogTreeData = me._createCatalogData.call(me, $.extend(true, {}, me.fullTreeData));
+            });
+        },
+        _createTreeItems: function (curNode, items) {
+            var me = this;
+
+            $.each(items, function (index, item) {
+                var newNode = {
+                    text: item.Name,
+                    li_attr: {
+                        dataCatalogItem: {
+                            Path: item.Path,
+                            Name: item.Name,
+                            Type: item.Type
+                        }
+                    },
+                    children: []
+                };
+                
+                //only add fole to the tree
+                if (item.Type === forerunner.ssr.constants.itemType.folder) {
+                    curNode.children.push(newNode);
+
+                    me._createTreeItems(newNode, item.children);
+                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
+                    curNode.children.push(newNode);
+                    newNode.icon = "jstree-file";
+                    newNode.li_attr.dataReport = true;
+                }
+            });
+        },
+        _getItems: function (rootPath, callback) {
+            var me = this;
+            //var items = null;
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: me.options.reportManagerAPI + "/GetCatalog",
+                async: true,
+                data: {
+                    rootPath: rootPath,
+                    showLinkedReport: false
+                },
+                success: function (data) {
+                    //items = data;
+                    if (typeof callback === "function") {
+                        callback.call(me, data);
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+            //return items;
         },
         _createCatalogData: function (nodeData) {
             var me = this;
@@ -10073,58 +10135,12 @@ $(function () {
                 if (child.children.length !== 0) {
                     me._createCatalogData(child);
                 }
-                else if(child.li_attr.dataCatalogItem.Type !== 1) {
+                else if (child.li_attr.dataCatalogItem.Type !== 1) {
                     nodeData.children.splice(i, 1);
                     i = i - 1;
                 }
             }
             return nodeData;
-        },
-        _createTreeItems: function (curNode, view, path) {
-            var me = this;
-            var items = me._getItems(view, path);
-
-            $.each(items, function (index, item) {
-                var newNode = {
-                    text: item.Name,
-                    li_attr: {
-                        dataCatalogItem: item
-                    },
-                    children: []
-                };
-                
-                //only add fole to the tree
-                if (item.Type === forerunner.ssr.constants.itemType.folder) {
-                    curNode.children.push(newNode);
-                    me._createTreeItems(newNode, view, item.Path);
-                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
-                    curNode.children.push(newNode);
-                    newNode.icon = "jstree-file";
-                    newNode.li_attr.dataReport = true;
-                }
-            });
-        },
-        _getItems: function (view, path) {
-            var me = this;
-            var items = null;
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
-                async: false,
-                data: {
-                    view: view,
-                    path: path
-                },
-                success: function (data) {
-                    items = data;
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-
-            return items;
         },
         setData: function (catalogItem){
             var me = this,
@@ -10163,7 +10179,7 @@ $(function () {
 
                 me.$tree.jstree({
                     core: {
-                        data: me.cagalogTreeData
+                        data: me.catalogTreeData
                     }
                 });
             }
@@ -10197,6 +10213,8 @@ $(function () {
         openDialog: function () {
             var me = this;
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -10206,6 +10224,9 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+
+            forerunner.dialog.dialogLock = false;
+
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -10243,7 +10264,9 @@ $(function () {
                     newLink: fileLocation
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Set linked report wrong.', data.Exception);
                         return;
                     }
@@ -10270,7 +10293,9 @@ $(function () {
                     link: me.curPath
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Create linked report wrong.', data.Exception);
                         return;
                     }

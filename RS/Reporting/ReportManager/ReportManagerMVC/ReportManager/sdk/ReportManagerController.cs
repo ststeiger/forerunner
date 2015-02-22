@@ -546,6 +546,25 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage GetCatalog(string rootPath, bool showLinkedReport, string instance = null)
+        {
+            try
+            {
+                var catalogs = GetReportManager(instance).GetCatalog(rootPath, showLinkedReport);
+                if (catalogs == null)
+                {
+                    return GetEmptyJSONResponse();
+                }
+
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(catalogs)), "text/JSON");
+            }
+            catch (Exception ex)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
+        [HttpGet]
         public HttpResponseMessage GetReportLink(string path, string instance = null)
         {
             try

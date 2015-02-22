@@ -306,7 +306,8 @@
     "roles":"rôles",
     "desp":"Description",
     "groupuser":"Groupe ou utilisateur",
-    "prompt":"Sélectionnez les rôles que vous voulez attribuer"
+    "prompt":"Sélectionnez les rôles que vous voulez attribuer",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"caché",

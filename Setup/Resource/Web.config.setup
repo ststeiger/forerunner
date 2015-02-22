@@ -16,7 +16,7 @@
     <add key="Forerunner.DefaultUserDomain" value="" />
     <add key="Forerunner.ReportServerWSUrl" value="http://localhost/ReportServer" />
     <add key="Forerunner.ReportServerDataSource" value="." />
-    <add key="Forerunner.UseIntegratedSecurityForSQL" value="false" />
+    <add key="Forerunner.UseIntegratedSecurityForSQL" value="true" />
     <add key="Forerunner.ReportServerDB" value="ReportServer" />
     <add key="Forerunner.ReportServerDBUser" value="" />
     <add key="Forerunner.ReportServerDBPWD" value="" />

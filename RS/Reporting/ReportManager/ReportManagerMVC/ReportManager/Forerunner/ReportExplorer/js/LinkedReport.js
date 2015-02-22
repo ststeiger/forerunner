@@ -328,6 +328,8 @@ $(function () {
         openDialog: function () {
             var me = this;
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -337,6 +339,9 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+
+            forerunner.dialog.dialogLock = false;
+
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -374,7 +379,9 @@ $(function () {
                     newLink: fileLocation
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Set linked report wrong.', data.Exception);
                         return;
                     }
@@ -401,7 +408,9 @@ $(function () {
                     link: me.curPath
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Create linked report wrong.', data.Exception);
                         return;
                     }

@@ -305,7 +305,8 @@
     "roles":"Роли",
     "desp":"описание",
     "groupuser":"Пользователь или группа пользователей",
-    "prompt":"Выберите роли, которые необходимо присвоить"
+    "prompt":"Выберите роли, которые необходимо присвоить",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"скрытый",

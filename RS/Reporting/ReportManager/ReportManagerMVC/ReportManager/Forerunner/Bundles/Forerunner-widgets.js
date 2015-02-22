@@ -4832,7 +4832,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            $(".fr-messagebox-msg").val();
+            $(".fr-messagebox-msg").html("");
             
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         }
@@ -6676,6 +6676,8 @@ $(function () {
                 me._refreshUI();
             }
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -6685,6 +6687,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            forerunner.dialog.dialogLock = false;
             me._trigger(events.close, null, { $forerunnerSecurity: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -6813,7 +6816,10 @@ $(function () {
         _submit: function () {
             var me = this;
 
-            var policyArr = me._generatePostData();            
+            var policyArr = me._generatePostData();
+
+            if (policyArr === null) return;
+
             me._setPolicy(policyArr);
         },
         _generatePostData: function () {
@@ -6822,6 +6828,11 @@ $(function () {
                 Roles = [];
 
             var groupuser = me.$groupuser.val();
+
+            if ($.trim(groupuser) === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.accountMsg);
+                return null;
+            }
 
             $.each(me.$layer2.find('.acc-chk'), function (i, obj) {
                 if (obj.checked) {
@@ -6915,6 +6926,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('update item policy wrong', data.Exception);
                         return;
                     }
@@ -6941,6 +6954,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('inherit parent policy wrong', data.Exception);
                         return;
                     }
@@ -8353,17 +8368,9 @@ $(function () {
                 return;
             }
 
-            //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
             $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
             $linkedReportDlg.forerunnerLinkedReport("openDialog");
 
-            $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
-                //if (previous) {
-                //    $linkedReportDlg.forerunnerLinkedReport("setCurPolicy", previous);
-
-                //    previous = null;
-                //}
-            });
             me.closeMenu();
         }
     }); //$.widget
@@ -10204,6 +10211,8 @@ $(function () {
         openDialog: function () {
             var me = this;
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -10213,6 +10222,9 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+
+            forerunner.dialog.dialogLock = false;
+
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -10250,7 +10262,9 @@ $(function () {
                     newLink: fileLocation
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Set linked report wrong.', data.Exception);
                         return;
                     }
@@ -10277,7 +10291,9 @@ $(function () {
                     link: me.curPath
                 },
                 success: function (data) {
-                    if (data.Status === "Failed") {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('Create linked report wrong.', data.Exception);
                         return;
                     }

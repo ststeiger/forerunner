@@ -305,7 +305,8 @@
     "roles":"角色",
     "desp":"说明",
     "groupuser":"域名帐号",
-    "prompt":"选择你要分配的角色"
+    "prompt":"选择你要分配的角色",
+    "accountMsg":"必须为角色分配指定有效的组或用户帐户"
   },
   "visibility": {
     "title":"隐藏",

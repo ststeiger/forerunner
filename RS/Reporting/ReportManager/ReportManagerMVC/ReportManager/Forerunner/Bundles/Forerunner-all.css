@@ -807,6 +807,10 @@ input.loginsize {
   .fr-messagebox-innerpage { min-width: 200px; max-width: 320px; }
 }
 
+@media only screen and (max-width : 479px) {
+    .fr-messagebox-content {padding: 8px;}
+}
+
 html,body {
   
   min-height: 100%;

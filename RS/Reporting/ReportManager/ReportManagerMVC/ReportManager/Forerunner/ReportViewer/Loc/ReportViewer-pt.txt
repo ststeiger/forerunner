@@ -305,7 +305,8 @@
     "roles":"Roles",
     "desp":"descrição",
     "groupuser":"Grupo ou Usuário",
-    "prompt":"Selecione as funções que você deseja atribuir"
+    "prompt":"Selecione as funções que você deseja atribuir",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"oculto",

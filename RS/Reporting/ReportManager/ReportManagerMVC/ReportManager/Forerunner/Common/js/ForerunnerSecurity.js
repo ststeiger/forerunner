@@ -205,6 +205,8 @@ $(function () {
                 me._refreshUI();
             }
 
+            forerunner.dialog.dialogLock = true;
+
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -214,6 +216,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
+            forerunner.dialog.dialogLock = false;
             me._trigger(events.close, null, { $forerunnerSecurity: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -342,7 +345,10 @@ $(function () {
         _submit: function () {
             var me = this;
 
-            var policyArr = me._generatePostData();            
+            var policyArr = me._generatePostData();
+
+            if (policyArr === null) return;
+
             me._setPolicy(policyArr);
         },
         _generatePostData: function () {
@@ -351,6 +357,11 @@ $(function () {
                 Roles = [];
 
             var groupuser = me.$groupuser.val();
+
+            if ($.trim(groupuser) === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.accountMsg);
+                return null;
+            }
 
             $.each(me.$layer2.find('.acc-chk'), function (i, obj) {
                 if (obj.checked) {
@@ -444,6 +455,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('update item policy wrong', data.Exception);
                         return;
                     }
@@ -470,6 +483,8 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
                         console.log('inherit parent policy wrong', data.Exception);
                         return;
                     }

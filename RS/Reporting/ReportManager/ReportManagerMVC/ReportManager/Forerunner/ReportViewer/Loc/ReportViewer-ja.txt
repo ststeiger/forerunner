@@ -305,7 +305,8 @@
     "roles":"役割",
     "desp":"説明",
     "groupuser":"グループまたはユーザー",
-    "prompt":"割り当てるロールを選択"
+    "prompt":"割り当てるロールを選択",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"隠された",

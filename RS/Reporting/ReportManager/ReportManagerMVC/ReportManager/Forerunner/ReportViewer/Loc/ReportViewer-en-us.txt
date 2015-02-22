@@ -267,9 +267,9 @@
     "save":"Save",
     "manageSubscription":"Manage Subscription",
     "toPlaceholder":"To",
-	"ccPlaceholder":"CC",
-	"bccPlaceholder":"BCC",
-	"replyToPlaceholder":"Reply-To",
+    "ccPlaceholder":"CC",
+    "bccPlaceholder":"BCC",
+    "replyToPlaceholder":"Reply-To",
     "subjectPlaceholder":"Subject",
     "descriptionPlaceholder":"Description",
     "commentPlaceholder":"Comment",
@@ -305,7 +305,8 @@
     "roles":"Roles",
     "desp":"Description",
     "groupuser":"Group or User",
-    "prompt":"Select the roles you want to assign"
+    "prompt":"Select the roles you want to assign",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"Hidden",
@@ -314,9 +315,9 @@
   },
   "linkedReport": {
     "title":"Linked Report",
-	"create":"Create a new linked report for {0}",
-	"edit":"Edit linked report {0}, select the report you want to link",
-	"location":"Location",
-	"report":"Report"
+    "create":"Create a new linked report for {0}",
+    "edit":"Edit linked report {0}, select the report you want to link",
+    "location":"Location",
+    "report":"Report"
   }
 }

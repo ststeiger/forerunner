@@ -195,17 +195,9 @@ $(function () {
                 return;
             }
 
-            //var previous = $securityDlg.forerunnerSecurity("getCurPolicy");
             $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
             $linkedReportDlg.forerunnerLinkedReport("openDialog");
 
-            $linkedReportDlg.one(events.forerunnerLinkedReportClose(), function (event, data) {
-                //if (previous) {
-                //    $linkedReportDlg.forerunnerLinkedReport("setCurPolicy", previous);
-
-                //    previous = null;
-                //}
-            });
             me.closeMenu();
         }
     }); //$.widget

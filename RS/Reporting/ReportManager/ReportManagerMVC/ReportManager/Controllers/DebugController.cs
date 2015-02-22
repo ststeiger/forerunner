@@ -20,6 +20,9 @@ namespace ReportManager.Controllers
         {
             return View();
         }
-
+        public ActionResult CascadeTest()
+        {
+            return View();
+        }
     }
 }

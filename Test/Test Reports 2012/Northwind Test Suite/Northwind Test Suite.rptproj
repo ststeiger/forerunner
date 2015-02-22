@@ -51,6 +51,10 @@
       <FullPath>Cascading Parameter single product.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Cascading Parameter Sticky.rdl</Name>
+      <FullPath>Cascading Parameter Sticky.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Checkin Test Report.rdl</Name>
       <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>
@@ -196,10 +200,6 @@
       <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Phone_Leads_with_Transcription.rdl</Name>
-      <FullPath>Phone_Leads_with_Transcription.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>pie chart.rdl</Name>
       <FullPath>pie chart.rdl</FullPath>
     </ProjectItem>
@@ -299,7 +299,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

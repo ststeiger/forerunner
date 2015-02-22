@@ -305,7 +305,8 @@
     "roles":"hlutverk",
     "desp":"lýsing",
     "groupuser":"Group eða User",
-    "prompt":"Veldu hlutverk sem þú vilt tengja"
+    "prompt":"Veldu hlutverk sem þú vilt tengja",
+    "accountMsg":"A valid group or user account name must be specified for this role assignment"
   },
   "visibility": {
     "title":"falinn",

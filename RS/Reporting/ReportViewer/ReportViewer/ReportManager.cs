@@ -32,6 +32,14 @@ namespace Forerunner.SSRS.Manager
         public bool overwrite { get; set; }
     }
 
+    public class SiteCatalog
+    {
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public ItemTypeEnum Type { get; set; }
+        public List<SiteCatalog> children = null;
+    }
+
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
@@ -2306,6 +2314,58 @@ namespace Forerunner.SSRS.Manager
             catch (Exception ex)
             {
                 return getReturnFailed();
+            }
+        }
+
+        public SiteCatalog GetCatalog(string root, bool showLinkedReport = false)
+        {
+            SiteCatalog rootNode = new SiteCatalog();
+            rootNode.Name = root;
+            rootNode.Path = root;
+            rootNode.Type = ItemTypeEnum.Folder;//default to folder type
+
+            GetCatalogItem(rootNode, showLinkedReport);
+            
+            return rootNode;
+        }
+
+        public void GetCatalogItem(SiteCatalog parentNode, bool showLinkedReport)
+        {
+            string path = parentNode.Path;
+
+            CatalogItem[] items = callListChildren(path, false);
+
+            if (items.Length == 0)
+            {
+                return;
+            }
+
+            parentNode.children = new List<SiteCatalog>();
+
+            foreach (CatalogItem item in items)
+            {
+                SiteCatalog child = new SiteCatalog();
+                child.Name = item.Name;
+                child.Type = item.Type;
+                child.Path = item.Path;
+
+                //if (item.Type == ItemTypeEnum.Folder || item.Type == ItemTypeEnum.Site)
+                if (item.Type == ItemTypeEnum.Folder)
+                {
+                    //recusive get the catalog
+                    GetCatalogItem(child, showLinkedReport);
+
+                    //if the catalog not include valid items then not add them into the list
+                    if (child.children.Count() != 0)
+                    {
+                        parentNode.children.Add(child);
+                    }
+                } // for now only return report and resource type items, for linked report developer can choose show them or not, default to false
+                  // not show hidden items
+                else if (((item.Type == ItemTypeEnum.Report || item.Type == ItemTypeEnum.Resource) || (item.Type == ItemTypeEnum.LinkedReport && showLinkedReport)) && !item.Hidden)
+                {
+                    parentNode.children.Add(child);
+                }
             }
         }
 

@@ -93,7 +93,7 @@ $(function () {
          */
         closeDialog: function () {
             var me = this;
-            $(".fr-messagebox-msg").val();
+            $(".fr-messagebox-msg").html("");
             
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         }

@@ -306,7 +306,7 @@
     "desp":"Cur síos",
     "groupuser":"Grúpa nó Úsáideoir",
     "prompt":"Roghnaigh na róil is mian leat a shannadh",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Ní mór cuntas úsáideora grúpa nó ainm bailí a shonrú don ról seo tasc."
   },
   "visibility": {
     "title":"Hidden",

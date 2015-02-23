@@ -307,12 +307,12 @@
     "desp":"Description",
     "groupuser":"Groupe ou utilisateur",
     "prompt":"Sélectionnez les rôles que vous voulez attribuer",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Un compte utilisateur groupe ou nom valide doit être spécifié pour cette attribution de rôle."
   },
   "visibility": {
     "title":"caché",
     "label":"Caché dans le mode normal",
-    "prompt":"Set pour hiddien ne sera pas afficher cet objet dans le mode normal, vous pouvez rallumer en mode admin."
+    "prompt":"Set pour caché ne sera pas afficher cet objet dans le mode normal, vous pouvez rallumer en mode admin."
   },
   "linkedReport": {
     "title":"Rapport Lié",

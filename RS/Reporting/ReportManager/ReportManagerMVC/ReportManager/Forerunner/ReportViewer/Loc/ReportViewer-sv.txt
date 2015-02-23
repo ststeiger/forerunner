@@ -306,7 +306,7 @@
     "desp":"Beskrivning",
     "groupuser":"Grupp eller Användare",
     "prompt":"Välj de roller du vill tilldela",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Ett giltigt grupp eller användare kontonamn måste anges för denna rolltilldelning"
   },
   "visibility": {
     "title":"Hidden",

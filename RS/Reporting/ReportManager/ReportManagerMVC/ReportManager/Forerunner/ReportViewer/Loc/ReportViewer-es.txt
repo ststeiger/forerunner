@@ -307,7 +307,7 @@
     "desp":"Descripción",
     "groupuser":"Grupo o Usuario",
     "prompt":"Seleccione las funciones que desea asignar",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Un nombre de grupo o cuenta de usuario válido debe ser especificado para esta asignación de funciones."
   },
   "visibility": {
     "title":"oculto",

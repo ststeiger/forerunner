@@ -306,7 +306,7 @@
     "desp":"descriere",
     "groupuser":"Grupul sau de utilizare",
     "prompt":"Selectați rolurile pe care doriți să o atribuiți",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Un grup sau cont de utilizator nume valid trebuie să fie specificate pentru această misiune rol"
   },
   "visibility": {
     "title":"ascuns",

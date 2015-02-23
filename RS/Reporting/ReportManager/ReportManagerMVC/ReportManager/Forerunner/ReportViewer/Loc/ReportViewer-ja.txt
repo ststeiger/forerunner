@@ -306,7 +306,7 @@
     "desp":"説明",
     "groupuser":"グループまたはユーザー",
     "prompt":"割り当てるロールを選択",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"有効なグループまたはユーザーアカウント名がこの役割の割り当てを指定する必要があります"
   },
   "visibility": {
     "title":"隠された",

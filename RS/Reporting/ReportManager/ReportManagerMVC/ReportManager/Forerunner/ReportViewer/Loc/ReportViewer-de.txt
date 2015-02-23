@@ -306,7 +306,7 @@
     "desp":"Beschreibung",
     "groupuser":"Gruppe oder Benutzer",
     "prompt":"Wählen Sie die Rollen, die Sie zuweisen möchten",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"Eine gültige Gruppen- oder Benutzerkontoname muss für diese Rollenzuweisung festgelegt werden."
   },
   "visibility": {
     "title":"versteckt",

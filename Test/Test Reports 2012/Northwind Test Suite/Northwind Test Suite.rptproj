@@ -63,10 +63,6 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Copy of N0359-061-REP-0236.rdl</Name>
-      <FullPath>Copy of N0359-061-REP-0236.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>CustDel.rdl</Name>
       <FullPath>CustDel.rdl</FullPath>
     </ProjectItem>
@@ -97,10 +93,6 @@
     <ProjectItem>
       <Name>Dynamic hidden cells.rdl</Name>
       <FullPath>Dynamic hidden cells.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
-      <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Go To Report Action Test.rdl</Name>
@@ -291,6 +283,10 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Northwind Sales - Backup.rdl</Name>
+      <FullPath>Northwind Sales - Backup.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -299,7 +295,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

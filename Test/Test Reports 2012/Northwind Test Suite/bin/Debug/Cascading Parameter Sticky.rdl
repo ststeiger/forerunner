@@ -983,7 +983,7 @@ Select '8' AS Value, 'Seafood' AS Label</CommandText>
       <DefaultValue>
         <DataSetReference>
           <DataSetName>TypeProducts</DataSetName>
-          <ValueField>ProductID</ValueField>
+          <ValueField>ProductName</ValueField>
         </DataSetReference>
       </DefaultValue>
       <Prompt>Type</Prompt>

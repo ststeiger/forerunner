@@ -33,7 +33,7 @@
     }
     .fr-security-layer .role, .fr-security-layer .desp {
         color: gray;
-        display: none;
+        /*display: none;*/
         font-size: 14px;
         margin:6px 0 -4px;
     }
@@ -43,6 +43,13 @@
         .fr-security-layer .role .tit, .fr-security-layer .desp .tit {
             font-weight: 700;
         }
+     .fr-security-layer ul li span {
+        max-width:350px; 
+        -ms-word-break:break-all;
+        word-break:break-all;
+        -ms-word-wrap:break-word;
+        word-wrap:break-word;
+    }
     .fr-security-layer ul li a {
         float: right;
         margin: 0 2px;
@@ -56,7 +63,7 @@
         border-radius: 2px;
     }
 
-.fr-security-container .layer-2, .fr-core-center .operate-2 {
+.fr-security-container .layer-2, .fr-security-container .layer-1 .funcBtn, .fr-core-center .operate-0,.fr-core-center .operate-1, .fr-core-center .operate-2 {
     display: none;
 }
     .fr-security-container .layer-2 .header {
@@ -81,23 +88,26 @@
     padding-bottom:16px;
     margin:0px;
 }
-    .fr-security-submit-container input {
+    .fr-security-submit-container .fr-security-btn {
         width: 130px;
+        margin: 0px 20px;
+    }
+    .fr-security-submit-container .fr-security-edit {
+        width: 220px;
         margin: 0px 20px;
     }
 
 @media only screen and (max-width : 479px) {
     .fr-security-container {
-        width: 320px;
-        
+        width: 340px;
     }
     .fr-security-layer {
         min-height: 140px;
         max-height: 240px;
     }
-
     .fr-security-submit-container input {
         width: 100px;
         margin: 0px 10px;
     }
+    .fr-security-layer ul li span { max-width:200px; }
 }

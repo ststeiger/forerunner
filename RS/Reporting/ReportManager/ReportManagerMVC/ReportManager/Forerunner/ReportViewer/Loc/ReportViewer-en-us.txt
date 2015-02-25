@@ -306,7 +306,14 @@
     "desp":"Description",
     "groupuser":"Group or User",
     "prompt":"Select the roles you want to assign",
-    "accountMsg":"A valid group or user account name must be specified for this role assignment"
+    "accountMsg":"A valid group or user account name must be specified for this role assignment",
+    "editSecurity":"Edit Item Security",
+    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
+    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
+    "deleteConfirm":"Are you sure to delete this role assignment?",
+    "home":"Home",
+    "revert":"Revert",
+    "roleEmptyMsg":"Select a minimum of one role for this group or user."
   },
   "visibility": {
     "title":"Hidden",

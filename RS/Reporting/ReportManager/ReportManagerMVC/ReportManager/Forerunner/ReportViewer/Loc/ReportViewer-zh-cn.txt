@@ -306,7 +306,14 @@
     "desp":"说明",
     "groupuser":"域名帐号",
     "prompt":"选择你要分配的角色",
-    "accountMsg":"必须为角色分配指定有效的组或用户帐户"
+    "accountMsg":"必须为角色分配指定有效的组或用户帐户",
+    "editSecurity":"编辑项安全设置",
+    "editConfirm":"从父项继承项安全设置。是否要对此项应用不同于 {0} 父项的安全设置?",
+    "revertConfirm":"为此项定义的安全设置将由其父项 {0} 的安全设置取代。是否继续?",
+    "deleteConfirm":"是否确定要删除此角色分配?",
+    "home":"主页",
+    "revert":"还原",
+    "roleEmptyMsg":"为该组或用户选中至少一个角色"
   },
   "visibility": {
     "title":"隐藏",
@@ -315,7 +322,7 @@
   },
   "linkedReport": {
     "title":"链接报表",
-    "create":"创建基于{0}的链接报表",
+    "create":"创建基于 {0} 的链接报表",
     "edit":"编辑链接报表 {0}, 选择您希望链接到的报表",
     "location":"保存地址",
     "report":"报表"

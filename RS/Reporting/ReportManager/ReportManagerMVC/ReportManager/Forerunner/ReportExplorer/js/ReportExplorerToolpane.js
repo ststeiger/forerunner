@@ -110,6 +110,7 @@ $(function () {
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
+
                 toolpaneItems.push(mi.itemSecurity);
             }
 

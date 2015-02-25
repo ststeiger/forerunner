@@ -306,7 +306,14 @@
     "desp":"說明",
     "groupuser":"域名帳號",
     "prompt":"選擇妳要分配的角色",
-    "accountMsg":"必須為角色分配指定有效的組或用戶帳戶"
+    "accountMsg":"必須為角色分配指定有效的組或用戶帳戶",
+    "editSecurity":"編輯項安全設置",
+    "editConfirm":"從父項繼承項安全設置。是否要對此項應用不同於 {0} 父項的安全設置?",
+    "revertConfirm":"為此項定義的安全設置將由其父項 {0} 的安全設置取代。是否繼續？",
+    "deleteConfirm":"是否確定要刪除此角色分配?",
+    "home":"主頁",
+    "revert":"還原",
+    "roleEmptyMsg":"為該組或用戶選中至少壹個角色"
   },
   "visibility": {
     "title":"隱藏",
@@ -315,7 +322,7 @@
   },
   "linkedReport": {
     "title":"鏈接報表",
-    "create":"創建基於{0}的鏈接報表",
+    "create":"創建基於 {0} 的鏈接報表",
     "edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
     "location":"保存地址",
     "report":"報表"

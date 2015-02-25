@@ -324,7 +324,7 @@
     "title":"tengd Report",
     "create":"Búa til nýjan tengd skýrslu fyrir {0}",
     "edit":"Breyta tengd skýrslu {0} Veldu skýrsluna sem þú vilt tengja",
-    "location":"Location",
+    "location":"Staðsetning",
     "report":"Skýrsla"
   }
 }

@@ -433,6 +433,7 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>CategoryID</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -459,6 +460,7 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>ProductName</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>DataSet1</DataSetName>
@@ -477,15 +479,17 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>Is Cheap</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
       <DefaultValue>
         <Values>
-          <Value>1/1/2001 12:00:00 AM</Value>
+          <Value>01/01/2001 00:00:00</Value>
         </Values>
       </DefaultValue>
       <Prompt>ProductionDate</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
       <DataType>String</DataType>
@@ -496,6 +500,7 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>IntegerTest</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="MultipleValues">
       <DataType>String</DataType>
@@ -506,6 +511,7 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>MultipleValues</Prompt>
+      <Hidden>true</Hidden>
       <ValidValues>
         <ParameterValues>
           <ParameterValue>
@@ -540,11 +546,7 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>FloatTest</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ReportParameter1">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
+      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

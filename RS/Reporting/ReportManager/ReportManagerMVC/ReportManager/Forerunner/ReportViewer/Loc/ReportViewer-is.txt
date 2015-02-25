@@ -307,13 +307,13 @@
     "groupuser":"Group eða User",
     "prompt":"Veldu hlutverk sem þú vilt tengja",
     "accountMsg":"Gilt hópur eða notandi reikningur nafn verður að vera tilgreind fyrir þetta hlutverk verkefni",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
+    "editSecurity":"Breyta Item Security",
+    "editConfirm":"Item öryggi er arfur frá foreldri sínu. Viltu sækja öryggisstillingar fyrir þetta atriði sem eru frábrugðin að {0} foreldri?",
+    "revertConfirm":"Öryggisstillingar sem eru skilgreind fyrir þessa mynd verður skipt út öryggisstillingar foreldri sitt {0}. Viltu halda áfram?",
+    "deleteConfirm":"Ertu viss um að eyða þessu hlutverki verkefni?",
     "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "revert":"Afturkalla",
+    "roleEmptyMsg":"Veldu að minnsta kosti eitt hlutverk þessa hóps eða notanda."
   },
   "visibility": {
     "title":"falinn",

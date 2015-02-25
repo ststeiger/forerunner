@@ -307,13 +307,13 @@
     "groupuser":"Grupo ou Usuário",
     "prompt":"Selecione as funções que você deseja atribuir",
     "accountMsg":"Um nome de grupo ou conta de usuário válida deve ser especificado para esta atribuição de função",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
-    "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "editSecurity":"Editar Item Segurança",
+    "editConfirm":"A segurança do item é herdado de seu pai item. Você deseja aplicar as configurações de segurança para este item, que são diferentes dos da {0} item pai?",
+    "revertConfirm":"As configurações de segurança que são definidas para este item será substituído pelas configurações de seu pai {0} de segurança. Você quer continuar?",
+    "deleteConfirm":"Tem certeza que deseja deletar essa atribuição de função?",
+    "home":"casa",
+    "revert":"reverter",
+    "roleEmptyMsg":"Selecione um mínimo de um papel para este grupo ou usuário."
   },
   "visibility": {
     "title":"oculto",

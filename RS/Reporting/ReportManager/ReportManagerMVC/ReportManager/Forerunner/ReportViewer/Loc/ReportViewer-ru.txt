@@ -307,13 +307,13 @@
     "groupuser":"Пользователь или группа пользователей",
     "prompt":"Выберите роли, которые необходимо присвоить",
     "accountMsg":"Действует группа или учетная запись пользователя имя должно быть определено для этого назначения роли",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
-    "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "editSecurity":"Изменить элемент безопасности",
+    "editConfirm":"Безопасность товара наследуется от его родительского элемента. Вы хотите, чтобы применить настройки безопасности для этого элемента, которые отличаются от тех, {0} родительского элемента?",
+    "revertConfirm":"Настройки безопасности, которые определены для этого элемента будут заменены настройками безопасности своего родителя {0}. Вы хотите продолжить?",
+    "deleteConfirm":"Вы действительно хотите удалить эту задачу роль?",
+    "home":"домой",
+    "revert":"возвращаться",
+    "roleEmptyMsg":"Выберите не менее одной роли для этой группы или пользователя."
   },
   "visibility": {
     "title":"скрытый",

@@ -307,13 +307,13 @@
     "groupuser":"Grúpa nó Úsáideoir",
     "prompt":"Roghnaigh na róil is mian leat a shannadh",
     "accountMsg":"Ní mór cuntas úsáideora grúpa nó ainm bailí a shonrú don ról seo tasc.",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
-    "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "editSecurity":"Slándáil Eagar Mír",
+    "editConfirm":"Tá slándáil Mír oidhreacht óna mír tuismitheoir. Ar mhaith leat iarratas a dhéanamh ar na socruithe slándála do mhír seo atá éagsúil leis na cinn de na {0} mír tuismitheoir?",
+    "revertConfirm":"Beidh na socruithe slándála atá sainithe don mhír seo in ionad na socruithe slándála a tuismitheoir {0}. Ar mhaith leat dul ar aghaidh?",
+    "deleteConfirm":"An bhfuil tú cinnte a scriosadh an ról seo tasc?",
+    "home":"Baile",
+    "revert":"ais",
+    "roleEmptyMsg":"Roghnaigh ar a laghad an ról amháin don ghrúpa seo nó úsáideoir."
   },
   "visibility": {
     "title":"Hidden",

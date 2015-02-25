@@ -307,13 +307,13 @@
     "groupuser":"グループまたはユーザー",
     "prompt":"割り当てるロールを選択",
     "accountMsg":"有効なグループまたはユーザーアカウント名がこの役割の割り当てを指定する必要があります",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
-    "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "editSecurity":"アイテムの編集セキュリティ",
+    "editConfirm":"アイテムのセキュリティは、その親項目から継承されます。あなたは{0}親アイテムとは異なるこの項目のセキュリティ設定を適用しますか？",
+    "revertConfirm":"この項目に定義されたセキュリティ設定は、その親{0}のセキュリティ設定に置き換えられます。続行しますか？",
+    "deleteConfirm":"あなたはこの役割の割り当てを削除してもよろしいですか？",
+    "home":"ホーム",
+    "revert":"戻す",
+    "roleEmptyMsg":"このグループまたはユーザの1のロールの最小値を選択します。"
   },
   "visibility": {
     "title":"隠された",

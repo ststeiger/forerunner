@@ -307,13 +307,13 @@
     "groupuser":"Gruppo o utente",
     "prompt":"Selezionare i ruoli che si desidera assegnare",
     "accountMsg":"Un nome del gruppo o account utente valido deve essere specificato per questa assegnazione del ruolo",
-    "editSecurity":"Edit Item Security",
-    "editConfirm":"Item security is inherited from its parent item. Do you want to apply security settings for this item that are different from those of the {0} parent item?",
-    "revertConfirm":"The security settings that are defined for this item will be replaced by the security settings of its parent {0}. Do you want to continue?",
-    "deleteConfirm":"Are you sure to delete this role assignment?",
-    "home":"Home",
-    "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "editSecurity":"Sicurezza Modifica elemento",
+    "editConfirm":"Sicurezza Voce è ereditato dal suo elemento principale. Vuoi applicare le impostazioni di sicurezza per questo articolo che sono diverse da quelle della {0} elemento padre?",
+    "revertConfirm":"Le impostazioni di sicurezza definite per questo articolo verranno sostituite dalle impostazioni di sicurezza del suo genitore {0}. Vuoi continuare?",
+    "deleteConfirm":"Sei sicuro di voler eliminare questo assegnazione di ruolo?",
+    "home":"casa",
+    "revert":"ritornare",
+    "roleEmptyMsg":"Selezionare un minimo di un ruolo per questo gruppo o utente."
   },
   "visibility": {
     "title":"nascosto",

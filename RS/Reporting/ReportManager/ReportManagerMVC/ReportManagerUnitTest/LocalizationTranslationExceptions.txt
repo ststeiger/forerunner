@@ -186,7 +186,8 @@
     "desp":["fr"],
     "groupuser":[],
     "prompt":[],
-    "home":["is"]
+    "home":["is"],
+    "detail": ["is"]
     },
   "RDLExt": {
       "title":["ro", "sv", "it"],

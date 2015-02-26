@@ -313,7 +313,8 @@
     "deleteConfirm":"An bhfuil tú cinnte a scriosadh an ról seo tasc?",
     "home":"Baile",
     "revert":"ais",
-    "roleEmptyMsg":"Roghnaigh ar a laghad an ról amháin don ghrúpa seo nó úsáideoir."
+    "roleEmptyMsg":"Roghnaigh ar a laghad an ról amháin don ghrúpa seo nó úsáideoir.",
+    "detail":"Sonraí"
   },
   "visibility": {
     "title":"Hidden",

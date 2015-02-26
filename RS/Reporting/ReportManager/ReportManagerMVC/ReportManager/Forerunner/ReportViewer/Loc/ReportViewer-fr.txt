@@ -314,7 +314,8 @@
     "deleteConfirm":"Êtes-vous sûr de vouloir supprimer cette attribution de rôle?",
     "home":"maison",
     "revert":"revenir",
-    "roleEmptyMsg":"Sélectionner au moins un rôle pour ce groupe ou utilisateur."
+    "roleEmptyMsg":"Sélectionner au moins un rôle pour ce groupe ou utilisateur.",
+    "detail":"Détails"
   },
   "visibility": {
     "title":"caché",

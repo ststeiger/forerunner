@@ -313,7 +313,8 @@
     "deleteConfirm":"Sigur doriți să ștergeți acest atribuire rol?",
     "home":"acasă",
     "revert":"reveni",
-    "roleEmptyMsg":"Selectați un minim de un rol pentru acest grup sau utilizator."
+    "roleEmptyMsg":"Selectați un minim de un rol pentru acest grup sau utilizator.",
+    "detail":"Detaliu"
   },
   "visibility": {
     "title":"ascuns",

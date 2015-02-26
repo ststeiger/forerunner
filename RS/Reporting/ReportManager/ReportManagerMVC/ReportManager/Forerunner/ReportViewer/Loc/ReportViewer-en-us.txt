@@ -313,7 +313,8 @@
     "deleteConfirm":"Are you sure to delete this role assignment?",
     "home":"Home",
     "revert":"Revert",
-    "roleEmptyMsg":"Select a minimum of one role for this group or user."
+    "roleEmptyMsg":"Select a minimum of one role for this group or user.",
+    "detail":"Detail"
   },
   "visibility": {
     "title":"Hidden",

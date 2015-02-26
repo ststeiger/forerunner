@@ -313,7 +313,8 @@
     "deleteConfirm":"Sind Sie sicher, dass diese Rollenzuweisung löschen?",
     "home":"Hause",
     "revert":"zurückkehren",
-    "roleEmptyMsg":"Wählen Sie mindestens eine Rolle für diese Gruppe oder einen Benutzer."
+    "roleEmptyMsg":"Wählen Sie mindestens eine Rolle für diese Gruppe oder einen Benutzer.",
+    "detail":"Details"
   },
   "visibility": {
     "title":"versteckt",

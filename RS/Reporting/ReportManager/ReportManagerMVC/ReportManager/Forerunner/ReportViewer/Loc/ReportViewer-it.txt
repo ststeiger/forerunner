@@ -313,7 +313,8 @@
     "deleteConfirm":"Sei sicuro di voler eliminare questo assegnazione di ruolo?",
     "home":"casa",
     "revert":"ritornare",
-    "roleEmptyMsg":"Selezionare un minimo di un ruolo per questo gruppo o utente."
+    "roleEmptyMsg":"Selezionare un minimo di un ruolo per questo gruppo o utente.",
+    "detail":"Dettaglio"
   },
   "visibility": {
     "title":"nascosto",

@@ -313,7 +313,8 @@
     "deleteConfirm":"是否确定要删除此角色分配?",
     "home":"主页",
     "revert":"还原",
-    "roleEmptyMsg":"为该组或用户选中至少一个角色"
+    "roleEmptyMsg":"为该组或用户选中至少一个角色",
+    "detail":"详细"
   },
   "visibility": {
     "title":"隐藏",

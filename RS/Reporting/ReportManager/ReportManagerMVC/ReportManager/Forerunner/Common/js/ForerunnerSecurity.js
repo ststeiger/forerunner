@@ -50,6 +50,9 @@ $(function () {
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                    headerHtml +
+                    "<div class='fr-security-path'>" +
+                        "<span class='fr-security-curPath'></span>" + 
+                    "</div>" +
                     "<div class='fr-security-container'>" +
                         "<div class='fr-security-layer layer-1'>" +
                             "<ul class='fr-security-list'></ul>" +
@@ -90,6 +93,7 @@ $(function () {
             me.$operate2 = me.element.find(".operate-2");
 
             me.$revert = me.$operate1.find(".fr-security-revert");
+            me.$curPath = me.element.find(".fr-security-curPath");
 
             //me.element.on(events.modalDialogGenericSubmit, function () {
             //    me._submit()
@@ -204,6 +208,8 @@ $(function () {
 
                 me.cachedRoles = null;
                 me.cachedPolicy = null;
+
+                me.$curPath.text(me._getItemName(path));
 
                 me.isRoot = me.curPath === '/' ? true : false;
             }
@@ -570,12 +576,12 @@ $(function () {
                 tpl = "<li>" +
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.roles + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>Delete</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn edit'>Edit</a>" +
+                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.delete + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +
-                           "<span class='tit'>Roles:</span>" +
+                           "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
                            "<span class='txt'>" + names.join(', ') + "</span>" +
                        "</div></li>";
 
@@ -591,13 +597,13 @@ $(function () {
 
             for (var i = 0, len = data.length; i < len; i++) {
                 tpl = "<li>" +
-                        "<div class='role-name'>" +
+                       "<div class='role-name'>" +
                             "<span class='chk'><input class='acc-chk' type='checkbox' data-acc='" + data[i].Name + "' /></span>" +
                             "<span class='acc-name'>" + data[i].Name + "</span>" +
                             "<a href='javascript:void(0);' class='tip' title=" + locData.security.desp + ">...</a>" +
                        "</div>" +
                         "<div class='desp'>" +
-                           "<span class='tit'>Description:</span>" +
+                           "<span class='tit'>" + locData.security.desp + ":&nbsp;</span>" +
                            "<span class='txt'>" + data[i].Description + "</span>" +
                        "</div></li>";
 
@@ -614,6 +620,12 @@ $(function () {
             var returnStr = strTemp.substring(index + 1);
 
             return returnStr === "" ? locData.security.home : returnStr;
+        },
+        _getItemName: function (curPath) {
+            var index = curPath.lastIndexOf("/"),
+                str = curPath.substring(index + 1);
+
+            return str === "" ? locData.security.home : str;
         }
     });
 });

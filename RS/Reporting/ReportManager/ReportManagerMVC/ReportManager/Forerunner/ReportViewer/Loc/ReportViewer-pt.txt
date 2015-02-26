@@ -313,7 +313,8 @@
     "deleteConfirm":"Tem certeza que deseja deletar essa atribuição de função?",
     "home":"casa",
     "revert":"reverter",
-    "roleEmptyMsg":"Selecione um mínimo de um papel para este grupo ou usuário."
+    "roleEmptyMsg":"Selecione um mínimo de um papel para este grupo ou usuário.",
+    "detail":"Detalhe"
   },
   "visibility": {
     "title":"oculto",

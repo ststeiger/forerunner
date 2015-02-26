@@ -314,7 +314,8 @@
     "deleteConfirm":"¿Seguro eliminar esta asignación de funciones?",
     "home":"casa",
     "revert":"revertir",
-    "roleEmptyMsg":"Seleccionar un mínimo de un papel de este grupo o usuario."
+    "roleEmptyMsg":"Seleccionar un mínimo de un papel de este grupo o usuario.",
+    "detail":"Detalles"
   },
   "visibility": {
     "title":"oculto",

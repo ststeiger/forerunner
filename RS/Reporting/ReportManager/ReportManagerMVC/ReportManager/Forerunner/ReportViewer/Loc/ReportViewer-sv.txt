@@ -313,7 +313,8 @@
     "deleteConfirm":"Är du säker på att ta bort denna rolltilldelningen?",
     "home":"Hem",
     "revert":"återgå",
-    "roleEmptyMsg":"Välj minst en roll för denna grupp eller användare."
+    "roleEmptyMsg":"Välj minst en roll för denna grupp eller användare.",
+    "detail":"Detalj"
   },
   "visibility": {
     "title":"Hidden",

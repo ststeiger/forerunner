@@ -313,7 +313,8 @@
     "deleteConfirm":"Ertu viss um að eyða þessu hlutverki verkefni?",
     "home":"Home",
     "revert":"Afturkalla",
-    "roleEmptyMsg":"Veldu að minnsta kosti eitt hlutverk þessa hóps eða notanda."
+    "roleEmptyMsg":"Veldu að minnsta kosti eitt hlutverk þessa hóps eða notanda.",
+    "detail":"Detail"
   },
   "visibility": {
     "title":"falinn",

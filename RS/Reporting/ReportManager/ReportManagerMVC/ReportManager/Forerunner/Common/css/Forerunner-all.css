@@ -3,6 +3,7 @@
 @import "../../ReportExplorer/css/ReportExplorer-all.css";
 @import "../../ReportViewer/css/ReportViewer-all.css";
 @import "./ContextMenuBase.css";
+@import "./DialogBase.css";
 @import "./DefaultAppTemplate.css";
 @import "./Forerunner-core.css";
 @import "./ForerunnerSecurity.css";

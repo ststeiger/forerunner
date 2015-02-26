@@ -12,6 +12,7 @@
   <file>/Forerunner/Common/css/ForerunnerProperties.css</file>
   <file>/Forerunner/Common/css/ContextMenuBase.css</file>
   <file>/Forerunner/Common/css/ForerunnerSecurity.css</file>
+  <file>/Forerunner/Common/css/DialogBase.css</file>
   <file>/Forerunner/ReportExplorer/css/ReportExplorer.css</file>
   <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
   <file>/Forerunner/ReportExplorer/css/ManageMySubscriptions.css</file>
@@ -19,6 +20,7 @@
   <file>/Forerunner/ReportExplorer/css/icons128x128.css</file>
   <file>/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css</file>
   <file>/Forerunner/ReportExplorer/css/LinkedReport.css</file>
+  <file>/Forerunner/ReportExplorer/css/UploadFile.css</file>
   <file>/Forerunner/ReportViewer/css/ManageSubscription.css</file>
   <file>/Forerunner/ReportViewer/css/ManageParamSets.css</file>
   <file>/Forerunner/ReportViewer/css/PageNav.css</file>

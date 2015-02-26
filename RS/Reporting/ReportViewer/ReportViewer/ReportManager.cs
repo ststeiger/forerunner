@@ -2356,7 +2356,7 @@ namespace Forerunner.SSRS.Manager
                     GetCatalogItem(child, showLinkedReport);
 
                     //if the catalog not include valid items then not add them into the list
-                    if (child.children.Count() != 0)
+                    if (child.children != null && child.children.Count() != 0)
                     {
                         parentNode.children.Add(child);
                     }

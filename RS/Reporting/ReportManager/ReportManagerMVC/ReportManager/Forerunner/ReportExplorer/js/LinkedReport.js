@@ -55,7 +55,7 @@ $(function () {
                     headerHtml +
                     "<form class='fr-linked-form fr-core-dialog-form'>" +
                         "<div class='fr-linked-container'>" +
-                            "<div class='fr-linked-prompt'></div>" +
+                            "<div class='fr-linked-prompt fr-core-dialog-description'></div>" +
                              // Dropdown container
                             "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
                                 "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +

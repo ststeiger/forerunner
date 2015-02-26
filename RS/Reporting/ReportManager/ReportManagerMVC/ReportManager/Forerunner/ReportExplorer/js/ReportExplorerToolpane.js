@@ -106,11 +106,11 @@ $(function () {
             var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
             if (me._isAdmin()) {
-                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard);
+                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                toolpaneItems.push(mi.itemSecurity);
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
-                toolpaneItems.push(mi.itemSecurity);
             }
 
             toolpaneItems.push(tg.explorerItemFindGroup);

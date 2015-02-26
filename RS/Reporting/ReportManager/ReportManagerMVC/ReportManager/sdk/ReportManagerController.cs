@@ -83,6 +83,48 @@ namespace ReportManager.Controllers
             return resp;
         }
 
+        private HttpResponseMessage GetDownloadResponseFromBytes(byte[] result, string mimeType, string path)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            if (result == null || result.Length == 0)
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            else
+            {
+                string filename = GetDownloadFilename(mimeType, path);
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                resp.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+                {
+                    FileName = filename
+                };
+
+            }
+
+            return resp;
+        }
+
+        private string GetDownloadFilename(string mimeType, string path)
+        {
+            string filename = System.IO.Path.GetFileName(path);
+            string ext = System.IO.Path.GetExtension(path);
+
+            if (ext == null || ext.Length == 0)
+            {
+                switch (mimeType)
+                {
+                    case "json/forerunner-dashboard":
+                        // New extension for forerunner dashboards
+                        ext = ".frdb";
+                        break;
+                }
+            }
+
+            return filename + ext;
+        }
+
         // "{}"
         private HttpResponseMessage GetEmptyJSONResponse()
         {
@@ -217,6 +259,16 @@ namespace ReportManager.Controllers
             string mimetype = null;
             result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
             return GetResponseFromBytes(result, mimetype);
+        }
+
+        [HttpGet]
+        [ActionName("DownloadResource")]
+        public HttpResponseMessage DownloadResource(string path, string instance = null)
+        {
+            byte[] result = null;
+            string mimetype = null;
+            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            return GetDownloadResponseFromBytes(result, mimetype, path);
         }
 
         [HttpPost]

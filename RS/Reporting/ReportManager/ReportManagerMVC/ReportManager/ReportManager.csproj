@@ -179,6 +179,7 @@
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
+    <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
     <Content Include="Forerunner\Common\css\ForerunnerSecurity.css" />
@@ -189,6 +190,7 @@
     <Content Include="Forerunner\Common\css\icons24x24.css" />
     <Content Include="Forerunner\Common\css\icons25x31.css" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\ZoomOffBlue.png" />
+    <Content Include="Forerunner\Common\images\ToolpaneIcons\UploadFile.png" />
     <Content Include="Forerunner\Common\images\ZoomIcon.png" />
     <Content Include="Forerunner\Common\images\ForerunnerLogo.png" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
@@ -200,12 +202,14 @@
     <Content Include="Forerunner\Common\images\ToolbarIcons\Tags.png" />
     <Content Include="Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png" />
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
+    <Content Include="Forerunner\Common\js\DialogBase.js" />
     <Content Include="Forerunner\Common\js\Viewerbase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />
+    <Content Include="Forerunner\ReportExplorer\css\UploadFile.css" />
     <Content Include="Forerunner\ReportExplorer\css\LinkedReport.css" />
     <Content Include="Forerunner\ReportExplorer\css\ManageMySubscriptions.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css" />
@@ -349,6 +353,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\SelectedFolder_Search.png" />
+    <Content Include="Forerunner\ReportExplorer\js\UploadFile.js" />
     <Content Include="Forerunner\ReportExplorer\js\LinkedReport.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerContextMenu.js" />
     <Content Include="Forerunner\ReportExplorer\js\CreateDashboard.js" />

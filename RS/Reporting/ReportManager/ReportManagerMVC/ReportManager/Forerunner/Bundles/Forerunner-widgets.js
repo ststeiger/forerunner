@@ -4963,6 +4963,11 @@ $(function () {
             $securitySection.addClass("fr-security-section");
             me.$securitySection = $securitySection;
             $container.append($securitySection);
+            //Upload File Section
+            var $uploadFileSection = new $("<div />");
+            $uploadFileSection.addClass("fr-upf-section");
+            me.$uploadFileSection = $uploadFileSection;
+            $container.append($uploadFileSection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
@@ -4971,6 +4976,7 @@ $(function () {
 
             me._initPropertiesDialog();
             me._initSecurityDialog();
+            me._initUploadFileDialog();
 
             me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
             //dashboard report toolbar height, used for each report floating header
@@ -5029,6 +5035,14 @@ $(function () {
                 $appContainer: me.$container,
                 $reportViewer: me.$mainviewport,
                 $reportExplorer: me.$mainsection
+            });
+        },
+        _initUploadFileDialog: function () {
+            var me = this;
+            me.$uploadFileSection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$uploadFileSection.uploadFile({
+                $appContainer: me.$container
             });
         },
         bindEvents: function () {
@@ -7115,7 +7129,7 @@ $(function () {
                 return me.permissionList;
             }
 
-            return ["Delete", "Update Properties", "Update Security Policies", "Create Link"];
+            return ["Delete", "Update Properties", "Update Security Policies", "Create Link", "Create Resource"];
         },
         /*
          * Gets the permissions defined by the call to setPermissionsList
@@ -7274,6 +7288,162 @@ $(function () {
         closeMenu: function () {
             var me = this;
             me.element.hide();
+        },
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/Common/js/DialogBase.js
+/**
+ * @file Contains the base widget used to contain common dialog functionality.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+     * Base Widget used to contain common dialog functionality.
+     *
+     * @namespace $.forerunner.dialogBase
+     * @prop {Object} options - The options for dialogBase
+     * @prop {String} options.title - The Title used for in the dialog header
+     * @prop {String} options.iconClass - Class used to define the dialog icon
+     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+     * @prop {String} options.actionWord - Optional, Localized string defining the submit text
+     * @prop {String} options.cancelWord - Optional, Localized string defining the cancel text
+     * @prop {String} options.reportManagerAPI - Optional, Path to the REST calls for the reportManager
+     * @prop {String} options.rsInstance - Optional, Report service instance name
+     *
+     * @example
+     * var widgets = {@link forerunner.ssr.constants.widgets};
+     * $.widget(widgets.getFullname(widgets.uploadFile), $.forerunner.dialogBase, {
+     *  options: {
+     *      title: loc.uploadDialog.title
+     *      iconClass: "fr-icons24x24-setup",
+     *      $appContainer: me.$appContainer
+     *  },
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.dialogBase), {
+        options: {
+            title: locData.dialogBase.title,
+            iconClass: "fr-icons24x24-setup",
+            $appContainer: null,
+            actionWord: locData.dialogBase.submit,
+            cancelWord: locData.dialogBase.cancel,
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            rsInstance: null
+        },
+        _init: function () {
+            var me = this;
+        },
+        _create: function () {
+            var me = this;
+
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml(me.options.iconClass, me.options.title, "fr-dlb-cancel-id", me.options.cancelWord);
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    // Header
+                    headerHtml +
+                    // Form
+                    "<form class='fr-dlb-form fr-core-dialog-form'>" +
+
+                    // Form Main
+                    "<div class=fr-dlb-form-main-id></div>" +
+
+                    // Submit container
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input type='button' class='fr-dlb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + me.options.actionWord + "' />" +
+                        "</div>" +
+                    "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+
+            me.$form = me.element.find(".fr-dlb-form");
+            me.$formMain = me.element.find(".fr-dlb-form-main-id");
+
+            me.element.find(".fr-dlb-cancel-id").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-dlb-submit-id").on("click", function (e) {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        _submit: function () {
+            var me = this;
+
+            if (!me.$form.valid()) {
+                return;
+            }
+
+            me.closeDialog();
+        },
+        /**
+         * Open dialog
+         *
+         * @function $.forerunner.dialogBase#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close  dialog
+         *
+         * @function $.forerunner.dialogBase#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-cdb-error-position");
+                    $(element).addClass("fr-cdb-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-cdb-error-position");
+                    $(element).removeClass("fr-cdb-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
         },
     }); //$.widget
 });
@@ -8191,6 +8361,8 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
+    var itemType = forerunner.ssr.constants.itemType;
+
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
@@ -8242,6 +8414,18 @@ $(function () {
                 me._$properties.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // DownloadFile
+            me._$downloadFile.off("click");
+            if (catalog.Type === itemType.folder) {
+                me._$downloadFile.hide();
+            } else {
+                me._$downloadFile.show();
+                me._$downloadFile.on("click", function (event, data) {
+                    me._onClickDownloadFile.apply(me, arguments);
+                });
+                me._$downloadFile.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+            }
+
             me._$security.off("click");
             if (!me.permissions["Update Security Policies"]) {
                 me._$security.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
@@ -8253,9 +8437,8 @@ $(function () {
             }
 
             me._$linkedReport.off("click").hide();
-            //type=2: report, type=4: linked report
-            //now only show the linked report entry on the normal report context menu
-            if (catalog.Type === 2 || catalog.Type === 4) {
+            // Only show the linked report entry on the normal report context menu
+            if (catalog.Type === itemType.report || catalog.Type === itemType.linkedReport) {
                 if (!me.permissions["Create Link"]) {
                     me._$linkedReport.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
                 } else {
@@ -8265,6 +8448,8 @@ $(function () {
                     me._$linkedReport.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
                 }
                 me._$linkedReport.show();
+            } else {
+                me._$linkedReport.hide();
             }
 
             // Call contextMenuBase._init()
@@ -8277,10 +8462,11 @@ $(function () {
             me._super();
 
             me.addHeader();
+            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
+            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
-            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
-            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -8303,6 +8489,19 @@ $(function () {
                     console.log(jqXHR);
                 }
             });
+            me.closeMenu();
+        },
+        _onClickDownloadFile: function (event, data) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DownloadResource";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            window.location.assign(url);
+
             me.closeMenu();
         },
         _onClickProperties: function (event, data) {
@@ -8607,11 +8806,11 @@ $(function () {
             var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
             if (me._isAdmin()) {
-                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard);
+                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                toolpaneItems.push(mi.itemSecurity);
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
-                toolpaneItems.push(mi.itemSecurity);
             }
 
             toolpaneItems.push(tg.explorerItemFindGroup);
@@ -9940,7 +10139,7 @@ $(function () {
                     headerHtml +
                     "<form class='fr-linked-form fr-core-dialog-form'>" +
                         "<div class='fr-linked-container'>" +
-                            "<div class='fr-linked-prompt'></div>" +
+                            "<div class='fr-linked-prompt fr-core-dialog-description'></div>" +
                              // Dropdown container
                             "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
                                 "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +
@@ -10331,6 +10530,113 @@ $(function () {
             });
         },
     });
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/UploadFile.js
+/**
+ * @file Contains the upload file dialog widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var uploadFile = locData.uploadFile;
+
+    /**
+     * Widget used to upload a file to the server
+     *
+     * @namespace $.forerunner.uploadFile
+     * @prop {Object} options - The options for the upload file dialog
+     *
+     * @example
+     * $("#uploadFileDialog").uploadFile({
+     *      $appContainer: me.options.$appContainer,
+     *      title: loc.uploadFile.title,
+     *      iconClass: "fr-upf-upload-file-icon"
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.uploadFile), $.forerunner.dialogBase, /** @lends $.forerunner.uploadFile */ {
+        options: {
+            title: uploadFile.title,
+            iconClass: "fr-upf-upload-file-icon",
+            parentFolder: ""
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+
+            var description = uploadFile.description.replace("{0}", me.options.parentFolder);
+
+            var $table = $(
+                "<table>" +
+                    // Instructions
+                    "<tr>" +
+                        "<td colspan='2'>" +
+                            "<label class='fr-upf-description fr-core-dialog-description'>" + description + "</label>" +
+                        "</td>" +
+                    "</tr>" +
+                    // Browse button
+                    "<tr>" +
+                        "<td colspan='2'>" +
+                            "<input name='add' type='button' value='" + uploadFile.browseBtn + "' title='" + uploadFile.browseBtn + "' class='fr-upf-browse-id fr-core-action-button'/>" +
+                        "</td>" +
+                    "</tr>" +
+                    // File to upload
+                    "<tr>" +
+                        "<td class='fr-upf-label-cell'>" +
+                            "<label class='fr-upf-label'>" + uploadFile.uploadFileLabel + "</label>" +
+                        "</td>" +
+                        "<td>" +
+                            "<input class='fr-upf-file fr-upf-input' autofocus='autofocus' type='text' required='true'/>" +
+                            "<span class='fr-dlb-error-span'/>" +
+                        "</td>" +
+                    "</tr>" +
+                    // File name
+                    "<tr>" +
+                        "<td>" +
+                            "<label class='fr-upf-label'>" + uploadFile.filename + "</label>" +
+                        "</td>" +
+                        "<td>" +
+                            "<input class='fr-upf-name fr-upf-input' type='text' required='true'/>" +
+                            "<span class='fr-dlb-error-span'/>" +
+                        "</td>" +
+                    "</tr>" +
+                    // Overwrite checkbox
+                    "<tr>" +
+                        "<td>" +
+                            "<label class='fr-upf-label'>" + uploadFile.overwrite + "</label>" +
+                        "</td>" +
+                        "<td>" +
+                            "<input class='fr-upf-overwrite-id fr-upf-checkbox' type='checkbox'/>" +
+                        "</td>" +
+                    "</tr>" +
+                "</table>"
+            );
+
+            me.$formMain.html("");
+            me.$formMain.append($table);
+
+            me._validateForm(me.$form);
+
+            me.$decsription = me.element.find(".fr-upf-description");
+            me.$uploadFile = me.element.find(".fr-upf-file");
+            me.$uploadName = me.element.find(".fr-upf-name");
+            me.$overwrite = me.element.find(".fr-upf-overwrite-id");
+
+            me.$uploadFile.watermark(uploadFile.uploadFileLabel, { useNative: false, className: "fr-watermark" });
+            me.$uploadName.watermark(uploadFile.filename, { useNative: false, className: "fr-watermark" });
+        },
+        _create: function () {
+            var me = this;
+            me._super();
+        },
+    }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportRender.js
 // Assign or create the single globally scoped variable
@@ -16600,7 +16906,7 @@ $(function () {
                     headerHtml +
                     "<form class='fr-mps-form fr-core-dialog-form'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
+                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-core-action-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +

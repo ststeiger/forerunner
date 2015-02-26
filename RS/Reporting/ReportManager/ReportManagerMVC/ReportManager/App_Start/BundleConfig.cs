@@ -18,6 +18,7 @@ namespace ReportManager
             bundles.Add(new StyleBundle("~/Forerunner/Common/css/bundle").Include(
                   "~/Forerunner/Common/css/ContextMenuBase.css",
                   "~/Forerunner/Common/css/DefaultAppTemplate.css",
+                  "~/Forerunner/Common/css/DialogBase.css",
                   "~/Forerunner/Common/css/Forerunner-core.css",
                   "~/Forerunner/Common/css/ForerunnerProperties.css",
                   "~/Forerunner/Common/css/ForerunnerSecurity.css",
@@ -41,6 +42,7 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/icons128x128.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css",
+                "~/Forerunner/ReportExplorer/css/UploadFile.css",
                 "~/Forerunner/ReportExplorer/css/UserSettings.css",
                 "~/Forerunner/ReportExplorer/css/ManageMySubscriptions.css",
                 "~/Forerunner/ReportExplorer/css/LinkedReport.css"                

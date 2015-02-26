@@ -12,6 +12,7 @@
     <file>/Forerunner/Common/js/ForerunnerProperties.js</file>
     <file>/Forerunner/Common/js/ForerunnerSecurity.js</file>
     <file>/Forerunner/Common/js/ContextMenuBase.js</file>
+    <file>/Forerunner/Common/js/DialogBase.js</file>
     <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
     <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
     <file>/Forerunner/ReportViewer/js/PageNav.js</file>
@@ -22,6 +23,7 @@
     <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
     <file>/Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js</file>
     <file>/Forerunner/ReportExplorer/js/LinkedReport.js</file>
+    <file>/Forerunner/ReportExplorer/js/UploadFile.js</file>
     <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
     <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
     <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>

@@ -16,6 +16,8 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var contextMenu = locData.contextMenu;
 
+    var itemType = forerunner.ssr.constants.itemType;
+
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;
     var propertyListMap = {
@@ -67,6 +69,18 @@ $(function () {
                 me._$properties.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // DownloadFile
+            me._$downloadFile.off("click");
+            if (catalog.Type === itemType.folder) {
+                me._$downloadFile.hide();
+            } else {
+                me._$downloadFile.show();
+                me._$downloadFile.on("click", function (event, data) {
+                    me._onClickDownloadFile.apply(me, arguments);
+                });
+                me._$downloadFile.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+            }
+
             me._$security.off("click");
             if (!me.permissions["Update Security Policies"]) {
                 me._$security.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
@@ -78,9 +92,8 @@ $(function () {
             }
 
             me._$linkedReport.off("click").hide();
-            //type=2: report, type=4: linked report
-            //now only show the linked report entry on the normal report context menu
-            if (catalog.Type === 2 || catalog.Type === 4) {
+            // Only show the linked report entry on the normal report context menu
+            if (catalog.Type === itemType.report || catalog.Type === itemType.linkedReport) {
                 if (!me.permissions["Create Link"]) {
                     me._$linkedReport.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
                 } else {
@@ -90,6 +103,8 @@ $(function () {
                     me._$linkedReport.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
                 }
                 me._$linkedReport.show();
+            } else {
+                me._$linkedReport.hide();
             }
 
             // Call contextMenuBase._init()
@@ -102,10 +117,11 @@ $(function () {
             me._super();
 
             me.addHeader();
+            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
+            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
-            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
-            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
         },
         _onClickDelete: function (event, data) {
             var me = this;
@@ -128,6 +144,19 @@ $(function () {
                     console.log(jqXHR);
                 }
             });
+            me.closeMenu();
+        },
+        _onClickDownloadFile: function (event, data) {
+            var me = this;
+
+            var url = me.options.reportManagerAPI + "/DownloadResource";
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            window.location.assign(url);
+
             me.closeMenu();
         },
         _onClickProperties: function (event, data) {

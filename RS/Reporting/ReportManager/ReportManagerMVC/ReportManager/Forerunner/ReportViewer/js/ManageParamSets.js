@@ -166,7 +166,7 @@ $(function () {
                     headerHtml +
                     "<form class='fr-mps-form fr-core-dialog-form'>" +
                         "<div class='fr-core-center'>" +
-                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
+                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-core-action-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +

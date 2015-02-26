@@ -121,6 +121,11 @@ $(function () {
             $securitySection.addClass("fr-security-section");
             me.$securitySection = $securitySection;
             $container.append($securitySection);
+            //Upload File Section
+            var $uploadFileSection = new $("<div />");
+            $uploadFileSection.addClass("fr-upf-section");
+            me.$uploadFileSection = $uploadFileSection;
+            $container.append($uploadFileSection);
 
             // Define the unzoom toolbar
             var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
@@ -129,6 +134,7 @@ $(function () {
 
             me._initPropertiesDialog();
             me._initSecurityDialog();
+            me._initUploadFileDialog();
 
             me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
             //dashboard report toolbar height, used for each report floating header
@@ -187,6 +193,14 @@ $(function () {
                 $appContainer: me.$container,
                 $reportViewer: me.$mainviewport,
                 $reportExplorer: me.$mainsection
+            });
+        },
+        _initUploadFileDialog: function () {
+            var me = this;
+            me.$uploadFileSection.addClass("fr-dialog-id fr-core-dialog-layout fr-core-widget");
+
+            me.$uploadFileSection.uploadFile({
+                $appContainer: me.$container
             });
         },
         bindEvents: function () {

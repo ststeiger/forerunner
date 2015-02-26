@@ -345,6 +345,10 @@ $(function () {
             forerunnerLinkedReport: "forerunnerLinkedReport",
             /** @constant */
             viewerBase: "viewerBase",
+            /** @constant */
+            dialogBase: "dialogBase",
+            /** @constant */
+            uploadFile: "uploadFile",
 
             /** @constant */
             namespace: "forerunner",

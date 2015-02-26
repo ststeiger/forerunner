@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -984,6 +984,12 @@ table, td, tr div {
 .fr-security-section {
     display: none;
 }
+    .fr-security-section .fr-security-path {
+        margin: 4px;
+        padding: 0 4px 4px;
+        text-align: center;
+        border-bottom: 1px dotted #666666;
+    }
 .fr-security-container {
     width:500px;
     margin-bottom:20px;
@@ -991,7 +997,7 @@ table, td, tr div {
 }
     .fr-security-container .fr-security-input {
         padding-left: 4px;
-    }
+    }     
 .fr-security-layer {
     margin: 4px 0;
     min-height: 140px;
@@ -1027,9 +1033,7 @@ table, td, tr div {
             font-weight: 700;
         }
      .fr-security-layer ul li span {
-        max-width:350px; 
-        -ms-word-break:break-all;
-        word-break:break-all;
+        max-width:350px;
         -ms-word-wrap:break-word;
         word-wrap:break-word;
     }
@@ -1053,6 +1057,7 @@ table, td, tr div {
         margin: 4px;
     }
     .fr-security-container .layer-2 .header .fr-security-label {
+        margin-left: 4px;
         margin-right: 8px;
         font-size: 14px;
         font-weight: 600;
@@ -1063,8 +1068,8 @@ table, td, tr div {
     .fr-security-container .layer-2 .prompt {
         padding-bottom: 4px;
         margin: 0 4px 4px;
+        margin-left: 8px;
         font-size:14px;
-        color: gray;
         border-bottom: 1px #000 dotted;
     }
 .fr-security-submit-container {

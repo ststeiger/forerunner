@@ -306,7 +306,15 @@
     "desp":"descrição",
     "groupuser":"Grupo ou Usuário",
     "prompt":"Selecione as funções que você deseja atribuir",
-    "accountMsg":"Um nome de grupo ou conta de usuário válida deve ser especificado para esta atribuição de função"
+    "accountMsg":"Um nome de grupo ou conta de usuário válida deve ser especificado para esta atribuição de função",
+    "editSecurity":"Editar Item Segurança",
+    "editConfirm":"A segurança do item é herdado de seu pai item. Você deseja aplicar as configurações de segurança para este item, que são diferentes dos da {0} item pai?",
+    "revertConfirm":"As configurações de segurança que são definidas para este item será substituído pelas configurações de seu pai {0} de segurança. Você quer continuar?",
+    "deleteConfirm":"Tem certeza que deseja deletar essa atribuição de função?",
+    "home":"casa",
+    "revert":"reverter",
+    "roleEmptyMsg":"Selecione um mínimo de um papel para este grupo ou usuário.",
+    "detail":"Detalhe"
   },
   "visibility": {
     "title":"oculto",

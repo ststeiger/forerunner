@@ -78,69 +78,85 @@ $(function () {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
-            $.when(me._initExtensionOptions()).done(function (data1) {
-                me._extensionSettings = data1;
-                me._initRenderFormat(data1);
-                me.$includeReport.prop("checked", true);
-                me.$includeLink.prop("checked", true);
-                if (subscriptionID) {
-                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+            //used two mediation Deferred object to help to make sure the format and schedule build sequence
+            //deferred1, deferred2 will always be resolved, but the argument will be different
+            //if success then pass return data, if fail pass nothing, the argument will be undefined
+            var deferred1 = $.Deferred(),
+                deferred2 = $.Deferred();
 
-                    me.$desc.val(subscriptionInfo.Description);
-                    me._subscriptionData = subscriptionInfo;
+            //deferred1 for format field
+            $.when(me._initExtensionOptions()).done(function (data1) { deferred1.resolve(data1); }).fail(function () { deferred1.resolve(); });
 
-                    var extensionSettings = subscriptionInfo.ExtensionSettings;
-                    for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
-                        if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.val( extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "CC") {
-                            me.$cc.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "BCC") {
-                            me.$bcc.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
-                            me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
-                        }
+            //deferred2 for schedule field
+            $.when(me._initProcessingOptions()).done(function (data2) { deferred2.resolve(data2); }).fail(function () { deferred2.resolve(); });
 
-                        if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeReport.prop("checked", true);
-                            } else {
-                                me.$includeReport.prop("checked", false);
+            $.when(deferred1, deferred2).done(function (data1, data2) {
+                //build format field first
+                if (data1 !== undefined) {
+                    me._extensionSettings = data1;
+                    me._initRenderFormat(data1);
+                    me.$includeReport.prop("checked", true);
+                    me.$includeLink.prop("checked", true);
+                    if (subscriptionID) {
+                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+
+                        me.$desc.val(subscriptionInfo.Description);
+                        me._subscriptionData = subscriptionInfo;
+
+                        var extensionSettings = subscriptionInfo.ExtensionSettings;
+                        for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
+                            if (extensionSettings.ParameterValues[i].Name === "TO") {
+                                me.$to.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "CC") {
+                                me.$cc.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "BCC") {
+                                me.$bcc.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                                me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
+                            }
+
+                            if (extensionSettings.ParameterValues[i].Name === "Subject") {
+                                me.$subject.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "Comment") {
+                                me.$comment.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
+                                if (extensionSettings.ParameterValues[i].Value === "True") {
+                                    me.$includeReport.prop("checked", true);
+                                } else {
+                                    me.$includeReport.prop("checked", false);
+                                }
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
+                                if (extensionSettings.ParameterValues[i].Value === "True") {
+                                    me.$includeLink.prop("checked", true);
+                                } else {
+                                    me.$includeLink.prop("checked", false);
+                                }
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
+                                me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
                             }
                         }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.prop("checked", true);
-                            } else {
-                                me.$includeLink.prop("checked", false);
-                            }
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
-                            me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
-                        }
+                    } else {
+                        var userName = forerunner.ajax.getUserName();
+                        me.$to.val(userName);
+                        me.$desc.val(locData.subscription.description.format(userName));
+                        me.$subject.val(locData.subscription.subject);
                     }
-                } else {
-                    var userName = forerunner.ajax.getUserName();
-                    me.$to.val( userName );
-                    me.$desc.val(locData.subscription.description.format(userName));
-                    me.$subject.val(locData.subscription.subject);
                 }
-            });
 
-            $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2);
-                if (subscriptionID) {
-                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
-                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                //build schedule field after format
+                if (data2 !== undefined) {
+                    me._initSharedSchedule(data2);
+                    if (subscriptionID) {
+                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                    }
                 }
             });
         },
@@ -240,6 +256,7 @@ $(function () {
         },
         _initRenderFormat : function (data) {
             var me = this;
+
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
@@ -261,6 +278,7 @@ $(function () {
             var me = this;
             var validValues = [];
             var i;
+
             for (i = 0; i < data.length; i++) {
                 validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                 me._sharedSchedule[data[i].ScheduleID] = data[i];
@@ -358,6 +376,7 @@ $(function () {
          */
         loadSubscription: function (subscripitonID) {
             var me = this;
+
             me._subscriptionID = subscripitonID;
             me._subscriptionData = null;
             me.element.html("");

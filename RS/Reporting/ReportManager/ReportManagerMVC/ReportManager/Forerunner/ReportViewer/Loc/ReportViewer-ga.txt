@@ -306,7 +306,15 @@
     "desp":"Cur síos",
     "groupuser":"Grúpa nó Úsáideoir",
     "prompt":"Roghnaigh na róil is mian leat a shannadh",
-    "accountMsg":"Ní mór cuntas úsáideora grúpa nó ainm bailí a shonrú don ról seo tasc."
+    "accountMsg":"Ní mór cuntas úsáideora grúpa nó ainm bailí a shonrú don ról seo tasc.",
+    "editSecurity":"Slándáil Eagar Mír",
+    "editConfirm":"Tá slándáil Mír oidhreacht óna mír tuismitheoir. Ar mhaith leat iarratas a dhéanamh ar na socruithe slándála do mhír seo atá éagsúil leis na cinn de na {0} mír tuismitheoir?",
+    "revertConfirm":"Beidh na socruithe slándála atá sainithe don mhír seo in ionad na socruithe slándála a tuismitheoir {0}. Ar mhaith leat dul ar aghaidh?",
+    "deleteConfirm":"An bhfuil tú cinnte a scriosadh an ról seo tasc?",
+    "home":"Baile",
+    "revert":"ais",
+    "roleEmptyMsg":"Roghnaigh ar a laghad an ról amháin don ghrúpa seo nó úsáideoir.",
+    "detail":"Sonraí"
   },
   "visibility": {
     "title":"Hidden",

@@ -306,7 +306,15 @@
     "desp":"descriere",
     "groupuser":"Grupul sau de utilizare",
     "prompt":"Selectați rolurile pe care doriți să o atribuiți",
-    "accountMsg":"Un grup sau cont de utilizator nume valid trebuie să fie specificate pentru această misiune rol"
+    "accountMsg":"Un grup sau cont de utilizator nume valid trebuie să fie specificate pentru această misiune rol",
+    "editSecurity":"Securitate Editare element",
+    "editConfirm":"Securitate Articolul este moștenit de la postul său părinte. Vrei pentru a aplica setările de securitate pentru acest articol, care sunt diferite de cele ale {0} Articolul mamă?",
+    "revertConfirm":"Setările de securitate care sunt definite pentru acest articol va fi înlocuit cu setările de securitate ale societății-mamă {0}. Vrei să continuați?",
+    "deleteConfirm":"Sigur doriți să ștergeți acest atribuire rol?",
+    "home":"acasă",
+    "revert":"reveni",
+    "roleEmptyMsg":"Selectați un minim de un rol pentru acest grup sau utilizator.",
+    "detail":"Detaliu"
   },
   "visibility": {
     "title":"ascuns",

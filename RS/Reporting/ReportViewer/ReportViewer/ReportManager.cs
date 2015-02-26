@@ -2279,16 +2279,9 @@ namespace Forerunner.SSRS.Manager
         {
             //not support set property when create a new linked report so far,
             //user can set property with property dialog
-            try
-            {
-                rs.Credentials = GetCredentials();
-                rs.CreateLinkedReport(linkedReportName, parentPath, link, null);
-                return getReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                return getReturnFailed();
-            }
+            rs.Credentials = GetCredentials();
+            rs.CreateLinkedReport(linkedReportName, parentPath, link, null);
+            return getReturnSuccess();
         }
 
         public string GetReportLink(string linkedReportPath)
@@ -2305,16 +2298,9 @@ namespace Forerunner.SSRS.Manager
 
         public string SetReportLink(string linkedReportPath, string newLink)
         {
-            try
-            {
-                rs.Credentials = GetCredentials();
-                rs.SetReportLink(linkedReportPath, newLink);
-                return getReturnSuccess();
-            }
-            catch (Exception ex)
-            {
-                return getReturnFailed();
-            }
+            rs.Credentials = GetCredentials();
+            rs.SetReportLink(linkedReportPath, newLink);
+            return getReturnSuccess();
         }
 
         public SiteCatalog GetCatalog(string root, bool showLinkedReport = false)

@@ -111,6 +111,7 @@ $(function () {
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
+
             }
 
             toolpaneItems.push(tg.explorerItemFindGroup);

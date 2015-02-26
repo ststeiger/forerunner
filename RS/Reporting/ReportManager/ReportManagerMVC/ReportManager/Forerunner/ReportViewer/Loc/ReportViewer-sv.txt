@@ -306,7 +306,15 @@
     "desp":"Beskrivning",
     "groupuser":"Grupp eller Användare",
     "prompt":"Välj de roller du vill tilldela",
-    "accountMsg":"Ett giltigt grupp eller användare kontonamn måste anges för denna rolltilldelning"
+    "accountMsg":"Ett giltigt grupp eller användare kontonamn måste anges för denna rolltilldelning",
+    "editSecurity":"Redigera objekt Säkerhet",
+    "editConfirm":"Punkt säkerhet är ett arv från den överordnade posten. Vill du ansöka säkerhetsinställningar för denna post som skiljer sig från den {0} ordnade objekt?",
+    "revertConfirm":"De säkerhetsinställningar som är definierade för denna post kommer att ersättas av säkerhetsinställningarna för den överordnade {0}. Vill du fortsätta?",
+    "deleteConfirm":"Är du säker på att ta bort denna rolltilldelningen?",
+    "home":"Hem",
+    "revert":"återgå",
+    "roleEmptyMsg":"Välj minst en roll för denna grupp eller användare.",
+    "detail":"Detalj"
   },
   "visibility": {
     "title":"Hidden",

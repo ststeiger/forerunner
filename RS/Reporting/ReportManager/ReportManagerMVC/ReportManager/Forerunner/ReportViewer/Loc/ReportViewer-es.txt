@@ -307,7 +307,15 @@
     "desp":"Descripción",
     "groupuser":"Grupo o Usuario",
     "prompt":"Seleccione las funciones que desea asignar",
-    "accountMsg":"Un nombre de grupo o cuenta de usuario válido debe ser especificado para esta asignación de funciones."
+    "accountMsg":"Un nombre de grupo o cuenta de usuario válido debe ser especificado para esta asignación de funciones.",
+    "editSecurity":"Seguridad Editar elemento",
+    "editConfirm":"Seguridad de los elementos se hereda de su elemento padre. ¿Quieres aplicar la configuración de seguridad para este material que son diferentes de los de la {0} elemento padre?",
+    "revertConfirm":"La configuración de seguridad que se definen por este concepto serán reemplazados por los ajustes de seguridad de su matriz {0}. ¿Quieres continuar?",
+    "deleteConfirm":"¿Seguro eliminar esta asignación de funciones?",
+    "home":"casa",
+    "revert":"revertir",
+    "roleEmptyMsg":"Seleccionar un mínimo de un papel de este grupo o usuario.",
+    "detail":"Detalles"
   },
   "visibility": {
     "title":"oculto",

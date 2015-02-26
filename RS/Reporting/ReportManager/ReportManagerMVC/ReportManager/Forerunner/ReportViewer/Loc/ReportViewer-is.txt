@@ -306,7 +306,15 @@
     "desp":"lýsing",
     "groupuser":"Group eða User",
     "prompt":"Veldu hlutverk sem þú vilt tengja",
-    "accountMsg":"Gilt hópur eða notandi reikningur nafn verður að vera tilgreind fyrir þetta hlutverk verkefni"
+    "accountMsg":"Gilt hópur eða notandi reikningur nafn verður að vera tilgreind fyrir þetta hlutverk verkefni",
+    "editSecurity":"Breyta Item Security",
+    "editConfirm":"Item öryggi er arfur frá foreldri sínu. Viltu sækja öryggisstillingar fyrir þetta atriði sem eru frábrugðin að {0} foreldri?",
+    "revertConfirm":"Öryggisstillingar sem eru skilgreind fyrir þessa mynd verður skipt út öryggisstillingar foreldri sitt {0}. Viltu halda áfram?",
+    "deleteConfirm":"Ertu viss um að eyða þessu hlutverki verkefni?",
+    "home":"Home",
+    "revert":"Afturkalla",
+    "roleEmptyMsg":"Veldu að minnsta kosti eitt hlutverk þessa hóps eða notanda.",
+    "detail":"Detail"
   },
   "visibility": {
     "title":"falinn",
@@ -317,7 +325,7 @@
     "title":"tengd Report",
     "create":"Búa til nýjan tengd skýrslu fyrir {0}",
     "edit":"Breyta tengd skýrslu {0} Veldu skýrsluna sem þú vilt tengja",
-    "location":"Location",
+    "location":"Staðsetning",
     "report":"Skýrsla"
   }
 }

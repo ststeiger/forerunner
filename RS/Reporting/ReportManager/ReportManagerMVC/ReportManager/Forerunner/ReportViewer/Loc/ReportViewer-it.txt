@@ -306,7 +306,15 @@
     "desp":"descrizione",
     "groupuser":"Gruppo o utente",
     "prompt":"Selezionare i ruoli che si desidera assegnare",
-    "accountMsg":"Un nome del gruppo o account utente valido deve essere specificato per questa assegnazione del ruolo"
+    "accountMsg":"Un nome del gruppo o account utente valido deve essere specificato per questa assegnazione del ruolo",
+    "editSecurity":"Sicurezza Modifica elemento",
+    "editConfirm":"Sicurezza Voce è ereditato dal suo elemento principale. Vuoi applicare le impostazioni di sicurezza per questo articolo che sono diverse da quelle della {0} elemento padre?",
+    "revertConfirm":"Le impostazioni di sicurezza definite per questo articolo verranno sostituite dalle impostazioni di sicurezza del suo genitore {0}. Vuoi continuare?",
+    "deleteConfirm":"Sei sicuro di voler eliminare questo assegnazione di ruolo?",
+    "home":"casa",
+    "revert":"ritornare",
+    "roleEmptyMsg":"Selezionare un minimo di un ruolo per questo gruppo o utente.",
+    "detail":"Dettaglio"
   },
   "visibility": {
     "title":"nascosto",

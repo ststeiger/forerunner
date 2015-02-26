@@ -307,7 +307,15 @@
     "desp":"Description",
     "groupuser":"Groupe ou utilisateur",
     "prompt":"Sélectionnez les rôles que vous voulez attribuer",
-    "accountMsg":"Un compte utilisateur groupe ou nom valide doit être spécifié pour cette attribution de rôle."
+    "accountMsg":"Un compte utilisateur groupe ou nom valide doit être spécifié pour cette attribution de rôle.",
+    "editSecurity":"Modifier un élément de sécurité",
+    "editConfirm":"La sécurité d'objet est hérité de son élément parent. Voulez-vous appliquer les paramètres de sécurité de ce poste qui sont différents de ceux de la {0} parent article?",
+    "revertConfirm":"Les paramètres de sécurité qui sont définis pour cet article seront remplacés par les paramètres de sécurité de son parent {0}. Voulez-vous continuer?",
+    "deleteConfirm":"Êtes-vous sûr de vouloir supprimer cette attribution de rôle?",
+    "home":"maison",
+    "revert":"revenir",
+    "roleEmptyMsg":"Sélectionner au moins un rôle pour ce groupe ou utilisateur.",
+    "detail":"Détails"
   },
   "visibility": {
     "title":"caché",

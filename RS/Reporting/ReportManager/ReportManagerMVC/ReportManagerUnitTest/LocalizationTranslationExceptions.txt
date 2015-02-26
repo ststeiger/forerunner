@@ -185,7 +185,9 @@
     "roles":["es","pt"],
     "desp":["fr"],
     "groupuser":[],
-    "prompt":[]
+    "prompt":[],
+    "home":["is"],
+    "detail": ["is"]
     },
   "RDLExt": {
       "title":["ro", "sv", "it"],
@@ -201,7 +203,7 @@
     "title":[],
     "create":[],
     "edit":[],
-    "location":["is"],
+    "location":[],
     "report":[]
   
   }

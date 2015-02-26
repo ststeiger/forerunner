@@ -5033,7 +5033,6 @@ $(function () {
 
             me.$securitySection.forerunnerSecurity({
                 $appContainer: me.$container,
-                $reportViewer: me.$mainviewport,
                 $reportExplorer: me.$mainsection
             });
         },
@@ -6504,23 +6503,23 @@ $(function () {
     * @namespace $.forerunner.forerunnerSecurity
     * @prop {Object} options - The options for the security dialog
     * @prop {Object} options.$reportExplorer - Report viewer widget
-    * @prop {Object} options.$reportViewer - Report viewer widget
     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
     * @prop {String} options.rsInstance - Optional, Report service instance name
     *
     * @example
     * $("#property").forerunnerSecurity({
     *     $appContainer: me.options.$appContainer,
-    *     $reportExplorer: me.$explorer,
-    *     $reportViewer: me.$viewer
+    *     $reportExplorer: me.$explorer
     * });
     */
     $.widget(widgets.getFullname(widgets.forerunnerSecurity), {
         options: {
             $appContainer: null,
-            $reportViewer: null,
             $reportExplorer: null,
             rsInstance: null,
+        },
+        _create: function () {
+
         },
         _init: function () {
             var me = this;
@@ -6529,7 +6528,7 @@ $(function () {
             me.curPath = null;
 
             me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
+            //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.security.title, "fr-security-cancel", locData.common.cancel);
@@ -6537,6 +6536,9 @@ $(function () {
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                    headerHtml +
+                    "<div class='fr-security-path'>" +
+                        "<span class='fr-security-curPath'></span>" + 
+                    "</div>" +
                     "<div class='fr-security-container'>" +
                         "<div class='fr-security-layer layer-1'>" +
                             "<ul class='fr-security-list'></ul>" +
@@ -6552,13 +6554,16 @@ $(function () {
                     "</div>" +
                    "<div class='fr-core-dialog-submit-container fr-security-submit-container'>" +
                        "<div class='fr-core-center'>" +
+                           "<div class='operate-0'>" +
+                                "<input type='button' class='fr-security-edit fr-core-dialog-button' value='" + locData.security.editSecurity + "' />" +
+                           "</div>" +
                            "<div class='operate-1'>" +
-                                "<input type='button' class='fr-security-new fr-core-dialog-button' value='" + locData.security.newPolicy + "' />" +
-                                "<input type='button' class='fr-security-reset fr-core-dialog-button' value='" + locData.security.reset + "' />" +
+                                "<input type='button' class='fr-security-new fr-security-btn fr-core-dialog-button' value='" + locData.security.newPolicy + "' />" +
+                                "<input type='button' class='fr-security-revert fr-security-btn fr-core-dialog-button' value='" + locData.security.revert + "' />" +
                            "</div>" +
                            "<div class='operate-2'>" +
-                                "<input type='button' class='fr-security-submit fr-core-dialog-button' value='" + locData.common.submit + "' />" +
-                                "<input type='button' class='fr-security-cancel fr-core-dialog-button' value='" + locData.common.cancel + "' />" +
+                                "<input type='button' class='fr-security-submit fr-security-btn fr-core-dialog-button' value='" + locData.common.submit + "' />" +
+                                "<input type='button' class='fr-security-cancel fr-security-btn fr-core-dialog-button' value='" + locData.common.cancel + "' />" +
                            "</div>" +
                        "</div>" +
                    "</div>" +
@@ -6569,14 +6574,16 @@ $(function () {
             me.$layer2 = me.element.find(".layer-2");
             me.$groupuser = me.$layer2.find(".fr-security-groupuser");
 
+            me.$operate0 = me.element.find(".operate-0");
             me.$operate1 = me.element.find(".operate-1");
             me.$operate2 = me.element.find(".operate-2");
 
-            me.$reset = me.$operate1.find(".fr-security-reset");
+            me.$revert = me.$operate1.find(".fr-security-revert");
+            me.$curPath = me.element.find(".fr-security-curPath");
 
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit()
-            });
+            //me.element.on(events.modalDialogGenericSubmit, function () {
+            //    me._submit()
+            //});
 
             me.element.on(events.modalDialogGenericCancel, function () {
                 me._clickCancel();
@@ -6603,24 +6610,37 @@ $(function () {
             });
 
             //reset to its parent policy
-            me.$reset.on("click", function () {
+            me.$revert.on("click", function () {
                 if (me.isInheritParent || me.isRoot) {
                     me.closeDialog();
                 } else {
-                    if (!confirm('Are you sure to set this item to inherit its parent security configuration?')) return;
+                    if (!confirm(locData.security.revertConfirm.format(me.parentName))) return;
 
                     me._inheritParentPolicy();
                 }
             });
 
+            me.$operate0.on("click", function () {
+                if (!confirm(locData.security.editConfirm.format(me.parentName))) return;
+
+                me._breakInherit();
+            });
+
             //save the change, (new or update)
             me.element.find(".fr-security-submit").on("click", function () {
-                me._submit();
+                me._submit(function () {
+                    me._clickCancel();
+                });
             });
 
             //back to main layer, for close button at the right top corner, always close dialog
             me.element.find(".fr-security-cancel").on("click", function (e) {
                 if ($(this).hasClass('fr-core-dialog-cancel')) {
+                    if (me.isInheritParent) {
+                        me.closeDialog();
+                        return;
+                    }
+
                     me.$layer2.hide();
                     me.$operate2.hide();
 
@@ -6648,9 +6668,8 @@ $(function () {
             });
 
             me.$layer1.delegate('.delete', 'click', function (e) {
-                if (!confirm('Are you sure to delete this?')) return;
+                if (!confirm(locData.security.deleteConfirm)) return;
 
-                // Todo.. call delete Api to delete this role assignment
                 var groupuser = $(this).siblings("span").text();
                 me._deletePolicy(groupuser);
             });
@@ -6661,7 +6680,7 @@ $(function () {
             });
 
             me.$layer2.delegate('.acc-name', 'click', function (e) {
-                var $chk = $(this).closest('li').find('.acc-chk').trigger('click');
+                $(this).closest('li').find('.acc-chk').trigger('click');
             });
             /******************* end of bind operate button in each row *********************/
         },
@@ -6671,13 +6690,14 @@ $(function () {
             if (me.curPath !== path) {
                 me.curPath = path;
                 me.curType = type;
+                me.parentName = me._getParentName(path);
 
                 me.cachedRoles = null;
                 me.cachedPolicy = null;
 
-                if (me.curPath === '/') {
-                    me.isRoot = true;
-                }
+                me.$curPath.text(me._getItemName(path));
+
+                me.isRoot = me.curPath === '/' ? true : false;
             }
         },
         /**
@@ -6704,6 +6724,7 @@ $(function () {
         closeDialog: function () {
             var me = this;
             forerunner.dialog.dialogLock = false;
+
             me._trigger(events.close, null, { $forerunnerSecurity: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
@@ -6733,6 +6754,8 @@ $(function () {
             me.cachedRoles = obj.roles;
             me.cachedPolicy = obj.policy;
             me.isInheritParent = obj.isInheritParent;
+
+            me.isRoot = me.curPath === '/' ? true : false;
 
             me._refreshUI();
         },
@@ -6771,7 +6794,7 @@ $(function () {
                 //for edit assign the account to the input and add title to show full text
                 !isNew && me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
 
-                me.$layer2.show();
+                me.$layer2.show().scrollTop(0);
                 me.$operate2.show();
             });
         },
@@ -6800,9 +6823,6 @@ $(function () {
                 me.closeDialog();
             }
         },
-        _create: function () {
-
-        },
         _refreshUI: function () {
             var me = this;
 
@@ -6810,14 +6830,22 @@ $(function () {
                 me._getPolicy();
             }
 
-            if (me.isInheritParent || me.isRoot) {
-                me.$reset.val(locData.common.cancel);
-            } else {
-                me.$reset.val(locData.security.reset);
-            }
-
             var layer1 = me._drawPolicyUI(me.cachedPolicy);
             me.$layer1.children('ul').html('').append(layer1);
+
+            if (me.isInheritParent) {
+                me.$operate0.show();
+                me.$operate1.hide();
+                me.$operate2.hide();
+            } else {
+                me.$operate0.hide();
+                me.$operate1.show();
+                me.$operate2.hide();
+
+                me.$layer1.find(".funcBtn").show();
+
+                me.isRoot ? me.$revert.hide() : me.$revert.show();
+            }
 
             //draw layer-2 later after layer-1 done
             setTimeout(function () {
@@ -6829,14 +6857,14 @@ $(function () {
                 me.$layer2.children('ul').html('').append(layer2);
             }, 0);
         },
-        _submit: function () {
+        _submit: function (callback) {
             var me = this;
 
             var policyArr = me._generatePostData();
 
-            if (policyArr === null) return;
+            if (!policyArr) return;
 
-            me._setPolicy(policyArr);
+            me._setPolicy(policyArr, callback);
         },
         _generatePostData: function () {
             var me = this,
@@ -6858,22 +6886,30 @@ $(function () {
                 }
             });
 
-            for (i = 0; i < me.cachedPolicy.length; i++) {
-                if (me.cachedPolicy[i].GroupUserName === groupuser) {
-                    me.cachedPolicy[i].Roles = Roles;
+            //at least one role need select
+            if (Roles.length === 0) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.roleEmptyMsg);
+                return null;
+            }
+
+            me.tempCachedPolicy = me.cachedPolicy.slice(0);
+
+            for (i = 0; i < me.tempCachedPolicy.length; i++) {
+                if (me.tempCachedPolicy[i].GroupUserName === groupuser) {
+                    me.tempCachedPolicy[i].Roles = Roles;
                     break;
                 }
             }
 
             //new a policy
-            if (i === me.cachedPolicy.length) {
-                me.cachedPolicy.push({
+            if (i === me.tempCachedPolicy.length) {
+                me.tempCachedPolicy.push({
                     GroupUserName: groupuser,
                     Roles: Roles
                 });
             }
             
-            return JSON.stringify(me.cachedPolicy)
+            return JSON.stringify(me.tempCachedPolicy);
         },
         _getRoles: function () {
             var me = this;
@@ -6927,7 +6963,7 @@ $(function () {
                 },
             });
         },
-        _setPolicy: function (policyArr) {
+        _setPolicy: function (policyArr, callback) {
             var me = this;
 
             forerunner.ajax.ajax({
@@ -6948,11 +6984,19 @@ $(function () {
                         return;
                     }
 
+                    //update cached policy only when set policy success
+                    me.cachedPolicy = me.tempCachedPolicy || me.cachedPolicy;
+                    me.tempCachedPolicy = null;
+
                     me.isInheritParent = false;
                     me._refreshUI();
-                    me._clickCancel();
+
+                    if (callback && typeof callback === "function") {
+                        callback();
+                    }
                 },
                 fail: function (data) {
+                    me.tempCachedPolicy = null;
                 },
             });
         },
@@ -6984,6 +7028,11 @@ $(function () {
                 },
             });
         },
+        _breakInherit: function () {
+            var me = this;
+
+            me._setPolicy(JSON.stringify(me.cachedPolicy));
+        },
         _deletePolicy: function (groupuser) {
             var me = this,
                 index = 0;
@@ -7013,12 +7062,12 @@ $(function () {
                 tpl = "<li>" +
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.roles + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='delete'>Delete</a>" +
-                            "<a href='javascript:void(0);' class='edit'>Edit</a>" +
+                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.delete + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +
-                           "<span class='tit'>Roles:</span>" +
+                           "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
                            "<span class='txt'>" + names.join(', ') + "</span>" +
                        "</div></li>";
 
@@ -7034,13 +7083,13 @@ $(function () {
 
             for (var i = 0, len = data.length; i < len; i++) {
                 tpl = "<li>" +
-                        "<div class='role-name'>" +
+                       "<div class='role-name'>" +
                             "<span class='chk'><input class='acc-chk' type='checkbox' data-acc='" + data[i].Name + "' /></span>" +
                             "<span class='acc-name'>" + data[i].Name + "</span>" +
                             "<a href='javascript:void(0);' class='tip' title=" + locData.security.desp + ">...</a>" +
                        "</div>" +
                         "<div class='desp'>" +
-                           "<span class='tit'>Description:</span>" +
+                           "<span class='tit'>" + locData.security.desp + ":&nbsp;</span>" +
                            "<span class='txt'>" + data[i].Description + "</span>" +
                        "</div></li>";
 
@@ -7048,6 +7097,21 @@ $(function () {
             }
 
             return html.join('');
+        },
+        _getParentName: function (curPath) {
+            var index = curPath.lastIndexOf("/"),
+                strTemp = curPath.substring(0, index);
+                
+            index = strTemp.lastIndexOf("/");
+            var returnStr = strTemp.substring(index + 1);
+
+            return returnStr === "" ? locData.security.home : returnStr;
+        },
+        _getItemName: function (curPath) {
+            var index = curPath.lastIndexOf("/"),
+                str = curPath.substring(index + 1);
+
+            return str === "" ? locData.security.home : str;
         }
     });
 });
@@ -8811,6 +8875,7 @@ $(function () {
                 if (lastFetched.path !== "/") {
                     toolpaneItems.push(mi.itemProperty);
                 }
+
             }
 
             toolpaneItems.push(tg.explorerItemFindGroup);
@@ -19325,69 +19390,85 @@ $(function () {
             var me = this;
             var subscriptionID = me._subscriptionID;
 
-            $.when(me._initExtensionOptions()).done(function (data1) {
-                me._extensionSettings = data1;
-                me._initRenderFormat(data1);
-                me.$includeReport.prop("checked", true);
-                me.$includeLink.prop("checked", true);
-                if (subscriptionID) {
-                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+            //used two mediation Deferred object to help to make sure the format and schedule build sequence
+            //deferred1, deferred2 will always be resolved, but the argument will be different
+            //if success then pass return data, if fail pass nothing, the argument will be undefined
+            var deferred1 = $.Deferred(),
+                deferred2 = $.Deferred();
 
-                    me.$desc.val(subscriptionInfo.Description);
-                    me._subscriptionData = subscriptionInfo;
+            //deferred1 for format field
+            $.when(me._initExtensionOptions()).done(function (data1) { deferred1.resolve(data1); }).fail(function () { deferred1.resolve(); });
 
-                    var extensionSettings = subscriptionInfo.ExtensionSettings;
-                    for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
-                        if (extensionSettings.ParameterValues[i].Name === "TO") {
-                            me.$to.val( extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "CC") {
-                            me.$cc.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "BCC") {
-                            me.$bcc.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
-                            me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
-                        }
+            //deferred2 for schedule field
+            $.when(me._initProcessingOptions()).done(function (data2) { deferred2.resolve(data2); }).fail(function () { deferred2.resolve(); });
 
-                        if (extensionSettings.ParameterValues[i].Name === "Subject") {
-                            me.$subject.val( extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "Comment") {
-                            me.$comment.val(extensionSettings.ParameterValues[i].Value);
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeReport.prop("checked", true);
-                            } else {
-                                me.$includeReport.prop("checked", false);
+            $.when(deferred1, deferred2).done(function (data1, data2) {
+                //build format field first
+                if (data1 !== undefined) {
+                    me._extensionSettings = data1;
+                    me._initRenderFormat(data1);
+                    me.$includeReport.prop("checked", true);
+                    me.$includeLink.prop("checked", true);
+                    if (subscriptionID) {
+                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+
+                        me.$desc.val(subscriptionInfo.Description);
+                        me._subscriptionData = subscriptionInfo;
+
+                        var extensionSettings = subscriptionInfo.ExtensionSettings;
+                        for (var i = 0; i < extensionSettings.ParameterValues.length; i++) {
+                            if (extensionSettings.ParameterValues[i].Name === "TO") {
+                                me.$to.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "CC") {
+                                me.$cc.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "BCC") {
+                                me.$bcc.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "ReplyTo") {
+                                me.$replyTo.val(extensionSettings.ParameterValues[i].Value);
+                            }
+
+                            if (extensionSettings.ParameterValues[i].Name === "Subject") {
+                                me.$subject.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "Comment") {
+                                me.$comment.val(extensionSettings.ParameterValues[i].Value);
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "IncludeReport") {
+                                if (extensionSettings.ParameterValues[i].Value === "True") {
+                                    me.$includeReport.prop("checked", true);
+                                } else {
+                                    me.$includeReport.prop("checked", false);
+                                }
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
+                                if (extensionSettings.ParameterValues[i].Value === "True") {
+                                    me.$includeLink.prop("checked", true);
+                                } else {
+                                    me.$includeLink.prop("checked", false);
+                                }
+                            }
+                            if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
+                                me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
                             }
                         }
-                        if (extensionSettings.ParameterValues[i].Name === "IncludeLink") {
-                            if (extensionSettings.ParameterValues[i].Value === "True") {
-                                me.$includeLink.prop("checked", true);
-                            } else {
-                                me.$includeLink.prop("checked", false);
-                            }
-                        }
-                        if (extensionSettings.ParameterValues[i].Name === "RenderFormat") {
-                            me.$renderFormat.val(extensionSettings.ParameterValues[i].Value);
-                        }
+                    } else {
+                        var userName = forerunner.ajax.getUserName();
+                        me.$to.val(userName);
+                        me.$desc.val(locData.subscription.description.format(userName));
+                        me.$subject.val(locData.subscription.subject);
                     }
-                } else {
-                    var userName = forerunner.ajax.getUserName();
-                    me.$to.val( userName );
-                    me.$desc.val(locData.subscription.description.format(userName));
-                    me.$subject.val(locData.subscription.subject);
                 }
-            });
 
-            $.when(me._initProcessingOptions()).done(function (data2) {
-                me._initSharedSchedule(data2);
-                if (subscriptionID) {
-                    var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
-                    me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                //build schedule field after format
+                if (data2 !== undefined) {
+                    me._initSharedSchedule(data2);
+                    if (subscriptionID) {
+                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                    }
                 }
             });
         },
@@ -19487,6 +19568,7 @@ $(function () {
         },
         _initRenderFormat : function (data) {
             var me = this;
+
             for (var i = 0; i < data.length; i++) {
                 var setting = data[i];
                 if (setting.Name === "RenderFormat") {
@@ -19508,6 +19590,7 @@ $(function () {
             var me = this;
             var validValues = [];
             var i;
+
             for (i = 0; i < data.length; i++) {
                 validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                 me._sharedSchedule[data[i].ScheduleID] = data[i];
@@ -19605,6 +19688,7 @@ $(function () {
          */
         loadSubscription: function (subscripitonID) {
             var me = this;
+
             me._subscriptionID = subscripitonID;
             me._subscriptionData = null;
             me.element.html("");

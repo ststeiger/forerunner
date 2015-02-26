@@ -191,7 +191,6 @@ $(function () {
 
             me.$securitySection.forerunnerSecurity({
                 $appContainer: me.$container,
-                $reportViewer: me.$mainviewport,
                 $reportExplorer: me.$mainsection
             });
         },

@@ -45,7 +45,7 @@ $(function () {
             //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.security.title, "fr-security-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', locData.security.title, "fr-security-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +

@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -513,6 +513,10 @@ div.fr-layout-position-absolute { position: absolute; }
     background-image:url(../images/ToolbarIcons/ZoomToPageWidth.png);
 }
 
+.fr-icons24x24-security {
+    background-image:url(../images/ToolbarIcons/Security.png);
+}
+
 /*** IconGen - start automatically generated, do not hand modify ***/
 /*.fr-icons25x31 {
   width:25px;
@@ -1015,7 +1019,7 @@ table, td, tr div {
         }    
     .fr-security-layer .acc span, .fr-security-layer .role-name span{
         display:inline-block;
-        height:20px;
+        min-height:20px;
     }
     .fr-security-layer .role-name .chk {
         padding: 0 4px;
@@ -1087,17 +1091,17 @@ table, td, tr div {
 
 @media only screen and (max-width : 479px) {
     .fr-security-container {
-        width: 340px;
+        width: 320px;
     }
     .fr-security-layer {
         min-height: 140px;
         max-height: 240px;
     }
-    .fr-security-submit-container input {
+    .fr-security-submit-container .fr-security-btn {
         width: 100px;
-        margin: 0px 10px;
+        margin: 0px 20px;
     }
-    .fr-security-layer ul li span { max-width:200px; }
+    .fr-security-layer ul li span { max-width:180px; }
 }
 .fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
 

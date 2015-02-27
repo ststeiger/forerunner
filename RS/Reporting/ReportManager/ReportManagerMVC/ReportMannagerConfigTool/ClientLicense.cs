@@ -343,10 +343,12 @@ namespace ForerunnerLicense
             if (IsMachineSame != 1 && ThisMachine != null)
                 LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
 
-            //If SKU is server license, do not check cores
-            if (License.SKU.IndexOf("Server") == -1)
-                if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity )
+            //If SKU is server license or Dev license, do not check cores
+            if (License.SKU.IndexOf("Server") == -1 || License.SKU.IndexOf("Dev") == -1)
+            {
+                if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
                     LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
+            }
 
             //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
             string lic = License.SKU.Substring(0, 5);

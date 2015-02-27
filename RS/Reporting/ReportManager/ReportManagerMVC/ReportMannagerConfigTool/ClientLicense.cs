@@ -344,7 +344,12 @@ namespace ForerunnerLicense
                 LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
 
             //If SKU is server license or Dev license, do not check cores
-            if (License.SKU.IndexOf("Server") == -1 || License.SKU.IndexOf("Dev") == -1)
+            if (License.SKU.IndexOf("Server") > 0 || License.SKU.IndexOf("Dev") > 0)
+            {
+                //Do nothing it is ok
+
+            }
+            else
             {
                 if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
                     LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");

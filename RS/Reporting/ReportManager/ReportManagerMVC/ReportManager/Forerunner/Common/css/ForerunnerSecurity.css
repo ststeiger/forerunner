@@ -32,7 +32,7 @@
         }    
     .fr-security-layer .acc span, .fr-security-layer .role-name span{
         display:inline-block;
-        height:20px;
+        min-height:20px;
     }
     .fr-security-layer .role-name .chk {
         padding: 0 4px;

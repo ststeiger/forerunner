@@ -291,12 +291,13 @@
     "deleteItem":"Delete",
     "description":"Description"
   },
-  "contextMenu": {
-    "title":"Context Menu",
-    "delLabel":"Delete",
-    "properties":"Properties",
-    "security":"Security",
-    "linkedReport":"Linked Report"
+  "contextMenu":{
+  "title":"Context Menu",
+  "delLabel": "Delete",
+  "properties": "Properties",
+  "security":"Security",
+  "linkedReport":"Linked Report",
+  "downloadFile":"Download File"
   },
   "security": {
     "title":"Security",
@@ -327,5 +328,18 @@
     "edit":"Edit linked report {0}, select the report you want to link",
     "location":"Location",
     "report":"Report"
+  },
+  "dialogBase": {
+    "title":"Dialog",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "uploadFile": {
+    "title":"Upload File",
+    "description":"Upload report (.rdl), shared dataset (.rsd), model (.smdl), report part (.rsc) or other resource into folder: {0}",
+    "uploadFileLabel":"File to Upload",
+    "browseBtn":"Browse",
+    "filename":"Name",
+    "overwrite":"Overwrite"
   }
 }

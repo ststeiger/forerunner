@@ -4,10 +4,13 @@ using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
 using System.Net.Http.Headers;
+using System.Web;
+using System.Web.Http;
 using System.Text;
 using System.Web.Script.Serialization;
+using System.Threading.Tasks;
+
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
@@ -665,6 +668,37 @@ namespace ReportManager.Controllers
             catch (Exception ex)
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
+        [HttpPost]
+        public async System.Threading.Tasks.Task<HttpResponseMessage> UploadFile()
+        {
+            // Check if the request contains "multipart/form-data"
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+
+            string root = HttpContext.Current.Server.MapPath("~/App_Data");
+            var provider = new MultipartFormDataStreamProvider(root);
+
+            try
+            {
+                // Read the form data.
+                await Request.Content.ReadAsMultipartAsync(provider);
+
+                // This illustrates how to get the file names.
+                foreach (MultipartFileData file in provider.FileData)
+                {
+                    System.Diagnostics.Trace.WriteLine(file.Headers.ContentDisposition.FileName);
+                    System.Diagnostics.Trace.WriteLine("Server file path: " + file.LocalFileName);
+                }
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (System.Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
             }
         }
 

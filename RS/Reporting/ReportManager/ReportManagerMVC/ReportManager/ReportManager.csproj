@@ -208,6 +208,7 @@
     <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />
     <Content Include="Forerunner\Dashboard\images\Edit.png" />
     <Content Include="Forerunner\Dashboard\images\Edit_Widget.png" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery.form.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.FRmaphilight.js" />
     <Content Include="Forerunner\ReportExplorer\css\UploadFile.css" />
     <Content Include="Forerunner\ReportExplorer\css\LinkedReport.css" />

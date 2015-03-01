@@ -83,11 +83,13 @@ $(function () {
             me.$form = me.element.find(".fr-dlb-form");
             me.$formMain = me.element.find(".fr-dlb-form-main-id");
 
-            me.element.find(".fr-dlb-cancel-id").on("click", function (e) {
+            me.$cancel = me.element.find(".fr-dlb-cancel-id");
+            me.$cancel.on("click", function (e) {
                 me.closeDialog();
             });
 
-            me.element.find(".fr-dlb-submit-id").on("click", function (e) {
+            me.$submit = me.element.find(".fr-dlb-submit-id");
+            me.$submit.on("click", function (e) {
                 me._submit();
             });
 

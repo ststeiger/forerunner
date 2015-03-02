@@ -672,40 +672,61 @@ namespace ReportManager.Controllers
         }
 
         [HttpPost]
-        public async System.Threading.Tasks.Task<HttpResponseMessage> UploadFile()
+        public HttpResponseMessage UploadFile()
         {
-            // Check if the request contains "multipart/form-data"
             if (!Request.Content.IsMimeMultipartContent())
             {
-                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.NotAcceptable, "This request is not properly formatted"));
             }
 
-            string root = HttpContext.Current.Server.MapPath("~/App_Data");
-            var provider = new MultipartFormDataStreamProvider(root);
+            UploadFileData data = new UploadFileData();
 
-            try
+            var provider = new MultipartMemoryStreamProvider();
+            var readPartsTask = System.Threading.Tasks.Task.Run(async () => { await Request.Content.ReadAsMultipartAsync(provider); });
+            readPartsTask.Wait();
+
+            foreach (StreamContent streamContent in provider.Contents)
             {
-                // Read the form data.
-                await Request.Content.ReadAsMultipartAsync(provider);
+                string name = streamContent.Headers.ContentDisposition.Name.ToLower().Replace("\"", "");
+                data.setResource.overwrite = false;
 
-                bool overwrite = false;
-                if (provider.FormData["overwrite"] != null && provider.FormData["overwrite"] == "on")
+                string content = "";
+                if (name != "file")
                 {
-                    overwrite = true;
+                    var readStringTask = System.Threading.Tasks.Task.Run<string>(async () => { return await streamContent.ReadAsStringAsync(); });
+                    readStringTask.Wait();
+                    content = readStringTask.Result;
                 }
 
-                // This illustrates how to get the file names.
-                foreach (MultipartFileData file in provider.FileData)
+                switch (name)
                 {
-                    System.Diagnostics.Trace.WriteLine(file.Headers.ContentDisposition.FileName);
-                    System.Diagnostics.Trace.WriteLine("Server file path: " + file.LocalFileName);
+                    case "overwrite":
+                        if (content == "on")
+                        {
+                            data.setResource.overwrite = true;
+                        }
+                        break;
+                    case "file":
+                        var readFileTask = System.Threading.Tasks.Task.Run<byte []>(async () => { return await streamContent.ReadAsByteArrayAsync(); });
+                        readFileTask.Wait();
+                        data.setResource.contentsUTF8 = readFileTask.Result;
+                        break;
+                    case "filename":
+                        data.filename = content;
+                        break;
+                    case "parentfolder":
+                        data.setResource.parentFolder = content;
+                        break;
+                    case "rsinstance":
+                        if (content != "null")
+                        {
+                            data.setResource.rsInstance = content;
+                        }
+                        break;
                 }
-                return Request.CreateResponse(HttpStatusCode.OK);
             }
-            catch (System.Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e);
-            }
+
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/JSON");
         }
 
         private string ToString<T>(T value)

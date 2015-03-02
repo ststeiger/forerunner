@@ -654,6 +654,28 @@ $(function () {
             me._createDashboardDialog.createDashboard("openDialog");
         },
         /**
+         * Show the upload file modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showUploadFileDialog
+         */
+        showUploadFileDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-upf-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-upf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.uploadFile({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                parentFolder: me.lastFetched.path,
+                rsInstance: me.options.rsInstance
+            });
+            $dlg.uploadFile("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog

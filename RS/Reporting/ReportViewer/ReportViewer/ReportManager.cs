@@ -27,9 +27,21 @@ namespace Forerunner.SSRS.Manager
         public string resourceName { get; set; }
         public string parentFolder { get; set; }
         public string contents { get; set; }
+        public byte [] contentsUTF8 { get; set; }
         public string mimetype { get; set; }
         public string rsInstance { get; set; }
         public bool overwrite { get; set; }
+    }
+
+    public class UploadFileData
+    {
+        public SetResource setResource;
+        public string filename;
+
+        public UploadFileData()
+        {
+            setResource = new SetResource();
+        }
     }
 
     public class SiteCatalog
@@ -390,10 +402,20 @@ namespace Forerunner.SSRS.Manager
             rs.DeleteItem(path);
             return getReturnSuccess();
         }
+        public String UploadFile(UploadFileData data)
+        {
+            // TODO
+            // Make this more real for other file types such as reports (.rdl)
+
+            data.setResource.resourceName = data.filename;
+            data.setResource.mimetype = Forerunner.MimeTypeMap.GetMimeType(Path.GetExtension(data.filename));
+            return SaveCatalogResource(data.setResource);
+        }
         public String SaveCatalogResource(SetResource setResource)
         {
             bool notFound = false;
             rs.Credentials = GetCredentials();
+            byte[] contentUTF8 = setResource.contentsUTF8 != null ? setResource.contentsUTF8 : Encoding.UTF8.GetBytes(setResource.contents); 
 
             if (!setResource.overwrite)
             {
@@ -403,7 +425,7 @@ namespace Forerunner.SSRS.Manager
                     rs.CreateResource(setResource.resourceName,
                                         HttpUtility.UrlDecode(setResource.parentFolder),
                                         setResource.overwrite,
-                                        Encoding.UTF8.GetBytes(setResource.contents),
+                                        contentUTF8,
                                         setResource.mimetype,
                                         null);
                     return getReturnSuccess();
@@ -424,7 +446,7 @@ namespace Forerunner.SSRS.Manager
                 // If we were told to overwrite, replace the contents here. We assume the resource exists 
                 var path = CombinePaths(HttpUtility.UrlDecode(setResource.parentFolder), setResource.resourceName);
                 path = GetPath(path);
-                rs.SetResourceContents(path, Encoding.UTF8.GetBytes(setResource.contents), setResource.mimetype);
+                rs.SetResourceContents(path, contentUTF8, setResource.mimetype);
             }
             catch (System.Web.Services.Protocols.SoapException e)
             {
@@ -440,7 +462,7 @@ namespace Forerunner.SSRS.Manager
                 rs.CreateResource(setResource.resourceName,
                                     HttpUtility.UrlDecode(setResource.parentFolder),
                                     setResource.overwrite,
-                                    Encoding.UTF8.GetBytes(setResource.contents),
+                                    contentUTF8,
                                     setResource.mimetype,
                                     null);
             }

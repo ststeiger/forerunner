@@ -1677,10 +1677,7 @@ $(function () {
             text: locData.uploadFile.title,
             events: {
                 click: function (e) {
-                    var $uploadFileSection = e.data.me.options.$appContainer.children(".fr-upf-section");
-                    var parentFolder = e.data.$reportExplorer.reportExplorer("getLastFetched").path;
-                    $uploadFileSection.uploadFile({ parentFolder: parentFolder });
-                    $uploadFileSection.uploadFile("openDialog");
+                    e.data.me.options.$reportExplorer.reportExplorer("showUploadFileDialog");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-upload-file"]);
                 }
             }

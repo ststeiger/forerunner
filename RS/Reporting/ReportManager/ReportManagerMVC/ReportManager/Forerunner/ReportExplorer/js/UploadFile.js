@@ -11,6 +11,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var uploadFile = locData.uploadFile;
     var helper = forerunner.helper;
@@ -20,19 +21,23 @@ $(function () {
      *
      * @namespace $.forerunner.uploadFile
      * @prop {Object} options - The options for the upload file dialog
+     * @prop {String} options.parentFolder - Folder the file will be uploaded to
+     * @prop {Object} options.$reportExplorer - Report Explorer Widget
      *
      * @example
      * $("#uploadFileDialog").uploadFile({
      *      $appContainer: me.options.$appContainer,
-     *      title: loc.uploadFile.title,
-     *      iconClass: "fr-upf-upload-file-icon"
+     *      $reportExplorer: me.element,
+     *      parentFolder: me.lastFetched.path,
+     *      rsInstance: me.options.rsInstance
      * });
      */
     $.widget(widgets.getFullname(widgets.uploadFile), $.forerunner.dialogBase, /** @lends $.forerunner.uploadFile */ {
         options: {
             title: uploadFile.title,
             iconClass: "fr-upf-upload-file-icon",
-            parentFolder: ""
+            parentFolder: "",
+            $reportExplorer: null
         },
         _init: function () {
             var me = this;
@@ -82,6 +87,11 @@ $(function () {
                             "</div>" +
                         "</td>" +
                     "</tr>" +
+                    // Hidden fields
+                    "<tr>" +
+                        "<input name='rsinstance' type='text' class='fr-core-hidden' value='" + me.options.rsInstance + "' />" +
+                        "<input name='parentfolder' type='text' class='fr-core-hidden' value='" + me.options.parentFolder + "' />" +
+                    "</tr>" +
                 "</table>"
             );
 
@@ -116,6 +126,7 @@ $(function () {
                 },
                 success: function (data, status, xhr) {
                     me.$progressContainer.hide();
+                    me.options.$reportExplorer.reportExplorer("refresh");
                     me.closeDialog();
                 },
                 error: function (xhr, status, error) {
@@ -129,7 +140,7 @@ $(function () {
             me.$uploadFile.watermark(uploadFile.uploadFileLabel, { useNative: false, className: "fr-watermark" });
 
             // Add a transparent file type <input> tag overlaid on top of the "Browse Button" This will enable
-            // use to have the look and feel we want and also be compatible on all browsers
+            // us to have the look and feel we want and also be compatible on all browsers
             me.$browseContainer = me.element.find(".fr-upf-browse-btn-container");
             me.$browseBtn = me.element.find(".fr-upf-browse-id");
         },

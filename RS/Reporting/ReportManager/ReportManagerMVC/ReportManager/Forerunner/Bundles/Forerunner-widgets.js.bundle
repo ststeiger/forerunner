@@ -7,6 +7,7 @@
     <file>/Forerunner/ReportExplorer/js/ParameterModel.js</file>
     <file>/Forerunner/Common/js/Toolbase.js</file>
     <file>/Forerunner/Common/js/MessageBox.js</file>
+    <file>/Forerunner/Common/js/catalogTree.js</file>
     <file>/Forerunner/Common/js/DefaultAppTemplate.js</file>
     <file>/Forerunner/Common/js/DashboardModel.js</file>
     <file>/Forerunner/Common/js/ForerunnerProperties.js</file>

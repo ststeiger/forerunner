@@ -32,7 +32,7 @@
         }    
     .fr-security-layer .acc span, .fr-security-layer .role-name span{
         display:inline-block;
-        height:20px;
+        min-height:20px;
     }
     .fr-security-layer .role-name .chk {
         padding: 0 4px;
@@ -104,15 +104,15 @@
 
 @media only screen and (max-width : 479px) {
     .fr-security-container {
-        width: 340px;
+        width: 320px;
     }
     .fr-security-layer {
         min-height: 140px;
         max-height: 240px;
     }
-    .fr-security-submit-container input {
+    .fr-security-submit-container .fr-security-btn {
         width: 100px;
-        margin: 0px 10px;
+        margin: 0px 20px;
     }
-    .fr-security-layer ul li span { max-width:200px; }
+    .fr-security-layer ul li span { max-width:180px; }
 }

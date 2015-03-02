@@ -344,6 +344,8 @@ $(function () {
             /** @constant */
             forerunnerLinkedReport: "forerunnerLinkedReport",
             /** @constant */
+            catalogTree: "catalogTree",
+            /** @constant */
             viewerBase: "viewerBase",
             /** @constant */
             dialogBase: "dialogBase",
@@ -615,7 +617,12 @@ $(function () {
             /** widget + event, lowercase */
             reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
 
-            saveRDLDone: "saveRDLDone"
+            saveRDLDone: "saveRDLDone",
+
+            /** @constant */
+            catalogSelected: "catalogSelected",
+            /** widget + event, lowercase */
+            forerunnerCatalogSelected: function () { return (forerunner.ssr.constants.widgets.catalogTree + this.catalogSelected).toLowerCase(); }
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

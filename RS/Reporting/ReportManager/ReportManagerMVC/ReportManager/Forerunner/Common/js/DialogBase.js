@@ -50,6 +50,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._hideSubmitError();
         },
         _create: function () {
             var me = this;
@@ -71,9 +72,12 @@ $(function () {
 
                     // Submit container
                     "<div class='fr-core-dialog-submit-container'>" +
+                        // Submit Button
                         "<div class='fr-core-center'>" +
                             "<input type='button' class='fr-dlb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + me.options.actionWord + "' />" +
                         "</div>" +
+                        // Submit Error
+                        "<div class='fr-dlb-submit-error fr-dlb-error fr-dlb-error-span error' />" +
                     "</div>" +
                     "</form>" +
                 "</div>");
@@ -88,6 +92,8 @@ $(function () {
                 me.closeDialog();
             });
 
+            me.$submitError = me.element.find(".fr-dlb-submit-error");
+
             me.$submit = me.element.find(".fr-dlb-submit-id");
             me.$submit.on("click", function (e) {
                 me._submit();
@@ -100,6 +106,15 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+        },
+        _showSubmitError: function (html) {
+            var me = this;
+            me.$submitError.show();
+            me.$submitError.html(html);
+        },
+        _hideSubmitError: function () {
+            var me = this;
+            me.$submitError.hide();
         },
         _submit: function () {
             var me = this;

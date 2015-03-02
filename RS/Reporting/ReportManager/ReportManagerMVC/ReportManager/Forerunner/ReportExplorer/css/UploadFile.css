@@ -12,7 +12,4 @@
   .fr-upf-section .fr-upf-progess-bar { background-color: #d5e1f2; width: 0%; height: 20px; -moz-border-radius: 3px; -webkit-border-radius: 3px; border-radius: 3px; }
   .fr-upf-section .fr-upf-progress-text { position: absolute; display: inline-block; top: 3px; left: 48%; }
 
-  /* This will be made visibe if an error happens */
-  .fr-upf-section .fr-upf-error { display: none; margin-top: 10px; overflow: auto; }
-
 .fr-upf-upload-file-icon { background-image: url(../../Common/images/ToolpaneIcons/UploadFile.png); }

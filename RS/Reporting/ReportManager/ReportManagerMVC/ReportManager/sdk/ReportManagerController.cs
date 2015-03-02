@@ -688,6 +688,12 @@ namespace ReportManager.Controllers
                 // Read the form data.
                 await Request.Content.ReadAsMultipartAsync(provider);
 
+                bool overwrite = false;
+                if (provider.FormData["overwrite"] != null && provider.FormData["overwrite"] == "on")
+                {
+                    overwrite = true;
+                }
+
                 // This illustrates how to get the file names.
                 foreach (MultipartFileData file in provider.FileData)
                 {

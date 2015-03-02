@@ -76,11 +76,6 @@ $(function () {
                     // Upload Status and progress bar
                     "<tr>" +
                         "<td colspan='2'>" +
-                            "<div class='fr-upf-error fr-dlb-error fr-dlb-error-span error' />" +
-                        "</td>" +
-                    "</tr>" +
-                    "<tr>" +
-                        "<td colspan='2'>" +
                             "<div class='fr-upf-progess-container'>" +
                                 "<div class='fr-upf-progess-bar' />" +
                                 "<div class='fr-upf-progress-text' />" +
@@ -101,14 +96,12 @@ $(function () {
             me.$decsription = me.element.find(".fr-upf-description");
             me.$uploadFile = me.element.find(".fr-upf-file");
             me.$overwrite = me.element.find(".fr-upf-overwrite-id");
-            me.$uploadError = me.element.find(".fr-upf-error");
 
             me.$progressContainer = me.element.find(".fr-upf-progess-container");
             me.$progressBar = me.element.find(".fr-upf-progess-bar");
             me.$progress = me.element.find(".fr-upf-progress-text");
 
             // Use jquery.form to handle an ajax like POST to the server
-            me.$uploadError.hide();
             me.$progressContainer.show();
             me.$form.ajaxForm({
                 beforeSend: function () {
@@ -127,9 +120,7 @@ $(function () {
                 },
                 error: function (xhr, status, error) {
                     me.$progressContainer.hide();
-
-                    me.$uploadError.show();
-                    me.$uploadError.html(xhr.responseText);
+                    me._showSubmitError(xhr.responseText);
                 }
             });
 
@@ -154,7 +145,7 @@ $(function () {
         _onReadyBrowseBtn: function () {
             var me = this;
 
-            me.$uploadError.width(me.$decsription.width());
+            me.$submitError.width(me.$decsription.width());
             me.$progressContainer.width(me.$decsription.width());
 
             if (me.$browseBtn.is(":visible")) {

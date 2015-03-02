@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -1613,6 +1613,19 @@ $(function () {
         actionHistoryDepth:function(){
             return this.actionHistory.length;
         },
+
+        /**
+         * Returns the action history stack
+         *
+         * @function $.forerunner.reportViewer#actionHistory
+         *
+         * @return {array} - Action history 
+         */
+        actionHistory: function () {
+            return this.actionHistory;
+        },
+
+
         /**
          * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
          *

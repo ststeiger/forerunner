@@ -81,8 +81,6 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-
-            me.element.append($container);
         },
         _create: function () {
             

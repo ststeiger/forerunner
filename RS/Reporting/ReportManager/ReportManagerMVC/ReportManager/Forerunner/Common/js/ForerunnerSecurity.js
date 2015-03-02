@@ -84,6 +84,7 @@ $(function () {
                "</div>");
 
             me.element.append($container);
+
             me.$layer1 = me.element.find(".layer-1");
             me.$layer2 = me.element.find(".layer-2");
             me.$groupuser = me.$layer2.find(".fr-security-groupuser");
@@ -104,8 +105,6 @@ $(function () {
             });
 
             me._bindEvents();
-
-            me.element.append($container);
         },
         _bindEvents: function(){
             var me = this;

@@ -943,11 +943,11 @@ $(function () {
         /**
         * Returns the action history stack
         *
-        * @function $.forerunner.reportViewer#actionHistory
+        * @function $.forerunner.reportViewer#getActionHistory
         *
         * @return {array} - Action history 
         */
-        actionHistory: function () {
+        getActionHistory: function () {
             return this.actionHistory;
         },
 

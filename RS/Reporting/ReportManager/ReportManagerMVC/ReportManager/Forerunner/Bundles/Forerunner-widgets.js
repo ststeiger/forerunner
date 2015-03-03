@@ -1583,24 +1583,21 @@ $(function () {
         },
 
         /**
-         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
-         *
-         * @function $.forerunner.reportViewer#back
-         *
-         * @fires reportviewerdrillback
-         * @fires reportviewerback
-         * @see forerunner.ssr.constants.events
-         */
-        back: function () {
+       * Plays an antion from the action history stack
+       *
+       * @function $.forerunner.reportViewer#playActionHistory
+       *      
+       */
+        playActionHistory: function (action) {
             var me = this;
-            var action = me.actionHistory.pop();
+
             if (action) {
                 me._clearReportViewerForDrill();
 
                 me.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
-               
+
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
@@ -1646,7 +1643,26 @@ $(function () {
                     if (me.options.parameterModel && action.parameterModel)
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
-                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
+                me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);               
+            }
+           
+        },
+
+        /**
+         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+         *
+         * @function $.forerunner.reportViewer#back
+         *
+         * @fires reportviewerdrillback
+         * @fires reportviewerback
+         * @see forerunner.ssr.constants.events
+         */
+        back: function () {
+            var me = this;
+
+            var action = me.actionHistory.pop();
+            if (action) {
+                me.playActionHistory(action);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {

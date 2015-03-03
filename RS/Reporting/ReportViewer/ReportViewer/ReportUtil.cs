@@ -224,7 +224,7 @@ namespace Forerunner
                         else
                         {
                             //Handle case of invalid parameters.  Do not add invalid, get error from SSRS
-                            if ((paramType != "String") && obj["Value"] == "")
+                            if ((paramType != "String") && (string)(obj["Value"]) == "")
                             {
                                 // do nothing
                             }
@@ -834,6 +834,7 @@ namespace Forerunner
         // Forerunner specific extensions here
         {".frdb", "json/forerunner-dashboard"},
         {".frsf", "json/forerunner-searchfolder"},
+        {".rdl", "xml/forerunner-report"},
         // combination of values from Windows 7 Registry and 
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
         // some added, including .7z and .dat

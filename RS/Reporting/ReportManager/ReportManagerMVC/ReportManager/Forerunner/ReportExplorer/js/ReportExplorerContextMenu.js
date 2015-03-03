@@ -149,8 +149,9 @@ $(function () {
         _onClickDownloadFile: function (event, data) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/DownloadResource";
+            var url = me.options.reportManagerAPI + "/DownloadFile";
             url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            url += "&itemtype=" + encodeURIComponent(me.options.catalogItem.Type);
             if (me.options.rsInstance) {
                 url += "&instance=" + me.options.rsInstance;
             }

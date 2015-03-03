@@ -259,12 +259,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        [ActionName("DownloadResource")]
-        public HttpResponseMessage DownloadResource(string path, string instance = null)
+        [ActionName("DownloadFile")]
+        public HttpResponseMessage DownloadFile(string path, string itemtype, string instance = null)
         {
             byte[] result = null;
             string mimetype = null;
-            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            result = GetReportManager(instance).GetCatalogContents(path, itemtype, out mimetype);
             return GetDownloadResponseFromBytes(result, mimetype, path);
         }
 

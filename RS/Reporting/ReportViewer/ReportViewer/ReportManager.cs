@@ -76,6 +76,11 @@ namespace Forerunner.SSRS.Manager
         private static readonly object SettingLockObj = new object();
         private static readonly object VersionLockObj = new object();
         static private List<string> ThumbnailsInProcess = new List<string>();
+        private static readonly IDictionary<string, string> _hiddenExtensionsMap = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) 
+        {
+            {".frdb", null},
+            {".frsf", null},
+        };
 
         private class SSRSServer
         {
@@ -402,11 +407,26 @@ namespace Forerunner.SSRS.Manager
             rs.DeleteItem(path);
             return getReturnSuccess();
         }
-        private static readonly IDictionary<string, string> _hiddenExtensionsMap = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) 
+        public byte[] GetReportDefinition(string path, out string mimetype)
         {
-            {".frdb", null},
-            {".frsf", null},
-        };
+            mimetype = "xml/forerunner-report";
+            return rs.GetReportDefinition(path);
+        }
+        public byte[] GetCatalogContents(string path, string itemtype, out string mimetype)
+        {
+            rs.Credentials = GetCredentials();
+
+            ItemTypeEnum type = (ItemTypeEnum)Convert.ToInt32(itemtype);
+            switch (type)
+            {
+                case ItemTypeEnum.Resource:
+                    return GetCatalogResource(path, out mimetype);
+                case ItemTypeEnum.Report:
+                    return GetReportDefinition(path, out mimetype);
+            }
+
+            throw new Exception("Unsupported catalog item type");
+        }
         private string GetResourceName(string filename)
         {
             string ext = Path.GetExtension(filename);

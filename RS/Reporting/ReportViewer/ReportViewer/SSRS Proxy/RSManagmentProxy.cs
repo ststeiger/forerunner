@@ -82,6 +82,15 @@ namespace Forerunner.SSRS.Management
             else
                 return RSSPS.GetResourceContents(path, out mimetype);
         }
+        
+        public byte[] GetReportDefinition(string path)
+        {
+            if (IsNative)
+                return RSNative.GetReportDefinition(path);
+            else
+                return RSSPS.GetReportDefinition(path);
+        }
+
         public void SetResourceContents(string Resource, byte[] Contents, string MimeType)
         {
             if (IsNative)

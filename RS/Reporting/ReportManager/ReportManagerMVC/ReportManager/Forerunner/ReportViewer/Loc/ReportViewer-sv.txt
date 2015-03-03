@@ -293,7 +293,7 @@
   "common": {
     "submit":"Submit",
     "cancel":"avboka",
-    "delete":"Radera",
+    "deleteBtn":"Radera",
     "edit":"Redigera",
     "name":"namn",
     "description":"Beskrivning"

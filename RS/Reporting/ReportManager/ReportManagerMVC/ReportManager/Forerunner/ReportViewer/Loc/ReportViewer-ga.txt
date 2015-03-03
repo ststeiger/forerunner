@@ -293,7 +293,7 @@
   "common": {
     "submit":"Cuir isteach",
     "cancel":"Cealaigh",
-    "delete":"Scrios",
+    "deleteBtn":"Scrios",
     "edit":"eagar",
     "name":"an t-ainm",
     "description":"Cur síos"

@@ -293,7 +293,7 @@
   "common": {
     "submit":"Submit",
     "cancel":"Cancel",
-    "delete":"Delete",
+    "deleteBtn":"Delete",
     "edit":"Edit",
     "name":"Name",
     "description":"Description"

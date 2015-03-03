@@ -293,7 +293,7 @@
   "common": {
     "submit":"submeter",
     "cancel":"cancelar",
-    "delete":"excluir",
+    "deleteBtn":"excluir",
     "edit":"editar",
     "name":"nome",
     "description":"descrição"

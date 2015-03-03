@@ -293,7 +293,7 @@
   "common": {
     "submit":"leggja",
     "cancel":"Hætta",
-    "delete":"eyða",
+    "deleteBtn":"eyða",
     "edit":"Breyta",
     "name":"Name",
     "description":"lýsing"

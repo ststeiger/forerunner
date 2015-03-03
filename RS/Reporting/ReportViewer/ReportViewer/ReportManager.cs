@@ -402,12 +402,24 @@ namespace Forerunner.SSRS.Manager
             rs.DeleteItem(path);
             return getReturnSuccess();
         }
+        private static readonly IDictionary<string, string> _hiddenExtensionsMap = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) 
+        {
+            {".frdb", null},
+            {".frsf", null},
+        };
+        private string GetResourceName(string filename)
+        {
+            string ext = Path.GetExtension(filename);
+            if (_hiddenExtensionsMap.ContainsKey(ext))
+            {
+                return Path.GetFileNameWithoutExtension(filename);
+            }
+
+            return filename;
+        }
         public String UploadFile(UploadFileData data)
         {
-            // TODO
-            // Make this more real for other file types such as reports (.rdl)
-
-            data.setResource.resourceName = data.filename;
+            data.setResource.resourceName = GetResourceName(data.filename);
             data.setResource.mimetype = Forerunner.MimeTypeMap.GetMimeType(Path.GetExtension(data.filename));
             return SaveCatalogResource(data.setResource);
         }

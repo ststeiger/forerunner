@@ -116,13 +116,7 @@ namespace ReportManager.Controllers
 
             if (ext == null || ext.Length == 0)
             {
-                switch (mimeType)
-                {
-                    case "json/forerunner-dashboard":
-                        // New extension for forerunner dashboards
-                        ext = ".frdb";
-                        break;
-                }
+                ext = Forerunner.MimeTypeMap.GetExtension(mimeType);
             }
 
             return filename + ext;

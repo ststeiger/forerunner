@@ -826,9 +826,14 @@ namespace Forerunner
 
     public static class MimeTypeMap
     {
-        private static readonly IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
+        private static readonly IDictionary<string, string> _MimeToExtensionMap = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+        private static readonly IDictionary<string, string> _ExtensionToMimeMap = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
 
         #region Big freaking list of mime types
+        // Forerunner specific extensions here
+        {".frdb", "json/forerunner-dashboard"},
+        {".frsf", "json/forerunner-searchfolder"},
         // combination of values from Windows 7 Registry and 
         // from C:\Windows\System32\inetsrv\config\applicationHost.config
         // some added, including .7z and .dat
@@ -1398,6 +1403,28 @@ namespace Forerunner
 
         };
 
+        private static void _PopulateMap()
+        {
+            if (_MimeToExtensionMap.Count > 0)
+            {
+                return;
+            }
+
+            var enumerator = _ExtensionToMimeMap.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                // Note that this will end up taking the last valid file extension for the
+                // given mime type
+                _MimeToExtensionMap[enumerator.Current.Value] = enumerator.Current.Key;
+            }
+        }
+
+        /// <summary>
+        /// GetMimeType
+        ///     Returns back a mime type string from the given file extension
+        /// </summary>
+        /// <param name="extension">File extension used as the lookup key</param>
+        /// <returns>A mime type string</returns>
         public static string GetMimeType(string extension)
         {
             if (extension == null)
@@ -1412,7 +1439,29 @@ namespace Forerunner
 
             string mime;
 
-            return _mappings.TryGetValue(extension, out mime) ? mime : "text/plain";
+            return _ExtensionToMimeMap.TryGetValue(extension, out mime) ? mime : "text/plain";
+        }
+
+        /// <summary>
+        /// GetMimeType
+        ///     Returns back a file extension from the given mime type
+        /// </summary>
+        /// <param name="mimeType">Mime type string used as the lookup key</param>
+        /// <returns>A file extension including the period</returns>
+        public static string GetExtension(string mimeType)
+        {
+            if (mimeType == null)
+            {
+                return "";
+            }
+
+            // Make sure the extension map is populated
+            _PopulateMap();
+
+            string extension;
+            bool found = _MimeToExtensionMap.TryGetValue(mimeType, out extension);
+
+            return extension != null ? extension : "";
         }
     }
 }

@@ -4860,7 +4860,6 @@ $(function () {
             containerClass: null,
             catalogTreeClass: null,
             $appContainer: null,
-            $reportExplorer: null,
             reportManagerAPI: null,
             rsInstance: null
         },
@@ -4978,7 +4977,6 @@ $(function () {
                 } else if (item.Type === forerunner.ssr.constants.itemType.report) {
                     curNode.children.push(newNode);
                     newNode.icon = "jstree-file";
-                    newNode.li_attr.dataReport = true;
                 }
             });
         },
@@ -5020,13 +5018,12 @@ $(function () {
         },        
         _onChangedjsTree: function (e, data) {
             var me = this;
-
-            if (me.options.type === "fullCatalog") {
-                if (data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
-                    me.$tree.jstree("toggle_node", data.node.id);
-                    return;
-                }
+            
+            if (me.options.type === "fullCatalog" && data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+                me.$tree.jstree("toggle_node", data.node.id);
+                return;
             }
+            
             var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.li_attr.dataCatalogItem.Path;
 
             me._trigger(events.catalogSelected, null, { path: location, item: data.node.li_attr.dataCatalogItem });
@@ -7242,7 +7239,7 @@ $(function () {
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
                             "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.delete + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.deleteBtn + "</a>" +
                             "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +
@@ -10310,13 +10307,12 @@ $(function () {
             var catalogTreeOptions = {
                 rootPath: "/",
                 $appContainer: me.options.$appContainer,
-                $reportExplorer: me.options.$reportExplorer,
                 reportManagerAPI: me.options.reportManagerAPI,
                 containerClass: "fr-linked-popup-container",
                 catalogTreeClass: "fr-linked-tree-container",
                 rsInstance: me.options.rsInstance
             };
-            debugger;
+
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);
@@ -27004,94 +27000,6 @@ $(function () {
             $dashboardEditor: null,
             reportId: null
         },
-        _setCheckbox: function (setting, $e) {
-            if (setting === true) {
-                $e.prop("checked", true);
-            } else {
-                $e.prop("checked", false);
-            }
-        },
-        _init: function () {
-            var me = this;
-
-            me.properties = me.options.$dashboardEditor.getReportProperties(me.options.reportId) || {};
-
-            // Open the top level nodes and deselect any previous selection
-            me.$tree.jstree("close_all");
-            me.$tree.jstree("open_node", "j1_1");
-            me.$tree.jstree("deselect_all", true);
-
-            // Restore the report name
-            if (me.properties.catalogItem &&
-                me.properties.catalogItem.Name) {
-                me.$reportInput.val(me.properties.catalogItem.Name);
-            } else {
-                me.$reportInput.val("");
-            }
-
-            // Restore the toolbar option checkboxes
-            me._setCheckbox(false, me.$hideToolbar);
-            me._setCheckbox(false, me.$minimalToolbar);
-            me._setCheckbox(false, me.$fullToolbar);
-
-            if (me.properties.toolbarConfigOption) {
-                if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.hide) {
-                    me._setCheckbox(true, me.$hideToolbar);
-                } else if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
-                    me._setCheckbox(true, me.$minimalToolbar);
-                } else {
-                    me._setCheckbox(true, me.$fullToolbar);
-                }
-            } else {
-                me._setCheckbox(true, me.$hideToolbar);
-            }
-
-            // Make sure the popup is hidden
-            me.$popup.addClass("fr-core-hidden");
-
-            me._resetValidateMessage();
-
-            // Setup the report selector UI
-            var JSData = me._createJSData("/");
-            me.$tree.jstree({
-                core: {
-                    data: JSData
-                }
-            });
-        },
-        _createJSData: function (path) {
-            var me = this;
-            var nodeTree = {
-                text: path,
-                state: {
-                    opened: true
-                },
-                children: []
-            };
-            me._createTreeItems(nodeTree, "catalog", path);
-            return [nodeTree];
-        },
-        _createTreeItems: function (curNode, view, path) {
-            var me = this;
-            var items = me._getItems(view, path);
-            $.each(items, function (index, item) {
-                var newNode = {
-                    text: item.Name,
-                    li_attr: {
-                        dataCatalogItem: item
-                    },
-                    children: []
-                };
-                if (item.Type === me._itemType.folder) {
-                    curNode.children.push(newNode);
-                    me._createTreeItems(newNode, view, item.Path);
-                } else if (item.Type === me._itemType.report) {
-                    curNode.children.push(newNode);
-                    newNode.icon = "jstree-file";
-                    newNode.li_attr.dataReport = true;
-                }
-            });
-        },
         _create: function () {
             var me = this;
 
@@ -27107,14 +27015,10 @@ $(function () {
                         "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                         // Dropdown container
                         "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' autofocus='autofocus' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
+                            "<input type='text' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' autofocus='autofocus' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
                             "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
                                 "<div class='fr-rp-dropdown-icon'></div>" +
                             "</div>" +
-                        "</div>" +
-                        // Popup container
-                        "<div class='fr-rp-popup-container fr-core-hidden'>" +
-                            "<div class='fr-report-tree-id fr-rp-tree-container'></div>" +
                         "</div>" +
                         // Toolbar options
                         "<table>" +
@@ -27153,11 +27057,6 @@ $(function () {
             me.$form = me.element.find(".fr-rp-form");
             me._validateForm(me.$form);
 
-            me.$dropdown = me.element.find(".fr-rp-dropdown-container");
-            me.$dropdown.on("click", function (e) {
-                me._onClickTreeDropdown.apply(me, arguments);
-            });
-
             me.$removeReport = me.element.find(".fr-rp-remove-report-id");
             me.$removeReport.on("click", function (e, data) {
                 me._onRemoveReport.apply(me, arguments);
@@ -27168,27 +27067,30 @@ $(function () {
             me.$hideToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
+
             me.$minimalToolbar = me.element.find(".fr-rp-minimal-toolbar-id");
             me.$minimalToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
+
             me.$fullToolbar = me.element.find(".fr-rp-full-toolbar-id");
             me.$fullToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
+            me.$dropdown = me.element.find(".fr-rp-dropdown-container");
+            me.$dropdown.find(".fr-rp-dropdown-icon").on("click", function (e) {
+                me._onClickTreeDropdown.apply(me, arguments);
+            });
+
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-            me.$popup = me.element.find(".fr-rp-popup-container");
-            me.$tree = me.element.find(".fr-report-tree-id");
-
             me.$reportInput.watermark(reportProperties.selectReport, { useNative: false, className: "fr-watermark" });
-
-            me.$tree.on("changed.jstree", function (e, data) {
-                me._onChangedjsTree.apply(me, arguments);
+            me.$reportInput.on("click", function (e) {
+                me._onClickTreeDropdown.apply(me, arguments);
             });
 
             // Hook the cancel and submit events
-            me.element.find(".fr-rp-cancel").on("click", function(e) {
+            me.element.find(".fr-rp-cancel").on("click", function (e) {
                 me.closeDialog();
             });
             me.element.find(".fr-rp-submit-id").on("click", function (e) {
@@ -27201,6 +27103,62 @@ $(function () {
                 me.closeDialog();
             });
         },
+        _init: function () {
+            var me = this;
+
+            me.properties = me.options.$dashboardEditor.getReportProperties(me.options.reportId) || {};
+
+            // Restore the report name
+            if (me.properties.catalogItem && me.properties.catalogItem.Name) {
+                me.$reportInput.val(me.properties.catalogItem.Name);
+            } else {
+                me.$reportInput.val("");
+            }
+
+            // Restore the toolbar option checkboxes
+            me._setCheckbox(false, me.$hideToolbar);
+            me._setCheckbox(false, me.$minimalToolbar);
+            me._setCheckbox(false, me.$fullToolbar);
+
+            if (me.properties.toolbarConfigOption) {
+                if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                    me._setCheckbox(true, me.$hideToolbar);
+                } else if (me.properties.toolbarConfigOption === constants.toolbarConfigOption.minimal) {
+                    me._setCheckbox(true, me.$minimalToolbar);
+                } else {
+                    me._setCheckbox(true, me.$fullToolbar);
+                }
+            } else {
+                me._setCheckbox(true, me.$hideToolbar);
+            }
+
+            //initialized catalog tree widget on the location input element
+            me.$reportInput.catalogTree({
+                rootPath: "/",
+                type: "fullCatalog",
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                containerClass: "fr-rp-popup-container",
+                catalogTreeClass: "fr-report-tree-id fr-rp-tree-container"
+            });
+
+            //after the item is selected this event will be triggered
+            me.$reportInput.off(events.forerunnerCatalogSelected());
+            me.$reportInput.on(events.forerunnerCatalogSelected(), function (e, data) {
+                var location = data.path;
+
+                // Set the value if this is a report
+                if (data.item.Type === forerunner.ssr.constants.itemType.report) {
+                    me.$reportInput.attr("title", location).val(location).valid();
+                    me.properties.catalogItem = data.item;
+
+                    // Clear any previously save parameters. These get added on the save call later
+                    me.properties.parameters = null;
+                }
+            });
+
+            me._resetValidateMessage();
+        },        
         _onRemoveReport: function (e, data) {
             var me = this;
             me.$reportInput.val("");
@@ -27214,72 +27172,19 @@ $(function () {
 
             $(e.target).prop("checked", true);
         },
-        _onChangedjsTree: function (e, data) {
-            var me = this;
-
-            // Set the value if this is a report
-            if (data.node.li_attr.dataReport === true) {
-                me.$reportInput.val(data.node.text);
-                me.properties.catalogItem = data.node.li_attr.dataCatalogItem;
-
-                // Clear any previously save parameters. These get added on the save call later
-                me.properties.parameters = null;
-
-                me.$popup.addClass("fr-core-hidden");
-            }
-            else {
-                me.$tree.jstree("toggle_node", data.node);
-            }
-        },
         _onClickTreeDropdown: function (e) {
             var me = this;
-            var $window = $(window);
 
             // Show the popup
             var width = me.$dropdown.width() - 2;//minus border width
-            me.$popup.css({ width: width });
-            me.$popup.toggleClass("fr-core-hidden");
+            me.$reportInput.catalogTree("toggleCatalog", width);
         },
-        // _getItems will return back an array of CatalogItem objects where:
-        //
-        // var = CatalogItem {
-        //          ID: string,     - GUID
-        //          Name: string,   - Item Name
-        //          Path: string,   - Item Path
-        //          Type: number,   - itemType (see below)
-        // }
-        _getItems: function (view, path) {
-            var me = this;
-            var items = null;
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: me.options.reportManagerAPI + "GetItems",
-                async: false,
-                data: {
-                    view: view,
-                    path: path
-                },
-                success: function (data) {
-                    items = data;
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            });
-
-            return items;
-        },
-        // itemType is the number returned in the CatalogItem.Type member
-        _itemType: {
-            unknown: 0,
-            folder: 1,
-            report: 2,
-            resource: 3,
-            linkedReport: 4,
-            dataSource: 5,
-            model: 6,
-            site: 7
+        _setCheckbox: function (setting, $e) {
+            if (setting === true) {
+                $e.prop("checked", true);
+            } else {
+                $e.prop("checked", false);
+            }
         },
         /**
          * Open parameter set dialog

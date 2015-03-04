@@ -1000,7 +1000,8 @@ namespace Forerunner.SSRS.Manager
 
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType,c.[Type] FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               SELECT DISTINCT Path, Name, ModifiedDate, c.ItemID, Description, MimeType, c.[Type], c.Hidden
+                               FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
                 if (SeperateDB)
                 {
@@ -1032,10 +1033,11 @@ namespace Forerunner.SSRS.Manager
                                 c.Name = SQLReader.GetString(1);
                                 c.ModifiedDate = SQLReader.GetDateTime(2);
                                 c.ModifiedDateSpecified = true;
-                                c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
                                 c.ID = SQLReader.GetGuid(3).ToString();
                                 c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
                                 c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                                c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
+                                c.Hidden = SQLReader.GetBoolean(7);
                                 list.Add(c);
                             }
                             return list.ToArray();
@@ -1069,7 +1071,7 @@ namespace Forerunner.SSRS.Manager
                 List<CatalogItem> list = new List<CatalogItem>();
                 CatalogItem c;
 
-                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID,Description,MimeType,c.[Type]
+                string SQL = @"SELECT Path, Name, ModifiedDate, ItemID, Description, MimeType, c.[Type], c.Hidden
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
@@ -1095,10 +1097,11 @@ namespace Forerunner.SSRS.Manager
                     c.Name = SQLReader.GetString(1);
                     c.ModifiedDate = SQLReader.GetDateTime(2);
                     c.ModifiedDateSpecified = true;
-                    c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
                     c.ID = SQLReader.GetGuid(3).ToString();
                     c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
                     c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                    c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
+                    c.Hidden = SQLReader.GetBoolean(7);
                     list.Add(c);
 
                 }
@@ -2015,7 +2018,7 @@ namespace Forerunner.SSRS.Manager
 
                 // TODO: Fix for Seperate DB
                 if (!SeperateDB)
-                    SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+                    SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType, c.Hidden FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
                 else
                     SQL.Append(@"SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
 
@@ -2062,6 +2065,7 @@ namespace Forerunner.SSRS.Manager
                                 item.ID = SQLReader.GetGuid(4).ToString();
                                 item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                                 item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
+                                item.Hidden = SQLReader.GetBoolean(7);
                                 list.Add(item);
                             }
                             return list.ToArray();

@@ -1000,7 +1000,7 @@ namespace Forerunner.SSRS.Manager
 
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID,Description,MimeType,c.[Type] FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
                 if (SeperateDB)
                 {
@@ -1032,7 +1032,7 @@ namespace Forerunner.SSRS.Manager
                                 c.Name = SQLReader.GetString(1);
                                 c.ModifiedDate = SQLReader.GetDateTime(2);
                                 c.ModifiedDateSpecified = true;
-                                c.Type = ItemTypeEnum.Report;
+                                c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
                                 c.ID = SQLReader.GetGuid(3).ToString();
                                 c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
                                 c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
@@ -1069,7 +1069,7 @@ namespace Forerunner.SSRS.Manager
                 List<CatalogItem> list = new List<CatalogItem>();
                 CatalogItem c;
 
-                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID,Description,MimeType  
+                string SQL = @"SELECT Path,Name,ModifiedDate,ItemID,Description,MimeType,c.[Type]
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
@@ -1095,7 +1095,7 @@ namespace Forerunner.SSRS.Manager
                     c.Name = SQLReader.GetString(1);
                     c.ModifiedDate = SQLReader.GetDateTime(2);
                     c.ModifiedDateSpecified = true;
-                    c.Type = ItemTypeEnum.Report;
+                    c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
                     c.ID = SQLReader.GetGuid(3).ToString();
                     c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
                     c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);

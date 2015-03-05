@@ -3713,7 +3713,6 @@ $(function () {
 
                         //close all opened dialog before report start refresh
                         forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
-
                         me.refreshReport(me.getCurPage());                        
                     }
 

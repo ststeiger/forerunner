@@ -1052,6 +1052,42 @@ $(function () {
                 me._reLayoutPage(me.curPage, force);                
             }
         },
+
+        /**
+       * Get current Scroll Position
+       *
+       * @function $.forerunner.reportViewer#getScrollPosition
+       */
+        getScrollPosition: function () {
+            var me = this;
+            var position = {};
+
+            if (me._ScrollInner) {
+                position.left = me.$reportAreaContainer.scrollLeft();
+                position.top = me.$reportAreaContainer.scrollTop();
+            }
+            else {
+                position.left = $(window).scrollLeft();
+                position.top = $(window).scrollTop();
+            }
+            return position;
+        },
+
+        /**
+        * Save Scroll Position
+        *
+        * @function $.forerunner.reportViewer#saveScrollPosition
+        */
+        saveScrollPosition: function () {
+            var me = this;
+
+            var pos = me.getScrollPosition()
+
+            me.scrollLeft = pos.left;
+            me.scrollTop = pos.top;
+
+        },
+
         /**
          * Re-layout the report
          *
@@ -1059,12 +1095,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
-            me.scrollLeft = $(window).scrollLeft();
-            me.scrollTop = $(window).scrollTop();
+
+            me.saveScrollPosition();
 
             me._ReRender.call(me);
-            $(window).scrollLeft(me.scrollLeft);
-            $(window).scrollTop(me.scrollTop);
+            me.scrollReportTo();
+            
         },
         _removeCSS: function () {
             var me = this;
@@ -1088,12 +1124,51 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (me.$reportAreaContainer) {
-                me.$reportAreaContainer.css("display", "block");
-                me.$reportAreaContainer.css("width", $(window).width());
-                me.$reportAreaContainer.css("height", $(window).height());
-                me.$reportAreaContainer.css("overflow", "auto");
+            if (!me._zoomOveride) {
+                if (me.$reportAreaContainer) {
+
+                    me.$reportAreaContainer.css("display", "block");
+                    me.$reportAreaContainer.css("width", $(window).width());
+                    me.$reportAreaContainer.css("height", $(window).height());
+                    me.$reportAreaContainer.css("overflow", "auto");
+                    me._ScrollInner = true;
+                }
             }
+            else {
+                if (me.$reportAreaContainer) {
+                    me.$reportAreaContainer.css("display", "table-cell");
+                    me.$reportAreaContainer.css("width", "auto");
+                    me.$reportAreaContainer.css("height", "auto");
+                    me.$reportAreaContainer.css("overflow", "visible");
+                    me.element.hide().show(0);
+                    me._ScrollInner = true;
+                }
+            }
+        },
+        /**       
+       * Scolls the report ot the current set locaion or position specified        
+       *
+       * @function $.forerunner.reportViewer#scrollReportTo
+       * @param {object} position - optional position object with top and left
+       */
+        scrollReportTo: function (position) {
+            var me = this;
+
+            if (!position) {
+                position = {};
+                position.left = me.scrollLeft;
+                position.top = me.scrollTop;
+            }
+
+            if (me._ScrollInner) {
+                me.$reportAreaContainer.scrollLeft(position.left);
+                me.$reportAreaContainer.scrollTop(position.top);
+            }
+            else {
+                $(window).scrollLeft(position.left);
+                $(window).scrollTop(position.top);
+            }
+
         },
 
         _setPage: function (pageNum) {
@@ -1132,8 +1207,8 @@ $(function () {
                 me.curPage = pageNum;
                 me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
             }
-            $(window).scrollLeft(me.scrollLeft);
-            $(window).scrollTop(me.scrollTop);
+
+            me.scrollReportTo();
             me.removeLoadingIndicator();
             me.lock = 0;
 
@@ -1306,12 +1381,19 @@ $(function () {
                 return;
             }
 
-            if (isEnabled === true){
+            if (isEnabled === true) {
+                me._zoomOveride = true;
                 forerunner.device.allowZoom(true);
+                if (me._ScrollInner)
+                    me.scrollReportBody(true);
+
                 me.allowSwipe(false);
             }
-            else{
+            else {
+                me._zoomOveride = false;
                 forerunner.device.allowZoom(false);
+                if (me._ScrollInner)
+                    me.scrollReportBody();
                 me.allowSwipe(true);
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
@@ -1358,35 +1440,50 @@ $(function () {
         },
         _touchNav: function () {
             
-            if (!forerunner.device.isTouch())
-                return;
-
-            // Touch Events
             var me = this;
 
-            if (!forerunner.device.isWindowsPhone()) {
-                $(me.element).hammer().on("pinchin", function (ev) {
-                    if (me._allowSwipe === true) {
-                        ev.preventDefault();
-                        me.zoomToPercent(me._zoomFactor * 0.99);
-                        //me.hide().show(0);
-                    }
-                });
-                $(me.element).hammer().on("pinchout", function (ev) {
-                    if (me._allowSwipe === true) {
-                        ev.preventDefault();
-                        me.zoomToPercent(me._zoomFactor * 1.01);
-                        //me.hide().show(0);
-                    }
+            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") == "on") {
 
-                });
-                $(me.element).hammer().on("doubletap", function (ev) {
-                    if (me._allowSwipe === true) {
-                        ev.preventDefault();
-                        me.zoomToPercent(100);
-                        me.hide().show(0);
-                    }
-                });
+                if (!forerunner.device.isWindowsPhone()) {
+                    $(me.element).hammer().on("pinchin", function (ev) {
+                        if (me._allowSwipe === true) {
+                            ev.preventDefault();
+
+                            var page = me.element.find(".Page");
+                            var area = page.height() * page.width();
+                            var zoomSpeed = .99;
+
+                            if (area > 1000000)
+                                zoomSpeed = .90;
+
+                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
+                            //me.hide().show(0);
+                        }
+                    });
+                    $(me.element).hammer().on("pinchout", function (ev) {
+                        if (me._allowSwipe === true) {
+                            ev.preventDefault();
+
+                            var page = me.element.find(".Page");
+                            var area = page.height() * page.width();
+                            var zoomSpeed = 1.01;
+
+                            if (area > 1000000)
+                                zoomSpeed = 1.10;
+
+                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
+                            //me.hide().show(0);
+                        }
+
+                    });
+                    $(me.element).hammer().on("doubletap", function (ev) {
+                        if (me._allowSwipe === true) {
+                            ev.preventDefault();
+                            me.zoomToPercent(100);
+                            me.hide().show(0);
+                        }
+                    });
+                }
             }
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
@@ -1401,26 +1498,28 @@ $(function () {
                             // Show the header on release only if this is not scrolling.
                             // If it is scrolling, we will let scrollstop handle that.                   
                         case "release":
-                            var swipeNav = false;                            
-                            if (ev.gesture.touches.length > 1) {                                
+                            var swipeNav = false;
+                            if (ev.gesture.touches.length > 1) {
                                 swipeNav = true;
                             }
-
-                            if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
-                                ev.gesture.preventDefault();
-                                me._navToPage(me.curPage + 1);
-                                break;
-                            }
-
-                            if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
-                                ev.gesture.preventDefault();
-                                me._navToPage(me.curPage - 1);
-                                break;
-                            }
-
                             if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
+
+                            if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") == "on") {
+                                if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
+                                    ev.gesture.preventDefault();
+                                    me._navToPage(me.curPage + 1);
+                                    break;
+                                }
+
+                                if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
+                                    ev.gesture.preventDefault();
+                                    me._navToPage(me.curPage - 1);
+                                    break;
+                                }
+                            }
+
                     }
                 }
             );
@@ -1524,8 +1623,10 @@ $(function () {
                 });
             }
 
-            me.savedTop = $(window).scrollTop();
-            me.savedLeft = $(window).scrollLeft();
+            var pos = me.getScrollPosition();
+
+            me.savedTop = pos.top;
+            me.savedLeft = pos.left;
 
             me.element.mask();
             docMap.slideUpShow();
@@ -1625,26 +1726,22 @@ $(function () {
             return this.actionHistory;
         },
 
-
         /**
-         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
-         *
-         * @function $.forerunner.reportViewer#back
-         *
-         * @fires reportviewerdrillback
-         * @fires reportviewerback
-         * @see forerunner.ssr.constants.events
-         */
-        back: function () {
+      * Plays an antion from the action history stack
+      *
+      * @function $.forerunner.reportViewer#playActionHistory
+      *      
+      */
+        playActionHistory: function (action) {
             var me = this;
-            var action = me.actionHistory.pop();
+
             if (action) {
                 me._clearReportViewerForDrill();
 
                 me.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
-               
+
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
@@ -1691,6 +1788,25 @@ $(function () {
                         me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false, me.pages[me.curPage].Replay);
+            }
+
+        },
+
+        /**
+         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+         *
+         * @function $.forerunner.reportViewer#back
+         *
+         * @fires reportviewerdrillback
+         * @fires reportviewerback
+         * @see forerunner.ssr.constants.events
+         */
+        back: function () {
+            var me = this;
+
+            var action = me.actionHistory.pop();
+            if (action) {
+                me.playActionHistory(action);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
@@ -1876,8 +1992,7 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 function (data) {
-                    me.scrollLeft = $(window).scrollLeft();
-                    me.scrollTop = $(window).scrollTop();
+                    me.saveScrollPosition();
 
                     me.numPages = data.NumPages;
                     me.renderTime = new Date().getTime();
@@ -1991,8 +2106,7 @@ $(function () {
                 },
                 function (data) {
                     if (data.Result === true) {
-                        me.scrollLeft = $(window).scrollLeft();
-                        me.scrollTop = $(window).scrollTop();
+                        me.saveScrollPosition();
 
                         var replay = me.pages[me.curPage].Replay;
 
@@ -2194,8 +2308,9 @@ $(function () {
                 left = me.savedLeft;
             }
             else {
-                top = $(window).scrollTop();
-                left = $(window).scrollLeft();
+                var pos = me.getScrollPosition();
+                top = pos.top;
+                left = pos.left;
             }
 
             if (me.paramLoaded) {
@@ -3161,8 +3276,6 @@ $(function () {
                             if (respToggleReplay)
                                 me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
 
-                            //$(window).scrollLeft(me.scrollLeft);
-                            //$(window).scrollTop(me.scrollTop);
                             if (scrollID) {
                                 el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
                                 if (el.length === 1)
@@ -3589,21 +3702,19 @@ $(function () {
                     }
                     else {
                         //restore privious scroll position
-                        var containerTop = me.options.$appContainer.scrollTop();
-                        var containerLeft = me.options.$appContainer.scrollLeft();
-                        var windowTop = $(window).scrollTop();
-                        var windowLeft = $(window).scrollLeft();
-                        
+                        //var containerTop = me.options.$appContainer.scrollTop();
+                        //var containerLeft = me.options.$appContainer.scrollLeft();
+                        var pos = me.getScrollPosition();
+
                         me._addSetPageCallback(function () {
-                            me.options.$appContainer.scrollTop(containerTop).scrollLeft(containerLeft);
-                            $(window).scrollTop(windowTop).scrollLeft(windowLeft);
+                            //me.options.$appContainer.scrollTop(containerTop).scrollLeft(containerLeft);
+                            me.scrollReportTo(pos);
                         });
 
                         //close all opened dialog before report start refresh
                         forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
 
-                        me.refreshReport(me.getCurPage());
-                        //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
+                        me.refreshReport(me.getCurPage());                        
                     }
 
                     me.autoRefreshID = null;
@@ -5520,10 +5631,16 @@ $(function () {
         getScrollPosition: function () {
             var me = this;
             var position = {};
-            position.left = $(window).scrollLeft();
-            position.top = $(window).scrollTop();
-            position.innerLeft = me.$container.scrollLeft();
-            position.innerTop = me.$container.scrollTop();
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                position = me.$viewer.reportViewer("getScrollPosition");
+            }
+            else {
+                position.left = $(window).scrollLeft();
+                position.top = $(window).scrollTop();
+                position.innerLeft = me.$container.scrollLeft();
+                position.innerTop = me.$container.scrollTop();
+            }
             return position;
         },
         getOriginalPosition: function () {
@@ -5534,23 +5651,35 @@ $(function () {
             var me = this;
             if (!me.savePosition)
                 me.savePosition = me.getScrollPosition();
-            if (position.left !== null)
-                $(window).scrollLeft(position.left);
-            if (position.top !== null)
-                $(window).scrollTop(position.top);
-            if (position.innerLeft !== null)
-                me.$container.scrollLeft(position.innerLeft);
-            if (position.innerTop !== null)
-                me.$container.scrollTop(position.innerTop);
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                me.$viewer.reportViewer("scrollReportTo", position);
+            }
+            else {
+
+                if (position.left)
+                    $(window).scrollLeft(position.left);
+                if (position.top)
+                    $(window).scrollTop(position.top);
+                if (position.innerLeft)
+                    me.$container.scrollLeft(position.innerLeft);
+                if (position.innerTop)
+                    me.$container.scrollTop(position.innerTop);
+            }
         },
         restoreScrollPosition: function () {
             var me = this;
             if (me.savePosition && !me.scrollLock) {
-                me.$container.scrollLeft(me.savePosition.innerLeft);
-                me.$container.scrollTop(me.savePosition.innerTop);
-                $(window).scrollLeft(me.savePosition.left);
-                $(window).scrollTop(me.savePosition.top);
-                
+
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("scrollReportTo", me.savePosition);
+                }
+                else {
+                    me.$container.scrollLeft(me.savePosition.innerLeft);
+                    me.$container.scrollTop(me.savePosition.innerTop);
+                    $(window).scrollLeft(me.savePosition.left);
+                    $(window).scrollTop(me.savePosition.top);
+                }
                 me.savePosition = null;
             }
         },
@@ -17551,10 +17680,10 @@ $(function () {
                 $reportViewer.reportViewer("windowResize");
             }
 
-            if (me.options.isFullScreen && (forerunner.device.isiOS())) {
-                $reportViewer.reportViewer("scrollReportBody");
-            }
-
+            if (me.options.isFullScreen && (forerunner.device.isiOS()))
+                if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                    $reportViewer.reportViewer("scrollReportBody");
+                }
 
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {

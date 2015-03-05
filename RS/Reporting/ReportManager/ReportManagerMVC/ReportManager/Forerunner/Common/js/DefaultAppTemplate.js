@@ -665,10 +665,16 @@ $(function () {
         getScrollPosition: function () {
             var me = this;
             var position = {};
-            position.left = $(window).scrollLeft();
-            position.top = $(window).scrollTop();
-            position.innerLeft = me.$container.scrollLeft();
-            position.innerTop = me.$container.scrollTop();
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                position = me.$viewer.reportViewer("getScrollPosition");
+            }
+            else {
+                position.left = $(window).scrollLeft();
+                position.top = $(window).scrollTop();
+                position.innerLeft = me.$container.scrollLeft();
+                position.innerTop = me.$container.scrollTop();
+            }
             return position;
         },
         getOriginalPosition: function () {
@@ -679,23 +685,35 @@ $(function () {
             var me = this;
             if (!me.savePosition)
                 me.savePosition = me.getScrollPosition();
-            if (position.left !== null)
-                $(window).scrollLeft(position.left);
-            if (position.top !== null)
-                $(window).scrollTop(position.top);
-            if (position.innerLeft !== null)
-                me.$container.scrollLeft(position.innerLeft);
-            if (position.innerTop !== null)
-                me.$container.scrollTop(position.innerTop);
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                me.$viewer.reportViewer("scrollReportTo", position);
+            }
+            else {
+
+                if (position.left)
+                    $(window).scrollLeft(position.left);
+                if (position.top)
+                    $(window).scrollTop(position.top);
+                if (position.innerLeft)
+                    me.$container.scrollLeft(position.innerLeft);
+                if (position.innerTop)
+                    me.$container.scrollTop(position.innerTop);
+            }
         },
         restoreScrollPosition: function () {
             var me = this;
             if (me.savePosition && !me.scrollLock) {
-                me.$container.scrollLeft(me.savePosition.innerLeft);
-                me.$container.scrollTop(me.savePosition.innerTop);
-                $(window).scrollLeft(me.savePosition.left);
-                $(window).scrollTop(me.savePosition.top);
-                
+
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                    me.$viewer.reportViewer("scrollReportTo", me.savePosition);
+                }
+                else {
+                    me.$container.scrollLeft(me.savePosition.innerLeft);
+                    me.$container.scrollTop(me.savePosition.innerTop);
+                    $(window).scrollLeft(me.savePosition.left);
+                    $(window).scrollTop(me.savePosition.top);
+                }
                 me.savePosition = null;
             }
         },

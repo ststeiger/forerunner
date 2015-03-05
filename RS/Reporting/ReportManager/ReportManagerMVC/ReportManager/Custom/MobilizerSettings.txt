@@ -19,5 +19,6 @@
 	"URLActionNewTab": "off",
 	"Debug":"off",
 	"SubscriptionInputSize":"50",
-	"ManageSubscriptionUI":"default"
+	"ManageSubscriptionUI":"default",
+	"EnableGestures":"on"
 }

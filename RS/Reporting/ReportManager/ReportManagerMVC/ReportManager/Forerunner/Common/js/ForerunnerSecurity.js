@@ -84,6 +84,7 @@ $(function () {
                "</div>");
 
             me.element.append($container);
+
             me.$layer1 = me.element.find(".layer-1");
             me.$layer2 = me.element.find(".layer-2");
             me.$groupuser = me.$layer2.find(".fr-security-groupuser");
@@ -104,8 +105,6 @@ $(function () {
             });
 
             me._bindEvents();
-
-            me.element.append($container);
         },
         _bindEvents: function(){
             var me = this;
@@ -577,7 +576,7 @@ $(function () {
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
                             "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.delete + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.deleteBtn + "</a>" +
                             "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +

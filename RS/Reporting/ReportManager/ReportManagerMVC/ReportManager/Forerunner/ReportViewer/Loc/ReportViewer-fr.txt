@@ -294,7 +294,7 @@
   "common": {
     "submit":"Soumettre",
     "cancel":"annuler",
-    "delete":"effacer",
+    "deleteBtn":"effacer",
     "edit":"éditer",
     "name":"nom",
     "description":"Description"

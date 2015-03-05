@@ -293,7 +293,7 @@
   "common": {
     "submit":"提出する",
     "cancel":"キャンセル",
-    "delete":"削除",
+    "deleteBtn":"削除",
     "edit":"編集",
     "name":"名前",
     "description":"説明"

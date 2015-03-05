@@ -293,7 +293,7 @@
   "common": {
     "submit":"prezenta",
     "cancel":"anula",
-    "delete":"șterge",
+    "deleteBtn":"șterge",
     "edit":"edita",
     "name":"nume",
     "description":"descriere"

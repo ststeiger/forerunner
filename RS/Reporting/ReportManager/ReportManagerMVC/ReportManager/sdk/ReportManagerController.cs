@@ -720,7 +720,22 @@ namespace ReportManager.Controllers
                 }
             }
 
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/JSON");
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/JSON");
+            }
+            catch (ArgumentException e)
+            {
+                if (e.ParamName == "overwrite")
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, e);
+                }
+                throw e;
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         private string ToString<T>(T value)

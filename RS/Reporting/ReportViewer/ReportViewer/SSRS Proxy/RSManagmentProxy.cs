@@ -91,6 +91,26 @@ namespace Forerunner.SSRS.Management
                 return RSSPS.GetReportDefinition(path);
         }
 
+        public Warning[] CreateReport(string Report, string Parent, bool Overwrite, byte[] Definition, Property[] Properties)
+        {
+            if (IsNative)
+                return RSNative.CreateReport(Report, Parent, Overwrite, Definition, Properties);
+            else
+            {
+                Warning[] warnings;
+                RSSPS.CreateReport(Report, Parent, Overwrite, Definition, Properties, out warnings);
+                return warnings;
+            }
+        }
+
+        public Warning[] SetReportDefinition(string path, byte[] definition)
+        {
+            if (IsNative)
+                return RSNative.SetReportDefinition(path, definition);
+            else
+                return RSSPS.SetReportDefinition(path, definition);
+        }
+
         public void SetResourceContents(string Resource, byte[] Contents, string MimeType)
         {
             if (IsNative)

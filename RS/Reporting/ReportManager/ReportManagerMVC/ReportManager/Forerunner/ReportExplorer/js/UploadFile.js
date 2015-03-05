@@ -21,6 +21,7 @@ $(function () {
      *
      * @namespace $.forerunner.uploadFile
      * @prop {Object} options - The options for the upload file dialog
+     * @prop {String} options.itemType - The CataloagItem.Type
      * @prop {String} options.parentFolder - Folder the file will be uploaded to
      * @prop {Object} options.$reportExplorer - Report Explorer Widget
      *
@@ -36,6 +37,7 @@ $(function () {
         options: {
             title: uploadFile.title,
             iconClass: "fr-upf-upload-file-icon",
+            itemType: "",
             parentFolder: "",
             $reportExplorer: null
         },
@@ -91,6 +93,7 @@ $(function () {
                     "<tr>" +
                         "<input name='rsinstance' type='text' class='fr-core-hidden' value='" + me.options.rsInstance + "' />" +
                         "<input name='parentfolder' type='text' class='fr-core-hidden' value='" + me.options.parentFolder + "' />" +
+                        "<input name='itemtype' type='text' class='fr-core-hidden' value='" + me.options.itemType + "' />" +
                     "</tr>" +
                 "</table>"
             );
@@ -118,6 +121,7 @@ $(function () {
                     var percent = "0%";
                     me.$progress.text(percent);
                     me.$progressBar.width(percent);
+                    me._hideSubmitError();
                 },
                 uploadProgress: function (event, position, total, percentComplete) {
                     var percent = percentComplete + '%';
@@ -126,10 +130,26 @@ $(function () {
                 },
                 success: function (data, status, xhr) {
                     me.$progressContainer.hide();
+                    var responseObj = JSON.parse(xhr.responseText);
+                    var dataObj = JSON.parse(data);
+                    if (responseObj.Warning) {
+                        var message = locData.uploadFile.warningsMessage.replace("{0}", responseObj.Warning);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, message, locData.uploadFile.title);
+                    } else if (dataObj.Exception) {
+                        me.$progressContainer.hide();
+                        me._showExceptionError(dataObj);
+                        return;
+                    }
+
                     me.options.$reportExplorer.reportExplorer("refresh");
                     me.closeDialog();
                 },
                 error: function (xhr, status, error) {
+                    if (xhr.status === 400) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.uploadFile.overwriteMessage, locData.uploadFile.overwriteTitle);
+                        return;
+                    }
+
                     me.$progressContainer.hide();
                     me._showSubmitError(xhr.responseText);
                 }

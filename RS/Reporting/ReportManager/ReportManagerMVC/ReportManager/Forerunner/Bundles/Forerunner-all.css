@@ -793,7 +793,7 @@ input.loginsize {
 }
 }
 
-.fr-messagebox { display: none; }
+.fr-messagebox { display: none; z-index: 200; }
 
 .fr-messagebox-innerpage { min-width: 200px; max-width: 400px; }
 

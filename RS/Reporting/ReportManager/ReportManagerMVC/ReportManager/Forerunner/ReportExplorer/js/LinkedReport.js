@@ -173,7 +173,7 @@ $(function () {
                 catalogTreeClass: "fr-linked-tree-container",
                 rsInstance: me.options.rsInstance
             };
-            debugger;
+            //debugger;
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);

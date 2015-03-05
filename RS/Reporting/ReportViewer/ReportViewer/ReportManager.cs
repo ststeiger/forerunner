@@ -80,6 +80,15 @@ namespace Forerunner.SSRS.Manager
         {
             {".frdb", null},
             {".frsf", null},
+            {".rdl", null},
+            {".smdl", null},
+            {".rsd", null},
+        };
+        private static readonly IDictionary<string, ItemTypeEnum> _extensionToItemTypeMap = new Dictionary<string, ItemTypeEnum>(StringComparer.InvariantCultureIgnoreCase) 
+        {
+            {".rdl", ItemTypeEnum.Report},
+            {".smdl", ItemTypeEnum.Model},
+            {".rsd", ItemTypeEnum.DataSource},
         };
 
         private class SSRSServer
@@ -437,11 +446,92 @@ namespace Forerunner.SSRS.Manager
 
             return filename;
         }
+        private string getCheckWarningsReturn(Warning[] warnings)
+        {
+            if (warnings.Length > 0)
+            {
+                return getReturnWarning(warnings[0].Message);
+            }
+
+            return getReturnSuccess();
+        }
+        public string SetReportDefinition(string report, UploadFileData data)
+        {
+            // Note that any warnings are purposefully ignored here. That is because it errantly reports that
+            // Data Sets could not be hooked up and in the case of a report where the dataset is already hooked
+            // up this warning is wrong.
+            rs.SetReportDefinition(data.setResource.parentFolder + "/" + report, data.setResource.contentsUTF8);
+            return getReturnSuccess();
+        }
+        public string CreateReport(string report, UploadFileData data)
+        {
+            Warning[] warnings = null;
+            try
+            {
+                warnings = rs.CreateReport(
+                    report,                         // Report name
+                    data.setResource.parentFolder,  // Parent folder
+                    data.setResource.overwrite,     // Overwrite flag
+                    data.setResource.contentsUTF8,  // Definition
+                    null);                          // Properties
+            }
+            catch (System.Web.Services.Protocols.SoapException e)
+            {
+                bool notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
+                if (notFound)
+                {
+                    throw new ArgumentException("Resource already exists:" + report, "overwrite");
+                }
+                throw e;
+            }
+
+            return getCheckWarningsReturn(warnings);
+        }
+        public String UploadReport(UploadFileData data)
+        {
+            rs.Credentials = GetCredentials();
+            string report = Path.GetFileNameWithoutExtension(data.filename);
+
+            var condition = new Management.Native.SearchCondition();
+            condition.Condition = Management.Native.ConditionEnum.Equals;
+            condition.Name = "Name";
+            condition.Value = report;
+            Management.Native.SearchCondition[] conditions = new Management.Native.SearchCondition[1];
+            conditions[0] = condition;
+            CatalogItem[] catalogItems = rs.FindItems(data.setResource.parentFolder, Management.Native.BooleanOperatorEnum.And, conditions);
+
+            if (catalogItems.Length == 0)
+            {
+                // No existing report
+                return CreateReport(report, data);
+            }
+            else if (data.setResource.overwrite)
+            {
+                // Report exists so they better ask to overwrite
+                return SetReportDefinition(report, data);
+            }
+
+            throw new ArgumentException("Resource already exists:" + report, "overwrite");
+        }
         public String UploadFile(UploadFileData data)
         {
-            data.setResource.resourceName = GetResourceName(data.filename);
-            data.setResource.mimetype = Forerunner.MimeTypeMap.GetMimeType(Path.GetExtension(data.filename));
-            return SaveCatalogResource(data.setResource);
+            ItemTypeEnum type;
+            string ext = Path.GetExtension(data.filename);
+            if (!_extensionToItemTypeMap.TryGetValue(ext, out type))
+            {
+                type = ItemTypeEnum.Resource;
+            }
+            switch (type)
+            {
+                case ItemTypeEnum.Resource:
+                    data.setResource.resourceName = GetResourceName(data.filename);
+                    data.setResource.mimetype = Forerunner.MimeTypeMap.GetMimeType(Path.GetExtension(data.filename));
+                    return SaveCatalogResource(data.setResource);
+                case ItemTypeEnum.Report:
+                    return UploadReport(data);
+            }
+
+            throw new Exception(String.Format("Unsupported file type: {0}", ext));
         }
         public String SaveCatalogResource(SetResource setResource)
         {
@@ -470,7 +560,7 @@ namespace Forerunner.SSRS.Manager
                         throw e;
                     }
                 }
-                throw new Exception("Resource already exists:" + setResource.resourceName);
+                throw new ArgumentException("Resource already exists:" + setResource.resourceName, "overwrite");
             }
 
             try
@@ -1940,6 +2030,16 @@ namespace Forerunner.SSRS.Manager
             w.WriteStartObject();
             w.WriteMember("Status");
             w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
+        }
+
+        private string getReturnWarning(string message)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Warning");
+            w.WriteString(message);
             w.WriteEndObject();
             return w.ToString();
         }

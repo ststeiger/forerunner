@@ -340,6 +340,9 @@
     "uploadFileLabel":"File to Upload",
     "browseBtn":"Browse",
     "filename":"Name",
-    "overwrite":"Overwrite"
+    "overwrite":"Overwrite",
+    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
+    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
+    "overwriteTitle":"Overwrite Failed"
   }
 }

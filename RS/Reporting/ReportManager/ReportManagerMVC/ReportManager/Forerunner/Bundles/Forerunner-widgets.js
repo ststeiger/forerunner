@@ -7667,6 +7667,72 @@ $(function () {
             var me = this;
             me.$submitError.hide();
         },
+        // _showExceptionError
+        //  Will show a Submit Error with formatting specifically designed to
+        //  work with a json object returned by a .cs controller that called
+        //  JsonUtility.WriteExceptionJSON(e)
+        _showExceptionError: function (errorData) {
+            var me = this;
+            var errorTag = locData.errorTag;
+            var $cell;
+
+            me.$submitError.html("");
+            if (errorData.Exception.Type === "LicenseException") {
+                //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
+                me.$submitError.append($("<div class='Page' >" +
+                    "<div class='fr-render-error-license Page'>" +
+                        "<div class='fr-render-error-license-container'>" +
+                    "<p class='fr-render-error-license-title'></p><br/>" +
+                    "<p class='fr-render-error-license-content'></p>" +
+                        "</div>" +
+                    "</div>"));
+
+                $cell = me.$submitError.find(".fr-render-error-license-title");
+                $cell.html(errorTag.licenseErrorTitle);
+                $cell = me.$submitError.find(".fr-render-error-license-content");
+                $cell.html(errorTag.licenseErrorContent);
+            }
+            else {
+                me.$submitError.append($("<div class='Page' >" +
+               "<div class='fr-render-error-message'></div></br>" +
+               "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
+               "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-DetailMessage'></div>" +
+               "<div class='fr-render-error fr-render-error-type'></div>" +
+               "<div class='fr-render-error fr-render-error-targetsite'></div>" +
+               "<div class='fr-render-error fr-render-error-source'></div>" +
+               "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
+               "</div></div>"));
+
+                $cell = me.$submitError.find(".fr-render-error");
+                $cell.hide();
+
+                $cell = me.$submitError.find(".fr-render-error-details");
+                $cell.on("click", { $Detail: me.$submitError.find(".fr-render-error") }, function (e) {
+                    e.data.$Detail.toggle();
+                });
+
+                $cell = me.$submitError.find(".fr-render-error-DetailMessage");
+                $cell.append("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.DetailMessage);
+
+                $cell = me.$submitError.find(".fr-render-error-type");
+                $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
+
+                $cell = me.$submitError.find(".fr-render-error-targetsite");
+                $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
+
+                $cell = me.$submitError.find(".fr-render-error-source");
+                $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
+
+                $cell = me.$submitError.find(".fr-render-error-message");
+                $cell.html(errorData.Exception.Message);
+
+                $cell = me.$submitError.find(".fr-render-error-stacktrace");
+                $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+            }
+
+            me.$submitError.show();
+        },
         _submit: function () {
             var me = this;
 
@@ -7718,7 +7784,7 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
-        },
+        }
     }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
@@ -10555,7 +10621,7 @@ $(function () {
                 catalogTreeClass: "fr-linked-tree-container",
                 rsInstance: me.options.rsInstance
             };
-            debugger;
+            //debugger;
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);
@@ -10735,6 +10801,7 @@ $(function () {
      *
      * @namespace $.forerunner.uploadFile
      * @prop {Object} options - The options for the upload file dialog
+     * @prop {String} options.itemType - The CataloagItem.Type
      * @prop {String} options.parentFolder - Folder the file will be uploaded to
      * @prop {Object} options.$reportExplorer - Report Explorer Widget
      *
@@ -10750,6 +10817,7 @@ $(function () {
         options: {
             title: uploadFile.title,
             iconClass: "fr-upf-upload-file-icon",
+            itemType: "",
             parentFolder: "",
             $reportExplorer: null
         },
@@ -10805,6 +10873,7 @@ $(function () {
                     "<tr>" +
                         "<input name='rsinstance' type='text' class='fr-core-hidden' value='" + me.options.rsInstance + "' />" +
                         "<input name='parentfolder' type='text' class='fr-core-hidden' value='" + me.options.parentFolder + "' />" +
+                        "<input name='itemtype' type='text' class='fr-core-hidden' value='" + me.options.itemType + "' />" +
                     "</tr>" +
                 "</table>"
             );
@@ -10832,6 +10901,7 @@ $(function () {
                     var percent = "0%";
                     me.$progress.text(percent);
                     me.$progressBar.width(percent);
+                    me._hideSubmitError();
                 },
                 uploadProgress: function (event, position, total, percentComplete) {
                     var percent = percentComplete + '%';
@@ -10840,10 +10910,26 @@ $(function () {
                 },
                 success: function (data, status, xhr) {
                     me.$progressContainer.hide();
+                    var responseObj = JSON.parse(xhr.responseText);
+                    var dataObj = JSON.parse(data);
+                    if (responseObj.Warning) {
+                        var message = locData.uploadFile.warningsMessage.replace("{0}", responseObj.Warning);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, message, locData.uploadFile.title);
+                    } else if (dataObj.Exception) {
+                        me.$progressContainer.hide();
+                        me._showExceptionError(dataObj);
+                        return;
+                    }
+
                     me.options.$reportExplorer.reportExplorer("refresh");
                     me.closeDialog();
                 },
                 error: function (xhr, status, error) {
+                    if (xhr.status === 400) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.uploadFile.overwriteMessage, locData.uploadFile.overwriteTitle);
+                        return;
+                    }
+
                     me.$progressContainer.hide();
                     me._showSubmitError(xhr.responseText);
                 }

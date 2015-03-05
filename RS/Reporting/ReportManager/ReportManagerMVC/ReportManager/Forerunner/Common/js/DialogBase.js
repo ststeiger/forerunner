@@ -116,6 +116,72 @@ $(function () {
             var me = this;
             me.$submitError.hide();
         },
+        // _showExceptionError
+        //  Will show a Submit Error with formatting specifically designed to
+        //  work with a json object returned by a .cs controller that called
+        //  JsonUtility.WriteExceptionJSON(e)
+        _showExceptionError: function (errorData) {
+            var me = this;
+            var errorTag = locData.errorTag;
+            var $cell;
+
+            me.$submitError.html("");
+            if (errorData.Exception.Type === "LicenseException") {
+                //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
+                me.$submitError.append($("<div class='Page' >" +
+                    "<div class='fr-render-error-license Page'>" +
+                        "<div class='fr-render-error-license-container'>" +
+                    "<p class='fr-render-error-license-title'></p><br/>" +
+                    "<p class='fr-render-error-license-content'></p>" +
+                        "</div>" +
+                    "</div>"));
+
+                $cell = me.$submitError.find(".fr-render-error-license-title");
+                $cell.html(errorTag.licenseErrorTitle);
+                $cell = me.$submitError.find(".fr-render-error-license-content");
+                $cell.html(errorTag.licenseErrorContent);
+            }
+            else {
+                me.$submitError.append($("<div class='Page' >" +
+               "<div class='fr-render-error-message'></div></br>" +
+               "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
+               "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-DetailMessage'></div>" +
+               "<div class='fr-render-error fr-render-error-type'></div>" +
+               "<div class='fr-render-error fr-render-error-targetsite'></div>" +
+               "<div class='fr-render-error fr-render-error-source'></div>" +
+               "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
+               "</div></div>"));
+
+                $cell = me.$submitError.find(".fr-render-error");
+                $cell.hide();
+
+                $cell = me.$submitError.find(".fr-render-error-details");
+                $cell.on("click", { $Detail: me.$submitError.find(".fr-render-error") }, function (e) {
+                    e.data.$Detail.toggle();
+                });
+
+                $cell = me.$submitError.find(".fr-render-error-DetailMessage");
+                $cell.append("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.DetailMessage);
+
+                $cell = me.$submitError.find(".fr-render-error-type");
+                $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
+
+                $cell = me.$submitError.find(".fr-render-error-targetsite");
+                $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
+
+                $cell = me.$submitError.find(".fr-render-error-source");
+                $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
+
+                $cell = me.$submitError.find(".fr-render-error-message");
+                $cell.html(errorData.Exception.Message);
+
+                $cell = me.$submitError.find(".fr-render-error-stacktrace");
+                $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+            }
+
+            me.$submitError.show();
+        },
         _submit: function () {
             var me = this;
 
@@ -167,6 +233,6 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
-        },
+        }
     }); //$.widget
 });

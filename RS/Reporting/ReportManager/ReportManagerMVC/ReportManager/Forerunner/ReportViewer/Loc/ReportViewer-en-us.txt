@@ -336,7 +336,7 @@
   },
   "uploadFile": {
     "title":"Upload File",
-    "description":"Upload report (.rdl), shared dataset (.rsd), model (.smdl), report part (.rsc) or other resource into folder: {0}",
+    "description":"Upload report (.rdl) or other resource into folder: {0}",
     "uploadFileLabel":"File to Upload",
     "browseBtn":"Browse",
     "filename":"Name",

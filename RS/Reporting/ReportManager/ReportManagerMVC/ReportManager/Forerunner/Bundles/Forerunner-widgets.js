@@ -8756,7 +8756,7 @@ $(function () {
 
             // DownloadFile
             me._$downloadFile.off("click");
-            if (catalog.Type === itemType.folder) {
+            if (catalog.Type !== itemType.report && catalog.Type !== itemType.resource) {
                 me._$downloadFile.hide();
             } else {
                 me._$downloadFile.show();

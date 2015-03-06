@@ -294,7 +294,7 @@
   "common": {
     "submit":"提交",
     "cancel":"取消",
-    "delete":"删除",
+    "deleteBtn":"删除",
     "edit":"编辑",
     "name":"名称",
     "description":"描述"

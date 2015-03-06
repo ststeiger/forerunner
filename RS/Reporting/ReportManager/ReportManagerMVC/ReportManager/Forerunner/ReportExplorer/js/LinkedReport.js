@@ -167,13 +167,12 @@ $(function () {
             var catalogTreeOptions = {
                 rootPath: "/",
                 $appContainer: me.options.$appContainer,
-                $reportExplorer: me.options.$reportExplorer,
                 reportManagerAPI: me.options.reportManagerAPI,
                 containerClass: "fr-linked-popup-container",
                 catalogTreeClass: "fr-linked-tree-container",
                 rsInstance: me.options.rsInstance
             };
-            //debugger;
+
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);

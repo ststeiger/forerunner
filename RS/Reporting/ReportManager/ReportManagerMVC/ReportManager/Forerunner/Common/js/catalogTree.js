@@ -18,7 +18,6 @@ $(function () {
             containerClass: null,
             catalogTreeClass: null,
             $appContainer: null,
-            $reportExplorer: null,
             reportManagerAPI: null,
             rsInstance: null
         },
@@ -136,7 +135,6 @@ $(function () {
                 } else if (item.Type === forerunner.ssr.constants.itemType.report) {
                     curNode.children.push(newNode);
                     newNode.icon = "jstree-file";
-                    newNode.li_attr.dataReport = true;
                 }
             });
         },
@@ -178,13 +176,12 @@ $(function () {
         },        
         _onChangedjsTree: function (e, data) {
             var me = this;
-
-            if (me.options.type === "fullCatalog") {
-                if (data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
-                    me.$tree.jstree("toggle_node", data.node.id);
-                    return;
-                }
+            
+            if (me.options.type === "fullCatalog" && data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+                me.$tree.jstree("toggle_node", data.node.id);
+                return;
             }
+            
             var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.li_attr.dataCatalogItem.Path;
 
             me._trigger(events.catalogSelected, null, { path: location, item: data.node.li_attr.dataCatalogItem });

@@ -7,6 +7,7 @@ $(function () {
 
         this.explorer = $("body").reportExplorerEZ({
             explorerSettings: explorerSettings,
+            
         });
     });
 });

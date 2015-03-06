@@ -576,7 +576,7 @@ $(function () {
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
                             "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.delete + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.deleteBtn + "</a>" +
                             "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +

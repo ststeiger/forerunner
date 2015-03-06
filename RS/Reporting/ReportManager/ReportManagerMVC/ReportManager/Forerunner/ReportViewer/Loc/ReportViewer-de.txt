@@ -294,7 +294,7 @@
   "common": {
     "submit":"einreichen",
     "cancel":"stornieren",
-    "delete":"löschen",
+    "deleteBtn":"löschen",
     "edit":"bearbeiten",
     "name":"Name",
     "description":"Beschreibung"

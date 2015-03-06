@@ -222,10 +222,10 @@ $(function () {
                 $reportViewer.reportViewer("windowResize");
             }
 
-            if (me.options.isFullScreen && (forerunner.device.isiOS())) {
-                $reportViewer.reportViewer("scrollReportBody");
-            }
-
+            if (me.options.isFullScreen && (forerunner.device.isiOS()))
+                if (widgets.hasWidget($reportViewer, widgets.reportViewer)) {
+                    $reportViewer.reportViewer("scrollReportBody");
+                }
 
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {

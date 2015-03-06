@@ -288,7 +288,8 @@
     "delLabel":"Radera",
     "properties":"Egenskaper",
     "security":"Säkerhet",
-    "linkedReport":"länkad Rapportera"
+    "linkedReport":"länkad Rapportera",
+    "downloadFile":"Download File"
   },
   "common": {
     "submit":"Submit",
@@ -327,5 +328,21 @@
     "edit":"Redigera länkad rapport {0}, välj den rapport som du vill länka",
     "location":"Läge",
     "report":"rapport"
+  },
+  "dialogBase": {
+    "title":"Dialog",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "uploadFile": {
+    "title":"Upload File",
+    "description":"Upload report (.rdl) or other resource into folder: {0}",
+    "uploadFileLabel":"File to Upload",
+    "browseBtn":"Browse",
+    "filename":"Name",
+    "overwrite":"Overwrite",
+    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
+    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
+    "overwriteTitle":"Overwrite Failed"
   }
 }

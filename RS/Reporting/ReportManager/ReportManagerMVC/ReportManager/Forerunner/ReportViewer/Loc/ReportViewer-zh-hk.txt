@@ -288,7 +288,8 @@
     "delLabel":"刪除",
     "properties":"屬性",
     "security":"安全性",
-    "linkedReport":"鏈接報表"
+    "linkedReport":"鏈接報表",
+    "downloadFile":"Download File"
   },
   "common": {
     "submit":"提交",
@@ -327,5 +328,21 @@
     "edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
     "location":"保存地址",
     "report":"報表"
+  },
+  "dialogBase": {
+    "title":"Dialog",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "uploadFile": {
+    "title":"Upload File",
+    "description":"Upload report (.rdl) or other resource into folder: {0}",
+    "uploadFileLabel":"File to Upload",
+    "browseBtn":"Browse",
+    "filename":"Name",
+    "overwrite":"Overwrite",
+    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
+    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
+    "overwriteTitle":"Overwrite Failed"
   }
 }

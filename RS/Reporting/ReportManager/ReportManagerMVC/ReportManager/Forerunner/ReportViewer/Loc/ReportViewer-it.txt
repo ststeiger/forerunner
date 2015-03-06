@@ -288,7 +288,8 @@
     "delLabel":"cancellare",
     "properties":"proprietà",
     "security":"sicurezza",
-    "linkedReport":"Rapporto collegato"
+    "linkedReport":"Rapporto collegato",
+    "downloadFile":"Download File"
   },
   "common": {
     "submit":"presentare",
@@ -327,5 +328,21 @@
     "edit":"Modifica legata relazione {0}, selezionare il report che si desidera collegare",
     "location":"posizione",
     "report":"relazione"
+  },
+  "dialogBase": {
+    "title":"Dialog",
+    "cancel":"Cancel",
+    "submit":"Submit"
+  },
+  "uploadFile": {
+    "title":"Upload File",
+    "description":"Upload report (.rdl) or other resource into folder: {0}",
+    "uploadFileLabel":"File to Upload",
+    "browseBtn":"Browse",
+    "filename":"Name",
+    "overwrite":"Overwrite",
+    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
+    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
+    "overwriteTitle":"Overwrite Failed"
   }
 }

@@ -169,7 +169,7 @@ $(function () {
 
                 if (enableList.length) {
                     me.enableTools(enableList);
-                    me.showTools(checkList);
+                    me.showTools(enableList);
                     me.removeHideDisable(enableList);
                 }
             }

@@ -145,12 +145,12 @@ $(function () {
                     me.closeDialog();
                 },
                 error: function (xhr, status, error) {
+                    me.$progressContainer.hide();
                     if (xhr.status === 400) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, locData.uploadFile.overwriteMessage, locData.uploadFile.overwriteTitle);
                         return;
                     }
 
-                    me.$progressContainer.hide();
                     me._showSubmitError(xhr.responseText);
                 }
             });

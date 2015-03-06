@@ -120,9 +120,19 @@ $(function () {
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _saveSettings: function () {
-            var me = this;
-            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.adminUI = me.$adminUI.prop("checked");
+            var me = this,
+                responsiveUI = me.$resposiveUI.prop("checked"),
+                adminUI = me.$adminUI.prop("checked");
+            
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI) {
+                //nothing change, just close dialog
+                me.closeDialog();
+                return;
+            }
+
+            me.settings.responsiveUI = responsiveUI;
+            me.settings.adminUI = adminUI;
+            
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);

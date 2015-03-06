@@ -284,6 +284,20 @@ $(function () {
             }
         },
         /**
+         * Make list of tools visible
+         * @function $.forerunner.toolBase#showTools
+         * @param {Arr} selectorArr - the array of tool's class name
+         */
+        showTools: function (selectorArr) {
+            var me = this;
+
+            if (selectorArr && $.isArray(selectorArr)) {
+                $.each(selectorArr, function (Index, Obj) {
+                    Obj.selectorClass && me.showTool(Obj.selectorClass);
+                });
+            }
+        },
+        /**
          * Make all tools visible
          * @function $.forerunner.toolBase#showAllTools
          */
@@ -294,7 +308,6 @@ $(function () {
                 if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
-
         },
         /**
         * Make tool hidden
@@ -312,6 +325,22 @@ $(function () {
                 $toolEl.hide();
             } else {
                 console.log("hideTool called with an invalid selector class: " + selectorClass);
+            }
+        },
+        /**
+         * Make list of tools hidden
+         * @function $.forerunner.toolBase#hideTools
+         * @param {Arr} selectorArr - the array of tool's class name
+         */
+        hideTools: function(selectorArr) {
+            var me = this;
+
+            if (selectorArr && $.isArray(selectorArr)) {
+                $.each(selectorArr, function (Index, Obj) {
+                    if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                        me.hideTool(Obj.selectorClass);
+                    }
+                });
             }
         },
         /**

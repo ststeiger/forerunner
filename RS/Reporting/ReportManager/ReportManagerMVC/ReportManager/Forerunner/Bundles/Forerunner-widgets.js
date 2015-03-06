@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/History.js
+﻿///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -4401,6 +4401,20 @@ $(function () {
             }
         },
         /**
+         * Make list of tools visible
+         * @function $.forerunner.toolBase#showTools
+         * @param {Arr} selectorArr - the array of tool's class name
+         */
+        showTools: function (selectorArr) {
+            var me = this;
+
+            if (selectorArr && $.isArray(selectorArr)) {
+                $.each(selectorArr, function (Index, Obj) {
+                    Obj.selectorClass && me.showTool(Obj.selectorClass);
+                });
+            }
+        },
+        /**
          * Make all tools visible
          * @function $.forerunner.toolBase#showAllTools
          */
@@ -4411,7 +4425,6 @@ $(function () {
                 if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
                     me.showTool(Obj.selectorClass);
             });
-
         },
         /**
         * Make tool hidden
@@ -4429,6 +4442,22 @@ $(function () {
                 $toolEl.hide();
             } else {
                 console.log("hideTool called with an invalid selector class: " + selectorClass);
+            }
+        },
+        /**
+         * Make list of tools hidden
+         * @function $.forerunner.toolBase#hideTools
+         * @param {Arr} selectorArr - the array of tool's class name
+         */
+        hideTools: function(selectorArr) {
+            var me = this;
+
+            if (selectorArr && $.isArray(selectorArr)) {
+                $.each(selectorArr, function (Index, Obj) {
+                    if (Obj.selectorClass && Obj.toolType !== toolTypes.toolGroup) {
+                        me.hideTool(Obj.selectorClass);
+                    }
+                });
             }
         },
         /**
@@ -9262,9 +9291,7 @@ $(function () {
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
-                if (data.isSubmit) {
-                    me._updateBtnStates.call(me);
-                }
+                data.isSubmit && me._updateBtnStates.call(me);
             });
         },
         _isAdmin: function () {
@@ -9284,14 +9311,14 @@ $(function () {
 
             var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-            if (me._isAdmin()) {
-                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
-                toolpaneItems.push(mi.itemSecurity);
-                if (lastFetched.path !== "/") {
-                    toolpaneItems.push(mi.itemProperty);
-                }
 
+            //if (me._isAdmin()) {
+            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+            toolpaneItems.push(mi.itemSecurity);
+            if (lastFetched.path !== "/") {
+                toolpaneItems.push(mi.itemProperty);
             }
+            //}
 
             toolpaneItems.push(tg.explorerItemFindGroup);
 
@@ -9320,30 +9347,38 @@ $(function () {
         },
         _updateBtnStates: function () {
             var me = this;
+            var enableList = [];
+            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, mi.itemProperty, mi.itemSecurity];
 
-            // Then we start out disabled and enable if needed
-            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty, mi.itemSecurity]);
+            // Then we start out disabled and hide them, after the permission check enable if needed
+            me.disableTools(checkList);
+            me.hideTools(checkList);
 
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
 
                 if (lastFetched.view === "catalog") {
-                    
+
                     if (permissions["Create Resource"]) {
-                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
-                        me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                    } else if (permissions["Create Report"]) {
+                        enableList.push(tp.itemUploadFile);
                     }
 
                     if (permissions["Update Security Policies"]) {
-                        me.enableTools([mi.itemSecurity]);
-                        me.removeHideDisable([mi.itemSecurity]);
+                        enableList.push(mi.itemSecurity);
                     }
                 }
 
                 if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
-                    me.enableTools([mi.itemProperty]);
-                    me.removeHideDisable([mi.itemProperty]);
+                    enableList.push(mi.itemProperty);
+                }
+
+                if (enableList.length) {
+                    me.enableTools(enableList);
+                    me.showTools(checkList);
+                    me.removeHideDisable(enableList);
                 }
             }
         },
@@ -9915,7 +9950,7 @@ $(function () {
             //create resource: create resource file (search folder/dashboard)
             //update properties: update report properties (tags)
             //for more properties, add to the list
-            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies"];
+            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report"];
             me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
         },
         /**
@@ -10391,9 +10426,19 @@ $(function () {
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         _saveSettings: function () {
-            var me = this;
-            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
-            me.settings.adminUI = me.$adminUI.prop("checked");
+            var me = this,
+                responsiveUI = me.$resposiveUI.prop("checked"),
+                adminUI = me.$adminUI.prop("checked");
+            
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI) {
+                //nothing change, just close dialog
+                me.closeDialog();
+                return;
+            }
+
+            me.settings.responsiveUI = responsiveUI;
+            me.settings.adminUI = adminUI;
+            
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);

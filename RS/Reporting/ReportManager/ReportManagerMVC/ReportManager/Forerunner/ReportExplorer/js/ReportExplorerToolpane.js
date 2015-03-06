@@ -83,9 +83,7 @@ $(function () {
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
-                if (data.isSubmit) {
-                    me._updateBtnStates.call(me);
-                }
+                data.isSubmit && me._updateBtnStates.call(me);
             });
         },
         _isAdmin: function () {
@@ -105,14 +103,14 @@ $(function () {
 
             var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
-            if (me._isAdmin()) {
-                toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
-                toolpaneItems.push(mi.itemSecurity);
-                if (lastFetched.path !== "/") {
-                    toolpaneItems.push(mi.itemProperty);
-                }
 
+            //if (me._isAdmin()) {
+            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+            toolpaneItems.push(mi.itemSecurity);
+            if (lastFetched.path !== "/") {
+                toolpaneItems.push(mi.itemProperty);
             }
+            //}
 
             toolpaneItems.push(tg.explorerItemFindGroup);
 
@@ -141,30 +139,38 @@ $(function () {
         },
         _updateBtnStates: function () {
             var me = this;
+            var enableList = [];
+            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, mi.itemProperty, mi.itemSecurity];
 
-            // Then we start out disabled and enable if needed
-            me.disableTools([tp.itemSearchFolder, tp.itemCreateDashboard, mi.itemProperty, mi.itemSecurity]);
+            // Then we start out disabled and hide them, after the permission check enable if needed
+            me.disableTools(checkList);
+            me.hideTools(checkList);
 
             if (me._isAdmin()) {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
 
                 if (lastFetched.view === "catalog") {
-                    
+
                     if (permissions["Create Resource"]) {
-                        me.enableTools([tp.itemSearchFolder, tp.itemCreateDashboard]);
-                        me.removeHideDisable([tp.itemSearchFolder, tp.itemCreateDashboard]);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                    } else if (permissions["Create Report"]) {
+                        enableList.push(tp.itemUploadFile);
                     }
 
                     if (permissions["Update Security Policies"]) {
-                        me.enableTools([mi.itemSecurity]);
-                        me.removeHideDisable([mi.itemSecurity]);
+                        enableList.push(mi.itemSecurity);
                     }
                 }
 
                 if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
-                    me.enableTools([mi.itemProperty]);
-                    me.removeHideDisable([mi.itemProperty]);
+                    enableList.push(mi.itemProperty);
+                }
+
+                if (enableList.length) {
+                    me.enableTools(enableList);
+                    me.showTools(checkList);
+                    me.removeHideDisable(enableList);
                 }
             }
         },

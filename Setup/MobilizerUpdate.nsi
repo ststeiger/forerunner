@@ -200,7 +200,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xls.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xml.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
-  File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ToolpaneIcons\UploadFile.png"
+  File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\UploadFile.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery.form.js"
@@ -915,7 +915,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\xls.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\xml.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
-  Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\ToolpaneIcons\UploadFile.png"
+  Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\UploadFile.png"
 
   Delete "$INSTDIR\Custom\Mobilizer.css"
   Delete "$INSTDIR\Custom\Mobilizer_Examples.css"

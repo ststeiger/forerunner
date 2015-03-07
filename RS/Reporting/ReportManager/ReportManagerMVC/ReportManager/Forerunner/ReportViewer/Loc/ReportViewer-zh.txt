@@ -289,7 +289,7 @@
     "properties":"属性",
     "security":"安全性",
     "linkedReport":"链接报表",
-    "downloadFile":"Download File"
+    "downloadFile":"下载文件"
   },
   "common": {
     "submit":"提交",
@@ -330,19 +330,19 @@
     "report":"报表"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"对话框",
+    "cancel":"取消",
+    "submit":"提交"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"上传文件",
+    "description":"上传报表(.rdl)或其它资源到此文件夹: {0}",
+    "uploadFileLabel":"要上传的文件",
+    "browseBtn":"浏览",
+    "filename":"名称",
+    "overwrite":"覆盖",
+    "overwriteMessage":"同名文件已经存在，请选择覆盖复选框然后重试.",
+    "warningsMessage":"上传成功.<br><br>返回一下警告:<br><br>{0}",
+    "overwriteTitle":"覆盖失败"
   }
 }

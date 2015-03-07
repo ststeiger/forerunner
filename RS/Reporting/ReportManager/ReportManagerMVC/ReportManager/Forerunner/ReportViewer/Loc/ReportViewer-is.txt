@@ -331,18 +331,18 @@
   },
   "dialogBase": {
     "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "cancel":"Hætta",
+    "submit":"leggja"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
+    "title":"Hlaða File",
+    "description":"Hlaða inn skýrslu (.rdl) eða aðra auðlind í möppu: {0}",
+    "uploadFileLabel":"Skrá til að hlaða",
+    "browseBtn":"Flokka",
     "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "overwrite":"Skrifa yfir",
+    "overwriteMessage":"A Resource með þessu nafni er þegar til. Þú getur athugað hann skrifi kassi þá reyndu aftur.",
+    "warningsMessage":"Hlaða inn árangursríkt <br><br> Eftirfarandi varnaðarorð voru aftur:. <br><br> {0}",
+    "overwriteTitle":"Skrifa yfir mistókst"
   }
 }

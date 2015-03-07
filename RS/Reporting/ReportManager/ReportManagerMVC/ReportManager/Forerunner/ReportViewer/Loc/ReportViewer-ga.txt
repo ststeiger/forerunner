@@ -289,7 +289,7 @@
     "properties":"airíonna",
     "security":"Slándáil",
     "linkedReport":"Tuairisc nasctha",
-    "downloadFile":"Download File"
+    "downloadFile":"Íosluchtaigh Comhad"
   },
   "common": {
     "submit":"Cuir isteach",
@@ -330,19 +330,19 @@
     "report":"Tuairisc"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"dialóg",
+    "cancel":"Cealaigh",
+    "submit":"Cuir isteach"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Comhad uaslódáil",
+    "description":"Upload tuarascáil (.rdl) nó acmhainní eile i bhfillteán: {0}",
+    "uploadFileLabel":"Comhad le Uasluchtaigh",
+    "browseBtn":"Brabhsáil",
+    "filename":"an t-ainm",
+    "overwrite":"forscríobh",
+    "overwriteMessage":"Acmhainn leis an ainm sin ann cheana. Is féidir leat seiceáil an bosca forscríobh ansin déan iarracht eile.",
+    "warningsMessage":"Upload Successfull. <br><br> ais na rabhaidh seo a leanas:<br><br> {0}",
+    "overwriteTitle":"forscríobh Theip"
   }
 }

@@ -330,19 +330,19 @@
     "report":"relazione"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"dialogo",
+    "cancel":"cancellare",
+    "submit":"presentare"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Carica file",
+    "description":"Carica report (.rdl) o di altre risorse nella cartella: {0}",
+    "uploadFileLabel":"File da caricare",
+    "browseBtn":"sfogliare",
+    "filename":"nome",
+    "overwrite":"Sovrascrivi",
+    "overwriteMessage":"Una risorsa con questo nome esiste già. È possibile controllare la casella di sovrascrittura poi riprovare.",
+    "warningsMessage":"Carica Successfull <br><br> I seguenti avvisi sono stati restituiti:. <br><br> {0}",
+    "overwriteTitle":"Sovrascrivi Impossibile"
   }
 }

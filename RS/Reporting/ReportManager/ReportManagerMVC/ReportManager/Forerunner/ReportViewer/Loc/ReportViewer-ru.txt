@@ -289,7 +289,7 @@
     "properties":"свойства",
     "security":"безопасность",
     "linkedReport":"Связанный отчет",
-    "downloadFile":"Download File"
+    "downloadFile":"Скачать файл"
   },
   "common": {
     "submit":"представлять",
@@ -330,19 +330,19 @@
     "report":"отчет"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"диалог",
+    "cancel":"отменить",
+    "submit":"представлять"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Загрузить файл",
+    "description":"Загрузить отчет (.rdl) или другой ресурс в папке: {0}",
+    "uploadFileLabel":"Файл для загрузки",
+    "browseBtn":"просматривать",
+    "filename":"имя",
+    "overwrite":"переписывать",
+    "overwriteMessage":"Ресурс с таким именем уже существует. Вы можете установить флажок перезаписи затем повторите попытку.",
+    "warningsMessage":"Загрузить успеху Каталог <br><br> Следующие предупреждения были возвращены:. <br><br> {0}",
+    "overwriteTitle":"Переписать удалось"
   }
 }

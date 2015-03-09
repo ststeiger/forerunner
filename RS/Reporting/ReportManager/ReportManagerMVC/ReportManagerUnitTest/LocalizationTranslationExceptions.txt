@@ -197,7 +197,8 @@
     "description":["fr"]
   },
   "contextMenu": {
-    "title":["ga", "it", "pt", "ro","sv"]
+    "title":["ga", "it", "pt", "ro","sv"],
+    "downloadFile":["is","it"]
     },
     "linkedReport": {
     "title":[],
@@ -205,7 +206,22 @@
     "edit":[],
     "location":[],
     "report":[]
-  
+  },
+  "dialogBase": {
+    "title":["de","is","ro","sv"],
+    "cancel":[],
+    "submit":["sv"]
+},
+  "uploadFile": {
+    "title":[],
+    "description":[],
+    "uploadFileLabel":[],
+    "browseBtn":[],
+    "filename":["de","is"],
+    "overwrite":[],
+    "overwriteMessage":[],
+    "warningsMessage":[],
+    "overwriteTitle":[]
   }
 }
 

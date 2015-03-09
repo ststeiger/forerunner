@@ -290,7 +290,7 @@
     "properties":"propriétés",
     "security":"sécurité",
     "linkedReport":"Rapport Lié",
-    "downloadFile":"Download File"
+    "downloadFile":"Télécharger le fichier"
   },
   "common": {
     "submit":"Soumettre",
@@ -331,19 +331,19 @@
     "report":"rapport"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"dialogue",
+    "cancel":"annuler",
+    "submit":"soumettre"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Télécharger le fichier",
+    "description":"Téléchargez rapport (.rdl) ou une autre ressource dans le dossier: {0}",
+    "uploadFileLabel":"Fichier à télécharger",
+    "browseBtn":"feuilleter",
+    "filename":"nom",
+    "overwrite":"écraser",
+    "overwriteMessage":"Une ressource avec ce nom existe déjà. Vous pouvez cocher la case de l'écrasement puis réessayez.",
+    "warningsMessage":"Téléchargez Successfull <br><br> Les avertissements suivants ont été retournés:. <br><br> {0}",
+    "overwriteTitle":"Ecraser Échec"
   }
 }

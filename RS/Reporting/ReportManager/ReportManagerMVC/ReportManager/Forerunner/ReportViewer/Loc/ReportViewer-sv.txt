@@ -289,7 +289,7 @@
     "properties":"Egenskaper",
     "security":"Säkerhet",
     "linkedReport":"länkad Rapportera",
-    "downloadFile":"Download File"
+    "downloadFile":"Hämta fil"
   },
   "common": {
     "submit":"Submit",
@@ -331,18 +331,18 @@
   },
   "dialogBase": {
     "title":"Dialog",
-    "cancel":"Cancel",
+    "cancel":"avboka",
     "submit":"Submit"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Ladda upp fil",
+    "description":"Ladda upp rapporten (.rdl) eller annan resurs i mappen: {0}",
+    "uploadFileLabel":"Fil att ladda upp",
+    "browseBtn":"Bläddra",
+    "filename":"namn",
+    "overwrite":"Skriv över",
+    "overwriteMessage":"En resurs med det namnet finns redan. Du kan kontrollera överskrivnings rutan och försök igen.",
+    "warningsMessage":"Ladda upp Framgångsrik <br><br> Följande varningar returnerades:. <br><br> {0}",
+    "overwriteTitle":"Skriv över Misslyckades"
   }
 }

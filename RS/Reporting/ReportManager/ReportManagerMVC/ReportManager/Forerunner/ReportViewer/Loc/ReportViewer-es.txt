@@ -290,7 +290,7 @@
     "properties":"Propiedades",
     "security":"seguridad",
     "linkedReport":"informe vinculado",
-    "downloadFile":"Download File"
+    "downloadFile":"Descargar Archivo"
   },
   "common": {
     "submit":"presentar",
@@ -331,19 +331,19 @@
     "report":"informe"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"diálogo",
+    "cancel":"cancelar",
+    "submit":"presentar"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Subir archivo",
+    "description":"Sube informe (RDL) u otro recurso en la carpeta: {0}",
+    "uploadFileLabel":"Archivo a subir",
+    "browseBtn":"Explorar",
+    "filename":"nombre",
+    "overwrite":"sobrescribir",
+    "overwriteMessage":"Un recurso con ese nombre ya existe. Usted puede marcar la casilla de sobreescritura vuelva a intentarlo.",
+    "warningsMessage":"Sube acertado <br><br> Las siguientes advertencias fueron devueltos:. <br><br> {0}",
+    "overwriteTitle":"sobrescribir Error"
   }
 }

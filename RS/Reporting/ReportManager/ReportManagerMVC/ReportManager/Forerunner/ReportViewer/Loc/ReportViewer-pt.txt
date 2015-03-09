@@ -289,7 +289,7 @@
     "properties":"Propriedades",
     "security":"segurança",
     "linkedReport":"Relatório Linked",
-    "downloadFile":"Download File"
+    "downloadFile":"download do arquivo"
   },
   "common": {
     "submit":"submeter",
@@ -330,19 +330,19 @@
     "report":"relatório"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"diálogo",
+    "cancel":"cancelar",
+    "submit":"submeter"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"Upload de arquivo",
+    "description":"Faça o upload de relatório (.rdl) ou outro recurso para a pasta: {0}",
+    "uploadFileLabel":"Arquivo para upload",
+    "browseBtn":"procurar",
+    "filename":"nome",
+    "overwrite":"sobrescrever",
+    "overwriteMessage":"Um recurso com esse nome já existe. Você pode verificar a caixa de sobrescrever tente novamente.",
+    "warningsMessage":"Publique Successfull <br><br> Os seguintes avisos foram devolvidos:. <br><br> {0}",
+    "overwriteTitle":"Substituir Falha"
   }
 }

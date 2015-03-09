@@ -289,7 +289,7 @@
     "properties":"プロパティ",
     "security":"セキュリティ",
     "linkedReport":"リンクされたレポート",
-    "downloadFile":"Download File"
+    "downloadFile":"ダウンロードファイル"
   },
   "common": {
     "submit":"提出する",
@@ -330,19 +330,19 @@
     "report":"レポート"
   },
   "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Cancel",
-    "submit":"Submit"
+    "title":"ダイアログ",
+    "cancel":"キャンセル",
+    "submit":"提出する"
   },
   "uploadFile": {
-    "title":"Upload File",
-    "description":"Upload report (.rdl) or other resource into folder: {0}",
-    "uploadFileLabel":"File to Upload",
-    "browseBtn":"Browse",
-    "filename":"Name",
-    "overwrite":"Overwrite",
-    "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
-    "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
-    "overwriteTitle":"Overwrite Failed"
+    "title":"ファイルのアップロード",
+    "description":"フォルダに報告書（.rdl）またはその他のリソースをアップロード：{0}",
+    "uploadFileLabel":"アップロードするファイル",
+    "browseBtn":"ブラウズ",
+    "filename":"名前",
+    "overwrite":"上書きする",
+    "overwriteMessage":"その名前のリソースは既に存在します。その後、上書き]チェックボックスをオンにし、もう一度試すことができます。",
+    "warningsMessage":"Successfullをアップロード以下の警告が返された<br><br>ログイン：。<br><br>ログイン{0}",
+    "overwriteTitle":"上書きに失敗しました"
   }
 }

@@ -406,6 +406,7 @@
     <Content Include="Forerunner\ReportViewer\js\SubscriptionModel.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ga.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-is.txt" />

@@ -920,9 +920,23 @@ $(function () {
 
             return $control;
         },
+        _setParamScrollPos: function ($control) {
+            var me = this;
+
+            if (forerunner.device.isTouch()) {
+                $control.off('focus').on('focus', function () {
+                    var newTop = this.offsetTop -28;
+
+                    setTimeout(function () {
+                        me.$params.scrollTop(newTop);
+                    }, 500);
+                });
+            }
+        },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name + "' prompt='" + param.Prompt + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
+            var $control = new $("<input class='fr-param fr-param-width fr-paramname-" + param.Name +
+                "' prompt='" + param.Prompt + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
             if (dependenceDisable) {
@@ -975,6 +989,7 @@ $(function () {
                     break;
             }
 
+            me._setParamScrollPos($control);
             return $control;
         },
         _setSelectedIndex: function (s, v) {
@@ -1134,6 +1149,8 @@ $(function () {
                     me._submitForm(pageNum);
                 }
             });
+
+            me._setParamScrollPos($control);
 
             $container.append($control).append($openDropDown);
             return $container;

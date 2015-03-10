@@ -344,5 +344,13 @@
     "overwriteMessage":"En resurs med det namnet finns redan. Du kan kontrollera överskrivnings rutan och försök igen.",
     "warningsMessage":"Ladda upp Framgångsrik <br><br> Följande varningar returnerades:. <br><br> {0}",
     "overwriteTitle":"Skriv över Misslyckades"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Create a new folder in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Description",
+    "hide":"Hidden in normal mode",
+    "fileExists":"A folder that name already exists"
   }
 }

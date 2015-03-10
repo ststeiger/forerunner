@@ -344,5 +344,13 @@
     "overwriteMessage":"A Resource með þessu nafni er þegar til. Þú getur athugað hann skrifi kassi þá reyndu aftur.",
     "warningsMessage":"Hlaða inn árangursríkt <br><br> Eftirfarandi varnaðarorð voru aftur:. <br><br> {0}",
     "overwriteTitle":"Skrifa yfir mistókst"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Create a new folder in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Description",
+    "hide":"Hidden in normal mode",
+    "fileExists":"A folder that name already exists"
   }
 }

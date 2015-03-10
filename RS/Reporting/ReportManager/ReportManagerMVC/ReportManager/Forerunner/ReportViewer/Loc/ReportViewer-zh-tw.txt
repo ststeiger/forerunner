@@ -344,5 +344,13 @@
     "overwriteMessage":"同名文件已經存在，請選擇覆蓋復選框然後重試.",
     "warningsMessage":"上傳成功.<br><br>返回壹下警告:<br><br>{0}",
     "overwriteTitle":"覆蓋失敗"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Create a new folder in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Description",
+    "hide":"Hidden in normal mode",
+    "fileExists":"A folder that name already exists"
   }
 }

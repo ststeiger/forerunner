@@ -93,6 +93,7 @@ $(function () {
                     parentFolder: me.options.parentFolder,
                     folderName: me.$folderName.val(),
                     folderDecsription: me.$folderDecsription.val(),
+                    hidden: me.$hidden.is(":checked") ? "on" : "off",
                     instance: me.options.rsInstance
                 },
                 success: function (data, status, xhr) {

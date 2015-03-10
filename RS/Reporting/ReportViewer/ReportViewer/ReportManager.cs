@@ -49,6 +49,7 @@ namespace Forerunner.SSRS.Manager
         public string parentFolder { set; get; }
         public string folderName { set; get; }
         public string folderDecsription { set; get; }
+        public string hidden { set; get; }
         public string instance { set; get; }
     }
 
@@ -545,7 +546,17 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
 
-            rs.CreateFolder(data.folderName, data.parentFolder, null);
+            Property [] properties = new Property[2];
+            Property description = new Property();
+            description.Name = "Description";
+            description.Value = data.folderDecsription;
+            properties[0] = description;
+            Property hidden = new Property();
+            hidden.Name = "Hidden";
+            hidden.Value = String.Compare(data.hidden, "on", true) == 0 ? "True" : "False";
+            properties[1] = hidden;
+
+            rs.CreateFolder(data.folderName, data.parentFolder, properties);
             return getReturnSuccess();
         }
         public String SaveCatalogResource(SetResource setResource)

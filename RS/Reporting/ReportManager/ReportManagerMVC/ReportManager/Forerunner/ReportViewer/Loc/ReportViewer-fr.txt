@@ -345,5 +345,13 @@
     "overwriteMessage":"Une ressource avec ce nom existe déjà. Vous pouvez cocher la case de l'écrasement puis réessayez.",
     "warningsMessage":"Téléchargez Successfull <br><br> Les avertissements suivants ont été retournés:. <br><br> {0}",
     "overwriteTitle":"Ecraser Échec"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Create a new folder in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Description",
+    "hide":"Hidden in normal mode",
+    "fileExists":"A folder that name already exists"
   }
 }

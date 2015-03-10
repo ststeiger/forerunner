@@ -74,7 +74,7 @@ namespace Forerunner.SSRS.Manager
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
-        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", false);
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
         static bool SeperateDB = ForerunnerUtil.GetAppSetting("Forerunner.SeperateDB", false);
@@ -607,49 +607,57 @@ namespace Forerunner.SSRS.Manager
             return getReturnSuccess();
         }
 
-        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
+public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
+{
+    Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
+    List<CatalogItem> list = new List<CatalogItem>();
+    CatalogItem[] items = callListChildren(path, isRecursive);
+    bool added = false;
+
+    foreach (CatalogItem ci in items)
+    {
+        added = false;
+        if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
         {
-            Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
-            List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem[] items = callListChildren(path, isRecursive);
-            bool added = false;
-
-            foreach (CatalogItem ci in items)
+            list.Add(ci);
+            added = true;
+        }
+        if (RecurseFolders)
+        {
+            if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
             {
-                added = false;
-                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
-                {
-                    list.Add(ci);
-                    added = true;
-                }
-                if (RecurseFolders)
-                {
-                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
-                    {
-                        CatalogItem[] folder = callListChildren(ci.Path, false);
+                CatalogItem[] folder = callListChildren(ci.Path, false);
 
-                        foreach (CatalogItem fci in folder)
+                foreach (CatalogItem fci in folder)
+                {
+                    if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
+                    {
+                        if (!ci.Hidden || showHidden)
                         {
-                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
-                            {
-                                if (!ci.Hidden || showHidden)
-                                {
-                                    list.Add(ci);
-                                    break;
-                                }
-                            }
+                            list.Add(ci);
+                            added = true;
+                            break;
                         }
                     }
                 }
-                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
+                if (!added)
                 {
+                    // We mark this as hidden here because it will show up in the admin view and be hidden in the normal view
+                    ci.Hidden = true;
                     list.Add(ci);
+                    added = true;
                 }
-
-
             }
-            return list.ToArray();
         }
+        else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
+        {
+            list.Add(ci);
+        }
+
+
+    }
+    return list.ToArray();
+}
 
 
         private static Impersonator tryImpersonate(Credentials DBCredentials)

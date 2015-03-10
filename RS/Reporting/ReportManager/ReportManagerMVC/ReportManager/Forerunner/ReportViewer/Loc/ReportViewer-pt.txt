@@ -344,5 +344,13 @@
     "overwriteMessage":"Um recurso com esse nome já existe. Você pode verificar a caixa de sobrescrever tente novamente.",
     "warningsMessage":"Publique Successfull <br><br> Os seguintes avisos foram devolvidos:. <br><br> {0}",
     "overwriteTitle":"Substituir Falha"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Crie uma nova pasta em: {0}",
+    "name":"nome",
+    "descriptionLabel":"descrição",
+    "hide":"Escondido em modo normal",
+    "fileExists":"A pasta que nome já existe"
   }
 }

@@ -344,5 +344,13 @@
     "overwriteMessage":"Eine Ressource mit diesem Namen existiert bereits. Sie können den Überschreibkasten überprüfen versuchen Sie es erneut.",
     "warningsMessage":"Laden Sie Erfolgreiche <br><br> Folgende Warnmeldungen wurden ausgegeben:.<br> <br> {0}",
     "overwriteTitle":"überschreiben fehlgeschlagen"
+  },
+  "newFolder": {
+    "title":"Neuer Ordner",
+    "description":"Erstellen Sie einen neuen Ordner in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Beschreibung",
+    "hide":"Im Normalmodus verborgenen",
+    "fileExists":"Ein Ordner mit diesem Namen existiert bereits"
   }
 }

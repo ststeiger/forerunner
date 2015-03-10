@@ -344,5 +344,13 @@
     "overwriteMessage":"Una risorsa con questo nome esiste già. È possibile controllare la casella di sovrascrittura poi riprovare.",
     "warningsMessage":"Carica Successfull <br><br> I seguenti avvisi sono stati restituiti:. <br><br> {0}",
     "overwriteTitle":"Sovrascrivi Impossibile"
+  },
+  "newFolder": {
+    "title":"Nuova cartella",
+    "description":"Creare una nuova cartella in: {0}",
+    "name":"nome",
+    "descriptionLabel":"descrizione",
+    "hide":"Nascosto in modalità normale",
+    "fileExists":"Una cartella già esistente nome"
   }
 }

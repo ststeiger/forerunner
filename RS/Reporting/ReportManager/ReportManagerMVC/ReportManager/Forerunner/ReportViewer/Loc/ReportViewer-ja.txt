@@ -344,5 +344,13 @@
     "overwriteMessage":"その名前のリソースは既に存在します。その後、上書き]チェックボックスをオンにし、もう一度試すことができます。",
     "warningsMessage":"Successfullをアップロード以下の警告が返された<br><br>ログイン：。<br><br>ログイン{0}",
     "overwriteTitle":"上書きに失敗しました"
+  },
+  "newFolder": {
+    "title":"新規フォルダ",
+    "description":"に新しいフォルダを作成します：{0}",
+    "name":"名前",
+    "descriptionLabel":"説明",
+    "hide":"通常モードに隠された",
+    "fileExists":"名前がすでに存在していることをフォルダ"
   }
 }

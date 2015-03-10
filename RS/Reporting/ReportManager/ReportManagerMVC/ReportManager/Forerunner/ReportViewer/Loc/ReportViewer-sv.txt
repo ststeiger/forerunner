@@ -344,5 +344,13 @@
     "overwriteMessage":"En resurs med det namnet finns redan. Du kan kontrollera överskrivnings rutan och försök igen.",
     "warningsMessage":"Ladda upp Framgångsrik <br><br> Följande varningar returnerades:. <br><br> {0}",
     "overwriteTitle":"Skriv över Misslyckades"
+  },
+  "newFolder": {
+    "title":"ny mapp",
+    "description":"Skapa en ny mapp i: {0}",
+    "name":"namn",
+    "descriptionLabel":"Beskrivning",
+    "hide":"Gömd i normalläge",
+    "fileExists":"En mapp det namnet finns redan"
   }
 }

@@ -222,6 +222,14 @@
     "overwriteMessage":[],
     "warningsMessage":[],
     "overwriteTitle":[]
+    },
+    "newFolder": {
+    "title":["is","pt","ro","ru"],
+    "description":[],
+    "name":["de","is"],
+    "descriptionLabel":["fr"],
+    "hide":[],
+    "fileExists":[]
   }
 }
 

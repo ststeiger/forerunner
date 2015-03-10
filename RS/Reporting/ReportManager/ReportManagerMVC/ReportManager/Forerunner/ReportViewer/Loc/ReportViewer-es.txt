@@ -345,5 +345,13 @@
     "overwriteMessage":"Un recurso con ese nombre ya existe. Usted puede marcar la casilla de sobreescritura vuelva a intentarlo.",
     "warningsMessage":"Sube acertado <br><br> Las siguientes advertencias fueron devueltos:. <br><br> {0}",
     "overwriteTitle":"sobrescribir Error"
+  },
+  "newFolder": {
+    "title":"nueva carpeta",
+    "description":"Crear una nueva carpeta en: {0}",
+    "name":"nombre",
+    "descriptionLabel":"descripción",
+    "hide":"Escondido en modo normal",
+    "fileExists":"Una carpeta que ya existe nombre"
   }
 }

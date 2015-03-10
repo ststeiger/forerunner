@@ -346,5 +346,13 @@
     "overwriteMessage":"A Resource with that name already exists. You can check the overwrite box then try again.",
     "warningsMessage":"Upload Successfull.<br><br>The following warnings were returned:<br><br>{0}",
     "overwriteTitle":"Overwrite Failed"
+  },
+  "newFolder": {
+    "title":"New Folder",
+    "description":"Create a new folder in: {0}",
+    "name":"Name",
+    "descriptionLabel":"Description",
+    "hide":"Hidden in normal mode",
+    "fileExists":"A folder that name already exists"
   }
 }

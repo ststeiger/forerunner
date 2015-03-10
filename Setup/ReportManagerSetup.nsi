@@ -219,7 +219,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\xml.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
   File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\UploadFile.png"
-  
+  File "${LOCALROOT}\Forerunner\Common\images\ToolpaneIcons\NewFolder.png"
+
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\animated-overlay.gif"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png"
@@ -278,6 +279,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ManageMySubscriptions.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\LinkedReport.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UploadFile.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\NewFolder.css"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\images"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\Report-icon.png"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\report_ear_selected.png"
@@ -874,6 +876,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorerSearchFolder.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\LinkedReport.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\UploadFile.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\NewFolder.css"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"
@@ -994,6 +997,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\xml.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\ManageSubscription.png"
   Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\UploadFile.png"
+  Delete "$INSTDIR\Forerunner\Common\images\ToolpaneIcons\NewFolder.png"
 
   Delete "$INSTDIR\Custom\Mobilizer.css"
   Delete "$INSTDIR\Custom\Mobilizer_Examples.css"

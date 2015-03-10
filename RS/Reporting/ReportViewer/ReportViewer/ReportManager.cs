@@ -543,7 +543,10 @@ namespace Forerunner.SSRS.Manager
         }
         public String NewFolder(NewFolderData data)
         {
-            throw new Exception("Test for New Folder error handling");
+            rs.Credentials = GetCredentials();
+
+            rs.CreateFolder(data.folderName, data.parentFolder, null);
+            return getReturnSuccess();
         }
         public String SaveCatalogResource(SetResource setResource)
         {

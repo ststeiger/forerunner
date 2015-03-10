@@ -153,7 +153,11 @@ $(function () {
                 if (lastFetched.view === "catalog") {
 
                     if (permissions["Create Resource"]) {
-                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                    }
+
+                    if (permissions["Create Folder"] && lastFetched.view === "catalog") {
+                        enableList.push(tp.itemNewFolder);
                     }
 
                     if (permissions["Update Security Policies"]) {

@@ -138,6 +138,15 @@ namespace Forerunner.SSRS.Management
 
             return;
         }
+        public void CreateFolder(string Folder, string Parent, Property[] Properties)
+        {
+            if (IsNative)
+                RSNative.CreateFolder(Folder, Parent, Properties);
+            else
+                RSSPS.CreateFolder(Folder, Parent);
+
+            return;
+        }
         public Property[] GetProperties(string path, Property[] props)
         {
             if (IsNative)

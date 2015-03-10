@@ -562,7 +562,7 @@ $(function () {
             //create resource: create resource file (search folder/dashboard)
             //update properties: update report properties (tags)
             //for more properties, add to the list
-            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report"];
+            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report", "Create Folder"];
             me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
         },
         /**

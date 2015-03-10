@@ -51,7 +51,7 @@ $(function () {
                     "<label class='fr-nfd-description fr-core-dialog-description'>" + description + "</label>" +
                     // New folder name
                     "<label class='fr-nfd-label'>" + newFolder.name + "</label>" +
-                    "<input name='foldername' class='fr-nfd-name fr-core-input' type='text' required='true'/>" +
+                    "<input name='foldername' class='fr-nfd-name fr-core-input' type='text' required='true' autofocus='autofocus'/>" +
                     "<span class='fr-dlb-error-span'/>" +
                     // Folder Description
                     "<label class='fr-nfd-label'>" + newFolder.descriptionLabel + "</label>" +
@@ -91,8 +91,8 @@ $(function () {
                 url: me.options.reportManagerAPI + "/NewFolder",
                 data: {
                     parentFolder: me.options.parentFolder,
-                    folderName: me.$folderName.text(),
-                    folderDecsription: me.$folderDecsription.text(),
+                    folderName: me.$folderName.val(),
+                    folderDecsription: me.$folderDecsription.val(),
                     instance: me.options.rsInstance
                 },
                 success: function (data, status, xhr) {

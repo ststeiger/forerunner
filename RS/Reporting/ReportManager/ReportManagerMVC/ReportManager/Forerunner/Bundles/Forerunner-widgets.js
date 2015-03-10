@@ -9387,7 +9387,11 @@ $(function () {
                 if (lastFetched.view === "catalog") {
 
                     if (permissions["Create Resource"]) {
-                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+                    }
+
+                    if (permissions["Create Folder"] && lastFetched.view === "catalog") {
+                        enableList.push(tp.itemNewFolder);
                     }
 
                     if (permissions["Update Security Policies"]) {
@@ -9974,7 +9978,7 @@ $(function () {
             //create resource: create resource file (search folder/dashboard)
             //update properties: update report properties (tags)
             //for more properties, add to the list
-            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report"];
+            var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report", "Create Folder"];
             me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
         },
         /**
@@ -11263,7 +11267,7 @@ $(function () {
                     "<label class='fr-nfd-description fr-core-dialog-description'>" + description + "</label>" +
                     // New folder name
                     "<label class='fr-nfd-label'>" + newFolder.name + "</label>" +
-                    "<input name='foldername' class='fr-nfd-name fr-core-input' type='text' required='true'/>" +
+                    "<input name='foldername' class='fr-nfd-name fr-core-input' type='text' required='true' autofocus='autofocus'/>" +
                     "<span class='fr-dlb-error-span'/>" +
                     // Folder Description
                     "<label class='fr-nfd-label'>" + newFolder.descriptionLabel + "</label>" +
@@ -11303,8 +11307,8 @@ $(function () {
                 url: me.options.reportManagerAPI + "/NewFolder",
                 data: {
                     parentFolder: me.options.parentFolder,
-                    folderName: me.$folderName.text(),
-                    folderDecsription: me.$folderDecsription.text(),
+                    folderName: me.$folderName.val(),
+                    folderDecsription: me.$folderDecsription.val(),
                     instance: me.options.rsInstance
                 },
                 success: function (data, status, xhr) {

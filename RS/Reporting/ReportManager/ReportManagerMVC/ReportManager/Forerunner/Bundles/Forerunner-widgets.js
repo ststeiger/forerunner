@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -7917,6 +7917,32 @@ $(function () {
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me._visibleCheck();
+        },
+        _visibleCheck: function () {
+            var me = this;
+
+            if (me.$formMain.is(":visible")) {
+                me.onDialogVisible();
+            } else {
+                // Poll until the browser button is visible
+                setTimeout(function () { me._visibleCheck.call(me); }, 50);
+            }
+        },
+        /**
+         * Is called when the dialog becomes visible. This is a good function to use if
+         * you need to do dynamic layout because the position and dimensions of the dialog's
+         * elements are all set when this is called.
+         *
+         * @function $.forerunner.dialogBase#onDialogVisible
+         */
+        onDialogVisible: function () {
+            var me = this;
+
+            // Set the submit error width to the size of the form main element. The
+            // reason to do this is to keep the width of $submitError from expanding
+            // the width of the dialog if / when an error is returned.
+            me.$submitError.width(me.$formMain.width());
         },
         /**
          * Close  dialog
@@ -9313,7 +9339,7 @@ $(function () {
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
 
             //if (me._isAdmin()) {
-            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
             toolpaneItems.push(mi.itemSecurity);
             if (lastFetched.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
@@ -9348,7 +9374,7 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var enableList = [];
-            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, mi.itemProperty, mi.itemSecurity];
+            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemProperty, mi.itemSecurity];
 
             // Then we start out disabled and hide them, after the permission check enable if needed
             me.disableTools(checkList);
@@ -9361,9 +9387,7 @@ $(function () {
                 if (lastFetched.view === "catalog") {
 
                     if (permissions["Create Resource"]) {
-                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
-                    } else if (permissions["Create Report"]) {
-                        enableList.push(tp.itemUploadFile);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
                     }
 
                     if (permissions["Update Security Policies"]) {
@@ -10062,6 +10086,28 @@ $(function () {
                 rsInstance: me.options.rsInstance
             });
             $dlg.uploadFile("openDialog");
+        },
+        /**
+         * Show the new folder modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showNewFolderDialog
+         */
+        showNewFolderDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-nfd-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-nfd-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.newFolder({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                parentFolder: me.lastFetched.path,
+                rsInstance: me.options.rsInstance
+            });
+            $dlg.newFolder("openDialog");
         },
         /**
          * Show the user settings modal dialog.
@@ -11133,34 +11179,26 @@ $(function () {
         openDialog: function () {
             var me = this;
             me._super();
-            me._onReadyBrowseBtn();
         },
-        _onReadyBrowseBtn: function () {
+        onDialogVisible: function() {
             var me = this;
+            me._super();
 
-            me.$submitError.width(me.$decsription.width());
             me.$progressContainer.width(me.$decsription.width());
 
-            if (me.$browseBtn.is(":visible")) {
-                me.$inputFile = $("<input name='file' type=file class='fr-upf-transparent-input' />");
-                me.$inputFile.on("change", function (e, data) {
-                    me._onChangeInputFile.call(me);
-                });
-                
-                me.$inputFile.css({
-                    top: me.$browseBtn.css("marginTop"),
-                    left: me.$browseBtn.css("marginLeft"),
-                    width: me.$browseBtn.css("width"),
-                    height: me.$browseBtn.css("height")
-                });
+            me.$inputFile = $("<input name='file' type=file class='fr-upf-transparent-input' />");
+            me.$inputFile.on("change", function (e, data) {
+                me._onChangeInputFile.call(me);
+            });
 
-                me.$browseContainer.append(me.$inputFile);
-            } else {
-                // Poll until the browser button is visible
-                setTimeout(function () {
-                    me._onReadyBrowseBtn.call(me);
-                }, 50);
-            }
+            me.$inputFile.css({
+                top: me.$browseBtn.css("marginTop"),
+                left: me.$browseBtn.css("marginLeft"),
+                width: me.$browseBtn.css("width"),
+                height: me.$browseBtn.css("height")
+            });
+
+            me.$browseContainer.append(me.$inputFile);
         },
         _onChangeInputFile: function (e, data) {
             var me = this;
@@ -11168,6 +11206,130 @@ $(function () {
             if (me.$inputFile[0] && me.$inputFile[0].files && me.$inputFile[0].files[0] && me.$inputFile[0].files[0].name) {
                 me.$uploadFile.val(me.$inputFile[0].files[0].name);
             }
+        }
+    }); //$.widget
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/NewFolder.js
+/**
+ * @file Contains the New Folder dialog widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var newFolder = locData.newFolder;
+    var helper = forerunner.helper;
+
+    /**
+     * Widget used to create a new child folder on the server
+     *
+     * @namespace $.forerunner.newFolder
+     * @prop {Object} options - The options for the new folder dialog
+     * @prop {String} options.parentFolder - Folder the file will be uploaded to
+     * @prop {Object} options.$reportExplorer - Report Explorer Widget
+     *
+     * @example
+     * $("#newFolderDialog").newFolder({
+     *      $appContainer: me.options.$appContainer,
+     *      $reportExplorer: me.element,
+     *      parentFolder: me.lastFetched.path,
+     *      rsInstance: me.options.rsInstance
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.newFolder), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
+        options: {
+            title: newFolder.title,
+            iconClass: "fr-nfd-new-folder-icon",
+            parentFolder: "",
+            $reportExplorer: null
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+
+            var description = newFolder.description.replace("{0}", me.options.parentFolder);
+
+            var $main = $(
+                "<div>" +
+                    // Dialog description
+                    "<label class='fr-nfd-description fr-core-dialog-description'>" + description + "</label>" +
+                    // New folder name
+                    "<label class='fr-nfd-label'>" + newFolder.name + "</label>" +
+                    "<input name='foldername' class='fr-nfd-name fr-core-input' type='text' required='true'/>" +
+                    "<span class='fr-dlb-error-span'/>" +
+                    // Folder Description
+                    "<label class='fr-nfd-label'>" + newFolder.descriptionLabel + "</label>" +
+                    "<textarea name='folderdescription' rows='5' class='fr-nfd-folder-description fr-core-input' />" +
+                    // Hidden in normal mode check box
+                    "<div class='fr-nfd-hidden-container'>" +
+                        "<input name='hide' class='fr-nfd-hidden' type='checkbox'/>" +
+                        "<label class='fr-nfd-hidden-label'>" + newFolder.hide + "</label>" +
+                    "</div>" +
+                "</div>"
+            );
+
+            me.$formMain.html("");
+            me.$formMain.append($main);
+
+            me.$folderName = me.element.find(".fr-nfd-name");
+            me.$folderDecsription = me.element.find(".fr-nfd-folder-description");
+            me.$hidden = me.element.find(".fr-nfd-hidden");
+
+            me._validateForm(me.$form);
+
+            me.$folderName.watermark(newFolder.name, { useNative: false, className: "fr-watermark" });
+        },
+        _submit: function () {
+            var me = this;
+
+            if (!me.$form.valid()) {
+                return;
+            }
+
+            me._hideSubmitError();
+
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "text",
+                async: false,
+                url: me.options.reportManagerAPI + "/NewFolder",
+                data: {
+                    parentFolder: me.options.parentFolder,
+                    folderName: me.$folderName.text(),
+                    folderDecsription: me.$folderDecsription.text(),
+                    instance: me.options.rsInstance
+                },
+                success: function (data, status, xhr) {
+                    var dataObj = JSON.parse(data);
+                    if (dataObj.Exception) {
+                        me._showExceptionError(dataObj);
+                        return;
+                    }
+
+                    me.options.$reportExplorer.reportExplorer("refresh");
+                    me.closeDialog();
+                },
+                fail: function (jqXHR, textStatus, errorThrown) {
+                    if (xhr.status === 400) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.newFolder.fileExists, locData.newFolder.fileExists);
+                        return;
+                    }
+
+                    me._showSubmitError(xhr.responseText);
+                }
+            });
+        },
+        openDialog: function () {
+            var me = this;
+            me._super();
         }
     }); //$.widget
 });

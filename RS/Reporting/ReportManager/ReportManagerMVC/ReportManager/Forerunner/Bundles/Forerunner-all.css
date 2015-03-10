@@ -1546,6 +1546,18 @@ table, td, tr div {
 
 .fr-upf-upload-file-icon { background-image: url(../../Common/images/ToolpaneIcons/UploadFile.png); }
 
+.fr-nfd-section { display: none; }
+  .fr-nfd-section .fr-nfd-description { display:block; margin: 0 16px 5px 0; }
+  .fr-nfd-section .fr-nfd-label { display: block; vertical-align: middle; margin: 0 5px 0 0; font-size: 13pt; }
+  .fr-nfd-section .fr-nfd-name { display: block; width: 450px; margin: 0 10px 5px 0; padding: 0 0 0 5px; }
+  .fr-nfd-section .fr-nfd-folder-description { display: block; width: 450px; height: auto; margin: 0 10px 5px 0; padding: 0 0 0 5px; display: block; resize: none; }
+
+  .fr-nfd-section .fr-nfd-hidden-container { display: block; line-height: 26px; }
+  .fr-nfd-section .fr-nfd-hidden { display: inline-block; vertical-align: middle; margin: 5px 5px 0 0; }
+  .fr-nfd-section .fr-nfd-hidden-label { display:inline-block; vertical-align:middle; }
+
+.fr-nfd-new-folder-icon { background-image: url(../../Common/images/ToolpaneIcons/NewFolder.png); }
+
 .fr-sub-form {min-width: 200px; min-height: 300px;}
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
 .fr-sub-descr{float:left; max-width:300px;white-space: nowrap; overflow:hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis;text-overflow: ellipsis;text-overflow:ellipsis;}

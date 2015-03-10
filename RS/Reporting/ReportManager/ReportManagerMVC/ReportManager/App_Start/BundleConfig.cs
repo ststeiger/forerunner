@@ -43,6 +43,7 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
                 "~/Forerunner/ReportExplorer/css/ReportExplorerSearchFolder.css",
                 "~/Forerunner/ReportExplorer/css/UploadFile.css",
+                "~/Forerunner/ReportExplorer/css/NewFolder.css",
                 "~/Forerunner/ReportExplorer/css/UserSettings.css",
                 "~/Forerunner/ReportExplorer/css/ManageMySubscriptions.css",
                 "~/Forerunner/ReportExplorer/css/LinkedReport.css"                

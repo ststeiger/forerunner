@@ -676,6 +676,28 @@ $(function () {
             $dlg.uploadFile("openDialog");
         },
         /**
+         * Show the new folder modal dialog.
+         *
+         * @function $.forerunner.reportExplorer#showNewFolderDialog
+         */
+        showNewFolderDialog: function () {
+            var me = this;
+            var $dlg = me.options.$appContainer.find(".fr-nfd-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-nfd-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+
+            // Aways re-initialize the dialog even if it was created before
+            $dlg.newFolder({
+                $appContainer: me.options.$appContainer,
+                $reportExplorer: me.element,
+                parentFolder: me.lastFetched.path,
+                rsInstance: me.options.rsInstance
+            });
+            $dlg.newFolder("openDialog");
+        },
+        /**
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog

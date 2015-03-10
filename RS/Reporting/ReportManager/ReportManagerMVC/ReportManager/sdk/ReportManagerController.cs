@@ -664,7 +664,18 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
             }
         }
-
+        [HttpPost]
+        public HttpResponseMessage NewFolder(NewFolderData data)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.instance).NewFolder(data)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
         [HttpPost]
         public HttpResponseMessage UploadFile()
         {

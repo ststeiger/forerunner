@@ -199,6 +199,32 @@ $(function () {
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me._visibleCheck();
+        },
+        _visibleCheck: function () {
+            var me = this;
+
+            if (me.$formMain.is(":visible")) {
+                me.onDialogVisible();
+            } else {
+                // Poll until the browser button is visible
+                setTimeout(function () { me._visibleCheck.call(me); }, 50);
+            }
+        },
+        /**
+         * Is called when the dialog becomes visible. This is a good function to use if
+         * you need to do dynamic layout because the position and dimensions of the dialog's
+         * elements are all set when this is called.
+         *
+         * @function $.forerunner.dialogBase#onDialogVisible
+         */
+        onDialogVisible: function () {
+            var me = this;
+
+            // Set the submit error width to the size of the form main element. The
+            // reason to do this is to keep the width of $submitError from expanding
+            // the width of the dialog if / when an error is returned.
+            me.$submitError.width(me.$formMain.width());
         },
         /**
          * Close  dialog

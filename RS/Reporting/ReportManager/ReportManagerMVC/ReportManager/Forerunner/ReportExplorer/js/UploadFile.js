@@ -171,34 +171,26 @@ $(function () {
         openDialog: function () {
             var me = this;
             me._super();
-            me._onReadyBrowseBtn();
         },
-        _onReadyBrowseBtn: function () {
+        onDialogVisible: function() {
             var me = this;
+            me._super();
 
-            me.$submitError.width(me.$decsription.width());
             me.$progressContainer.width(me.$decsription.width());
 
-            if (me.$browseBtn.is(":visible")) {
-                me.$inputFile = $("<input name='file' type=file class='fr-upf-transparent-input' />");
-                me.$inputFile.on("change", function (e, data) {
-                    me._onChangeInputFile.call(me);
-                });
-                
-                me.$inputFile.css({
-                    top: me.$browseBtn.css("marginTop"),
-                    left: me.$browseBtn.css("marginLeft"),
-                    width: me.$browseBtn.css("width"),
-                    height: me.$browseBtn.css("height")
-                });
+            me.$inputFile = $("<input name='file' type=file class='fr-upf-transparent-input' />");
+            me.$inputFile.on("change", function (e, data) {
+                me._onChangeInputFile.call(me);
+            });
 
-                me.$browseContainer.append(me.$inputFile);
-            } else {
-                // Poll until the browser button is visible
-                setTimeout(function () {
-                    me._onReadyBrowseBtn.call(me);
-                }, 50);
-            }
+            me.$inputFile.css({
+                top: me.$browseBtn.css("marginTop"),
+                left: me.$browseBtn.css("marginLeft"),
+                width: me.$browseBtn.css("width"),
+                height: me.$browseBtn.css("height")
+            });
+
+            me.$browseContainer.append(me.$inputFile);
         },
         _onChangeInputFile: function (e, data) {
             var me = this;

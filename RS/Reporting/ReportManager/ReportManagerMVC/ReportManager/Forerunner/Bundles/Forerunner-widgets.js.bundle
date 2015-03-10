@@ -25,6 +25,7 @@
     <file>/Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js</file>
     <file>/Forerunner/ReportExplorer/js/LinkedReport.js</file>
     <file>/Forerunner/ReportExplorer/js/UploadFile.js</file>
+    <file>/Forerunner/ReportExplorer/js/NewFolder.js</file>
     <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
     <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
     <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>

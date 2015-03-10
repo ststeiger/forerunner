@@ -44,6 +44,14 @@ namespace Forerunner.SSRS.Manager
         }
     }
 
+    public class NewFolderData
+    {
+        public string parentFolder { set; get; }
+        public string folderName { set; get; }
+        public string folderDecsription { set; get; }
+        public string instance { set; get; }
+    }
+
     public class SiteCatalog
     {
         public string Name { get; set; }
@@ -532,6 +540,10 @@ namespace Forerunner.SSRS.Manager
             }
 
             throw new Exception(String.Format("Unsupported file type: {0}", ext));
+        }
+        public String NewFolder(NewFolderData data)
+        {
+            throw new Exception("Test for New Folder error handling");
         }
         public String SaveCatalogResource(SetResource setResource)
         {

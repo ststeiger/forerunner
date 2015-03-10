@@ -1681,6 +1681,20 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-upload-file"]);
                 }
             }
+        },
+        /** @member */
+        itemNewFolder: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-rm-item-new-folder",
+            imageClass: "fr-nfd-new-folder-icon",
+            sharedClass: "fr-hide-if-disable",
+            text: locData.newFolder.title,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showNewFolderDialog");
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-new-folder"]);
+                }
+            }
         }
     };
 

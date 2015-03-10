@@ -350,6 +350,8 @@ $(function () {
             dialogBase: "dialogBase",
             /** @constant */
             uploadFile: "uploadFile",
+            /** @constant */
+            newFolder: "newFolder",
 
             /** @constant */
             namespace: "forerunner",

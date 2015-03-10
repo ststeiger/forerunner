@@ -105,7 +105,7 @@ $(function () {
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
 
             //if (me._isAdmin()) {
-            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
+            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
             toolpaneItems.push(mi.itemSecurity);
             if (lastFetched.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
@@ -140,7 +140,7 @@ $(function () {
         _updateBtnStates: function () {
             var me = this;
             var enableList = [];
-            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, mi.itemProperty, mi.itemSecurity];
+            var checkList = [tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemProperty, mi.itemSecurity];
 
             // Then we start out disabled and hide them, after the permission check enable if needed
             me.disableTools(checkList);
@@ -153,9 +153,7 @@ $(function () {
                 if (lastFetched.view === "catalog") {
 
                     if (permissions["Create Resource"]) {
-                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
-                    } else if (permissions["Create Report"]) {
-                        enableList.push(tp.itemUploadFile);
+                        enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
                     }
 
                     if (permissions["Update Security Policies"]) {

@@ -133,7 +133,7 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
-            me.property = forerunner.cache.itemProperty[path] = null;
+            me.property = forerunner.cache.itemProperty[path];
 
             me.$tabs.find("div").remove();
             me.$tabsUL.find("li").remove();
@@ -457,7 +457,8 @@ $(function () {
             var me = this;
             try {
                 var descriptionInput = $.trim(me.$desInput.val()),
-                    isHidden = me.$isHidden[0].checked ? "True" : "False";
+                    isHidden = me.$isHidden[0].checked ? "True" : "False",
+                    path = me.curPath;
 
                 var properties = [];
 
@@ -488,8 +489,8 @@ $(function () {
                         },
                         success: function (data) {
                             //return true;
-                            me.property["Hidden"] = isHidden;
-                            me.property["Description"] = descriptionInput;
+                            forerunner.cache.itemProperty[path]["Hidden"] = isHidden;
+                            forerunner.cache.itemProperty[path]["Description"] = descriptionInput;
                         },
                         fail: function (data) {
                             me._description = "";
@@ -520,7 +521,8 @@ $(function () {
         },
         _setRDLExtension: function () {
             var me = this;
-            var rdl = me.$rdlInput.val();
+            var rdl = me.$rdlInput.val(),
+                path = me.curPath;
 
             if (rdl !== me._rdl) {
                 var properties = [{
@@ -541,7 +543,7 @@ $(function () {
                     },
                     success: function (data) {
                         me._rdl = rdl;
-                        me.property["ForerunnerRDLExt"] = rdl;
+                        forerunner.cache.itemProperty[path]["ForerunnerRDLExt"] = rdl;
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
                     },
                     fail: function (data) {

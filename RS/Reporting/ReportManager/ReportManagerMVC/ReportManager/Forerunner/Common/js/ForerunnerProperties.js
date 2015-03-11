@@ -7,6 +7,7 @@ var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
+forerunner.cache = forerunner.cache || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
@@ -92,7 +93,6 @@ $(function () {
         */
         openDialog: function () {
             var me = this;
-            // me._beforeOpenDialog();
 
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
@@ -133,7 +133,7 @@ $(function () {
          */
         setProperties: function (path, propertyList) {
             var me = this;
-            me.cached = null;
+            me.property = forerunner.cache.itemProperty[path] = null;
 
             me.$tabs.find("div").remove();
             me.$tabsUL.find("li").remove();
@@ -488,6 +488,8 @@ $(function () {
                         },
                         success: function (data) {
                             //return true;
+                            me.property["Hidden"] = isHidden;
+                            me.property["Description"] = descriptionInput;
                         },
                         fail: function (data) {
                             me._description = "";
@@ -539,6 +541,7 @@ $(function () {
                     },
                     success: function (data) {
                         me._rdl = rdl;
+                        me.property["ForerunnerRDLExt"] = rdl;
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
                     },
                     fail: function (data) {
@@ -621,9 +624,9 @@ $(function () {
         _getProperties: function (path, callback, context) {
             var me = this;
 
-            if (me.cached) {
+            if (me.property) {
                 if (typeof callback === "function") {
-                    callback.call(context || me, me.cached);
+                    callback.call(context || me, me.property);
                 }
                 return;
             }
@@ -640,13 +643,13 @@ $(function () {
                 },
                 success: function (data) {
                     try {
-                        me.cached = JSON.parse(data);
+                        me.property = forerunner.cache.itemProperty[path] = JSON.parse(data);
                     } catch (e) {
-                        me.cached = data;
+                        me.property = forerunner.cache.itemProperty[path] = data;
                     }
 
                     if (typeof callback === "function") {
-                        callback.call(context || me, me.cached);
+                        callback.call(context || me, me.property);
                     }
                     return;
                 },

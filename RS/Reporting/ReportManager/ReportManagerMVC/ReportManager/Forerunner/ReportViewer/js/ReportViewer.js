@@ -2316,6 +2316,11 @@ $(function () {
         _getRDLExtProp: function () {
             var me = this;
 
+            me.property = forerunner.cache.itemProperty[me.reportPath];
+            if (me.property["ForerunnerRDLExt"]) {
+                return me.property["ForerunnerRDLExt"];
+            }
+
             forerunner.ajax.ajax(
                {
                    type: "GET",

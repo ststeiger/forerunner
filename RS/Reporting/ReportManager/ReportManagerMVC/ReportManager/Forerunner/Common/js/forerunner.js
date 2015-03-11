@@ -1942,6 +1942,9 @@ $(function () {
 
     };
 
+    forerunner.cache = {
+        itemProperty: {}
+    };
     /**
     * Defines the methods used to modal dialog.
     *

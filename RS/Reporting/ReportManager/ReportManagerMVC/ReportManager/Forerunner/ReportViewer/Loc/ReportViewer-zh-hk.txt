@@ -346,11 +346,11 @@
     "overwriteTitle":"覆蓋失敗"
   },
   "newFolder": {
-    "title":"New Folder",
-    "description":"Create a new folder in: {0}",
-    "name":"Name",
-    "descriptionLabel":"Description",
-    "hide":"Hidden in normal mode",
-    "fileExists":"A folder that name already exists"
+    "title":"新建文件夾",
+    "description":"在{0}下新建文件夾",
+    "name":"名稱",
+    "descriptionLabel":"描述",
+    "hide":"在普通模式下隱藏",
+    "fileExists":"同名文件夾已經存在"
   }
 }

@@ -276,9 +276,9 @@ namespace ReportManager.Controllers
 
         [HttpGet]
         [ActionName("DeleteCatalogItem")]
-        public HttpResponseMessage DeleteCatalogItem(string path, string instance = null)
+        public HttpResponseMessage DeleteCatalogItem(string path, string safeFolderDelete, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path, safeFolderDelete)), "text/JSON");
         }
 
         [HttpGet]

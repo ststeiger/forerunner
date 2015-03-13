@@ -289,7 +289,9 @@
     "properties":"Proprietăți",
     "security":"securitate",
     "linkedReport":"Raport legat",
-    "downloadFile":"Descarca File"
+    "downloadFile":"Descarca File",
+    "deleteConfirm":"Are you sure to delete {0}?",
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
   },
   "common": {
     "submit":"prezenta",

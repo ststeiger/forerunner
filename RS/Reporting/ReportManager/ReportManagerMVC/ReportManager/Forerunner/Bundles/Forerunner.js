@@ -1257,6 +1257,16 @@ $(function () {
                 func();
                 me[id] = null;
             }, n);
+        },
+        getItemName: function (itemPath, defaultName) {
+            if (itemPath && typeof itemPath === "string" && itemPath.length) {
+                var index = itemPath.lastIndexOf("/"),
+                    str = itemPath.substring(index + 1);
+
+                return str === "" ? (defaultName || "") : str;
+            }
+
+            return itemPath;
         }
     },
         

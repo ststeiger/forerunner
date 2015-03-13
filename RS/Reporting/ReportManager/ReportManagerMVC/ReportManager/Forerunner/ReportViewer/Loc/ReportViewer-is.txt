@@ -289,7 +289,9 @@
     "properties":"eiginleikar",
     "security":"Öryggi",
     "linkedReport":"tengd Report",
-    "downloadFile":"Download File"
+    "downloadFile":"Download File",
+    "deleteConfirm":"Are you sure to delete {0}?",
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
   },
   "common": {
     "submit":"leggja",

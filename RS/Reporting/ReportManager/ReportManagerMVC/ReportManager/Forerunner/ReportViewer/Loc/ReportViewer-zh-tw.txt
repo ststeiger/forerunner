@@ -289,7 +289,9 @@
     "properties":"屬性",
     "security":"安全性",
     "linkedReport":"鏈接報表",
-    "downloadFile":"下載文件"
+    "downloadFile":"下載文件",
+    "deleteConfirm":"確定要刪除 {0} 嗎?",
+    "folderNotEmpty":"該文件夾中包含子項，您不能刪除"
   },
   "common": {
     "submit":"提交",

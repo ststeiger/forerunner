@@ -289,7 +289,9 @@
     "properties":"プロパティ",
     "security":"セキュリティ",
     "linkedReport":"リンクされたレポート",
-    "downloadFile":"ダウンロードファイル"
+    "downloadFile":"ダウンロードファイル",
+    "deleteConfirm":"Are you sure to delete {0}?",
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
   },
   "common": {
     "submit":"提出する",

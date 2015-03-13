@@ -91,6 +91,14 @@ namespace Forerunner.SSRS.Management
                 return RSSPS.GetReportDefinition(path);
         }
 
+        public ItemTypeEnum GetItemType(string path)
+        {
+            if (IsNative)
+                return RSNative.GetItemType(path);
+            else
+                return RSSPS.GetItemType(path);
+        }
+
         public Warning[] CreateReport(string Report, string Parent, bool Overwrite, byte[] Definition, Property[] Properties)
         {
             if (IsNative)

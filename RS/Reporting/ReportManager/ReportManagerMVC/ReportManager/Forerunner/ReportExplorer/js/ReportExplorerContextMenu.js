@@ -35,6 +35,11 @@ $(function () {
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
         options: {
+            $appContainer: null,
+            $reportExplorer: null,
+            reportManagerAPI: null,
+            rsInstance: null,
+            catalogItem: null
         },
         _init: function () {
             var me = this;
@@ -125,9 +130,12 @@ $(function () {
         },
         _onClickDelete: function (event, data) {
             var me = this;
-
+            var itemName = forerunner.helper.getItemName(me.options.catalogItem.Path);
+            if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
+            
             var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
-            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
+            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path) + "&safeFolderDelete=true";
+
             if (me.options.rsInstance) {
                 url += "&instance=" + me.options.rsInstance;
             }
@@ -137,13 +145,18 @@ $(function () {
                 url: url,
                 async: false,
                 success: function (data) {
-                    me.options.$reportExplorer.reportExplorer("refresh");
+                    if (data.Warning === "folderNotEmpty") {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, contextMenu.folderNotEmpty);
+                    } else if (data.Status && data.Status === "Success") {
+                        me.options.$reportExplorer.reportExplorer("refresh");
+                    }
                 },
                 fail: function (jqXHR) {
                     console.log("DeleteCatalogItem failed - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }
             });
+
             me.closeMenu();
         },
         _onClickDownloadFile: function (event, data) {

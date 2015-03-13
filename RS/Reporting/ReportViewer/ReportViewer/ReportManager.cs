@@ -414,13 +414,30 @@ namespace Forerunner.SSRS.Manager
             return rs.GetPermissions(path);
         }
 
+        private ItemTypeEnum GetItemType(string path)
+        {
+            rs.Credentials = GetCredentials();
+            return rs.GetItemType(path);
+        }
         public byte[] GetCatalogResource(string path, out string mimetype)
         {
             rs.Credentials = GetCredentials();
             return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
         }
-        public String DeleteCatalogItem(string path)
+        public String DeleteCatalogItem(string path, string saveFolderDelete)
         {
+            bool needFolderCheck = Convert.ToBoolean(saveFolderDelete);
+
+            if (needFolderCheck == true && GetItemType(path) == ItemTypeEnum.Folder)
+            {
+                var items = callListChildren(path, false);
+                if (items.Length != 0)
+                {
+                    string warningMsg = "folderNotEmpty";
+                    return getReturnWarning(warningMsg);
+                }
+            }
+
             rs.Credentials = GetCredentials();
             rs.DeleteItem(path);
             return getReturnSuccess();
@@ -618,58 +635,57 @@ namespace Forerunner.SSRS.Manager
             return getReturnSuccess();
         }
 
-public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
-{
-    Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
-    List<CatalogItem> list = new List<CatalogItem>();
-    CatalogItem[] items = callListChildren(path, isRecursive);
-    bool added = false;
+        public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
+        {
+            Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem[] items = callListChildren(path, isRecursive);
+            bool added = false;
 
-    foreach (CatalogItem ci in items)
-    {
-        added = false;
-        if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport  || showAll) && (!ci.Hidden || showHidden))
-        {
-            list.Add(ci);
-            added = true;
-        }
-        if (RecurseFolders)
-        {
-            if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
+            foreach (CatalogItem ci in items)
             {
-                CatalogItem[] folder = callListChildren(ci.Path, false);
-
-                foreach (CatalogItem fci in folder)
+                added = false;
+                if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport || showAll) && (!ci.Hidden || showHidden))
                 {
-                    if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
-                    {
-                        if (!ci.Hidden || showHidden)
-                        {
-                            list.Add(ci);
-                            added = true;
-                            break;
-                        }
-                    }
-                }
-                if (!added)
-                {
-                    // We mark this as hidden here because it will show up in the admin view and be hidden in the normal view
-                    ci.Hidden = true;
                     list.Add(ci);
                     added = true;
                 }
+                if (RecurseFolders)
+                {
+                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && (!ci.Hidden || showHidden) && !added)
+                    {
+                        CatalogItem[] folder = callListChildren(ci.Path, false);
+
+                        foreach (CatalogItem fci in folder)
+                        {
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site || fci.Type == ItemTypeEnum.Resource || fci.Type == ItemTypeEnum.LinkedReport || showAll)
+                            {
+                                if (!ci.Hidden || showHidden)
+                                {
+                                    list.Add(ci);
+                                    added = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!added)
+                        {
+                            // We mark this as hidden here because it will show up in the admin view and be hidden in the normal view
+                            ci.Hidden = true;
+                            list.Add(ci);
+                            added = true;
+                        }
+                    }
+                }
+                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
+                {
+                    list.Add(ci);
+                }
+
+
             }
+            return list.ToArray();
         }
-        else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site || showAll) && (!ci.Hidden || showHidden) && !added)
-        {
-            list.Add(ci);
-        }
-
-
-    }
-    return list.ToArray();
-}
-
 
         private static Impersonator tryImpersonate(Credentials DBCredentials)
         {

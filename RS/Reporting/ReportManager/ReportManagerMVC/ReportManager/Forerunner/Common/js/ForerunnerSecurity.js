@@ -621,10 +621,7 @@ $(function () {
             return returnStr === "" ? locData.security.home : returnStr;
         },
         _getItemName: function (curPath) {
-            var index = curPath.lastIndexOf("/"),
-                str = curPath.substring(index + 1);
-
-            return str === "" ? locData.security.home : str;
+            return forerunner.helper.getItemName(curPath, locData.security.home);
         }
     });
 });

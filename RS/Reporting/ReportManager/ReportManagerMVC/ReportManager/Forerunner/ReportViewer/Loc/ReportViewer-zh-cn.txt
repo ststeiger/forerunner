@@ -289,7 +289,9 @@
     "properties":"属性",
     "security":"安全性",
     "linkedReport":"链接报表",
-    "downloadFile":"下载文件"
+    "downloadFile":"下载文件",
+    "deleteConfirm":"确定要删除 {0} 吗?",
+    "folderNotEmpty":"该文件夹中包含子项，您不能删除"
   },
   "common": {
     "submit":"提交",
@@ -346,7 +348,7 @@
     "overwriteTitle":"覆盖失败"
   },
   "newFolder": {
-   "title":"新建文件夹",
+    "title":"新建文件夹",
     "description":"在{0}下新建文件夹",
     "name":"名称",
     "descriptionLabel":"描述",

@@ -14,7 +14,7 @@
 .fr-core-input { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 13px; color: black; background-color: white; margin: 0; height: 22px; line-height:22px; border: 1px solid #424242; -webkit-appearance: none; box-shadow: 0px 0px 7px #545454 inset; }
 
 .fr-core-dialog-layout { width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; right: 0px; z-index: 5; }
-.fr-core-dialog-innerPage { overflow-y: auto; overflow-x: hidden; background-color: #ffffff; top:64px; border: 1px solid #035378; box-shadow: 0px 0px 15px #696969; position: relative; -webkit-appearance: none; }
+.fr-core-dialog-innerPage { overflow-y: auto; overflow-x: hidden; background-color: #ffffff; top:60px; border: 1px solid #035378; box-shadow: 0px 0px 15px #696969; position: relative; -webkit-appearance: none; }
 .fr-core-dialog-header { font-size: 15pt; font-weight: bold; color: #ffffff; position: relative; width: 100%; display: inline-block; text-align: left; background: #537eb4; /* Old browsers */ background: -moz-linear-gradient(top, #537eb4 0%, #3c5d9c 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#537eb4), color-stop(100%,#3c5d9c)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* IE10+ */ background: linear-gradient(to bottom, #537eb4 0%,#3c5d9c 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */ }
     .fr-core-dialog-header .fr-core-dialog-icon-container{ height: 100%; margin: 0 17px 0 11px; vertical-align: top; display: inline-block; }
     .fr-core-dialog-header .fr-core-dialog-icon-inner{ height: 45px; vertical-align: middle; display: table-cell; }
@@ -45,15 +45,16 @@
 .fr-watermark { color: lightgrey; }
 
 /* (E.g., for phones, landscape) */
-@media only screen and (max-height : 340px) {
+@media only screen and (max-height : 340px) and (orientation: landscape) {
+  .fr-core-dialog-innerPage { top: 20px; }
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
-  .fr-core-dialog-form { margin:4px 0px 25px 8px; max-height:250px; }
+  .fr-core-dialog-form { margin:4px 0px 25px 8px; max-height:210px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
-  .fr-core-dialog-form { margin:4px 0px 25px 4px; max-height:300px; }
+  .fr-core-dialog-form { margin:4px 0px 25px 4px; max-height:390px; }
   .fr-core-dialog-header .fr-core-dialog-title{ max-width:150px; }
 }
 

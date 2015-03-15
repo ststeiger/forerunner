@@ -372,5 +372,17 @@ namespace Forerunner.SSRS.Management
                 // sharepoint not have this Api
             }
         }
+
+        public void MoveItem(string curFullPath, string newFullPath)
+        {
+            if (IsNative)
+            {
+                RSNative.MoveItem(curFullPath, newFullPath);
+            }
+            else
+            {
+                RSSPS.MoveItem(curFullPath, newFullPath);
+            }
+        }
     }
 }

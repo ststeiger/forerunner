@@ -181,6 +181,7 @@
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
+    <Content Include="Forerunner\ReportExplorer\css\MoveItem.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
     <Content Include="Forerunner\Common\css\ForerunnerSecurity.css" />
     <Content Include="Forerunner\Common\css\MessageBox.css" />
@@ -205,6 +206,7 @@
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
     <Content Include="Forerunner\Common\js\DialogBase.js" />
     <Content Include="Forerunner\Common\js\catalogTree.js" />
+    <Content Include="Forerunner\ReportExplorer\js\MoveItem.js" />
     <Content Include="Forerunner\Common\js\Viewerbase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />

@@ -292,7 +292,8 @@
     "linkedReport":"Rapport Lié",
     "downloadFile":"Télécharger le fichier",
     "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
+    "move":"Move"
   },
   "common": {
     "submit":"Soumettre",
@@ -355,5 +356,10 @@
     "descriptionLabel":"Description",
     "hide":"Caché dans le mode normal",
     "fileExists":"Un dossier ce nom existe déjà"
+  },
+  "move": {
+    "title":"Move",
+    "location":"Location",
+    "prompt":"Select the folder that you want to include this item"
   }
 }

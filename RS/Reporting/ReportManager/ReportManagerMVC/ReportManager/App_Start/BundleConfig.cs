@@ -46,7 +46,8 @@ namespace ReportManager
                 "~/Forerunner/ReportExplorer/css/NewFolder.css",
                 "~/Forerunner/ReportExplorer/css/UserSettings.css",
                 "~/Forerunner/ReportExplorer/css/ManageMySubscriptions.css",
-                "~/Forerunner/ReportExplorer/css/LinkedReport.css"                
+                "~/Forerunner/ReportExplorer/css/LinkedReport.css",
+                "~/Forerunner/ReportExplorer/css/MoveItem.css"
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/Lib/jsTree/themes/default/bundle").Include(

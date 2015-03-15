@@ -64,8 +64,7 @@ $(function () {
 
             // Properties
             me._$properties.off("click");
-            if (!me.permissions["Update Properties"] &&
-                propertyListMap[me.options.catalogItem.Type]) {
+            if (!me.permissions["Update Properties"] && propertyListMap[me.options.catalogItem.Type]) {
                 me._$properties.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$properties.on("click", function (event, data) {
@@ -86,6 +85,7 @@ $(function () {
                 me._$downloadFile.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // Forerunner Security
             me._$security.off("click");
             if (!me.permissions["Update Security Policies"]) {
                 me._$security.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
@@ -96,6 +96,7 @@ $(function () {
                 me._$security.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // Linked Report
             me._$linkedReport.off("click").hide();
             // Only show the linked report entry on the normal report context menu
             if (catalog.Type === itemType.report || catalog.Type === itemType.linkedReport) {
@@ -112,6 +113,17 @@ $(function () {
                 me._$linkedReport.hide();
             }
 
+            me._$moveItem.off("click");
+            if (!me.permissions["Update Properties"]) {
+                me._$moveItem.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
+            } else {
+                me._$moveItem.on("click", function (event, data) {
+                    me._onClickMoveItem.apply(me, arguments);
+                });
+
+                me._$moveItem.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+            }
+
             // Call contextMenuBase._init()
             me._super();
         },
@@ -122,15 +134,17 @@ $(function () {
             me._super();
 
             me.addHeader();
-            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
-            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
-            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
+
+            me._$moveItem = me.addMenuItem("fr-ctx-move-id", contextMenu.move);
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
+            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
+            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
         },
         _onClickDelete: function (event, data) {
             var me = this;
-            var itemName = forerunner.helper.getItemName(me.options.catalogItem.Path);
+            var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
             if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
             
             var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
@@ -240,6 +254,24 @@ $(function () {
 
             $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
             $linkedReportDlg.forerunnerLinkedReport("openDialog");
+
+            me.closeMenu();
+        },
+        _onClickMoveItem: function (event, data) {
+            var me = this;
+
+            var $moveItemDlg = me.options.$appContainer.find(".fr-move-section");
+            if(!$moveItemDlg || $moveItemDlg.length === 0) {
+                console.log("Error - fr-move-section not found");
+                return;
+            }
+
+            $moveItemDlg.forerunnerMoveItem("setData", me.options.catalogItem);
+            $moveItemDlg.forerunnerMoveItem("openDialog");
+
+            $moveItemDlg.one(events.forerunnerMoveItemClose(), function (event, data) {
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
 
             me.closeMenu();
         }

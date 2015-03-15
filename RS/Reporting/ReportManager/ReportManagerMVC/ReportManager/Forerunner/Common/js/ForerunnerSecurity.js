@@ -216,7 +216,7 @@ $(function () {
         /**
          * Show the security modal dialog.
          *
-         * @function $.forerunner.forerunnerProperties#openDialog
+         * @function $.forerunner.forerunnerSecurity#openDialog
          */
         openDialog: function () {
             var me = this;
@@ -232,7 +232,7 @@ $(function () {
         /**
          * Close the security modal dialog.
          *
-         * @function $.forerunner.forerunnerProperties#closeDialog
+         * @function $.forerunner.forerunnerSecurity#closeDialog
          */
         closeDialog: function () {
             var me = this;
@@ -612,16 +612,18 @@ $(function () {
             return html.join('');
         },
         _getParentName: function (curPath) {
-            var index = curPath.lastIndexOf("/"),
-                strTemp = curPath.substring(0, index);
+            //var index = curPath.lastIndexOf("/"),
+            //    strTemp = curPath.substring(0, index);
                 
-            index = strTemp.lastIndexOf("/");
-            var returnStr = strTemp.substring(index + 1);
+            //index = strTemp.lastIndexOf("/");
+            //var returnStr = strTemp.substring(index + 1);
 
-            return returnStr === "" ? locData.security.home : returnStr;
+            //return returnStr === "" ? locData.security.home : returnStr;
+            var parentPath = forerunner.helper.getParentPath(curPath);
+            return parentPath === null ? "/" : parentPath;
         },
         _getItemName: function (curPath) {
-            return forerunner.helper.getItemName(curPath, locData.security.home);
+            return forerunner.helper.getCurrentItemName(curPath, locData.security.home);
         }
     });
 });

@@ -61,6 +61,13 @@ namespace Forerunner.SSRS.Manager
         public List<SiteCatalog> children = null;
     }
 
+    public class MoveItemData
+    {
+        public string curFullPath { get; set; }
+        public string newFullPath { get; set; }
+        public string instance { set; get; }
+    }
+
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
@@ -2561,6 +2568,13 @@ namespace Forerunner.SSRS.Manager
                     parentNode.children.Add(child);
                 }
             }
+        }
+
+        public string MoveItem(MoveItemData data)
+        {
+            rs.Credentials = GetCredentials();
+            rs.MoveItem(data.curFullPath, data.newFullPath);
+            return getReturnSuccess();
         }
 
         protected virtual void Dispose(bool disposing)

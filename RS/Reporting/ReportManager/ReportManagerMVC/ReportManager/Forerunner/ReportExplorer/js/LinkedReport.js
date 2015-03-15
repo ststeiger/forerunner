@@ -82,13 +82,13 @@ $(function () {
 
             me.element.append($container);
 
-            //add form validation
-            me.$prompt = me.element.find(".fr-linked-prompt");
             me.$form = me.element.find(".fr-linked-form");
 
-            me.$name = me.element.find(".fr-linked-name");
-            me.$location = me.element.find(".fr-linked-location");
-            me.$treeLabel = me.element.find(".fr-linked-tree-label");
+            me.$linkContainer = me.element.find(".fr-linked-container");            
+            me.$prompt = me.$linkContainer.find(".fr-linked-prompt");
+            me.$name = me.$linkContainer.find(".fr-linked-name");
+            me.$location = me.$linkContainer.find(".fr-linked-location");
+            me.$treeLabel = me.$linkContainer.find(".fr-linked-tree-label");
 
             me._bindEvents();
         },
@@ -144,12 +144,13 @@ $(function () {
         },
         _openPopup: function () {
             var me = this;
-
+            me.initHeight = me.initHeight || me.$linkContainer.height();
             //calculate the tree container width
             //handle border width
-            var width = me.$location.width() + 4 + 24;
+            var width = me.$location.width() + 24;
+            var visible = me.$location.catalogTree("toggleCatalog", width);
 
-            me.$location.catalogTree("toggleCatalog", width);
+            visible ? me.$linkContainer.css({ height: '220px' }) : me.$linkContainer.css({ height: me.initHeight });
         },
         setData: function (catalogItem){
             var me = this,
@@ -199,6 +200,7 @@ $(function () {
             me.$location.on(events.forerunnerCatalogSelected(), function (e, data) {
                 var location = data.path;
                 me.$location.attr("title", location).val(location).valid();
+                me.$linkContainer.css({ height: me.initHeight });
             });
         },
         /**
@@ -225,6 +227,9 @@ $(function () {
 
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+
+            //make sure the $linkContainer is reset to its original height when dialog close
+            me.initHeight && me.$linkContainer.css({ height: me.initHeight });
         },
         _getReportLink: function () {
             var me = this;
@@ -325,6 +330,6 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
-        },
+        }
     });
 });

@@ -628,6 +628,19 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._linkedReportDialog = $dlg;
+
+            //init moveItem dialog
+            $dlg = me.options.$appContainer.find(".fr-move-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-move-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerMoveItem({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    reportManagerAPI: me.options.reportManagerAPI
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._moreItemDialog = $dlg;
         },
         /**
          * Show the create dashboard modal dialog.

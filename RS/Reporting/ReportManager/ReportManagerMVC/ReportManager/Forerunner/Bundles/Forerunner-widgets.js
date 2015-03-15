@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/History.js
+///#source 1 1 /Forerunner/Common/js/History.js
 /**
  * @file
  *  Defines the forerunner router and history widgets
@@ -5084,6 +5084,9 @@ $(function () {
             }
 
             me.$catalogTree.toggleClass("fr-core-hidden");
+
+            //return tree dropdown visible status
+            return !me.$catalogTree.hasClass("fr-core-hidden");
         },
         _getCatalogTreeData: function (rootPath) {
             var me = this;
@@ -7073,7 +7076,7 @@ $(function () {
         /**
          * Show the security modal dialog.
          *
-         * @function $.forerunner.forerunnerProperties#openDialog
+         * @function $.forerunner.forerunnerSecurity#openDialog
          */
         openDialog: function () {
             var me = this;
@@ -7089,7 +7092,7 @@ $(function () {
         /**
          * Close the security modal dialog.
          *
-         * @function $.forerunner.forerunnerProperties#closeDialog
+         * @function $.forerunner.forerunnerSecurity#closeDialog
          */
         closeDialog: function () {
             var me = this;
@@ -7469,16 +7472,18 @@ $(function () {
             return html.join('');
         },
         _getParentName: function (curPath) {
-            var index = curPath.lastIndexOf("/"),
-                strTemp = curPath.substring(0, index);
+            //var index = curPath.lastIndexOf("/"),
+            //    strTemp = curPath.substring(0, index);
                 
-            index = strTemp.lastIndexOf("/");
-            var returnStr = strTemp.substring(index + 1);
+            //index = strTemp.lastIndexOf("/");
+            //var returnStr = strTemp.substring(index + 1);
 
-            return returnStr === "" ? locData.security.home : returnStr;
+            //return returnStr === "" ? locData.security.home : returnStr;
+            var parentPath = forerunner.helper.getParentPath(curPath);
+            return parentPath === null ? "/" : parentPath;
         },
         _getItemName: function (curPath) {
-            return forerunner.helper.getItemName(curPath, locData.security.home);
+            return forerunner.helper.getCurrentItemName(curPath, locData.security.home);
         }
     });
 });
@@ -8949,8 +8954,7 @@ $(function () {
 
             // Properties
             me._$properties.off("click");
-            if (!me.permissions["Update Properties"] &&
-                propertyListMap[me.options.catalogItem.Type]) {
+            if (!me.permissions["Update Properties"] && propertyListMap[me.options.catalogItem.Type]) {
                 me._$properties.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$properties.on("click", function (event, data) {
@@ -8971,6 +8975,7 @@ $(function () {
                 me._$downloadFile.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // Forerunner Security
             me._$security.off("click");
             if (!me.permissions["Update Security Policies"]) {
                 me._$security.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
@@ -8981,6 +8986,7 @@ $(function () {
                 me._$security.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            // Linked Report
             me._$linkedReport.off("click").hide();
             // Only show the linked report entry on the normal report context menu
             if (catalog.Type === itemType.report || catalog.Type === itemType.linkedReport) {
@@ -8997,6 +9003,17 @@ $(function () {
                 me._$linkedReport.hide();
             }
 
+            me._$moveItem.off("click");
+            if (!me.permissions["Update Properties"]) {
+                me._$moveItem.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
+            } else {
+                me._$moveItem.on("click", function (event, data) {
+                    me._onClickMoveItem.apply(me, arguments);
+                });
+
+                me._$moveItem.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
+            }
+
             // Call contextMenuBase._init()
             me._super();
         },
@@ -9007,15 +9024,17 @@ $(function () {
             me._super();
 
             me.addHeader();
-            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
-            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
-            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
+
+            me._$moveItem = me.addMenuItem("fr-ctx-move-id", contextMenu.move);
             me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
+            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
+            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
         },
         _onClickDelete: function (event, data) {
             var me = this;
-            var itemName = forerunner.helper.getItemName(me.options.catalogItem.Path);
+            var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
             if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
             
             var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
@@ -9125,6 +9144,24 @@ $(function () {
 
             $linkedReportDlg.forerunnerLinkedReport("setData", me.options.catalogItem);
             $linkedReportDlg.forerunnerLinkedReport("openDialog");
+
+            me.closeMenu();
+        },
+        _onClickMoveItem: function (event, data) {
+            var me = this;
+
+            var $moveItemDlg = me.options.$appContainer.find(".fr-move-section");
+            if(!$moveItemDlg || $moveItemDlg.length === 0) {
+                console.log("Error - fr-move-section not found");
+                return;
+            }
+
+            $moveItemDlg.forerunnerMoveItem("setData", me.options.catalogItem);
+            $moveItemDlg.forerunnerMoveItem("openDialog");
+
+            $moveItemDlg.one(events.forerunnerMoveItemClose(), function (event, data) {
+                me.options.$reportExplorer.reportExplorer("refresh");
+            });
 
             me.closeMenu();
         }
@@ -10064,6 +10101,19 @@ $(function () {
                 me.options.$appContainer.append($dlg);
             }
             me._linkedReportDialog = $dlg;
+
+            //init moveItem dialog
+            $dlg = me.options.$appContainer.find(".fr-move-section");
+            if ($dlg.length === 0) {
+                $dlg = new $("<div class='fr-move-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.forerunnerMoveItem({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element,
+                    reportManagerAPI: me.options.reportManagerAPI
+                });
+                me.options.$appContainer.append($dlg);
+            }
+            me._moreItemDialog = $dlg;
         },
         /**
          * Show the create dashboard modal dialog.
@@ -10783,13 +10833,13 @@ $(function () {
 
             me.element.append($container);
 
-            //add form validation
-            me.$prompt = me.element.find(".fr-linked-prompt");
             me.$form = me.element.find(".fr-linked-form");
 
-            me.$name = me.element.find(".fr-linked-name");
-            me.$location = me.element.find(".fr-linked-location");
-            me.$treeLabel = me.element.find(".fr-linked-tree-label");
+            me.$linkContainer = me.element.find(".fr-linked-container");            
+            me.$prompt = me.$linkContainer.find(".fr-linked-prompt");
+            me.$name = me.$linkContainer.find(".fr-linked-name");
+            me.$location = me.$linkContainer.find(".fr-linked-location");
+            me.$treeLabel = me.$linkContainer.find(".fr-linked-tree-label");
 
             me._bindEvents();
         },
@@ -10845,12 +10895,13 @@ $(function () {
         },
         _openPopup: function () {
             var me = this;
-
+            me.initHeight = me.initHeight || me.$linkContainer.height();
             //calculate the tree container width
             //handle border width
-            var width = me.$location.width() + 4 + 24;
+            var width = me.$location.width() + 24;
+            var visible = me.$location.catalogTree("toggleCatalog", width);
 
-            me.$location.catalogTree("toggleCatalog", width);
+            visible ? me.$linkContainer.css({ height: '220px' }) : me.$linkContainer.css({ height: me.initHeight });
         },
         setData: function (catalogItem){
             var me = this,
@@ -10900,6 +10951,7 @@ $(function () {
             me.$location.on(events.forerunnerCatalogSelected(), function (e, data) {
                 var location = data.path;
                 me.$location.attr("title", location).val(location).valid();
+                me.$linkContainer.css({ height: me.initHeight });
             });
         },
         /**
@@ -10926,6 +10978,9 @@ $(function () {
 
             me._trigger(events.close, null, { $forerunnerLinkedReport: me.element, path: me.curPath });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+
+            //make sure the $linkContainer is reset to its original height when dialog close
+            me.initHeight && me.$linkContainer.css({ height: me.initHeight });
         },
         _getReportLink: function () {
             var me = this;
@@ -11026,7 +11081,7 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
-        },
+        }
     });
 });
 ///#source 1 1 /Forerunner/ReportExplorer/js/UploadFile.js
@@ -11357,6 +11412,224 @@ $(function () {
             me._super();
         }
     }); //$.widget
+});
+///#source 1 1 /Forerunner/ReportExplorer/js/MoveItem.js
+/**
+ * @file Contains the forerunnerMoveItem widget.
+ */
+var forerunner = forerunner || {};
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    /**
+    * Widget used to support item move
+    *
+    * @namespace $.forerunner.forerunnerMoveItem
+    * @prop {Object} options - The options for the forerunnerMoveItem dialog
+    * @prop {Object} options.$reportExplorer - Report viewer widget
+    * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+    * @prop {String} options.rsInstance - Optional, Report service instance name
+    *
+    * @example
+    * $("#dialog").forerunnerMoveItem({
+    *     $appContainer: me.options.$appContainer,
+    *     $reportExplorer: me.$explorer
+    * });
+    */
+    $.widget(widgets.getFullname(widgets.forerunnerMoveItem), {
+        options: {
+            $appContainer: null,
+            $reportExplorer: null,
+            rsInstance: null,
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+            var common = locData.common,
+                move = locData.move;
+
+            me.curPath = null;
+            me.element.children().remove();
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', move.title, "fr-move-cancel", common.cancel);
+
+            var $container = new $(
+               "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                   headerHtml +
+                "<div class='fr-move-container'>" +
+                    "<div class='fr-move-prompt fr-core-dialog-description'>" + move.prompt + "</div>" +
+                    // Dropdown container
+                    "<div class='fr-move-input-container fr-move-dropdown-container'>" +
+                        "<label class='fr-move-label fr-move-tree-label' >" + move.location + "</label>" +
+	                    "<input type='text' name='location' class='fr-core-input fr-move-input fr-move-location fr-core-cursorpointer'" +
+                            " readonly='true' required='true' allowblank='false' nullable='false'/>" +
+	                    "<div class='fr-move-dropdown-iconcontainer fr-core-cursorpointer'>" +
+		                    "<div class='fr-move-dropdown-icon'></div>" +
+	                    "</div>" +
+                    "</div>" +
+                "</div>" +
+                "<div class='fr-core-dialog-submit-container fr-move-submit-container'>" +
+                    "<div class='fr-core-center'>" +
+                        "<input type='button' class='fr-move-submit fr-core-dialog-button' value='" + common.submit + "' />" +
+                        "<input type='button' class='fr-move-cancel fr-core-dialog-button' value='" + common.cancel + "' />" +
+                    "</div>" +
+                "</div>" +
+               "</div>");
+
+            me.element.append($container);
+            me.$moveContainer = me.element.find(".fr-move-container");
+            me.$location = me.$moveContainer.find(".fr-move-location");
+
+            me._bindEvents();
+        },
+        _bindEvents: function () {
+            var me = this;
+
+            me.$location.on('click', function () {
+                me._openPopup.call(me)
+            });
+
+            me.element.find(".fr-move-dropdown-icon").on("click", function () {
+                me._openPopup.call(me)
+            });
+
+            me.element.find(".fr-move-submit").on("click", function () {
+                me._submit();
+            });
+
+            me.element.find(".fr-move-cancel").on("click", function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submit();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+        },
+        setData: function (catalogItem) {
+            var me = this;
+
+            me.curPath = catalogItem.Path;
+            me.Name = catalogItem.Name;
+            me.Type = catalogItem.Type;
+
+            var parentPath = forerunner.helper.getParentPath(me.curPath);
+            parentPath = (parentPath === null || parentPath === "") ? "/" : parentPath;
+            me.$location.val(parentPath);
+
+            var catalogTreeOptions = {
+                rootPath: "/",
+                type: "subCatalog",
+                $appContainer: me.options.$appContainer,
+                reportManagerAPI: me.options.reportManagerAPI,
+                containerClass: "fr-move-popup-container",
+                catalogTreeClass: "fr-move-tree-container",
+                rsInstance: me.options.rsInstance
+            };
+
+            //initialized catalog tree widget on the location input element
+            me.$location.catalogTree(catalogTreeOptions);
+
+            //after the item is selected this event will be triggered
+            me.$location.off(events.forerunnerCatalogSelected());
+            me.$location.on(events.forerunnerCatalogSelected(), function (e, data) {
+                var location = data.path;
+                me.$location.attr("title", location).val(location);
+                //here me.initHeight already exist,
+                //it will be set when open the tree dropdown for the first time
+                me.$moveContainer.css({ height: me.initHeight });
+            });
+        },
+        _openPopup: function () {
+            var me = this;
+            me.initHeight = me.initHeight || me.$moveContainer.height();
+            //calculate the tree container width, handle border width
+            var width = me.$location.width() + 24;
+            var visible = me.$location.catalogTree("toggleCatalog", width);
+            //expand fr-move-container height to 200px to show the tree dropdown
+            visible ? me.$moveContainer.css({ height: '200px' }): me.$moveContainer.css({ height: me.initHeight });
+        },
+        /**
+         * Show the forerunnerMoveItem modal dialog.
+         *
+         * @function $.forerunner.forerunnerMoveItem#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+
+            forerunner.dialog.dialogLock = true;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        /**
+         * Close the forerunnerMoveItem modal dialog.
+         *
+         * @function $.forerunner.forerunnerMoveItem#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.dialogLock = false;
+            me._trigger(events.close);
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //make sure the moveContainer is reset to its original height when dialog close
+            me.initHeight && me.$moveContainer.css({ height: me.initHeight });
+        },
+        _submit: function (callback) {
+            var me = this,
+                postData = me._generatePostData();
+
+            if (postData === null) {
+                me.closeDialog();
+                return;
+            }
+
+            forerunner.ajax.ajax({
+                type: "POST",
+                dataType: "JSON",
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/MoveItem",
+                data: postData,
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
+
+                        console.log('Set linked report wrong.', data.Exception);
+                        return;
+                    }
+
+                    me.closeDialog();
+                },
+                fail: function (data) {
+                },
+            });
+        },
+        _generatePostData: function () {
+            var me = this,
+                data = {
+                    curFullPath: me.curPath,
+                    newFullPath: null,
+                    instance: me.options.rsInstance
+                },
+                location = $.trim(me.$location.val()),
+                newLocation = location === '/' ? (location + me.Name) : (location + '/' + me.Name);
+
+            if (data.curFullPath === newLocation) return null;
+
+            data.newFullPath = newLocation;
+            return data;
+        }
+    });
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportRender.js
 // Assign or create the single globally scoped variable

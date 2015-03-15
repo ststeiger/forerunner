@@ -291,7 +291,8 @@
     "linkedReport":"鏈接報表",
     "downloadFile":"下載文件",
     "deleteConfirm":"確定要刪除 {0} 嗎?",
-    "folderNotEmpty":"該文件夾中包含子項，您不能刪除"
+    "folderNotEmpty":"該文件夾中包含子項，您不能刪除",
+    "move":"移動"
   },
   "common": {
     "submit":"提交",
@@ -354,5 +355,10 @@
     "descriptionLabel":"描述",
     "hide":"在普通模式下隱藏",
     "fileExists":"同名文件夾已經存在"
+  },
+  "move": {
+    "title":"移動",
+    "location":"位置",
+    "prompt":"選擇要包含此項的文件夾"
   }
 }

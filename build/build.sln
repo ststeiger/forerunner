@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		doit.cmd = doit.cmd
 		Forerunner.cmd = Forerunner.cmd
 		FR-DemoServer.cmd = FR-DemoServer.cmd
+		getFullyQualifiedFilePath.cmd = getFullyQualifiedFilePath.cmd
 		jonto-i7.cmd = jonto-i7.cmd
 		mail.css = mail.css
 		MASON.cmd = MASON.cmd

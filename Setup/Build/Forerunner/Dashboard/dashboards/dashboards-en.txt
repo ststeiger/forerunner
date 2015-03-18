@@ -1,7 +1,0 @@
-﻿{
-  "templates": {
-    "2Up1Down": "2 Up, 1 Down",
-    "2Up2Down": "2 Up, 2 Down",
-    "SideBySide": "Side by Side"
-  }
-}

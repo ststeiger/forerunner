@@ -88,6 +88,9 @@ echo Creating ForerunnerSDK.%BUILD_NUMBER%.nupkg... >> %NUGET_PACKAGE_LOG%
 pushd %DEST%
 %NUGET_TOOL% pack %DEST%\ForerunnerSDK.nuspec -Version %BUILD_NUMBER% >> %NUGET_PACKAGE_LOG%
 popd
+if ERRORLEVEL 1 (
+	goto :Error
+)
 
 echo CreateNugetPackage SUCCEEDED. >> %NUGET_PACKAGE_LOG%
 echo CreateNugetPackage SUCCEEDED. >> %BUILD_LOG%

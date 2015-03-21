@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05CD3E5C-A8F2-45D0-9B9F-1F267AF76598}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		buildfailed.htm.template.cmd = buildfailed.htm.template.cmd
+		buildPackage.cmd = buildPackage.cmd
+		buildpassed.htm.template.cmd = buildpassed.htm.template.cmd
+		createMobilizerSetup.cmd = createMobilizerSetup.cmd
+		createMobilizerUpdateSetup.cmd = createMobilizerUpdateSetup.cmd
+		createNugetPackage.cmd = createNugetPackage.cmd
+		Daily Build.xml = Daily Build.xml
+		Forerunner.cmd = Forerunner.cmd
+		FR-DemoServer.cmd = FR-DemoServer.cmd
+		getFullyQualifiedFilePath.cmd = getFullyQualifiedFilePath.cmd
+		jonto-i7.cmd = jonto-i7.cmd
+		mail.css = mail.css
+		MASON.cmd = MASON.cmd
+		postbuild.cmd = postbuild.cmd
+		readme.txt = readme.txt
+		sendmail.cmd = sendmail.cmd
+		sendmail.ps1 = sendmail.ps1
+		sign.cmd = sign.cmd
+		sign.ps1 = sign.ps1
+		variables.cmd = variables.cmd
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

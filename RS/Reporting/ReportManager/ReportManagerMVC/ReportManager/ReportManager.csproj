@@ -487,6 +487,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="Global.asax" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
+    <Content Include="sdk\readme.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

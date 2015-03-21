@@ -3346,13 +3346,6 @@ $(function () {
                 });
             }
              
-            if (!me.pages[newPageNum]) {
-                me.pages[newPageNum] = new reportPage(data);
-            }
-            else {
-                me.pages[newPageNum].reportObj = data;
-            } 
-
             if (!data.SessionID)
                 me.sessionID = "";
             else
@@ -3367,6 +3360,17 @@ $(function () {
             catch (error) {
                 me.numPages = 0;
             } 
+
+            if (me.numPages !== 0 && newPageNum > me.numPages) {
+                newPageNum = me.numPages;
+            }
+
+            if (!me.pages[newPageNum]) {
+                me.pages[newPageNum] = new reportPage(data);
+            }
+            else {
+                me.pages[newPageNum].reportObj = data;
+            }
 
             if (!loadOnly) {
 

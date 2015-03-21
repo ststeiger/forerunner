@@ -20,7 +20,12 @@ for /F "tokens=1-4 delims=." %%i in (%~dp0\..\build.txt) do (
 
 set /A BUILD_BUILD+=1
 set BUILD_RELEASE=%DROP_ROOT%\%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
+
 mkdir %BUILD_RELEASE%
+if not exist "%SECRETS_ROOT%" (
+	mkdir "%SECRETS_ROOT%"
+)
+
 set BUILD_LOG=%BUILD_RELEASE%\build.log
 echo %DATE% >> %BUILD_LOG%
 echo %TIME% >> %BUILD_LOG%
@@ -88,11 +93,6 @@ if ERRORLEVEL 1 (
 
 echo Running PostBuild >> %BUILD_LOG%
 call %~dp0postbuild.cmd %BUILD_RELEASE% %BUILD_LOG%
-if ERRORLEVEL 1 (
-	goto :Error
-)
-echo Running PostBuild2 >> %BUILD_LOG%
-call %~dp0postbuild2.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

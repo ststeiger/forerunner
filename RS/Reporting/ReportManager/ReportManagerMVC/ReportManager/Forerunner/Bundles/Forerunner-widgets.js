@@ -1082,8 +1082,7 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
             
-            if (me.$reportAreaContainer) {
-                 
+            if (me.$reportAreaContainer) {                 
                 me.$reportAreaContainer.css("display", "block");
                 me.$reportAreaContainer.css("width", $(window).width());
                 me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);

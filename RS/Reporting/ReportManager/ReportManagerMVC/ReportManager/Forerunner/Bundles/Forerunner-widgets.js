@@ -1082,25 +1082,13 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
             
-            if (!me._zoomOveride) {
-                if (me.$reportAreaContainer) {
+            if (me.$reportAreaContainer) {
                  
-                    me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height());
-                    me.$reportAreaContainer.css("overflow", "auto");
-                    me._ScrollInner = true;
-                }
-            }
-            else {
-                if (me.$reportAreaContainer) {
-                    me.$reportAreaContainer.css("display", "table-cell");
-                    me.$reportAreaContainer.css("width", "auto");
-                    me.$reportAreaContainer.css("height", "auto");
-                    me.$reportAreaContainer.css("overflow", "visible");
-                    me.element.hide().show(0);
-                    me._ScrollInner = true;
-                }
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);
+                me.$reportAreaContainer.css("overflow", "auto");
+                me._ScrollInner = true;
             }
         },
 
@@ -1342,18 +1330,11 @@ $(function () {
             }
 
             if (isEnabled === true) {
-                me._zoomOveride = true;
                 forerunner.device.allowZoom(true);
-                if (me._ScrollInner)
-                    me.scrollReportBody(true);
-
                 me.allowSwipe(false);
             }
             else {
-                me._zoomOveride = false;
                 forerunner.device.allowZoom(false);
-                if (me._ScrollInner)
-                    me.scrollReportBody();
                 me.allowSwipe(true);
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
@@ -10323,11 +10304,11 @@ $(function () {
             imageContainer.attr("style", Style);
             RIContext.$HTMLParent.append(imageContainer);
 
-            RIContext.$HTMLParent.append(me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset));
+            me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
             NewImage.attr("style", imageStyle);//remove display:table-cell; from image style
 
             //Add Highlighting  except IE8
-            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8() ) {
+            if (forerunner.config.getCustomSettingsValue("ImageAreaHighligh", "off") === "on" && !forerunner.device.isMSIE8()) {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
 
@@ -10464,7 +10445,7 @@ $(function () {
            
 
         },
-        _writeAction: function (RIContext, Action, Control) {            
+        _writeAction: function (RIContext, Action, Control) {
             var me = this;
             if (Action.HyperLink) {
                 Control.addClass("fr-core-cursorpointer");
@@ -10506,13 +10487,13 @@ $(function () {
                 offsetLeft = imageConsolidationOffset.Left;
                 offsetTop = imageConsolidationOffset.Top;
             }
-           
+
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
                 me._writeUniqueName($map, "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $map.attr("id", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-              
+
                 for (var i = 0; i < actionImageMapAreas.Count; i++) {
                     var element = actionImageMapAreas.ActionInfoWithMaps[i];
 
@@ -10566,7 +10547,7 @@ $(function () {
                         $map.append($area);
                     }
                 }
-                return $map;
+                RIContext.$HTMLParent.append($map);
             }
         },
         _resizeImage: function (img, sizingType, height, width, maxHeight, maxWidth) {
@@ -10854,7 +10835,7 @@ $(function () {
                 $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {
-                    $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                    //$FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
                 }
                 $FixedColHeader.append(colgroup.clone(true, true));
                 $FixedRowHeader.addClass("fr-render-tablix");
@@ -11366,7 +11347,7 @@ $(function () {
         _writeTooltipInternal: function (tooltip, element, actionElement, offsetLeft, offsetTop) {
             var me = this;
 
-            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && !forerunner.device.isMSIE8() ) {
+            if (tooltip && forerunner.config.getCustomSettingsValue("FancyTooltips", "off").toLowerCase() === "on" && !forerunner.device.isMSIE8()) {
                 // Make DIV and append to page 
                 var $tooltip = $("<div class='fr-tooltip'>" + tooltip + "<div class='fr-arrow'></div></div>");
 

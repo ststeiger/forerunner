@@ -1664,7 +1664,7 @@ $(function () {
                 $Tablix.attr("Style", Style);
                 $Tablix.append(colgroup);
                 if (!forerunner.device.isFirefox()) {
-                    $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                    //$FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
                 }
                 $FixedColHeader.append(colgroup.clone(true, true));
                 $FixedRowHeader.addClass("fr-render-tablix");

@@ -409,26 +409,15 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (!me._zoomOveride) {
-                if (me.$reportAreaContainer) {
+            if (me.$reportAreaContainer) {
 
-                    me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height());
-                    me.$reportAreaContainer.css("overflow", "auto");
-                    me._ScrollInner = true;
-                }
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);
+                me.$reportAreaContainer.css("overflow", "auto");
+                me._ScrollInner = true;
             }
-            else {
-                if (me.$reportAreaContainer) {
-                    me.$reportAreaContainer.css("display", "table-cell");
-                    me.$reportAreaContainer.css("width", "auto");
-                    me.$reportAreaContainer.css("height", "auto");
-                    me.$reportAreaContainer.css("overflow", "visible");
-                    me.element.hide().show(0);
-                    me._ScrollInner = true;
-                }
-            }
+  
         },
         /**       
        * Scolls the report ot the current set locaion or position specified        
@@ -667,18 +656,11 @@ $(function () {
             }
 
             if (isEnabled === true) {
-                me._zoomOveride = true;
                 forerunner.device.allowZoom(true);
-                if (me._ScrollInner)
-                    me.scrollReportBody(true);
-
                 me.allowSwipe(false);
             }
             else {
-                me._zoomOveride = false;
                 forerunner.device.allowZoom(false);
-                if (me._ScrollInner)
-                    me.scrollReportBody();
                 me.allowSwipe(true);
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });

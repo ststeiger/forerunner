@@ -156,15 +156,20 @@ $(function () {
                     }
                 });
             }
+        },
+        _init: function () {
+            var me = this;
+            me._super(me.$reportContainer);
 
             me.options.$appContainer.off(events.saveRDLDone);
             me.options.$appContainer.on(events.saveRDLDone, function (e, data) {
                 me._updateRDLExt(data);
             });
-        },
-        _init: function () {
-            var me = this;
-            me._super(me.$reportContainer);
+
+            me.options.$appContainer.off(events.renameItem);
+            me.options.$appContainer.on(events.renameItem, function (e, data) {
+                me.reportPath = data.newPath || me.reportPath;
+            });
         },
         _checkPermission: function (path) {
             var me = this;

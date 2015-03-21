@@ -1111,8 +1111,34 @@ namespace Forerunner.SSRS.Manager
         }
         public void SetProperty(string path, string properties)
         {
+            List<Property> excludeName = new List<Property>();
+            string newPath = string.Empty;
             Property[] props = JsonUtility.GetPropertiesList(properties);
-            callSetProperties(path, props);
+
+            foreach (Property prop in props)
+            {
+                if (prop.Name != "Name")
+                {
+                    excludeName.Add(prop);
+                }
+                else
+                {
+                    newPath = prop.Value;
+                }
+            }
+
+            if (excludeName.Count() > 0)
+            {
+                callSetProperties(path, excludeName.ToArray());
+            }
+
+            // to rename an item we have to call MoveItem Api
+            //setProperties can't do it since it's read-only for this Api
+            if (newPath != string.Empty)
+            {
+                rs.Credentials = GetCredentials();
+                rs.MoveItem(path, newPath);
+            }
         }
         public string IsFavorite(string path)
         {

@@ -1,4 +1,4 @@
-﻿.fr-properties-section {
+﻿.fr-properties-section, .fr-readonly-span {
     display:none;
 }
 .fr-properties-container {
@@ -43,9 +43,20 @@
     margin-top:2px;
 }
 
-.fr-rdl-label, .fr-description-label, .fr-tag-label {
-    margin: 0 11px 10px 0; 
+.fr-rdl-label, .fr-description-label, .fr-name-label, .fr-tag-label {
+    margin: 0 11px 6px 0; 
     display: block;
+}
+.fr-name-label {
+    display:inline-block;
+}
+.fr-readonly-span {
+    color: gray;
+    font-size: 13px;
+}
+.fr-name-readonly {
+    cursor: default;
+    background-color: #EEE;
 }
 .fr-property-visibility {
     margin: 4px;
@@ -56,8 +67,15 @@
     display: block;
     resize: none;
 } 
-
-.fr-properties-container .fr-sf-text, .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text {
+.fr-name-div {
+    margin-bottom: 8px;
+}
+.fr-properties-container .fr-name-text{ 
+    width:450px;
+}
+.fr-properties-container .fr-sf-text, .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text,
+.fr-properties-container .fr-name-text
+{
     padding: 0 0 0 4px;
 }
 
@@ -65,11 +83,11 @@
     width: 310px;
 }
 
-.fr-properties-form .fr-sf-error-span {
+.fr-properties-form .fr-error-span {
     font-size: 10pt;
     display:block;
 }
-.fr-properties-form, .fr-sf-error {
+.fr-properties-form, .fr-error {
     border-width: thin; 
     border-color: red;
 }
@@ -81,7 +99,7 @@
     .fr-properties-container {
         width:320px;
     }
-    .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text {
+    .fr-properties-container .fr-rdl-text, .fr-properties-container .fr-description-text, .fr-properties-container .fr-tag-text, .fr-properties-container .fr-name-text{ 
         width:300px;
     }
     .fr-properties-container .fr-sf-text {
@@ -94,7 +112,7 @@
         padding:4px;
         font-size:small;
     }
-    .fr-rdl-label, .fr-description-label, .fr-tag-label, .fr-visibility-label{
+    .fr-rdl-label, .fr-description-label, .fr-tag-label, .fr-visibility-label, .fr-name-label{
         font-size:small;
     }
 

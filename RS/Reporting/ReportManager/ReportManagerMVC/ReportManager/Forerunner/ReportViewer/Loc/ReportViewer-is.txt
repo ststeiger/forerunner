@@ -281,7 +281,8 @@
     "title":"eiginleikar ",
     "submit":"leggja",
     "deleteItem":"eyða",
-    "description":"Lýsing"
+    "description":"Lýsing",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"samhengi Matseðill",

@@ -281,7 +281,8 @@
     "title":"プロパティ",
     "submit":"提出する",
     "deleteItem":"削除",
-    "description":"説明"
+    "description":"説明",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"コンテキストメニュー",

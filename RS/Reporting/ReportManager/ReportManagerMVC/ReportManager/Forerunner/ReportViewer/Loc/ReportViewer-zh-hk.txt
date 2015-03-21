@@ -281,7 +281,8 @@
     "title":"屬性",
     "submit":"提交",
     "deleteItem":"刪除",
-    "description":"描述"
+    "description":"描述",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"右鍵菜單",

@@ -281,7 +281,8 @@
     "title":"proprietà",
     "submit":"presentare",
     "deleteItem":"cancellare",
-    "description":"descrizione"
+    "description":"descrizione",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"Context Menu",

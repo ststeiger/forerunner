@@ -281,7 +281,8 @@
     "title":"Egenskaper",
     "submit":"Skicka in",
     "deleteItem":"Radera",
-    "description":"Beskrivning"
+    "description":"Beskrivning",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"snabbmenyn",

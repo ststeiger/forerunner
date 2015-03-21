@@ -35,7 +35,7 @@ $(function () {
         // Report/Linked Report
         report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
     };
 
     /**
@@ -73,6 +73,7 @@ $(function () {
             else
                 layout.$mainsection.hide();
             layout.$docmapsection.hide();
+
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder(),
@@ -376,10 +377,10 @@ $(function () {
                 }
                 if (!view) {// general catalog page
                     view = "catalog";
-                    me._setPropertiesTabs(path, propertyListMap.normal);
+                    me._setPropertiesTabs(view, path, propertyListMap.normal);
                 }
                 else if (view === "searchfolder") {
-                    me._setPropertiesTabs(path, propertyListMap.searchFolder);
+                    me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
                 }
 
                 me._setSecurity(path);
@@ -453,7 +454,8 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setPropertiesTabs(path, propertyListMap.report);
+
+            me._setPropertiesTabs("viewer", path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -511,7 +513,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setPropertiesTabs(path, propertyListMap.normal);
+            me._setPropertiesTabs("dashboard", path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -596,9 +598,9 @@ $(function () {
                 me._initNavigateTo();
             }
         },
-        _setPropertiesTabs: function (path, propertyList) {
+        _setPropertiesTabs: function (view, path, propertyList) {
             var me = this;
-            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", view, path, propertyList);
         },
         _setSecurity: function (path) {
             var me = this;

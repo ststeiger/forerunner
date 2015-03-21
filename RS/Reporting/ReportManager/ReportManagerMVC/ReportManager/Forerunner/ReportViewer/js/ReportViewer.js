@@ -2322,27 +2322,30 @@ $(function () {
             var me = this;
 
             me.property = forerunner.cache.itemProperty[me.reportPath];
-            if (me.property["ForerunnerRDLExt"]) {
-                return me.property["ForerunnerRDLExt"];
+
+            if (me.property) {
+                me.RDLExtProperty = me.property["ForerunnerRDLExt"] || null;
+                return;
             }
 
-            forerunner.ajax.ajax(
-               {
-                   type: "GET",
-                   dataType: "json",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
-                   data: {
-                       path: encodeURIComponent(me.reportPath),
-                       propertyName: "ForerunnerRDLExt",
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       if (data && JSON.stringify(data) !== "{}" ) {
-                           me.RDLExtProperty = data; 
-                       }
-                   },
-                   async: false
-               });
+            forerunner.ajax.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                data: {
+                    path: encodeURIComponent(me.reportPath),
+                    propertyName: "ForerunnerRDLExt",
+                    instance: me.options.rsInstance,
+                },
+                success: function (data) {
+                    if (data && JSON.stringify(data) !== "{}") {
+                        //me.RDLExtProperty = data;
+
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = data;
+                    }
+                }
+            });
         },
         /**
         * Get RDL Extension

@@ -275,7 +275,8 @@
     "deleteFailed":"Abonnement Löschung gescheitert",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Antwort an"
+    "replyToPlaceholder":"Antwort an",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"Eigenschaften",

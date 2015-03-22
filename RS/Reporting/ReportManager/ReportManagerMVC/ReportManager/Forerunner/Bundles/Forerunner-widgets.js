@@ -20002,7 +20002,13 @@ $(function () {
             me.$listcontainer.html("");
             var $list = new $("<UL />");
             $list.addClass("fr-sub-list");
+
             $.when(me.options.subscriptionModel.subscriptionModel("getMySubscriptionList", me.options.reportPath)).done(function (data) {
+                //if no subscription in the list show the prompt
+                if (data.length === 0) {
+                    me.$emptyPrompt.show();
+                    return;
+                }
                 for (var i = 0; i < data.length; i++) {
                     var subInfo = data[i];
                     var $li = new $("<LI />");
@@ -20025,20 +20031,29 @@ $(function () {
          */
         listSubscriptions: function () {
             var me = this;
+
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
+
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
             me.$container.append(headerHtml);
+
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
             me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
             me.element.append(me.$container);
+
+            me.$emptyPrompt = me._createDiv(["fr-sub-empty-prompt"]);
+            me.$emptyPrompt.text(locData.subscription.emptyPrompt);
+            me.$container.append(me.$emptyPrompt);
+
             me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
             me.$container.append(me.$listcontainer);
             me.$theForm = me._createDiv(["fr-sub-form"]);
             me.$container.append(me.$theForm);
+
             me._renderList();
 
             me.element.find(".fr-managesubscription-cancel").on("click", function (e) {

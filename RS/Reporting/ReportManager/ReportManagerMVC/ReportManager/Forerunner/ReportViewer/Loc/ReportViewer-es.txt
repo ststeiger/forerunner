@@ -276,7 +276,8 @@
     "deleteFailed":"Eliminación Suscripción fallado",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Responder a"
+    "replyToPlaceholder":"Responder a",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"Propiedades",

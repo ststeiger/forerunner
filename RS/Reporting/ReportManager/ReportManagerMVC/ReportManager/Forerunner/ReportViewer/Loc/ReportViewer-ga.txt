@@ -275,7 +275,8 @@
     "deleteFailed":"Theip scriosadh Síntiúis",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Freagair-A"
+    "replyToPlaceholder":"Freagair-A",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"airíonna",

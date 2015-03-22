@@ -275,7 +275,8 @@
     "deleteFailed":"Prenumerations deletion misslyckades",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Svara till"
+    "replyToPlaceholder":"Svara till",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"Egenskaper",

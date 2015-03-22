@@ -156,7 +156,8 @@
 	"addNew": "Create",
 	"edit": "Edit",
 	"deleteSubscription": "Delete",
-	"deleteFailed": "Subscription deletion failed"
+	"deleteFailed": "Subscription deletion failed",
+	"emptyPrompt":"There are no subscriptions to display at this time"
   },
   "paramPane": {
     "nullField":"Null",

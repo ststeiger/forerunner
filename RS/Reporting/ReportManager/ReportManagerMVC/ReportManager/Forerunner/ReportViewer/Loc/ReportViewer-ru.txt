@@ -275,7 +275,8 @@
     "deleteFailed":"Подписка Ошибка удаления",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To"
+    "replyToPlaceholder":"Reply-To",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"свойства",

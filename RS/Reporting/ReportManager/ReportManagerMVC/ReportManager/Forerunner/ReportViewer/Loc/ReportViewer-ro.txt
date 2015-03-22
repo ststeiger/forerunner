@@ -275,7 +275,8 @@
     "deleteFailed":"Ștergerea abonament eșuat",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Răspunde-a"
+    "replyToPlaceholder":"Răspunde-a",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"Proprietăți",

@@ -275,7 +275,8 @@
     "deleteFailed":"Áskrift eyða mistókst",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Svara-til"
+    "replyToPlaceholder":"Svara-til",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"eiginleikar ",

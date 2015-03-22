@@ -275,7 +275,8 @@
     "deleteFailed":"サブスクリプションの削除に失敗しました",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"返信先"
+    "replyToPlaceholder":"返信先",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"プロパティ",

@@ -17,6 +17,7 @@ set NUGET_TOOL=%~dp0tools\nuget\nuget.exe
 
 :: We need to remove the "..\" so that the "/XD" robocopy switch used below will work properly
 call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager" SRC_REPORT_MANAGER
+call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" SRC_FRCONFIG
 
 set SRC_FORERUNNER="%SRC_REPORT_MANAGER%\Forerunner"
 set SRC_SDK="%SRC_REPORT_MANAGER%\sdk"
@@ -24,10 +25,12 @@ set SRC_CUSTOM="%SRC_REPORT_MANAGER%\Custom"
 set SRC_LIB="%SRC_REPORT_MANAGER%\bin"
 set SRC_NUGET="%~dp0tools\nuget"
 set SRC_THUMBNAIL="%~dp0..\RS\Reporting\ReportViewer\ReportViewer\Forerunner.Thumbnail\bin\Release"
+set SRC_FRCONFIG_BIN=%SRC_FRCONFIG%\bin\Release
 
 set DEST="%BUILD_RELEASE%_nuget_package"
 set DEST_CONTENT="%DEST%\content"
 set DEST_LIB="%DEST%\lib"
+set DEST_TOOLS="%DEST%\tools"
 
 echo Executing CreateNugetPackage... >> %NUGET_PACKAGE_LOG%
 echo Executing CreateNugetPackage... >> %BUILD_LOG%
@@ -79,6 +82,17 @@ if ERRORLEVEL 8 (
 
 :: Content/lib
 robocopy %SRC_LIB% %DEST_LIB% Forerunner.Json.dll Forerunner.SQLReporting.dll PdfSharp.dll /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: tools
+robocopy %SRC_FRCONFIG_BIN% %DEST_TOOLS% /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy %SRC_NUGET% %DEST_TOOLS% init.ps1 install.ps1 uninstall.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )

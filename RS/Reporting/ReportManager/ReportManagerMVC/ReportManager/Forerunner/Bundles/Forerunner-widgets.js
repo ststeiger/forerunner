@@ -20630,10 +20630,12 @@ $(function () {
             var me = this;
             me._setSubscriptionOrSetDefaults();
         },
-        _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
+        _createInputWithPlaceHolder: function (listOfClasses, type, name, placeholder) {
             var me = this;
             var $input = new $("<INPUT />");
             $input.attr("type", type);
+            name && $input.attr("name", name);
+
             if (placeholder)
                 $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
@@ -20705,6 +20707,9 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
 
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             me._subscriptionID = subscripitonID;
             me._subscriptionData = null;
             me.element.html("");
@@ -20723,29 +20728,29 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "");  //locData.subscription.descriptionPlaceholder
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$desc.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
 
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "");  //locData.subscription.toPlaceholder
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$to.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
 
-            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.subscription.toPlaceholder
             me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
 
-            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.subscription.toPlaceholder
             me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
 
-            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "");  //locData.subscription.toPlaceholder
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.subscription.toPlaceholder
             me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
 
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "");  // locData.subscription.subjectPlaceholder
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$subject.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
@@ -20759,7 +20764,6 @@ $(function () {
 
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
             me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
-            
             
 
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
@@ -20794,6 +20798,18 @@ $(function () {
             //disable form auto submit when click enter on the keyboard
             me.$theForm.on("submit", function () { return false; });
 
+            me.$theForm.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.siblings("span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-error");
+                }
+            });
+
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 
                 me._submit();
@@ -20825,7 +20841,7 @@ $(function () {
         _submit : function () {
             var me = this;
 
-            if (me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
+            if (me.$theForm.valid() && me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
                 var subscriptionInfo = me._getSubscriptionInfo();
 
                 me.options.subscriptionModel.subscriptionModel(
@@ -20876,6 +20892,9 @@ $(function () {
          */
         destroy: function () {
             var me = this;
+
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
             me.element.html("");
             this._destroy();
         }

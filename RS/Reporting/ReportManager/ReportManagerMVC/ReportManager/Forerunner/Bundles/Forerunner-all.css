@@ -127,6 +127,7 @@ div.fr-layout-position-absolute { position: absolute; }
 .fr-core-toolbar { margin: 0; padding: 0; width: 100%; height: 38px; overflow: hidden; background: #527db4; /* Old browsers */ background: -moz-linear-gradient(top, #527db4 0%, #526ea2 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#527db4), color-stop(100%,#526ea2)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #527db4 0%,#526ea2 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #527db4 0%,#526ea2 100%); /* IE10+ */ background: linear-gradient(to bottom, #527db4 0%,#526ea2 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#527db4', endColorstr='#526ea2',GradientType=0 ); /* IE6-9 */ }
 
 .fr-watermark { color: lightgrey; }
+.fr-core-dialog-form .fr-error, .fr-error { border: 1px solid red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) and (orientation: landscape) {
@@ -962,10 +963,6 @@ table, td, tr div {
 .fr-properties-form .fr-error-span {
     font-size: 10pt;
     display:block;
-}
-.fr-properties-form, .fr-error {
-    border-width: thin; 
-    border-color: red;
 }
 .fr-visibility-container {
     margin: 10px 0px 6px -2px;

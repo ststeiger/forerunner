@@ -1875,16 +1875,16 @@ $(function () {
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
-
+                
                 var paramList = null;
                 if (me.paramLoaded) {
                     var $paramArea = me.options.paramArea;
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
 
+                //need to always set paramList event it's null
+                me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -3091,6 +3091,7 @@ $(function () {
 
             if (me.$emailSub)
                 me.$emailSub.emailSubscription("destroy");
+
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }

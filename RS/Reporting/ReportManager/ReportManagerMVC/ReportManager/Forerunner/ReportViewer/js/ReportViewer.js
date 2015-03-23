@@ -484,6 +484,7 @@ $(function () {
                 $(window).scrollTop(position.top);
             }
 
+
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar

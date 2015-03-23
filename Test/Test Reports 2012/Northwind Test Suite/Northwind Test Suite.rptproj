@@ -139,10 +139,6 @@
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Learner Report.rdl</Name>
-      <FullPath>Learner Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Line Chart 1.rdl</Name>
       <FullPath>Line Chart 1.rdl</FullPath>
     </ProjectItem>
@@ -178,6 +174,10 @@
     <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
       <FullPath>newspaper multi column.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Northwind Sales - Backup.rdl</Name>
+      <FullPath>Northwind Sales - Backup.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Northwind Sales.rdl</Name>
@@ -236,6 +236,10 @@
       <FullPath>SingleGuage.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Store Health Check.rdl</Name>
+      <FullPath>Store Health Check.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
       <FullPath>Table Chart with background color.rdl</FullPath>
     </ProjectItem>
@@ -282,10 +286,6 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Northwind Sales - Backup.rdl</Name>
-      <FullPath>Northwind Sales - Backup.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

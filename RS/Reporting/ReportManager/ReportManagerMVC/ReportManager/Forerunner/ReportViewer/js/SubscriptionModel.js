@@ -54,7 +54,7 @@ $(function () {
                 async: true
             })
             .done(function (data) {
-                console.log("ListSubscriptions succeeded.");
+                //console.log("ListSubscriptions succeeded.");
             })
             .fail(function (data) {
                 console.log("ListSubscriptions call failed.");
@@ -168,6 +168,7 @@ $(function () {
         },
         _saveSubscription: function (verb, subscriptionInfo, success, error) {
             var me = this;
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/" + verb;
             subscriptionInfo.Instance = me.options.rsInstance;
             forerunner.ajax.post(

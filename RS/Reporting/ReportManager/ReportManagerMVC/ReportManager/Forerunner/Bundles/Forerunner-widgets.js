@@ -2506,16 +2506,16 @@ $(function () {
             me._setEmailSubscriptionUI();
             if (me.$emailSub) {
                 me.$emailSub.emailSubscription("option", "reportPath", me.getReportPath());
-
+                
                 var paramList = null;
                 if (me.paramLoaded) {
                     var $paramArea = me.options.paramArea;
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
 
+                //need to always set paramList event it's null
+                me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -3722,6 +3722,7 @@ $(function () {
 
             if (me.$emailSub)
                 me.$emailSub.emailSubscription("destroy");
+
             if (me.$paramarea) {
                 me.$paramarea.reportParameter("destroy");
             }
@@ -18296,7 +18297,7 @@ $(function () {
                 async: true
             })
             .done(function (data) {
-                console.log("ListSubscriptions succeeded.");
+                //console.log("ListSubscriptions succeeded.");
             })
             .fail(function (data) {
                 console.log("ListSubscriptions call failed.");
@@ -18410,6 +18411,7 @@ $(function () {
         },
         _saveSubscription: function (verb, subscriptionInfo, success, error) {
             var me = this;
+
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/" + verb;
             subscriptionInfo.Instance = me.options.rsInstance;
             forerunner.ajax.post(

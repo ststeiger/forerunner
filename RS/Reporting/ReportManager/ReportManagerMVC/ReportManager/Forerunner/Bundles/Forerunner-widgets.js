@@ -9578,6 +9578,42 @@ $(function () {
             onInputFocus: null,
             userSettings: null,
         },
+        // Constructor
+        _create: function () {
+            var me = this;
+
+            // Make sure the viewerBase _create gets called
+            me._super();
+        },
+        _init: function () {
+            var me = this;
+            me.$RMList = null;
+            me.$UL = null;
+            me.rmListItems = null;
+            me.colorOverrideSettings = null;
+            me.selectedItem = 0;
+            me.isRendered = false;
+            me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
+            me._super(me.$explorer);
+            me.$viewerContainer = me.$explorer;
+            me.$selectedItem = null;
+
+            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
+            if ($reportExplorerContainer.length === 0) {
+                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
+                me.element.append($reportExplorerContainer);
+            }
+            me.$reportExplorerContainer = $reportExplorerContainer;
+
+            // Make sure the view base has the explorer container
+            me._super($reportExplorerContainer);
+
+            if (!me.subscriptionModel) {
+                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+            }
+
+            me._initExplorerDialogs();
+        },
         /**
          * Save the user settings
          * @function $.forerunner.reportExplorer#saveUserSettings
@@ -9834,6 +9870,7 @@ $(function () {
 
             me.$UL = me.element.find(".fr-report-explorer");
             me.$UL.html("");
+
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             
@@ -9857,7 +9894,9 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
+
             me._renderPCView(catalogItems);
+
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
                 setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20); }, 100);  //This is a hack for now
@@ -9891,8 +9930,8 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state === "complete" || !state) {//loading,interactive,complete       
-                            me._setIframeHeight(frame);
+                        if (state === "complete" || !state) {//loading,interactive,complete
+                            me._loadIframeDone(frame);
                         }
                         else {
                             //check frame document state until it turn to complete
@@ -9910,9 +9949,18 @@ $(function () {
             }
             else {
                 $if.load(function () {
-                    me._setIframeHeight(this);
+                    me._loadIframeDone(this);
                 });
             }
+        },
+        _loadIframeDone: function (frame) {
+            var me = this;
+
+            me.$reportExplorerContainer.length && me.$reportExplorerContainer.hide();
+            me._setIframeHeight(frame);
+
+            me._trigger(events.afterFetch, null, { reportExplorer: me });
+            me.removeLoadingIndicator();
         },
         //set iframe height with body height
         _setIframeHeight: function (frame) {
@@ -9920,8 +9968,65 @@ $(function () {
             //use app container height minus toolbar height
             //also there is an offset margin-botton:-20px defined in ReportExplorer.css 
             //to prevent document scroll bar (except IE8)
-            var iframeHeight = me.options.$appContainer.height() - 38;
+            var iframeHeight = me.options.$appContainer.height() - 60;
             frame.style.height = iframeHeight + "px";
+        },
+        _searchItems: function (keyword) {
+            var me = this;
+
+            if (keyword === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                return;
+            }
+
+            var url = me.options.reportManagerAPI + "/FindItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
+            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            //specify the search folder, not default to global
+            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
+            //folder = folder.replace("%2f", "/");
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                data: {
+                    folder: "",
+                    searchOperator: "",
+                    searchCriteria: JSON.stringify(searchCriteria)
+                },
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    }
+                    else {
+                        if (data.length) {
+                            me._render(data);
+                        }
+                        else {
+                            me._showNotFound();
+                        }
+                    }
+
+                    me._trigger(events.afterFetch, null, { reportExplorer: me });
+                    me.removeLoadingIndicator();
+                },
+                error: function (data) {
+                    console.log(data);
+
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                    me.removeLoadingIndicator();
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+        _showNotFound: function () {
+            var me = this;
+            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            $explorer.append($notFound);
+            me.element.append($explorer);
         },
         /**
          * Returns the last fetch view and path
@@ -9975,13 +10080,14 @@ $(function () {
         },
         _fetch: function (view, path) {
             var me = this;
+
             me.lastFetched = {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             me.showLoadingIndictator();
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -10048,41 +10154,6 @@ $(function () {
                     }
                 }
             }
-        },
-        // Constructor
-        _create: function () {
-            var me = this;
-
-            // Make sure the viewerBase _create gets called
-            me._super();
-        },
-        _init: function () {
-            var me = this;
-            me.$RMList = null;
-            me.$UL = null;
-            me.rmListItems = null;
-            me.colorOverrideSettings = null;
-            me.selectedItem = 0;
-            me.isRendered = false;
-            me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
-            me._super(me.$explorer);
-            me.$viewerContainer = me.$explorer;
-            me.$selectedItem = null;
-
-            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
-            if ($reportExplorerContainer.length === 0) {
-                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
-                me.element.append($reportExplorerContainer);
-            }
-
-            // Make sure the view base has the explorer container
-            me._super($reportExplorerContainer);
-
-            if (!me.subscriptionModel) {
-                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
-            }
-
-            me._initExplorerDialogs();
         },
         _checkPermission: function () {
             var me = this;
@@ -10304,57 +10375,6 @@ $(function () {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
                 }
             });
-        },
-        _searchItems: function (keyword) {
-            var me = this;
-
-            if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
-                return;
-            }
-            
-            var url = me.options.reportManagerAPI + "/FindItems";
-            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
-            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
-
-            //specify the search folder, not default to global
-            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
-            //folder = folder.replace("%2f", "/");
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                data: {
-                    folder: "",
-                    searchOperator: "",
-                    searchCriteria: JSON.stringify(searchCriteria)
-                },
-                success: function (data) {
-                    if (data.Exception) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    }
-                    else {
-                        if (data.length) {
-                            me._render(data);
-                        }
-                        else {
-                            me._showNotFound();
-                        }
-                    }
-                },
-                error: function (data) {
-                    console.log(data);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
-                }
-            });
-        },
-        _showNotFound:function(){
-            var me = this;
-            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
-            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
-            $explorer.append($notFound);            
-            me.element.append($explorer);
         },
         /**
          * Function execute when input element blur

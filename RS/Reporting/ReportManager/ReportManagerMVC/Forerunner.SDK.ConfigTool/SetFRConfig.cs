@@ -7,24 +7,20 @@ using System.Security;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Management.Automation;
-using System.Configuration;
+
+using EnvDTE;
+using EnvDTE80;
 
 using ReportMannagerConfigTool;
 using ForerunnerLicense;
 
 namespace Forerunner.SDK.ConfigTool
 {
-    [Cmdlet(VerbsCommon.Get, "FRConfigTool")]
-    public class GetFRConfigTool : PSCmdlet
+    [Cmdlet(VerbsCommon.Set, "FRConfig")]
+    public class SetFRConfig : PSCmdlet
     {
-        public GetFRConfigTool()
+        public SetFRConfig()
         {
-            LoadWebConfig();
-            LicenseData data = ClientLicense.GetLicense();
-            if (data != null)
-            {
-                LicenseKey = data.LicenseKey;
-            }
         }
 
         #region Parameter properties / definitions
@@ -346,7 +342,7 @@ namespace Forerunner.SDK.ConfigTool
             SetForerunnerSetting("MobilizerSettingPath", MobilizerSettingPath);
             SetForerunnerSetting("VersionPath", VersionPath);
 
-            WriteVerbose("Saving Forerunner specific web.config settings");
+            WriteVerbose("Saving Forerunner settings: " + appConfig.FilePath);
             appConfig.Save();
 
             WriteVerbose("End UpdateWebConfig()");
@@ -438,6 +434,53 @@ namespace Forerunner.SDK.ConfigTool
 
         protected override void BeginProcessing()
         {
+            base.BeginProcessing();
+        }
+        protected override void ProcessRecord()
+        {
+            LoadWebConfig();
+            LicenseData data = ClientLicense.GetLicense();
+            if (data != null)
+            {
+                LicenseKey = data.LicenseKey;
+            }
+
+            PromptForMissingParameters();
+
+            if (!SkipProcessing)
+            {
+                int processingId = 1;
+                string activity = "Updating Forerunner Configuration Settings";
+                WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
+                TestConnection();
+
+                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
+                ActivateLicense();
+
+                WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
+                UpdateWebConfig();
+
+                WriteProgress(new ProgressRecord(processingId, activity, "UpdateDBSchema()"));
+                UpdateDBSchema();
+            }
+
+            // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
+            // call individual public methods such as ActivateLicense()
+            WriteObject("Set-FRConfig complete");
+        }
+        protected override void EndProcessing()
+        {
+            base.EndProcessing();
+        }
+
+        #endregion // Processing methods
+
+        #region Private methods and data
+
+        // Private Methods
+        //
+        private void PromptForMissingParameters()
+        {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
 
             if (DefaultUserDomain == null)
@@ -486,40 +529,6 @@ namespace Forerunner.SDK.ConfigTool
                 }
             }
         }
-        protected override void ProcessRecord()
-        {
-            if (!SkipProcessing)
-            {
-                int processingId = 1;
-                string activity = "Updating Forerunner Configuration Settings";
-                WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
-                TestConnection();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
-                ActivateLicense();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
-                UpdateWebConfig();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "UpdateDBSchema()"));
-                UpdateDBSchema();
-            }
-
-            // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
-            // call individual public methods such as ActivateLicense()
-            WriteObject(this);
-        }
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
-
-        #endregion // Processing methods
-
-        #region Private methods and data
-
-        // Private Methods
-        //
         private string GetStringFromSecureString(SecureString value)
         {
             IntPtr valuePtr = IntPtr.Zero;
@@ -567,15 +576,58 @@ namespace Forerunner.SDK.ConfigTool
                 prop = value;
             }
         }
+        private string GetLocalFilePathFromActriveProject(string filename)
+        {
+            string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
+            var dte = (DTE2)GetVariableValue("DTE");
+            var projects = (System.Array)dte.ActiveSolutionProjects;
+            int length = projects.Length;
+            Project project = null;
+            if (projects.Length > 0)
+            {
+                // Get the active project
+                project = (Project)projects.GetValue(0);
+            }
+            else
+            {
+                // If there isn't an active project then see if there is only one
+                // project in this solution
+                var solution = (Solution)dte.Solution;
+                var solutionProjects = (Projects)solution.Projects;
+                foreach (Project p in solutionProjects)
+                {
+                    if (prjKindCSharpProject == p.Kind)
+                    {
+                        if (project != null)
+                        {
+                            throw new Exception("Unable to determine which project you want configured. Select a project in the solution explorer and try again");
+                        }
+                        project = p;
+                    }
+                }
+
+                if (project == null)
+                {
+                    throw (new Exception("No active project in the solution, Select a project in the solution explorer and try again"));
+                }
+            }
+
+            var projectItems = (ProjectItems)project.ProjectItems;
+            var projectItem = (ProjectItem)projectItems.Item(filename);
+            if (projectItem == null)
+            {
+                throw (new Exception(String.Format("Error - Unable to find file: {0} in project {1}", filename, project.Name)));
+            }
+            var properties = (Properties)projectItem.Properties;
+            var property = (Property)properties.Item("LocalPath");
+            return property.Value;
+        }
         private void LoadWebConfig()
         {
-            // TODO
-            // Make this hard coded path, conditional when run as a Package Manager Tool, I need
-            // to actually get the web.config path from the DTE object
-            string webConfigPath = @"C:\Users\Jon\Documents\GitHub\Release\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\Web.config";
-            ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
+            string webConfigPath = GetLocalFilePathFromActriveProject("web.config");
+            System.Configuration.ExeConfigurationFileMap configFileMap = new System.Configuration.ExeConfigurationFileMap();
             configFileMap.ExeConfigFilename = webConfigPath;
-            appConfig = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+            appConfig = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFileMap, System.Configuration.ConfigurationUserLevel.None);
 
             AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl");
             AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource");
@@ -602,7 +654,7 @@ namespace Forerunner.SDK.ConfigTool
 
         // Private Data
         //
-        private Configuration appConfig { get; set; }
+        private System.Configuration.Configuration appConfig { get; set; }
         private bool needsActivation = false;
 
         #endregion  // Private methods

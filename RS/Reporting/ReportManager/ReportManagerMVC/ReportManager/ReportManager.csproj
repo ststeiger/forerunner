@@ -521,7 +521,6 @@
     <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="sdk\readme.docx" />
     <Content Include="Views\Debug\Test.cshtml" />
     <Content Include="Views\Debug\CascadeTest.cshtml" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">

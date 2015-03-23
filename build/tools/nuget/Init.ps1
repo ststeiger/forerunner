@@ -1,3 +1,8 @@
 param($installPath, $toolsPath, $package)
 
-Import-Module (Join-Path $toolsPath Forerunner.SDK.ConfigTool.dll)
+$env:frToolsPath = $toolsPath
+$env:frConfigToolModule = "forerunner.sdk.configtool"
+$env:frConfigToolDLL = $env:frConfigToolModule + ".dll"
+$env:frConfigToolPath = join-path -path $env:frToolsPath -childpath $env:frConfigToolDLL
+
+import-module $env:frConfigToolPath

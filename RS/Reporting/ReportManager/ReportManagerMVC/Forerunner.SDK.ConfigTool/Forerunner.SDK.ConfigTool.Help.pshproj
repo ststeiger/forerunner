@@ -3,30 +3,28 @@
   <Name>Forerunner.SDK.ConfigTool</Name>
   <Version>1.0.0.0</Version>
   <Description />
-  <ModulePath>C:\Users\Jon\Documents\GitHub\Release\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\bin\Debug\Forerunner.SDK.ConfigTool.dll</ModulePath>
+  <ModulePath>C:\Users\Jon\Documents\GitHub\Release\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\bin\Release\Forerunner.SDK.ConfigTool.dll</ModulePath>
   <HasManifest>false</HasManifest>
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />
   <Cmdlets>
-    <CmdletObject verb="Get" noun="FRConfigTool">
-      <Name>Get-FRConfigTool</Name>
+    <CmdletObject verb="Set" noun="FRConfig">
+      <Name>Set-FRConfig</Name>
       <GeneralHelp>
         <Synopsis>Configures the environment for the Forerunner SDK.</Synopsis>
         <Description>The Forerunner SDK stores application settings in the web.config file. You can edit these settings directly in web.config. 
 Additionally you need to activate a license in order to view reports. As well as initialize the Forerunner SDK database
 schema.
 
-Get-FrConfigTool will do the following:
+Set-FrConfig will do the following:
 
 * Test the connection settings
 * Create or update Forerunner SDK specific web.config settings
-* Activate the license [url=https://www.forerunnersw.com/registerTrial]register for a free trial[/url]
+* Activate the license register for a free trial
 * Create or update the Forerunner SDK database schema
 
-You can run Get-FRConfigTool without any parameters and it will prompt you for the minimum required
-set of parameters.
-
-</Description>
+You can run Set-FRConfig without any parameters and it will prompt you for the minimum required
+set of parameters.</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -39,7 +37,7 @@ set of parameters.
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath SkipProcessing ResetPassword Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-FRConfigTool [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-SkipProcessing] [-ResetPassword]</string>
+        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-SkipProcessing] [-ResetPassword]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -64,7 +62,7 @@ set of parameters.
             <string>n</string>
           </Aliases>
           <Description>Is Native SSRS or Power Point</Description>
-          <DefaultValue>true</DefaultValue>
+          <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SharePointHost</Name>
@@ -99,8 +97,8 @@ set of parameters.
           <Aliases>
             <string>ssrs</string>
           </Aliases>
-          <Description>Reporting service web service URL</Description>
-          <DefaultValue>http://localhost/ReportServer</DefaultValue>
+          <Description>Reporting Serivce, web service URL</Description>
+          <DefaultValue>http://localhost/ReportServer </DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDataSource</Name>
@@ -117,21 +115,20 @@ set of parameters.
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>UseIntegratedSecurityForSQL</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>is</string>
           </Aliases>
-          <Description>Use integrated SQL security
-</Description>
+          <Description>Use integrated SQL security</Description>
           <DefaultValue>true</DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDB</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>dn</string>
@@ -166,8 +163,8 @@ set of parameters.
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDBDomain</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>dd</string>
@@ -178,8 +175,8 @@ set of parameters.
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerTimeout</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>t</string>
@@ -244,20 +241,20 @@ set of parameters.
           <Aliases>
             <string>skip</string>
           </Aliases>
-          <Description>Skips all configuration processing. This enables you to create the FRConfigTool and manually call any / all configuration methods yourself.</Description>
-          <DefaultValue />
+          <Description>Skips all configuration processing</Description>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ResetPassword</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>reset</string>
           </Aliases>
-          <Description>Forces a prompt for the ReportServerDBPWD value.</Description>
-          <DefaultValue />
+          <Description>Forces a prompt for the ReportServerDBPWD value</Description>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
       </Parameters>
       <Examples />

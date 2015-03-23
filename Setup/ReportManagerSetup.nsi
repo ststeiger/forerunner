@@ -132,7 +132,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\sdk\ReportManagerController.cs"
   File "${LOCALROOT}\sdk\ReportViewerController.cs"
   File "${LOCALROOT}\sdk\CustomAPIFilters.cs"
-  File "${LOCALROOT}\sdk\readme.docx"
+  File "${LOCALROOT}\sdk\readme.txt"
 
   SetOutPath "$INSTDIR\Forerunner"
   File "${LOCALROOT}\Forerunner\version.txt"
@@ -280,6 +280,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\LinkedReport.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UploadFile.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\NewFolder.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\MoveItem.css"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\images"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\Report-icon.png"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\report_ear_selected.png"
@@ -762,7 +763,7 @@ Section Uninstall
   Delete "$INSTDIR\sdk\ReportManagerController.cs"
   Delete "$INSTDIR\sdk\ReportViewerController.cs"
   Delete "$INSTDIR\sdk\CustomAPIFilters.cs"
-  Delete "$INSTDIR\sdk\readme.docx"
+  Delete "$INSTDIR\sdk\readme.txt"
 
   Delete "$INSTDIR\Forerunner\version.txt"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner.min.js"
@@ -877,6 +878,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\LinkedReport.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\UploadFile.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\NewFolder.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\MoveItem.css"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"

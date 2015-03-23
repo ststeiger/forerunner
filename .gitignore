@@ -11,6 +11,7 @@ Test/Test Reports 2012/Report Project1/bin/
 *.fileListAbsolute.txt
 *.CodeAnalysisLog.xml
 *.lastcodeanalysissucceeded
+Thumbs.db
 build/smtp.config.xml
 Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
 RS/Reporting/ReportManager/ReportManagerMVC/icongen/bin/Debug/*
@@ -725,3 +726,4 @@ RS/Reporting/ReportViewer/PDFsharp/code/PdfSharp/bin/codeanalysis/*
 utilities/SetupUtil/SetupUtil/bin/*
 utilities/SetupUtil/SetupUtil/obj/*
 utilities/timebomb/timebomb/bin/*
+Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Store Health Check.rdl

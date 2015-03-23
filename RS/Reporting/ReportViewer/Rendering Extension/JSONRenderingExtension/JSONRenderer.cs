@@ -78,40 +78,54 @@ namespace Forerunner.RenderingExtensions
                 Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
                 retval = GetRPL().Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
-                RegisteredStream.Position = 0;
-                JSON = new ReportJSONWriter(RegisteredStream);
-                if (renderProperties["UpdatedPaginationMode"].ToString() == "TotalPages")
-                    sw = JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString()));
-                else
-                    sw = JSON.RPLToJSON(0);
-
-                int bufsiz = 1024 * 1000;
-                char[] c = new char[bufsiz];
-                StringBuilder sb;
-                byte[] b;
-                sb = sw.GetStringBuilder();
-
-                int len = sb.Length;
-                int offset = 0;
-
-                while (len >= 0)
+                // Check if we are past the last page, if so return the last page.
+                if (RegisteredStream.Length == 0 && renderProperties["UpdatedPaginationMode"].ToString() == "TotalPages")  
                 {
-                    if (len >= bufsiz)
-                    {
-                        sb.CopyTo(offset, c, 0, bufsiz);
-                        b = Encoding.UTF8.GetBytes(c, 0, bufsiz);
-                        outputStream.Write(b, 0, b.Length);
-                        len -= bufsiz;
-                        offset += bufsiz;
-                    }
-                    else
-                    {
-                        sb.CopyTo(offset, c, 0, len);
-                        b = Encoding.UTF8.GetBytes(c, 0, len);
-                        outputStream.Write(b, 0, b.Length);
-                        break;
-                    }
+                    this.RegisteredStream = null;
+                    deviceInfo["StartPage"] = renderProperties["TotalPages"].ToString();
+                    deviceInfo["EndPage"] = renderProperties["TotalPages"].ToString();
+                    retval = GetRPL().Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
+                }
 
+
+                if (RegisteredStream.Length != 0)
+                {
+
+                    RegisteredStream.Position = 0;
+                    JSON = new ReportJSONWriter(RegisteredStream);
+                    if (renderProperties["UpdatedPaginationMode"].ToString() == "TotalPages")
+                        sw = JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString()));
+                    else
+                        sw = JSON.RPLToJSON(0);
+
+                    int bufsiz = 1024 * 1000;
+                    char[] c = new char[bufsiz];
+                    StringBuilder sb;
+                    byte[] b;
+                    sb = sw.GetStringBuilder();
+
+                    int len = sb.Length;
+                    int offset = 0;
+
+                    while (len >= 0)
+                    {
+                        if (len >= bufsiz)
+                        {
+                            sb.CopyTo(offset, c, 0, bufsiz);
+                            b = Encoding.UTF8.GetBytes(c, 0, bufsiz);
+                            outputStream.Write(b, 0, b.Length);
+                            len -= bufsiz;
+                            offset += bufsiz;
+                        }
+                        else
+                        {
+                            sb.CopyTo(offset, c, 0, len);
+                            b = Encoding.UTF8.GetBytes(c, 0, len);
+                            outputStream.Write(b, 0, b.Length);
+                            break;
+                        }
+
+                    }
                 }
                 return retval;
             }

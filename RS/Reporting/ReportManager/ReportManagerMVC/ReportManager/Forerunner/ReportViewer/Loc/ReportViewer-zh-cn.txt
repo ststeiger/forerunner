@@ -275,13 +275,15 @@
     "deleteFailed":"删除订阅成功",
     "ccPlaceholder":"抄送",
     "bccPlaceholder":"秘密抄送",
-    "replyToPlaceholder":"答复"
+    "replyToPlaceholder":"答复",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"属性",
     "submit":"提交",
     "deleteItem":"删除",
-    "description":"描述"
+    "description":"描述",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"右键菜单",
@@ -291,7 +293,8 @@
     "linkedReport":"链接报表",
     "downloadFile":"下载文件",
     "deleteConfirm":"确定要删除 {0} 吗?",
-    "folderNotEmpty":"该文件夹中包含子项，您不能删除"
+    "folderNotEmpty":"该文件夹中包含子项，您不能删除",
+    "move":"移动"
   },
   "common": {
     "submit":"提交",
@@ -354,5 +357,10 @@
     "descriptionLabel":"描述",
     "hide":"在普通模式下隐藏",
     "fileExists":"同名文件夹已经存在"
+  },
+  "move": {
+    "title":"移动",
+    "location":"位置",
+    "prompt":"选择要包含此项的文件夹"
   }
 }

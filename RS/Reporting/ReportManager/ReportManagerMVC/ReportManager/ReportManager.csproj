@@ -181,6 +181,7 @@
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
+    <Content Include="Forerunner\ReportExplorer\css\MoveItem.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
     <Content Include="Forerunner\Common\css\ForerunnerSecurity.css" />
     <Content Include="Forerunner\Common\css\MessageBox.css" />
@@ -205,6 +206,7 @@
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
     <Content Include="Forerunner\Common\js\DialogBase.js" />
     <Content Include="Forerunner\Common\js\catalogTree.js" />
+    <Content Include="Forerunner\ReportExplorer\js\MoveItem.js" />
     <Content Include="Forerunner\Common\js\Viewerbase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />
     <Content Include="Forerunner\Common\js\ForerunnerSecurity.js" />
@@ -485,6 +487,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="Global.asax" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
+    <Content Include="sdk\readme.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -518,7 +521,6 @@
     <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="sdk\readme.docx" />
     <Content Include="Views\Debug\Test.cshtml" />
     <Content Include="Views\Debug\CascadeTest.cshtml" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">

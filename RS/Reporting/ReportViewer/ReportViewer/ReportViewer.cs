@@ -411,10 +411,26 @@ namespace Forerunner.SSRS.Viewer
                         execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters), "en-us");
                     }
 
-                    result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);                    
-                    execInfo = rs.GetExecutionInfo();
-                    numPages = execInfo.NumPages;
-                    hasDocMap = execInfo.HasDocumentMap;
+
+                    // Check for beyond last page, if beyond go to last page.
+                    for (int x = 0; x < 2 ;x++)
+                    {
+                        result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);
+                        execInfo = rs.GetExecutionInfo();
+                        numPages = execInfo.NumPages;                     
+                        hasDocMap = execInfo.HasDocumentMap;
+                        if (execInfo.NumPages != 0 && execInfo.NumPages < int.Parse(PageNum))
+                        {
+                            PageNum = numPages.ToString();
+                            devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
+                            //Page number   
+                            devInfo += @"<StartPage>" + numPages + "</StartPage><EndPage>" + numPages + "</EndPage>";
+                            //End Device Info
+                            devInfo += @"</DeviceInfo>";
+                        }
+                        else
+                            break;
+                    }
 
                 }
                 if (result.Length != 0)

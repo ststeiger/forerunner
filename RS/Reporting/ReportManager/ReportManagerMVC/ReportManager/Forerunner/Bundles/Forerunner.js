@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespace
@@ -353,6 +353,8 @@ $(function () {
             uploadFile: "uploadFile",
             /** @constant */
             newFolder: "newFolder",
+            /** @constant */
+            forerunnerMoveItem: "forerunnerMoveItem",
 
             /** @constant */
             namespace: "forerunner",
@@ -608,6 +610,8 @@ $(function () {
             forerunnerPropertiesClose: function () { return (forerunner.ssr.constants.widgets.forerunnerProperties + this.close).toLowerCase(); },
             /** widget + event, lowercase */
             forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
+            /** widget + event, lowercase */
+            forerunnerMoveItemClose: function () { return (forerunner.ssr.constants.widgets.forerunnerMoveItem + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",
@@ -619,7 +623,10 @@ $(function () {
             /** widget + event, lowercase */
             reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
 
+            /** @constant */
             saveRDLDone: "saveRDLDone",
+            /** @constant */
+            renameItem: "renameItem",
 
             /** @constant */
             catalogSelected: "catalogSelected",
@@ -1257,16 +1264,6 @@ $(function () {
                 func();
                 me[id] = null;
             }, n);
-        },
-        getItemName: function (itemPath, defaultName) {
-            if (itemPath && typeof itemPath === "string" && itemPath.length) {
-                var index = itemPath.lastIndexOf("/"),
-                    str = itemPath.substring(index + 1);
-
-                return str === "" ? (defaultName || "") : str;
-            }
-
-            return itemPath;
         }
     },
         

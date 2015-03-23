@@ -275,13 +275,15 @@
     "deleteFailed":"Подписка Ошибка удаления",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To"
+    "replyToPlaceholder":"Reply-To",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"свойства",
     "submit":"представлять",
     "deleteItem":"удалять",
-    "description":"описание"
+    "description":"описание",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"Контекстное меню",
@@ -291,7 +293,8 @@
     "linkedReport":"Связанный отчет",
     "downloadFile":"Скачать файл",
     "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
+    "move":"Move"
   },
   "common": {
     "submit":"представлять",
@@ -354,5 +357,10 @@
     "descriptionLabel":"описание",
     "hide":"Скрытые в нормальном режиме",
     "fileExists":"Папка, имя уже существует"
+  },
+  "move": {
+    "title":"Move",
+    "location":"Location",
+    "prompt":"Select the folder that you want to include this item"
   }
 }

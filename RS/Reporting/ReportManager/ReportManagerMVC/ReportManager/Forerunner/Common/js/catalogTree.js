@@ -85,6 +85,9 @@ $(function () {
             }
 
             me.$catalogTree.toggleClass("fr-core-hidden");
+
+            //return tree dropdown visible status
+            return !me.$catalogTree.hasClass("fr-core-hidden");
         },
         _getCatalogTreeData: function (rootPath) {
             var me = this;

@@ -20,7 +20,12 @@ for /F "tokens=1-4 delims=." %%i in (%~dp0\..\build.txt) do (
 
 set /A BUILD_BUILD+=1
 set BUILD_RELEASE=%DROP_ROOT%\%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
+
 mkdir %BUILD_RELEASE%
+if not exist "%SECRETS_ROOT%" (
+	mkdir "%SECRETS_ROOT%"
+)
+
 set BUILD_LOG=%BUILD_RELEASE%\build.log
 echo %DATE% >> %BUILD_LOG%
 echo %TIME% >> %BUILD_LOG%
@@ -91,16 +96,12 @@ call %~dp0postbuild.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
-echo Running PostBuild2 >> %BUILD_LOG%
-call %~dp0postbuild2.cmd %BUILD_RELEASE% %BUILD_LOG%
-if ERRORLEVEL 1 (
-	goto :Error
-)
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
 %ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip 
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
+robocopy %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%\Setup_Upload *.nupkg /R:0
 %ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip >> %BUILD_LOG% 2>&1
 %UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%" >> %BUILD_LOG% 2>&1
 set MailSubject="BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"

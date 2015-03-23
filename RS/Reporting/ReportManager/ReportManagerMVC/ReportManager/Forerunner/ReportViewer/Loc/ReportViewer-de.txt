@@ -275,13 +275,15 @@
     "deleteFailed":"Abonnement Löschung gescheitert",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Antwort an"
+    "replyToPlaceholder":"Antwort an",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"Eigenschaften",
     "submit":"einreichen",
     "deleteItem":"löschen",
-    "description":"Beschreibung"
+    "description":"Beschreibung",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"Kontextmenü",
@@ -291,7 +293,8 @@
     "linkedReport":"Verknüpften Berichts",
     "downloadFile":"Datei herunterladen",
     "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it."
+    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
+    "move":"Move"
   },
   "common": {
     "submit":"einreichen",
@@ -354,5 +357,10 @@
     "descriptionLabel":"Beschreibung",
     "hide":"Im Normalmodus verborgenen",
     "fileExists":"Ein Ordner mit diesem Namen existiert bereits"
+  },
+  "move": {
+    "title":"Move",
+    "location":"Location",
+    "prompt":"Select the folder that you want to include this item"
   }
 }

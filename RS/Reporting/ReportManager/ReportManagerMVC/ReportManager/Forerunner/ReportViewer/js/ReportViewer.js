@@ -156,15 +156,20 @@ $(function () {
                     }
                 });
             }
+        },
+        _init: function () {
+            var me = this;
+            me._super(me.$reportContainer);
 
             me.options.$appContainer.off(events.saveRDLDone);
             me.options.$appContainer.on(events.saveRDLDone, function (e, data) {
                 me._updateRDLExt(data);
             });
-        },
-        _init: function () {
-            var me = this;
-            me._super(me.$reportContainer);
+
+            me.options.$appContainer.off(events.renameItem);
+            me.options.$appContainer.on(events.renameItem, function (e, data) {
+                me.reportPath = data.newPath || me.reportPath;
+            });
         },
         _checkPermission: function (path) {
             var me = this;
@@ -404,26 +409,15 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (!me._zoomOveride) {
-                if (me.$reportAreaContainer) {
+            if (me.$reportAreaContainer) {
 
-                    me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height());
-                    me.$reportAreaContainer.css("overflow", "auto");
-                    me._ScrollInner = true;
-                }
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);
+                me.$reportAreaContainer.css("overflow", "auto");
+                me._ScrollInner = true;
             }
-            else {
-                if (me.$reportAreaContainer) {
-                    me.$reportAreaContainer.css("display", "table-cell");
-                    me.$reportAreaContainer.css("width", "auto");
-                    me.$reportAreaContainer.css("height", "auto");
-                    me.$reportAreaContainer.css("overflow", "visible");
-                    me.element.hide().show(0);
-                    me._ScrollInner = true;
-                }
-            }
+  
         },
         /**       
        * Scolls the report ot the current set locaion or position specified        
@@ -662,18 +656,11 @@ $(function () {
             }
 
             if (isEnabled === true) {
-                me._zoomOveride = true;
                 forerunner.device.allowZoom(true);
-                if (me._ScrollInner)
-                    me.scrollReportBody(true);
-
                 me.allowSwipe(false);
             }
             else {
-                me._zoomOveride = false;
                 forerunner.device.allowZoom(false);
-                if (me._ScrollInner)
-                    me.scrollReportBody();
                 me.allowSwipe(true);
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
@@ -1853,8 +1840,9 @@ $(function () {
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                
+                //need to always set paramList event it's null to clear cache    
+                me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -2317,27 +2305,30 @@ $(function () {
             var me = this;
 
             me.property = forerunner.cache.itemProperty[me.reportPath];
-            if (me.property["ForerunnerRDLExt"]) {
-                return me.property["ForerunnerRDLExt"];
+
+            if (me.property) {
+                me.RDLExtProperty = me.property["ForerunnerRDLExt"] || null;
+                return;
             }
 
-            forerunner.ajax.ajax(
-               {
-                   type: "GET",
-                   dataType: "json",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
-                   data: {
-                       path: encodeURIComponent(me.reportPath),
-                       propertyName: "ForerunnerRDLExt",
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       if (data && JSON.stringify(data) !== "{}" ) {
-                           me.RDLExtProperty = data; 
-                       }
-                   },
-                   async: false
-               });
+            forerunner.ajax.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                data: {
+                    path: encodeURIComponent(me.reportPath),
+                    propertyName: "ForerunnerRDLExt",
+                    instance: me.options.rsInstance,
+                },
+                success: function (data) {
+                    if (data && JSON.stringify(data) !== "{}") {
+                        //me.RDLExtProperty = data;
+
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = data;
+                    }
+                }
+            });
         },
         /**
         * Get RDL Extension
@@ -2626,13 +2617,6 @@ $(function () {
                 });
             }
              
-            if (!me.pages[newPageNum]) {
-                me.pages[newPageNum] = new reportPage(data);
-            }
-            else {
-                me.pages[newPageNum].reportObj = data;
-            } 
-
             if (!data.SessionID)
                 me.sessionID = "";
             else
@@ -2647,6 +2631,17 @@ $(function () {
             catch (error) {
                 me.numPages = 0;
             } 
+
+            if (me.numPages !== 0 && newPageNum > me.numPages) {
+                newPageNum = me.numPages;
+            }
+
+            if (!me.pages[newPageNum]) {
+                me.pages[newPageNum] = new reportPage(data);
+            }
+            else {
+                me.pages[newPageNum].reportObj = data;
+            }
 
             if (!loadOnly) {
 

@@ -749,6 +749,19 @@ namespace ReportManager.Controllers
             }
         }
 
+        [HttpPost]
+        public HttpResponseMessage MoveItem(MoveItemData data)
+        {
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.instance).MoveItem(data)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+        }
+
         private string ToString<T>(T value)
         {
             StringBuilder buffer = new StringBuilder();

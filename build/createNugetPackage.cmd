@@ -104,8 +104,16 @@ if ERRORLEVEL 8 (
 echo Creating ForerunnerSDK.%BUILD_NUMBER%.nupkg... >> %NUGET_PACKAGE_LOG%
 pushd %DEST%
 %NUGET_TOOL% pack %DEST%\ForerunnerSDK.nuspec -Version %BUILD_NUMBER% >> %NUGET_PACKAGE_LOG%
-popd
 if ERRORLEVEL 1 (
+  popd
+	goto :Error
+)
+popd
+
+:: Copy the package to the release bin folder
+set PKG_FILE=ForerunnerSDK.%BUILD_NUMBER%.nupkg
+robocopy %DEST% %BUILD_RELEASE%\bin\Release %PKG_FILE% /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
 	goto :Error
 )
 

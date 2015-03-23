@@ -208,6 +208,12 @@
     "emptyError":"搜索條件不能為空",
     "notFound":"沒有結果符合您的搜索條件，請縮小搜尋範圍。"
   },
+  "RDLExt": {
+    "title":"RDL擴展",
+    "submit":"提交",
+    "cancel":"取消",
+    "dialogTitle":"RDL的JSON擴展"
+  },
   "createDashboard": {
     "title":"創建指示板",
     "cancel":"取消",
@@ -216,12 +222,6 @@
     "namePlaceholder":"指示板名稱",
     "dashboardTemplate":"模板",
     "overwrite":"覆蓋"
-  },
-  "RDLExt": {
-    "title":"RDL擴展",
-    "submit":"提交",
-    "cancel":"取消",
-    "dialogTitle":"RDL的JSON擴展"
   },
   "reportProperties": {
     "title":"報表屬性",
@@ -272,36 +272,27 @@
     "addNew":"創建",
     "edit":"編輯",
     "deleteSubscription":"刪除",
-    "deleteFailed":"刪除訂閱成功",
-    "ccPlaceholder":"抄送",
-    "bccPlaceholder":"秘密抄送",
-    "replyToPlaceholder":"答復",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"刪除訂閱成功"
   },
   "properties": {
     "title":"屬性",
     "submit":"提交",
     "deleteItem":"刪除",
-    "description":"描述",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"描述"
   },
   "contextMenu": {
     "title":"右鍵菜單",
     "delLabel":"刪除",
     "properties":"屬性",
     "security":"安全性",
-    "linkedReport":"鏈接報表",
-    "downloadFile":"下載文件",
-    "deleteConfirm":"確定要刪除 {0} 嗎?",
-    "folderNotEmpty":"該文件夾中包含子項，您不能刪除",
-    "move":"移動"
+    "linkedReport":"鏈接報表"
   },
   "common": {
     "submit":"提交",
     "cancel":"取消",
-    "deleteBtn":"刪除",
+    "delete":"刪除",
     "edit":"編輯",
-    "name":"名稱",
+    "name":"Name",
     "description":"描述"
   },
   "security": {
@@ -311,16 +302,7 @@
     "roles":"角色",
     "desp":"說明",
     "groupuser":"域名帳號",
-    "prompt":"選擇妳要分配的角色",
-    "accountMsg":"必須為角色分配指定有效的組或用戶帳戶",
-    "editSecurity":"編輯項安全設置",
-    "editConfirm":"從父項繼承項安全設置。是否要對此項應用不同於 {0} 父項的安全設置?",
-    "revertConfirm":"為此項定義的安全設置將由其父項 {0} 的安全設置取代。是否繼續？",
-    "deleteConfirm":"是否確定要刪除此角色分配?",
-    "home":"主頁",
-    "revert":"還原",
-    "roleEmptyMsg":"為該組或用戶選中至少壹個角色",
-    "detail":"詳細"
+    "prompt":"選擇妳要分配的角色"
   },
   "visibility": {
     "title":"隱藏",
@@ -329,38 +311,7 @@
   },
   "linkedReport": {
     "title":"鏈接報表",
-    "create":"創建基於 {0} 的鏈接報表",
-    "edit":"編輯鏈接報表 {0}, 選擇您希望鏈接到的報表",
-    "location":"保存地址",
-    "report":"報表"
-  },
-  "dialogBase": {
-    "title":"對話框",
-    "cancel":"取消",
-    "submit":"提交"
-  },
-  "uploadFile": {
-    "title":"上傳文件",
-    "description":"上傳報表(.rdl)或其它資源到此文件夾: {0}",
-    "uploadFileLabel":"要上傳的文件",
-    "browseBtn":"瀏覽",
-    "filename":"名稱",
-    "overwrite":"覆蓋",
-    "overwriteMessage":"同名文件已經存在，請選擇覆蓋復選框然後重試.",
-    "warningsMessage":"上傳成功.<br><br>返回壹下警告:<br><br>{0}",
-    "overwriteTitle":"覆蓋失敗"
-  },
-  "newFolder": {
-    "title":"新建文件夾",
-    "description":"在{0}下新建文件夾",
-    "name":"名稱",
-    "descriptionLabel":"描述",
-    "hide":"在普通模式下隱藏",
-    "fileExists":"同名文件夾已經存在"
-  },
-  "move": {
-    "title":"移動",
-    "location":"位置",
-    "prompt":"選擇要包含此項的文件夾"
+    "prompt":"創建基於{0}的鏈接報表",
+    "location":"地址"
   }
 }

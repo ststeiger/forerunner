@@ -272,95 +272,46 @@
     "addNew":"создавать",
     "edit":"редактировать",
     "deleteSubscription":"удалять",
-    "deleteFailed":"Подписка Ошибка удаления",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Подписка Ошибка удаления"
   },
   "properties": {
     "title":"свойства",
     "submit":"представлять",
     "deleteItem":"удалять",
-    "description":"описание",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"описание"
   },
   "contextMenu": {
     "title":"Контекстное меню",
     "delLabel":"удалять",
     "properties":"свойства",
-    "security":"безопасность",
-    "linkedReport":"Связанный отчет",
-    "downloadFile":"Скачать файл",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"представлять",
-    "cancel":"отменить",
-    "deleteBtn":"удалять",
-    "edit":"редактировать",
-    "name":"имя",
-    "description":"описание"
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"новый",
-    "reset":"сброс",
-    "roles":"Роли",
-    "desp":"описание",
-    "groupuser":"Пользователь или группа пользователей",
-    "prompt":"Выберите роли, которые необходимо присвоить",
-    "accountMsg":"Действует группа или учетная запись пользователя имя должно быть определено для этого назначения роли",
-    "editSecurity":"Изменить элемент безопасности",
-    "editConfirm":"Безопасность товара наследуется от его родительского элемента. Вы хотите, чтобы применить настройки безопасности для этого элемента, которые отличаются от тех, {0} родительского элемента?",
-    "revertConfirm":"Настройки безопасности, которые определены для этого элемента будут заменены настройками безопасности своего родителя {0}. Вы хотите продолжить?",
-    "deleteConfirm":"Вы действительно хотите удалить эту задачу роль?",
-    "home":"домой",
-    "revert":"возвращаться",
-    "roleEmptyMsg":"Выберите не менее одной роли для этой группы или пользователя.",
-    "detail":"подробно"
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"скрытый",
-    "label":"Скрытые в нормальном режиме",
-    "prompt":"Установите скрыты не покажет этот пункт в нормальном режиме, вы можете переключить его обратно в режим администратора."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Связанный отчет",
-    "create":"Создайте новый связанный отчет для {0}",
-    "edit":"Редактировать связанного отчета {0}, выберите отчет, который вы хотите связать",
-    "location":"расположение",
-    "report":"отчет"
-  },
-  "dialogBase": {
-    "title":"диалог",
-    "cancel":"отменить",
-    "submit":"представлять"
-  },
-  "uploadFile": {
-    "title":"Загрузить файл",
-    "description":"Загрузить отчет (.rdl) или другой ресурс в папке: {0}",
-    "uploadFileLabel":"Файл для загрузки",
-    "browseBtn":"просматривать",
-    "filename":"имя",
-    "overwrite":"переписывать",
-    "overwriteMessage":"Ресурс с таким именем уже существует. Вы можете установить флажок перезаписи затем повторите попытку.",
-    "warningsMessage":"Загрузить успеху Каталог <br><br> Следующие предупреждения были возвращены:. <br><br> {0}",
-    "overwriteTitle":"Переписать удалось"
-  },
-  "newFolder": {
-    "title":"New Folder",
-    "description":"Создайте новую папку в {0}",
-    "name":"имя",
-    "descriptionLabel":"описание",
-    "hide":"Скрытые в нормальном режиме",
-    "fileExists":"Папка, имя уже существует"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

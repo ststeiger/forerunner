@@ -27,7 +27,7 @@
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
     "serverError":"Ausnahme vom Server geworfen",
-    "type":"Art",
+    "type":"Type",
     "targetSite":"targeSite",
     "source":"Ursprung",
     "message":"Information",
@@ -54,7 +54,7 @@
     "docMap":"Dokument anzeigen",
     "find":"Finden",
     "next":"nächster",
-    "zoom":"Aktivieren Pinch Zoom",
+    "zoom":"Zoomen",
     "print":"Drucken",
     "dsCredential":"Credential",
     "views":"Ansichten",
@@ -200,7 +200,7 @@
     "title":"Datenquelle Credential",
     "cancel":"Abbestellen",
     "submit":"einreichen",
-    "username":"Loginname:",
+    "username":"Login name:",
     "password":"Passwort:",
     "reset":"rücksetzen"
   },
@@ -263,7 +263,7 @@
     "descriptionPlaceholder":"Beschreibung",
     "commentPlaceholder":"Kommentar",
     "subject":"@ Report wurde unter @ ExecutionTime ausgeführt",
-    "description":"Senden Sie E-Mail an {0}",
+    "description":"E-Mail an {0}",
     "includeLink":"Fügen Link",
     "includeReport":"Fügen Bericht",
     "schedule":"Zeitplan",
@@ -272,95 +272,46 @@
     "addNew":"Schaffen ",
     "edit":"Edieren",
     "deleteSubscription":"Löschen ",
-    "deleteFailed":"Abonnement Löschung gescheitert",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Antwort an",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Abonnement Löschung gescheitert"
   },
   "properties": {
     "title":"Eigenschaften",
     "submit":"einreichen",
     "deleteItem":"löschen",
-    "description":"Beschreibung",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"Beschreibung"
   },
   "contextMenu": {
     "title":"Kontextmenü",
     "delLabel":"löschen",
     "properties":"Eigenschaften",
-    "security":"Sicherheit",
-    "linkedReport":"Verknüpften Berichts",
-    "downloadFile":"Datei herunterladen",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"einreichen",
-    "cancel":"stornieren",
-    "deleteBtn":"löschen",
-    "edit":"bearbeiten",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
     "name":"Name",
-    "description":"Beschreibung"
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"Neu",
-    "reset":"rücksetzen",
-    "roles":"Rollen",
-    "desp":"Beschreibung",
-    "groupuser":"Gruppe oder Benutzer",
-    "prompt":"Wählen Sie die Rollen, die Sie zuweisen möchten",
-    "accountMsg":"Eine gültige Gruppen- oder Benutzerkontoname muss für diese Rollenzuweisung festgelegt werden.",
-    "editSecurity":"Element bearbeiten Sicherheit",
-    "editConfirm":"Artikel Sicherheit wird von der übergeordneten Element übernommen. Haben Sie die Sicherheitseinstellungen für diesen Titel, die sich von denen des {0} übergeordnete Element sind bewerben?",
-    "revertConfirm":"Die Sicherheitseinstellungen, die für dieses Objekt definiert sind, wird von den Sicherheitseinstellungen des übergeordneten {0} ersetzt werden. Wollen Sie weitermachen?",
-    "deleteConfirm":"Sind Sie sicher, dass diese Rollenzuweisung löschen?",
-    "home":"Hause",
-    "revert":"zurückkehren",
-    "roleEmptyMsg":"Wählen Sie mindestens eine Rolle für diese Gruppe oder einen Benutzer.",
-    "detail":"Einzelheiten"
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"versteckt",
-    "label":"Im Normalmodus verborgenen",
-    "prompt":"Zu versteckten Stellen wird dieses Produkt im normalen Modus nicht angezeigt, können Sie sie im Admin-Modus zurück."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"verknüpften Berichts",
-    "create":"Erstellen Sie einen neuen verknüpften Bericht für {0}",
-    "edit":"Bearbeiten verknüpften Bericht {0}, wählen Sie den Bericht, den Sie verknüpfen möchten",
-    "location":"Lage",
-    "report":"Sich Melden"
-  },
-  "dialogBase": {
-    "title":"Dialog",
-    "cancel":"Rückgängig Machen",
-    "submit":"Einreichen"
-  },
-  "uploadFile": {
-    "title":"Datei hochladen",
-    "description":"Bericht (.rdl) oder eine andere Ressource Laden Sie in den Ordner: {0}",
-    "uploadFileLabel":"Datei zum hochladen",
-    "browseBtn":"blättern",
-    "filename":"Name",
-    "overwrite":"überschreiben",
-    "overwriteMessage":"Eine Ressource mit diesem Namen existiert bereits. Sie können den Überschreibkasten überprüfen versuchen Sie es erneut.",
-    "warningsMessage":"Laden Sie Erfolgreiche <br><br> Folgende Warnmeldungen wurden ausgegeben:.<br> <br> {0}",
-    "overwriteTitle":"überschreiben fehlgeschlagen"
-  },
-  "newFolder": {
-    "title":"Neuer Ordner",
-    "description":"Erstellen Sie einen neuen Ordner in: {0}",
-    "name":"Name",
-    "descriptionLabel":"Beschreibung",
-    "hide":"Im Normalmodus verborgenen",
-    "fileExists":"Ein Ordner mit diesem Namen existiert bereits"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

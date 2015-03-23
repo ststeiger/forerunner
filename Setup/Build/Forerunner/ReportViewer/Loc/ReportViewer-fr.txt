@@ -273,95 +273,46 @@
     "addNew":"Créer",
     "edit":"Modifier",
     "deleteSubscription":"Effacer",
-    "deleteFailed":"Suppression abonnement qui a échoué",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Suppression abonnement qui a échoué"
   },
   "properties": {
     "title":"propriétés",
     "submit":"soumettre ",
     "deleteItem":"soumettre",
-    "description":"description",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"description"
   },
   "contextMenu": {
     "title":"Menu contextuel",
     "delLabel":"effacer",
     "properties":"propriétés",
-    "security":"sécurité",
-    "linkedReport":"Rapport Lié",
-    "downloadFile":"Télécharger le fichier",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"Soumettre",
-    "cancel":"annuler",
-    "deleteBtn":"effacer",
-    "edit":"éditer",
-    "name":"nom",
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
     "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"nouveau",
-    "reset":"remettre",
-    "roles":"rôles",
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
     "desp":"Description",
-    "groupuser":"Groupe ou utilisateur",
-    "prompt":"Sélectionnez les rôles que vous voulez attribuer",
-    "accountMsg":"Un compte utilisateur groupe ou nom valide doit être spécifié pour cette attribution de rôle.",
-    "editSecurity":"Modifier un élément de sécurité",
-    "editConfirm":"La sécurité d'objet est hérité de son élément parent. Voulez-vous appliquer les paramètres de sécurité de ce poste qui sont différents de ceux de la {0} parent article?",
-    "revertConfirm":"Les paramètres de sécurité qui sont définis pour cet article seront remplacés par les paramètres de sécurité de son parent {0}. Voulez-vous continuer?",
-    "deleteConfirm":"Êtes-vous sûr de vouloir supprimer cette attribution de rôle?",
-    "home":"maison",
-    "revert":"revenir",
-    "roleEmptyMsg":"Sélectionner au moins un rôle pour ce groupe ou utilisateur.",
-    "detail":"Détails"
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"caché",
-    "label":"Caché dans le mode normal",
-    "prompt":"Set pour caché ne sera pas afficher cet objet dans le mode normal, vous pouvez rallumer en mode admin."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Rapport Lié",
-    "create":"Créer un nouveau rapport lié pour {0}",
-    "edit":"Modifier liée rapport {0}, sélectionnez le rapport que vous voulez lier",
-    "location":"emplacement",
-    "report":"rapport"
-  },
-  "dialogBase": {
-    "title":"dialogue",
-    "cancel":"annuler",
-    "submit":"soumettre"
-  },
-  "uploadFile": {
-    "title":"Télécharger le fichier",
-    "description":"Téléchargez rapport (.rdl) ou une autre ressource dans le dossier: {0}",
-    "uploadFileLabel":"Fichier à télécharger",
-    "browseBtn":"feuilleter",
-    "filename":"nom",
-    "overwrite":"écraser",
-    "overwriteMessage":"Une ressource avec ce nom existe déjà. Vous pouvez cocher la case de l'écrasement puis réessayez.",
-    "warningsMessage":"Téléchargez Successfull <br><br> Les avertissements suivants ont été retournés:. <br><br> {0}",
-    "overwriteTitle":"Ecraser Échec"
-  },
-  "newFolder": {
-    "title":"Nouveau dossier",
-    "description":"Créer un nouveau dossier dans: {0}",
-    "name":"nom",
-    "descriptionLabel":"Description",
-    "hide":"Caché dans le mode normal",
-    "fileExists":"Un dossier ce nom existe déjà"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

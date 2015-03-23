@@ -50,7 +50,7 @@
     "navigation":"navigazione",
     "favorites":"Preferiti",
     "back":"indietro",
-    "refresh":"rinfrescare",
+    "refresh":"Refresh",
     "docMap":"Mappa documento",
     "find":"trovare",
     "next":"Successivo",
@@ -78,7 +78,7 @@
     "home":"Casa",
     "keyword":"parola chiave",
     "lastPage":"Ultimo",
-    "logOff":"disconnettersi",
+    "logOff":"logoff",
     "menu":"Menu",
     "navigation":"Navigazione",
     "next":"seguente",
@@ -86,7 +86,7 @@
     "paramarea":"Parametri",
     "previousPage":"precedente",
     "recent":"Recenti",
-    "refresh":"rinfrescare",
+    "refresh":"Refresh",
     "reportPage":"Pagina",
     "zoom":"Abilita Zoom",
     "print":"Stampare",
@@ -272,95 +272,46 @@
     "addNew":"Creare",
     "edit":"Modifica",
     "deleteSubscription":"Cancellare ",
-    "deleteFailed":"Eliminazione di abbonamento fallito",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Eliminazione di abbonamento fallito"
   },
   "properties": {
     "title":"proprietà",
     "submit":"presentare",
     "deleteItem":"cancellare",
-    "description":"descrizione",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"descrizione"
   },
   "contextMenu": {
     "title":"Context Menu",
     "delLabel":"cancellare",
     "properties":"proprietà",
-    "security":"sicurezza",
-    "linkedReport":"Rapporto collegato",
-    "downloadFile":"Download File",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"presentare",
-    "cancel":"cancellare",
-    "deleteBtn":"annullare",
-    "edit":"Modifica",
-    "name":"nome",
-    "description":"descrizione"
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"nuovo",
+    "newPolicy":"New",
     "reset":"Reset",
-    "roles":"ruoli",
-    "desp":"descrizione",
-    "groupuser":"Gruppo o utente",
-    "prompt":"Selezionare i ruoli che si desidera assegnare",
-    "accountMsg":"Un nome del gruppo o account utente valido deve essere specificato per questa assegnazione del ruolo",
-    "editSecurity":"Sicurezza Modifica elemento",
-    "editConfirm":"Sicurezza Voce è ereditato dal suo elemento principale. Vuoi applicare le impostazioni di sicurezza per questo articolo che sono diverse da quelle della {0} elemento padre?",
-    "revertConfirm":"Le impostazioni di sicurezza definite per questo articolo verranno sostituite dalle impostazioni di sicurezza del suo genitore {0}. Vuoi continuare?",
-    "deleteConfirm":"Sei sicuro di voler eliminare questo assegnazione di ruolo?",
-    "home":"casa",
-    "revert":"ritornare",
-    "roleEmptyMsg":"Selezionare un minimo di un ruolo per questo gruppo o utente.",
-    "detail":"Dettaglio"
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"nascosto",
-    "label":"Nascosto in modalità normale",
-    "prompt":"Impostare nascosto non mostrerà questa voce in modalità normale, è possibile passare di nuovo in modalità amministratore."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Rapporto collegato",
-    "create":"Creare un nuovo report collegato per {0}",
-    "edit":"Modifica legata relazione {0}, selezionare il report che si desidera collegare",
-    "location":"posizione",
-    "report":"relazione"
-  },
-  "dialogBase": {
-    "title":"dialogo",
-    "cancel":"cancellare",
-    "submit":"presentare"
-  },
-  "uploadFile": {
-    "title":"Carica file",
-    "description":"Carica report (.rdl) o di altre risorse nella cartella: {0}",
-    "uploadFileLabel":"File da caricare",
-    "browseBtn":"sfogliare",
-    "filename":"nome",
-    "overwrite":"Sovrascrivi",
-    "overwriteMessage":"Una risorsa con questo nome esiste già. È possibile controllare la casella di sovrascrittura poi riprovare.",
-    "warningsMessage":"Carica Successfull <br><br> I seguenti avvisi sono stati restituiti:. <br><br> {0}",
-    "overwriteTitle":"Sovrascrivi Impossibile"
-  },
-  "newFolder": {
-    "title":"Nuova cartella",
-    "description":"Creare una nuova cartella in: {0}",
-    "name":"nome",
-    "descriptionLabel":"descrizione",
-    "hide":"Nascosto in modalità normale",
-    "fileExists":"Una cartella già esistente nome"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

@@ -275,13 +275,15 @@
     "deleteFailed":"刪除訂閱成功",
     "ccPlaceholder":"抄送",
     "bccPlaceholder":"秘密抄送",
-    "replyToPlaceholder":"答復"
+    "replyToPlaceholder":"答復",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "properties": {
     "title":"屬性",
     "submit":"提交",
     "deleteItem":"刪除",
-    "description":"描述"
+    "description":"描述",
+    "readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu": {
     "title":"右鍵菜單",

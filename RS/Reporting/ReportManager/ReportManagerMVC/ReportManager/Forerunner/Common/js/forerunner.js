@@ -610,7 +610,7 @@ $(function () {
             /** widget + event, lowercase */
             forerunnerSecurityClose: function () { return (forerunner.ssr.constants.widgets.forerunnerSecurity + this.close).toLowerCase(); },
             /** widget + event, lowercase */
-            forerunnerMoveItemClose: function() { return (forerunner.ssr.constants.widgets.forerunnerMoveItem + this.close).toLowerCase(); },
+            forerunnerMoveItemClose: function () { return (forerunner.ssr.constants.widgets.forerunnerMoveItem + this.close).toLowerCase(); },
 
             /** @constant */
             zoomChange: "zoomchange",
@@ -622,7 +622,10 @@ $(function () {
             /** widget + event, lowercase */
             reportExplorerEZAfterTransition: function () { return (forerunner.ssr.constants.widgets.reportExplorerEZ + this.afterTransition).toLowerCase(); },
 
+            /** @constant */
             saveRDLDone: "saveRDLDone",
+            /** @constant */
+            renameItem: "renameItem",
 
             /** @constant */
             catalogSelected: "catalogSelected",

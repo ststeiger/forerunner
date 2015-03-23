@@ -94,7 +94,7 @@
     "saveParam":"Spara Parameter",
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
-    "dsCredential":"Datakälla Credential",
+    "dsCredential":"Datasource Credential",
     "addToFavorites":"Lägg till i favoriter",
     "unzoom":"Zooma ut",
     "search":"Sökning",
@@ -190,7 +190,7 @@
     "add":"Lägg",
     "addNewSet":"Lägg till ny Set",
     "name":"Namn",
-    "defaultHeader":"Standard",
+    "defaultHeader":"Default",
     "allUsers":"Alla",
     "deleteHeader":"Radera",
     "apply":"inbespara",
@@ -272,95 +272,46 @@
     "addNew":"Skapa",
     "edit":"Redigera",
     "deleteSubscription":"Radera",
-    "deleteFailed":"Prenumerations deletion misslyckades",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Svara till",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Prenumerations deletion misslyckades"
   },
   "properties": {
     "title":"Egenskaper",
     "submit":"Skicka in",
     "deleteItem":"Radera",
-    "description":"Beskrivning",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"Beskrivning"
   },
   "contextMenu": {
     "title":"snabbmenyn",
     "delLabel":"Radera",
     "properties":"Egenskaper",
-    "security":"Säkerhet",
-    "linkedReport":"länkad Rapportera",
-    "downloadFile":"Hämta fil",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
     "submit":"Submit",
-    "cancel":"avboka",
-    "deleteBtn":"Radera",
-    "edit":"Redigera",
-    "name":"namn",
-    "description":"Beskrivning"
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"ny",
-    "reset":"Återställ",
-    "roles":"Roller",
-    "desp":"Beskrivning",
-    "groupuser":"Grupp eller Användare",
-    "prompt":"Välj de roller du vill tilldela",
-    "accountMsg":"Ett giltigt grupp eller användare kontonamn måste anges för denna rolltilldelning",
-    "editSecurity":"Redigera objekt Säkerhet",
-    "editConfirm":"Punkt säkerhet är ett arv från den överordnade posten. Vill du ansöka säkerhetsinställningar för denna post som skiljer sig från den {0} ordnade objekt?",
-    "revertConfirm":"De säkerhetsinställningar som är definierade för denna post kommer att ersättas av säkerhetsinställningarna för den överordnade {0}. Vill du fortsätta?",
-    "deleteConfirm":"Är du säker på att ta bort denna rolltilldelningen?",
-    "home":"Hem",
-    "revert":"återgå",
-    "roleEmptyMsg":"Välj minst en roll för denna grupp eller användare.",
-    "detail":"Detalj"
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
     "title":"Hidden",
-    "label":"Gömd i normalläge",
-    "prompt":"Ställ in på dolda kommer inte att visa denna post i normalt läge, kan du växla tillbaka den i adminläge."
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"länkad Rapportera",
-    "create":"Skapa en ny länkad rapport för {0}",
-    "edit":"Redigera länkad rapport {0}, välj den rapport som du vill länka",
-    "location":"Läge",
-    "report":"rapport"
-  },
-  "dialogBase": {
-    "title":"Dialog",
-    "cancel":"avboka",
-    "submit":"Submit"
-  },
-  "uploadFile": {
-    "title":"Ladda upp fil",
-    "description":"Ladda upp rapporten (.rdl) eller annan resurs i mappen: {0}",
-    "uploadFileLabel":"Fil att ladda upp",
-    "browseBtn":"Bläddra",
-    "filename":"namn",
-    "overwrite":"Skriv över",
-    "overwriteMessage":"En resurs med det namnet finns redan. Du kan kontrollera överskrivnings rutan och försök igen.",
-    "warningsMessage":"Ladda upp Framgångsrik <br><br> Följande varningar returnerades:. <br><br> {0}",
-    "overwriteTitle":"Skriv över Misslyckades"
-  },
-  "newFolder": {
-    "title":"ny mapp",
-    "description":"Skapa en ny mapp i: {0}",
-    "name":"namn",
-    "descriptionLabel":"Beskrivning",
-    "hide":"Gömd i normalläge",
-    "fileExists":"En mapp det namnet finns redan"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

@@ -156,7 +156,8 @@
 	"addNew": "Create",
 	"edit": "Edit",
 	"deleteSubscription": "Delete",
-	"deleteFailed": "Subscription deletion failed"
+	"deleteFailed": "Subscription deletion failed",
+	"emptyPrompt":"There are no subscriptions to display at this time"
   },
   "paramPane": {
     "nullField":"Null",
@@ -289,7 +290,8 @@
 	"title":"Properties",
 	"submit":"Submit",
 	"deleteItem":"Delete",
-	"description":"Description"
+	"description":"Description",
+	"readonly":"Please set name property in catalog item context menu"
   },
   "contextMenu":{
   "title":"Context Menu",

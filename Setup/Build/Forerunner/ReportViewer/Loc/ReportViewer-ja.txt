@@ -272,95 +272,46 @@
     "addNew":"作る",
     "edit":"編集",
     "deleteSubscription":"削除",
-    "deleteFailed":"サブスクリプションの削除に失敗しました",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"返信先",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"サブスクリプションの削除に失敗しました"
   },
   "properties": {
     "title":"プロパティ",
     "submit":"提出する",
     "deleteItem":"削除",
-    "description":"説明",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"説明"
   },
   "contextMenu": {
     "title":"コンテキストメニュー",
     "delLabel":"削除",
     "properties":"プロパティ",
-    "security":"セキュリティ",
-    "linkedReport":"リンクされたレポート",
-    "downloadFile":"ダウンロードファイル",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"提出する",
-    "cancel":"キャンセル",
-    "deleteBtn":"削除",
-    "edit":"編集",
-    "name":"名前",
-    "description":"説明"
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"新しい",
-    "reset":"リセット",
-    "roles":"役割",
-    "desp":"説明",
-    "groupuser":"グループまたはユーザー",
-    "prompt":"割り当てるロールを選択",
-    "accountMsg":"有効なグループまたはユーザーアカウント名がこの役割の割り当てを指定する必要があります",
-    "editSecurity":"アイテムの編集セキュリティ",
-    "editConfirm":"アイテムのセキュリティは、その親項目から継承されます。あなたは{0}親アイテムとは異なるこの項目のセキュリティ設定を適用しますか？",
-    "revertConfirm":"この項目に定義されたセキュリティ設定は、その親{0}のセキュリティ設定に置き換えられます。続行しますか？",
-    "deleteConfirm":"あなたはこの役割の割り当てを削除してもよろしいですか？",
-    "home":"ホーム",
-    "revert":"戻す",
-    "roleEmptyMsg":"このグループまたはユーザの1のロールの最小値を選択します。",
-    "detail":"詳細"
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"隠された",
-    "label":"通常モードに隠された",
-    "prompt":"通常モードでのこの項目を表示しません隠さに設定し、あなたが戻って管理モードでそれを切り替えることができます."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"リンクされたレポート",
-    "create":"のための新しいリンクされたレポートを作成します{0}",
-    "edit":"編集には{0}、あなたがリンクしたいレポートを選択し、レポートをリンクさ",
-    "location":"場所",
-    "report":"レポート"
-  },
-  "dialogBase": {
-    "title":"ダイアログ",
-    "cancel":"キャンセル",
-    "submit":"提出する"
-  },
-  "uploadFile": {
-    "title":"ファイルのアップロード",
-    "description":"フォルダに報告書（.rdl）またはその他のリソースをアップロード：{0}",
-    "uploadFileLabel":"アップロードするファイル",
-    "browseBtn":"ブラウズ",
-    "filename":"名前",
-    "overwrite":"上書きする",
-    "overwriteMessage":"その名前のリソースは既に存在します。その後、上書き]チェックボックスをオンにし、もう一度試すことができます。",
-    "warningsMessage":"Successfullをアップロード以下の警告が返された<br><br>ログイン：。<br><br>ログイン{0}",
-    "overwriteTitle":"上書きに失敗しました"
-  },
-  "newFolder": {
-    "title":"新規フォルダ",
-    "description":"に新しいフォルダを作成します：{0}",
-    "name":"名前",
-    "descriptionLabel":"説明",
-    "hide":"通常モードに隠された",
-    "fileExists":"名前がすでに存在していることをフォルダ"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

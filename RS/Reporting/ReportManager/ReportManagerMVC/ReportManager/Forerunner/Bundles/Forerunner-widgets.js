@@ -876,15 +876,20 @@ $(function () {
                     }
                 });
             }
+        },
+        _init: function () {
+            var me = this;
+            me._super(me.$reportContainer);
 
             me.options.$appContainer.off(events.saveRDLDone);
             me.options.$appContainer.on(events.saveRDLDone, function (e, data) {
                 me._updateRDLExt(data);
             });
-        },
-        _init: function () {
-            var me = this;
-            me._super(me.$reportContainer);
+
+            me.options.$appContainer.off(events.renameItem);
+            me.options.$appContainer.on(events.renameItem, function (e, data) {
+                me.reportPath = data.newPath || me.reportPath;
+            });
         },
         _checkPermission: function (path) {
             var me = this;
@@ -1124,26 +1129,15 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (!me._zoomOveride) {
-                if (me.$reportAreaContainer) {
+            if (me.$reportAreaContainer) {
 
-                    me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height());
-                    me.$reportAreaContainer.css("overflow", "auto");
-                    me._ScrollInner = true;
-                }
+                me.$reportAreaContainer.css("display", "block");
+                me.$reportAreaContainer.css("width", $(window).width());
+                me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);
+                me.$reportAreaContainer.css("overflow", "auto");
+                me._ScrollInner = true;
             }
-            else {
-                if (me.$reportAreaContainer) {
-                    me.$reportAreaContainer.css("display", "table-cell");
-                    me.$reportAreaContainer.css("width", "auto");
-                    me.$reportAreaContainer.css("height", "auto");
-                    me.$reportAreaContainer.css("overflow", "visible");
-                    me.element.hide().show(0);
-                    me._ScrollInner = true;
-                }
-            }
+  
         },
         /**       
        * Scolls the report ot the current set locaion or position specified        
@@ -1382,18 +1376,11 @@ $(function () {
             }
 
             if (isEnabled === true) {
-                me._zoomOveride = true;
                 forerunner.device.allowZoom(true);
-                if (me._ScrollInner)
-                    me.scrollReportBody(true);
-
                 me.allowSwipe(false);
             }
             else {
-                me._zoomOveride = false;
                 forerunner.device.allowZoom(false);
-                if (me._ScrollInner)
-                    me.scrollReportBody();
                 me.allowSwipe(true);
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
@@ -2573,8 +2560,9 @@ $(function () {
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                
+                //need to always set paramList event it's null to clear cache    
+                me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -3037,27 +3025,30 @@ $(function () {
             var me = this;
 
             me.property = forerunner.cache.itemProperty[me.reportPath];
-            if (me.property["ForerunnerRDLExt"]) {
-                return me.property["ForerunnerRDLExt"];
+
+            if (me.property) {
+                me.RDLExtProperty = me.property["ForerunnerRDLExt"] || null;
+                return;
             }
 
-            forerunner.ajax.ajax(
-               {
-                   type: "GET",
-                   dataType: "json",
-                   url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
-                   data: {
-                       path: encodeURIComponent(me.reportPath),
-                       propertyName: "ForerunnerRDLExt",
-                       instance: me.options.rsInstance,
-                   },
-                   success: function (data) {
-                       if (data && JSON.stringify(data) !== "{}" ) {
-                           me.RDLExtProperty = data; 
-                       }
-                   },
-                   async: false
-               });
+            forerunner.ajax.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
+                data: {
+                    path: encodeURIComponent(me.reportPath),
+                    propertyName: "ForerunnerRDLExt",
+                    instance: me.options.rsInstance,
+                },
+                success: function (data) {
+                    if (data && JSON.stringify(data) !== "{}") {
+                        //me.RDLExtProperty = data;
+
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = data;
+                    }
+                }
+            });
         },
         /**
         * Get RDL Extension
@@ -6236,7 +6227,7 @@ $(function () {
             $appContainer: null,
             $reportViewer: null,
             $reportExplorer: null,
-            rsInstance: null,
+            rsInstance: null
         },
         _init: function () {
             var me = this;
@@ -6247,7 +6238,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", locData.properties.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -6293,6 +6284,8 @@ $(function () {
         openDialog: function () {
             var me = this;
 
+            //used to flag where user make the change
+            me.userUpdate = false;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -6303,7 +6296,7 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath });
+            me._trigger(events.close, null, { $forerunnerProperties: me.element, path: me.curPath, isUpdate: me.userUpdate });
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
         /**
@@ -6316,6 +6309,7 @@ $(function () {
         getProperties: function () {
             var me = this;
             return {
+                view: me.view,
                 path: me.curPath,
                 propertyList: me._propertyList
             };
@@ -6330,8 +6324,10 @@ $(function () {
          *
          * @see forerunner.ssr.constants.properties
          */
-        setProperties: function (path, propertyList) {
+        setProperties: function (view, path, propertyList) {
             var me = this;
+
+            me.view = view;
             me.property = forerunner.cache.itemProperty[path];
 
             me.$tabs.find("div").remove();
@@ -6358,7 +6354,7 @@ $(function () {
                     case propertyEnums.description:
                         me._createDescription();
                         me._addPreprocess(function () {
-                            me._descriptionAndHiddenPreloading();
+                            me._propertiesPreloading();
                         });
                         break;
                     case propertyEnums.rdlExtension:
@@ -6401,21 +6397,50 @@ $(function () {
         },
         _createDescription: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.properties.description + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.properties.title + "</a></li>");
 
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
-                    "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
-                    "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
-                    "<div class='fr-visibility-container'>" +
-                        "<label class='fr-visibility-label'>"+
-                            "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + 
-                        "</label>" +
-                    "</div>" +
+                    "<form class='fr-properties-form fr-property-form'>" +
+                        "<div class='fr-name-div'>" + 
+                            "<label class='fr-name-label'>" + locData.common.name + "</label>" +
+                            "<span class='fr-readonly-span'>"+ locData.properties.readonly + "</span>" + 
+                            "<input type='text' class='fr-core-input fr-property-input fr-name-text fr-property-name' name='Name' required='true'>" +
+                            "<span class='fr-error-span' />" +
+                        "</div>" +
+                        "<div>" +
+                            "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
+                            "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
+                        "<div>" +
+                        "<div class='fr-visibility-container'>" +
+                            "<label class='fr-visibility-label'>"+
+                                "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + 
+                            "</label>" +
+                        "</div>" +
+                    "</form>" +
                 "</div>");
 
             me.$desInput = $descriptionDiv.find(".fr-description-text");
             me.$isHidden = $descriptionDiv.find(".fr-property-visibility");
+            me.$itemName = $descriptionDiv.find(".fr-name-text");
+            me.$propertyForm = $descriptionDiv.find(".fr-property-form");
+
+            if (me.view !== "contextmenu") {
+                me.$itemName.addClass("fr-name-readonly").attr("disabled", true);
+                $descriptionDiv.find(".fr-readonly-span").show();
+            }
+
+            me.$propertyForm.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.siblings("span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-error");
+                }
+            });
 
             me.$tabsUL.append($li);
             me.$tabs.append($descriptionDiv);
@@ -6431,12 +6456,6 @@ $(function () {
                 "</div>");
 
             me.$rdlInput = $rdlDiv.find(".fr-rdl-text");
-            
-            //me.options.$reportViewer.on(events.reportViewerAfterLoadReport(), function (event, data) {
-            //    if (data.RDLExtProperty) {
-            //        me._RDLExtensionPreloading(data.RDLExtProperty);
-            //    }
-            //});
 
             me.$tabsUL.append($li);
             me.$tabs.append($rdlDiv);
@@ -6469,19 +6488,19 @@ $(function () {
                 "<div id='" + me.guid + "_" + "searchfolder" + "' class='fr-property-container fr-sf-container'>" +
                    "<form class='fr-properties-form fr-sf-form'>" +
                         "<table class='fr-sf-table'>" +
-                            "<tr>" +
-                                "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
+                            //"<tr>" +
+                                //"<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
                                 //disable the search folder name textbox, not allow user rename folder temporarily
-                                "<td>" +
-                                    "<input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' disabled='true' />" +
-                                    "<span class='fr-sf-error-span' />" +
-                                "</td>" +
-                            "</tr>" +
+                                //"<td>" +
+                                //    "<input type='hidden' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername'/>" +
+                                //    "<span class='fr-error-span' />" +
+                                //"</td>" +
+                            //"</tr>" +
                             "<tr>" +
                                 "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
                                 "<td>" +
                                     "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
-                                    "<span class='fr-sf-error-span' />" +
+                                    "<span class='fr-error-span' />" +
                                 "</td>" +
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
@@ -6499,10 +6518,10 @@ $(function () {
                     error.appendTo(element.siblings("span"));
                 },
                 highlight: function (element) {
-                    $(element).addClass("fr-sf-error");
+                    $(element).addClass("fr-error");
                 },
                 unhighlight: function (element) {
-                    $(element).removeClass("fr-sf-error");
+                    $(element).removeClass("fr-error");
                 }
             });
 
@@ -6517,7 +6536,7 @@ $(function () {
             var result = true;
             switch (tabName) {
                 case propertyEnums.description:
-                    me._setDescriptionAndHidden();
+                    result = me._setProperties();
                     break;
                 case propertyEnums.rdlExtension:
                     me._setRDLExtension();
@@ -6624,7 +6643,7 @@ $(function () {
             }
         },
 
-        _descriptionAndHiddenPreloading: function () {
+        _propertiesPreloading: function () {
             var me = this;
 
             me._description = "";
@@ -6646,18 +6665,26 @@ $(function () {
                 }
 
                 if (typeof data === "object") {
-                    me._description = data["Description"];
-
+                    me._description = data["Description"] || "";
                     me.$desInput.val(me._description);
+
+                    me._itemName = data["Name"];
+                    me.$itemName.val(me._itemName);
                 }
             }, me);
         },
-        _setDescriptionAndHidden: function () {
+        _setProperties: function () {
             var me = this;
+
+            if (me.$propertyForm.valid() === false) {
+                return false;
+            }
             try {
                 var descriptionInput = $.trim(me.$desInput.val()),
                     isHidden = me.$isHidden[0].checked ? "True" : "False",
-                    path = me.curPath;
+                    itemName = $.trim(me.$itemName.val()),
+                    path = me.curPath,
+                    newPath = null;
 
                 var properties = [];
 
@@ -6672,14 +6699,24 @@ $(function () {
                     properties.push({
                         name: "Hidden",
                         value: isHidden
-                    })
+                    });
+                }
+
+                if (itemName !== me._itemName) {
+                    newPath = forerunner.helper.getParentPath(path) + "/" + itemName;
+                    properties.push({
+                        name: "Name",
+                        value: newPath
+                    });
                 }
                
                 if (properties.length) {
+                    me.userUpdate = true;
+
                     forerunner.ajax.ajax({
                         type: "POST",
                         dataType: "text",
-                        async: true,
+                        async: false,
                         url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                         data: {                            
                             path: me.curPath,
@@ -6687,13 +6724,21 @@ $(function () {
                             instance: me.options.rsInstance,
                         },
                         success: function (data) {
-                            //return true;
-                            forerunner.cache.itemProperty[path]["Hidden"] = isHidden;
-                            forerunner.cache.itemProperty[path]["Description"] = descriptionInput;
+                            if (newPath) {
+                                me.curPath = newPath;
+                                me.options.$appContainer.trigger(events.renameItem, { newPath: me.curPath })
+
+                                delete forerunner.cache.itemProperty[path];
+                            } else {
+                                forerunner.cache.itemProperty[path]["Hidden"] = isHidden;
+                                forerunner.cache.itemProperty[path]["Name"] = itemName;
+                                forerunner.cache.itemProperty[path]["Description"] = descriptionInput;
+                            }
                         },
                         fail: function (data) {
                             me._description = "";
                             me._isHidden = "False";
+                            me._itemName = "";
                             forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
                         }
                     });
@@ -6703,6 +6748,8 @@ $(function () {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, e.message, "Error Saving");
                 return false;
             }
+
+            return true;
         },
 
         _RDLExtensionPreloading: function (RDLExtension) {
@@ -6729,7 +6776,6 @@ $(function () {
                     value: rdl
                 }];
 
-                //me.options.$reportViewer.find(".fr-layout-reportviewer").reportViewer("saveRDLExt", rdl);
                 forerunner.ajax.ajax({
                     type: "POST",
                     dataType: "text",
@@ -6742,7 +6788,10 @@ $(function () {
                     },
                     success: function (data) {
                         me._rdl = rdl;
+
                         forerunner.cache.itemProperty[path]["ForerunnerRDLExt"] = rdl;
+                        me.property = forerunner.cache.itemProperty[path];
+
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
                     },
                     fail: function (data) {
@@ -6761,11 +6810,11 @@ $(function () {
 
             if (content) {
                 content = JSON.parse(content);//replace(/"/g, '')
-                me.$sfForm.find(".fr-sf-foldername").val(content.name)
+                //me.$sfForm.find(".fr-sf-foldername").val(content.name)
                 me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
             }
             else {
-                me.$sfForm.find(".fr-sf-foldername").val("")
+                //me.$sfForm.find(".fr-sf-foldername").val("")
                 me.$sfForm.find(".fr-sf-foldertags").val("");
             }
         },
@@ -6776,7 +6825,7 @@ $(function () {
 
             forerunner.ajax.ajax({
                 url: url,
-                async: true,
+                async: false,
                 type: "GET",
                 dataType: "text",
                 data: {
@@ -6795,11 +6844,11 @@ $(function () {
             var me = this;
 
             if (me.$sfForm.valid()) {
-                var name = $.trim(me.$sfForm.find(".fr-sf-foldername").val());
+                var name = $.trim(me._itemName);
                 var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
                 var priorSearchFolder = JSON.parse(me._searchFolder);
 
-                if (name !== priorSearchFolder.name || tags !== priorSearchFolder.tags) {
+                if (tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");
 
                     for (var i = 0; i < tagsList.length; i++) {
@@ -6809,7 +6858,7 @@ $(function () {
                     var searchfolder = {
                         searchFolderName: name,
                         overwrite: true,
-                        content: { name: name, tags: tagsList.join(",") }
+                        content: { tags: tagsList.join(",") }
                     };
 
                     me.options.$reportExplorer.reportExplorer("setSearchFolder", searchfolder);
@@ -6839,7 +6888,7 @@ $(function () {
                 async: false,
                 data: {
                     path: path,
-                    propertyName: "Hidden,Description,ForerunnerRDLExt",
+                    propertyName: "Hidden,Description,ForerunnerRDLExt,Name",
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
@@ -8924,7 +8973,7 @@ $(function () {
         // LinkedReport
         4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
@@ -9100,17 +9149,18 @@ $(function () {
                 propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
             }
 
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
+            $propertyDlg.forerunnerProperties("setProperties", "contextmenu", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.one(events.forerunnerPropertiesClose(), function (event, data) {
                 // Restore the previous settings
                 if (previous && previous.path && previous.propertyList) {
-                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                    $propertyDlg.forerunnerProperties("setProperties", previous.view, previous.path, previous.propertyList);
 
                     previous = null;
                 }
-                me.options.$reportExplorer.reportExplorer("refresh");
+
+                data.isUpdate && me.options.$reportExplorer.reportExplorer("refresh");
             });
             me.closeMenu();
         },
@@ -18695,7 +18745,7 @@ $(function () {
                 if (me.options.DefaultAppTemplate === null) {
                     //init property dialog in reportviewer
                     layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
-                    layout.$propertySection.forerunnerProperties("setProperties", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);
+                    layout.$propertySection.forerunnerProperties("setProperties", "viewer", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);
                 }
             });
 
@@ -19253,7 +19303,7 @@ $(function () {
         // Report/Linked Report
         report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
     };
 
     /**
@@ -19291,6 +19341,7 @@ $(function () {
             else
                 layout.$mainsection.hide();
             layout.$docmapsection.hide();
+
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder(),
@@ -19594,10 +19645,10 @@ $(function () {
                 }
                 if (!view) {// general catalog page
                     view = "catalog";
-                    me._setPropertiesTabs(path, propertyListMap.normal);
+                    me._setPropertiesTabs(view, path, propertyListMap.normal);
                 }
                 else if (view === "searchfolder") {
-                    me._setPropertiesTabs(path, propertyListMap.searchFolder);
+                    me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
                 }
 
                 me._setSecurity(path);
@@ -19671,7 +19722,8 @@ $(function () {
             layout.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(layout.$container);
             //set properties dialog
-            me._setPropertiesTabs(path, propertyListMap.report);
+
+            me._setPropertiesTabs("viewer", path, propertyListMap.report);
 
             //add this class to distinguish explorer toolbar and viewer toolbar
             var $toolbar = layout.$mainheadersection;
@@ -19729,7 +19781,7 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me._setPropertiesTabs(path, propertyListMap.normal);
+            me._setPropertiesTabs("dashboard", path, propertyListMap.normal);
 
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
@@ -19814,9 +19866,9 @@ $(function () {
                 me._initNavigateTo();
             }
         },
-        _setPropertiesTabs: function (path, propertyList) {
+        _setPropertiesTabs: function (view, path, propertyList) {
             var me = this;
-            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", path, propertyList);
+            me.DefaultAppTemplate.$propertySection.forerunnerProperties("setProperties", view, path, propertyList);
         },
         _setSecurity: function (path) {
             var me = this;
@@ -19950,7 +20002,13 @@ $(function () {
             me.$listcontainer.html("");
             var $list = new $("<UL />");
             $list.addClass("fr-sub-list");
+
             $.when(me.options.subscriptionModel.subscriptionModel("getMySubscriptionList", me.options.reportPath)).done(function (data) {
+                //if no subscription in the list show the prompt
+                if (data.length === 0) {
+                    me.$emptyPrompt.show();
+                    return;
+                }
                 for (var i = 0; i < data.length; i++) {
                     var subInfo = data[i];
                     var $li = new $("<LI />");
@@ -19973,20 +20031,29 @@ $(function () {
          */
         listSubscriptions: function () {
             var me = this;
+
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
+
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
             me.$container.append(headerHtml);
+
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
             me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
             me.element.append(me.$container);
+
+            me.$emptyPrompt = me._createDiv(["fr-sub-empty-prompt"]);
+            me.$emptyPrompt.text(locData.subscription.emptyPrompt);
+            me.$container.append(me.$emptyPrompt);
+
             me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
             me.$container.append(me.$listcontainer);
             me.$theForm = me._createDiv(["fr-sub-form"]);
             me.$container.append(me.$theForm);
+
             me._renderList();
 
             me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
@@ -20563,10 +20630,12 @@ $(function () {
             var me = this;
             me._setSubscriptionOrSetDefaults();
         },
-        _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
+        _createInputWithPlaceHolder: function (listOfClasses, type, name, placeholder) {
             var me = this;
             var $input = new $("<INPUT />");
             $input.attr("type", type);
+            name && $input.attr("name", name);
+
             if (placeholder)
                 $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
@@ -20638,6 +20707,9 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
 
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             me._subscriptionID = subscripitonID;
             me._subscriptionData = null;
             me.element.html("");
@@ -20656,29 +20728,29 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "");  //locData.subscription.descriptionPlaceholder
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$desc.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
 
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "");  //locData.subscription.toPlaceholder
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$to.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
 
-            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.subscription.toPlaceholder
             me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
 
-            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.subscription.toPlaceholder
             me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
 
-            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "");  //locData.subscription.toPlaceholder
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.subscription.toPlaceholder
             me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
 
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "");  // locData.subscription.subjectPlaceholder
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$subject.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
@@ -20692,7 +20764,6 @@ $(function () {
 
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
             me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
-            
             
 
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
@@ -20727,6 +20798,18 @@ $(function () {
             //disable form auto submit when click enter on the keyboard
             me.$theForm.on("submit", function () { return false; });
 
+            me.$theForm.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.siblings("span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-error");
+                }
+            });
+
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 
                 me._submit();
@@ -20758,7 +20841,7 @@ $(function () {
         _submit : function () {
             var me = this;
 
-            if (me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
+            if (me.$theForm.valid() && me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
                 var subscriptionInfo = me._getSubscriptionInfo();
 
                 me.options.subscriptionModel.subscriptionModel(
@@ -20809,6 +20892,9 @@ $(function () {
          */
         destroy: function () {
             var me = this;
+
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
             me.element.html("");
             this._destroy();
         }

@@ -30,7 +30,7 @@ $(function () {
         // LinkedReport
         4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
         // Search Folder
-        searchFolder: [propertyEnums.searchFolder, propertyEnums.description],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
@@ -206,17 +206,18 @@ $(function () {
                 propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
             }
 
-            $propertyDlg.forerunnerProperties("setProperties", me.options.catalogItem.Path, propertyList);
+            $propertyDlg.forerunnerProperties("setProperties", "contextmenu", me.options.catalogItem.Path, propertyList);
             $propertyDlg.forerunnerProperties("openDialog");
 
             $propertyDlg.one(events.forerunnerPropertiesClose(), function (event, data) {
                 // Restore the previous settings
                 if (previous && previous.path && previous.propertyList) {
-                    $propertyDlg.forerunnerProperties("setProperties", previous.path, previous.propertyList);
+                    $propertyDlg.forerunnerProperties("setProperties", previous.view, previous.path, previous.propertyList);
 
                     previous = null;
                 }
-                me.options.$reportExplorer.reportExplorer("refresh");
+
+                data.isUpdate && me.options.$reportExplorer.reportExplorer("refresh");
             });
             me.closeMenu();
         },

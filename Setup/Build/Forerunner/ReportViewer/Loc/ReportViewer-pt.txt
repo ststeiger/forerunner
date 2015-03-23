@@ -78,7 +78,7 @@
     "home":"Em casa",
     "keyword":"Palavra-chave",
     "lastPage":"Último",
-    "logOff":"sair",
+    "logOff":"logoff",
     "menu":"Menu",
     "navigation":"Navegação",
     "next":"Próximo",
@@ -272,95 +272,46 @@
     "addNew":"criar",
     "edit":"editar",
     "deleteSubscription":"excluir",
-    "deleteFailed":"Exclusão Assinatura falhou",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Responder para",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Exclusão Assinatura falhou"
   },
   "properties": {
     "title":"Propriedades",
     "submit":"submeter",
     "deleteItem":"excluir",
-    "description":"descrição",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"descrição"
   },
   "contextMenu": {
     "title":"Context Menu",
     "delLabel":"excluir",
     "properties":"Propriedades",
-    "security":"segurança",
-    "linkedReport":"Relatório Linked",
-    "downloadFile":"download do arquivo",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"submeter",
-    "cancel":"cancelar",
-    "deleteBtn":"excluir",
-    "edit":"editar",
-    "name":"nome",
-    "description":"descrição"
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"novo",
-    "reset":"restabelecer",
+    "newPolicy":"New",
+    "reset":"Reset",
     "roles":"Roles",
-    "desp":"descrição",
-    "groupuser":"Grupo ou Usuário",
-    "prompt":"Selecione as funções que você deseja atribuir",
-    "accountMsg":"Um nome de grupo ou conta de usuário válida deve ser especificado para esta atribuição de função",
-    "editSecurity":"Editar Item Segurança",
-    "editConfirm":"A segurança do item é herdado de seu pai item. Você deseja aplicar as configurações de segurança para este item, que são diferentes dos da {0} item pai?",
-    "revertConfirm":"As configurações de segurança que são definidas para este item será substituído pelas configurações de seu pai {0} de segurança. Você quer continuar?",
-    "deleteConfirm":"Tem certeza que deseja deletar essa atribuição de função?",
-    "home":"casa",
-    "revert":"reverter",
-    "roleEmptyMsg":"Selecione um mínimo de um papel para este grupo ou usuário.",
-    "detail":"Detalhe"
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"oculto",
-    "label":"Escondido em modo normal",
-    "prompt":"Defina como escondido não vai exibir este item no modo normal, você pode ligá-lo de volta no modo de administrador."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Relatório Linked",
-    "create":"Criar um novo relatório vinculado para {0}",
-    "edit":"Editar ligada relatório {0}, selecione o relatório que você deseja vincular",
-    "location":"localização",
-    "report":"relatório"
-  },
-  "dialogBase": {
-    "title":"diálogo",
-    "cancel":"cancelar",
-    "submit":"submeter"
-  },
-  "uploadFile": {
-    "title":"Upload de arquivo",
-    "description":"Faça o upload de relatório (.rdl) ou outro recurso para a pasta: {0}",
-    "uploadFileLabel":"Arquivo para upload",
-    "browseBtn":"procurar",
-    "filename":"nome",
-    "overwrite":"sobrescrever",
-    "overwriteMessage":"Um recurso com esse nome já existe. Você pode verificar a caixa de sobrescrever tente novamente.",
-    "warningsMessage":"Publique Successfull <br><br> Os seguintes avisos foram devolvidos:. <br><br> {0}",
-    "overwriteTitle":"Substituir Falha"
-  },
-  "newFolder": {
-    "title":"New Folder",
-    "description":"Crie uma nova pasta em: {0}",
-    "name":"nome",
-    "descriptionLabel":"descrição",
-    "hide":"Escondido em modo normal",
-    "fileExists":"A pasta que nome já existe"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

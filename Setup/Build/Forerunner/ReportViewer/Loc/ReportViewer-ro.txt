@@ -75,7 +75,7 @@
     "favorites":"Favorite",
     "find":"Găseşte",
     "firstPage":"primul",
-    "logOff":"ieși din cont",
+    "logOff":"logoff",
     "home":"Acasă",
     "keyword":"Cuvinte cheie",
     "lastPage":"Ultima",
@@ -86,7 +86,7 @@
     "paramarea":"Parametri",
     "previousPage":"Anterior",
     "recent":"Recente",
-    "refresh":"reîmprospăta",
+    "refresh":"Refresh",
     "reportPage":"Pagina",
     "zoom":"Permite Zoom",
     "print":"imprima",
@@ -229,7 +229,7 @@
     "submit":"executa",
     "selectReport":"<selectați raport>",
     "hideToolbar":"Ascunde Toolbar",
-    "toolbar":"Bara de instrumente:",
+    "toolbar":"Toolbar:",
     "minimal":"minim",
     "full":"complet",
     "removeReport":"Scoateți Raport"
@@ -272,95 +272,46 @@
     "addNew":"crea",
     "edit":"edita",
     "deleteSubscription":"șterge",
-    "deleteFailed":"Ștergerea abonament eșuat",
-    "ccPlaceholder":"CC",
-    "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Răspunde-a",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "deleteFailed":"Ștergerea abonament eșuat"
   },
   "properties": {
     "title":"Proprietăți",
     "submit":"prezenta",
     "deleteItem":"șterge",
-    "description":"descriere",
-    "readonly":"Please set name property in catalog item context menu"
+    "description":"descriere"
   },
   "contextMenu": {
     "title":"Context Menu",
     "delLabel":"șterge",
     "properties":"Proprietăți",
-    "security":"securitate",
-    "linkedReport":"Raport legat",
-    "downloadFile":"Descarca File",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "security":"Security",
+    "linkedReport":"Linked Report"
   },
   "common": {
-    "submit":"prezenta",
-    "cancel":"anula",
-    "deleteBtn":"șterge",
-    "edit":"edita",
-    "name":"nume",
-    "description":"descriere"
+    "submit":"Submit",
+    "cancel":"Cancel",
+    "delete":"Delete",
+    "edit":"Edit",
+    "name":"Name",
+    "description":"Description"
   },
   "security": {
     "title":"",
-    "newPolicy":"nou",
-    "reset":"restabili",
-    "roles":"Roluri",
-    "desp":"descriere",
-    "groupuser":"Grupul sau de utilizare",
-    "prompt":"Selectați rolurile pe care doriți să o atribuiți",
-    "accountMsg":"Un grup sau cont de utilizator nume valid trebuie să fie specificate pentru această misiune rol",
-    "editSecurity":"Securitate Editare element",
-    "editConfirm":"Securitate Articolul este moștenit de la postul său părinte. Vrei pentru a aplica setările de securitate pentru acest articol, care sunt diferite de cele ale {0} Articolul mamă?",
-    "revertConfirm":"Setările de securitate care sunt definite pentru acest articol va fi înlocuit cu setările de securitate ale societății-mamă {0}. Vrei să continuați?",
-    "deleteConfirm":"Sigur doriți să ștergeți acest atribuire rol?",
-    "home":"acasă",
-    "revert":"reveni",
-    "roleEmptyMsg":"Selectați un minim de un rol pentru acest grup sau utilizator.",
-    "detail":"Detaliu"
+    "newPolicy":"New",
+    "reset":"Reset",
+    "roles":"Roles",
+    "desp":"Description",
+    "groupuser":"Group or User",
+    "prompt":"Select the roles you want to assign"
   },
   "visibility": {
-    "title":"ascuns",
-    "label":"Ascuns în modul normal",
-    "prompt":"Set de ascuns nu va arăta acest articol în modul normal, îl puteți comuta înapoi în modul de administrare."
+    "title":"Hidden",
+    "label":"Hidden in normal mode",
+    "prompt":"Set to hiddien will not show this item in the normal mode, you can switch it back in the admin mode."
   },
   "linkedReport": {
-    "title":"Raport legat",
-    "create":"Creați un nou raport legat de {0}",
-    "edit":"Editare legate raport {0}, selectați raportul dorit pentru a lega",
-    "location":"locație",
-    "report":"raport"
-  },
-  "dialogBase": {
-    "title":"Dialog",
-    "cancel":"anula",
-    "submit":"prezenta"
-  },
-  "uploadFile": {
-    "title":"Încărcați fișier",
-    "description":"Încărcați raport (.rdl) sau alte resurse în dosar: {0}",
-    "uploadFileLabel":"Fișier de încărcat",
-    "browseBtn":"Căutați",
-    "filename":"nume",
-    "overwrite":"Suprascriere",
-    "overwriteMessage":"O de resurse cu același nume există deja. Puteți verifica căsuța de suprascriere, apoi încercați din nou.",
-    "warningsMessage":"Încărcați succes <br><br> următoarele avertismente au fost returnate. <br><br>{0}",
-    "overwriteTitle":"Suprascriere eșuat"
-  },
-  "newFolder": {
-    "title":"New Folder",
-    "description":"Creați un nou dosar în: {0}",
-    "name":"nume",
-    "descriptionLabel":"descriere",
-    "hide":"Ascuns în modul normal",
-    "fileExists":"Un director același nume există deja"
-  },
-  "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Linked Report",
+    "prompt":"Created new linked report based on {0}",
+    "location":"Location"
   }
 }

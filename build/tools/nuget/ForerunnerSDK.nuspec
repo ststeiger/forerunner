@@ -16,8 +16,8 @@
     <copyright>Copyright 2015</copyright>
     <tags>SSRS SQL Report Forerunner MVC REST</tags>
     <dependencies>
-      <dependency id="Microsoft.AspNet.Mvc" version="[4.0.40804.0,4.1)" />
-      <dependency id="Microsoft.AspNet.WebApi" version="[4.0.30506.0,4.1)" />
+      <dependency id="Microsoft.AspNet.Mvc" version="[4.0.40804.0,6)" />
+      <dependency id="Microsoft.AspNet.WebApi" version="[4.0.30506.0,6)" />
     </dependencies>
     <references>
     </references>

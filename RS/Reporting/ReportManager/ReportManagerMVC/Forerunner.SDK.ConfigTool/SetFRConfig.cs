@@ -7,6 +7,8 @@ using System.Security;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Management.Automation;
+using System.Text.RegularExpressions;
+using System.IO;
 
 using EnvDTE;
 using EnvDTE80;
@@ -348,13 +350,43 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End UpdateWebConfig()");
             return true;
         }
+        public Boolean UpdateSourceFiles()
+        {
+            WriteVerbose("Start UpdateSourceFiles()");
+
+            string pattern = @"public static void Register\(HttpConfiguration config\)\s*\r\n\s*\{[ \f\t\v]*";
+            string markComment = @"ForerunnerSDK - Set-FRConfig, Automatic edit start, WebApiConfig.cs, Register()";
+            string insertText =
+                "\r\n" +
+                "            // " + markComment + "\r\n" +
+                "            // Keep the comment above and Set-FRConfig will not change this file again\r\n" +
+                "            config.Routes.MapHttpRoute(\r\n" +
+                "                name: \"MobilizerManagerAPI\",\r\n" +
+                "                routeTemplate: \"api/{controller}/{action}/{id}\",\r\n" +
+                "                defaults: new { id = RouteParameter.Optional },\r\n" +
+                "                constraints: new { controller = \"ReportManager\" }\r\n" +
+                "            );\r\n" +
+                "\r\n" +
+                "            config.Routes.MapHttpRoute(\r\n" +
+                "                name: \"MobilizerViewerAPI\",\r\n" +
+                "                routeTemplate: \"api/{controller}/{action}/{id}\",\r\n" +
+                "                defaults: new { id = RouteParameter.Optional },\r\n" +
+                "                constraints: new { controller = \"ReportViewer\" }\r\n" +
+                "            );\r\n" +
+                "            // ForerunnerSDK - Set-FRConfig, Automatic edit end;\r\n";
+
+            AutomaticEditInsert("WebApiConfig.cs", markComment, pattern, insertText);
+
+            WriteVerbose("end UpdateSourceFiles()");
+            return true;
+        }
         public Boolean UpdateDBSchema()
         {
+            WriteVerbose("Start UpdateDBSchema()");
+
             string userNamePrompt = "User Name";
             string passwordPrompt = "Password";
             string authenticationTypePrompt = "Use Integrated Security For SQL";
-
-            WriteVerbose("Start UpdateDBSchema()");
 
             // Create the collection of field descriptions for the Prompt class
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
@@ -462,6 +494,9 @@ namespace Forerunner.SDK.ConfigTool
 
                 WriteProgress(new ProgressRecord(processingId, activity, "UpdateDBSchema()"));
                 UpdateDBSchema();
+
+                WriteProgress(new ProgressRecord(processingId, activity, "UpdateSourceFiles()"));
+                UpdateSourceFiles();
             }
 
             // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
@@ -479,6 +514,43 @@ namespace Forerunner.SDK.ConfigTool
 
         // Private Methods
         //
+        private void AutomaticEditInsert(string filename, string markComment, string pattern, string insertText)
+        {
+            // Read the file into a string
+            string path = GetLocalFilePathFromActriveProject(filename);
+            string fileText;
+
+            // See if we have already made the automatic edit to this file
+            using (StreamReader sr = File.OpenText(path))
+            {
+                fileText = sr.ReadToEnd();
+            }
+            if (fileText.IndexOf(markComment) != -1)
+            {
+                // The mark text is already in the file so we are done
+                return;
+            }
+
+            // Do the automatic insert
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(fileText);
+
+            if (!match.Success)
+            {
+                throw (new Exception("Search pattern: " + pattern + " not found in file: " + filename));
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(fileText.Substring(0, match.Index + match.Length));
+            sb.Append(insertText);
+            sb.Append(fileText.Substring(match.Index + match.Length));
+
+            // Save the file back
+            using (StreamWriter sw = File.CreateText(path))
+            {
+                sw.Write(sb.ToString());
+            }
+        }
         private void PromptForMissingParameters()
         {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
@@ -583,37 +655,27 @@ namespace Forerunner.SDK.ConfigTool
             var projects = (System.Array)dte.ActiveSolutionProjects;
             int length = projects.Length;
             Project project = null;
-            if (projects.Length > 0)
+            var solution = (Solution)dte.Solution;
+            var solutionProjects = (Projects)solution.Projects;
+            foreach (Project p in solutionProjects)
             {
-                // Get the active project
-                project = (Project)projects.GetValue(0);
-            }
-            else
-            {
-                // If there isn't an active project then see if there is only one
-                // project in this solution
-                var solution = (Solution)dte.Solution;
-                var solutionProjects = (Projects)solution.Projects;
-                foreach (Project p in solutionProjects)
+                if (prjKindCSharpProject == p.Kind)
                 {
-                    if (prjKindCSharpProject == p.Kind)
+                    if (project != null)
                     {
-                        if (project != null)
-                        {
-                            throw new Exception("Unable to determine which project you want configured. Select a project in the solution explorer and try again");
-                        }
-                        project = p;
+                        throw new Exception("Unable to determine which project you want configured. Select a project in the solution explorer and try again");
                     }
+                    project = p;
                 }
+            }
 
-                if (project == null)
-                {
-                    throw (new Exception("No active project in the solution, Select a project in the solution explorer and try again"));
-                }
+            if (project == null)
+            {
+                throw (new Exception("No active project in the solution, Select a project in the solution explorer and try again"));
             }
 
             var projectItems = (ProjectItems)project.ProjectItems;
-            var projectItem = (ProjectItem)projectItems.Item(filename);
+            ProjectItem projectItem = GetProjectItem(projectItems, filename);
             if (projectItem == null)
             {
                 throw (new Exception(String.Format("Error - Unable to find file: {0} in project {1}", filename, project.Name)));
@@ -621,6 +683,31 @@ namespace Forerunner.SDK.ConfigTool
             var properties = (Properties)projectItem.Properties;
             var property = (Property)properties.Item("LocalPath");
             return property.Value;
+        }
+        private ProjectItem GetProjectItem(ProjectItems items, string filename)
+        {
+            foreach (ProjectItem item in items)
+            {
+                System.Diagnostics.Debug.WriteLine(item.Name);
+                ProjectItems items2 = item.ProjectItems;
+                System.Diagnostics.Debug.WriteLine(items2.Count);
+                if (items2 != null && items2.Count > 0)
+                {
+                    ProjectItem item2 = GetProjectItem(items2, filename);
+                    if (item2 != null)
+                    {
+                        return item2;
+                    }
+                }
+                else
+                {
+                    if (String.Compare(item.Name, filename, true) == 0)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
         }
         private void LoadWebConfig()
         {

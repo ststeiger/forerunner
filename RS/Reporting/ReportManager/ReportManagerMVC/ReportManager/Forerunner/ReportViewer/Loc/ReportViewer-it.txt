@@ -276,14 +276,14 @@
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
     "replyToPlaceholder":"Reply-To",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"Non ci sono abbonamenti da mostrare in questo momento"
   },
   "properties": {
     "title":"proprietà",
     "submit":"presentare",
     "deleteItem":"cancellare",
     "description":"descrizione",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Si prega di impostare la proprietà nome nel catalogo menu contestuale voce"
   },
   "contextMenu": {
     "title":"Context Menu",
@@ -292,9 +292,9 @@
     "security":"sicurezza",
     "linkedReport":"Rapporto collegato",
     "downloadFile":"Download File",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Sei sicuro di voler eliminare {0}?",
+    "folderNotEmpty":"C'è voce secondaria all'interno della cartella, non è possibile eliminarlo.",
+    "move":"mossa"
   },
   "common": {
     "submit":"presentare",
@@ -359,8 +359,8 @@
     "fileExists":"Una cartella già esistente nome"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"mossa",
+    "location":"posizione",
+    "prompt":"Selezionare la cartella che si desidera includere questa voce"
   }
 }

@@ -276,14 +276,14 @@
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
     "replyToPlaceholder":"Răspunde-a",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"Nu exista abonamente de afișat în acest moment"
   },
   "properties": {
     "title":"Proprietăți",
     "submit":"prezenta",
     "deleteItem":"șterge",
     "description":"descriere",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Vă rugăm să setați proprietatea nume in catalog meniul contextual articol"
   },
   "contextMenu": {
     "title":"Context Menu",
@@ -292,9 +292,9 @@
     "security":"securitate",
     "linkedReport":"Raport legat",
     "downloadFile":"Descarca File",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Sigur să ștergeți {0}?",
+    "folderNotEmpty":"Nu este sub articol din dosarul, nu se poate șterge",
+    "move":"mutare"
   },
   "common": {
     "submit":"prezenta",
@@ -359,8 +359,8 @@
     "fileExists":"Un director același nume există deja"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"mutare",
+    "location":"locație",
+    "prompt":"Selectați folderul pe care doriți să includă acest articol"
   }
 }

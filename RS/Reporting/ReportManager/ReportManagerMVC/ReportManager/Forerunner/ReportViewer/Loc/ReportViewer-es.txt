@@ -277,14 +277,14 @@
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
     "replyToPlaceholder":"Responder a",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"No hay suscripciones para mostrar en este momento"
   },
   "properties": {
     "title":"Propiedades",
     "submit":"presentar",
     "deleteItem":"borrar",
     "description":"descripción",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Por favor, establezca la propiedad nombre en el menú contextual elemento de catálogo"
   },
   "contextMenu": {
     "title":"Menú contextual",
@@ -293,9 +293,9 @@
     "security":"seguridad",
     "linkedReport":"informe vinculado",
     "downloadFile":"Descargar Archivo",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"¿Seguro eliminar {0}?",
+    "folderNotEmpty":"Hay subtema dentro de la carpeta, no puede eliminarlo.",
+    "move":"movimiento"
   },
   "common": {
     "submit":"presentar",
@@ -360,8 +360,8 @@
     "fileExists":"Una carpeta que ya existe nombre"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"movimiento",
+    "location":"ubicación",
+    "prompt":"Seleccione la carpeta que desea incluir este tema"
   }
 }

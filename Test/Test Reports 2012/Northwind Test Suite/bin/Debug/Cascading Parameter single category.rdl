@@ -568,16 +568,17 @@ WHERE        OrderID IN (@Orders)</CommandText>
     <ReportParameter Name="EndDate">
       <DataType>DateTime</DataType>
       <DefaultValue>
-        <Values>
-          <Value>03/05/1996 00:00:00</Value>
-        </Values>
+        <DataSetReference>
+          <DataSetName>ReportOrders</DataSetName>
+          <ValueField>ShippedDate</ValueField>
+        </DataSetReference>
       </DefaultValue>
       <Prompt>End Date</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Order</DataSetName>
-          <ValueField>RequiredDate</ValueField>
-          <LabelField>RequiredDate</LabelField>
+          <ValueField>ShippedDate</ValueField>
+          <LabelField>ShippedDate</LabelField>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>

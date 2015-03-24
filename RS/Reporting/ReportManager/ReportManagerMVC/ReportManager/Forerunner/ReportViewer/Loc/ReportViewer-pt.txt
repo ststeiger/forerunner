@@ -276,14 +276,14 @@
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
     "replyToPlaceholder":"Responder para",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"Não há assinaturas para mostrar neste momento"
   },
   "properties": {
     "title":"Propriedades",
     "submit":"submeter",
     "deleteItem":"excluir",
     "description":"descrição",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Por favor, defina a propriedade nome no catálogo item de menu de contexto"
   },
   "contextMenu": {
     "title":"Context Menu",
@@ -292,9 +292,9 @@
     "security":"segurança",
     "linkedReport":"Relatório Linked",
     "downloadFile":"download do arquivo",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Tem certeza que deseja excluir {0}?",
+    "folderNotEmpty":"Há sub item dentro da pasta, não é possível excluí-lo.",
+    "move":"mudança"
   },
   "common": {
     "submit":"submeter",
@@ -359,8 +359,8 @@
     "fileExists":"A pasta que nome já existe"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"mudança",
+    "location":"localização",
+    "prompt":"Selecione a pasta que você deseja incluir este item"
   }
 }

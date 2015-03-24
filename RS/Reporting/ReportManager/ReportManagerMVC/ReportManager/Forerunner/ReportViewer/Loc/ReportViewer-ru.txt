@@ -276,14 +276,14 @@
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
     "replyToPlaceholder":"Reply-To",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"Там нет подписки на форуме в этот раз"
   },
   "properties": {
     "title":"свойства",
     "submit":"представлять",
     "deleteItem":"удалять",
     "description":"описание",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Пожалуйста, установите свойство имени в каталоге контекстного пункт меню"
   },
   "contextMenu": {
     "title":"Контекстное меню",
@@ -292,9 +292,9 @@
     "security":"безопасность",
     "linkedReport":"Связанный отчет",
     "downloadFile":"Скачать файл",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Вы действительно хотите удалить {0}?",
+    "folderNotEmpty":"Существует суб элемент внутри папки, вы не можете удалить его.",
+    "move":"шаг"
   },
   "common": {
     "submit":"представлять",
@@ -359,8 +359,8 @@
     "fileExists":"Папка, имя уже существует"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"шаг",
+    "location":"расположение",
+    "prompt":"Выберите папку, которую вы хотите включить этот пункт"
   }
 }

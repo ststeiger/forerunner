@@ -417,7 +417,7 @@ namespace Forerunner.SSRS.Viewer
 
                     if (execInfo.Parameters.Length != 0 && paramList != null)
                     {
-                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters),"");
+                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters),null);
                     }
 
                     result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);                    

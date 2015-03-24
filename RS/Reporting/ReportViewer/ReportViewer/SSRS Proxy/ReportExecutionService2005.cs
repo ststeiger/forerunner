@@ -21,7 +21,7 @@ namespace Forerunner.SSRS.Execution
     using System.Web.Services.Protocols;
     using System.Xml.Serialization;
     using System.ComponentModel;
-
+    using System.Net;
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")]
@@ -163,8 +163,21 @@ namespace Forerunner.SSRS.Execution
                     base.UseDefaultCredentials = false;
                 }
                 base.Url = value;
+               
             }
         }
+
+
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest retval = base.GetWebRequest(uri);
+
+            string lang = System.Web.HttpContext.Current.Request.Headers.Get("Accept-Language");
+            retval.Headers.Set(HttpRequestHeader.AcceptLanguage, lang);
+            return retval;
+        }
+
+
 
         public new bool UseDefaultCredentials
         {

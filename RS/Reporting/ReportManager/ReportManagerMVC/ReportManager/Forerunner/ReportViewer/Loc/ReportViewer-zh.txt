@@ -276,14 +276,14 @@
     "ccPlaceholder":"抄送",
     "bccPlaceholder":"秘密抄送",
     "replyToPlaceholder":"答复",
-    "emptyPrompt":"There are no subscriptions to display at this time"
+    "emptyPrompt":"当前没有可以显示的订阅"
   },
   "properties": {
     "title":"属性",
     "submit":"提交",
     "deleteItem":"删除",
     "description":"描述",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"请在目录项的右键菜单中设置名称"
   },
   "contextMenu": {
     "title":"右键菜单",

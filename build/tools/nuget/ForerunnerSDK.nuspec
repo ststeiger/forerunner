@@ -10,12 +10,16 @@
     <projectUrl>https://www.forerunnersw.com/</projectUrl>
     <iconUrl>https://www.forerunnersw.com/content/img/ForerunnerNugetIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>The Forerunner SDK allows you to showcase your investiment in SSRS reports in your own web application. With Forerunner SDK your web app will run on all major browsers and mobile devices.</summary>
+    <summary>The Forerunner SDK allows you to showcase your investiment in SSRS reports in your own web application. Forerunner SDK runs on all major browsers and mobile devices.</summary>
     <description>With the Forerunner SDK all of the Controls, APIs, CSS and Events we used to build Mobilizer are documented and available for you to build your own custom experience or incorporate into your existing applications. With full support for MVC, REST / AJAX, HTML5 and CSS building your own modern web application is a breeze.</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
-    <tags>SSRS SQL Reports Forerunner Forerunnersw MVC REST</tags>
+    <tags>SSRS SQL Report Forerunner MVC REST</tags>
     <dependencies>
+      <dependency id="Microsoft.AspNet.Mvc" version="[4.0.40804.0,4.1)" />
+      <dependency id="Microsoft.AspNet.WebApi" version="[4.0.30506.0,4.1)" />
     </dependencies>
+    <references>
+    </references>
   </metadata>
 </package>

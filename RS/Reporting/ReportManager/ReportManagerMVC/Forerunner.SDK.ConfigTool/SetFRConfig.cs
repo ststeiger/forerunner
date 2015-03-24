@@ -375,7 +375,7 @@ namespace Forerunner.SDK.ConfigTool
                 "            );\r\n" +
                 "            // ForerunnerSDK - Set-FRConfig, Automatic edit end;\r\n";
 
-            AutomaticEditInsert("WebApiConfig.cs", markComment, pattern, insertText);
+            AutomaticEditInsert(@"\App_Start", "WebApiConfig.cs", markComment, pattern, insertText);
 
             WriteVerbose("end UpdateSourceFiles()");
             return true;
@@ -514,12 +514,16 @@ namespace Forerunner.SDK.ConfigTool
 
         // Private Methods
         //
-        private void AutomaticEditInsert(string filename, string markComment, string pattern, string insertText)
+        private void AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
         {
             // Read the file into a string
-            string path = GetLocalFilePathFromActriveProject(filename);
+            string path = GetLocalFilePathFromActriveProject(projectRelativePath, filename);
+            if (path == null)
+            {
+                return;
+            }
+            
             string fileText;
-
             // See if we have already made the automatic edit to this file
             using (StreamReader sr = File.OpenText(path))
             {
@@ -648,7 +652,7 @@ namespace Forerunner.SDK.ConfigTool
                 prop = value;
             }
         }
-        private string GetLocalFilePathFromActriveProject(string filename)
+        private string GetLocalFilePathFromActriveProject(string projectRelativePath, string filename)
         {
             string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
             var dte = (DTE2)GetVariableValue("DTE");
@@ -675,35 +679,39 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             var projectItems = (ProjectItems)project.ProjectItems;
-            ProjectItem projectItem = GetProjectItem(projectItems, filename);
+            string fullPath = GetFullPath(project.FullName, projectRelativePath, filename);
+            ProjectItem projectItem = GetProjectItem(projectItems, fullPath);
             if (projectItem == null)
             {
-                throw (new Exception(String.Format("Error - Unable to find file: {0} in project {1}", filename, project.Name)));
+                return null;
             }
             var properties = (Properties)projectItem.Properties;
             var property = (Property)properties.Item("LocalPath");
             return property.Value;
         }
-        private ProjectItem GetProjectItem(ProjectItems items, string filename)
+        private string GetFullPath(string projectFullName, string projectRelativePath, string filename)
+        {
+            int index = projectFullName.LastIndexOf(@"\");
+            string path = projectRelativePath.Substring(0, 1) == @"\" ? projectRelativePath : @"\" + projectRelativePath;
+            return Path.Combine(projectFullName.Substring(0, index) + path, filename);
+        }
+        private ProjectItem GetProjectItem(ProjectItems items, string fullPath)
         {
             foreach (ProjectItem item in items)
             {
-                System.Diagnostics.Debug.WriteLine(item.Name);
+                string itemFullPath = item.Properties.Item("FullPath").Value;
+                if (String.Compare(itemFullPath, fullPath, true) == 0)
+                {
+                    return item;
+                }
+
                 ProjectItems items2 = item.ProjectItems;
-                System.Diagnostics.Debug.WriteLine(items2.Count);
                 if (items2 != null && items2.Count > 0)
                 {
-                    ProjectItem item2 = GetProjectItem(items2, filename);
+                    ProjectItem item2 = GetProjectItem(items2, fullPath);
                     if (item2 != null)
                     {
                         return item2;
-                    }
-                }
-                else
-                {
-                    if (String.Compare(item.Name, filename, true) == 0)
-                    {
-                        return item;
                     }
                 }
             }
@@ -711,7 +719,11 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void LoadWebConfig()
         {
-            string webConfigPath = GetLocalFilePathFromActriveProject("web.config");
+            string webConfigPath = GetLocalFilePathFromActriveProject(@"\", "web.config");
+            if (webConfigPath == null)
+            {
+                throw (new Exception(String.Format("Error - Unable to find file: {0}", "web.config")));
+            }
             System.Configuration.ExeConfigurationFileMap configFileMap = new System.Configuration.ExeConfigurationFileMap();
             configFileMap.ExeConfigFilename = webConfigPath;
             appConfig = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFileMap, System.Configuration.ConfigurationUserLevel.None);

@@ -141,16 +141,16 @@ set of parameters.</maml:para>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-				<maml:name>SkipProcessing</maml:name>
+				<maml:name>ResetPassword</maml:name>
 				<maml:description>
-					<maml:para>Skips all configuration processing</maml:para>
+					<maml:para>Forces a prompt for the ReportServerDBPWD value</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-				<maml:name>ResetPassword</maml:name>
+				<maml:name>ProjectName</maml:name>
 				<maml:description>
-					<maml:para>Forces a prompt for the ReportServerDBPWD value</maml:para>
+					<maml:para>Explicitly give the project name. Helpful when more than one project is in the solution.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
@@ -350,18 +350,6 @@ set of parameters.</maml:para>
 			<dev:defaultValue>Forerunner\version.txt</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
-			<maml:name>SkipProcessing</maml:name>
-			<maml:description>
-				<maml:para>Skips all configuration processing</maml:para>
-			</maml:description>
-			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
-			<dev:type>
-				<maml:name>SwitchParameter</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue>false</dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>ResetPassword</maml:name>
 			<maml:description>
 				<maml:para>Forces a prompt for the ReportServerDBPWD value</maml:para>
@@ -372,6 +360,18 @@ set of parameters.</maml:para>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue>false</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ProjectName</maml:name>
+			<maml:description>
+				<maml:para>Explicitly give the project name. Helpful when more than one project is in the solution.</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 	</command:parameters>
 	<command:inputTypes>

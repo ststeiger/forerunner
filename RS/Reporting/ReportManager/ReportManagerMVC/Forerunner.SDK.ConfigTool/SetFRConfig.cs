@@ -21,10 +21,6 @@ namespace Forerunner.SDK.ConfigTool
     [Cmdlet(VerbsCommon.Set, "FRConfig")]
     public class SetFRConfig : PSCmdlet
     {
-        public SetFRConfig()
-        {
-        }
-
         #region Parameter properties / definitions
 
         // License key
@@ -205,18 +201,17 @@ namespace Forerunner.SDK.ConfigTool
             set { _versionPath = value; }
         }
 
-        private SwitchParameter _skipProcessing;
-        [Parameter(HelpMessage = "Skips all update and validation code")]
-        [Alias("skip")]
-        public SwitchParameter SkipProcessing
+        private string _projectName;
+        [Parameter(HelpMessage = "Explicitly defines which project you want configured")]
+        public string ProjectName
         {
             get
             {
-                return _skipProcessing;
+                return _projectName;
             }
             set
             {
-                _skipProcessing = value;
+                _projectName = value;
             }
         }
 
@@ -237,9 +232,56 @@ namespace Forerunner.SDK.ConfigTool
 
         #endregion // Parameter properties / definitions
 
-        #region Public methods
+        #region Processing methods
 
-        public Boolean TestConnection()
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+        }
+        protected override void ProcessRecord()
+        {
+            LoadWebConfig();
+            LicenseData data = ClientLicense.GetLicense();
+            if (data != null)
+            {
+                LicenseKey = data.LicenseKey;
+            }
+
+            PromptForMissingParameters();
+
+            int processingId = 1;
+            string activity = "Updating Forerunner Configuration Settings";
+            WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
+            TestConnection();
+
+            WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
+            ActivateLicense();
+
+            WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
+            UpdateWebConfig();
+
+            WriteProgress(new ProgressRecord(processingId, activity, "UpdateDBSchema()"));
+            UpdateDBSchema();
+
+            WriteProgress(new ProgressRecord(processingId, activity, "UpdateSourceFiles()"));
+            UpdateSourceFiles();
+
+            // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
+            // call individual public methods such as ActivateLicense()
+            WriteObject("Set-FRConfig complete");
+        }
+        protected override void EndProcessing()
+        {
+            base.EndProcessing();
+        }
+
+        #endregion // Processing methods
+
+        #region Private methods and data
+
+        // Private Methods
+        //
+        private Boolean TestConnection()
         {
             WriteVerbose("Start TestConnection()");
 
@@ -294,7 +336,7 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End TestConnection()" + StaticMessages.connectDBSuccess);
             return true;
         }
-        public Boolean ActivateLicense()
+        private Boolean ActivateLicense()
         {
             WriteVerbose("Start ActivateLicense()");
 
@@ -319,7 +361,7 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End ActivateLicense()");
             return true;
         }
-        public Boolean UpdateWebConfig()
+        private Boolean UpdateWebConfig()
         {
             WriteVerbose("Start UpdateWebConfig()");
 
@@ -350,7 +392,7 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End UpdateWebConfig()");
             return true;
         }
-        public Boolean UpdateSourceFiles()
+        private Boolean UpdateSourceFiles()
         {
             WriteVerbose("Start UpdateSourceFiles()");
 
@@ -380,7 +422,7 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("end UpdateSourceFiles()");
             return true;
         }
-        public Boolean UpdateDBSchema()
+        private Boolean UpdateDBSchema()
         {
             WriteVerbose("Start UpdateDBSchema()");
 
@@ -460,64 +502,10 @@ namespace Forerunner.SDK.ConfigTool
             return true;
         }
 
-        #endregion  // Public methods
-
-        #region Processing methods
-
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-        }
-        protected override void ProcessRecord()
-        {
-            LoadWebConfig();
-            LicenseData data = ClientLicense.GetLicense();
-            if (data != null)
-            {
-                LicenseKey = data.LicenseKey;
-            }
-
-            PromptForMissingParameters();
-
-            if (!SkipProcessing)
-            {
-                int processingId = 1;
-                string activity = "Updating Forerunner Configuration Settings";
-                WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
-                TestConnection();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
-                ActivateLicense();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
-                UpdateWebConfig();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "UpdateDBSchema()"));
-                UpdateDBSchema();
-
-                WriteProgress(new ProgressRecord(processingId, activity, "UpdateSourceFiles()"));
-                UpdateSourceFiles();
-            }
-
-            // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
-            // call individual public methods such as ActivateLicense()
-            WriteObject("Set-FRConfig complete");
-        }
-        protected override void EndProcessing()
-        {
-            base.EndProcessing();
-        }
-
-        #endregion // Processing methods
-
-        #region Private methods and data
-
-        // Private Methods
-        //
         private void AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
         {
             // Read the file into a string
-            string path = GetLocalFilePathFromActriveProject(projectRelativePath, filename);
+            string path = GetLocalFilePathFromProject(projectRelativePath, filename);
             if (path == null)
             {
                 return;
@@ -652,22 +640,40 @@ namespace Forerunner.SDK.ConfigTool
                 prop = value;
             }
         }
-        private string GetLocalFilePathFromActriveProject(string projectRelativePath, string filename)
+        private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
         {
             string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
             var dte = (DTE2)GetVariableValue("DTE");
-            var projects = (System.Array)dte.ActiveSolutionProjects;
-            int length = projects.Length;
             Project project = null;
             var solution = (Solution)dte.Solution;
             var solutionProjects = (Projects)solution.Projects;
+
+            // If we don't have the project name, try to heuristically get the project
             foreach (Project p in solutionProjects)
             {
-                if (prjKindCSharpProject == p.Kind)
+                if (ProjectName != null)
+                {
+                    if (String.Compare(ProjectName, p.Name, true) == 0)
+                    {
+                        project = p;
+                        break;
+                    }
+                }
+                else if (prjKindCSharpProject == p.Kind)
                 {
                     if (project != null)
                     {
-                        throw new Exception("Unable to determine which project you want configured. Select a project in the solution explorer and try again");
+                        var activeProjects = (System.Array)dte.ActiveSolutionProjects;
+                        int length = activeProjects.Length;
+                        if (activeProjects.Length > 0)
+                        {
+                            // Get the active project
+                            project = (Project)activeProjects.GetValue(0);
+                        }
+                        if (project == null || prjKindCSharpProject != project.Kind)
+                        {
+                            throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
+                        }
                     }
                     project = p;
                 }
@@ -675,7 +681,11 @@ namespace Forerunner.SDK.ConfigTool
 
             if (project == null)
             {
-                throw (new Exception("No active project in the solution, Select a project in the solution explorer and try again"));
+                if (ProjectName != null)
+                {
+                    throw new Exception("The given -ProjectName: " + ProjectName + " doesn't exist in the solution");
+                }
+                throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
             }
 
             var projectItems = (ProjectItems)project.ProjectItems;
@@ -719,7 +729,7 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void LoadWebConfig()
         {
-            string webConfigPath = GetLocalFilePathFromActriveProject(@"\", "web.config");
+            string webConfigPath = GetLocalFilePathFromProject(@"\", "web.config");
             if (webConfigPath == null)
             {
                 throw (new Exception(String.Format("Error - Unable to find file: {0}", "web.config")));

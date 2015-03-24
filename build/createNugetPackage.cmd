@@ -92,7 +92,12 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-:: The cmdlet help editor named the help file incorrectly so I renam it here
+robocopy %SRC_FRCONFIG% %DEST_TOOLS% Forerunner.SDK.ConfigTool.Help.xml /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: The cmdlet help editor named the help file incorrectly so I rename it here
 rename %DEST_TOOLS%\Forerunner.SDK.ConfigTool.Help.xml Forerunner.SDK.ConfigTool-Help.xml
 
 robocopy %SRC_NUGET% %DEST_TOOLS% init.ps1 install.ps1 uninstall.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL

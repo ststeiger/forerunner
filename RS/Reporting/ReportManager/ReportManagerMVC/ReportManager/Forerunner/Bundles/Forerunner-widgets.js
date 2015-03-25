@@ -2560,8 +2560,9 @@ $(function () {
                     //get current parameter list without validate
                     paramList = $paramArea.reportParameter("getParamsList", true);
                 }
-                if (paramList)
-                    me.$emailSub.emailSubscription("option", "paramList", paramList);
+                
+                //need to always set paramList event it's null to clear cache    
+                me.$emailSub.emailSubscription("option", "paramList", paramList);
                 me.$emailSub.emailSubscription("loadSubscription", subscriptionID);
                 me.$emailSub.emailSubscription("openDialog");
             }
@@ -9577,6 +9578,42 @@ $(function () {
             onInputFocus: null,
             userSettings: null,
         },
+        // Constructor
+        _create: function () {
+            var me = this;
+
+            // Make sure the viewerBase _create gets called
+            me._super();
+        },
+        _init: function () {
+            var me = this;
+            me.$RMList = null;
+            me.$UL = null;
+            me.rmListItems = null;
+            me.colorOverrideSettings = null;
+            me.selectedItem = 0;
+            me.isRendered = false;
+            me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
+            me._super(me.$explorer);
+            me.$viewerContainer = me.$explorer;
+            me.$selectedItem = null;
+
+            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
+            if ($reportExplorerContainer.length === 0) {
+                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
+                me.element.append($reportExplorerContainer);
+            }
+            me.$reportExplorerContainer = $reportExplorerContainer;
+
+            // Make sure the view base has the explorer container
+            me._super($reportExplorerContainer);
+
+            if (!me.subscriptionModel) {
+                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
+            }
+
+            me._initExplorerDialogs();
+        },
         /**
          * Save the user settings
          * @function $.forerunner.reportExplorer#saveUserSettings
@@ -9833,6 +9870,7 @@ $(function () {
 
             me.$UL = me.element.find(".fr-report-explorer");
             me.$UL.html("");
+
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             
@@ -9856,7 +9894,9 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
+
             me._renderPCView(catalogItems);
+
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
                 setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20); }, 100);  //This is a hack for now
@@ -9890,8 +9930,8 @@ $(function () {
                         }
                         catch (e) { state = null; }
 
-                        if (state === "complete" || !state) {//loading,interactive,complete       
-                            me._setIframeHeight(frame);
+                        if (state === "complete" || !state) {//loading,interactive,complete
+                            me._loadIframeDone(frame);
                         }
                         else {
                             //check frame document state until it turn to complete
@@ -9909,9 +9949,18 @@ $(function () {
             }
             else {
                 $if.load(function () {
-                    me._setIframeHeight(this);
+                    me._loadIframeDone(this);
                 });
             }
+        },
+        _loadIframeDone: function (frame) {
+            var me = this;
+
+            me.$reportExplorerContainer.length && me.$reportExplorerContainer.hide();
+            me._setIframeHeight(frame);
+
+            me._trigger(events.afterFetch, null, { reportExplorer: me });
+            me.removeLoadingIndicator();
         },
         //set iframe height with body height
         _setIframeHeight: function (frame) {
@@ -9919,8 +9968,65 @@ $(function () {
             //use app container height minus toolbar height
             //also there is an offset margin-botton:-20px defined in ReportExplorer.css 
             //to prevent document scroll bar (except IE8)
-            var iframeHeight = me.options.$appContainer.height() - 38;
+            var iframeHeight = me.options.$appContainer.height() - 60;
             frame.style.height = iframeHeight + "px";
+        },
+        _searchItems: function (keyword) {
+            var me = this;
+
+            if (keyword === "") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                return;
+            }
+
+            var url = me.options.reportManagerAPI + "/FindItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
+            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
+
+            //specify the search folder, not default to global
+            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
+            //folder = folder.replace("%2f", "/");
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                data: {
+                    folder: "",
+                    searchOperator: "",
+                    searchCriteria: JSON.stringify(searchCriteria)
+                },
+                success: function (data) {
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    }
+                    else {
+                        if (data.length) {
+                            me._render(data);
+                        }
+                        else {
+                            me._showNotFound();
+                        }
+                    }
+
+                    me._trigger(events.afterFetch, null, { reportExplorer: me });
+                    me.removeLoadingIndicator();
+                },
+                error: function (data) {
+                    console.log(data);
+
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                    me.removeLoadingIndicator();
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                }
+            });
+        },
+        _showNotFound: function () {
+            var me = this;
+            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            $explorer.append($notFound);
+            me.element.append($explorer);
         },
         /**
          * Returns the last fetch view and path
@@ -9974,13 +10080,14 @@ $(function () {
         },
         _fetch: function (view, path) {
             var me = this;
+
             me.lastFetched = {
                 view: view,
                 path: path
             };
-            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             me.showLoadingIndictator();
+            me._trigger(events.beforeFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
 
             if (view === "resource") {
                 me._renderResource(path);
@@ -10047,41 +10154,6 @@ $(function () {
                     }
                 }
             }
-        },
-        // Constructor
-        _create: function () {
-            var me = this;
-
-            // Make sure the viewerBase _create gets called
-            me._super();
-        },
-        _init: function () {
-            var me = this;
-            me.$RMList = null;
-            me.$UL = null;
-            me.rmListItems = null;
-            me.colorOverrideSettings = null;
-            me.selectedItem = 0;
-            me.isRendered = false;
-            me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
-            me._super(me.$explorer);
-            me.$viewerContainer = me.$explorer;
-            me.$selectedItem = null;
-
-            var $reportExplorerContainer = me.element.find(".fr-report-explorer");
-            if ($reportExplorerContainer.length === 0) {
-                $reportExplorerContainer = $("<div class='fr-report-explorer fr-core-widget'></div>");
-                me.element.append($reportExplorerContainer);
-            }
-
-            // Make sure the view base has the explorer container
-            me._super($reportExplorerContainer);
-
-            if (!me.subscriptionModel) {
-                me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
-            }
-
-            me._initExplorerDialogs();
         },
         _checkPermission: function () {
             var me = this;
@@ -10303,57 +10375,6 @@ $(function () {
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
                 }
             });
-        },
-        _searchItems: function (keyword) {
-            var me = this;
-
-            if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
-                return;
-            }
-            
-            var url = me.options.reportManagerAPI + "/FindItems";
-            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
-            var searchCriteria = { SearchCriteria: [{ Key: "Name", Value: keyword }, { Key: "Description", Value: keyword }] };
-
-            //specify the search folder, not default to global
-            //var folder = me.priorExplorerPath ? me.priorExplorerPath : "";
-            //folder = folder.replace("%2f", "/");
-
-            forerunner.ajax.ajax({
-                dataType: "json",
-                url: url,
-                async: false,
-                data: {
-                    folder: "",
-                    searchOperator: "",
-                    searchCriteria: JSON.stringify(searchCriteria)
-                },
-                success: function (data) {
-                    if (data.Exception) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    }
-                    else {
-                        if (data.length) {
-                            me._render(data);
-                        }
-                        else {
-                            me._showNotFound();
-                        }
-                    }
-                },
-                error: function (data) {
-                    console.log(data);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
-                }
-            });
-        },
-        _showNotFound:function(){
-            var me = this;
-            var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
-            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
-            $explorer.append($notFound);            
-            me.element.append($explorer);
         },
         /**
          * Function execute when input element blur
@@ -20001,7 +20022,13 @@ $(function () {
             me.$listcontainer.html("");
             var $list = new $("<UL />");
             $list.addClass("fr-sub-list");
+
             $.when(me.options.subscriptionModel.subscriptionModel("getMySubscriptionList", me.options.reportPath)).done(function (data) {
+                //if no subscription in the list show the prompt
+                if (data.length === 0) {
+                    me.$emptyPrompt.show();
+                    return;
+                }
                 for (var i = 0; i < data.length; i++) {
                     var subInfo = data[i];
                     var $li = new $("<LI />");
@@ -20024,20 +20051,29 @@ $(function () {
          */
         listSubscriptions: function () {
             var me = this;
+
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
+
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
             me.$container.append(headerHtml);
+
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
             me.options.subscriptionModel.subscriptionModel("getDeliveryExtensions");
             me.element.append(me.$container);
+
+            me.$emptyPrompt = me._createDiv(["fr-sub-empty-prompt"]);
+            me.$emptyPrompt.text(locData.subscription.emptyPrompt);
+            me.$container.append(me.$emptyPrompt);
+
             me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
             me.$container.append(me.$listcontainer);
             me.$theForm = me._createDiv(["fr-sub-form"]);
             me.$container.append(me.$theForm);
+
             me._renderList();
 
             me.element.find(".fr-managesubscription-cancel").on("click", function (e) {
@@ -20614,10 +20650,12 @@ $(function () {
             var me = this;
             me._setSubscriptionOrSetDefaults();
         },
-        _createInputWithPlaceHolder: function (listOfClasses, type, placeholder) {
+        _createInputWithPlaceHolder: function (listOfClasses, type, name, placeholder) {
             var me = this;
             var $input = new $("<INPUT />");
             $input.attr("type", type);
+            name && $input.attr("name", name);
+
             if (placeholder)
                 $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
             for (var i = 0; i < listOfClasses.length; i++) {
@@ -20689,6 +20727,9 @@ $(function () {
         loadSubscription: function (subscripitonID) {
             var me = this;
 
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             me._subscriptionID = subscripitonID;
             me._subscriptionData = null;
             me.element.html("");
@@ -20707,29 +20748,29 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "");  //locData.subscription.descriptionPlaceholder
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$desc.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
 
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "");  //locData.subscription.toPlaceholder
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$to.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
 
-            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.subscription.toPlaceholder
             me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
 
-            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "");  //locData.subscription.toPlaceholder
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.subscription.toPlaceholder
             me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
 
-            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "");  //locData.subscription.toPlaceholder
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.subscription.toPlaceholder
             me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
 
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "");  // locData.subscription.subjectPlaceholder
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$subject.prop("required", true);
             me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
@@ -20743,7 +20784,6 @@ $(function () {
 
             me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
             me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
-            
             
 
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
@@ -20778,6 +20818,18 @@ $(function () {
             //disable form auto submit when click enter on the keyboard
             me.$theForm.on("submit", function () { return false; });
 
+            me.$theForm.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo(element.siblings("span"));
+                },
+                highlight: function (element) {
+                    $(element).addClass("fr-error");
+                },
+                unhighlight: function (element) {
+                    $(element).removeClass("fr-error");
+                }
+            });
+
             me.element.find(".fr-email-submit-id").on("click", function (e) {
                 
                 me._submit();
@@ -20809,7 +20861,7 @@ $(function () {
         _submit : function () {
             var me = this;
 
-            if (me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
+            if (me.$theForm.valid() && me.$to.val() !== "" && me.$desc.val() !== "" && me.$subject.val() !== "" && me.$to.attr("data-invalid") !== "true") {
                 var subscriptionInfo = me._getSubscriptionInfo();
 
                 me.options.subscriptionModel.subscriptionModel(
@@ -20860,6 +20912,9 @@ $(function () {
          */
         destroy: function () {
             var me = this;
+
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
             me.element.html("");
             this._destroy();
         }

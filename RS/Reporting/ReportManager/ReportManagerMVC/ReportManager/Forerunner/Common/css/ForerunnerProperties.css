@@ -87,10 +87,6 @@
     font-size: 10pt;
     display:block;
 }
-.fr-properties-form, .fr-error {
-    border-width: thin; 
-    border-color: red;
-}
 .fr-visibility-container {
     margin: 10px 0px 6px -2px;
 }

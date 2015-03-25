@@ -132,7 +132,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\sdk\ReportManagerController.cs"
   File "${LOCALROOT}\sdk\ReportViewerController.cs"
   File "${LOCALROOT}\sdk\CustomAPIFilters.cs"
-  File "${LOCALROOT}\sdk\readme.docx"
+  File "${LOCALROOT}\sdk\readme.txt"
 
   SetOutPath "$INSTDIR\Forerunner"
   File "${LOCALROOT}\Forerunner\version.txt"
@@ -763,7 +763,7 @@ Section Uninstall
   Delete "$INSTDIR\sdk\ReportManagerController.cs"
   Delete "$INSTDIR\sdk\ReportViewerController.cs"
   Delete "$INSTDIR\sdk\CustomAPIFilters.cs"
-  Delete "$INSTDIR\sdk\readme.docx"
+  Delete "$INSTDIR\sdk\readme.txt"
 
   Delete "$INSTDIR\Forerunner\version.txt"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner.min.js"

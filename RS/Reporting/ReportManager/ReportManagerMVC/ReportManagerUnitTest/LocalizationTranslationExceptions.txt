@@ -230,6 +230,11 @@
     "descriptionLabel":["fr"],
     "hide":[],
     "fileExists":[]
+      },
+  "move": {
+    "title":[],
+    "location":["is"],
+    "prompt":[]
   }
 }
 

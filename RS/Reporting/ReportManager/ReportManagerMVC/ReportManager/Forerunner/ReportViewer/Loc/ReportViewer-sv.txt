@@ -275,14 +275,15 @@
     "deleteFailed":"Prenumerations deletion misslyckades",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Svara till"
+    "replyToPlaceholder":"Svara till",
+    "emptyPrompt":"Det finns inga prenumerationer att visa på denna tid"
   },
   "properties": {
     "title":"Egenskaper",
     "submit":"Skicka in",
     "deleteItem":"Radera",
     "description":"Beskrivning",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Vänligen ange namn egendom i katalogen posten snabbmenyn"
   },
   "contextMenu": {
     "title":"snabbmenyn",
@@ -291,9 +292,9 @@
     "security":"Säkerhet",
     "linkedReport":"länkad Rapportera",
     "downloadFile":"Hämta fil",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Är du säker på att ta bort {0}?",
+    "folderNotEmpty":"Det finns underpost i mappen, kan du inte ta bort den.",
+    "move":"Flytta"
   },
   "common": {
     "submit":"Submit",
@@ -358,8 +359,8 @@
     "fileExists":"En mapp det namnet finns redan"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"Flytta",
+    "location":"Läge",
+    "prompt":"Välj den mapp som du vill inkludera detta objekt"
   }
 }

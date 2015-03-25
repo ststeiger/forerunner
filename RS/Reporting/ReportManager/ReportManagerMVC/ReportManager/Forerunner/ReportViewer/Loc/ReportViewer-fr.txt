@@ -276,14 +276,15 @@
     "deleteFailed":"Suppression abonnement qui a échoué",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To"
+    "replyToPlaceholder":"Reply-To",
+    "emptyPrompt":"Il n'y a pas d'abonnements à afficher pour le moment"
   },
   "properties": {
     "title":"propriétés",
     "submit":"soumettre ",
     "deleteItem":"soumettre",
     "description":"description",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Se il vous plaît définir le nom propriété catalogue le menu contextuel de l'élément"
   },
   "contextMenu": {
     "title":"Menu contextuel",
@@ -292,9 +293,9 @@
     "security":"sécurité",
     "linkedReport":"Rapport Lié",
     "downloadFile":"Télécharger le fichier",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Êtes-vous sûr de vouloir supprimer {0}?",
+    "folderNotEmpty":"Il est l'élément de sous dans le dossier, vous ne pouvez pas le supprimer.",
+    "move":"mouvement"
   },
   "common": {
     "submit":"Soumettre",
@@ -359,8 +360,8 @@
     "fileExists":"Un dossier ce nom existe déjà"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"mouvement",
+    "location":"emplacement",
+    "prompt":"Sélectionnez le dossier que vous souhaitez inclure cet article"
   }
 }

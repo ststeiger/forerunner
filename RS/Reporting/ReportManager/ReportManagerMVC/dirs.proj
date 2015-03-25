@@ -6,8 +6,9 @@
 		<!-- <ProjectFiles Include="icongen\icongen.csproj" /> -->
 		<ProjectFiles Include="ReportManager\ReportManager.csproj" />
 		<ProjectFiles Include="ReportMannagerConfigTool\ReportManagerConfigTool.csproj" />
-		<ProjectFiles Include="ValidateLicense\ValidateLicense.csproj" />
-		<!-- <ProjectFiles Include="RSProxy\RSProxy.csproj" /> --> 
+    <ProjectFiles Include="ValidateLicense\ValidateLicense.csproj" />
+    <ProjectFiles Include="Forerunner.SDK.ConfigTool\Forerunner.SDK.ConfigTool.csproj" />
+    <!-- <ProjectFiles Include="RSProxy\RSProxy.csproj" /> --> 
 		<!-- <ProjectFiles Include="RSProxyAPI.Tests\RSProxyAPI.Tests.csproj" />  -->
 	</ItemGroup> 
 	<Import Project="ReportManagerMVC.traversal.targets"/> 

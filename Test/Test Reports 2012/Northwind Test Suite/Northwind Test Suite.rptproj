@@ -139,10 +139,6 @@
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Learner Report.rdl</Name>
-      <FullPath>Learner Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Line Chart 1.rdl</Name>
       <FullPath>Line Chart 1.rdl</FullPath>
     </ProjectItem>
@@ -238,6 +234,10 @@
     <ProjectItem>
       <Name>SingleGuage.rdl</Name>
       <FullPath>SingleGuage.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Store Health Check.rdl</Name>
+      <FullPath>Store Health Check.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>

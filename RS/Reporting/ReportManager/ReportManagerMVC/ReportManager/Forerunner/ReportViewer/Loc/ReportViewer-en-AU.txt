@@ -148,7 +148,8 @@
     "deleteFailed":"Subscription deletion failed",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Reply-To"
+    "replyToPlaceholder":"Reply-To",
+    "emptyPrompt":"There are no subscriptions to display at this time"
   },
   "paramPane": {
     "nullField":"Null",

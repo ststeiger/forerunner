@@ -275,14 +275,15 @@
     "deleteFailed":"刪除訂閱成功",
     "ccPlaceholder":"抄送",
     "bccPlaceholder":"秘密抄送",
-    "replyToPlaceholder":"答復"
+    "replyToPlaceholder":"答復",
+    "emptyPrompt":"當前沒有可以顯示的訂閱"
   },
   "properties": {
     "title":"屬性",
     "submit":"提交",
     "deleteItem":"刪除",
     "description":"描述",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"請在目錄項的右鍵菜單中設置名稱"
   },
   "contextMenu": {
     "title":"右鍵菜單",

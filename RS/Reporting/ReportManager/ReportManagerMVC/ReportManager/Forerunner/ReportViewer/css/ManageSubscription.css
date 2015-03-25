@@ -1,7 +1,7 @@
 ﻿.fr-sub-form {min-width: 200px; min-height: 300px;}
 .fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:10px;}
 .fr-sub-descr{float:left; max-width:300px;white-space: nowrap; overflow:hidden; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis;text-overflow: ellipsis;text-overflow:ellipsis;}
-.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width:100%; }
+.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #BBBBBB; width:100%; max-width:550px; }
 .fr-sub-icon18x18 {  width:18px; height:18px; margin:5px; display:inline-block;}
 .fr-sub-delete-icon { float: right; background-image:url(../images/DeleteSubscription.png); cursor: pointer; }
 .fr-sub-edit-icon { float: right; background-image:url(../images/EditSubscription.png); cursor: pointer; }
@@ -21,5 +21,5 @@
 .fr-core-dialog-header .fr-email-create-id {background-image:url(../images/NewEmail_btn.png); cursor: pointer; filter: none;}
 .fr-email-submit-id {display: inline-block;}
 .fr-email-delete-id {display: inline-block;}
-.fr-emailsubscription-section { display: none; }
-.fr-managesubscription-section {display:none; }
+.fr-emailsubscription-section, .fr-managesubscription-section, .fr-sub-empty-prompt { display: none; }
+.fr-sub-empty-prompt { font-size:16px; padding: 6px; color:gray; }

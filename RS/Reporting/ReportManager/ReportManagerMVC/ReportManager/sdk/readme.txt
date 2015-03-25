@@ -1,53 +1,21 @@
 ﻿ForerunnerSDK
 
 After you have installed the ForerunnerSDK package you will need to
-edit a small number of files to finish enabling support for the SDK
-as follows:
+configure the settings. A Package Manager Console command has been
+supplied to make this as easy as possible.
 
-File: ~\web.config
+The new command is named Set-FRConfig and you run it  from the
+Package Manager console window. "Tools" -> "NuGet Package Manage" ->
+"Package Manager Console".
 
-In the web.config file you will need to add to the <appSettings> section
-which is a child of the <configuration> section. Specifically you will need
-to add all of the forerunner specific settings. These settings are easy to
-identify because they all start as follows:
+You can run Set-FRConfig as follows:
 
-    <add key="Forerunner...
+Set-FRConfig -Verbose
 
-The best way to add the correct values to your web application is to copy
-all the forerunner specific settings from a properly configured Mobilizer
-installation.
+Set-FRConfig will prompt you for any / all input it needs to configure
+the Forerunner SDK in your application. If you are interested in more information
+about Set-FRConfig you can get help as follows:
 
-If you don't already have Mobilizer installed you can register for a free
-trial license here:
+Set-FRConfig -?
 
-https://www.forerunnersw.com/registerTrial
-
-Once you have a properly configured and running Mobilizer for your machine,
-Simply copy the forerunner specific <appSettings>.
-
-File: ~\App_Start\WebApiConfig.cs
-
-The Forerunner SDK comes with System.Web.Http.ApiController classes. These
-are contained in the sdk folder. In order for these to run properly the method
-
-    Register(HttpConfiguration config)
-
-must contain the supporting MapHttpRoute() calls as follows:
-
-    config.Routes.MapHttpRoute(
-        name: "MobilizerManagerAPI",
-        routeTemplate: "api/{controller}/{action}/{id}",
-        defaults: new { id = RouteParameter.Optional },
-        constraints: new { controller = @"ReportManager"  }
-    );
-
-    config.Routes.MapHttpRoute(
-        name: "MobilizerViewerAPI",
-        routeTemplate: "api/{controller}/{action}/{id}",
-        defaults: new { id = RouteParameter.Optional },
-        constraints: new { controller = @"ReportViewer" }
-    );
-
-adding these calls will enable the REST end point to execute properly. Make
-sure you add these first in the file to avoid any conflicts.
-    
+Your done, enjoy!

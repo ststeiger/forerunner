@@ -275,14 +275,15 @@
     "deleteFailed":"サブスクリプションの削除に失敗しました",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"返信先"
+    "replyToPlaceholder":"返信先",
+    "emptyPrompt":"この時点で表示させるのサブスクリプションはありません"
   },
   "properties": {
     "title":"プロパティ",
     "submit":"提出する",
     "deleteItem":"削除",
     "description":"説明",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"カタログアイテムのコンテキストメニューでnameプロパティを設定してください"
   },
   "contextMenu": {
     "title":"コンテキストメニュー",
@@ -291,9 +292,9 @@
     "security":"セキュリティ",
     "linkedReport":"リンクされたレポート",
     "downloadFile":"ダウンロードファイル",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"あなたは{0}削除してもよろしいですか？",
+    "folderNotEmpty":"フォルダ内のサブ項目があり、あなたはそれを削除することはできません。",
+    "move":"移動"
   },
   "common": {
     "submit":"提出する",
@@ -358,8 +359,8 @@
     "fileExists":"名前がすでに存在していることをフォルダ"
   },
   "move": {
-    "title":"Move",
-    "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "title":"移動",
+    "location":"場所",
+    "prompt":"この項目を含めるフォルダを選択"
   }
 }

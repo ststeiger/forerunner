@@ -275,14 +275,15 @@
     "deleteFailed":"Áskrift eyða mistókst",
     "ccPlaceholder":"CC",
     "bccPlaceholder":"BCC",
-    "replyToPlaceholder":"Svara-til"
+    "replyToPlaceholder":"Svara-til",
+    "emptyPrompt":"Það eru engar áskriftir að sýna á þessum tíma"
   },
   "properties": {
     "title":"eiginleikar ",
     "submit":"leggja",
     "deleteItem":"eyða",
     "description":"Lýsing",
-    "readonly":"Please set name property in catalog item context menu"
+    "readonly":"Vinsamlegast settu nafn eign í verslun atriði samhengi matseðill"
   },
   "contextMenu": {
     "title":"samhengi Matseðill",
@@ -291,9 +292,9 @@
     "security":"Öryggi",
     "linkedReport":"tengd Report",
     "downloadFile":"Download File",
-    "deleteConfirm":"Are you sure to delete {0}?",
-    "folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-    "move":"Move"
+    "deleteConfirm":"Ertu viss um að eyða {0}?",
+    "folderNotEmpty":"Það er undir lið inni í möppunni, þú getur ekki eyða því.",
+    "move":"Færa"
   },
   "common": {
     "submit":"leggja",
@@ -358,8 +359,8 @@
     "fileExists":"A mappa sem nafn er þegar til"
   },
   "move": {
-    "title":"Move",
+    "title":"Færa",
     "location":"Location",
-    "prompt":"Select the folder that you want to include this item"
+    "prompt":"Veldu möppuna sem þú vilt hafa þetta atriði"
   }
 }

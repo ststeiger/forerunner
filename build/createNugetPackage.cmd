@@ -17,6 +17,7 @@ set NUGET_TOOL=%~dp0tools\nuget\nuget.exe
 
 :: We need to remove the "..\" so that the "/XD" robocopy switch used below will work properly
 call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager" SRC_REPORT_MANAGER
+call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" SRC_FRCONFIG
 
 set SRC_FORERUNNER="%SRC_REPORT_MANAGER%\Forerunner"
 set SRC_SDK="%SRC_REPORT_MANAGER%\sdk"
@@ -24,10 +25,12 @@ set SRC_CUSTOM="%SRC_REPORT_MANAGER%\Custom"
 set SRC_LIB="%SRC_REPORT_MANAGER%\bin"
 set SRC_NUGET="%~dp0tools\nuget"
 set SRC_THUMBNAIL="%~dp0..\RS\Reporting\ReportViewer\ReportViewer\Forerunner.Thumbnail\bin\Release"
+set SRC_FRCONFIG_BIN=%SRC_FRCONFIG%\bin\Release
 
 set DEST="%BUILD_RELEASE%_nuget_package"
 set DEST_CONTENT="%DEST%\content"
 set DEST_LIB="%DEST%\lib"
+set DEST_TOOLS="%DEST%\tools"
 
 echo Executing CreateNugetPackage... >> %NUGET_PACKAGE_LOG%
 echo Executing CreateNugetPackage... >> %BUILD_LOG%
@@ -54,7 +57,7 @@ if ERRORLEVEL 8 (
 )
 
 :: Content\Forerunner
-robocopy %SRC_FORERUNNER% %DEST_CONTENT%\Forerunner /S /LOG+:%NUGET_PACKAGE_LOG% /XF version.txt /XD %SRC_FORERUNNER%\Bundles %SRC_FORERUNNER%\Common\js %SRC_FORERUNNER%\Dashboard\js  %SRC_FORERUNNER%\ReportExplorer\js  %SRC_FORERUNNER%\ReportViewer\js >> NUL
+robocopy %SRC_FORERUNNER% %DEST_CONTENT%\Forerunner /S /LOG+:%NUGET_PACKAGE_LOG% /XF version.txt forerunner.js Forerunner-widgets.js *.bundle *.map /XD %SRC_FORERUNNER%\Common\js %SRC_FORERUNNER%\Dashboard\js  %SRC_FORERUNNER%\ReportExplorer\js  %SRC_FORERUNNER%\ReportViewer\js >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )
@@ -83,12 +86,39 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+:: tools
+robocopy %SRC_FRCONFIG_BIN% %DEST_TOOLS% Forerunner.SDK.ConfigTool.dll UWS.Configuration.dll /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy %SRC_FRCONFIG% %DEST_TOOLS% Forerunner.SDK.ConfigTool.Help.xml /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: The cmdlet help editor named the help file incorrectly so I rename it here
+rename %DEST_TOOLS%\Forerunner.SDK.ConfigTool.Help.xml Forerunner.SDK.ConfigTool-Help.xml
+
+robocopy %SRC_NUGET% %DEST_TOOLS% init.ps1 install.ps1 uninstall.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 :: Create the package
 echo Creating ForerunnerSDK.%BUILD_NUMBER%.nupkg... >> %NUGET_PACKAGE_LOG%
 pushd %DEST%
 %NUGET_TOOL% pack %DEST%\ForerunnerSDK.nuspec -Version %BUILD_NUMBER% >> %NUGET_PACKAGE_LOG%
-popd
 if ERRORLEVEL 1 (
+  popd
+	goto :Error
+)
+popd
+
+:: Copy the package to the release bin folder
+set PKG_FILE=ForerunnerSDK.%BUILD_NUMBER%.nupkg
+robocopy %DEST% %BUILD_RELEASE%\bin\Release %PKG_FILE% /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
 	goto :Error
 )
 

@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidateLicense", "Validate
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfSharp", "..\..\ReportViewer\PDFsharp\code\PdfSharp\PdfSharp.csproj", "{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.SDK.ConfigTool", "Forerunner.SDK.ConfigTool\Forerunner.SDK.ConfigTool.csproj", "{BE5CAF57-D90F-48D1-9573-DD1597DB739B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,12 @@ Global
 		{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

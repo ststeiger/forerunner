@@ -2314,7 +2314,7 @@ $(function () {
                 return null;
             }
 
-            var m = moment(defaultDatetime);
+            var m = moment(defaultDatetime, forerunner.ssr._internal.getStandardMomentDateFormat());
             return m.isValid() ? m.format(forerunner.ssr._internal.getStandardMomentDateFormat()) : null;
         },
         _checkDependencies: function (param) {

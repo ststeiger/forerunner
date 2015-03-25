@@ -144,7 +144,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -232,7 +231,7 @@
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>ReportOrders</DataSetName>
+        <DataSetName>Order</DataSetName>
         <Top>0.75in</Top>
         <Left>0.30208in</Left>
         <Height>0.5in</Height>
@@ -294,170 +293,14 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="Cat">
-      <Query>
-        <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT        Categories.*
-FROM            Categories</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="CategoryID">
-          <DataField>CategoryID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CategoryName">
-          <DataField>CategoryName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Picture">
-          <DataField>Picture</DataField>
-          <rd:TypeName>System.Byte[]</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Product">
-      <Query>
-        <DataSourceName>DataSource1</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@CatID">
-            <Value>=Parameters!CatID.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT        ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued
-FROM            Products
-WHERE        (CategoryID IN (@CatID))</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ProductID">
-          <DataField>ProductID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ProductName">
-          <DataField>ProductName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SupplierID">
-          <DataField>SupplierID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CategoryID">
-          <DataField>CategoryID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="QuantityPerUnit">
-          <DataField>QuantityPerUnit</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="UnitPrice">
-          <DataField>UnitPrice</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="UnitsInStock">
-          <DataField>UnitsInStock</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="UnitsOnOrder">
-          <DataField>UnitsOnOrder</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="ReorderLevel">
-          <DataField>ReorderLevel</DataField>
-          <rd:TypeName>System.Int16</rd:TypeName>
-        </Field>
-        <Field Name="Discontinued">
-          <DataField>Discontinued</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="Order">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@Product">
-            <Value>=Parameters!Product.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
         <CommandText>SELECT        Orders.OrderID, Orders.CustomerID, Orders.EmployeeID, Orders.OrderDate, Orders.RequiredDate, Orders.ShippedDate, Orders.ShipVia, Orders.Freight, Orders.ShipName, Orders.ShipAddress, Orders.ShipCity, 
                          Orders.ShipRegion, Orders.ShipPostalCode, Orders.ShipCountry
 FROM            Orders INNER JOIN
                          [Order Details] ON Orders.OrderID = [Order Details].OrderID
-WHERE        ([Order Details].ProductID IN (@Product))</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="OrderID">
-          <DataField>OrderID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="CustomerID">
-          <DataField>CustomerID</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeID">
-          <DataField>EmployeeID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="OrderDate">
-          <DataField>OrderDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="RequiredDate">
-          <DataField>RequiredDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="ShippedDate">
-          <DataField>ShippedDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
-        <Field Name="ShipVia">
-          <DataField>ShipVia</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Freight">
-          <DataField>Freight</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="ShipName">
-          <DataField>ShipName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipAddress">
-          <DataField>ShipAddress</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipCity">
-          <DataField>ShipCity</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipRegion">
-          <DataField>ShipRegion</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipPostalCode">
-          <DataField>ShipPostalCode</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ShipCountry">
-          <DataField>ShipCountry</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="ReportOrders">
-      <Query>
-        <DataSourceName>DataSource1</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@Orders">
-            <Value>=Parameters!Orders.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT        OrderID, CustomerID, EmployeeID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry
-FROM            Orders
-WHERE        OrderID IN (@Orders)</CommandText>
+WHERE        ([Order Details].ProductID = 1)</CommandText>
       </Query>
       <Fields>
         <Field Name="OrderID">
@@ -520,40 +363,32 @@ WHERE        OrderID IN (@Orders)</CommandText>
     </DataSet>
   </DataSets>
   <ReportParameters>
-    <ReportParameter Name="CatID">
-      <DataType>Integer</DataType>
-      <Prompt>Cat ID</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Cat</DataSetName>
-          <ValueField>CategoryID</ValueField>
-          <LabelField>CategoryName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="Product">
-      <DataType>String</DataType>
-      <Prompt>Product</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Product</DataSetName>
-          <ValueField>ProductID</ValueField>
-          <LabelField>ProductName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Orders">
-      <DataType>String</DataType>
-      <Prompt>Orders</Prompt>
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+      <Prompt>Start Date</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Order</DataSetName>
-          <ValueField>OrderID</ValueField>
-          <LabelField>OrderID</LabelField>
+          <ValueField>OrderDate</ValueField>
+          <LabelField>OrderDate</LabelField>
         </DataSetReference>
       </ValidValues>
-      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>03/05/1996 00:00:00</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>End Date</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Order</DataSetName>
+          <ValueField>RequiredDate</ValueField>
+          <LabelField>RequiredDate</LabelField>
+        </DataSetReference>
+      </ValidValues>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

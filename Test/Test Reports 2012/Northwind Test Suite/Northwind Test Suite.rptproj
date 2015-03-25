@@ -180,6 +180,10 @@
       <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Northwind Sales - Backup.rdl</Name>
+      <FullPath>Northwind Sales - Backup.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Northwind Sales.rdl</Name>
       <FullPath>Northwind Sales.rdl</FullPath>
     </ProjectItem>
@@ -283,10 +287,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Northwind Sales - Backup.rdl</Name>
-      <FullPath>Northwind Sales - Backup.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -295,7 +295,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

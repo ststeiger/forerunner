@@ -275,6 +275,27 @@ namespace ForerunnerRegister
 
         }
 
+        public void NoThankYou(string email)
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+            SqlCommand SQLComm;
+
+            try
+            {
+                SQLConn.Open();
+                SQLComm = new SqlCommand("delete campaignlist where email = @email INSERT NoThankYou (email,NoDate) SELECT @email, GETDATE()", SQLConn);                
+                SQLComm.Parameters.AddWithValue("@email", email);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+            }
+            catch (Exception /*e*/)
+            {
+                SQLConn.Close();
+            }
+
+        }
+
         public class campaign { public string ID; public string ListID;}
 
         public string RunCampaign(XmlReader XMLData, TaskWorker tw)

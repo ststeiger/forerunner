@@ -24,8 +24,7 @@ namespace RegisterWebService.Controllers
         {
             string cookievalue;
             HttpResponseMessage Response = this.Request.CreateResponse();
-            this.Request.CreateResponse();
-
+            
             if (HttpContext.Current.Request.Cookies["ForerunnerID"] != null)
             {
                 cookievalue = HttpContext.Current.Request.Cookies["ForerunnerID"].Value;
@@ -67,6 +66,15 @@ namespace RegisterWebService.Controllers
             }
 
             return WebSerivceHelper.GetResponseFromBytes(logo, "image/png", new HttpResponseMessage(HttpStatusCode.OK));
+        }
+
+        [HttpGet]
+        public HttpResponseMessage NoThankYou(string email)
+        {
+            Reg.NoThankYou(email);
+
+            return WebSerivceHelper.GetResponseFromString("<!DOCTYPE html><html ><body><h1>Thank you</h1></body></html>", "text/html", this.Request.CreateResponse());
+
         }
   
     }

@@ -663,17 +663,7 @@ namespace Forerunner.SDK.ConfigTool
                 {
                     if (project != null)
                     {
-                        var activeProjects = (System.Array)dte.ActiveSolutionProjects;
-                        int length = activeProjects.Length;
-                        if (activeProjects.Length > 0)
-                        {
-                            // Get the active project
-                            project = (Project)activeProjects.GetValue(0);
-                        }
-                        if (project == null || prjKindCSharpProject != project.Kind)
-                        {
-                            throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
-                        }
+                        throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
                     }
                     project = p;
                 }

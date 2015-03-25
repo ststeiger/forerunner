@@ -87,7 +87,7 @@ if ERRORLEVEL 8 (
 )
 
 :: tools
-robocopy %SRC_FRCONFIG_BIN% %DEST_TOOLS% Forerunner.SDK.ConfigTool.dll Forerunner.SDK.ConfigTool.Help.xml UWS.Configuration.dll /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+robocopy %SRC_FRCONFIG_BIN% %DEST_TOOLS% Forerunner.SDK.ConfigTool.dll UWS.Configuration.dll /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )

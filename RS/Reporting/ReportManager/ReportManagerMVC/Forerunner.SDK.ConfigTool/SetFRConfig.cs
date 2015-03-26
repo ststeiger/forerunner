@@ -21,6 +21,10 @@ namespace Forerunner.SDK.ConfigTool
     [Cmdlet(VerbsCommon.Set, "FRConfig")]
     public class SetFRConfig : PSCmdlet
     {
+        public SetFRConfig()
+        {
+        }
+
         #region Parameter properties / definitions
 
         // License key
@@ -34,7 +38,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.IsNative" value="true" />
-        private string _isNative = "true";
+        private string _isNative;
         [Parameter(HelpMessage = "'true' = native, 'false' = Power Point")]
         [Alias("n")]
         public string IsNative
@@ -44,7 +48,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.SharePointHost" value="" />
-        private string _sharePointHost = "";
+        private string _sharePointHost;
         [Parameter(HelpMessage = "URL of the Share Point host, used if IsNative = 'false'")]
         [Alias("s")]
         public string SharePointHost
@@ -70,7 +74,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerWSUrl" value="http://localhost/ReportServer" />
-        private string _reportServerWSUrl = "http://localhost/ReportServer";
+        private string _reportServerWSUrl;
         [Parameter(HelpMessage = "Report Server URL")]
         [Alias("ssrs")]
         public string ReportServerWSUrl
@@ -80,7 +84,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDataSource" value="." />
-        private string _reportServerDataSource = ".";
+        private string _reportServerDataSource;
         [Parameter(HelpMessage = "Report Server data source")]
         [Alias("ds")]
         public string ReportServerDataSource
@@ -90,7 +94,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.UseIntegratedSecurityForSQL" value="true" />
-        private string _useIntegratedSecurityForSQL = "true";
+        private string _useIntegratedSecurityForSQL;
         [Parameter(HelpMessage = "Use integrated SQL security")]
         [Alias("is")]
         public string UseIntegratedSecurityForSQL
@@ -100,7 +104,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDB" value="ReportServer" />
-        private string _reportServerDB = "ReportServer";
+        private string _reportServerDB;
         [Parameter(HelpMessage = "Report server database name")]
         [Alias("dn")]
         public string ReportServerDB
@@ -142,7 +146,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDBDomain" value="" />
-        private string _reportServerDBDomain = "";
+        private string _reportServerDBDomain;
         [Parameter(HelpMessage = "Report server database domain")]
         [Alias("dd")]
         public string ReportServerDBDomain
@@ -230,6 +234,21 @@ namespace Forerunner.SDK.ConfigTool
             }
         }
 
+        private string _webConfigPath;
+        [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
+        public string WebConfigPath
+        {
+            get
+            {
+                return _webConfigPath;
+            }
+            set
+            {
+                _webConfigPath = value;
+            }
+        }
+
+
         #endregion // Parameter properties / definitions
 
         #region Processing methods
@@ -288,10 +307,10 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            bool useSQLSecurity = String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0;
+            bool useIntegratedSecurityForSQL = String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0;
             bool isNative = String.Compare(IsNative, "true", true) == 0;
             string dbServerPWD = GetStringFromSecureString(ReportServerDBPWD);
-            if (useSQLSecurity)
+            if (!useIntegratedSecurityForSQL)
             {
                 builder.UserID = ReportServerDBUser;
                 builder.Password = dbServerPWD;
@@ -305,7 +324,7 @@ namespace Forerunner.SDK.ConfigTool
             string result;
 
             //Test database connection
-            if (!useSQLSecurity)
+            if (useIntegratedSecurityForSQL)
                 result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, dbServerPWD);
             else
                 result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
@@ -396,6 +415,13 @@ namespace Forerunner.SDK.ConfigTool
         {
             WriteVerbose("Start UpdateSourceFiles()");
 
+            if (WebConfigPath != null)
+            {
+                WriteVerbose("Skipping UpdateSourceFiles() because -WebConfigPath is defined");
+                WriteVerbose("end UpdateSourceFiles()");
+                return true;
+            }
+
             string pattern = @"public static void Register\(HttpConfiguration config\)\s*\r\n\s*\{[ \f\t\v]*";
             string markComment = @"ForerunnerSDK - Set-FRConfig, Automatic edit start, WebApiConfig.cs, Register()";
             string insertText =
@@ -417,7 +443,7 @@ namespace Forerunner.SDK.ConfigTool
                 "            );\r\n" +
                 "            // ForerunnerSDK - Set-FRConfig, Automatic edit end;\r\n";
 
-            AutomaticEditInsert(@"\App_Start", "WebApiConfig.cs", markComment, pattern, insertText);
+            AutomaticEditInsert(@"App_Start", "WebApiConfig.cs", markComment, pattern, insertText);
 
             WriteVerbose("end UpdateSourceFiles()");
             return true;
@@ -428,7 +454,7 @@ namespace Forerunner.SDK.ConfigTool
 
             string userNamePrompt = "User Name";
             string passwordPrompt = "Password";
-            string authenticationTypePrompt = "Use Integrated Security For SQL";
+            string useIntegratedSecurityForSQL = "Use Integrated Security For SQL (return = false)";
 
             // Create the collection of field descriptions for the Prompt class
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
@@ -443,8 +469,8 @@ namespace Forerunner.SDK.ConfigTool
             description.HelpMessage = "Password";
             descriptions.Add(description);
 
-            description = new System.Management.Automation.Host.FieldDescription(authenticationTypePrompt);
-            description.HelpMessage = "true = SQL, false  domain";
+            description = new System.Management.Automation.Host.FieldDescription(useIntegratedSecurityForSQL);
+            description.HelpMessage = "true = domain authentication, false sql";
             descriptions.Add(description);
 
             // Prompt the user and assign the values
@@ -457,11 +483,14 @@ namespace Forerunner.SDK.ConfigTool
             AssignResult(ref userName, userNamePrompt, results);
             securePassword = (SecureString)results[passwordPrompt].BaseObject;
             string password = GetStringFromSecureString(securePassword);
-            AssignResult(ref SQLIntegration, authenticationTypePrompt, results);
-            bool isSQLAuthentication = String.Compare(SQLIntegration, "true", true) == 0 || String.Compare(SQLIntegration, "on", true) == 0;
+            AssignResult(ref SQLIntegration, useIntegratedSecurityForSQL, results);
+            bool isUseIntegratedSecurityForSQL = 
+                String.Compare(SQLIntegration, "true", true) == 0 ||
+                String.Compare(SQLIntegration, "yes", true) == 0 ||
+                String.Compare(SQLIntegration, "on", true) == 0;
 
             string domainName = null;
-            if (!isSQLAuthentication)
+            if (isUseIntegratedSecurityForSQL)
             {
                 var domainDescriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
                 System.Management.Automation.Host.FieldDescription domainDescription;
@@ -477,7 +506,7 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            if (isSQLAuthentication)
+            if (!isUseIntegratedSecurityForSQL)
             {
                 builder.UserID = userName;
                 builder.Password = password;
@@ -488,7 +517,7 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, !isSQLAuthentication);
+            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, isUseIntegratedSecurityForSQL);
 
             if (!StaticMessages.testSuccess.Equals(result))
             {
@@ -502,13 +531,14 @@ namespace Forerunner.SDK.ConfigTool
             return true;
         }
 
-        private void AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
+        private bool AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
         {
             // Read the file into a string
             string path = GetLocalFilePathFromProject(projectRelativePath, filename);
             if (path == null)
             {
-                return;
+                WriteWarning("Warning - File: " + Path.Combine(projectRelativePath, filename) + ", not found");
+                return false;
             }
             
             string fileText;
@@ -520,7 +550,7 @@ namespace Forerunner.SDK.ConfigTool
             if (fileText.IndexOf(markComment) != -1)
             {
                 // The mark text is already in the file so we are done
-                return;
+                return true;
             }
 
             // Do the automatic insert
@@ -542,26 +572,28 @@ namespace Forerunner.SDK.ConfigTool
             {
                 sw.Write(sb.ToString());
             }
+
+            return true;
         }
         private void PromptForMissingParameters()
         {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
 
-            if (DefaultUserDomain == null)
+            if (DefaultUserDomain == null || DefaultUserDomain.Length == 0)
             {
                 var description = new System.Management.Automation.Host.FieldDescription("DefaultUserDomain");
                 description.HelpMessage = "Reporting Services default user login domain";
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBUser == null)
+            if (ReportServerDBUser == null || ReportServerDBUser.Length == 0)
             {
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBUser");
                 description.HelpMessage = "Database login user name";
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBPWD == null || ResetPassword)
+            if (ReportServerDBPWD == null || ReportServerDBPWD.Length == 0 || ResetPassword)
             {
                 ReportServerDBPWD = null;
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBPWD");
@@ -625,25 +657,37 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void AssignResult(ref string prop, string resultsKey, Dictionary<string, PSObject> results)
         {
-            if (prop != null)
+            if (prop != null && prop.Length > 0)
             {
                 return;
             }
 
             prop = (string)results[resultsKey].BaseObject;
         }
-        private void AssignForerunnerSetting(ref string prop, string name)
+        private void AssignForerunnerSetting(ref string prop, string name, string defaultValue = null)
         {
+            if (prop != null && prop.Length > 0)
+            {
+                // Always take parameters that are specified on the command line
+                return;
+            }
+
             var value = GetForerunnerSetting(name);
-            if (value != null)
+            if (value != null && value.Length > 0)
             {
                 prop = value;
             }
+
+            prop = defaultValue;
         }
         private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
         {
             string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
             var dte = (DTE2)GetVariableValue("DTE");
+            if (dte == null)
+            {
+                return null;
+            }
             Project project = null;
             var solution = (Solution)dte.Solution;
             var solutionProjects = (Projects)solution.Projects;
@@ -719,22 +763,26 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void LoadWebConfig()
         {
-            string webConfigPath = GetLocalFilePathFromProject(@"\", "web.config");
+            string webConfigPath = WebConfigPath;
             if (webConfigPath == null)
             {
-                throw (new Exception(String.Format("Error - Unable to find file: {0}", "web.config")));
+                webConfigPath = GetLocalFilePathFromProject(@"\", "web.config");
+                if (webConfigPath == null)
+                {
+                    throw (new Exception("Error - Unable to find file: web.config, try setting -WebConfigPath"));
+                }
             }
             System.Configuration.ExeConfigurationFileMap configFileMap = new System.Configuration.ExeConfigurationFileMap();
             configFileMap.ExeConfigFilename = webConfigPath;
             appConfig = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFileMap, System.Configuration.ConfigurationUserLevel.None);
 
-            AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl");
-            AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource");
-            AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB");
+            AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl", "http://localhost/ReportServer");
+            AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource", ".");
+            AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB", "ReportServer");
             AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
             AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
-            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
-            AssignForerunnerSetting(ref _isNative, "IsNative");
+            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", "false");
+            AssignForerunnerSetting(ref _isNative, "IsNative", "true");
             AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");
             AssignForerunnerSetting(ref _defaultUserDomain, "DefaultUserDomain");
 

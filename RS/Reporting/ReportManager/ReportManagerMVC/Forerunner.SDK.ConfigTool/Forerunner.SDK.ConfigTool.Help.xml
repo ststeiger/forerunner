@@ -154,6 +154,13 @@ set of parameters.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>WebConfigPath</maml:name>
+				<maml:description>
+					<maml:para />
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
@@ -179,7 +186,7 @@ set of parameters.</maml:para>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
+			<dev:defaultValue>true</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>SharePointHost</maml:name>
@@ -239,7 +246,7 @@ set of parameters.</maml:para>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue>true</dev:defaultValue>
+			<dev:defaultValue>false</dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>ReportServerDB</maml:name>
@@ -365,6 +372,18 @@ set of parameters.</maml:para>
 			<maml:name>ProjectName</maml:name>
 			<maml:description>
 				<maml:para>Explicitly give the project name. Helpful when more than one project is in the solution.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>WebConfigPath</maml:name>
+			<maml:description>
+				<maml:para />
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>

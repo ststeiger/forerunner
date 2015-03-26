@@ -362,7 +362,10 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
- 
+  File "${LOCALROOT}\Config\MobilizerConfig.ps1"
+  File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.dll"
+  File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  File "${LOCALROOT}\Config\UWS.Configuration.dll"
 
   SetOutPath "$INSTDIR\Custom"
   File "${LOCALROOT}\Custom\Mobilizer.css"
@@ -976,6 +979,10 @@ Section Uninstall
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\Config\MobilizerConfig.ps1"
+  Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.dll"
+  Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  Delete "$INSTDIR\Config\UWS.Configuration.dll"
   Delete "$INSTDIR\InstallInstructions.rtf"
   Delete "$INSTDIR\RDL Extension Documentation.rtf"
 

@@ -49,6 +49,11 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" %Destination%\Config *.xml *.ps1
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 robocopy "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" %Destination%\Config *.xml *.ps1 /LOG+:%LOGFILE% 
 if ERRORLEVEL 8 (
 	goto :Error

@@ -448,9 +448,21 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("end UpdateSourceFiles()");
             return true;
         }
+        private bool isUseIntegratedSecurityForSQL()
+        {
+            return String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0 ||
+                   String.Compare(UseIntegratedSecurityForSQL, "yes", true) == 0 ||
+                   String.Compare(UseIntegratedSecurityForSQL, "on", true) == 0;
+        }
         private Boolean UpdateDBSchema()
         {
             WriteVerbose("Start UpdateDBSchema()");
+
+            if (isSchemaUpToDate())
+            {
+                WriteVerbose("DB Schema is already up to date");
+                return true;
+            }
 
             string userNamePrompt = "User Name";
             string passwordPrompt = "Password";
@@ -484,13 +496,9 @@ namespace Forerunner.SDK.ConfigTool
             securePassword = (SecureString)results[passwordPrompt].BaseObject;
             string password = GetStringFromSecureString(securePassword);
             AssignResult(ref SQLIntegration, useIntegratedSecurityForSQL, results);
-            bool isUseIntegratedSecurityForSQL = 
-                String.Compare(SQLIntegration, "true", true) == 0 ||
-                String.Compare(SQLIntegration, "yes", true) == 0 ||
-                String.Compare(SQLIntegration, "on", true) == 0;
 
             string domainName = null;
-            if (isUseIntegratedSecurityForSQL)
+            if (isUseIntegratedSecurityForSQL())
             {
                 var domainDescriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
                 System.Management.Automation.Host.FieldDescription domainDescription;
@@ -506,7 +514,7 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            if (!isUseIntegratedSecurityForSQL)
+            if (!isUseIntegratedSecurityForSQL())
             {
                 builder.UserID = userName;
                 builder.Password = password;
@@ -517,7 +525,7 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, isUseIntegratedSecurityForSQL);
+            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, isUseIntegratedSecurityForSQL());
 
             if (!StaticMessages.testSuccess.Equals(result))
             {
@@ -527,10 +535,29 @@ namespace Forerunner.SDK.ConfigTool
                 return false;
             }
 
+            WriteVerbose("DB Schema updated");
             WriteVerbose("End UpdateDBSchema() - " + result);
             return true;
         }
+        private bool isSchemaUpToDate()
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = ReportServerDataSource;
+            builder.InitialCatalog = ReportServerDB;
+            string password = GetStringFromSecureString(ReportServerDBPWD);
+            if (!isUseIntegratedSecurityForSQL())
+            {
+                builder.UserID = ReportServerDBUser;
+                builder.Password = password;
+            }
+            else
+            {
+                builder.IntegratedSecurity = true;
+            }
 
+            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
+            return ConfigToolHelper.CheckSchema(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, password, isUseIntegratedSecurityForSQL());
+        }
         private bool AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
         {
             // Read the file into a string
@@ -790,9 +817,9 @@ namespace Forerunner.SDK.ConfigTool
             string password = GetForerunnerSetting("ReportServerDBPWD");
             if (password != null)
             {
-                var descripted = Forerunner.SSRS.Security.Encryption.Decrypt(password);
+                var decrypted = Forerunner.SSRS.Security.Encryption.Decrypt(password);
                 ReportServerDBPWD = new SecureString();
-                foreach (char ch in descripted)
+                foreach (char ch in decrypted)
                 {
                     ReportServerDBPWD.AppendChar(ch);
                 }

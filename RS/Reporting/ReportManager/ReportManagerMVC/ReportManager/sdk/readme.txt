@@ -18,4 +18,14 @@ about Set-FRConfig you can get help as follows:
 
 Set-FRConfig -?
 
+You will need a trial license to evaluate ForerunnerSDK. You can get a free 30
+trial license key here:
+
+https://www.forerunnersw.com/registerTrial
+
+You can find samples of how to create the report viewer and report explorer widgets
+here:
+
+http://www.forerunnersw.com/samples
+
 Your done, enjoy!

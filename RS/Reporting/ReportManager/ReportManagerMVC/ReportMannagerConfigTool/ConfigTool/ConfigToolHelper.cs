@@ -107,6 +107,55 @@ namespace ReportMannagerConfigTool
         }
 
         /// <summary>
+        /// Verify is the scheme exists and is up to date
+        /// </summary>
+        /// <param name="connectionString">given connection string</param>
+        /// <returns>true or false</returns>
+        public static bool CheckSchema(string connectionString, String UserName, string Domain, string Password, bool IsIntegrated)
+        {
+            SqlConnection conn = new SqlConnection(connectionString);
+            Impersonator impersonator = new Impersonator(UserName, Domain, Password);
+
+            try
+            {
+                if (IsIntegrated)
+                    impersonator.Impersonate();
+
+                // You need to update the version number in both functions.  Update and check.!!!!!
+                string SQL;
+                SQL = @"                           
+                           SELECT Version FROM ForerunnerDBVersion                                                        
+                            ";
+                conn.Open();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, conn))
+                {
+                    using (SqlDataReader rd = SQLComm.ExecuteReader())
+                    {
+                        rd.Read();
+                        if (rd.GetString(0) == "1.3" || rd.GetString(0) == "S.1.3")
+                            return true;
+                        else
+                            return false;                                                
+                    }
+                }
+            }
+
+
+            catch (Exception error)
+            {
+                return false;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+                if (impersonator != null)
+                    impersonator.Undo();
+            }
+            
+        }
+
+        /// <summary>
         /// Verify whether program can connect database with given connection string.
         /// </summary>
         /// <param name="connectionString">given connection string</param>
@@ -122,6 +171,8 @@ namespace ReportMannagerConfigTool
                     impersonator.Impersonate();
 
                 
+
+                // You need to update the version number in both functions.  Update and check.!!!!!
                  string SQL;
                  if (isReportServerDB(conn))
                  {

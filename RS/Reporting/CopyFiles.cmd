@@ -49,7 +49,7 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" %Destination%\Config Forerunner.SDK.ConfigTool.Help.xml MobilizerConfig.ps1 /LOG+:%LOGFILE% 
+robocopy "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" %Destination%\Config *.xml *.ps1 /LOG+:%LOGFILE% 
 if ERRORLEVEL 8 (
 	goto :Error
 )

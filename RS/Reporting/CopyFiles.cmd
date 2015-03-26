@@ -44,12 +44,12 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\bin\Release\" %Destination%\bin Forerunner.SDK.ConfigTool.dll UWS.Configuration.dll
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\bin\Release" %Destination%\%Destination%\Config
 if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\" %Destination%\bin Forerunner.SDK.ConfigTool.Help.xml MobilizerConfig.ps1
+robocopy "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" %Destination%\Config Forerunner.SDK.ConfigTool.Help.xml MobilizerConfig.ps1 /LOG+:%LOGFILE% 
 if ERRORLEVEL 8 (
 	goto :Error
 )

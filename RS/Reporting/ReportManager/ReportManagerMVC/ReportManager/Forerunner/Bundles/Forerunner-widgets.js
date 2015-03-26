@@ -3027,7 +3027,7 @@ $(function () {
             me.property = forerunner.cache.itemProperty[me.reportPath];
 
             if (me.property) {
-                me.RDLExtProperty = me.property["ForerunnerRDLExt"] || null;
+                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property["ForerunnerRDLExt"]) || null;
                 return;
             }
 
@@ -3042,10 +3042,8 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
-                    if (data && JSON.stringify(data) !== "{}") {
-                        //me.RDLExtProperty = data;
-
-                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = data;
+                    if (data && JSON.stringify(data) !== "{}") {                       
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = forerunner.helper.JSONParse(data);
                     }
                 }
             });
@@ -17109,7 +17107,7 @@ $(function () {
                 return null;
             }
 
-            var m = moment(defaultDatetime);
+            var m = moment(defaultDatetime, forerunner.ssr._internal.getStandardMomentDateFormat());
             return m.isValid() ? m.format(forerunner.ssr._internal.getStandardMomentDateFormat()) : null;
         },
         _checkDependencies: function (param) {

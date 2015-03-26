@@ -38,7 +38,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.IsNative" value="true" />
-        private string _isNative = "true";
+        private string _isNative;
         [Parameter(HelpMessage = "'true' = native, 'false' = Power Point")]
         [Alias("n")]
         public string IsNative
@@ -48,7 +48,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.SharePointHost" value="" />
-        private string _sharePointHost = "";
+        private string _sharePointHost;
         [Parameter(HelpMessage = "URL of the Share Point host, used if IsNative = 'false'")]
         [Alias("s")]
         public string SharePointHost
@@ -74,7 +74,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerWSUrl" value="http://localhost/ReportServer" />
-        private string _reportServerWSUrl = "http://localhost/ReportServer";
+        private string _reportServerWSUrl;
         [Parameter(HelpMessage = "Report Server URL")]
         [Alias("ssrs")]
         public string ReportServerWSUrl
@@ -84,7 +84,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDataSource" value="." />
-        private string _reportServerDataSource = ".";
+        private string _reportServerDataSource;
         [Parameter(HelpMessage = "Report Server data source")]
         [Alias("ds")]
         public string ReportServerDataSource
@@ -94,7 +94,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.UseIntegratedSecurityForSQL" value="true" />
-        private string _useIntegratedSecurityForSQL = "false";
+        private string _useIntegratedSecurityForSQL;
         [Parameter(HelpMessage = "Use integrated SQL security")]
         [Alias("is")]
         public string UseIntegratedSecurityForSQL
@@ -104,7 +104,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDB" value="ReportServer" />
-        private string _reportServerDB = "ReportServer";
+        private string _reportServerDB;
         [Parameter(HelpMessage = "Report server database name")]
         [Alias("dn")]
         public string ReportServerDB
@@ -146,7 +146,7 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         // <add key="Forerunner.ReportServerDBDomain" value="" />
-        private string _reportServerDBDomain = "";
+        private string _reportServerDBDomain;
         [Parameter(HelpMessage = "Report server database domain")]
         [Alias("dd")]
         public string ReportServerDBDomain
@@ -579,21 +579,21 @@ namespace Forerunner.SDK.ConfigTool
         {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
 
-            if (DefaultUserDomain == null)
+            if (DefaultUserDomain == null || DefaultUserDomain.Length == 0)
             {
                 var description = new System.Management.Automation.Host.FieldDescription("DefaultUserDomain");
                 description.HelpMessage = "Reporting Services default user login domain";
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBUser == null)
+            if (ReportServerDBUser == null || ReportServerDBUser.Length == 0)
             {
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBUser");
                 description.HelpMessage = "Database login user name";
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBPWD == null || ResetPassword)
+            if (ReportServerDBPWD == null || ReportServerDBPWD.Length == 0 || ResetPassword)
             {
                 ReportServerDBPWD = null;
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBPWD");
@@ -657,20 +657,28 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void AssignResult(ref string prop, string resultsKey, Dictionary<string, PSObject> results)
         {
-            if (prop != null)
+            if (prop != null && prop.Length > 0)
             {
                 return;
             }
 
             prop = (string)results[resultsKey].BaseObject;
         }
-        private void AssignForerunnerSetting(ref string prop, string name)
+        private void AssignForerunnerSetting(ref string prop, string name, string defaultValue = null)
         {
+            if (prop != null && prop.Length > 0)
+            {
+                // Always take parameters that are specified on the command line
+                return;
+            }
+
             var value = GetForerunnerSetting(name);
-            if (value != null)
+            if (value != null && value.Length > 0)
             {
                 prop = value;
             }
+
+            prop = defaultValue;
         }
         private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
         {
@@ -768,13 +776,13 @@ namespace Forerunner.SDK.ConfigTool
             configFileMap.ExeConfigFilename = webConfigPath;
             appConfig = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFileMap, System.Configuration.ConfigurationUserLevel.None);
 
-            AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl");
-            AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource");
-            AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB");
+            AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl", "http://localhost/ReportServer");
+            AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource", ".");
+            AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB", "ReportServer");
             AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
             AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
-            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
-            AssignForerunnerSetting(ref _isNative, "IsNative");
+            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", "false");
+            AssignForerunnerSetting(ref _isNative, "IsNative", "true");
             AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");
             AssignForerunnerSetting(ref _defaultUserDomain, "DefaultUserDomain");
 

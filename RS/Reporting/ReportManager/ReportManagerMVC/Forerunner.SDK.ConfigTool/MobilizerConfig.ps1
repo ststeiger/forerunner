@@ -11,5 +11,5 @@ $mobilizerLoaded = Get-Module Forerunner.SDK.ConfigTool.dll
 
 if (!$mobilizerLoaded)
 {
-        Import-Module (Join-Path $scriptDirectory Forerunner.SDK.ConfigTool.dll)
+        Import-Module (Join-Path $mobilizerConfig Forerunner.SDK.ConfigTool.dll)
 }

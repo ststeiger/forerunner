@@ -34,10 +34,10 @@ set of parameters.</Description>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath ProjectName ResetPassword Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath ProjectName ResetPassword WebConfigPath Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-ProjectName &lt;String&gt;] [-ResetPassword]</string>
+        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-ProjectName &lt;String&gt;] [-ResetPassword] [-WebConfigPath &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -62,7 +62,7 @@ set of parameters.</Description>
             <string>n</string>
           </Aliases>
           <Description>Is Native SSRS or Power Point</Description>
-          <DefaultValue />
+          <DefaultValue>true</DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SharePointHost</Name>
@@ -115,20 +115,20 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>UseIntegratedSecurityForSQL</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>is</string>
           </Aliases>
           <Description>Use integrated SQL security</Description>
-          <DefaultValue>true</DefaultValue>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDB</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>dn</string>
@@ -163,8 +163,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDBDomain</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>dd</string>
@@ -199,8 +199,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>QueueThumbnails</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>q</string>
@@ -223,8 +223,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>VersionPath</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>v</string>
@@ -272,6 +272,15 @@ set of parameters.</Description>
           </Attributes>
           <Aliases />
           <Description>Explicitly give the project name. Helpful when more than one project is in the solution.</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>WebConfigPath</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases />
+          <Description />
           <DefaultValue />
         </ParameterDescription>
       </Parameters>

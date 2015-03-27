@@ -140,11 +140,6 @@ namespace ReportMannagerConfigTool
                 }
             }
 
-
-            catch (Exception)
-            {
-                return false;
-            }
             finally
             {
                 if (conn.State == ConnectionState.Open)

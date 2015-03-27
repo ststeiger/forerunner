@@ -73,7 +73,7 @@ set of parameters.</maml:para>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 				<maml:name>UseIntegratedSecurityForSQL</maml:name>
 				<maml:description>
-					<maml:para>Use integrated SQL security</maml:para>
+					<maml:para>Use integrated SQL security (true = domain, false = SQL)</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
@@ -239,14 +239,14 @@ set of parameters.</maml:para>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>UseIntegratedSecurityForSQL</maml:name>
 			<maml:description>
-				<maml:para>Use integrated SQL security</maml:para>
+				<maml:para>Use integrated SQL security (true = domain, false = SQL)</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
 				<maml:uri/>
 			</dev:type>
-			<dev:defaultValue>false</dev:defaultValue>
+			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>ReportServerDB</maml:name>

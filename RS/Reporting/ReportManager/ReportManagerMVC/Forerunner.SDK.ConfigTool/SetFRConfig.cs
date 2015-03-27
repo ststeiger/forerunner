@@ -494,9 +494,12 @@ namespace Forerunner.SDK.ConfigTool
             securePassword = (SecureString)results[passwordPrompt].BaseObject;
             string password = GetStringFromSecureString(securePassword);
             AssignResult(ref SQLIntegration, authenticationPrompt, results);
+            bool isSQLIntegration = String.Compare(SQLIntegration, "true", true) == 0 ||
+                                    String.Compare(SQLIntegration, "yes", true) == 0 ||
+                                    String.Compare(SQLIntegration, "on", true) == 0; ;
 
             string domainName = null;
-            if (isUseIntegratedSecurityForSQL())
+            if (isSQLIntegration)
             {
                 var domainDescriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
                 System.Management.Automation.Host.FieldDescription domainDescription;
@@ -512,9 +515,6 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            bool isSQLIntegration = String.Compare(SQLIntegration, "true", true) == 0 ||
-                                    String.Compare(SQLIntegration, "yes", true) == 0 ||
-                                    String.Compare(SQLIntegration, "on", true) == 0; ;
             if (!isSQLIntegration)
             {
                 builder.UserID = userName;
@@ -526,7 +526,7 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, isUseIntegratedSecurityForSQL());
+            result = ConfigToolHelper.UpdateSchema(builder.ConnectionString, userName, domainName, password, isSQLIntegration);
 
             if (!StaticMessages.testSuccess.Equals(result))
             {
@@ -556,8 +556,15 @@ namespace Forerunner.SDK.ConfigTool
                 builder.IntegratedSecurity = true;
             }
 
-            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-            return ConfigToolHelper.CheckSchema(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, password, isUseIntegratedSecurityForSQL());
+            try
+            {
+                return ConfigToolHelper.CheckSchema(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, password, isUseIntegratedSecurityForSQL());
+            }
+            catch (Exception e)
+            {
+                WriteWarning(String.Format("Warning - isSchemaUpToDate() failed, Database connection failed, user: {0}, error: {1}", ReportServerDBUser, e.Message));
+            }
+            return false;
         }
         private bool AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
         {

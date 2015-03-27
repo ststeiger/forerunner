@@ -121,8 +121,8 @@ set of parameters.</Description>
           <Aliases>
             <string>is</string>
           </Aliases>
-          <Description>Use integrated SQL security</Description>
-          <DefaultValue>false</DefaultValue>
+          <Description>Use integrated SQL security (true = domain, false = SQL)</Description>
+          <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDB</Name>

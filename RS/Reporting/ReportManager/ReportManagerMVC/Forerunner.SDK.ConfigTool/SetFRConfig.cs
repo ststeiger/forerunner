@@ -93,10 +93,10 @@ namespace Forerunner.SDK.ConfigTool
             set { _reportServerDataSource = value; }
         }
 
-        // <add key="Forerunner.UseIntegratedSecurityForSQL" value="true" />
+        // <add key="Forerunner.UseIntegratedSecurityForSQL" value="" />
         private string _useIntegratedSecurityForSQL;
-        [Parameter(HelpMessage = "Use integrated SQL security")]
-        [Alias("is")]
+        [Parameter(HelpMessage = authenticationHelp)]
+        [Alias("ia")]
         public string UseIntegratedSecurityForSQL
         {
             get { return _useIntegratedSecurityForSQL; }
@@ -307,10 +307,9 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            bool useIntegratedSecurityForSQL = String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0;
             bool isNative = String.Compare(IsNative, "true", true) == 0;
             string dbServerPWD = GetStringFromSecureString(ReportServerDBPWD);
-            if (!useIntegratedSecurityForSQL)
+            if (!isUseIntegratedSecurityForSQL())
             {
                 builder.UserID = ReportServerDBUser;
                 builder.Password = dbServerPWD;
@@ -324,7 +323,7 @@ namespace Forerunner.SDK.ConfigTool
             string result;
 
             //Test database connection
-            if (useIntegratedSecurityForSQL)
+            if (isUseIntegratedSecurityForSQL())
                 result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, dbServerPWD);
             else
                 result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
@@ -466,7 +465,6 @@ namespace Forerunner.SDK.ConfigTool
 
             string userNamePrompt = "User Name";
             string passwordPrompt = "Password";
-            string useIntegratedSecurityForSQL = "Use Integrated Security For SQL (return = false)";
 
             // Create the collection of field descriptions for the Prompt class
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
@@ -481,8 +479,8 @@ namespace Forerunner.SDK.ConfigTool
             description.HelpMessage = "Password";
             descriptions.Add(description);
 
-            description = new System.Management.Automation.Host.FieldDescription(useIntegratedSecurityForSQL);
-            description.HelpMessage = "true = domain authentication, false sql";
+            description = new System.Management.Automation.Host.FieldDescription(authenticationPrompt);
+            description.HelpMessage = authenticationHelp;
             descriptions.Add(description);
 
             // Prompt the user and assign the values
@@ -495,7 +493,7 @@ namespace Forerunner.SDK.ConfigTool
             AssignResult(ref userName, userNamePrompt, results);
             securePassword = (SecureString)results[passwordPrompt].BaseObject;
             string password = GetStringFromSecureString(securePassword);
-            AssignResult(ref SQLIntegration, useIntegratedSecurityForSQL, results);
+            AssignResult(ref SQLIntegration, authenticationPrompt, results);
 
             string domainName = null;
             if (isUseIntegratedSecurityForSQL())
@@ -514,7 +512,10 @@ namespace Forerunner.SDK.ConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            if (!isUseIntegratedSecurityForSQL())
+            bool isSQLIntegration = String.Compare(SQLIntegration, "true", true) == 0 ||
+                                    String.Compare(SQLIntegration, "yes", true) == 0 ||
+                                    String.Compare(SQLIntegration, "on", true) == 0; ;
+            if (!isSQLIntegration)
             {
                 builder.UserID = userName;
                 builder.Password = password;
@@ -629,6 +630,13 @@ namespace Forerunner.SDK.ConfigTool
                 descriptions.Add(description);
             }
 
+            if (UseIntegratedSecurityForSQL == null || UseIntegratedSecurityForSQL.Length == 0)
+            {
+                var description = new System.Management.Automation.Host.FieldDescription("UseIntegratedSecurityForSQL");
+                description.HelpMessage = authenticationHelp;
+                descriptions.Add(description);
+            }
+
             if (LicenseKey == null)
             {
                 needsActivation = true;
@@ -643,6 +651,7 @@ namespace Forerunner.SDK.ConfigTool
                 var results = Host.UI.Prompt(null, null, descriptions);
                 AssignResult(ref _defaultUserDomain, "DefaultUserDomain", results);
                 AssignResult(ref _reportServerDBUser, "ReportServerDBUser", results);
+                AssignResult(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", results);
                 AssignResult(ref _licenseKey, "LicenseKey", results);
 
                 if (ReportServerDBPWD == null)
@@ -702,9 +711,12 @@ namespace Forerunner.SDK.ConfigTool
             var value = GetForerunnerSetting(name);
             if (value != null && value.Length > 0)
             {
+                // Take the value from the given web.config file (app settings)
                 prop = value;
+                return;
             }
 
+            // Otherwise assign the default value (or null)
             prop = defaultValue;
         }
         private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
@@ -808,7 +820,7 @@ namespace Forerunner.SDK.ConfigTool
             AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB", "ReportServer");
             AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
             AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
-            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", "false");
+            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
             AssignForerunnerSetting(ref _isNative, "IsNative", "true");
             AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");
             AssignForerunnerSetting(ref _defaultUserDomain, "DefaultUserDomain");
@@ -830,6 +842,8 @@ namespace Forerunner.SDK.ConfigTool
         //
         private System.Configuration.Configuration appConfig { get; set; }
         private bool needsActivation = false;
+        private const string authenticationPrompt = "Use Integrated Security For SQL (return = false)";
+        private const string authenticationHelp = "true = domain authentication, false = SQL";
 
         #endregion  // Private methods
 

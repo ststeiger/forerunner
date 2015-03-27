@@ -141,7 +141,7 @@ namespace ReportMannagerConfigTool
             }
 
 
-            catch (Exception error)
+            catch (Exception)
             {
                 return false;
             }

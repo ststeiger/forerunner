@@ -11,6 +11,7 @@ Test/Test Reports 2012/Report Project1/bin/
 *.fileListAbsolute.txt
 *.CodeAnalysisLog.xml
 *.lastcodeanalysissucceeded
+TemporaryGeneratedFile_*.cs
 Thumbs.db
 build/smtp.config.xml
 Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user

@@ -1,0 +1,51 @@
+﻿.fr-ezviewer-container {
+  display:block; 
+  height: 100%; 
+  position: relative; 
+  overflow: hidden;
+}
+
+.fr-ezviewer-leftpane {
+  display: none;
+  width: 280px; 
+  height: 100%; 
+  position: absolute; 
+  left: 0px; 
+  top: 0px;
+  z-index: 3;
+}
+
+.fr-ezviewer-rightpane {
+  display: none;
+  width: 280px; 
+  height: 100%; 
+  position: absolute; 
+  right: 0px; 
+  top: 0px;
+  z-index: 3;
+}
+
+.fr-ezviewer-toppane {
+    width:100%; 
+    position: absolute; 
+    top: 0px; 
+    z-index: 2
+}
+
+.fr-ezviewer-bottompane {
+    width:100%; 
+    height: 150px; 
+    position: absolute; 
+    bottom: 0px;
+    z-index: 1;
+}
+
+.fr-ezviewer-scrollable {
+    display:block; 
+    width: 100%; 
+    height: 100%; 
+    position: absolute; 
+    top: 0px; 
+    left: 0px; 
+    overflow: auto;
+}

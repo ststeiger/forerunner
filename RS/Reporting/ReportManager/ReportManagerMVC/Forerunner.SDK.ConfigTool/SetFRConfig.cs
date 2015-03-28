@@ -103,6 +103,26 @@ namespace Forerunner.SDK.ConfigTool
             set { _useIntegratedSecurityForSQL = value; }
         }
 
+        // <add key="Forerunner.UseMobilizerDB" value="true" />
+        private string _useMobilizerDB;
+        [Parameter(HelpMessage = "Don't allow any use of the Mobilizer DB functions")]
+        [Alias("umdb")]
+        public string UseMobilizerDB
+        {
+            get { return _useMobilizerDB; }
+            set { _useMobilizerDB = value; }
+        }
+
+        // <add key="Forerunner.SeperateDB" value="false" />
+        private string _seperateDB;
+        [Parameter(HelpMessage = "Use a separate DB for Mobilizer")]
+        [Alias("sdb")]
+        public string SeperateDB
+        {
+            get { return _seperateDB; }
+            set { _seperateDB = value; }
+        }
+
         // <add key="Forerunner.ReportServerDB" value="ReportServer" />
         private string _reportServerDB;
         [Parameter(HelpMessage = "Report server database name")]
@@ -389,6 +409,8 @@ namespace Forerunner.SDK.ConfigTool
             SetForerunnerSetting("ReportServerWSUrl", ReportServerWSUrl);
             SetForerunnerSetting("ReportServerDataSource", ReportServerDataSource);
             SetForerunnerSetting("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL);
+            SetForerunnerSetting("UseMobilizerDB", UseMobilizerDB);
+            SetForerunnerSetting("SeperateDB", SeperateDB);
             SetForerunnerSetting("ReportServerDB", ReportServerDB);
             SetForerunnerSetting("ReportServerDBUser", ReportServerDBUser);
 
@@ -449,13 +471,22 @@ namespace Forerunner.SDK.ConfigTool
         }
         private bool isUseIntegratedSecurityForSQL()
         {
-            return String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0 ||
-                   String.Compare(UseIntegratedSecurityForSQL, "yes", true) == 0 ||
-                   String.Compare(UseIntegratedSecurityForSQL, "on", true) == 0;
+            return String.Compare(UseIntegratedSecurityForSQL, "true", true) == 0;
+        }
+        private bool isUseMobilizerDB()
+        {
+            return String.Compare(UseMobilizerDB, "true", true) == 0;
         }
         private Boolean UpdateDBSchema()
         {
             WriteVerbose("Start UpdateDBSchema()");
+
+            if (!isUseMobilizerDB())
+            {
+                WriteVerbose("Skipped because UseMobilizerDB is set to false");
+                WriteVerbose("End UpdateDBSchema()");
+                return true;
+            }
 
             if (isSchemaUpToDate())
             {
@@ -653,9 +684,10 @@ namespace Forerunner.SDK.ConfigTool
                 descriptions.Add(description);
             }
 
+            Dictionary <string, PSObject> results = null;
             if (descriptions.Count > 0)
             {
-                var results = Host.UI.Prompt(null, null, descriptions);
+                results = Host.UI.Prompt(null, null, descriptions);
                 AssignResult(ref _defaultUserDomain, "DefaultUserDomain", results);
                 AssignResult(ref _reportServerDBUser, "ReportServerDBUser", results);
                 AssignResult(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", results);
@@ -665,6 +697,18 @@ namespace Forerunner.SDK.ConfigTool
                 {
                     // The password is always a different pattern than the rest
                     ReportServerDBPWD = (System.Security.SecureString)results["ReportServerDBPWD"].BaseObject;
+                }
+
+                if ((ReportServerDBDomain == null || ReportServerDBDomain.Length == 0) && isUseIntegratedSecurityForSQL())
+                {
+                    descriptions.Clear();
+                    var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBDomain");
+                    description.HelpMessage = "Reporting Server DB domain";
+                    descriptions.Add(description);
+
+                    results.Clear();
+                    results = Host.UI.Prompt(null, null, descriptions);
+                    AssignResult(ref _reportServerDBDomain, "ReportServerDBDomain", results);
                 }
             }
         }
@@ -828,6 +872,8 @@ namespace Forerunner.SDK.ConfigTool
             AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
             AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
             AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
+            AssignForerunnerSetting(ref _useMobilizerDB, "UseMobilizerDB", "true");
+            AssignForerunnerSetting(ref _seperateDB, "SeperateDB", "false");
             AssignForerunnerSetting(ref _isNative, "IsNative", "true");
             AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");
             AssignForerunnerSetting(ref _defaultUserDomain, "DefaultUserDomain");

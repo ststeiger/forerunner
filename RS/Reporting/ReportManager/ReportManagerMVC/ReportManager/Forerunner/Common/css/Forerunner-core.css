@@ -50,13 +50,15 @@
   .fr-core-dialog-innerPage { top: 20px; }
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
   .fr-core-dialog-form { margin:4px 0px 25px 8px; max-height:210px; }
+  .fr-core-dialog-header .fr-core-dialog-cancel-container { margin: 0px 6px 0 0px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
   .fr-core-dialog-form { margin:4px 0px 25px 4px; max-height:390px; }
-  .fr-core-dialog-header .fr-core-dialog-title{ max-width:150px; }
+  .fr-core-dialog-header .fr-core-dialog-title{ max-width:175px; }
+  .fr-core-dialog-header .fr-core-dialog-cancel-container { margin: 0px 6px 0 0px; }
 }
 
 /* Smartphones (landscape) ----------- */

@@ -19,9 +19,11 @@
   <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.js"></script>
   <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/History.js"></script>
-  <script type="text/javascript" src="~/Forerunner/Common/js/Viewerbase.js"></script>
+    <script type="text/javascript" src="~/Forerunner/Common/js/Viewerbase.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Common/js/DialogBase.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/ReportViewer.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/ParameterModel.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Common/js/catalogTree.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/Toolbase.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/MessageBox.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/DashboardModel.js"></script>
@@ -40,6 +42,10 @@
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/ReportExplorer.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/UserSettings.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/ReportExplorerSearchFolder.js"></script>
+  <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/LinkedReport.js"></script>
+  <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/UploadFile.js"></script>
+  <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/NewFolder.js"></script>
+  <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/MoveItem.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/EmailSubscription.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/ManageSubscription.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/ReportRender.js"></script>
@@ -112,18 +118,19 @@
                      alert(url);
                  }
         });
-
+        
+        $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Company Sales 2008", 1);
         //$reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
-        $reportViewer.reportViewer("loadReport", "/Northwind Test Suite/Simple Parameter", 1, {
-            "ParamsList": [{
-                "Parameter": "CategoryID",
-                "Value": "1"
-            },
-            {
-                "Parameter": "SecondParam",
-                "UseDefault": "true"
-            }]
-        });
+        //$reportViewer.reportViewer("loadReport", "/Northwind Test Suite/Simple Parameter", 1, {
+        //    "ParamsList": [{
+        //        "Parameter": "CategoryID",
+        //        "Value": "1"
+        //    },
+        //    {
+        //        "Parameter": "SecondParam",
+        //        "UseDefault": "true"
+        //    }]
+        //});
     });
       
   </script>

@@ -19,15 +19,19 @@
     .fr-rp-form .fr-rp-error-span { display: inline; font-size: 10pt; }
     .fr-rp-form .fr-rp-error-position { display: inline; }
     .fr-rp-form .fr-rp-error { border-width: thin; border-color: red; }
+    .fr-rp-form .fr-rp-submit { margin-top:46px }
 
     .fr-rp-icon-edit {background-image:url(../images/edit.png); }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
-    .fr-rp-form { margin-right: 4px; }
+    .fr-rp-form { margin:8px 8px 0px 8px; }
+    .fr-rp-form .fr-rp-text-input { min-width: 278px; }
+    .fr-rp-form .fr-rp-submit { margin-top:30px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-    .fr-rp-form { margin-right: 4px; }
+    .fr-rp-form { margin:10px 4px 0 4px; }
+    .fr-rp-form .fr-rp-text-input { min-width: 278px; }
 }

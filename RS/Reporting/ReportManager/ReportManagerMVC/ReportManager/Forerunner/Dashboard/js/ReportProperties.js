@@ -85,7 +85,7 @@ $(function () {
                             "<tr>" +
                         "</table>" +
                         // Submit conatiner
-                        "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-rp-submit fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
                                 "<input type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
                             "</div>" +

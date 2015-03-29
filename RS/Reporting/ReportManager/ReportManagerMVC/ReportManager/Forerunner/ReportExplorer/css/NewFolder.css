@@ -10,6 +10,11 @@
 
 .fr-nfd-new-folder-icon { background-image: url(../../Common/images/ToolpaneIcons/NewFolder.png); }
 
-@media only screen and (max-width : 479px) {
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) and (orientation: landscape) {
+    .fr-nfd-section .fr-nfd-name, .fr-nfd-section .fr-nfd-folder-description { width:364px; }
+}
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) and (orientation: portrait) {
     .fr-nfd-section .fr-nfd-name, .fr-nfd-section .fr-nfd-folder-description { width:294px; }
 }

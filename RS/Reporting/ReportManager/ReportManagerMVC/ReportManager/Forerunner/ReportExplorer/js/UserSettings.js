@@ -69,8 +69,8 @@ $(function () {
                             "<td>" +
                                 "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
                             "</td>" +
-                            "<td>" +
-                                "<select class='fr-us-viewStyle-id fr-us-dropdown'  name='viewStyle' type='text' list='viewStyles'>" +
+                            "<td class = 'fr-toolbase-selectinner'>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' type='text' list='viewStyles'>" +
                                 "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
                                 "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
                                  "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +

@@ -103,85 +103,85 @@
   margin-top:-64px; 
   position:absolute;
 }
-.fr-icons128x128-file-avi {
+.fr-icons128x128-file-avi {background-size: 100%;
     background-image:url(../images/ResourceIcons/avi.png);
 }
 
-.fr-icons128x128-file-bmp {
+.fr-icons128x128-file-bmp {background-size: 100%;
   background-image:url(../images/ResourceIcons/bmp.png);
 }
 
-.fr-icons128x128-file-css {
+.fr-icons128x128-file-css {background-size: 100%;
   background-image:url(../images/ResourceIcons/css.png);
 }
 
-.fr-icons128x128-file-doc {
+.fr-icons128x128-file-doc {background-size: 100%;
   background-image:url(../images/ResourceIcons/doc.png);
 }
 
-.fr-icons128x128-file-gif {
+.fr-icons128x128-file-gif {background-size: 100%;
   background-image:url(../images/ResourceIcons/gif.png);
 }
 
-.fr-icons128x128-file-html {
+.fr-icons128x128-file-html {background-size: 100%;
   background-image:url(../images/ResourceIcons/html.png);
 }
 
-.fr-icons128x128-file-ini {
+.fr-icons128x128-file-ini {background-size: 100%;
   background-image:url(../images/ResourceIcons/ini.png);
 }
 
-.fr-icons128x128-file-jpeg {
+.fr-icons128x128-file-jpeg {background-size: 100%;
   background-image:url(../images/ResourceIcons/jpeg.png);
 }
 
-.fr-icons128x128-file-mp3 {
+.fr-icons128x128-file-mp3 {background-size: 100%;
   background-image:url(../images/ResourceIcons/mp3.png);
 }
 
-.fr-icons128x128-file-mpeg {
+.fr-icons128x128-file-mpeg {background-size: 100%;
   background-image:url(../images/ResourceIcons/mpeg.png);
 }
 
-.fr-icons128x128-file-pdf {
+.fr-icons128x128-file-pdf {background-size: 100%;
   background-image:url(../images/ResourceIcons/pdf.png);
 }
 
-.fr-icons128x128-file-ppt {
+.fr-icons128x128-file-ppt {background-size: 100%;
   background-image:url(../images/ResourceIcons/ppt.png);
 }
 
-.fr-icons128x128-file-rar {
+.fr-icons128x128-file-rar {background-size: 100%;
   background-image:url(../images/ResourceIcons/rar.png);
 }
 
-.fr-icons128x128-file-text {
+.fr-icons128x128-file-text {background-size: 100%;
   background-image:url(../images/ResourceIcons/text.png);
 }
 
-.fr-icons128x128-file-tiff {
+.fr-icons128x128-file-tiff {background-size: 100%;
   background-image:url(../images/ResourceIcons/tiff.png);
 }
 
-.fr-icons128x128-file-xls {
+.fr-icons128x128-file-xls {background-size: 100%;
   background-image:url(../images/ResourceIcons/xls.png);
 }
 
-.fr-icons128x128-file-zip {
+.fr-icons128x128-file-zip {background-size: 100%;
   background-image:url(../images/ResourceIcons/zip.png);
 }
 
-.fr-icons128x128-file-xml {
+.fr-icons128x128-file-xml {background-size: 100%;
   background-image:url(../images/ResourceIcons/xml.png);
 }
 
-.fr-icons128x128-file-png {
+.fr-icons128x128-file-png {background-size: 100%;
   background-image:url(../images/ResourceIcons/png.png);
 }
 
-.fr-icons128x128-file-unknown {
+.fr-icons128x128-file-unknown {background-size: 100%;
   background-image:url(../images/ResourceIcons/unknown.png);
 }
 
-.fr-icons128x128-file-dashboard { height: 100%; width: 100%; background-image: url(../images/ResourceIcons/dashboard.png); background-repeat: no-repeat; background-position: center; }
+.fr-icons128x128-file-dashboard { background-size: 100%;height: 100%; width: 100%; background-image: url(../images/ResourceIcons/dashboard.png); background-repeat: no-repeat; background-position: center; }
 

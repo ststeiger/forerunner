@@ -9653,9 +9653,17 @@ $(function () {
               + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
             if (me.options.rsInstance)
                 reportThumbnailPath += "&instance=" + me.options.rsInstance;
+
+            var viewStyle = "";
+            if (me.options.userSettings.viewStyle === "small")
+                viewStyle = "-small";
+            if (me.options.userSettings.viewStyle === "list")
+                viewStyle = "-list";
+
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
+            $item.addClass("fr-explorer-item" + viewStyle);
             if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
             }
@@ -9664,8 +9672,9 @@ $(function () {
                 $item.addClass("fr-explorer-hidden-item");
             }
 
-            var $anchor = new $("<a />");
+            var $anchor = new $("<div />");
             $anchor.addClass("fr-explorer-item-image-link");
+            $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -9691,7 +9700,7 @@ $(function () {
             if (forerunner.device.isTouch()) {
                 // Touch devices
                 var options = { stop_browser_behavior: { userSelect: "none" }, swipe_max_touches: 22, drag_max_touches: 2 };
-                $anchor.hammer(options).on("tap",
+                $item.hammer(options).on("tap",
                     function (event) {
                         if (me.options.navigateTo) {
                             //On mobile use the browsers native viewer, does not work in IFrame
@@ -9705,7 +9714,7 @@ $(function () {
                         }
                     }
                 );
-                $anchor.hammer(options).on("hold",
+                $item.hammer(options).on("hold",
                     function (event) {
                         var data = {
                             catalogItem: catalogItem,
@@ -9718,7 +9727,7 @@ $(function () {
                 );
             } else {
                 // Non-touch (PCs)
-                $anchor.on("contextmenu", function (event) {
+                $item.on("contextmenu", function (event) {
                     // Steal the bowser context menu if we click on a report explorer item
                     var data = {
                         catalogItem: catalogItem,
@@ -9735,7 +9744,7 @@ $(function () {
                     return false;
                 });
 
-                $anchor.on("click", function (event) {
+                $item.on("click", function (event) {
                     if (me.options.navigateTo) {
                         me.options.navigateTo(action, catalogItem.Path);
                     }
@@ -9747,6 +9756,7 @@ $(function () {
             //Image Block
             var $imageblock = new $("<div />");
             $imageblock.addClass("fr-report-item-image-block");
+            $imageblock.addClass("fr-report-item-image-block" + viewStyle);            
             $anchor.append($imageblock);
             var outerImage = new $("<div />");            
             $imageblock.append(outerImage);
@@ -9777,6 +9787,7 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
+                corner.addClass("fr-explorer-item-earcorner" + viewStyle);
 
                 //only draw the page background when it not hidden
                 if (!catalogItem.Hidden) {
@@ -9787,6 +9798,7 @@ $(function () {
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
+                innerImage.addClass("fr-report-item-inner-image" + viewStyle);
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
@@ -9812,8 +9824,10 @@ $(function () {
             //Caption
             var $caption = new $("<div />");
             $caption.addClass("fr-explorer-caption");
+            $caption.addClass("fr-explorer-caption" + viewStyle);
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
+            $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
             $captiontext.attr("title", name);
@@ -9824,8 +9838,10 @@ $(function () {
             //Description
             var $desc = new $("<div />");
             $desc.addClass("fr-explorer-desc-container");
+            $desc.addClass("fr-explorer-desc-container" + viewStyle);
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
+            $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
             if (description) {
@@ -10563,6 +10579,18 @@ $(function () {
                                 "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                             "</td>" +
                         "</tr>" +
+                         "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown'  name='viewStyle' type='text' list='viewStyles'>" +
+                                "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
+                                "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
+                                 "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
+                                "</select" +
+                            "</td>" +
+                        "</tr>" +
                     "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -10607,6 +10635,9 @@ $(function () {
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
+
+            me.$viewStyle = me.element.find(".fr-us-viewStyle-id");
+            me.$viewStyle.val(me.settings.viewStyle);
         },
         _triggerClose: function (isSubmit) {
             var me = this;
@@ -10622,7 +10653,7 @@ $(function () {
                 responsiveUI = me.$resposiveUI.prop("checked"),
                 adminUI = me.$adminUI.prop("checked");
             
-            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI) {
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === me.$viewStyle.val()) {
                 //nothing change, just close dialog
                 me.closeDialog();
                 return;
@@ -10630,6 +10661,7 @@ $(function () {
 
             me.settings.responsiveUI = responsiveUI;
             me.settings.adminUI = adminUI;
+            me.settings.viewStyle = me.$viewStyle.val();
             
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);

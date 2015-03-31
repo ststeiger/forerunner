@@ -1,13 +1,1 @@
-.fr-explorer-item { display: inline-block;  margin-left:0px; padding:  15px 15px 0px 15px; cursor: pointer; }
-.fr-report-item-image-block { width: 100px; height: 125px; position: relative;  }
-.fr-explorer-caption { width: 100px; display: table-row; margin-left: auto; margin-right: auto; }
-.fr-explorer-item-title { text-align: center; font-size:8pt; width:100px; height:25px; display: block; color: #212729; font-weight: 700; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
-.fr-explorer-item-desc { text-align: center; font-size: 6pt; width:100px; height:30px; display:block; color: #212729; font-weight: 500; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; -ms-word-wrap: break-word; word-wrap: break-word; overflow:hidden; }
 
-.fr-explorer-item-earcorner { width: 30px; height:030px; z-index: 4; position: absolute;  top: 0px; right: 0px;}
-.fr-report-item-inner-image { height: 95px; width: 85px; position: absolute; top: 10px; left: 5px; padding-left: 5px; padding-right: 5px; margin: 4px; }
-
-.fr-explorer-folder {  background-size: 100%;  height: 100%; width: 100%; background-image: url(../forerunner/reportexplorer/Images/folder.png); background-repeat: no-repeat; background-position: center;}
-
-.fr-explorer-folder-selected {  background-size: 100%; height: 100%; width: 100%; background-image: url(../forerunner/reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
-.fr-report-item-ear-image { background-size: 100%; background-image: url(../forerunner/reportexplorer/Images/report_ear.png); z-index:5; position: absolute;  top: 0px; right: 0px;}

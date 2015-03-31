@@ -57,6 +57,7 @@ $(function () {
             var me = this;
             me.element.html(null);
             me.enableCascadingTree = forerunner.config.getCustomSettingsValue("EnableCascadingTree", "on") === "on";
+            me.isDebug = forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false;
         },
         _render: function () {
             var me = this;
@@ -244,12 +245,12 @@ $(function () {
                 me._cancelForm();
             });
 
-            if (me.options.$reportViewer.isDebug) {
+            if (me.isDebug) {
                 console.log("writeParameterPanel", {
                     submitForm: submitForm,
                     DefaultValueCount: data.DefaultValueCount,
                     DataCount: parseInt(data.Count, 10),
-                    LoadedForDefault:me._loadedForDefault
+                    LoadedForDefault: me._loadedForDefault
                 });
             }
             if (submitForm !== false) {
@@ -2328,12 +2329,39 @@ $(function () {
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
+            var me = this;
             if (!defaultDatetime) {
                 return null;
             }
 
-            var m = moment(defaultDatetime, forerunner.ssr._internal.getStandardMomentDateFormat());
-            return m.isValid() ? m.format(forerunner.ssr._internal.getStandardMomentDateFormat()) : null;
+            var dateFormat = forerunner.ssr._internal.getStandardMomentDateFormat();
+            var m = moment(defaultDatetime, dateFormat);
+
+            if (!m.isValid()) {
+                me._DebugLog("_getDateTimeFromDefault", {
+                    defaultDatetime: defaultDatetime,
+                    dateFormat: dateFormat
+                });
+            }
+
+            return m.isValid() ? m.format(dateFormat) : null;
+        },
+        _DebugLog: function (funcName, debugData) {
+            var me = this;
+            if (!me.isDebug) {
+                return;
+            }
+
+            if (forerunner.device.isiOS()) {
+                var $error = me.$form.find(".fr-param-debug-error");
+                if ($error.length === 0) {
+                    $error = $("<div class='fr-param-debug-error error'></dev>");
+                    me.$form.append($error);
+                }
+                $error.text(funcName + ", " + JSON.stringify(debugData));
+            }
+
+            console.log(funcName, debugData);
         },
         _checkDependencies: function (param) {
             var me = this;

@@ -1470,6 +1470,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-option-label { font-size:12px; }
 .fr-param-option-div {display:inline-block;margin-left:10px;}
 
+.fr-param-debug-error { margin: 5px; border-width: thin; border-color: red; }
+
 .fr-param-tree-hidden { display:none; }
 .fr-param-tree {
     display:none; 

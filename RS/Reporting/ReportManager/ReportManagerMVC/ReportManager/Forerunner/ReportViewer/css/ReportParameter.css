@@ -35,6 +35,8 @@
 .fr-param-option-label { font-size:12px; }
 .fr-param-option-div {display:inline-block;margin-left:10px;}
 
+.fr-param-debug-error { margin: 5px; border-width: thin; border-color: red; }
+
 .fr-param-tree-hidden { display:none; }
 .fr-param-tree {
     display:none; 

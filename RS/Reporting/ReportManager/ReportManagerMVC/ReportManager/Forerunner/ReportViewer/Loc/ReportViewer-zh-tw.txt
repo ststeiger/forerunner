@@ -127,7 +127,8 @@
     "AdminUI":"管理員UI",
     "ViewStyleLarge":"Large",
     "ViewStyleSmall":"Small",
-    "ViewStyleList":"List"
+    "ViewStyleList":"List",
+    "ViewStyle":"View Style"
   },
   "paramPane": {
     "nullField":"空值",

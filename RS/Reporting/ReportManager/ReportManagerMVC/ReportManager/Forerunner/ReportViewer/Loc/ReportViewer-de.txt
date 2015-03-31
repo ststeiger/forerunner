@@ -125,9 +125,10 @@
     "ResponsiveUI":"Responsive UI",
     "Email":"E-Mail",
     "AdminUI":"Admin-Benutzeroberfläche",
-    "ViewStyleLarge" : "Groß",
-	"ViewStyleSmall" : "klein",
-	"ViewStyleList" : "Liste"
+    "ViewStyleLarge":"Groß",
+    "ViewStyleSmall":"klein",
+    "ViewStyleList":"Liste",
+    "ViewStyle":"Ansicht Style"
   },
   "paramPane": {
     "nullField":"nichtig",

@@ -65,6 +65,18 @@ $(function () {
                                 "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
                             "</td>" +
                         "</tr>" +
+                         "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
+                            "</td>" +
+                            "<td class = 'fr-toolbase-selectinner'>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' type='text' list='viewStyles'>" +
+                                "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
+                                "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
+                                 "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
+                                "</select" +
+                            "</td>" +
+                        "</tr>" +
                     "</table>" +
                     // Ok button
                     "<div class='fr-core-dialog-submit-container'>" +
@@ -109,6 +121,9 @@ $(function () {
             me.$adminUI = me.element.find(".fr-us-admin-ui-id");
             var adminUI = me.settings.adminUI;
             me.$adminUI.prop("checked", adminUI);
+
+            me.$viewStyle = me.element.find(".fr-us-viewStyle-id");
+            me.$viewStyle.val(me.settings.viewStyle);
         },
         _triggerClose: function (isSubmit) {
             var me = this;
@@ -124,7 +139,7 @@ $(function () {
                 responsiveUI = me.$resposiveUI.prop("checked"),
                 adminUI = me.$adminUI.prop("checked");
             
-            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI) {
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === me.$viewStyle.val()) {
                 //nothing change, just close dialog
                 me.closeDialog();
                 return;
@@ -132,6 +147,7 @@ $(function () {
 
             me.settings.responsiveUI = responsiveUI;
             me.settings.adminUI = adminUI;
+            me.settings.viewStyle = me.$viewStyle.val();
             
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);

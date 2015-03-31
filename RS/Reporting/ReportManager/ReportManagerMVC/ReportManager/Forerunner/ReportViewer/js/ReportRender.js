@@ -98,6 +98,9 @@ $(function () {
             me._tablixStream = {};
             me.RDLExt = RDLExt;
 
+            if (me.RDLExt.ForceResponsive !== undefined)
+                me.options.responsive = me.RDLExt.ForceResponsive;
+
             me._currentWidth = me.options.reportViewer.element.width();
             if (me.Page.Replay === undefined)
                 me.Page.Replay = {};

@@ -124,7 +124,10 @@
     "cancel":"Hætta",
     "ResponsiveUI":"móttækilegur HÍ",
     "Email":"Email",
-    "AdminUI":"Admin UI"
+    "AdminUI":"Admin UI",
+    "ViewStyleLarge":"Stór",
+    "ViewStyleSmall":"Small",
+    "ViewStyleList":"List"
   },
   "paramPane": {
     "nullField":"Zero",

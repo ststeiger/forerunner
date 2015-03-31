@@ -124,7 +124,10 @@
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI",
     "Email":"Eメール",
-    "AdminUI":"管理UI"
+    "AdminUI":"管理UI",
+    "ViewStyleLarge":"大",
+    "ViewStyleSmall":"スモール",
+    "ViewStyleList":"リスト"
   },
   "paramPane": {
     "nullField":"ゼロ",

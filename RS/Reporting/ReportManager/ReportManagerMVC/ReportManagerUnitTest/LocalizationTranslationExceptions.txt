@@ -62,7 +62,10 @@
     "submit": ["de", "es", "fr", "ga", "is", "it", "ja", "pt", "sv"],
     "ResponsiveUI": ["de"],
     "Email":["fr", "de", "es", "ga", "is", "pt"],
-    "AdminUI":["is", "sv", "ro"]
+    "AdminUI":["is", "sv", "ro"],
+    "ViewStyleLarge" : [],
+	"ViewStyleSmall" : ["is"],
+	"ViewStyleList" : ["is"]
   },
   "paramPane": {
     "nullField": ["ga", "is"],

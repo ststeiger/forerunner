@@ -124,7 +124,10 @@
     "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI",
     "Email":"e-post",
-    "AdminUI":"Admin UI"
+    "AdminUI":"Admin UI",
+    "ViewStyleLarge":"stor",
+    "ViewStyleSmall":"liten",
+    "ViewStyleList":"lista"
   },
   "paramPane": {
     "nullField":"Noll",

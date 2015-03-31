@@ -124,7 +124,10 @@
     "cancel":"取消",
     "ResponsiveUI":"動態UI",
     "Email":"電子郵件",
-    "AdminUI":"管理員UI"
+    "AdminUI":"管理員UI",
+    "ViewStyleLarge":"Large",
+    "ViewStyleSmall":"Small",
+    "ViewStyleList":"List"
   },
   "paramPane": {
     "nullField":"空值",

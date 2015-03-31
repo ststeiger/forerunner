@@ -132,7 +132,10 @@
     "cancel":"Cancel",
     "ResponsiveUI":"Responsive UI",
 	"Email":"Email",
-	"AdminUI": "Admin UI"
+	"AdminUI": "Admin UI",
+    "ViewStyleLarge" : "Large",
+	"ViewStyleSmall" : "Small",
+	"ViewStyleList" : "List"
   },
   "subscription": {
     "email": "Email",

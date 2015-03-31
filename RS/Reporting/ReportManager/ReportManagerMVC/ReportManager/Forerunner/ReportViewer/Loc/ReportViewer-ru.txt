@@ -124,7 +124,10 @@
     "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс",
     "Email":"по электронной почте",
-    "AdminUI":"UI Админ"
+    "AdminUI":"UI Админ",
+    "ViewStyleLarge":"большой",
+    "ViewStyleSmall":"небольшой",
+    "ViewStyleList":"список"
   },
   "paramPane": {
     "nullField":"Ноль",

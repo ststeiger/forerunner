@@ -124,7 +124,10 @@
     "cancel":"Abbestellen",
     "ResponsiveUI":"Responsive UI",
     "Email":"E-Mail",
-    "AdminUI":"Admin-Benutzeroberfläche"
+    "AdminUI":"Admin-Benutzeroberfläche",
+    "ViewStyleLarge" : "Groß",
+	"ViewStyleSmall" : "klein",
+	"ViewStyleList" : "Liste"
   },
   "paramPane": {
     "nullField":"nichtig",

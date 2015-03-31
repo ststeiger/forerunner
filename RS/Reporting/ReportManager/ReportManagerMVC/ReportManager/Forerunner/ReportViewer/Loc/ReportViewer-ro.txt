@@ -124,7 +124,10 @@
     "cancel":"Anula",
     "ResponsiveUI":"UI receptiv",
     "Email":"E-mail",
-    "AdminUI":"UI admin"
+    "AdminUI":"UI admin",
+    "ViewStyleLarge":"mare",
+    "ViewStyleSmall":"mic",
+    "ViewStyleList":"listă"
   },
   "paramPane": {
     "nullField":"nul",

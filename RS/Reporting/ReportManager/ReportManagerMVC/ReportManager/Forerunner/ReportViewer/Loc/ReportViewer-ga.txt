@@ -124,7 +124,10 @@
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach",
     "Email":"Email",
-    "AdminUI":"Chomhéadain Riarachán"
+    "AdminUI":"Chomhéadain Riarachán",
+    "ViewStyleLarge":"Mór",
+    "ViewStyleSmall":"Beaga",
+    "ViewStyleList":"liosta"
   },
   "paramPane": {
     "nullField":"Null",

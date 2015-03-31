@@ -124,7 +124,10 @@
     "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive",
     "Email":"e-mail",
-    "AdminUI":"interfaccia utente Admin"
+    "AdminUI":"interfaccia utente Admin",
+    "ViewStyleLarge":"Grande",
+    "ViewStyleSmall":"Piccolo",
+    "ViewStyleList":"Lista"
   },
   "paramPane": {
     "nullField":"Zero",

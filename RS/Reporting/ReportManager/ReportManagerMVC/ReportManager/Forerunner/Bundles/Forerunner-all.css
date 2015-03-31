@@ -1071,7 +1071,7 @@ table, td, tr div {
 
 .fr-explorer-item-list { display: table; padding: 15px 0px 0px 15px; margin-left:0; }
 .fr-explorer-item-image-link-list { display:table-cell;vertical-align:middle;  }
-.fr-explorer-caption-list { width: 150px; display: table-cell;vertical-align:middle;  }
+.fr-explorer-caption-list { width: 150px; display: table-cell;vertical-align:middle; padding-left:15px; }
 .fr-explorer-desc-container-list { display:table-cell;vertical-align:middle; }
 
 .fr-report-item-image-block-list { width: 100px; height: 125px;}

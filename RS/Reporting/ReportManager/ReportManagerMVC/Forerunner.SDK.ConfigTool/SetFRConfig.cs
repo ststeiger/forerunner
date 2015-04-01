@@ -652,14 +652,14 @@ namespace Forerunner.SDK.ConfigTool
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBUser == null || ReportServerDBUser.Length == 0)
+            if ((ReportServerDBUser == null || ReportServerDBUser.Length == 0) && isUseMobilizerDB())
             {
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBUser");
                 description.HelpMessage = "Database login user name";
                 descriptions.Add(description);
             }
 
-            if (ReportServerDBPWD == null || ReportServerDBPWD.Length == 0 || ResetPassword)
+            if ((ReportServerDBPWD == null || ReportServerDBPWD.Length == 0 || ResetPassword) && isUseMobilizerDB())
             {
                 ReportServerDBPWD = null;
                 var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBPWD");
@@ -668,7 +668,7 @@ namespace Forerunner.SDK.ConfigTool
                 descriptions.Add(description);
             }
 
-            if (UseIntegratedSecurityForSQL == null || UseIntegratedSecurityForSQL.Length == 0)
+            if ((UseIntegratedSecurityForSQL == null || UseIntegratedSecurityForSQL.Length == 0) && isUseMobilizerDB())
             {
                 var description = new System.Management.Automation.Host.FieldDescription("UseIntegratedSecurityForSQL");
                 description.HelpMessage = authenticationHelp;

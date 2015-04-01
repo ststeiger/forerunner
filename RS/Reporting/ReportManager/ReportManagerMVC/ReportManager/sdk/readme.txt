@@ -5,8 +5,9 @@ configure the settings. A Package Manager Console command has been
 supplied to make this as easy as possible.
 
 The new command is named Set-FRConfig and you run it  from the
-Package Manager console window. "Tools" -> "NuGet Package Manage" ->
-"Package Manager Console".
+Package Manager console window:
+
+  "Tools" -> "NuGet Package Manage" -> "Package Manager Console".
 
 You can run Set-FRConfig as follows:
 
@@ -19,7 +20,7 @@ about Set-FRConfig you can get help as follows:
 Set-FRConfig -?
 
 You will need a trial license to evaluate ForerunnerSDK. You can get a free 30
-trial license key here:
+day trial license key here:
 
 https://www.forerunnersw.com/registerTrial
 

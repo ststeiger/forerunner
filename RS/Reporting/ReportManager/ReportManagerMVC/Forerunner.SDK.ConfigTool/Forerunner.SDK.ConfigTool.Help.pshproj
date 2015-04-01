@@ -34,10 +34,10 @@ set of parameters.</Description>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath ProjectName ResetPassword WebConfigPath Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL UseMobilizerDB SeperateDB ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath ProjectName ResetPassword WebConfigPath Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-ProjectName &lt;String&gt;] [-ResetPassword] [-WebConfigPath &lt;String&gt;]</string>
+        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-UseMobilizerDB &lt;String&gt;] [-SeperateDB &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-ProjectName &lt;String&gt;] [-ResetPassword] [-WebConfigPath &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -119,7 +119,7 @@ set of parameters.</Description>
             <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
-            <string>is</string>
+            <string>ia</string>
           </Aliases>
           <Description>Use integrated SQL security (true = domain, false = SQL)</Description>
           <DefaultValue />
@@ -127,8 +127,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDB</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>dn</string>
@@ -139,8 +139,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDBUser</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>u</string>
@@ -163,8 +163,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDBDomain</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>dd</string>
@@ -199,8 +199,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>QueueThumbnails</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>q</string>
@@ -211,8 +211,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>MobilizerSettingPath</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>m</string>
@@ -223,8 +223,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>VersionPath</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>v</string>
@@ -280,8 +280,32 @@ set of parameters.</Description>
             <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Explicitly set the path of the Web.config file. This enables you to configure Mobilizer with the set-FRConfig command.</Description>
           <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>UseMobilizerDB</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>umdb</string>
+          </Aliases>
+          <Description>Use the Mobilizer database. The enables all the extended Mobilizer functionality.</Description>
+          <DefaultValue>true</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>SeperateDB</Name>
+          <Attributes>
+            <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>sdb</string>
+          </Aliases>
+          <Description>Setting this flag will enable you to use a separate DB for Mobilizer.</Description>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
       </Parameters>
       <Examples />
@@ -289,6 +313,10 @@ set of parameters.</Description>
         <RelatedLink>
           <LinkText>Forerunner Software Home Page</LinkText>
           <LinkUrl>https://www.forerunnersw.com/</LinkUrl>
+        </RelatedLink>
+        <RelatedLink>
+          <LinkText>Developers Support Page</LinkText>
+          <LinkUrl>https://forerunnersw.com/developers</LinkUrl>
         </RelatedLink>
       </RelatedLinks>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />

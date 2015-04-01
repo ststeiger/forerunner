@@ -78,6 +78,20 @@ set of parameters.</maml:para>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>UseMobilizerDB</maml:name>
+				<maml:description>
+					<maml:para>Use the Mobilizer database. The enables all the extended Mobilizer functionality.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>SeperateDB</maml:name>
+				<maml:description>
+					<maml:para>Setting this flag will enable you to use a separate DB for Mobilizer.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 				<maml:name>ReportServerDB</maml:name>
 				<maml:description>
 					<maml:para>Report server Database name</maml:para>
@@ -157,7 +171,7 @@ set of parameters.</maml:para>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 				<maml:name>WebConfigPath</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>Explicitly set the path of the Web.config file. This enables you to configure Mobilizer with the set-FRConfig command.</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
@@ -383,7 +397,7 @@ set of parameters.</maml:para>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>WebConfigPath</maml:name>
 			<maml:description>
-				<maml:para />
+				<maml:para>Explicitly set the path of the Web.config file. This enables you to configure Mobilizer with the set-FRConfig command.</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -391,6 +405,30 @@ set of parameters.</maml:para>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>UseMobilizerDB</maml:name>
+			<maml:description>
+				<maml:para>Use the Mobilizer database. The enables all the extended Mobilizer functionality.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>true</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>SeperateDB</maml:name>
+			<maml:description>
+				<maml:para>Setting this flag will enable you to use a separate DB for Mobilizer.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>false</dev:defaultValue>
 		</command:parameter>
 	</command:parameters>
 	<command:inputTypes>
@@ -431,6 +469,10 @@ set of parameters.</maml:para>
 		<maml:navigationLink>
 			<maml:linkText>Forerunner Software Home Page</maml:linkText>
 			<maml:uri>https://www.forerunnersw.com/</maml:uri>
+		</maml:navigationLink>
+		<maml:navigationLink>
+			<maml:linkText>Developers Support Page</maml:linkText>
+			<maml:uri>https://forerunnersw.com/developers</maml:uri>
 		</maml:navigationLink>
 	</maml:relatedLinks>
 </command:command>

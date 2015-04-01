@@ -127,7 +127,8 @@
     "AdminUI":"Chomhéadain Riarachán",
     "ViewStyleLarge":"Mór",
     "ViewStyleSmall":"Beaga",
-    "ViewStyleList":"liosta"
+    "ViewStyleList":"liosta",
+    "ViewStyle":"Féach ar Stíl"
   },
   "paramPane": {
     "nullField":"Null",

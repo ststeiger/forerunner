@@ -127,7 +127,8 @@
     "AdminUI":"UI Админ",
     "ViewStyleLarge":"большой",
     "ViewStyleSmall":"небольшой",
-    "ViewStyleList":"список"
+    "ViewStyleList":"список",
+    "ViewStyle":"Посмотреть Style"
   },
   "paramPane": {
     "nullField":"Ноль",

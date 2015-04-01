@@ -125,9 +125,10 @@
     "ResponsiveUI":"動態UI",
     "Email":"電子郵件",
     "AdminUI":"管理員UI",
-    "ViewStyleLarge":"Large",
-    "ViewStyleSmall":"Small",
-    "ViewStyleList":"List"
+    "ViewStyleLarge":"大",
+    "ViewStyleSmall":"小",
+    "ViewStyleList":"列表",
+    "ViewStyle":"視圖模式"
   },
   "paramPane": {
     "nullField":"空值",

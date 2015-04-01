@@ -127,7 +127,8 @@
     "AdminUI":"Admin UI",
     "ViewStyleLarge":"stor",
     "ViewStyleSmall":"liten",
-    "ViewStyleList":"lista"
+    "ViewStyleList":"lista",
+    "ViewStyle":"Se Stil"
   },
   "paramPane": {
     "nullField":"Noll",

@@ -128,7 +128,8 @@
     "AdminUI":"interfaz del administrador",
     "ViewStyleLarge":"grande",
     "ViewStyleSmall":"pequeño",
-    "ViewStyleList":"lista"
+    "ViewStyleList":"lista",
+    "ViewStyle":"Ver Estilo"
   },
   "paramPane": {
     "nullField":"cero",

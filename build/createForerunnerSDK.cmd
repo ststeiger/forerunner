@@ -57,7 +57,7 @@ if ERRORLEVEL 8 (
 )
 
 :: Content\Forerunner
-robocopy %SRC_FORERUNNER% %DEST_CONTENT%\Forerunner /S /LOG+:%NUGET_PACKAGE_LOG% /XF version.txt forerunner.js Forerunner-widgets.js *.bundle *.map /XD %SRC_FORERUNNER%\Common\js %SRC_FORERUNNER%\Dashboard\js  %SRC_FORERUNNER%\ReportExplorer\js  %SRC_FORERUNNER%\ReportViewer\js >> NUL
+robocopy %SRC_FORERUNNER% %DEST_CONTENT%\Forerunner /S /LOG+:%NUGET_PACKAGE_LOG% /XF forerunner.js Forerunner-widgets.js *.bundle *.map /XD %SRC_FORERUNNER%\Common\js %SRC_FORERUNNER%\Dashboard\js  %SRC_FORERUNNER%\ReportExplorer\js  %SRC_FORERUNNER%\ReportViewer\js >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )

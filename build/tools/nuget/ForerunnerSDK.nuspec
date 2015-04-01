@@ -19,7 +19,5 @@
       <dependency id="Microsoft.AspNet.Mvc" version="[4.0.40804.0,6)" />
       <dependency id="Microsoft.AspNet.WebApi" version="[4.0.30506.0,6)" />
     </dependencies>
-    <references>
-    </references>
   </metadata>
 </package>

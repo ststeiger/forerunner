@@ -360,6 +360,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\Version.txt" />
     <Content Include="Global.asax" />
+    <Content Include="readme.txt" />
     <Content Include="sdk\readme.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -393,6 +394,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
+    <None Include="GettingStartedV4.nuspec" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

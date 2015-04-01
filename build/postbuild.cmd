@@ -49,7 +49,12 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-call %~dp0CreateNugetPackage.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
+call %~dp0createForerunnerSDK.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
+call %~dp0createGettingStartedSDK.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

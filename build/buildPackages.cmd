@@ -1,6 +1,6 @@
 @echo off
 
-:: This is a test file that will call createNugetPackage.cmd in the same
+:: This is a test file that will call createForerunnerSDK.cmd in the same
 :: way that build does. It is not part of the "real" build
 
 call %~dp0variables.cmd
@@ -56,8 +56,14 @@ echo %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%> %~dp0\..\build.
 
 pushd %~dp0\..
 
-echo Running createNugetPackage >> %BUILD_LOG%
-call %~dp0createNugetPackage.cmd %BUILD_RELEASE% %BUILD_LOG%
+echo Running createForerunnerSDK >> %BUILD_LOG%
+call %~dp0createForerunnerSDK.cmd %BUILD_RELEASE% %BUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
+echo Running createGettingStartedV4 >> %BUILD_LOG%
+call %~dp0createGettingStartedV4.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

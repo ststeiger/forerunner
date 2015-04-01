@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>ForerunnerGettingStartedV4</id>
+    <title>Forerunner GettingStarted V4</title>
+    <version>$version$</version>
+    <authors>ForerunnerSW</authors>
+    <owners>ForerunnerSW</owners>
+    <licenseUrl>https://www.forerunnersw.com/pricing</licenseUrl>
+    <projectUrl>https://www.forerunnersw.com/</projectUrl>
+    <iconUrl>https://www.forerunnersw.com/content/img/ForerunnerNugetIcon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>This package allows you to create the Getting Started V4 sample. This sample adds a page that contains the Report Explorer Widget on top of the ForerunnerSDK package.</summary>
+    <description>With the Getting Started V4 sample you can see exactly how easy it is to browse and view your reports using the Report Explorer widget from the Forerunner SDK package.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Example</tags>
+    <dependencies>
+      <dependency id="ForerunnerSDK" version="[4.0.230.0,)" />
+    </dependencies>
+  </metadata>
+</package>

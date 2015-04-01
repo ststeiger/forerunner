@@ -1,6 +1,6 @@
 @echo off
 
-:: Runs CreateNugetPackage actions.
+:: Runs createForerunnerSDK actions.
 ::
 :: The NuGet package will be created via the "convention based working directory"
 :: instructions found here:
@@ -11,7 +11,7 @@ setlocal
 set BUILD_RELEASE=%1
 set BUILD_LOG=%2
 set /p BUILD_NUMBER=<"%~dp0..\build.txt"
-set NUGET_PACKAGE_LOG=%BUILD_RELEASE%\CreateNugetPackage.log
+set NUGET_PACKAGE_LOG=%BUILD_RELEASE%\createForerunnerSDK.log
 
 set NUGET_TOOL=%~dp0tools\nuget\nuget.exe
 
@@ -27,13 +27,13 @@ set SRC_NUGET="%~dp0tools\nuget"
 set SRC_THUMBNAIL="%~dp0..\RS\Reporting\ReportViewer\ReportViewer\Forerunner.Thumbnail\bin\Release"
 set SRC_FRCONFIG_BIN=%SRC_FRCONFIG%\bin\Release
 
-set DEST="%BUILD_RELEASE%_nuget_package"
+set DEST="%BUILD_RELEASE%_ForerunnerSDK"
 set DEST_CONTENT="%DEST%\content"
 set DEST_LIB="%DEST%\lib"
 set DEST_TOOLS="%DEST%\tools"
 
-echo Executing CreateNugetPackage... >> %NUGET_PACKAGE_LOG%
-echo Executing CreateNugetPackage... >> %BUILD_LOG%
+echo Executing createForerunnerSDK... >> %NUGET_PACKAGE_LOG%
+echo Executing createForerunnerSDK... >> %BUILD_LOG%
 echo %DATE% >> %NUGET_PACKAGE_LOG% 
 echo %TIME% >> %NUGET_PACKAGE_LOG%
 
@@ -122,11 +122,11 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-echo CreateNugetPackage SUCCEEDED. >> %NUGET_PACKAGE_LOG%
-echo CreateNugetPackage SUCCEEDED. >> %BUILD_LOG%
+echo createForerunnerSDK SUCCEEDED. >> %NUGET_PACKAGE_LOG%
+echo createForerunnerSDK SUCCEEDED. >> %BUILD_LOG%
 exit /b 0
 
 :Error
-echo CreateNugetPackage FAILED. >> %NUGET_PACKAGE_LOG%
-echo CreateNugetPackage FAILED. >> %BUILD_LOG%
+echo createForerunnerSDK FAILED. >> %NUGET_PACKAGE_LOG%
+echo createForerunnerSDK FAILED. >> %BUILD_LOG%
 exit /b 1

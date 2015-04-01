@@ -54,7 +54,7 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-call %~dp0createGettingStartedSDK.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
+call %~dp0createGettingStartedV4.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

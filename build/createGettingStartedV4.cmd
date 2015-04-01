@@ -67,7 +67,7 @@ if ERRORLEVEL 8 (
 )
 
 :: Create the package
-set PKG_FILE=GettingStartedV4.%BUILD_NUMBER%.nupkg
+set PKG_FILE=Forerunner_GettingStartedV4.%BUILD_NUMBER%.nupkg
 echo Creating %PKG_FILE%... >> %NUGET_PACKAGE_LOG%
 pushd %DEST%
 %NUGET_TOOL% pack GettingStartedV4.nuspec -Version %BUILD_NUMBER% >> %NUGET_PACKAGE_LOG%

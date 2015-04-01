@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>ForerunnerGettingStartedV4</id>
+    <id>Forerunner_GettingStartedV4</id>
     <title>Forerunner GettingStarted V4</title>
     <version>$version$</version>
     <authors>ForerunnerSW</authors>

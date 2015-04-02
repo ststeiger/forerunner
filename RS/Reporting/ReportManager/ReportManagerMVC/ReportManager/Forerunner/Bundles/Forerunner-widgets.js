@@ -15919,6 +15919,8 @@ $(function () {
                     else {
                         $control.removeClass("fr-param-autocomplete-error");
                     }
+
+                    $control.valid();
                 },
                 change: function (event, obj) {
                     if (!obj.item) {

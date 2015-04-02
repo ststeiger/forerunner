@@ -2,14 +2,14 @@
 <package >
   <metadata>
     <id>Forerunner_GettingStartedV4</id>
-    <title>Forerunner GettingStarted V4</title>
+    <title>HTML5 MVC Report Viewer for SSRS</title>
     <version>$version$</version>
     <authors>ForerunnerSW</authors>
     <owners>ForerunnerSW</owners>
-    <licenseUrl>https://www.forerunnersw.com/pricing</licenseUrl>
+    <licenseUrl>https://www.forerunnersw.com/content/license.rtf</licenseUrl>
     <projectUrl>https://www.forerunnersw.com/</projectUrl>
     <iconUrl>https://www.forerunnersw.com/content/img/ForerunnerNugetIcon.png</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>This package allows you to create the Getting Started V4 sample. This sample adds a page that contains the Report Explorer Widget on top of the ForerunnerSDK package.</summary>
     <description>With the Getting Started V4 sample you can see exactly how easy it is to browse and view your reports using the Report Explorer widget from the Forerunner SDK package.</description>
     <releaseNotes></releaseNotes>

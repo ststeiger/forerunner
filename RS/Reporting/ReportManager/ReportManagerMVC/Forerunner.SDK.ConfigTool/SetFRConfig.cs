@@ -239,21 +239,6 @@ namespace Forerunner.SDK.ConfigTool
             }
         }
 
-        private SwitchParameter _resetPassword;
-        [Parameter(HelpMessage = "Forces a re-prompt for the ReportServerDBPWD value")]
-        [Alias("reset")]
-        public SwitchParameter ResetPassword
-        {
-            get
-            {
-                return _resetPassword;
-            }
-            set
-            {
-                _resetPassword = value;
-            }
-        }
-
         private string _webConfigPath;
         [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
         public string WebConfigPath
@@ -641,77 +626,91 @@ namespace Forerunner.SDK.ConfigTool
 
             return true;
         }
+        private void AddPrompt(string name, string currentValue, string helpMessage, ref System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription> descriptions, out string prompt)
+        {
+            const string returnEqualsFormat = "{0} (return = '{1}')";
+            prompt = name;
+            if (currentValue != null && currentValue.Length > 0)
+            {
+                prompt = String.Format(returnEqualsFormat, prompt, currentValue);
+            }
+            var description = new System.Management.Automation.Host.FieldDescription(prompt);
+            description.HelpMessage = helpMessage;
+            descriptions.Add(description);
+        }
         private void PromptForMissingParameters()
         {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
 
-            if (DefaultUserDomain == null || DefaultUserDomain.Length == 0)
+            // LicenseKey
+            string LicenseKeyPrompt = "";
+            if (LicenseKey == null || LicenseKey.Length == 0)
             {
-                var description = new System.Management.Automation.Host.FieldDescription("DefaultUserDomain");
-                description.HelpMessage = "Reporting Services default user login domain";
-                descriptions.Add(description);
+                needsActivation = true;
+                AddPrompt("LicenseKey", LicenseKey, @"Activation License Key (https://www.forerunnersw.com/registerTrial)", ref descriptions, out LicenseKeyPrompt);
             }
 
-            if ((ReportServerDBUser == null || ReportServerDBUser.Length == 0) && isUseMobilizerDB())
-            {
-                var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBUser");
-                description.HelpMessage = "Database login user name";
-                descriptions.Add(description);
-            }
+            // DefaultUserDomain
+            string DefaultUserDomainPrompt;
+            AddPrompt("DefaultUserDomain", DefaultUserDomain, "Reporting Services default user login domain", ref descriptions, out DefaultUserDomainPrompt);
 
-            if ((ReportServerDBPWD == null || ReportServerDBPWD.Length == 0 || ResetPassword) && isUseMobilizerDB())
+            // ReportServerWSUrl
+            string ReportServerWSUrlPrompt;
+            AddPrompt("ReportServerWSUrl", ReportServerWSUrl, "Reporting Services Web Service URL", ref descriptions, out ReportServerWSUrlPrompt);
+
+            string ReportServerDBPrompt = "";
+            string ReportServerDataSourcePrompt = "";
+            string ReportServerDBUserPrompt = "";
+            string ReportServerDBPWDPrompt = "ReportServerDBPWD";
+            string UseIntegratedSecurityForSQLPrompt = "";
+            if (isUseMobilizerDB())
             {
-                ReportServerDBPWD = null;
-                var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBPWD");
+                // ReportServerDB
+                AddPrompt("ReportServerDB", ReportServerDB, "Report Server DB Name", ref descriptions, out ReportServerDBPrompt);
+
+                // ReportServerDataSource
+                AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
+
+                // ReportServerDBUser
+                AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
+
+                // ReportServerDBPWD
+                var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
                 description.SetParameterType(Type.GetType("System.Security.SecureString"));
                 description.HelpMessage = "Database login password";
                 descriptions.Add(description);
-            }
 
-            if ((UseIntegratedSecurityForSQL == null || UseIntegratedSecurityForSQL.Length == 0) && isUseMobilizerDB())
-            {
-                var description = new System.Management.Automation.Host.FieldDescription("UseIntegratedSecurityForSQL");
-                description.HelpMessage = authenticationHelp;
-                descriptions.Add(description);
-            }
-
-            if (LicenseKey == null)
-            {
-                needsActivation = true;
-
-                var description = new System.Management.Automation.Host.FieldDescription("LicenseKey");
-                description.HelpMessage = @"Activation License Key (https://www.forerunnersw.com/registerTrial)";
-                descriptions.Add(description);
+                // UseIntegratedSecurityForSQL
+                AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
             }
 
             Dictionary <string, PSObject> results = null;
             if (descriptions.Count > 0)
             {
                 results = Host.UI.Prompt(null, null, descriptions);
-                AssignResult(ref _defaultUserDomain, "DefaultUserDomain", results);
-                AssignResult(ref _reportServerDBUser, "ReportServerDBUser", results);
-                AssignResult(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL", results);
-                AssignResult(ref _licenseKey, "LicenseKey", results);
+                AssignResult(ref _licenseKey, LicenseKeyPrompt, results);
+                AssignResult(ref _defaultUserDomain, DefaultUserDomainPrompt, results);
+                AssignResult(ref _reportServerDB, ReportServerDBPrompt, results);
+                AssignResult(ref _reportServerDataSource, ReportServerDataSourcePrompt, results);
+                AssignResult(ref _reportServerDBUser, ReportServerDBUserPrompt, results);
+                AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);
 
-                if (ReportServerDBPWD == null)
-                {
-                    // The password is always a different pattern than the rest
-                    ReportServerDBPWD = (System.Security.SecureString)results["ReportServerDBPWD"].BaseObject;
-                }
+                // The password is always a different pattern than the rest
+                ReportServerDBPWD = (System.Security.SecureString)results[ReportServerDBPWDPrompt].BaseObject;
 
-                if ((ReportServerDBDomain == null || ReportServerDBDomain.Length == 0) && isUseIntegratedSecurityForSQL())
+                string ReportServerDBDomainPrompt = "ReportServerDBDomain";
+                if (isUseIntegratedSecurityForSQL() && isUseMobilizerDB())
                 {
                     descriptions.Clear();
-                    var description = new System.Management.Automation.Host.FieldDescription("ReportServerDBDomain");
-                    description.HelpMessage = "Reporting Server DB domain";
-                    descriptions.Add(description);
+                    AddPrompt("ReportServerDBDomain", ReportServerDBDomain, "Reporting Server DB domain", ref descriptions, out ReportServerDBDomainPrompt);
 
                     results.Clear();
                     results = Host.UI.Prompt(null, null, descriptions);
-                    AssignResult(ref _reportServerDBDomain, "ReportServerDBDomain", results);
+                    AssignResult(ref _reportServerDBDomain, ReportServerDBDomainPrompt, results);
                 }
             }
         }
+
         private string GetStringFromSecureString(SecureString value)
         {
             IntPtr valuePtr = IntPtr.Zero;
@@ -744,12 +743,22 @@ namespace Forerunner.SDK.ConfigTool
         }
         private void AssignResult(ref string prop, string resultsKey, Dictionary<string, PSObject> results)
         {
-            if (prop != null && prop.Length > 0)
+            PSObject value = null;
+            bool hasValue = results.TryGetValue(resultsKey, out value);
+            if (!hasValue)
             {
+                // Nothing to assign here this key was not prompted for
                 return;
             }
 
-            prop = (string)results[resultsKey].BaseObject;
+            string result = (string)value.BaseObject;
+            if (result == null || result.Length == 0)
+            {
+                // If the user just hit return the we keep whatever value we have
+                return;
+            }
+
+            prop = result;
         }
         private void AssignForerunnerSetting(ref string prop, string name, string defaultValue = null)
         {

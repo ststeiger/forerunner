@@ -64,9 +64,6 @@ if ERRORLEVEL 8 (
 
 :: Content\Forerunner\Version.txt
 robocopy %BUILD_RELEASE%\Setup\Build\Forerunner %DEST_CONTENT%\Forerunner Version.txt /LOG+:%NUGET_PACKAGE_LOG% >> NUL
-if ERRORLEVEL 8 (
-	goto :Error
-)
 
 :: Content\sdk
 robocopy %SRC_SDK% %DEST_CONTENT%\sdk /LOG+:%NUGET_PACKAGE_LOG% >> NUL

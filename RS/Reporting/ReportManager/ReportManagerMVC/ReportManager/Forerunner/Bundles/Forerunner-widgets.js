@@ -11295,7 +11295,15 @@ $(function () {
             // Change the form to set up a post action and a submit button
             var url = me.options.reportManagerAPI + "/UploadFile";
             me.$form.attr({ action: url, method: "post", enctype: "multipart/form-data" });
-            me.$submit.attr({ type: "submit" });
+            //ie not allow change input type property when it is created, to bypass it create a new one and replace old
+            //it was record by #1433
+            if (forerunner.device.isMSIE()) {
+                var newBtnHtml = me.$submit.prop("outerHTML").replace(/type=[a-z]+/i, "type='submit'");
+
+                me.$submit.replaceWith(newBtnHtml);
+            } else {
+                me.$submit.attr({ type: "submit" });
+            }
 
             me.$decsription = me.element.find(".fr-upf-description");
             me.$uploadFile = me.element.find(".fr-upf-file");

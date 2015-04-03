@@ -652,6 +652,12 @@ namespace Forerunner.SDK.ConfigTool
 
             // DefaultUserDomain
             string DefaultUserDomainPrompt;
+            string userDomain = Environment.GetEnvironmentVariable("USERDOMAIN");
+            if ((DefaultUserDomain == null || DefaultUserDomain.Length == 0) &&
+                (userDomain != null && userDomain.Length > 0))
+            {
+                DefaultUserDomain = userDomain;
+            }
             AddPrompt("DefaultUserDomain", DefaultUserDomain, "Reporting Services default user login domain", ref descriptions, out DefaultUserDomainPrompt);
 
             // ReportServerWSUrl
@@ -702,6 +708,11 @@ namespace Forerunner.SDK.ConfigTool
                 if (isUseIntegratedSecurityForSQL() && isUseMobilizerDB())
                 {
                     descriptions.Clear();
+                    if ((ReportServerDBDomain == null || ReportServerDBDomain.Length == 0) &&
+                        (userDomain != null && userDomain.Length > 0))
+                    {
+                        ReportServerDBDomain = userDomain;
+                    }
                     AddPrompt("ReportServerDBDomain", ReportServerDBDomain, "Reporting Server DB domain", ref descriptions, out ReportServerDBDomainPrompt);
 
                     results.Clear();

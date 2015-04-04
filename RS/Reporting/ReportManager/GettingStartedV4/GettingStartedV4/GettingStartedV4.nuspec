@@ -11,7 +11,7 @@
     <iconUrl>https://www.forerunnersw.com/content/img/ForerunnerNugetIcon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <summary>This package allows you to create the Getting Started V4 sample. This sample adds a page that contains the Report Explorer Widget on top of the ForerunnerSDK package.</summary>
-    <description>With the Getting Started V4 sample you can see exactly how easy it is to browse and view your reports using the Report Explorer widget from the Forerunner SDK package.</description>
+    <description>With the Getting Started V4 sample you can see exactly how easy it is to browse and view your reports using the Report Explorer widget from the Forerunner SDK package. Just create an empty web project and install.</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Example</tags>

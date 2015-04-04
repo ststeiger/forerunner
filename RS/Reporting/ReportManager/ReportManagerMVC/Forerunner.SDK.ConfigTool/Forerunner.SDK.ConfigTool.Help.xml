@@ -21,7 +21,8 @@ schema.</maml:para>
 		<maml:para>* Test the connection settings
 * Create or update Forerunner SDK specific web.config settings
 * Activate the license register for a free trial
-* Create or update the Forerunner SDK database schema</maml:para>
+* Create or update the Forerunner SDK database schema
+* Check the .Net Target Framework</maml:para>
 		<maml:para>You can run Set-FRConfig without any parameters and it will prompt you for the minimum required
 set of parameters.</maml:para>
 	</maml:description>

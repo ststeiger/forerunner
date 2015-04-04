@@ -809,7 +809,7 @@ namespace Forerunner.SDK.ConfigTool
             uint value = targetFramework.Value;
             if (value < net45)
             {
-                WriteWarning("The Target framework for ForerunnerSDK must be at least .Net Framework 4.5");
+                WriteWarning("Warning - The Target framework for ForerunnerSDK must be at least .Net Framework 4.5");
             }
 
             WriteVerbose("End CheckTargetFramework()");

@@ -290,6 +290,9 @@ namespace Forerunner.SDK.ConfigTool
             WriteProgress(new ProgressRecord(processingId, activity, "UpdateSourceFiles()"));
             UpdateSourceFiles();
 
+            WriteProgress(new ProgressRecord(processingId, activity, "CheckTargetFramework()"));
+            CheckTargetFramework();
+
             // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
             // call individual public methods such as ActivateLicense()
             WriteObject("Set-FRConfig complete");
@@ -790,7 +793,28 @@ namespace Forerunner.SDK.ConfigTool
             // Otherwise assign the default value (or null)
             prop = defaultValue;
         }
-        private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
+        private void CheckTargetFramework()
+        {
+            WriteVerbose("Start CheckTargetFramework()");
+
+            const uint net45 = 0x40005;
+            Project project = GetProject();
+            if (project == null)
+            {
+                return;
+            }
+
+            Properties properties = (Properties)project.Properties;
+            Property targetFramework = properties.Item("TargetFramework");
+            uint value = targetFramework.Value;
+            if (value < net45)
+            {
+                WriteWarning("The Target framework for ForerunnerSDK must be at least .Net Framework 4.5");
+            }
+
+            WriteVerbose("End CheckTargetFramework()");
+        }
+        private Project GetProject()
         {
             string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
             var dte = (DTE2)GetVariableValue("DTE");
@@ -823,6 +847,11 @@ namespace Forerunner.SDK.ConfigTool
                 }
             }
 
+            return project;
+        }
+        private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
+        {
+            Project project = GetProject();
             if (project == null)
             {
                 if (ProjectName != null)

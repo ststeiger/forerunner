@@ -9655,16 +9655,18 @@ $(function () {
             if (me.options.rsInstance)
                 reportThumbnailPath += "&instance=" + me.options.rsInstance;
 
-            var viewStyle = "";
-            if (me.options.userSettings.viewStyle === "small")
+            var viewStyle = null;
+            if (me.options.userSettings.viewStyle === "small") {
                 viewStyle = "-small";
-            if (me.options.userSettings.viewStyle === "list")
+            }
+            if (me.options.userSettings.viewStyle === "list") {
                 viewStyle = "-list";
+            }
 
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
-            $item.addClass("fr-explorer-item" + viewStyle);
+            viewStyle && $item.addClass("fr-explorer-item" + viewStyle);
             if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
             }
@@ -9675,7 +9677,7 @@ $(function () {
 
             var $anchor = new $("<div />");
             $anchor.addClass("fr-explorer-item-image-link");
-            $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
+            viewStyle && $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -9757,7 +9759,7 @@ $(function () {
             //Image Block
             var $imageblock = new $("<div />");
             $imageblock.addClass("fr-report-item-image-block");
-            $imageblock.addClass("fr-report-item-image-block" + viewStyle);            
+            viewStyle && $imageblock.addClass("fr-report-item-image-block" + viewStyle);
             $anchor.append($imageblock);
             var outerImage = new $("<div />");            
             $imageblock.append(outerImage);
@@ -9788,7 +9790,7 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
-                corner.addClass("fr-explorer-item-earcorner" + viewStyle);
+                viewStyle && corner.addClass("fr-explorer-item-earcorner" + viewStyle);
 
                 //only draw the page background when it not hidden
                 if (!catalogItem.Hidden) {
@@ -9799,7 +9801,7 @@ $(function () {
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
-                innerImage.addClass("fr-report-item-inner-image" + viewStyle);
+                viewStyle && innerImage.addClass("fr-report-item-inner-image" + viewStyle);
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
@@ -9825,10 +9827,10 @@ $(function () {
             //Caption
             var $caption = new $("<div />");
             $caption.addClass("fr-explorer-caption");
-            $caption.addClass("fr-explorer-caption" + viewStyle);
+            viewStyle && $caption.addClass("fr-explorer-caption" + viewStyle);
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            $captiontext.addClass("fr-explorer-item-title" + viewStyle);
+            viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
             $captiontext.attr("title", name);
@@ -9839,10 +9841,10 @@ $(function () {
             //Description
             var $desc = new $("<div />");
             $desc.addClass("fr-explorer-desc-container");
-            $desc.addClass("fr-explorer-desc-container" + viewStyle);
+            viewStyle && $desc.addClass("fr-explorer-desc-container" + viewStyle);
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            $desctext.addClass("fr-explorer-item-desc" + viewStyle);
+            viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
             if (description) {
@@ -10585,7 +10587,7 @@ $(function () {
                                 "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
                             "</td>" +
                             "<td class = 'fr-toolbase-selectinner'>" +
-                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' type='text' list='viewStyles'>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
                                 "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
                                 "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
                                  "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
@@ -10603,7 +10605,6 @@ $(function () {
                     buildVersion +
                 "</div>" +
             "</div>");
-            //http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
@@ -10652,9 +10653,10 @@ $(function () {
         _saveSettings: function () {
             var me = this,
                 responsiveUI = me.$resposiveUI.prop("checked"),
-                adminUI = me.$adminUI.prop("checked");
-            
-            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === me.$viewStyle.val()) {
+                adminUI = me.$adminUI.prop("checked"),
+                viewStyle = me.$viewStyle.val();
+
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === viewStyle) {
                 //nothing change, just close dialog
                 me.closeDialog();
                 return;
@@ -10662,7 +10664,7 @@ $(function () {
 
             me.settings.responsiveUI = responsiveUI;
             me.settings.adminUI = adminUI;
-            me.settings.viewStyle = me.$viewStyle.val();
+            me.settings.viewStyle = viewStyle;
             
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);

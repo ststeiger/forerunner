@@ -70,7 +70,7 @@ $(function () {
                                 "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
                             "</td>" +
                             "<td class = 'fr-toolbase-selectinner'>" +
-                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' type='text' list='viewStyles'>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
                                 "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
                                 "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
                                  "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
@@ -88,7 +88,6 @@ $(function () {
                     buildVersion +
                 "</div>" +
             "</div>");
-            //http://localhost:9000/Forerunner/ReportViewer/Loc/ReportViewer-en.txt
 
             me.element.append($theForm);
 
@@ -137,9 +136,10 @@ $(function () {
         _saveSettings: function () {
             var me = this,
                 responsiveUI = me.$resposiveUI.prop("checked"),
-                adminUI = me.$adminUI.prop("checked");
-            
-            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === me.$viewStyle.val()) {
+                adminUI = me.$adminUI.prop("checked"),
+                viewStyle = me.$viewStyle.val();
+
+            if (me.settings.responsiveUI === responsiveUI && me.settings.adminUI === adminUI && me.settings.viewStyle === viewStyle) {
                 //nothing change, just close dialog
                 me.closeDialog();
                 return;
@@ -147,7 +147,7 @@ $(function () {
 
             me.settings.responsiveUI = responsiveUI;
             me.settings.adminUI = adminUI;
-            me.settings.viewStyle = me.$viewStyle.val();
+            me.settings.viewStyle = viewStyle;
             
             //update cached setting
             forerunner.ajax.setUserSetting(me.settings);

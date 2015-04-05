@@ -466,7 +466,9 @@ $(function () {
         ResetSize: function () {
             var me = this;
             
-            $(window).resize();
+            // Don't add a window resize call here. It causes a never ending series of window resize
+            // events to be triggered
+            //$(window).resize();
             var heightValues = me.getHeightValues();
 
 

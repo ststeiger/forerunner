@@ -305,7 +305,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass && me.allTools[Obj.selectorClass].isVisible)
+                if (Obj.selectorClass)
                     me.showTool(Obj.selectorClass);
             });
         },
@@ -355,7 +355,6 @@ $(function () {
                     var $toolEl = me.element.find("." + Obj.selectorClass);
 
                     if (!$toolEl.hasClass("fr-toolbase-no-hide-id")) {
-                        me.allTools[Obj.selectorClass].isVisible = $toolEl.is(":visible");
                         me.hideTool(Obj.selectorClass);
                     }
                 }

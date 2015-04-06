@@ -1370,6 +1370,130 @@ $(function () {
                 }
             });
         },
+
+        internalDynamicRules: function () {
+            var ruleArr = [],
+                forerunnerFolderPath = forerunner.config.forerunnerFolder();
+
+            //show element when touch screen rule for toolbase
+            var touchShowRule = {
+                selector: ".fr-toolbase-show-if-mobile",
+                properties: function () {
+                    var pairs = { display: "none" };
+                    if (forerunner.device.isMobile()) {
+                        pairs.display = null;
+                    }
+                    return pairs;
+                }
+            };
+            //show element when touch screen rule for toolpane
+            var touchShowRuleTp = {
+                selector: ".fr-toolpane .fr-toolbase-show-if-mobile",
+                properties: function () {
+                    var pairs = { display: "none" };
+                    if (forerunner.device.isMobile()) {
+                        pairs.display = null;
+                    }
+                    return pairs;
+                }
+            };
+            //hide element when touch screen rule for toolbase
+            var touchHideRule = {
+                selector: ".fr-toolbase-hide-if-mobile",
+                properties: function () {
+                    var pairs = { display: null };
+                    if (forerunner.device.isMobile()) {
+                        pairs.display = "none";
+                    }
+                    return pairs;
+                }
+            };
+            //hide element when touch screen rule for tool pane
+            var touchHideRuleTp = {
+                selector: ".fr-toolpane .fr-toolbase-hide-if-mobile",
+                properties: function () {
+                    var pairs = { display: null };
+                    if (forerunner.device.isMobile()) {
+                        pairs.display = "none";
+                    }
+                    return pairs;
+                }
+            };
+
+            var folderImageIE8 = {
+                selector: ".fr-explorer-folder-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/folder.png', sizingMethod='scale')" };
+                }
+            };
+
+            var folderSelectedImageIE8 = {
+                selector: ".fr-explorer-folder-selected-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/folder_selected.png', sizingMethod='scale')" };
+                }
+            };
+
+            var itemOuterImageIE8 = {
+                selector: ".fr-report-item-outer-image-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/report_bkg.png', sizingMethod='scale')" };
+                }
+            };
+
+            var itemEarImageIE8 = {
+                selector: ".fr-report-item-ear-image-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/report_ear.png', sizingMethod='scale')" };
+                }
+            };
+
+            var itemEarSelectedImageIE8 = {
+                selector: ".fr-explorer-item-ear-selcted-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/report_ear_selected.png', sizingMethod='scale')" };
+                }
+            };
+
+            var searchFolderImageIE8 = {
+                selector: ".fr-explorer-searchfolder-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/Folder_Search.png', sizingMethod='scale')" };
+                }
+            };
+
+            var searchFolderSelectedImageIE8 = {
+                selector: ".fr-explorer-searchfolder-selected-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/SelectedFolder_Search.png', sizingMethod='scale')" };
+                }
+            };
+
+            var dashboardImageIE8 = {
+                selector: ".fr-explorer-dashboard-ie8",
+                properties: function () {
+                    return { filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + forerunnerFolderPath + "/reportexplorer/images/ResourceIcons/dashboard.png', sizingMethod='scale')" };
+                }
+            };
+
+            ruleArr.push(touchShowRule);
+            ruleArr.push(touchHideRule);
+            ruleArr.push(touchShowRuleTp);
+            ruleArr.push(touchHideRuleTp);
+
+            if (forerunner.device.isMSIE8()) {
+                ruleArr.push(folderImageIE8);
+                ruleArr.push(folderSelectedImageIE8);
+                ruleArr.push(itemOuterImageIE8);
+                ruleArr.push(itemEarImageIE8);
+                ruleArr.push(itemEarSelectedImageIE8);
+                ruleArr.push(searchFolderImageIE8);
+                ruleArr.push(searchFolderSelectedImageIE8);
+                ruleArr.push(dashboardImageIE8);
+            }
+
+            return ruleArr;
+        }
     },
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -2344,52 +2468,8 @@ $(function () {
         
     };
     $(document).ready(function () {
-        //show element when touch screen rule for toolbase
-        var touchShowRule = {
-            selector: ".fr-toolbase-show-if-mobile",
-            properties: function () {
-                var pairs = { display: "none" };
-                if (forerunner.device.isMobile()) {
-                    pairs.display = null;
-                }
-                return pairs;
-            }
-        };
-        //show element when touch screen rule for toolpane
-        var touchShowRuleTp = {
-            selector: ".fr-toolpane .fr-toolbase-show-if-mobile",
-            properties: function () {
-                var pairs = { display: "none" };
-                if (forerunner.device.isMobile()) {
-                    pairs.display = null;
-                }
-                return pairs;
-            }
-        };
-        //hide element when touch screen rule for toolbase
-        var touchHideRule = {
-            selector: ".fr-toolbase-hide-if-mobile",
-            properties: function () {
-                var pairs = { display: null };
-                if (forerunner.device.isMobile()) {
-                    pairs.display = "none";
-                }
-                return pairs;
-            }
-        };
-        //hide element when touch screen rule for tool pane
-        var touchHideRuleTp = {
-            selector: ".fr-toolpane .fr-toolbase-hide-if-mobile",
-            properties: function () {
-                var pairs = { display: null };
-                if (forerunner.device.isMobile()) {
-                    pairs.display = "none";
-                }
-                return pairs;
-            }
-        };
         
-        forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
+        forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
         // Put a check in so that this would not barf for the login page.
         if ($.validator) {
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");

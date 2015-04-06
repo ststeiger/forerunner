@@ -206,6 +206,7 @@
     <Content Include="Forerunner\Common\js\ContextMenuBase.js" />
     <Content Include="Forerunner\Common\js\DialogBase.js" />
     <Content Include="Forerunner\Common\js\catalogTree.js" />
+    <Content Include="Forerunner\ReportExplorer\css\ReportExplorerIE8.css" />
     <Content Include="Forerunner\ReportExplorer\js\MoveItem.js" />
     <Content Include="Forerunner\Common\js\Viewerbase.js" />
     <Content Include="Forerunner\Common\js\ForerunnerProperties.js" />

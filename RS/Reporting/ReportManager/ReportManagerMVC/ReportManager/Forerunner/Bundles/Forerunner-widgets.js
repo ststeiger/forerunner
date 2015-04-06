@@ -9769,10 +9769,10 @@ $(function () {
             
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
                 if (isSelected) {
-                    outerImage.addClass("fr-explorer-folder-selected");
+                    me.isIE8Small ? outerImage.addClass("fr-explorer-folder-selected-ie8") : outerImage.addClass("fr-explorer-folder-selected");
                 }
                 else {
-                    outerImage.addClass("fr-explorer-folder");
+                    me.isIE8Small ? outerImage.addClass("fr-explorer-folder-ie8") : outerImage.addClass("fr-explorer-folder");
                 }
             }
             else if (catalogItem.Type === 3) {//resource files
@@ -9780,7 +9780,8 @@ $(function () {
                 outerImage.addClass(fileTypeClass);
 
                 if (catalogItem.MimeType === "json/forerunner-searchfolder" && isSelected) {
-                    outerImage.addClass("fr-explorer-searchfolder-selected").removeClass("fr-explorer-searchfolder");
+                    me.isIE8Small ? outerImage.addClass("fr-explorer-searchfolder-selected-ie8").removeClass("fr-explorer-searchfolder-ie8") :
+                        outerImage.addClass("fr-explorer-searchfolder-selected").removeClass("fr-explorer-searchfolder");
                 }
             }
             else {
@@ -9805,13 +9806,15 @@ $(function () {
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
+
+                
+                me.isIE8Small ? outerImage.addClass("fr-report-item-outer-image-ie8") : outerImage.addClass("fr-report-item-outer-image");
+
                 if (isSelected) {
-                    outerImage.addClass("fr-report-item-outer-image-selected");
-                    EarImage.addClass("fr-explorer-item-ear-selcted");
+                    me.isIE8Small ? EarImage.addClass("fr-explorer-item-ear-selcted-ie8") : EarImage.addClass("fr-explorer-item-ear-selcted");
                 }
                 else {
-                    outerImage.addClass("fr-report-item-outer-image");
-                    EarImage.addClass("fr-report-item-ear-image");
+                    me.isIE8Small ? EarImage.addClass("fr-report-item-ear-image-ie8") : EarImage.addClass("fr-report-item-ear-image");
                 }
 
                 innerImage.attr("src", imageSrc);
@@ -9911,6 +9914,8 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
+
+            me.isIE8Small = forerunner.device.isMSIE8() && (me.options.userSettings.viewStyle === "small" || me.options.userSettings.viewStyle === "list");
 
             me._renderPCView(catalogItems);
 
@@ -10432,6 +10437,8 @@ $(function () {
             return me.view;
         },
         _getFileTypeClass: function (mimeType) {
+            var me = this;
+
             var fileTypeClass = null,
                 isFeatureIcon = false;
 
@@ -10495,11 +10502,11 @@ $(function () {
                     break;
                 case "json/forerunner-dashboard":
                     isFeatureIcon = true;
-                    fileTypeClass = "fr-icons128x128-file-dashboard";
+                    fileTypeClass = me.isIE8Small ? "fr-explorer-dashboard-ie8" : "fr-explorer-dashboard";
                     break;
                 case "json/forerunner-searchfolder":
                     isFeatureIcon = true;
-                    fileTypeClass = "fr-explorer-searchfolder";
+                    fileTypeClass = me.isIE8Small ? "fr-explorer-searchfolder-ie8" : "fr-explorer-searchfolder";
                     break;
                 default://unknown
                     fileTypeClass = "fr-icons128x128-file-unknown";

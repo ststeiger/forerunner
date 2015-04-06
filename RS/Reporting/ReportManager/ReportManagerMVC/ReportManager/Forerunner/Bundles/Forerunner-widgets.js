@@ -6658,7 +6658,7 @@ $(function () {
                     me.$isHidden.attr("checked", true);
                 }
 
-                if (typeof data === "object" && data["Hidden"].toLowerCase() === "true") {
+                if (typeof data === "object" && data["Hidden"] && data["Hidden"].toLowerCase() === "true") {
                     me._isHidden = "True";
                     me.$isHidden.attr("checked", true);
                 }

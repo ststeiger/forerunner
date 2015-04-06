@@ -6648,6 +6648,7 @@ $(function () {
             me._description = "";
             me._isHidden = "False";
 
+
             me._getProperties(me.curPath, function (data) {
                 var me = this;
 

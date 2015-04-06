@@ -1093,7 +1093,7 @@ namespace Forerunner.SSRS.Manager
             string[] propertyArray = propName.Split(',');
 
             //Cant get properties from root in sharepoint.
-            if (IsNativeRS == false && path == "/")
+            if (IsNativeRS == false && path == "/" && propName != "ID")
                 return "";
 
             Property[] props = new Property[propertyArray.Length];

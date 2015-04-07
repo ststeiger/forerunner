@@ -1766,7 +1766,7 @@ $(function () {
         * @member
         */
         hasPermission: function (path, permissions) {
-            var permissionData = null;
+            var permissionData = {};
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
                 "?path=" + encodeURIComponent(path) +

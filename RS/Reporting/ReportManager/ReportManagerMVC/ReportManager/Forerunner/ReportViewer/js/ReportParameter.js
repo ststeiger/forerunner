@@ -728,7 +728,7 @@ $(function () {
 
                     if ($checkbox[0].checked !== true) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
-
+                        $.watermark.show($control);
                         //add validate arrtibutes to control when uncheck null checkbox
                         $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.attr(attribute, "true");
@@ -740,7 +740,7 @@ $(function () {
                     }
                     else {
                         $control.attr("disabled", true).addClass("fr-param-disable");
-
+                        $.watermark.hide($control);
                         //remove validate arrtibutes
                         $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.removeAttr(attribute);
@@ -823,6 +823,7 @@ $(function () {
                     $control.parent().removeClass("fr-param-disable");
                 }
                 $control.removeClass("fr-param-disable");
+                $.watermark.show($control);
 
                 //add validate arrtibutes to control when uncheck null checkbox
                 $.each(me._paramValidation[param.Name], function (index, attribute) {
@@ -832,6 +833,7 @@ $(function () {
                 if (param.Type === "DateTime") { $control.datepicker("enable"); }
             }
             else {
+
                 if ($nullCheckbox.length) {
                     if ($nullCheckbox[0].checked === true) {
                         $nullCheckbox[0].checked = false;
@@ -863,6 +865,7 @@ $(function () {
                     $control.parent().addClass("fr-param-disable");
                 }
                 $control.addClass("fr-param-disable");
+                $.watermark.hide($control);
 
                 if (param.Type === "DateTime") {
                     //set delay to 100 since datepicker need time to generate image for the first time

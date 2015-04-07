@@ -523,7 +523,13 @@ namespace Forerunner.SSRS.Manager
         public String UploadReport(UploadFileData data)
         {
             rs.Credentials = GetCredentials();
+
             string report = Path.GetFileNameWithoutExtension(data.filename);
+            if (IsNativeRS == false)
+            {
+                // SharePoint requires the file extension
+                report = data.filename;
+            }
 
             var condition = new Management.Native.SearchCondition();
             condition.Condition = Management.Native.ConditionEnum.Equals;
@@ -533,7 +539,7 @@ namespace Forerunner.SSRS.Manager
             conditions[0] = condition;
             CatalogItem[] catalogItems = rs.FindItems(data.setResource.parentFolder, Management.Native.BooleanOperatorEnum.And, conditions);
 
-            if (catalogItems.Length == 0)
+            if (catalogItems == null || catalogItems.Length == 0)
             {
                 // No existing report
                 return CreateReport(report, data);

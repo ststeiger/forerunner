@@ -79,7 +79,10 @@ $(function () {
             });
 
             // Save the model
-            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
+            var result = me.model.save(overwrite, me.parentFolder, me.dashboardName);
+            if (result.status) {
+                me.dashboardName = result.resourceName;
+            } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
             }
         },

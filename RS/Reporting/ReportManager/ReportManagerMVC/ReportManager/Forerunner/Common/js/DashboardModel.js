@@ -62,7 +62,10 @@ $(function () {
         },
         save: function (overwrite, parentFolder, dashboardName) {
             var me = this;
-            var status = false;
+            var result = {
+                status: false,
+                resourceName: null
+            }
             if (overwrite === null || overwrite === undefined) {
                 overwrite = false;
             }
@@ -82,14 +85,17 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    status = true;
+                    if (data && data.ResourceName) {
+                        result.resourceName = data.ResourceName;
+                    }
+                    result.status = true;
                 },
                 fail: function (jqXHR) {
                     console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }
             });
-            return status;
+            return result;
         },
         loadTemplate: function (templateName) {
             var me = this;

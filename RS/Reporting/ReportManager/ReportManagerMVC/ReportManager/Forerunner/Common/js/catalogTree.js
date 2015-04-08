@@ -131,7 +131,8 @@ $(function () {
                     children: []
                 };
 
-                if (item.Type === forerunner.ssr.constants.itemType.folder) {
+                if (item.Type === forerunner.ssr.constants.itemType.folder ||
+                    item.Type === forerunner.ssr.constants.itemType.site) {
                     curNode.children.push(newNode);
 
                     me._catalogDataPrefix(newNode, item.children);

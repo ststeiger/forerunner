@@ -5122,7 +5122,8 @@ $(function () {
                     children: []
                 };
 
-                if (item.Type === forerunner.ssr.constants.itemType.folder) {
+                if (item.Type === forerunner.ssr.constants.itemType.folder ||
+                    item.Type === forerunner.ssr.constants.itemType.site) {
                     curNode.children.push(newNode);
 
                     me._catalogDataPrefix(newNode, item.children);
@@ -6148,7 +6149,10 @@ $(function () {
         },
         save: function (overwrite, parentFolder, dashboardName) {
             var me = this;
-            var status = false;
+            var result = {
+                status: false,
+                resourceName: null
+            }
             if (overwrite === null || overwrite === undefined) {
                 overwrite = false;
             }
@@ -6168,14 +6172,17 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    status = true;
+                    if (data && data.ResourceName) {
+                        result.resourceName = data.ResourceName;
+                    }
+                    result.status = true;
                 },
                 fail: function (jqXHR) {
                     console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }
             });
-            return status;
+            return result;
         },
         loadTemplate: function (templateName) {
             var me = this;
@@ -20370,10 +20377,11 @@ $(function () {
 
             // Save the model and navigate to editDashboard
             var overwrite = me.$overwrite.prop("checked");
-            if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
+            var result = me.model.save(overwrite, me.options.parentFolder, dashboardName);
+            if (result.status) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
+                var path = helper.combinePaths(me.options.parentFolder, result.resourceName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();
@@ -28210,7 +28218,10 @@ $(function () {
             });
 
             // Save the model
-            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
+            var result = me.model.save(overwrite, me.parentFolder, me.dashboardName);
+            if (result.status) {
+                me.dashboardName = result.resourceName;
+            } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
             }
         },

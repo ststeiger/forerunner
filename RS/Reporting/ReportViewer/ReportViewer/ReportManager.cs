@@ -426,10 +426,28 @@ namespace Forerunner.SSRS.Manager
             rs.Credentials = GetCredentials();
             return rs.GetItemType(path);
         }
+        private void SetMissingResourceExtension(ref string path, string mimetype)
+        {
+            if (!Path.HasExtension(path) && mimetype != null && mimetype.Length > 0 && !IsNativeRS)
+            {
+                string extension = MimeTypeMap.GetExtension(mimetype);
+                path += extension;
+            }
+        }
+        private void SetMissingMimetype(string path, ref string mimetype)
+        {
+            if (mimetype == null && Path.HasExtension(path))
+            {
+                mimetype = MimeTypeMap.GetMimeType(Path.GetExtension(path));
+            }
+        }
         public byte[] GetCatalogResource(string path, out string mimetype)
         {
             rs.Credentials = GetCredentials();
-            return rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
+            byte[] contents = rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
+            SetMissingMimetype(path, ref mimetype);
+
+            return contents;
         }
         public String DeleteCatalogItem(string path, string saveFolderDelete)
         {
@@ -589,11 +607,27 @@ namespace Forerunner.SSRS.Manager
             rs.CreateFolder(data.folderName, data.parentFolder, properties);
             return getReturnSuccess();
         }
+        private string getSaveCatalogResourceSuccess(string resourceName)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteMember("ResourceName");
+            w.WriteString(resourceName);
+            w.WriteEndObject();
+            return w.ToString();
+        }
+
         public String SaveCatalogResource(SetResource setResource)
         {
             bool notFound = false;
             rs.Credentials = GetCredentials();
-            byte[] contentUTF8 = setResource.contentsUTF8 != null ? setResource.contentsUTF8 : Encoding.UTF8.GetBytes(setResource.contents); 
+            byte[] contentUTF8 = setResource.contentsUTF8 != null ? setResource.contentsUTF8 : Encoding.UTF8.GetBytes(setResource.contents);
+
+            string resourceName = setResource.resourceName;
+            SetMissingResourceExtension(ref resourceName, setResource.mimetype);
+            setResource.resourceName = resourceName;
 
             if (!setResource.overwrite)
             {
@@ -606,7 +640,7 @@ namespace Forerunner.SSRS.Manager
                                         contentUTF8,
                                         setResource.mimetype,
                                         null);
-                    return getReturnSuccess();
+                    return getSaveCatalogResourceSuccess(resourceName);
                 }
                 catch (System.Web.Services.Protocols.SoapException e)
                 {
@@ -645,7 +679,7 @@ namespace Forerunner.SSRS.Manager
                                     null);
             }
 
-            return getReturnSuccess();
+            return getSaveCatalogResourceSuccess(resourceName);
         }
 
         public CatalogItem[] ListChildren(string path, Boolean isRecursive = false, bool showAll = false, bool showHidden = true)
@@ -657,6 +691,10 @@ namespace Forerunner.SSRS.Manager
 
             foreach (CatalogItem ci in items)
             {
+                string mimetype = ci.MimeType;
+                SetMissingMimetype(ci.Path, ref mimetype);
+                ci.MimeType = mimetype;
+
                 added = false;
                 if ((ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.Resource || ci.Type == ItemTypeEnum.LinkedReport || showAll) && (!ci.Hidden || showHidden))
                 {
@@ -2587,9 +2625,9 @@ namespace Forerunner.SSRS.Manager
                 child.Path = item.Path;
 
                 //if (item.Type == ItemTypeEnum.Folder || item.Type == ItemTypeEnum.Site)
-                if (item.Type == ItemTypeEnum.Folder)
+                if (item.Type == ItemTypeEnum.Folder || item.Type == ItemTypeEnum.Site)
                 {
-                    //recusive get the catalog
+                    //recursively get the catalog
                     GetCatalogItem(child, showLinkedReport);
 
                     //if the catalog not include valid items then not add them into the list

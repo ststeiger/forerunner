@@ -257,7 +257,6 @@ namespace ReportMannagerConfigTool
                 }
 
                 System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-                string result;
            
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -345,6 +344,10 @@ namespace ReportMannagerConfigTool
 
         private void btnInstallUWS_Click(object sender, EventArgs e)
         {
+            using (new CenterWinDialog(this))
+            {
+                MessageBox.Show(this, "Please restart the configuration tool after installation to complete web site setup.", "Forerunner Software Mobilizer");
+            }
             Process.Start("UltiDev.WebServer.msi");
         }
 

@@ -709,7 +709,7 @@ $(function () {
             
             var me = this;
 
-            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") == "on") {
+            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") === "on") {
 
                 if (!forerunner.device.isWindowsPhone()) {
                     $(me.element).hammer().on("pinchin", function (ev) {
@@ -773,7 +773,7 @@ $(function () {
                                 me._updateTableHeaders(me);
                             break;
 
-                            if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") == "on") {
+                            if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") === "on") {
                                 if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                     ev.gesture.preventDefault();
                                     me._navToPage(me.curPage + 1);

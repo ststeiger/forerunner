@@ -42,3 +42,6 @@
 /video-Partner1,/video?utm_source=Partner1&utm_medium=email&utm_campaign=Netp
 /home-Partner1,/?utm_source=Partner1&utm_medium=email&utm_campaign=Netp
 /trial-Partner1,/registerTrial?utm_source=Partner1&utm_medium=email&utm_campaign=Netp
+/video-V4,/video?utm_source=V4&utm_medium=email&utm_campaign=Netp
+/home-V4,/?utm_source=V4&utm_medium=email&utm_campaign=V4
+/trial-V4,/registerTrial?utm_source=V4&utm_medium=email&utm_campaign=V4

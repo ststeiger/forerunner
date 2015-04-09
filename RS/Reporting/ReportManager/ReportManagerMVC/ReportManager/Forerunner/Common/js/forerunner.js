@@ -1212,7 +1212,9 @@ $(function () {
                     path = path + "/" + arguments[index];
                 }
             }
-            path = path.replace("//", "/");
+            if (path.indexOf("http:") == -1) {
+                path = path.replace("//", "/");
+            }
             return path;
         },
         /**

@@ -166,10 +166,11 @@ $(function () {
 
             // Save the model and navigate to editDashboard
             var overwrite = me.$overwrite.prop("checked");
-            if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
+            var result = me.model.save(overwrite, me.options.parentFolder, dashboardName);
+            if (result.status) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
+                var path = helper.combinePaths(me.options.parentFolder, result.resourceName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();

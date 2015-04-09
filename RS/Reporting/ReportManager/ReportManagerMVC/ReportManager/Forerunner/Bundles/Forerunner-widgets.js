@@ -5122,7 +5122,8 @@ $(function () {
                     children: []
                 };
 
-                if (item.Type === forerunner.ssr.constants.itemType.folder) {
+                if (item.Type === forerunner.ssr.constants.itemType.folder ||
+                    item.Type === forerunner.ssr.constants.itemType.site) {
                     curNode.children.push(newNode);
 
                     me._catalogDataPrefix(newNode, item.children);
@@ -6148,7 +6149,10 @@ $(function () {
         },
         save: function (overwrite, parentFolder, dashboardName) {
             var me = this;
-            var status = false;
+            var result = {
+                status: false,
+                resourceName: null
+            }
             if (overwrite === null || overwrite === undefined) {
                 overwrite = false;
             }
@@ -6168,14 +6172,17 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    status = true;
+                    if (data && data.ResourceName) {
+                        result.resourceName = data.ResourceName;
+                    }
+                    result.status = true;
                 },
                 fail: function (jqXHR) {
                     console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }
             });
-            return status;
+            return result;
         },
         loadTemplate: function (templateName) {
             var me = this;
@@ -15557,7 +15564,7 @@ $(function () {
 
                     if ($checkbox[0].checked !== true) {//uncheck
                         $control.removeAttr("disabled").removeClass("fr-param-disable");
-
+                        $.watermark.show($control);
                         //add validate arrtibutes to control when uncheck null checkbox
                         $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.attr(attribute, "true");
@@ -15569,7 +15576,7 @@ $(function () {
                     }
                     else {
                         $control.attr("disabled", true).addClass("fr-param-disable");
-
+                        $.watermark.hide($control);
                         //remove validate arrtibutes
                         $.each(me._paramValidation[param.Name], function (index, attribute) {
                             $control.removeAttr(attribute);
@@ -15652,6 +15659,7 @@ $(function () {
                     $control.parent().removeClass("fr-param-disable");
                 }
                 $control.removeClass("fr-param-disable");
+                $.watermark.show($control);
 
                 //add validate arrtibutes to control when uncheck null checkbox
                 $.each(me._paramValidation[param.Name], function (index, attribute) {
@@ -15661,6 +15669,7 @@ $(function () {
                 if (param.Type === "DateTime") { $control.datepicker("enable"); }
             }
             else {
+
                 if ($nullCheckbox.length) {
                     if ($nullCheckbox[0].checked === true) {
                         $nullCheckbox[0].checked = false;
@@ -15692,6 +15701,7 @@ $(function () {
                     $control.parent().addClass("fr-param-disable");
                 }
                 $control.addClass("fr-param-disable");
+                $.watermark.hide($control);
 
                 if (param.Type === "DateTime") {
                     //set delay to 100 since datepicker need time to generate image for the first time
@@ -20370,10 +20380,11 @@ $(function () {
 
             // Save the model and navigate to editDashboard
             var overwrite = me.$overwrite.prop("checked");
-            if (me.model.save(overwrite, me.options.parentFolder, dashboardName)) {
+            var result = me.model.save(overwrite, me.options.parentFolder, dashboardName);
+            if (result.status) {
                 // Call navigateTo to bring up the create dashboard view
                 var navigateTo = me.options.$reportExplorer.reportExplorer("option", "navigateTo");
-                var path = helper.combinePaths(me.options.parentFolder, dashboardName);
+                var path = helper.combinePaths(me.options.parentFolder, result.resourceName);
                 navigateTo("editDashboard", path);
 
                 me.closeDialog();
@@ -28210,7 +28221,10 @@ $(function () {
             });
 
             // Save the model
-            if (!me.model.save(overwrite, me.parentFolder, me.dashboardName)) {
+            var result = me.model.save(overwrite, me.parentFolder, me.dashboardName);
+            if (result.status) {
+                me.dashboardName = result.resourceName;
+            } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, messages.saveDashboardFailed, toolbar.saveDashboard);
             }
         },

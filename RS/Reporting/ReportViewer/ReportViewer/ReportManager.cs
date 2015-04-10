@@ -1237,7 +1237,7 @@ namespace Forerunner.SSRS.Manager
         private string GetPath(string path)
         {
             
-            if (IsNativeRS)
+            if (IsNativeRS || path.IndexOf(SharePointHostName) != -1)
                 return path;
 
             return SharePointHostName + path.Substring(39);            

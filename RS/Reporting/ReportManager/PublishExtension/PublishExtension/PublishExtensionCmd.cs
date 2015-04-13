@@ -235,7 +235,7 @@ namespace PublishExtension
             WriteVerbose("Start ValidateInputParameters()");
 
             ValidateFileExists(ProjectFileName, "Project");
-            ValidateFileExists(ItemPath, "Item");
+            ValidateFileOrDirExists(ItemPath, "Item");
 
             WriteVerbose("End ValidateInputParameters()");
         }
@@ -247,6 +247,16 @@ namespace PublishExtension
                 throw new FileNotFoundException(filetype + ": " + filename + ", not found", filename);
             }
         }
+
+        private void ValidateFileOrDirExists(string filename, string filetype)
+        {
+            if (!File.Exists(filename) && !Directory.Exists(filename))
+            {
+                throw new FileNotFoundException(filetype + ": " + filename + ", not found", filename);
+            }
+        }
+
+
         #endregion  // Private methods and data
     }
 }

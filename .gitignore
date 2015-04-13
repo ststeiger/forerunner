@@ -728,3 +728,4 @@ utilities/SetupUtil/SetupUtil/bin/*
 utilities/SetupUtil/SetupUtil/obj/*
 utilities/timebomb/timebomb/bin/*
 Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Store Health Check.rdl
+RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Debug/PublishExtension.dll.config

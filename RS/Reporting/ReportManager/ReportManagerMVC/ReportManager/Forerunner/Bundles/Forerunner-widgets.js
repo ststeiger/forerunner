@@ -2170,6 +2170,7 @@ $(function () {
                     else {
                         me.renderError = false;
                         me.sessionID = data.SessionID;
+                        me.RDLExtProperty = null;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.reportPath;
                         me.reportPath = data.ReportPath;
@@ -14192,6 +14193,7 @@ $(function () {
         getParamsList: function (noValid) {
             var me = this;
             var i, $input;
+
 
             //for all get request that need validate, close all dropdown panel to get latest value first
             if (!noValid) {

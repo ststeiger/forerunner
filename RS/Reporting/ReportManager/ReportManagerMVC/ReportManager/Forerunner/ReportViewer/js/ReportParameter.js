@@ -2124,6 +2124,7 @@ $(function () {
             var me = this;
             var i, $input;
 
+
             //for all get request that need validate, close all dropdown panel to get latest value first
             if (!noValid) {
                 me._closeAllDropdown();

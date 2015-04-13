@@ -1539,6 +1539,7 @@ $(function () {
                     else {
                         me.renderError = false;
                         me.sessionID = data.SessionID;
+                        me.RDLExtProperty = null;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.reportPath;
                         me.reportPath = data.ReportPath;

@@ -54,6 +54,16 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\PublishExtension\PublishExtension\bin\Release" %Destination%\Config *.dll 
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\PublishExtension\PublishExtension" %Destination%\Config *.xml *.ps1
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\bin\Release" %Destination%\Config
 if ERRORLEVEL 8 (
 	goto :Error

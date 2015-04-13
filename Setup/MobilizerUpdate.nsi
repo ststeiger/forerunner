@@ -367,6 +367,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\MobilizerConfig.ps1"
   File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.dll"
   File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  File "${LOCALROOT}\Config\PublishExtension.dll"
+  File "${LOCALROOT}\Config\PublishExtension-Help.xml"
   File "${LOCALROOT}\Config\UWS.Configuration.dll"
 
   SetOutPath "$INSTDIR\Custom"
@@ -986,6 +988,8 @@ Section Uninstall
   Delete "$INSTDIR\Config\MobilizerConfig.ps1"
   Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.dll"
   Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  Delete "$INSTDIR\Config\PublishExtension.dll"
+  Delete "$INSTDIR\Config\PublishExtension-Help.xml"
   Delete "$INSTDIR\Config\UWS.Configuration.dll"
   Delete "$INSTDIR\InstallInstructions.rtf"
   Delete "$INSTDIR\RDL Extension Documentation.rtf"

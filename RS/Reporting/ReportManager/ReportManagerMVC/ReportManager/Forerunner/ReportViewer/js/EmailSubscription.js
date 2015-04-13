@@ -91,6 +91,8 @@ $(function () {
             $.when(me._initProcessingOptions()).done(function (data2) { deferred2.resolve(data2); }).fail(function () { deferred2.resolve(); });
 
             $.when(deferred1, deferred2).done(function (data1, data2) {
+                var subscriptionInfo;
+
                 //build format field first
                 if (data1 !== undefined) {
                     me._extensionSettings = data1;
@@ -98,7 +100,7 @@ $(function () {
                     me.$includeReport.prop("checked", true);
                     me.$includeLink.prop("checked", true);
                     if (subscriptionID) {
-                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
                         me.$desc.val(subscriptionInfo.Description);
                         me._subscriptionData = subscriptionInfo;
@@ -154,7 +156,7 @@ $(function () {
                 if (data2 !== undefined) {
                     me._initSharedSchedule(data2);
                     if (subscriptionID) {
-                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                         me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                     }
                 }

@@ -139,15 +139,17 @@ $(function () {
                 $loadMore.addClass("fr-nav-item");
                 $loadMore.addClass("fr-core-cursorpointer");
                 $loadMore.on("click", function () {
+                    var i;
+
                     if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
-                        for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+                        for (i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
                             me._renderListItem(i, me.$list, true);
                         }
                         me._maxNumPages += me._batchSize;
                     } else {
                         var realMax = me.options.$reportViewer.reportViewer("getNumPages");
                         if (realMax !== me._maxNumPages) {
-                            for (var i = me._maxNumPages + 1; i <= realMax; i++) {
+                            for (i = me._maxNumPages + 1; i <= realMax; i++) {
                                 me._renderListItem(i, me.$list, true);
                             }
                             me._maxNumPages = realMax;

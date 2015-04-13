@@ -1086,7 +1086,7 @@ $(function () {
         saveScrollPosition: function () {
             var me = this;
 
-            var pos = me.getScrollPosition()
+            var pos = me.getScrollPosition();
 
             me.scrollLeft = pos.left;
             me.scrollTop = pos.top;
@@ -1438,10 +1438,10 @@ $(function () {
 
                             var page = me.element.find(".Page");
                             var area = page.height() * page.width();
-                            var zoomSpeed = .99;
+                            var zoomSpeed = 0.99;
 
                             if (area > 1000000)
-                                zoomSpeed = .90;
+                                zoomSpeed = 0.90;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
                             //me.hide().show(0);
@@ -1483,7 +1483,7 @@ $(function () {
                             break;
 
                             // Show the header on release only if this is not scrolling.
-                            // If it is scrolling, we will let scrollstop handle that.                   
+                            // If it is scrolling, we will let scrollstop handle that.
                         case "release":
                             var swipeNav = false;
                             if (ev.gesture.touches.length > 1) {
@@ -2810,12 +2810,10 @@ $(function () {
                     if (me.isDebug) {
                         console.log("showParameters", { numOfVisibleParameters: me.$numOfVisibleParameters });
                     }
-                    if (me.$numOfVisibleParameters > 0)
+                    if (me.$numOfVisibleParameters > 0) {
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
-                    else {
-                        //Removed becasue should be called from wrtiteParameterPanel
-                        //me._loadPage(pageNum, false, null, null, true);
                     }
+                   
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }
@@ -3027,7 +3025,7 @@ $(function () {
             me.property = forerunner.cache.itemProperty[me.reportPath];
 
             if (me.property) {
-                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property["ForerunnerRDLExt"]) || null;
+                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property.ForerunnerRDLExt) || null;
                 return;
             }
 
@@ -3043,7 +3041,7 @@ $(function () {
                 },
                 success: function (data) {
                     if (data && JSON.stringify(data) !== "{}") {                       
-                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = forerunner.helper.JSONParse(data);
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = forerunner.helper.JSONParse(data);
                     }
                 }
             });
@@ -3106,7 +3104,7 @@ $(function () {
             
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
-            if (!pageNum || parseInt(pageNum) !== pageNum) {
+            if (!pageNum || parseInt(pageNum, 10) !== pageNum) {
                 pageNum = 1;
             }
             if (paramList && typeof paramList === "object")
@@ -4926,7 +4924,7 @@ $(function () {
             me.element.off(events.modalDialogGenericCancel);
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-            $messageBox = new $(
+            var $messageBox = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     "<div class='fr-messagebox-innerpage'>" +
                         "<div class='fr-core-dialog-header'>" +
@@ -5088,7 +5086,7 @@ $(function () {
                 state: {
                     opened: true
                 },
-                li_attr: {
+                liAttr: {
                     dataCatalogItem: {
                         Path: me.options.rootPath,
                         Name: me.options.rootPath,
@@ -5112,7 +5110,7 @@ $(function () {
             $.each(items, function (index, item) {
                 var newNode = {
                     text: item.Name,
-                    li_attr: {
+                    liAttr: {
                         dataCatalogItem: {
                             Path: item.Path,
                             Name: item.Name,
@@ -5141,7 +5139,7 @@ $(function () {
                 if (child.children.length !== 0) {
                     me._createSimpleTreeData(child);
                 }
-                else if (child.li_attr.dataCatalogItem.Type !== 1) {
+                else if (child.liAttr.dataCatalogItem.Type !== 1) {
                     nodeData.children.splice(i, 1);
                     i = i - 1;
                 }
@@ -5172,14 +5170,14 @@ $(function () {
         _onChangedjsTree: function (e, data) {
             var me = this;
             
-            if (me.options.type === "fullCatalog" && data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+            if (me.options.type === "fullCatalog" && data.node.liAttr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
                 me.$tree.jstree("toggle_node", data.node.id);
                 return;
             }
             
-            var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.li_attr.dataCatalogItem.Path;
+            var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.liAttr.dataCatalogItem.Path;
 
-            me._trigger(events.catalogSelected, null, { path: location, item: data.node.li_attr.dataCatalogItem });
+            me._trigger(events.catalogSelected, null, { path: location, item: data.node.liAttr.dataCatalogItem });
             me.$catalogTree.addClass("fr-core-hidden");
         }
     });
@@ -6152,7 +6150,8 @@ $(function () {
             var result = {
                 status: false,
                 resourceName: null
-            }
+            };
+
             if (overwrite === null || overwrite === undefined) {
                 overwrite = false;
             }
@@ -6244,7 +6243,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.properties.title, "fr-properties-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -6348,7 +6347,7 @@ $(function () {
             me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
-            for (key in me.$tabs.data()) {
+            for (var key in me.$tabs.data()) {
                 var widget = me.$tabs.data()[key];
                 if (widget.widgetName) {
                     me.$tabs[widget.widgetName]("destroy");
@@ -6573,7 +6572,7 @@ $(function () {
                 me._preprocess = function () {
                     priorFunc();
                     func();
-                }
+                };
             }
         },
 
@@ -6603,7 +6602,7 @@ $(function () {
 
                         if (data.Tags && data.Tags !== "NotFound") {
                             me._tags = data.Tags.join(",");
-                            me._tags = me._tags.replace(/"/g, '');
+                            me._tags = me._tags.replace(/"/g, "");
 
                             me.$tagInput.val(me._tags);
                         }
@@ -6666,16 +6665,16 @@ $(function () {
                     me.$isHidden.attr("checked", true);
                 }
 
-                if (typeof data === "object" && data["Hidden"] && data["Hidden"].toLowerCase() === "true") {
+                if (typeof data === "object" && data.Hidden && data.Hidden.toLowerCase() === "true") {
                     me._isHidden = "True";
                     me.$isHidden.attr("checked", true);
                 }
 
                 if (typeof data === "object") {
-                    me._description = data["Description"] || "";
+                    me._description = data.Description || "";
                     me.$desInput.val(me._description);
 
-                    me._itemName = data["Name"];
+                    me._itemName = data.Name;
                     me.$itemName.val(me._itemName);
                 }
             }, me);
@@ -6737,9 +6736,9 @@ $(function () {
 
                                 delete forerunner.cache.itemProperty[path];
                             } else {
-                                forerunner.cache.itemProperty[path]["Hidden"] = isHidden;
-                                forerunner.cache.itemProperty[path]["Name"] = itemName;
-                                forerunner.cache.itemProperty[path]["Description"] = descriptionInput;
+                                forerunner.cache.itemProperty[path].Hidden = isHidden;
+                                forerunner.cache.itemProperty[path].Name = itemName;
+                                forerunner.cache.itemProperty[path].Description = descriptionInput;
                             }
                         },
                         fail: function (data) {
@@ -6766,8 +6765,8 @@ $(function () {
             me._getProperties(me.curPath, function (data) {
                 var me = this;
 
-                if (typeof data === "object" && data["ForerunnerRDLExt"]) {
-                    me._rdl = data["ForerunnerRDLExt"];
+                if (typeof data === "object" && data.ForerunnerRDLExt) {
+                    me._rdl = data.ForerunnerRDLExt;
                     me.$rdlInput.val(me._rdl);
                 }
             }, me);
@@ -6796,7 +6795,7 @@ $(function () {
                     success: function (data) {
                         me._rdl = rdl;
 
-                        forerunner.cache.itemProperty[path]["ForerunnerRDLExt"] = rdl;
+                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = rdl;
                         me.property = forerunner.cache.itemProperty[path];
 
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
@@ -6818,7 +6817,7 @@ $(function () {
             if (content) {
                 content = JSON.parse(content);//replace(/"/g, '')
                 //me.$sfForm.find(".fr-sf-foldername").val(content.name)
-                me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
+                me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ""));
             }
             else {
                 //me.$sfForm.find(".fr-sf-foldername").val("")
@@ -6965,7 +6964,7 @@ $(function () {
             //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', locData.security.title, "fr-security-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.security.title, "fr-security-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -7068,7 +7067,7 @@ $(function () {
 
             //back to main layer, for close button at the right top corner, always close dialog
             me.element.find(".fr-security-cancel").on("click", function (e) {
-                if ($(this).hasClass('fr-core-dialog-cancel')) {
+                if ($(this).hasClass("fr-core-dialog-cancel")) {
                     if (me.isInheritParent) {
                         me.closeDialog();
                         return;
@@ -7091,16 +7090,16 @@ $(function () {
 
             /******************* bind operate button in each row *********************/
             // show or hide the current user's roles
-            me.$layer1.delegate('.tip', 'click', function (e) {
-                $(this).closest('li').find('.role').toggle();
+            me.$layer1.delegate(".tip", "click", function (e) {
+                $(this).closest("li").find(".role").toggle();
             });
 
-            me.$layer1.delegate('.edit', 'click', function (e) {
+            me.$layer1.delegate(".edit", "click", function (e) {
                 var groupuser = $(this).siblings("span").text();
                 me._switchToLayer2("edit", groupuser);
             });
 
-            me.$layer1.delegate('.delete', 'click', function (e) {
+            me.$layer1.delegate(".delete", "click", function (e) {
                 if (!confirm(locData.security.deleteConfirm)) return;
 
                 var groupuser = $(this).siblings("span").text();
@@ -7108,12 +7107,12 @@ $(function () {
             });
 
             // show or hide the roles description
-            me.$layer2.delegate('.tip', 'click', function (e) {
-                $(this).closest('li').find('.desp').toggle();
+            me.$layer2.delegate(".tip", "click", function (e) {
+                $(this).closest("li").find(".desp").toggle();
             });
 
-            me.$layer2.delegate('.acc-name', 'click', function (e) {
-                $(this).closest('li').find('.acc-chk').trigger('click');
+            me.$layer2.delegate(".acc-name", "click", function (e) {
+                $(this).closest("li").find(".acc-chk").trigger("click");
             });
             /******************* end of bind operate button in each row *********************/
         },
@@ -7130,7 +7129,7 @@ $(function () {
 
                 me.$curPath.text(me._getItemName(path));
 
-                me.isRoot = me.curPath === '/' ? true : false;
+                me.isRoot = me.curPath === "/" ? true : false;
             }
         },
         /**
@@ -7188,7 +7187,7 @@ $(function () {
             me.cachedPolicy = obj.policy;
             me.isInheritParent = obj.isInheritParent;
 
-            me.isRoot = me.curPath === '/' ? true : false;
+            me.isRoot = me.curPath === "/" ? true : false;
 
             me._refreshUI();
         },
@@ -7201,7 +7200,7 @@ $(function () {
             if (!isNew) {
                 //merge the exist roles with the role list, set the exist role checkbox to checked by default
                 var existRole = {},
-                    $chks = me.$layer2.find('.acc-chk'),
+                    $chks = me.$layer2.find(".acc-chk"),
                     i, j;
 
                 for (i = 0; i < me.cachedPolicy.length; i++) {
@@ -7238,7 +7237,7 @@ $(function () {
                 me.curLayer = 1;
 
                 me.$layer2.hide(function () {
-                    var $chks = me.$layer2.find('.acc-chk');
+                    var $chks = me.$layer2.find(".acc-chk");
                     //un-check all selected role when hide layer2
                     for (var i = 0; i < $chks.length; i++) {
                         if ($chks[i].checked) {
@@ -7247,7 +7246,7 @@ $(function () {
                     }
                     
                     me.$operate2.hide();
-                    me.$groupuser.val('').removeAttr('title').removeAttr('readonly');
+                    me.$groupuser.val("").removeAttr("title").removeAttr("readonly");
 
                     me.$layer1.show();
                     me.$operate1.show();
@@ -7264,7 +7263,7 @@ $(function () {
             }
 
             var layer1 = me._drawPolicyUI(me.cachedPolicy);
-            me.$layer1.children('ul').html('').append(layer1);
+            me.$layer1.children("ul").html("").append(layer1);
 
             if (me.isInheritParent) {
                 me.$operate0.show();
@@ -7287,7 +7286,7 @@ $(function () {
                 }
 
                 var layer2 = me._drawRoleUI(me.cachedRoles);
-                me.$layer2.children('ul').html('').append(layer2);
+                me.$layer2.children("ul").html("").append(layer2);
             }, 0);
         },
         _submit: function (callback) {
@@ -7311,10 +7310,10 @@ $(function () {
                 return null;
             }
 
-            $.each(me.$layer2.find('.acc-chk'), function (i, obj) {
+            $.each(me.$layer2.find(".acc-chk"), function (i, obj) {
                 if (obj.checked) {
                     Roles.push({
-                        Name: obj.getAttribute('data-acc')
+                        Name: obj.getAttribute("data-acc")
                     });
                 }
             });
@@ -7413,7 +7412,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('update item policy wrong', data.Exception);
+                        console.log("update item policy wrong", data.Exception);
                         return;
                     }
 
@@ -7449,7 +7448,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('inherit parent policy wrong', data.Exception);
+                        console.log("inherit parent policy wrong", data.Exception);
                         return;
                     }
 
@@ -7501,13 +7500,13 @@ $(function () {
                        "</div>" +
                        "<div class='role'>" +
                            "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
-                           "<span class='txt'>" + names.join(', ') + "</span>" +
+                           "<span class='txt'>" + names.join(", ") + "</span>" +
                        "</div></li>";
 
                 html.push(tpl);
             }
 
-            return html.join('');
+            return html.join("");
         },
         // draw layer-2 UI to show all available roles
         _drawRoleUI: function (data) {
@@ -7529,7 +7528,7 @@ $(function () {
                 html.push(tpl);
             }
 
-            return html.join('');
+            return html.join("");
         },
         _getParentName: function (curPath) {
             //var index = curPath.lastIndexOf("/"),
@@ -8588,7 +8587,7 @@ $(function () {
             } else {
                 me.enableTools([tp.itemZoom]);
                 me.removeHideDisable([tp.itemZoom]);
-            };
+            }
         },
         _clearItemStates: function () {
             var me = this;
@@ -8759,15 +8758,17 @@ $(function () {
                 $loadMore.addClass("fr-nav-item");
                 $loadMore.addClass("fr-core-cursorpointer");
                 $loadMore.on("click", function () {
+                    var i;
+
                     if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
-                        for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+                        for (i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
                             me._renderListItem(i, me.$list, true);
                         }
                         me._maxNumPages += me._batchSize;
                     } else {
                         var realMax = me.options.$reportViewer.reportViewer("getNumPages");
                         if (realMax !== me._maxNumPages) {
-                            for (var i = me._maxNumPages + 1; i <= realMax; i++) {
+                            for (i = me._maxNumPages + 1; i <= realMax; i++) {
                                 me._renderListItem(i, me.$list, true);
                             }
                             me._maxNumPages = realMax;
@@ -9003,7 +9004,7 @@ $(function () {
 
             // Delete item
             me._$delete.off("click");
-            if (!me.permissions["Delete"]) {
+            if (!me.permissions.Delete) {
                 me._$delete.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$delete.on("click", function (event, data) {
@@ -9153,7 +9154,7 @@ $(function () {
 
             // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
             if (me.options.catalogItem.Type === 3) {
-                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap.searchFolder : propertyList;
             }
 
             $propertyDlg.forerunnerProperties("setProperties", "contextmenu", me.options.catalogItem.Path, propertyList);
@@ -10045,7 +10046,7 @@ $(function () {
                 error: function (data) {
                     console.log(data);
 
-                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: me.path });
                     me.removeLoadingIndicator();
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
                 }
@@ -10921,7 +10922,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', linked.title, "fr-linked-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", linked.title, "fr-linked-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -10976,12 +10977,12 @@ $(function () {
             me._resetValidateMessage();
             me._validateForm(me.$form);
 
-            me.$location.on('click', function () {
-                me._openPopup.call(me)
+            me.$location.on("click", function () {
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-linked-dropdown-icon").on("click", function () {
-                me._openPopup.call(me)
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-linked-submit").on("click", function () {
@@ -11012,8 +11013,8 @@ $(function () {
         _reset: function () {
             var me = this;
 
-            me.$name.val('');
-            me.$location.removeAttr("title").val('');
+            me.$name.val("");
+            me.$location.removeAttr("title").val("");
         },
         _openPopup: function () {
             var me = this;
@@ -11023,7 +11024,7 @@ $(function () {
             var width = me.$location.width() + 24;
             var visible = me.$location.catalogTree("toggleCatalog", width);
 
-            visible ? me.$linkContainer.css({ height: '220px' }) : me.$linkContainer.css({ height: me.initHeight });
+            visible ? me.$linkContainer.css({ height: "220px" }) : me.$linkContainer.css({ height: me.initHeight });
         },
         setData: function (catalogItem){
             var me = this,
@@ -11141,7 +11142,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Set linked report wrong.', data.Exception);
+                        console.log("Set linked report wrong.", data.Exception);
                         return;
                     }
 
@@ -11170,7 +11171,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Create linked report wrong.', data.Exception);
+                        console.log("Create linked report wrong.", data.Exception);
                         return;
                     }
 
@@ -11341,7 +11342,7 @@ $(function () {
                     me._hideSubmitError();
                 },
                 uploadProgress: function (event, position, total, percentComplete) {
-                    var percent = percentComplete + '%';
+                    var percent = percentComplete + "%";
                     me.$progress.text(percent);
                     me.$progressBar.width(percent);
                 },
@@ -11528,12 +11529,12 @@ $(function () {
                     me.closeDialog();
                 },
                 fail: function (jqXHR, textStatus, errorThrown) {
-                    if (xhr.status === 400) {
+                    if (jqXHR.status === 400) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, locData.newFolder.fileExists, locData.newFolder.fileExists);
                         return;
                     }
 
-                    me._showSubmitError(xhr.responseText);
+                    me._showSubmitError(jqXHR.responseText);
                 }
             });
         },
@@ -11590,7 +11591,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', move.title, "fr-move-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", move.title, "fr-move-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -11624,12 +11625,12 @@ $(function () {
         _bindEvents: function () {
             var me = this;
 
-            me.$location.on('click', function () {
-                me._openPopup.call(me)
+            me.$location.on("click", function () {
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-move-dropdown-icon").on("click", function () {
-                me._openPopup.call(me)
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-move-submit").on("click", function () {
@@ -11689,7 +11690,7 @@ $(function () {
             var width = me.$location.width() + 24;
             var visible = me.$location.catalogTree("toggleCatalog", width);
             //expand fr-move-container height to 200px to show the tree dropdown
-            visible ? me.$moveContainer.css({ height: '200px' }): me.$moveContainer.css({ height: me.initHeight });
+            visible ? me.$moveContainer.css({ height: "200px" }): me.$moveContainer.css({ height: me.initHeight });
         },
         /**
          * Show the forerunnerMoveItem modal dialog.
@@ -11734,7 +11735,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Set linked report wrong.', data.Exception);
+                        console.log("Set linked report wrong.", data.Exception);
                         return;
                     }
 
@@ -11752,7 +11753,7 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 location = $.trim(me.$location.val()),
-                newLocation = location === '/' ? (location + me.Name) : (location + '/' + me.Name);
+                newLocation = location === "/" ? (location + me.Name) : (location + "/" + me.Name);
 
             if (data.curFullPath === newLocation) return null;
 
@@ -14845,6 +14846,8 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
+var moment = moment || {};
+
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -15034,8 +15037,6 @@ $(function () {
                     me._numVisibleParams += 1;
                     $eleBorder.append(me._writeParamControl(mergedParam, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
-                else
-                    me._checkHiddenParam(mergedParam);
             });
             //resize the textbox width when custom right pane width is big
             me._elementWidthCheck();
@@ -15134,7 +15135,7 @@ $(function () {
             var params = forerunner.helper.JSONParse(savedParam);
             var hasMembers = false;
 
-            $.each(params.ParamsList, function (index, item) {
+            $.each(params.ParamsList, function (i, item) {
                 var index = item.Parameter ? item.Parameter : item.Name;
                 paramObj[index] = item;
                 hasMembers = true;
@@ -15680,7 +15681,7 @@ $(function () {
 
                 $control.attr("disabled", true).addClass("fr-usedefault");
                 customVal = $control.val();
-                $control.attr('data-custom', customVal).val("");
+                $control.attr("data-custom", customVal).val("");
 
                 //remove validate arrtibutes                
                 for (var i = 0, arr = me._paramValidation[param.Name], len = arr.length; i < len; i++) {
@@ -15764,7 +15765,7 @@ $(function () {
             var me = this;
 
             if (forerunner.device.isTouch()) {
-                $control.off('focus').on('focus', function () {
+                $control.off("focus").on("focus", function () {
                     var newTop = this.offsetTop -28;
 
                     setTimeout(function () {
@@ -16433,7 +16434,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;
@@ -16507,7 +16508,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for (i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -16761,8 +16762,8 @@ $(function () {
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
-            $control.delegate('label', 'click', function (e) {
-                $(this).siblings('.fr-param-dropdown-checkbox').trigger('click');
+            $control.delegate("label", "click", function (e) {
+                $(this).siblings(".fr-param-dropdown-checkbox").trigger("click");
             });
             return $control;
         },
@@ -17336,17 +17337,6 @@ $(function () {
         _disabledSubSequenceControl: function ($control) {
             $control.attr("disabled", true).addClass("fr-param-disable");
         },
-        _checkHiddenParam: function (param) {
-            var me = this;
-            //if (param.QueryParameter) {
-            //when no default value exist, it will set it as the first valid value
-            //if no valid value exist, will popup error.
-            if (!me._hasDefaultValue(param)) {
-                // Do not error here because the parameter can be an internal parameter.
-                //console.log(param.Name + " does not have a default value.");
-            }
-            //}
-        },
         _getDatePickerLoc: function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
@@ -17601,7 +17591,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-printreport", print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                 headerHtml +
@@ -19142,7 +19132,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-dataSourceCred", dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +
@@ -19161,7 +19151,7 @@ $(function () {
 
             me.element.append($dialog);
             me.$container = me.element.find(".fr-dsc-main-container");
-            me.$form = me.element.find('.fr-dsc-form');
+            me.$form = me.element.find(".fr-dsc-form");
 
             //disable form auto submit when click enter on the keyboard
             me.$form.on("submit", function () { return false; });
@@ -19234,7 +19224,7 @@ $(function () {
                 //highlight error datasource label by change color to red
                 var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
                 if (error && me._credentialData) {
-                    var datasourceID = error[0].replace(/["“”']/g, '');
+                    var datasourceID = error[0].replace(/["“”']/g, "");
                     me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
                     me.openDialog();
                 }
@@ -19518,7 +19508,8 @@ $(function () {
 
             //check the build version on the server each time when route happen
             //if not match then force refresh the browser
-            var newVersion = forerunner.ajax.getBuildVersion();
+            var newVersion = forerunner.ajax.getBuildVersion(),
+                options;
 
             if (me.buildVersion && me.buildVersion !== newVersion) {
                 window.location.reload(true);
@@ -19543,14 +19534,14 @@ $(function () {
                 path = parts[0];
                 data.args[0] = path;
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
-                var options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
+                options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
                 me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
                 var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
-                var options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
+                options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
                 me.transitionToReportViewer(reportPath, RSURLParams, options);
@@ -20532,6 +20523,8 @@ $(function () {
             $.when(me._initProcessingOptions()).done(function (data2) { deferred2.resolve(data2); }).fail(function () { deferred2.resolve(); });
 
             $.when(deferred1, deferred2).done(function (data1, data2) {
+                var subscriptionInfo;
+
                 //build format field first
                 if (data1 !== undefined) {
                     me._extensionSettings = data1;
@@ -20539,7 +20532,7 @@ $(function () {
                     me.$includeReport.prop("checked", true);
                     me.$includeLink.prop("checked", true);
                     if (subscriptionID) {
-                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
 
                         me.$desc.val(subscriptionInfo.Description);
                         me._subscriptionData = subscriptionInfo;
@@ -20595,7 +20588,7 @@ $(function () {
                 if (data2 !== undefined) {
                     me._initSharedSchedule(data2);
                     if (subscriptionID) {
-                        var subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                        subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
                         me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
                     }
                 }

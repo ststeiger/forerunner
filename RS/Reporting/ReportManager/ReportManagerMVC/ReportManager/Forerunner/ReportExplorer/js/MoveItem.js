@@ -44,7 +44,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', move.title, "fr-move-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", move.title, "fr-move-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -78,12 +78,12 @@ $(function () {
         _bindEvents: function () {
             var me = this;
 
-            me.$location.on('click', function () {
-                me._openPopup.call(me)
+            me.$location.on("click", function () {
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-move-dropdown-icon").on("click", function () {
-                me._openPopup.call(me)
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-move-submit").on("click", function () {
@@ -143,7 +143,7 @@ $(function () {
             var width = me.$location.width() + 24;
             var visible = me.$location.catalogTree("toggleCatalog", width);
             //expand fr-move-container height to 200px to show the tree dropdown
-            visible ? me.$moveContainer.css({ height: '200px' }): me.$moveContainer.css({ height: me.initHeight });
+            visible ? me.$moveContainer.css({ height: "200px" }): me.$moveContainer.css({ height: me.initHeight });
         },
         /**
          * Show the forerunnerMoveItem modal dialog.
@@ -188,7 +188,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Set linked report wrong.', data.Exception);
+                        console.log("Set linked report wrong.", data.Exception);
                         return;
                     }
 
@@ -206,7 +206,7 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 location = $.trim(me.$location.val()),
-                newLocation = location === '/' ? (location + me.Name) : (location + '/' + me.Name);
+                newLocation = location === "/" ? (location + me.Name) : (location + "/" + me.Name);
 
             if (data.curFullPath === newLocation) return null;
 

@@ -107,12 +107,12 @@ $(function () {
                     me.closeDialog();
                 },
                 fail: function (jqXHR, textStatus, errorThrown) {
-                    if (xhr.status === 400) {
+                    if (jqXHR.status === 400) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, locData.newFolder.fileExists, locData.newFolder.fileExists);
                         return;
                     }
 
-                    me._showSubmitError(xhr.responseText);
+                    me._showSubmitError(jqXHR.responseText);
                 }
             });
         },

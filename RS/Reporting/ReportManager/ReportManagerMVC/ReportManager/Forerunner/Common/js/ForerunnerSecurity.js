@@ -45,7 +45,7 @@ $(function () {
             //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-security', locData.security.title, "fr-security-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.security.title, "fr-security-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -148,7 +148,7 @@ $(function () {
 
             //back to main layer, for close button at the right top corner, always close dialog
             me.element.find(".fr-security-cancel").on("click", function (e) {
-                if ($(this).hasClass('fr-core-dialog-cancel')) {
+                if ($(this).hasClass("fr-core-dialog-cancel")) {
                     if (me.isInheritParent) {
                         me.closeDialog();
                         return;
@@ -171,16 +171,16 @@ $(function () {
 
             /******************* bind operate button in each row *********************/
             // show or hide the current user's roles
-            me.$layer1.delegate('.tip', 'click', function (e) {
-                $(this).closest('li').find('.role').toggle();
+            me.$layer1.delegate(".tip", "click", function (e) {
+                $(this).closest("li").find(".role").toggle();
             });
 
-            me.$layer1.delegate('.edit', 'click', function (e) {
+            me.$layer1.delegate(".edit", "click", function (e) {
                 var groupuser = $(this).siblings("span").text();
                 me._switchToLayer2("edit", groupuser);
             });
 
-            me.$layer1.delegate('.delete', 'click', function (e) {
+            me.$layer1.delegate(".delete", "click", function (e) {
                 if (!confirm(locData.security.deleteConfirm)) return;
 
                 var groupuser = $(this).siblings("span").text();
@@ -188,12 +188,12 @@ $(function () {
             });
 
             // show or hide the roles description
-            me.$layer2.delegate('.tip', 'click', function (e) {
-                $(this).closest('li').find('.desp').toggle();
+            me.$layer2.delegate(".tip", "click", function (e) {
+                $(this).closest("li").find(".desp").toggle();
             });
 
-            me.$layer2.delegate('.acc-name', 'click', function (e) {
-                $(this).closest('li').find('.acc-chk').trigger('click');
+            me.$layer2.delegate(".acc-name", "click", function (e) {
+                $(this).closest("li").find(".acc-chk").trigger("click");
             });
             /******************* end of bind operate button in each row *********************/
         },
@@ -210,7 +210,7 @@ $(function () {
 
                 me.$curPath.text(me._getItemName(path));
 
-                me.isRoot = me.curPath === '/' ? true : false;
+                me.isRoot = me.curPath === "/" ? true : false;
             }
         },
         /**
@@ -268,7 +268,7 @@ $(function () {
             me.cachedPolicy = obj.policy;
             me.isInheritParent = obj.isInheritParent;
 
-            me.isRoot = me.curPath === '/' ? true : false;
+            me.isRoot = me.curPath === "/" ? true : false;
 
             me._refreshUI();
         },
@@ -281,7 +281,7 @@ $(function () {
             if (!isNew) {
                 //merge the exist roles with the role list, set the exist role checkbox to checked by default
                 var existRole = {},
-                    $chks = me.$layer2.find('.acc-chk'),
+                    $chks = me.$layer2.find(".acc-chk"),
                     i, j;
 
                 for (i = 0; i < me.cachedPolicy.length; i++) {
@@ -318,7 +318,7 @@ $(function () {
                 me.curLayer = 1;
 
                 me.$layer2.hide(function () {
-                    var $chks = me.$layer2.find('.acc-chk');
+                    var $chks = me.$layer2.find(".acc-chk");
                     //un-check all selected role when hide layer2
                     for (var i = 0; i < $chks.length; i++) {
                         if ($chks[i].checked) {
@@ -327,7 +327,7 @@ $(function () {
                     }
                     
                     me.$operate2.hide();
-                    me.$groupuser.val('').removeAttr('title').removeAttr('readonly');
+                    me.$groupuser.val("").removeAttr("title").removeAttr("readonly");
 
                     me.$layer1.show();
                     me.$operate1.show();
@@ -344,7 +344,7 @@ $(function () {
             }
 
             var layer1 = me._drawPolicyUI(me.cachedPolicy);
-            me.$layer1.children('ul').html('').append(layer1);
+            me.$layer1.children("ul").html("").append(layer1);
 
             if (me.isInheritParent) {
                 me.$operate0.show();
@@ -367,7 +367,7 @@ $(function () {
                 }
 
                 var layer2 = me._drawRoleUI(me.cachedRoles);
-                me.$layer2.children('ul').html('').append(layer2);
+                me.$layer2.children("ul").html("").append(layer2);
             }, 0);
         },
         _submit: function (callback) {
@@ -391,10 +391,10 @@ $(function () {
                 return null;
             }
 
-            $.each(me.$layer2.find('.acc-chk'), function (i, obj) {
+            $.each(me.$layer2.find(".acc-chk"), function (i, obj) {
                 if (obj.checked) {
                     Roles.push({
-                        Name: obj.getAttribute('data-acc')
+                        Name: obj.getAttribute("data-acc")
                     });
                 }
             });
@@ -493,7 +493,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('update item policy wrong', data.Exception);
+                        console.log("update item policy wrong", data.Exception);
                         return;
                     }
 
@@ -529,7 +529,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('inherit parent policy wrong', data.Exception);
+                        console.log("inherit parent policy wrong", data.Exception);
                         return;
                     }
 
@@ -581,13 +581,13 @@ $(function () {
                        "</div>" +
                        "<div class='role'>" +
                            "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
-                           "<span class='txt'>" + names.join(', ') + "</span>" +
+                           "<span class='txt'>" + names.join(", ") + "</span>" +
                        "</div></li>";
 
                 html.push(tpl);
             }
 
-            return html.join('');
+            return html.join("");
         },
         // draw layer-2 UI to show all available roles
         _drawRoleUI: function (data) {
@@ -609,7 +609,7 @@ $(function () {
                 html.push(tpl);
             }
 
-            return html.join('');
+            return html.join("");
         },
         _getParentName: function (curPath) {
             //var index = curPath.lastIndexOf("/"),

@@ -138,7 +138,8 @@ $(function () {
 
             //check the build version on the server each time when route happen
             //if not match then force refresh the browser
-            var newVersion = forerunner.ajax.getBuildVersion();
+            var newVersion = forerunner.ajax.getBuildVersion(),
+                options;
 
             if (me.buildVersion && me.buildVersion !== newVersion) {
                 window.location.reload(true);
@@ -163,14 +164,14 @@ $(function () {
                 path = parts[0];
                 data.args[0] = path;
                 var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
-                var options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
+                options = parts.length > 1 ? forerunner.ssr._internal.getOptionsFromURL(parts[1]) : null;
                 if (params) params = JSON.stringify({ "ParamsList": params });
                 me.transitionToReportViewer(path, params, options);
             } else if (data.name === "transitionToReportViewerWithRSURLAccess") {
                 var startParam = args.indexOf("&");
                 var reportPath = startParam > 0 ? args.substring(0, startParam) : args;
                 var RSURLParams = startParam > 0 ? args.substring(startParam + 1) : null;
-                var options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
+                options = (RSURLParams) ? forerunner.ssr._internal.getOptionsFromURL(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = RSURLParams.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(RSURLParams) : null;
                 if (RSURLParams) RSURLParams = JSON.stringify({ "ParamsList": RSURLParams });
                 me.transitionToReportViewer(reportPath, RSURLParams, options);

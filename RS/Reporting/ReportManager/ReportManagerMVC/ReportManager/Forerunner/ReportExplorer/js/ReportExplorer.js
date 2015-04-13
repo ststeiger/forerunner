@@ -511,7 +511,7 @@ $(function () {
                 error: function (data) {
                     console.log(data);
 
-                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
+                    me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: me.path });
                     me.removeLoadingIndicator();
                     forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
                 }

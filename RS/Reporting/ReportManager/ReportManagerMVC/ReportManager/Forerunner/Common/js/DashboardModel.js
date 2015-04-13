@@ -65,7 +65,8 @@ $(function () {
             var result = {
                 status: false,
                 resourceName: null
-            }
+            };
+
             if (overwrite === null || overwrite === undefined) {
                 overwrite = false;
             }

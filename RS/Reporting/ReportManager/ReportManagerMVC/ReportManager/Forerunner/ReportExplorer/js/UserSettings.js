@@ -122,7 +122,11 @@ $(function () {
             me.$adminUI.prop("checked", adminUI);
 
             me.$viewStyle = me.element.find(".fr-us-viewStyle-id");
-            me.$viewStyle.val(me.settings.viewStyle);
+
+            if (me.settings.viewStyle)
+                me.$viewStyle.val(me.settings.viewStyle);
+            else
+                me.$viewStyle.val("large");
         },
         _triggerClose: function (isSubmit) {
             var me = this;

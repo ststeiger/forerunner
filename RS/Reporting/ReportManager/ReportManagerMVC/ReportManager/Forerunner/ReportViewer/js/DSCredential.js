@@ -45,7 +45,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-dataSourceCred", dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +
@@ -64,7 +64,7 @@ $(function () {
 
             me.element.append($dialog);
             me.$container = me.element.find(".fr-dsc-main-container");
-            me.$form = me.element.find('.fr-dsc-form');
+            me.$form = me.element.find(".fr-dsc-form");
 
             //disable form auto submit when click enter on the keyboard
             me.$form.on("submit", function () { return false; });
@@ -137,7 +137,7 @@ $(function () {
                 //highlight error datasource label by change color to red
                 var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
                 if (error && me._credentialData) {
-                    var datasourceID = error[0].replace(/["“”']/g, '');
+                    var datasourceID = error[0].replace(/["“”']/g, "");
                     me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
                     me.openDialog();
                 }

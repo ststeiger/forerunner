@@ -97,7 +97,7 @@ $(function () {
                 state: {
                     opened: true
                 },
-                li_attr: {
+                liAttr: {
                     dataCatalogItem: {
                         Path: me.options.rootPath,
                         Name: me.options.rootPath,
@@ -121,7 +121,7 @@ $(function () {
             $.each(items, function (index, item) {
                 var newNode = {
                     text: item.Name,
-                    li_attr: {
+                    liAttr: {
                         dataCatalogItem: {
                             Path: item.Path,
                             Name: item.Name,
@@ -150,7 +150,7 @@ $(function () {
                 if (child.children.length !== 0) {
                     me._createSimpleTreeData(child);
                 }
-                else if (child.li_attr.dataCatalogItem.Type !== 1) {
+                else if (child.liAttr.dataCatalogItem.Type !== 1) {
                     nodeData.children.splice(i, 1);
                     i = i - 1;
                 }
@@ -181,14 +181,14 @@ $(function () {
         _onChangedjsTree: function (e, data) {
             var me = this;
             
-            if (me.options.type === "fullCatalog" && data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+            if (me.options.type === "fullCatalog" && data.node.liAttr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
                 me.$tree.jstree("toggle_node", data.node.id);
                 return;
             }
             
-            var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.li_attr.dataCatalogItem.Path;
+            var location = data.node.text === me.options.rootPath ? me.options.rootPath : data.node.liAttr.dataCatalogItem.Path;
 
-            me._trigger(events.catalogSelected, null, { path: location, item: data.node.li_attr.dataCatalogItem });
+            me._trigger(events.catalogSelected, null, { path: location, item: data.node.liAttr.dataCatalogItem });
             me.$catalogTree.addClass("fr-core-hidden");
         }
     });

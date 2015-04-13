@@ -257,7 +257,7 @@ $(function () {
             } else {
                 me.enableTools([tp.itemZoom]);
                 me.removeHideDisable([tp.itemZoom]);
-            };
+            }
         },
         _clearItemStates: function () {
             var me = this;

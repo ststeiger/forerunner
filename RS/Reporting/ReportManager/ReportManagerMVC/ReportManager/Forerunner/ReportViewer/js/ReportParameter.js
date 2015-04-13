@@ -9,6 +9,8 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
+var moment = moment || {};
+
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
@@ -198,8 +200,6 @@ $(function () {
                     me._numVisibleParams += 1;
                     $eleBorder.append(me._writeParamControl(mergedParam, new $("<div />"), pageNum, metadata ? metadata[index] : null));
                 }
-                else
-                    me._checkHiddenParam(mergedParam);
             });
             //resize the textbox width when custom right pane width is big
             me._elementWidthCheck();
@@ -298,7 +298,7 @@ $(function () {
             var params = forerunner.helper.JSONParse(savedParam);
             var hasMembers = false;
 
-            $.each(params.ParamsList, function (index, item) {
+            $.each(params.ParamsList, function (i, item) {
                 var index = item.Parameter ? item.Parameter : item.Name;
                 paramObj[index] = item;
                 hasMembers = true;
@@ -844,7 +844,7 @@ $(function () {
 
                 $control.attr("disabled", true).addClass("fr-usedefault");
                 customVal = $control.val();
-                $control.attr('data-custom', customVal).val("");
+                $control.attr("data-custom", customVal).val("");
 
                 //remove validate arrtibutes                
                 for (var i = 0, arr = me._paramValidation[param.Name], len = arr.length; i < len; i++) {
@@ -928,7 +928,7 @@ $(function () {
             var me = this;
 
             if (forerunner.device.isTouch()) {
-                $control.off('focus').on('focus', function () {
+                $control.off("focus").on("focus", function () {
                     var newTop = this.offsetTop -28;
 
                     setTimeout(function () {
@@ -1597,7 +1597,7 @@ $(function () {
                         }
 
                         //if target parameter is required and backend value is empty, then it's not valid
-                        if ($targetElement.hasClass("fr-param-required") && !!backendValue === false) {
+                        if ($targetElement.hasClass("fr-param-required") && Boolean(backendValue) === false) {
                             invalidList = invalidList || [];
                             invalidList.push(param.Prompt);
                             isValid = false;
@@ -1671,7 +1671,7 @@ $(function () {
                     }
                 }
                 else {
-                    for (var i = 0; i < valids.length; i++) {
+                    for (i = 0; i < valids.length; i++) {
                         if ((predefinedValue && predefinedValue === valids[i].Value)) {
                             if ($input) { $input.val(valids[i].Key); } //set display text
                             $hidden.attr("backendValue", valids[i].Value); //set backend value
@@ -1925,8 +1925,8 @@ $(function () {
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);
 
-            $control.delegate('label', 'click', function (e) {
-                $(this).siblings('.fr-param-dropdown-checkbox').trigger('click');
+            $control.delegate("label", "click", function (e) {
+                $(this).siblings(".fr-param-dropdown-checkbox").trigger("click");
             });
             return $control;
         },
@@ -2499,17 +2499,6 @@ $(function () {
         },
         _disabledSubSequenceControl: function ($control) {
             $control.attr("disabled", true).addClass("fr-param-disable");
-        },
-        _checkHiddenParam: function (param) {
-            var me = this;
-            //if (param.QueryParameter) {
-            //when no default value exist, it will set it as the first valid value
-            //if no valid value exist, will popup error.
-            if (!me._hasDefaultValue(param)) {
-                // Do not error here because the parameter can be an internal parameter.
-                //console.log(param.Name + " does not have a default value.");
-            }
-            //}
         },
         _getDatePickerLoc: function () {
             var me = this;

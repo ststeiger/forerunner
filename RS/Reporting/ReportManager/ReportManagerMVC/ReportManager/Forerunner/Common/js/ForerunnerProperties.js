@@ -48,7 +48,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', locData.properties.title, "fr-properties-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.properties.title, "fr-properties-cancel", locData.common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -152,7 +152,7 @@ $(function () {
             me._propertyList = propertyList;
 
             //remove prior jquery.ui.tabs binding
-            for (key in me.$tabs.data()) {
+            for (var key in me.$tabs.data()) {
                 var widget = me.$tabs.data()[key];
                 if (widget.widgetName) {
                     me.$tabs[widget.widgetName]("destroy");
@@ -377,7 +377,7 @@ $(function () {
                 me._preprocess = function () {
                     priorFunc();
                     func();
-                }
+                };
             }
         },
 
@@ -407,7 +407,7 @@ $(function () {
 
                         if (data.Tags && data.Tags !== "NotFound") {
                             me._tags = data.Tags.join(",");
-                            me._tags = me._tags.replace(/"/g, '');
+                            me._tags = me._tags.replace(/"/g, "");
 
                             me.$tagInput.val(me._tags);
                         }
@@ -470,16 +470,16 @@ $(function () {
                     me.$isHidden.attr("checked", true);
                 }
 
-                if (typeof data === "object" && data["Hidden"] && data["Hidden"].toLowerCase() === "true") {
+                if (typeof data === "object" && data.Hidden && data.Hidden.toLowerCase() === "true") {
                     me._isHidden = "True";
                     me.$isHidden.attr("checked", true);
                 }
 
                 if (typeof data === "object") {
-                    me._description = data["Description"] || "";
+                    me._description = data.Description || "";
                     me.$desInput.val(me._description);
 
-                    me._itemName = data["Name"];
+                    me._itemName = data.Name;
                     me.$itemName.val(me._itemName);
                 }
             }, me);
@@ -541,9 +541,9 @@ $(function () {
 
                                 delete forerunner.cache.itemProperty[path];
                             } else {
-                                forerunner.cache.itemProperty[path]["Hidden"] = isHidden;
-                                forerunner.cache.itemProperty[path]["Name"] = itemName;
-                                forerunner.cache.itemProperty[path]["Description"] = descriptionInput;
+                                forerunner.cache.itemProperty[path].Hidden = isHidden;
+                                forerunner.cache.itemProperty[path].Name = itemName;
+                                forerunner.cache.itemProperty[path].Description = descriptionInput;
                             }
                         },
                         fail: function (data) {
@@ -570,8 +570,8 @@ $(function () {
             me._getProperties(me.curPath, function (data) {
                 var me = this;
 
-                if (typeof data === "object" && data["ForerunnerRDLExt"]) {
-                    me._rdl = data["ForerunnerRDLExt"];
+                if (typeof data === "object" && data.ForerunnerRDLExt) {
+                    me._rdl = data.ForerunnerRDLExt;
                     me.$rdlInput.val(me._rdl);
                 }
             }, me);
@@ -600,7 +600,7 @@ $(function () {
                     success: function (data) {
                         me._rdl = rdl;
 
-                        forerunner.cache.itemProperty[path]["ForerunnerRDLExt"] = rdl;
+                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = rdl;
                         me.property = forerunner.cache.itemProperty[path];
 
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
@@ -622,7 +622,7 @@ $(function () {
             if (content) {
                 content = JSON.parse(content);//replace(/"/g, '')
                 //me.$sfForm.find(".fr-sf-foldername").val(content.name)
-                me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ''));
+                me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ""));
             }
             else {
                 //me.$sfForm.find(".fr-sf-foldername").val("")

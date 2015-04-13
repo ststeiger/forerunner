@@ -132,7 +132,7 @@ $(function () {
                     me._hideSubmitError();
                 },
                 uploadProgress: function (event, position, total, percentComplete) {
-                    var percent = percentComplete + '%';
+                    var percent = percentComplete + "%";
                     me.$progress.text(percent);
                     me.$progressBar.width(percent);
                 },

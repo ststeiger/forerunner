@@ -53,7 +53,7 @@ $(function () {
 
             // Delete item
             me._$delete.off("click");
-            if (!me.permissions["Delete"]) {
+            if (!me.permissions.Delete) {
                 me._$delete.addClass("fr-toolbase-disabled").removeClass("fr-core-cursorpointer");
             } else {
                 me._$delete.on("click", function (event, data) {
@@ -203,7 +203,7 @@ $(function () {
 
             // For search folder it's different with other resource file, it don't have tags, instead it's search folder property
             if (me.options.catalogItem.Type === 3) {
-                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap["searchFolder"] : propertyList;
+                propertyList = me.options.catalogItem.MimeType === "json/forerunner-searchfolder" ? propertyListMap.searchFolder : propertyList;
             }
 
             $propertyDlg.forerunnerProperties("setProperties", "contextmenu", me.options.catalogItem.Path, propertyList);

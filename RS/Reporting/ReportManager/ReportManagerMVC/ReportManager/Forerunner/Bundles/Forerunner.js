@@ -134,7 +134,9 @@ jQuery.fn.extend({
                 var clone = $(this.cloneNode(true)).hide().css("position", "absolute").css("overflow", "visible").width(el.width()).height("auto");
                 el.after(clone);
 
-                function height() { return clone.height() > el.height(); }
+                var height = function () {
+                    return clone.height() > el.height();
+                };
 
                 if (height()) {
                     var myElipse = " ...";
@@ -1213,7 +1215,7 @@ $(function () {
                     path = path + "/" + arguments[index];
                 }
             }
-            if (path.indexOf("http:") == -1) {
+            if (path.indexOf("http:") === -1) {
                 path = path.replace("//", "/");
             }
             return path;

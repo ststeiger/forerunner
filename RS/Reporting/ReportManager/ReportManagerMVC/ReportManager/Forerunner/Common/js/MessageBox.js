@@ -38,7 +38,7 @@ $(function () {
             me.element.off(events.modalDialogGenericCancel);
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-            $messageBox = new $(
+            var $messageBox = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     "<div class='fr-messagebox-innerpage'>" +
                         "<div class='fr-core-dialog-header'>" +

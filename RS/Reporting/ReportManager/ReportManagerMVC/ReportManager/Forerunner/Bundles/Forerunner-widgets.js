@@ -2216,6 +2216,7 @@ $(function () {
                     else {
                         me.renderError = false;
                         me.sessionID = data.SessionID;
+                        me.RDLExtProperty = null;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.reportPath;
                         me.reportPath = data.ReportPath;
@@ -3040,7 +3041,10 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
-                    if (data && JSON.stringify(data) !== "{}") {                       
+                    if (data && JSON.stringify(data) !== "{}") {
+                        if (!forerunner.cache.itemProperty[me.reportPath])
+                            forerunner.cache.itemProperty[me.reportPath] = {};
+
                         me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = forerunner.helper.JSONParse(data);
                     }
                 }

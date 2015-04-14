@@ -6625,7 +6625,7 @@ $(function () {
             if (tags !== "" && tags !== me._tags) {
                 tagList = tags.split(",");
                 for (var i = 0; i < tagList.length; i++) {
-                    tagList[i] = '"' + $.trim(tagList[i]) + '"';
+                    tagList[i] = "\"" + $.trim(tagList[i]) + "\"";
                 }
                 tags = tagList.join(",");
                 me._tags = tags;
@@ -6736,7 +6736,7 @@ $(function () {
                         success: function (data) {
                             if (newPath) {
                                 me.curPath = newPath;
-                                me.options.$appContainer.trigger(events.renameItem, { newPath: me.curPath })
+                                me.options.$appContainer.trigger(events.renameItem, { newPath: me.curPath });
 
                                 delete forerunner.cache.itemProperty[path];
                             } else {
@@ -6862,7 +6862,7 @@ $(function () {
                     var tagsList = tags.split(",");
 
                     for (var i = 0; i < tagsList.length; i++) {
-                        tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
+                        tagsList[i] = "\"" + $.trim(tagsList[i]) + "\"";
                     }
 
                     var searchfolder = {

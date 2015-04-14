@@ -11876,7 +11876,7 @@ $(function () {
             me.reportObj = Page.reportObj;
             me.Page = Page;
             me._tablixStream = {};
-            me.RDLExt = RDLExt;
+            me.RDLExt = RDLExt ? RDLExt : {};
 
             if (me.RDLExt.ForceResponsive !== undefined)
                 me.options.responsive = me.RDLExt.ForceResponsive;

@@ -227,6 +227,7 @@ namespace Forerunner.SDK.ConfigTool
 
         private string _projectName;
         [Parameter(HelpMessage = "Explicitly defines which project you want configured")]
+        [Alias("pr")]
         public string ProjectName
         {
             get
@@ -241,6 +242,7 @@ namespace Forerunner.SDK.ConfigTool
 
         private string _webConfigPath;
         [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
+        [Alias("w")]
         public string WebConfigPath
         {
             get
@@ -253,6 +255,20 @@ namespace Forerunner.SDK.ConfigTool
             }
         }
 
+        private SwitchParameter _skipLicenseCheck;
+        [Parameter(HelpMessage = "Causes Set-FRConfig to skip the license check")]
+        [Alias("sl")]
+        public SwitchParameter SkipLicenseCheck
+        {
+            get
+            {
+                return _skipLicenseCheck;
+            }
+            set
+            {
+                _skipLicenseCheck = value;
+            }
+        }
 
         #endregion // Parameter properties / definitions
 
@@ -278,8 +294,11 @@ namespace Forerunner.SDK.ConfigTool
             WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
             TestConnection();
 
-            WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
-            ActivateLicense();
+            if (!SkipLicenseCheck.IsPresent)
+            {
+                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
+                ActivateLicense();
+            }
 
             WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
             UpdateWebConfig();
@@ -647,7 +666,7 @@ namespace Forerunner.SDK.ConfigTool
 
             // LicenseKey
             string LicenseKeyPrompt = "";
-            if (LicenseKey == null || LicenseKey.Length == 0)
+            if ((LicenseKey == null || LicenseKey.Length == 0) && !SkipLicenseCheck.IsPresent)
             {
                 needsActivation = true;
                 AddPrompt("LicenseKey", LicenseKey, @"Activation License Key (https://www.forerunnersw.com/registerTrial)", ref descriptions, out LicenseKeyPrompt);
@@ -705,7 +724,12 @@ namespace Forerunner.SDK.ConfigTool
                 AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);
 
                 // The password is always a different pattern than the rest
-                ReportServerDBPWD = (System.Security.SecureString)results[ReportServerDBPWDPrompt].BaseObject;
+                PSObject value = null;
+                bool hasValue = results.TryGetValue(ReportServerDBPWDPrompt, out value);
+                if (hasValue)
+                {
+                    ReportServerDBPWD = (System.Security.SecureString)results[ReportServerDBPWDPrompt].BaseObject;
+                }
 
                 string ReportServerDBDomainPrompt = "ReportServerDBDomain";
                 if (isUseIntegratedSecurityForSQL() && isUseMobilizerDB())
@@ -796,6 +820,13 @@ namespace Forerunner.SDK.ConfigTool
         private void CheckTargetFramework()
         {
             WriteVerbose("Start CheckTargetFramework()");
+
+            if (WebConfigPath != null)
+            {
+                WriteVerbose("Skipping CheckTargetFramework() because -WebConfigPath is defined");
+                WriteVerbose("end CheckTargetFramework()");
+                return;
+            }
 
             const uint net45 = 0x40005;
             Project project = GetProject();

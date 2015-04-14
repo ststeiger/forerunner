@@ -227,6 +227,7 @@ namespace Forerunner.SDK.ConfigTool
 
         private string _projectName;
         [Parameter(HelpMessage = "Explicitly defines which project you want configured")]
+        [Alias("pr")]
         public string ProjectName
         {
             get
@@ -241,6 +242,7 @@ namespace Forerunner.SDK.ConfigTool
 
         private string _webConfigPath;
         [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
+        [Alias("w")]
         public string WebConfigPath
         {
             get
@@ -253,6 +255,20 @@ namespace Forerunner.SDK.ConfigTool
             }
         }
 
+        private SwitchParameter _skipLicenseCheck;
+        [Parameter(HelpMessage = "Causes Set-FRConfig to skip the license check")]
+        [Alias("sl")]
+        public SwitchParameter SkipLicenseCheck
+        {
+            get
+            {
+                return _skipLicenseCheck;
+            }
+            set
+            {
+                _skipLicenseCheck = value;
+            }
+        }
 
         #endregion // Parameter properties / definitions
 
@@ -278,8 +294,11 @@ namespace Forerunner.SDK.ConfigTool
             WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
             TestConnection();
 
-            WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
-            ActivateLicense();
+            if (!SkipLicenseCheck.IsPresent)
+            {
+                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
+                ActivateLicense();
+            }
 
             WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
             UpdateWebConfig();
@@ -403,9 +422,12 @@ namespace Forerunner.SDK.ConfigTool
             SetForerunnerSetting("ReportServerDBUser", ReportServerDBUser);
 
             // Need to get and set the encrypted value here
-            string password = GetStringFromSecureString(ReportServerDBPWD);
-            string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
-            SetForerunnerSetting("ReportServerDBPWD", encryptedPWD);
+            if (ReportServerDBPWD != null && ReportServerDBPWD.Length > 0)
+            {
+                string password = GetStringFromSecureString(ReportServerDBPWD);
+                string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
+                SetForerunnerSetting("ReportServerDBPWD", encryptedPWD);
+            }
 
             SetForerunnerSetting("ReportServerDBDomain", ReportServerDBDomain);
             SetForerunnerSetting("ReportServerTimeout", ReportServerTimeout);
@@ -647,7 +669,7 @@ namespace Forerunner.SDK.ConfigTool
 
             // LicenseKey
             string LicenseKeyPrompt = "";
-            if (LicenseKey == null || LicenseKey.Length == 0)
+            if ((LicenseKey == null || LicenseKey.Length == 0) && !SkipLicenseCheck.IsPresent)
             {
                 needsActivation = true;
                 AddPrompt("LicenseKey", LicenseKey, @"Activation License Key (https://www.forerunnersw.com/registerTrial)", ref descriptions, out LicenseKeyPrompt);
@@ -667,30 +689,31 @@ namespace Forerunner.SDK.ConfigTool
             string ReportServerWSUrlPrompt;
             AddPrompt("ReportServerWSUrl", ReportServerWSUrl, "Reporting Services Web Service URL", ref descriptions, out ReportServerWSUrlPrompt);
 
-            string ReportServerDBPrompt = "";
-            string ReportServerDataSourcePrompt = "";
             string ReportServerDBUserPrompt = "";
             string ReportServerDBPWDPrompt = "ReportServerDBPWD";
             string UseIntegratedSecurityForSQLPrompt = "";
+            string ReportServerDataSourcePrompt = "";
+
+            // ReportServerDataSource
+            AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
+
+            // UseIntegratedSecurityForSQL
+            AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
+
+            // ReportServerDBUser
+            AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
+
+            // ReportServerDBPWD
+            var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
+            description.SetParameterType(Type.GetType("System.Security.SecureString"));
+            description.HelpMessage = "Database login password";
+            descriptions.Add(description);
+
+            string ReportServerDBPrompt = "";
             if (isUseMobilizerDB())
             {
                 // ReportServerDB
                 AddPrompt("ReportServerDB", ReportServerDB, "Report Server DB Name", ref descriptions, out ReportServerDBPrompt);
-
-                // ReportServerDataSource
-                AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
-
-                // ReportServerDBUser
-                AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
-
-                // ReportServerDBPWD
-                var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
-                description.SetParameterType(Type.GetType("System.Security.SecureString"));
-                description.HelpMessage = "Database login password";
-                descriptions.Add(description);
-
-                // UseIntegratedSecurityForSQL
-                AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
             }
 
             Dictionary <string, PSObject> results = null;
@@ -705,7 +728,12 @@ namespace Forerunner.SDK.ConfigTool
                 AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);
 
                 // The password is always a different pattern than the rest
-                ReportServerDBPWD = (System.Security.SecureString)results[ReportServerDBPWDPrompt].BaseObject;
+                PSObject value = null;
+                bool hasValue = results.TryGetValue(ReportServerDBPWDPrompt, out value);
+                if (hasValue)
+                {
+                    ReportServerDBPWD = (System.Security.SecureString)results[ReportServerDBPWDPrompt].BaseObject;
+                }
 
                 string ReportServerDBDomainPrompt = "ReportServerDBDomain";
                 if (isUseIntegratedSecurityForSQL() && isUseMobilizerDB())
@@ -796,6 +824,13 @@ namespace Forerunner.SDK.ConfigTool
         private void CheckTargetFramework()
         {
             WriteVerbose("Start CheckTargetFramework()");
+
+            if (WebConfigPath != null)
+            {
+                WriteVerbose("Skipping CheckTargetFramework() because -WebConfigPath is defined");
+                WriteVerbose("end CheckTargetFramework()");
+                return;
+            }
 
             const uint net45 = 0x40005;
             Project project = GetProject();

@@ -733,7 +733,7 @@ namespace ReportManager.Controllers
 
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/JSON");
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/html");
             }
             catch (ArgumentException e)
             {
@@ -745,7 +745,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/html");
             }
         }
 

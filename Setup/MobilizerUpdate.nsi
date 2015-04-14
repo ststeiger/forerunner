@@ -372,12 +372,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\UWS.Configuration.dll"
 
   SetOutPath "$INSTDIR\Custom"
-  File "${LOCALROOT}\Custom\Mobilizer.css"
   File "${LOCALROOT}\Custom\Mobilizer_Examples.css"
-  File "${LOCALROOT}\Custom\MobilizerSettings.txt"
   File "${LOCALROOT}\Custom\MobilizerSettings_Examples.txt"
-  File "${LOCALROOT}\Custom\MobilizerSharedSchedule.txt"
-
+ 
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
   File "${RESOURCEROOT}\RDL Extension Documentation.rtf"

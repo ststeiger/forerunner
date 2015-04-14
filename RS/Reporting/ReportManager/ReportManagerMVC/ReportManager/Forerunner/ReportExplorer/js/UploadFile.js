@@ -58,7 +58,7 @@ $(function () {
                     // Browse button
                     "<tr>" +
                         "<td colspan='2' class='fr-upf-browse-btn-container'>" +
-                            "<input name='browse' type='button' autofocus='autofocus' value='" + uploadFile.browseBtn + "' title='" + uploadFile.browseBtn + "' class='fr-upf-browse-id fr-core-action-button'/>" +
+                            "<input name='browse' type='button' autofocus='autofocus' value='" + uploadFile.browseBtn + "' title='" + uploadFile.browseBtn + "' class='fr-upf-browse-id fr-upf-browse fr-core-action-button'/>" +
                         "</td>" +
                     "</tr>" +
                     // File to upload
@@ -102,7 +102,7 @@ $(function () {
             me.$formMain.append($table);
 
             // Change the form to set up a post action and a submit button
-            var url = me.options.reportManagerAPI + "/UploadFile";
+            var url = me.options.reportManagerAPI + "UploadFile";
             me.$form.attr({ action: url, method: "post", enctype: "multipart/form-data" });
             //ie not allow change input type property when it is created, to bypass it create a new one and replace old
             //it was record by #1433
@@ -124,6 +124,7 @@ $(function () {
 
             // Use jquery.form to handle an ajax like POST to the server
             me.$progressContainer.show();
+            
             me.$form.ajaxForm({
                 beforeSend: function () {
                     var percent = "0%";
@@ -132,7 +133,7 @@ $(function () {
                     me._hideSubmitError();
                 },
                 uploadProgress: function (event, position, total, percentComplete) {
-                    var percent = percentComplete + '%';
+                    var percent = percentComplete + "%";
                     me.$progress.text(percent);
                     me.$progressBar.width(percent);
                 },
@@ -186,9 +187,9 @@ $(function () {
 
             me.$progressContainer.width(me.$decsription.width());
 
-            me.$inputFile = $("<input name='file' type=file class='fr-upf-transparent-input' />");
+            me.$inputFile = new $("<input name='file' type=file class='fr-upf-transparent-input' />");
             me.$inputFile.on("change", function (e, data) {
-                me._onChangeInputFile.call(me);
+                me._onChangeInputFile.apply(me, arguments);
             });
 
             me.$inputFile.css({
@@ -201,11 +202,17 @@ $(function () {
             me.$browseContainer.append(me.$inputFile);
         },
         _onChangeInputFile: function (e, data) {
-            var me = this;
-
-            if (me.$inputFile[0] && me.$inputFile[0].files && me.$inputFile[0].files[0] && me.$inputFile[0].files[0].name) {
-                me.$uploadFile.val(me.$inputFile[0].files[0].name);
+            var me = this,
+                filePath;
+            
+            if (forerunner.device.isMSIE()) {
+                //for IE it will show the fakepath for security, so need to do a parse to get the right filename
+                filePath = e.target.value.replace(/C:\\fakepath\\/i, '');
+            } else if (me.$inputFile[0] && me.$inputFile[0].files && me.$inputFile[0].files[0] && me.$inputFile[0].files[0].name) {
+                filePath = me.$inputFile[0].files[0].name;
             }
+
+            me.$uploadFile.val(filePath);
         }
     }); //$.widget
 });

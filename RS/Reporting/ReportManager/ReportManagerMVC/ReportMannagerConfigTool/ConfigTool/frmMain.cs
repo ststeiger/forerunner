@@ -3,13 +3,15 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows.Forms;
 using ForerunnerLicense;
-
+using System.IO;
+using System.Net;
 
 namespace ReportMannagerConfigTool
 {
     public partial class frmMain : Form
     {
         private WinFormHelper winform;
+        private string forerunnerDownload = "http://forerunnersw.com/download/mobilizer/Version4/";
 
         public frmMain()
         {
@@ -19,6 +21,7 @@ namespace ReportMannagerConfigTool
                 winform = new WinFormHelper();
 
                 LoadWebConfig();
+                LoadVerionInfo();
                 SetReportManagerFolderPath();
                 LoadWebServerConfig();
                 rtbCurLicense.Text = ClientLicense.GetLicenseString();
@@ -148,6 +151,18 @@ namespace ReportMannagerConfigTool
         }
         #endregion
 
+        private void LoadVerionInfo()
+        {
+            string currVer = "";
+            if (File.Exists("../Forerunner/version.txt"))
+            {
+                currVer = File.ReadAllText("../Forerunner/version.txt");
+            }
+           
+            txtCurrVer.Text = currVer;
+            
+        }
+
         #region SSRS Connection
         private void LoadWebConfig()
         {
@@ -257,7 +272,6 @@ namespace ReportMannagerConfigTool
                 }
 
                 System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-                string result;
            
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -345,6 +359,10 @@ namespace ReportMannagerConfigTool
 
         private void btnInstallUWS_Click(object sender, EventArgs e)
         {
+            using (new CenterWinDialog(this))
+            {
+                MessageBox.Show(this, "Please restart the configuration tool after installation to complete web site setup.", "Forerunner Software Mobilizer");
+            }
             Process.Start("UltiDev.WebServer.msi");
         }
 
@@ -588,6 +606,81 @@ namespace ReportMannagerConfigTool
         private void rdoDomain_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnUpdateCheck_Click(object sender, EventArgs e)
+        {
+            string latestVer = "";
+          
+            try
+            {
+                WebRequest request = WebRequest.Create(forerunnerDownload + "Version.txt");
+                request.Method = "GET";
+
+                request.Timeout = 5000;
+
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream dataStream2 = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(dataStream2);
+                        latestVer = reader.ReadToEnd();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
+            
+            txtLatestVer.Text = latestVer;
+
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                string fileName = Directory.GetCurrentDirectory() + "ForerunnerMobilizerUpdate.exe";
+
+                WebRequest request = WebRequest.Create(forerunnerDownload + "ForerunnerMobilizerUpdate.exe");
+                request.Method = "GET";
+
+                request.Timeout = 5000;
+
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream dataStream2 = response.GetResponseStream())
+                    {
+                        
+                        FileStream updateFile =  File.Open(fileName,FileMode.Create);
+                        byte[] buff = new byte[1024];                      
+
+                        int len;
+                        while ( (len = dataStream2.Read(buff,0,1024)) >0)
+                        {
+                            Cursor.Current = Cursors.WaitCursor;
+                            updateFile.Write(buff,0,len);
+                            Application.DoEvents();
+                        }
+                        updateFile.Close();
+                    }
+                }
+                Cursor.Current = Cursors.Default;
+                Process.Start(fileName);
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
         }
     }
 }

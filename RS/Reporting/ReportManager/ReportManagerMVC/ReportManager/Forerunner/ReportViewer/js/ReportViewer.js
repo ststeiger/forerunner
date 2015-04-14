@@ -366,7 +366,7 @@ $(function () {
         saveScrollPosition: function () {
             var me = this;
 
-            var pos = me.getScrollPosition()
+            var pos = me.getScrollPosition();
 
             me.scrollLeft = pos.left;
             me.scrollTop = pos.top;
@@ -709,7 +709,7 @@ $(function () {
             
             var me = this;
 
-            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") == "on") {
+            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") === "on") {
 
                 if (!forerunner.device.isWindowsPhone()) {
                     $(me.element).hammer().on("pinchin", function (ev) {
@@ -718,10 +718,10 @@ $(function () {
 
                             var page = me.element.find(".Page");
                             var area = page.height() * page.width();
-                            var zoomSpeed = .99;
+                            var zoomSpeed = 0.99;
 
                             if (area > 1000000)
-                                zoomSpeed = .90;
+                                zoomSpeed = 0.90;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
                             //me.hide().show(0);
@@ -763,7 +763,7 @@ $(function () {
                             break;
 
                             // Show the header on release only if this is not scrolling.
-                            // If it is scrolling, we will let scrollstop handle that.                   
+                            // If it is scrolling, we will let scrollstop handle that.
                         case "release":
                             var swipeNav = false;
                             if (ev.gesture.touches.length > 1) {
@@ -773,7 +773,7 @@ $(function () {
                                 me._updateTableHeaders(me);
                             break;
 
-                            if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") == "on") {
+                            if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") === "on") {
                                 if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                     ev.gesture.preventDefault();
                                     me._navToPage(me.curPage + 1);
@@ -1496,6 +1496,7 @@ $(function () {
                     else {
                         me.renderError = false;
                         me.sessionID = data.SessionID;
+                        me.RDLExtProperty = null;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.reportPath;
                         me.reportPath = data.ReportPath;
@@ -2090,12 +2091,10 @@ $(function () {
                     if (me.isDebug) {
                         console.log("showParameters", { numOfVisibleParameters: me.$numOfVisibleParameters });
                     }
-                    if (me.$numOfVisibleParameters > 0)
+                    if (me.$numOfVisibleParameters > 0) {
                         me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
-                    else {
-                        //Removed becasue should be called from wrtiteParameterPanel
-                        //me._loadPage(pageNum, false, null, null, true);
                     }
+                   
                     me.paramLoaded = true;
                     me.$paramarea = me.options.paramArea;
                 }
@@ -2307,7 +2306,7 @@ $(function () {
             me.property = forerunner.cache.itemProperty[me.reportPath];
 
             if (me.property) {
-                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property["ForerunnerRDLExt"]) || null;
+                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property.ForerunnerRDLExt) || null;
                 return;
             }
 
@@ -2322,8 +2321,11 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
-                    if (data && JSON.stringify(data) !== "{}") {                       
-                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath]["ForerunnerRDLExt"] = forerunner.helper.JSONParse(data);
+                    if (data && JSON.stringify(data) !== "{}") {
+                        if (!forerunner.cache.itemProperty[me.reportPath])
+                            forerunner.cache.itemProperty[me.reportPath] = {};
+
+                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = forerunner.helper.JSONParse(data);
                     }
                 }
             });
@@ -2386,7 +2388,7 @@ $(function () {
             
             me._resetViewer(true);
             me.renderTime = new Date().getTime();
-            if (!pageNum || parseInt(pageNum) !== pageNum) {
+            if (!pageNum || parseInt(pageNum, 10) !== pageNum) {
                 pageNum = 1;
             }
             if (paramList && typeof paramList === "object")

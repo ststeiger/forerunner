@@ -48,7 +48,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-tags', linked.title, "fr-linked-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", linked.title, "fr-linked-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -103,12 +103,12 @@ $(function () {
             me._resetValidateMessage();
             me._validateForm(me.$form);
 
-            me.$location.on('click', function () {
-                me._openPopup.call(me)
+            me.$location.on("click", function () {
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-linked-dropdown-icon").on("click", function () {
-                me._openPopup.call(me)
+                me._openPopup.call(me);
             });
 
             me.element.find(".fr-linked-submit").on("click", function () {
@@ -139,8 +139,8 @@ $(function () {
         _reset: function () {
             var me = this;
 
-            me.$name.val('');
-            me.$location.removeAttr("title").val('');
+            me.$name.val("");
+            me.$location.removeAttr("title").val("");
         },
         _openPopup: function () {
             var me = this;
@@ -150,7 +150,7 @@ $(function () {
             var width = me.$location.width() + 24;
             var visible = me.$location.catalogTree("toggleCatalog", width);
 
-            visible ? me.$linkContainer.css({ height: '220px' }) : me.$linkContainer.css({ height: me.initHeight });
+            visible ? me.$linkContainer.css({ height: "220px" }) : me.$linkContainer.css({ height: me.initHeight });
         },
         setData: function (catalogItem){
             var me = this,
@@ -268,7 +268,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Set linked report wrong.', data.Exception);
+                        console.log("Set linked report wrong.", data.Exception);
                         return;
                     }
 
@@ -297,7 +297,7 @@ $(function () {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message);
 
-                        console.log('Create linked report wrong.', data.Exception);
+                        console.log("Create linked report wrong.", data.Exception);
                         return;
                     }
 

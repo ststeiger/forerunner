@@ -422,9 +422,12 @@ namespace Forerunner.SDK.ConfigTool
             SetForerunnerSetting("ReportServerDBUser", ReportServerDBUser);
 
             // Need to get and set the encrypted value here
-            string password = GetStringFromSecureString(ReportServerDBPWD);
-            string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
-            SetForerunnerSetting("ReportServerDBPWD", encryptedPWD);
+            if (ReportServerDBPWD != null && ReportServerDBPWD.Length > 0)
+            {
+                string password = GetStringFromSecureString(ReportServerDBPWD);
+                string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
+                SetForerunnerSetting("ReportServerDBPWD", encryptedPWD);
+            }
 
             SetForerunnerSetting("ReportServerDBDomain", ReportServerDBDomain);
             SetForerunnerSetting("ReportServerTimeout", ReportServerTimeout);
@@ -686,30 +689,31 @@ namespace Forerunner.SDK.ConfigTool
             string ReportServerWSUrlPrompt;
             AddPrompt("ReportServerWSUrl", ReportServerWSUrl, "Reporting Services Web Service URL", ref descriptions, out ReportServerWSUrlPrompt);
 
-            string ReportServerDBPrompt = "";
-            string ReportServerDataSourcePrompt = "";
             string ReportServerDBUserPrompt = "";
             string ReportServerDBPWDPrompt = "ReportServerDBPWD";
             string UseIntegratedSecurityForSQLPrompt = "";
+            string ReportServerDataSourcePrompt = "";
+
+            // ReportServerDataSource
+            AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
+
+            // UseIntegratedSecurityForSQL
+            AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
+
+            // ReportServerDBUser
+            AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
+
+            // ReportServerDBPWD
+            var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
+            description.SetParameterType(Type.GetType("System.Security.SecureString"));
+            description.HelpMessage = "Database login password";
+            descriptions.Add(description);
+
+            string ReportServerDBPrompt = "";
             if (isUseMobilizerDB())
             {
                 // ReportServerDB
                 AddPrompt("ReportServerDB", ReportServerDB, "Report Server DB Name", ref descriptions, out ReportServerDBPrompt);
-
-                // ReportServerDataSource
-                AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
-
-                // ReportServerDBUser
-                AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
-
-                // ReportServerDBPWD
-                var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
-                description.SetParameterType(Type.GetType("System.Security.SecureString"));
-                description.HelpMessage = "Database login password";
-                descriptions.Add(description);
-
-                // UseIntegratedSecurityForSQL
-                AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
             }
 
             Dictionary <string, PSObject> results = null;

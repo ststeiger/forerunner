@@ -76,7 +76,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="PublishExtension.Help.pshproj" />
+    <None Include="PublishExtension.Help.pshproj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web References\ReportService2005\ActiveState.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

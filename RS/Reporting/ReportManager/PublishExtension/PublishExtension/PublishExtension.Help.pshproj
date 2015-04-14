@@ -3,7 +3,7 @@
   <Name>PublishExtension</Name>
   <Version>1.0.0.0</Version>
   <Description />
-  <ModulePath>..\bin\Debug\PublishExtension.dll</ModulePath>
+  <ModulePath>.\bin\Debug\PublishExtension.dll</ModulePath>
   <HasManifest>false</HasManifest>
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />
@@ -14,24 +14,24 @@
         <Synopsis>Publishes the RDL Extensions from the given .rdle file into the deployed report (.rdl file) of the same name.</Synopsis>
         <Description>Publish-Extension is designed to work in two environments:
 
-* As an "External Tool" inside of visual Studio
-* As a normal PowerShell command
+- As an "External Tool" inside of visual Studio
+- As a normal PowerShell command
 
 In either mode Publish-Extension will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for a report (.rdl) file that matches the RDLExtension (.rdle) file of the same name. If it finds a report of the same name deployed on the server and folder, Publish-Extension will publish the RDLExtension into the report. You can also give a folder path for the -i parameter and Publish-Extension will publish all .rdle files in the given folder. A good practice is to created a solution folder (RDLExtensions) inside of you report project solution and keep all your report extensions together with your reports.
 
 To install Publish-Extension as a Visual Studio "External Tool" follow the following steps:
 
-* Add a command to your $profile which imports Publish-Extension as follows:
-** Import-Module "C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll"
-* In Visual Studio do the following
-** Open the "Tools" -&gt; "External Tools..." dialog
-** Select the "Add" button
-** Set the tool values as follows:
-*** Title: Publish RDLE File
-*** Command: PowerShell.exe
-*** Arguments: -command "Publish-Extension -Verbose -i '$(ItemPath)' -p '&lt;fully qualified path to your .rptproj file&gt;'"
-*** Check the "Use Output window" check box
-** Select the "Ok" button
+- Add a command to your $profile which imports Publish-Extension as follows:
+  - Import-Module "C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll"
+- In Visual Studio do the following
+-  Open the "Tools" -&gt; "External Tools..." dialog
+-  Select the "Add" button
+-  Set the tool values as follows:
+-    Title: Publish RDLE File
+-    Command: PowerShell.exe
+-    Arguments: -command "Publish-Extension -Verbose -i '$(ItemPath)' -p '&lt;fully qualified path to your .rptproj file&gt;'"
+-    Check the "Use Output window" check box
+-  Select the "Ok" button
 
 You are now ready to go. Whenever you have a .rdle file open, you can select the new "Publish RDLE File" in the "Tools" menu and your RDLExtension will be published.
 

@@ -22,6 +22,7 @@
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
 <meta name="viewport" content="width=device-width" />
 <title><?php wp_title( '|', true, 'right' ); ?></title>
+<meta name="description" content="Forerunner Software provides Mobile BI, HTML5 Report, SSRS and Mobile Reporting tool." />
 <link href="/content/site.css" rel="stylesheet"/>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />

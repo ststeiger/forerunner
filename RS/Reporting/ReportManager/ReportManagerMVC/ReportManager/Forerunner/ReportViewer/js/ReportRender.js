@@ -98,6 +98,7 @@ $(function () {
             me._tablixStream = {};
             me.RDLExt = RDLExt ? RDLExt : {};
 
+
             if (me.RDLExt.ForceResponsive !== undefined)
                 me.options.responsive = me.RDLExt.ForceResponsive;
 

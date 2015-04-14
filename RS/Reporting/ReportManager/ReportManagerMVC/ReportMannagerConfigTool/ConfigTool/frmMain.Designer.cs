@@ -90,6 +90,13 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
+            this.tabUpdate = new System.Windows.Forms.TabPage();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtLatestVer = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtCurrVer = new System.Windows.Forms.TextBox();
+            this.btnUpdateCheck = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -98,6 +105,7 @@
             this.tabPage1.SuspendLayout();
             this.gbAuthType.SuspendLayout();
             this.tabActivation.SuspendLayout();
+            this.tabUpdate.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -106,6 +114,7 @@
             this.tabMain.Controls.Add(this.tabPage3);
             this.tabMain.Controls.Add(this.tabPage1);
             this.tabMain.Controls.Add(this.tabActivation);
+            this.tabMain.Controls.Add(this.tabUpdate);
             resources.ApplyResources(this.tabMain, "tabMain");
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -539,6 +548,54 @@
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
             // 
+            // tabUpdate
+            // 
+            this.tabUpdate.Controls.Add(this.btnUpdateCheck);
+            this.tabUpdate.Controls.Add(this.btnUpdate);
+            this.tabUpdate.Controls.Add(this.label7);
+            this.tabUpdate.Controls.Add(this.txtLatestVer);
+            this.tabUpdate.Controls.Add(this.label6);
+            this.tabUpdate.Controls.Add(this.txtCurrVer);
+            resources.ApplyResources(this.tabUpdate, "tabUpdate");
+            this.tabUpdate.Name = "tabUpdate";
+            this.tabUpdate.UseVisualStyleBackColor = true;
+            // 
+            // btnUpdate
+            // 
+            resources.ApplyResources(this.btnUpdate, "btnUpdate");
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.Name = "label7";
+            // 
+            // txtLatestVer
+            // 
+            resources.ApplyResources(this.txtLatestVer, "txtLatestVer");
+            this.txtLatestVer.Name = "txtLatestVer";
+            this.txtLatestVer.ReadOnly = true;
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
+            // txtCurrVer
+            // 
+            resources.ApplyResources(this.txtCurrVer, "txtCurrVer");
+            this.txtCurrVer.Name = "txtCurrVer";
+            this.txtCurrVer.ReadOnly = true;
+            // 
+            // btnUpdateCheck
+            // 
+            resources.ApplyResources(this.btnUpdateCheck, "btnUpdateCheck");
+            this.btnUpdateCheck.Name = "btnUpdateCheck";
+            this.btnUpdateCheck.UseVisualStyleBackColor = true;
+            this.btnUpdateCheck.Click += new System.EventHandler(this.btnUpdateCheck_Click);
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -562,6 +619,8 @@
             this.gbAuthType.PerformLayout();
             this.tabActivation.ResumeLayout(false);
             this.tabActivation.PerformLayout();
+            this.tabUpdate.ResumeLayout(false);
+            this.tabUpdate.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -629,6 +688,13 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnSplit;
         private System.Windows.Forms.Button btnUpdateSchema;
+        private System.Windows.Forms.TabPage tabUpdate;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtLatestVer;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtCurrVer;
+        private System.Windows.Forms.Button btnUpdateCheck;
     }
 }
 

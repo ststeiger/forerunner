@@ -13176,7 +13176,6 @@ $(function () {
             }).fail(fail);
 
         },
-
         _easySubmit: function (e, type, url, datatype, success, fail,reportPath) {
             if (!success) success = "alert('Success');";
             if (!fail) fail = "alert('Failed');";

@@ -731,3 +731,5 @@ Test/Test Reports 2012/Northwind Test Suite/bin/Debug/Store Health Check.rdl
 RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Debug/PublishExtension.dll.config
 RS/Reporting/ReportManager/ReportManagerMVC/Forerunner.SDK.ConfigTool/Forerunner.SDK.ConfigTool.csproj.user
 RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Release/PublishExtension.dll.config
+RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Debug/PublishFRExtension.dll.config
+RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Release/PublishFRExtension.dll.config

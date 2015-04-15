@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PublishExtension</RootNamespace>
-    <AssemblyName>PublishExtension</AssemblyName>
+    <AssemblyName>PublishFRExtension</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -56,7 +56,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PublishExtensionCmd.cs" />
+    <Compile Include="PublishFRExtensionCmd.cs" />
     <Compile Include="SSRS Proxy\ReportingService200X.cs" />
     <Compile Include="SSRS Proxy\RSManagmentProxy.cs" />
     <Compile Include="Web References\ReportService2005\Reference.cs">
@@ -76,7 +76,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="PublishExtension.Help.pshproj">
+    <None Include="PublishFRExtension.Help.pshproj">
       <SubType>Designer</SubType>
     </None>
     <None Include="Web References\ReportService2005\ActiveState.datasource">
@@ -301,7 +301,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PublishExtension-Help.xml" />
+    <Content Include="PublishFRExtension-Help.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

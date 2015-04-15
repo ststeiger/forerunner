@@ -30,8 +30,8 @@ namespace PublishExtension
         }
     }
 
-    [Cmdlet("Publish", "Extension")]
-    public class PublishExtensionCmd : PSCmdlet
+    [Cmdlet("Publish", "FRExtension")]
+    public class PublishFRExtensionCmd : PSCmdlet
     {
         #region Parameter properties / definitions
 
@@ -146,7 +146,7 @@ namespace PublishExtension
 
         private void PublishFile(PublishManifest manifest, string filePath)
         {
-            WriteVerbose("PublishFile - File: '" + Path.GetFileName(filePath) + "'");
+            WriteObject("PublishFile - File: '" + Path.GetFileName(filePath) + "'");
 
             // Read the RDL Extension data from the file
             string fileData = File.ReadAllText(filePath);

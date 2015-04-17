@@ -20890,6 +20890,9 @@ $(function () {
                 me.$subject.parent().parent().hide();
                 me.$desc.parent().parent().hide();
                 me.$comment.parent().parent().hide();
+                me.$bcc.parent().parent().hide();
+                me.$cc.parent().parent().hide();
+                me.$replyTo.parent().parent().hide();
             }
             me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission === true;
             if (!me._canEditComment) {

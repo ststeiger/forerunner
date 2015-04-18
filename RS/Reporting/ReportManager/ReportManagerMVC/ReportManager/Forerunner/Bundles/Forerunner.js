@@ -751,6 +751,11 @@ $(function () {
 
         _customSettings: null,
 
+        _watermarkConfig: {
+            useNative: true,
+            className: "fr-watermark"
+        },
+
         _endsWith : function(str, suffix) {
             return str.indexOf(suffix, str.length - suffix.length);
         },
@@ -894,6 +899,14 @@ $(function () {
                 return settings[setting];
             else
                 return defaultval;
+        },
+        //internal used
+        setWatermarkConfig: function (cfg) {
+            forerunner.config._watermarkConfig = cfg || forerunner.config._watermarkConfig;
+        },
+        //internal used
+        getWatermarkConfig: function () {
+            return forerunner.config._watermarkConfig;
         }
     };
 
@@ -2473,7 +2486,16 @@ $(function () {
         
     };
     $(document).ready(function () {
-        
+        //For IE browser when set placeholder browser will trigger an input event if it's Chinese
+        //to avoid conflict (like auto complete) with other widget not use placeholder to do it
+        //Anyway IE native support placeholder property from IE10 on, so not big deal
+        //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+        if (forerunner.device.isMSIE()) {
+            forerunner.config.setWatermarkConfig({
+                useNative: false,
+                className: "fr-watermark"
+            });
+        }
         forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
         // Put a check in so that this would not barf for the login page.
         if ($.validator) {

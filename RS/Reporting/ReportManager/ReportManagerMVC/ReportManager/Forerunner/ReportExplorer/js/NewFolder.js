@@ -73,7 +73,7 @@ $(function () {
 
             me._validateForm(me.$form);
 
-            me.$folderName.watermark(newFolder.name, { useNative: false, className: "fr-watermark" });
+            me.$folderName.watermark(newFolder.name, forerunner.config.getWatermarkConfig());
         },
         _submit: function () {
             var me = this;

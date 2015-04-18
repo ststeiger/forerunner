@@ -127,7 +127,7 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
 
             me._updateBtnStates();
         },

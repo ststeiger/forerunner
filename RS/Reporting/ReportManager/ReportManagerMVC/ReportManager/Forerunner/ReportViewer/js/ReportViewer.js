@@ -684,7 +684,7 @@ $(function () {
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
-                me.options.onInputFocus.call(me);
+                me.options.onInputFocus();
         },
 
         _allowSwipe: true,

@@ -125,7 +125,7 @@ $(function () {
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-            me.$reportInput.watermark(reportProperties.selectReport, { useNative: false, className: "fr-watermark" });
+            me.$reportInput.watermark(reportProperties.selectReport, forerunner.config.getWatermarkConfig());
             me.$reportInput.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
             });

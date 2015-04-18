@@ -120,7 +120,7 @@ $(function () {
                 $input.val(encodedSetName).attr("title", encodedSetName);
             }
             else {
-                $input.watermark(manageParamSets.newSet, { useNative: false, className: "fr-watermark" });
+                $input.watermark(manageParamSets.newSet, forerunner.config.getWatermarkConfig());
             }
 
             $input.on("change", function (e) {

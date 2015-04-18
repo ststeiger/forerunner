@@ -73,7 +73,7 @@ $(function () {
             var me = this;
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
         },
         _init: function () {
             var me = this;

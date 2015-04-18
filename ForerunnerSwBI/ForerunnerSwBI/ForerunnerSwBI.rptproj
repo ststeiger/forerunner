@@ -10,16 +10,16 @@
   <DataSets />
   <Reports>
     <ProjectItem>
+      <Name>Extend Tiral License.rdl</Name>
+      <FullPath>Extend Tiral License.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Trial Licenses Detail.rdl</Name>
       <FullPath>Trial Licenses Detail.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Trial Licenses Summary.rdl</Name>
       <FullPath>Trial Licenses Summary.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Extend Tiral License.rdl</Name>
-      <FullPath>Extend Tiral License.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

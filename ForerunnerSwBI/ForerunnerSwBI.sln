@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RDLExtensions", "RDLExtensions", "{D1566500-78E0-41CA-89C1-5958F5D9768E}"
 	ProjectSection(SolutionItems) = preProject
 		ForerunnerSwBI\RDLExtensions\Extend Tiral License.rdle = ForerunnerSwBI\RDLExtensions\Extend Tiral License.rdle
+		ForerunnerSwBI\RDLExtensions\readme.txt = ForerunnerSwBI\RDLExtensions\readme.txt
 		ForerunnerSwBI\RDLExtensions\Trial Licenses Detail.rdle = ForerunnerSwBI\RDLExtensions\Trial Licenses Detail.rdle
 	EndProjectSection
 EndProject

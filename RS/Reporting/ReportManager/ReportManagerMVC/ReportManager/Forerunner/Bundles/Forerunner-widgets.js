@@ -15778,17 +15778,18 @@ $(function () {
             var me = this;
 
             if (forerunner.device.isTouch()) {
-                //this focus will remove the jquery watermark focus bind
-                //for watermark beside IE I set it to use the native
-                //we should avoid the code like this since we don't know any plugin or other guys' code bind this event
-                $control.off("focus").on("focus", function () {
-                    var newTop = this.offsetTop -28;
-
-                    setTimeout(function () {
-                        me.$params.scrollTop(newTop);
-                    }, 500);
-                });
+                $control.off("focus", me._setScrollPos).on("focus", { me: me }, me._setScrollPos);
             }
+        },
+        _setScrollPos: function (event) {
+            var me = event.data.me,
+                element = event.target;
+
+            var newTop = element.offsetTop - 28;
+
+            setTimeout(function () {
+                me.$params.scrollTop(newTop);
+            }, 500);
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;

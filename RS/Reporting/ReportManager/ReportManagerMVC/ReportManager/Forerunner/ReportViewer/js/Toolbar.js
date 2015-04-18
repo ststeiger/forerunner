@@ -64,7 +64,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 

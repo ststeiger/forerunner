@@ -166,7 +166,7 @@ $(function () {
 
             me._validateForm(me.$form);
 
-            me.$uploadFile.watermark(uploadFile.uploadFileLabel, { useNative: false, className: "fr-watermark" });
+            me.$uploadFile.watermark(uploadFile.uploadFileLabel, forerunner.config.getWatermarkConfig());
 
             // Add a transparent file type <input> tag overlaid on top of the "Browse Button" This will enable
             // us to have the look and feel we want and also be compatible on all browsers

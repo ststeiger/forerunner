@@ -51,7 +51,7 @@ $(function () {
         _hasPostedBackWithoutSubmitForm: false,
         _dependencyList: null,
         _isDropdownTree: true, // indicate whether apply cascading tree
-        _writeParamDoneCallback: null,
+        _writeParamDoneCallback: null,        
 
         _init: function () {
             var me = this;
@@ -709,7 +709,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -926,6 +926,9 @@ $(function () {
             var me = this;
 
             if (forerunner.device.isTouch()) {
+                //this focus will remove the jquery watermark focus bind
+                //for watermark beside IE I set it to use the native
+                //we should avoid the code like this since we don't know any plugin or other guys' code bind this event
                 $control.off("focus").on("focus", function () {
                     var newTop = this.offsetTop -28;
 

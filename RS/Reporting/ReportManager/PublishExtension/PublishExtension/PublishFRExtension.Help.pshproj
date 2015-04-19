@@ -3,7 +3,7 @@
   <Name>PublishExtension</Name>
   <Version>1.0.0.0</Version>
   <Description />
-  <ModulePath>.\bin\Debug\PublishExtension.dll</ModulePath>
+  <ModulePath>.\bin\Debug\PublishFRExtension.dll</ModulePath>
   <HasManifest>false</HasManifest>
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />

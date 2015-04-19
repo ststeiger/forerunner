@@ -1,0 +1,17 @@
+{
+    "ExtendButton": {
+        "InputType": "button",
+        "JavaScriptActions": [
+            {
+                "On": "click",
+                "Code": "ForerunnerSwBI.onExtendTrial(e)"
+            }
+        ]
+    },
+    "LicenseID2": {
+        "InputType": "text",
+        "InputSubmit": "always",
+        "InputName": "LicenseID",
+        "InputReadOnly": true
+    }
+}

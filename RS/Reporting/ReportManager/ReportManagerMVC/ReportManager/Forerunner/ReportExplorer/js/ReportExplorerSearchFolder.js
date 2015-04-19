@@ -79,8 +79,8 @@ $(function () {
 
             me.element.append($container);
 
-            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, { useNative: false, className: "fr-watermark" });
-            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, forerunner.config.getWatermarkConfig());
 
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({

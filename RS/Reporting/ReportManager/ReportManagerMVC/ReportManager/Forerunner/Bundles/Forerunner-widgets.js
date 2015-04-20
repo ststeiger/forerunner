@@ -15956,6 +15956,8 @@ $(function () {
                         setTimeout(function () { me._submitForm(pageNum); }, 100);
                     }
 
+                    $control.valid();
+
                     return false;
                 },
                 focus: function (event, obj) {
@@ -15964,13 +15966,14 @@ $(function () {
                 response: function (event, obj) {
                     //obj.content.length will equal = 0 if no item match.
                     if (obj.content.length === 0) {
+
                         $control.addClass("fr-param-autocomplete-error");
                     }
                     else {
                         $control.removeClass("fr-param-autocomplete-error");
                     }
 
-                    $control.valid();
+                    $control.val() !== "" && $control.valid();
                 },
                 change: function (event, obj) {
                     if (!obj.item) {

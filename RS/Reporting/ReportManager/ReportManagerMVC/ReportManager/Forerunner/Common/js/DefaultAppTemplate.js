@@ -15,6 +15,7 @@ $(function () {
     // This is an internal class right now.
     ssr.DefaultAppTemplate = function (options) {
         var me = this;
+
         me.options = {
             $container: null,
             isFullScreen: true
@@ -638,45 +639,54 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus());
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur());
         },
         onInputFocus: function () {
             var me = this;
 
             if (forerunner.device.isiOS()) {
-                setTimeout(function () {
-                    if (me.options.isFullScreen)
-                        me._makePositionAbsolute();
+                return function () {
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionAbsolute();
 
-                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                    me.$container.addClass("fr-layout-container-noscroll");
+                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                        me.$container.addClass("fr-layout-container-noscroll");
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
-                    me.ResetSize();
-                }, 50);
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
+                        me.ResetSize();
+                    }, 50);
+                }
             }
+
+            return null;
         },
         onInputBlur: function () {
             var me = this;
+
             if (forerunner.device.isiOS()) {
-                setTimeout(function () {
-                    if (me.options.isFullScreen)
-                        me._makePositionFixed();
+                return function () {
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionFixed();
 
-                    if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                        me.$container.removeClass("fr-layout-container-noscroll");
-                    }
+                        if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                            me.$container.removeClass("fr-layout-container-noscroll");
+                        }
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
 
-                    if (me.ResetSize)
-                        me.ResetSize();
-                }, 50);
+                        if (me.ResetSize)
+                            me.ResetSize();
+                    }, 50);
+                }
             }
+
+            return null;
         },
         getScrollPosition: function () {
             var me = this;

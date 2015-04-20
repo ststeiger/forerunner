@@ -359,6 +359,6 @@ $(function () {
             }
 
             return null;
-        },
+        }
     });  // $.widget
 });  // function()

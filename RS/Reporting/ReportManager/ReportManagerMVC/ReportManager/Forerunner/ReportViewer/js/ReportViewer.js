@@ -683,6 +683,7 @@ $(function () {
          */
         onInputFocus: function () {
             var me = this;
+
             if (me.options.onInputFocus)
                 me.options.onInputFocus();
         },

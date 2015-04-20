@@ -1187,13 +1187,24 @@ $(function () {
          * @member
          */
         getParentPath: function (path) {
-            if (!path || path === "/") return null;
+            if (!path || path === "/") {
+                // Root
+                return null;
+            }
 
             var parts = path.split("&");
             path = parts[0];
 
             var lastIndex = path.lastIndexOf("/");
-            if (lastIndex === -1) return null;
+            if (lastIndex === -1) {
+                // Root
+                return null;
+            }
+
+            if (lastIndex !== 0 && path.substr(lastIndex - 1, 1) === "/") {
+                // Site (SharePoint)
+                return "/";
+            }
 
             return path.slice(0, lastIndex);
         },

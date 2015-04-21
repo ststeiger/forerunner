@@ -82,8 +82,8 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                onInputFocus: layout.onInputFocus,
-                onInputBlur: layout.onInputBlur,
+                onInputFocus: layout.onInputFocus(),
+                onInputBlur: layout.onInputBlur(),
                 userSettings: me._getUserSettings()
             });
 

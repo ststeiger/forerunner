@@ -311,7 +311,7 @@ $(function () {
             name && $input.attr("name", name);
 
             if (placeholder)
-                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
+                $input.watermark(placeholder, forerunner.config.getWatermarkConfig());
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -321,7 +321,7 @@ $(function () {
             var me = this;
             var $input = new $("<TEXTAREA />");
             if (placeholder)
-                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
+                $input.watermark(placeholder, forerunner.config.getWatermarkConfig());
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }

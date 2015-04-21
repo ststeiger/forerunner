@@ -1,0 +1,18 @@
+{
+    "NextWeek": {
+        "JavaScriptActions": [
+            {
+                "On": "click",
+                "Code": "ForerunnerSwBI.onNextWeek(e)"
+            }
+        ]
+    },
+    "PrevWeek": {
+        "JavaScriptActions": [
+            {
+                "On": "click",
+                "Code": "ForerunnerSwBI.onPrevWeek(e)"
+            }
+        ]
+    }
+}

@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F14B399A-7131-4C87-9E4B-1186C45EF12D}") = "ForerunnerSwBI", "ForerunnerSwBI\ForerunnerSwBI.rptproj", "{42F8B663-4419-429A-BF8E-B05B88B5F88A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RDLExtensions", "RDLExtensions", "{D1566500-78E0-41CA-89C1-5958F5D9768E}"
+	ProjectSection(SolutionItems) = preProject
+		ForerunnerSwBI\RDLExtensions\Extend Tiral License.rdle = ForerunnerSwBI\RDLExtensions\Extend Tiral License.rdle
+		ForerunnerSwBI\RDLExtensions\readme.txt = ForerunnerSwBI\RDLExtensions\readme.txt
+		ForerunnerSwBI\RDLExtensions\Trial Licenses Detail.rdle = ForerunnerSwBI\RDLExtensions\Trial Licenses Detail.rdle
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ReportCodeUnitTests", "ReportCodeUnitTests\ReportCodeUnitTests.vbproj", "{2B97F1D8-5930-4687-A607-09F0DE361E2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{0AE85917-0E9E-4C5E-B35E-35943FA47AC3}"
+	ProjectSection(SolutionItems) = preProject
+		ForerunnerSwBI\RDLExtensions\Next.png = ForerunnerSwBI\RDLExtensions\Next.png
+		ForerunnerSwBI\RDLExtensions\Previous.png = ForerunnerSwBI\RDLExtensions\Previous.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "script", "script", "{34C40255-DBCE-4373-9BB2-63B41C0B210B}"
+	ProjectSection(SolutionItems) = preProject
+		ForerunnerSwBI\RDLExtensions\Deploy-All.ps1 = ForerunnerSwBI\RDLExtensions\Deploy-All.ps1
+		ForerunnerSwBI\RDLExtensions\ForerunnerSwBI.js = ForerunnerSwBI\RDLExtensions\ForerunnerSwBI.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugLocal|Any CPU = DebugLocal|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Debug|Any CPU.ActiveCfg = Debug
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Debug|Any CPU.Build.0 = Debug
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Debug|Any CPU.Deploy.0 = Debug
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.DebugLocal|Any CPU.ActiveCfg = DebugLocal
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.DebugLocal|Any CPU.Build.0 = DebugLocal
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.DebugLocal|Any CPU.Deploy.0 = DebugLocal
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Release|Any CPU.ActiveCfg = Release
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Release|Any CPU.Build.0 = Release
+		{42F8B663-4419-429A-BF8E-B05B88B5F88A}.Release|Any CPU.Deploy.0 = Release
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.DebugLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B97F1D8-5930-4687-A607-09F0DE361E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0AE85917-0E9E-4C5E-B35E-35943FA47AC3} = {D1566500-78E0-41CA-89C1-5958F5D9768E}
+		{34C40255-DBCE-4373-9BB2-63B41C0B210B} = {D1566500-78E0-41CA-89C1-5958F5D9768E}
+	EndGlobalSection
+EndGlobal

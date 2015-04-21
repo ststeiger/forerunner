@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="ForerunnerReg">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=ForerunnerReg.db.11812708.hostedresource.com;Initial Catalog=ForerunnerReg</ConnectString>
+  </ConnectionProperties>
+  <DataSourceID>830a9140-ae4d-4766-b40d-9821a4ba7931</DataSourceID>
+</RptDataSource>

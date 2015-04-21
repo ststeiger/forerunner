@@ -126,7 +126,7 @@ $(function () {
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
 
-            me.$dashboardName.watermark(createDashboard.namePlaceholder, { useNative: false, className: "fr-watermark" });
+            me.$dashboardName.watermark(createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();

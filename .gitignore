@@ -733,3 +733,7 @@ RS/Reporting/ReportManager/ReportManagerMVC/Forerunner.SDK.ConfigTool/Forerunner
 RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Release/PublishExtension.dll.config
 RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Debug/PublishFRExtension.dll.config
 RS/Reporting/ReportManager/PublishExtension/PublishExtension/bin/Release/PublishFRExtension.dll.config
+ForerunnerSwBI/ForerunnerSwBI/bin/Debug/*
+ForerunnerSwBI/ReportCodeUnitTests/obj/Debug/*
+ForerunnerSwBI/ForerunnerSwBI/ForerunnerSwBI.rptproj.user
+ForerunnerSwBI/ReportCodeUnitTests/bin/Debug/*

@@ -1409,8 +1409,9 @@ $(function () {
          */
         onInputFocus: function () {
             var me = this;
+
             if (me.options.onInputFocus)
-                me.options.onInputFocus.call(me);
+                me.options.onInputFocus();
         },
 
         _allowSwipe: true,
@@ -5210,6 +5211,7 @@ $(function () {
     // This is an internal class right now.
     ssr.DefaultAppTemplate = function (options) {
         var me = this;
+
         me.options = {
             $container: null,
             isFullScreen: true
@@ -5833,45 +5835,54 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
 
-            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus);
-            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur);
+            $viewer.reportViewer("option", "onInputFocus", me.onInputFocus());
+            $viewer.reportViewer("option", "onInputBlur", me.onInputBlur());
         },
         onInputFocus: function () {
             var me = this;
 
             if (forerunner.device.isiOS()) {
-                setTimeout(function () {
-                    if (me.options.isFullScreen)
-                        me._makePositionAbsolute();
+                return function () {
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionAbsolute();
 
-                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                    me.$container.addClass("fr-layout-container-noscroll");
+                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                        me.$container.addClass("fr-layout-container-noscroll");
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
-                    me.ResetSize();
-                }, 50);
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
+                        me.ResetSize();
+                    }, 50);
+                }
             }
+
+            return null;
         },
         onInputBlur: function () {
             var me = this;
+
             if (forerunner.device.isiOS()) {
-                setTimeout(function () {
-                    if (me.options.isFullScreen)
-                        me._makePositionFixed();
+                return function () {
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionFixed();
 
-                    if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                        me.$container.removeClass("fr-layout-container-noscroll");
-                    }
+                        if (me.$leftpane && !me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                            me.$container.removeClass("fr-layout-container-noscroll");
+                        }
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
 
-                    if (me.ResetSize)
-                        me.ResetSize();
-                }, 50);
+                        if (me.ResetSize)
+                            me.ResetSize();
+                    }, 50);
+                }
             }
+
+            return null;
         },
         getScrollPosition: function () {
             var me = this;
@@ -8128,7 +8139,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -8394,7 +8405,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -9315,7 +9326,7 @@ $(function () {
             var me = this;
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
         },
         _init: function () {
             var me = this;
@@ -9490,7 +9501,7 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
 
             me._updateBtnStates();
         },
@@ -10806,8 +10817,8 @@ $(function () {
 
             me.element.append($container);
 
-            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, { useNative: false, className: "fr-watermark" });
-            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, { useNative: false, className: "fr-watermark" });
+            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, forerunner.config.getWatermarkConfig());
 
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
@@ -11390,7 +11401,7 @@ $(function () {
 
             me._validateForm(me.$form);
 
-            me.$uploadFile.watermark(uploadFile.uploadFileLabel, { useNative: false, className: "fr-watermark" });
+            me.$uploadFile.watermark(uploadFile.uploadFileLabel, forerunner.config.getWatermarkConfig());
 
             // Add a transparent file type <input> tag overlaid on top of the "Browse Button" This will enable
             // us to have the look and feel we want and also be compatible on all browsers
@@ -11516,7 +11527,7 @@ $(function () {
 
             me._validateForm(me.$form);
 
-            me.$folderName.watermark(newFolder.name, { useNative: false, className: "fr-watermark" });
+            me.$folderName.watermark(newFolder.name, forerunner.config.getWatermarkConfig());
         },
         _submit: function () {
             var me = this;
@@ -14909,7 +14920,7 @@ $(function () {
         _hasPostedBackWithoutSubmitForm: false,
         _dependencyList: null,
         _isDropdownTree: true, // indicate whether apply cascading tree
-        _writeParamDoneCallback: null,
+        _writeParamDoneCallback: null,        
 
         _init: function () {
             var me = this;
@@ -15567,7 +15578,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-watermark" });
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -15784,14 +15795,18 @@ $(function () {
             var me = this;
 
             if (forerunner.device.isTouch()) {
-                $control.off("focus").on("focus", function () {
-                    var newTop = this.offsetTop -28;
-
-                    setTimeout(function () {
-                        me.$params.scrollTop(newTop);
-                    }, 500);
-                });
+                $control.off("focus", me._setScrollPos).on("focus", { me: me }, me._setScrollPos);
             }
+        },
+        _setScrollPos: function (event) {
+            var me = event.data.me,
+                element = event.target;
+
+            var newTop = element.offsetTop - 28;
+
+            setTimeout(function () {
+                me.$params.scrollTop(newTop);
+            }, 500);
         },
         _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
@@ -15947,6 +15962,8 @@ $(function () {
                         setTimeout(function () { me._submitForm(pageNum); }, 100);
                     }
 
+                    $control.valid();
+
                     return false;
                 },
                 focus: function (event, obj) {
@@ -15955,13 +15972,14 @@ $(function () {
                 response: function (event, obj) {
                     //obj.content.length will equal = 0 if no item match.
                     if (obj.content.length === 0) {
+
                         $control.addClass("fr-param-autocomplete-error");
                     }
                     else {
                         $control.removeClass("fr-param-autocomplete-error");
                     }
 
-                    $control.valid();
+                    $control.val() !== "" && $control.valid();
                 },
                 change: function (event, obj) {
                     if (!obj.item) {
@@ -18045,7 +18063,7 @@ $(function () {
                 $input.val(encodedSetName).attr("title", encodedSetName);
             }
             else {
-                $input.watermark(manageParamSets.newSet, { useNative: false, className: "fr-watermark" });
+                $input.watermark(manageParamSets.newSet, forerunner.config.getWatermarkConfig());
             }
 
             $input.on("change", function (e) {
@@ -19100,7 +19118,7 @@ $(function () {
             }
 
             return null;
-        },
+        }
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportViewer/js/DSCredential.js
@@ -19471,8 +19489,8 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-                onInputFocus: layout.onInputFocus,
-                onInputBlur: layout.onInputBlur,
+                onInputFocus: layout.onInputFocus(),
+                onInputBlur: layout.onInputBlur(),
                 userSettings: me._getUserSettings()
             });
 
@@ -20350,7 +20368,7 @@ $(function () {
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
 
-            me.$dashboardName.watermark(createDashboard.namePlaceholder, { useNative: false, className: "fr-watermark" });
+            me.$dashboardName.watermark(createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -20762,7 +20780,7 @@ $(function () {
             name && $input.attr("name", name);
 
             if (placeholder)
-                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
+                $input.watermark(placeholder, forerunner.config.getWatermarkConfig());
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -20772,7 +20790,7 @@ $(function () {
             var me = this;
             var $input = new $("<TEXTAREA />");
             if (placeholder)
-                $input.watermark(placeholder, { useNative: false, className: "fr-watermark" });
+                $input.watermark(placeholder, forerunner.config.getWatermarkConfig());
             for (var i = 0; i < listOfClasses.length; i++) {
                 $input.addClass(listOfClasses[i]);
             }
@@ -28485,7 +28503,7 @@ $(function () {
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-            me.$reportInput.watermark(reportProperties.selectReport, { useNative: false, className: "fr-watermark" });
+            me.$reportInput.watermark(reportProperties.selectReport, forerunner.config.getWatermarkConfig());
             me.$reportInput.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
             });

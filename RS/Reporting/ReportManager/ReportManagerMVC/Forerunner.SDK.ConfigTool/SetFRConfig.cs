@@ -722,10 +722,11 @@ namespace Forerunner.SDK.ConfigTool
                 results = Host.UI.Prompt(null, null, descriptions);
                 AssignResult(ref _licenseKey, LicenseKeyPrompt, results);
                 AssignResult(ref _defaultUserDomain, DefaultUserDomainPrompt, results);
-                AssignResult(ref _reportServerDB, ReportServerDBPrompt, results);
+                AssignResult(ref _reportServerWSUrl, ReportServerWSUrlPrompt, results);
                 AssignResult(ref _reportServerDataSource, ReportServerDataSourcePrompt, results);
-                AssignResult(ref _reportServerDBUser, ReportServerDBUserPrompt, results);
                 AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);
+                AssignResult(ref _reportServerDBUser, ReportServerDBUserPrompt, results);
+                AssignResult(ref _reportServerDB, ReportServerDBPrompt, results);
 
                 // The password is always a different pattern than the rest
                 PSObject value = null;

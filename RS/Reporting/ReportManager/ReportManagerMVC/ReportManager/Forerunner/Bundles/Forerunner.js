@@ -1183,7 +1183,8 @@ $(function () {
          *
          * @param {String} path - Path that need to handle
          *
-         * @return {String} - Its parent path, return null if not has
+         * @return {String} - Its parent path, return null if null path or 
+         *                    already at the root
          * @member
          */
         getParentPath: function (path) {

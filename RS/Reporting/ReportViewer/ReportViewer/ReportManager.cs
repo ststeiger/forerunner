@@ -1792,7 +1792,10 @@ namespace Forerunner.SSRS.Manager
             }
             finally
             {
-                sqlImpersonator.Dispose();
+                if (sqlImpersonator != null)
+                {
+                    sqlImpersonator.Dispose();
+                }
                 threadContext.Dispose();
             }
         }

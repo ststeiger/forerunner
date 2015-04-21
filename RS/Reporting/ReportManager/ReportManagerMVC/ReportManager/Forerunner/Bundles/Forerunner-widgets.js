@@ -1039,7 +1039,7 @@ $(function () {
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();            
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.toolbarHeight) + "px");
                 $rowHeader.css("visibility", "visible");
             }
             else {
@@ -1129,13 +1129,19 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (me.$reportAreaContainer) {
+            if (forerunner.config.getCustomSettingsValue("AppleFixedToolbarBug", "on") === "on") {
 
-                me.$reportAreaContainer.css("display", "block");
-                me.$reportAreaContainer.css("width", $(window).width());
-                me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight);
-                me.$reportAreaContainer.css("overflow", "auto");
-                me._ScrollInner = true;
+                if (me.$reportAreaContainer) {
+
+                    me.$reportAreaContainer.css("display", "block");
+                    me.$reportAreaContainer.css("width", $(window).width());
+                    me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight - 100);
+                    me.$reportAreaContainer.css("overflow", "auto");
+                    me._ScrollInner = true;
+                }
+            }
+            else {
+                me.toolbarHeight = 0;
             }
   
         },
@@ -13824,7 +13830,6 @@ $(function () {
 
                             //Undo rotate if needed
                             me._unRotate(respCols.Columns[BRObj.ColumnIndex].Header.children(0).children(0));
-
                             $ExtRow = null;
                         }
                         else {

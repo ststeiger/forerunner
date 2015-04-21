@@ -20,5 +20,7 @@
 	"Debug":"off",
 	"SubscriptionInputSize":"50",
 	"ManageSubscriptionUI":"default",
-	"EnableGestures":"on"
+	"EnableGestures":"on",
+	"BigTablixBatchSize":3000,
+	"AppleFixedToolbarBug":"on"
 }

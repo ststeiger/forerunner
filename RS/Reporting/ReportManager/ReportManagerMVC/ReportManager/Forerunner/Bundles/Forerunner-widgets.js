@@ -13830,7 +13830,6 @@ $(function () {
 
                             //Undo rotate if needed
                             me._unRotate(respCols.Columns[BRObj.ColumnIndex].Header.children(0).children(0));
-
                             $ExtRow = null;
                         }
                         else {

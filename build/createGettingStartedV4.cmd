@@ -66,6 +66,12 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+:: \tools
+robocopy %SRC_GETTING_STARTED_V4%\tools %DEST_TOOLS% /S /LOG+:%NUGET_PACKAGE_LOG%
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 :: Create the package
 set PKG_FILE=Forerunner_GettingStartedV4.%BUILD_NUMBER%.nupkg
 echo Creating %PKG_FILE%... >> %NUGET_PACKAGE_LOG%

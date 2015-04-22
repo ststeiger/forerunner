@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"Folder de căutare Creat eșuată",
     "addTagsSucceeded":"Adauga etichete Reușit",
     "addTagsFailed":"Adauga Tag-uri eșuate",
-    "invalidName":"Invalid Name"
+    "invalidName":"numele invalid"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",

@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"Cuardaigh Fillteán Cruthaithe Theip",
     "addTagsSucceeded":"Add Tags Comharba",
     "addTagsFailed":"Add Tags Theip",
-    "invalidName":"Invalid Name"
+    "invalidName":"an t-ainm neamhbhailí"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",

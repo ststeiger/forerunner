@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"Поиск Папка создания Неудачный",
     "addTagsSucceeded":"Добавить метки успешно завершено",
     "addTagsFailed":"Добавить метки Failed",
-    "invalidName":"Invalid Name"
+    "invalidName":"Неправильное имя"
   },
   "errorTag": {
     "moreDetail":"Подробнее",

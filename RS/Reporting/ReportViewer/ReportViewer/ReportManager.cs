@@ -621,6 +621,7 @@ namespace Forerunner.SSRS.Manager
 
         public String SaveCatalogResource(SetResource setResource)
         {
+            bool invalidItemName = false;
             bool notFound = false;
             rs.Credentials = GetCredentials();
             byte[] contentUTF8 = setResource.contentsUTF8 != null ? setResource.contentsUTF8 : Encoding.UTF8.GetBytes(setResource.contents);
@@ -644,6 +645,11 @@ namespace Forerunner.SSRS.Manager
                 }
                 catch (System.Web.Services.Protocols.SoapException e)
                 {
+                    invalidItemName = String.Compare(e.Detail["ErrorCode"].InnerText, "rsInvalidItemName", true) == 0;
+                    if (invalidItemName)
+                    {
+                        throw new ArgumentException("Invalid resource name:" + setResource.resourceName, "name");
+                    }
                     notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
                     if (!notFound)
                     {
@@ -662,6 +668,11 @@ namespace Forerunner.SSRS.Manager
             }
             catch (System.Web.Services.Protocols.SoapException e)
             {
+                invalidItemName = String.Compare(e.Detail["ErrorCode"].InnerText, "rsInvalidItemName", true) == 0;
+                if (invalidItemName)
+                {
+                    throw new ArgumentException("Invalid resource name:" + setResource.resourceName, ", name");
+                }
                 notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
                 if (!notFound)
                 {

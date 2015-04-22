@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Cuardaigh Fillteán Cruthaithe Comharba",
     "saveSearchFolderFailed":"Cuardaigh Fillteán Cruthaithe Theip",
     "addTagsSucceeded":"Add Tags Comharba",
-    "addTagsFailed":"Add Tags Theip"
+    "addTagsFailed":"Add Tags Theip",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",

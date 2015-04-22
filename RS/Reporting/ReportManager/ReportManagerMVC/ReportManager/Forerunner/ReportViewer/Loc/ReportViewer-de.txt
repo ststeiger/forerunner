@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Suchordner Erstellt Nachfolger",
     "saveSearchFolderFailed":"Suchordner Erstellt fehlgeschlagen",
     "addTagsSucceeded":"Schlagworte hinzufügen Nachfolger",
-    "addTagsFailed":"Schlagworte hinzufügen fehlgeschlagen"
+    "addTagsFailed":"Schlagworte hinzufügen fehlgeschlagen",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",

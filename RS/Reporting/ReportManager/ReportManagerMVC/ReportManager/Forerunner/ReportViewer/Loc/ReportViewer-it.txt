@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Ricerca cartella Creato Riuscito",
     "saveSearchFolderFailed":"Ricerca cartella Creazione non riuscita",
     "addTagsSucceeded":"Aggiungi Tag Completato",
-    "addTagsFailed":"Aggiungi Tag falliti"
+    "addTagsFailed":"Aggiungi Tag falliti",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",

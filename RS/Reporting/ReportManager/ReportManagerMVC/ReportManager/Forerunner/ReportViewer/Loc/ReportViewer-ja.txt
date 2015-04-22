@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"検索フォルダ成功作成",
     "saveSearchFolderFailed":"検索フォルダに失敗しました作成",
     "addTagsSucceeded":"成功タグを追加する",
-    "addTagsFailed":"障害タグを追加する"
+    "addTagsFailed":"障害タグを追加する",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",

@@ -92,6 +92,7 @@ $(function () {
                     result.status = true;
                 },
                 fail: function (jqXHR) {
+                    result.responseJSON = jqXHR.responseJSON;
                     console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }

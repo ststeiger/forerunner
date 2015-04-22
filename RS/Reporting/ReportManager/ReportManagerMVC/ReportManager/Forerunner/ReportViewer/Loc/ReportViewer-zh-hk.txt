@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"搜索文件夾創建成功",
     "saveSearchFolderFailed":"搜索文件夾創建失敗",
     "addTagsSucceeded":"添加標籤成功",
-    "addTagsFailed":"添加標籤失敗"
+    "addTagsFailed":"添加標籤失敗",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"點擊查看更多訊息",

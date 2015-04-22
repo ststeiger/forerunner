@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Leita Mappa Búið Eftirmaður",
     "saveSearchFolderFailed":"Leita Mappa Búið mistókst",
     "addTagsSucceeded":"Bæta Tags Eftirmaður",
-    "addTagsFailed":"Bæta Tags mistókst"
+    "addTagsFailed":"Bæta Tags mistókst",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",

@@ -30,7 +30,8 @@
     "saveSearchFolderSucceeded":"Search Folder Created Succeeded",
     "saveSearchFolderFailed":"Search Folder Created Failed",
     "addTagsSucceeded":"Add Tags Succeeded",
-    "addTagsFailed":"Add Tags Failed"
+    "addTagsFailed":"Add Tags Failed",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",
@@ -133,10 +134,10 @@
     "ResponsiveUI":"Responsive UI",
     "Email":"Email",
     "AdminUI":"Admin UI",
-	"ViewStyle" : "View Style",
-	"ViewStyleLarge" : "Large",
-	"ViewStyleSmall" : "Small",
-	"ViewStyleList" : "List"
+    "ViewStyle":"View Style",
+    "ViewStyleLarge":"Large",
+    "ViewStyleSmall":"Small",
+    "ViewStyleList":"List"
   },
   "paramPane": {
     "nullField":"Null",

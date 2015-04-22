@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Carpeta de búsqueda Creado Sucedido",
     "saveSearchFolderFailed":"Buscar carpeta creada Failed",
     "addTagsSucceeded":"Añadir etiquetas Succeeded",
-    "addTagsFailed":"Añadir etiquetas fallidas"
+    "addTagsFailed":"Añadir etiquetas fallidas",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",

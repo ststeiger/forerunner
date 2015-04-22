@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Pasta de Pesquisa Criado Sucedido",
     "saveSearchFolderFailed":"Pasta de Pesquisa Criado Failed",
     "addTagsSucceeded":"Adicionar tags Sucedido",
-    "addTagsFailed":"Adicionar tags Falha"
+    "addTagsFailed":"Adicionar tags Falha",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",

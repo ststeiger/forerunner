@@ -6198,6 +6198,7 @@ $(function () {
                     result.status = true;
                 },
                 fail: function (jqXHR) {
+                    result.responseJSON = jqXHR.responseJSON;
                     console.log("ssr.DashboardModel.save() - " + jqXHR.statusText);
                     console.log(jqXHR);
                 }
@@ -20418,7 +20419,11 @@ $(function () {
                 return;
             }
 
-            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
+            if (result.responseJSON && result.responseJSON.ExceptionMessage.substr(0, 21).toLowerCase() == "invalid resource name") {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName, createDashboard.title);
+            } else {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
+            }
         },
         /**
          * Open create dashboard dialog

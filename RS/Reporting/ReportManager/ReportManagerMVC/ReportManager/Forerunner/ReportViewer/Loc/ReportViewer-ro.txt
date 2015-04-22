@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Folder de căutare Creat Urmat",
     "saveSearchFolderFailed":"Folder de căutare Creat eșuată",
     "addTagsSucceeded":"Adauga etichete Reușit",
-    "addTagsFailed":"Adauga Tag-uri eșuate"
+    "addTagsFailed":"Adauga Tag-uri eșuate",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",

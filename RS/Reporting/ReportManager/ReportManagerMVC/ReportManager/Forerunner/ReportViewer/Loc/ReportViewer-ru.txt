@@ -22,7 +22,8 @@
     "saveSearchFolderSucceeded":"Поиск Папка создания Преемник",
     "saveSearchFolderFailed":"Поиск Папка создания Неудачный",
     "addTagsSucceeded":"Добавить метки успешно завершено",
-    "addTagsFailed":"Добавить метки Failed"
+    "addTagsFailed":"Добавить метки Failed",
+    "invalidName":"Invalid Name"
   },
   "errorTag": {
     "moreDetail":"Подробнее",

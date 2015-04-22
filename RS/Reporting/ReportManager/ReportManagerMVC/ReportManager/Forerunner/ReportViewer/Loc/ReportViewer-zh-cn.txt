@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"搜索文件夹创建失败",
     "addTagsSucceeded":"添加标签成功",
     "addTagsFailed":"添加标签失败",
-    "invalidName":"Invalid Name"
+    "invalidName":"无效名称"
   },
   "errorTag": {
     "moreDetail":"点击查看更多信息",

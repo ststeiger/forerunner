@@ -13843,7 +13843,6 @@ $(function () {
                                 ric.css("height", CellHeight + "mm");
                                 $ExtCell.append(ric);
                             }
-
                         }
                     }
                 });

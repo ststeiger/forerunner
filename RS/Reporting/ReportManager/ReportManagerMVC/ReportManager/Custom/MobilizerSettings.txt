@@ -1,6 +1,6 @@
 {
 	"MaxBigDropdownItem": 50,
-	"MinItemToEnableBigDropdownOnTouch": 10,
+	"MinItemToEnableBigDropdownOnTouch": 20,
 	"EnableCascadingTree": "on",
 	"MaxResponsiveResolution": 1280,
 	"FullScreenPageNavSize" : 768,

@@ -575,7 +575,7 @@ $(function () {
 
                     if (param.ValidValues !== "") { // Dropdown box
                         bindingEnter = false;
-                        $element = forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10) ?
+                        $element = forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 20) ?
                             me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
                             me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                     }

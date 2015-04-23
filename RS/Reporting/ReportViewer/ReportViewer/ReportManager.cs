@@ -648,7 +648,7 @@ namespace Forerunner.SSRS.Manager
                     invalidItemName = String.Compare(e.Detail["ErrorCode"].InnerText, "rsInvalidItemName", true) == 0;
                     if (invalidItemName)
                     {
-                        throw new ArgumentException("Invalid resource name:" + setResource.resourceName, "name");
+                        throw new ArgumentException("Invalid resource name:" + setResource.resourceName);
                     }
                     notFound = String.Compare(e.Detail["HttpStatus"].InnerText, "400", true) == 0;
                     if (!notFound)

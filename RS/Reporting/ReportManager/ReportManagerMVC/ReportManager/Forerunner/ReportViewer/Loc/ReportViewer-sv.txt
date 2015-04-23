@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"Sökmapp Skapad misslyckades",
     "addTagsSucceeded":"Lägg till etiketter Efterföljande",
     "addTagsFailed":"Lägg till etiketter Misslyckade",
-    "invalidName":"Invalid Name"
+    "invalidName":"ogiltigt namn"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",

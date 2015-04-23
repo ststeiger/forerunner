@@ -23,7 +23,7 @@
     "saveSearchFolderFailed":"Dossier de recherche Créé en déroute",
     "addTagsSucceeded":"Ajouter des mots clés Réussi",
     "addTagsFailed":"Ajouter des mots clés perdus",
-    "invalidName":"Invalid Name"
+    "invalidName":"nom invalide"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",

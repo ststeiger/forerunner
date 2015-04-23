@@ -778,8 +778,7 @@ $(function () {
                             }
                             if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
-                            break;
-
+                            
                             if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") === "on") {
                                 if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                     ev.gesture.preventDefault();

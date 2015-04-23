@@ -86,10 +86,14 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data && data.ResourceName) {
-                        result.resourceName = data.ResourceName;
+                    if (data && data.Exception) {
+                        result = data;
                     }
-                    result.status = true;
+                    else if (data && data.ResourceName) {
+                        result.resourceName = data.ResourceName;
+                        result.status = true;
+                    }
+                    
                 },
                 fail: function (jqXHR) {
                     result.responseJSON = jqXHR.responseJSON;

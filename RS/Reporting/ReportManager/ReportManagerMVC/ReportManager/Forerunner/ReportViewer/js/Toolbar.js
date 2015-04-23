@@ -48,6 +48,11 @@ $(function () {
                     me._clearBtnStates();
                 }
                 else {
+                    // If the report changes size in a dashboard, it will change the size of the
+                    // containing <div> and therefore the toolbar needs to resize just like the 
+                    // case of a window resize
+                    me.windowResize();
+
                     $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                     var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 

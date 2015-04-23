@@ -271,7 +271,14 @@ namespace ReportManager.Controllers
         [HttpPost]
         public HttpResponseMessage SaveResource(SetResource setResource)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
+            try
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
         }
 
         [HttpGet]

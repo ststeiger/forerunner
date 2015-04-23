@@ -1498,8 +1498,7 @@ $(function () {
                             }
                             if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
-                            break;
-
+                            
                             if (forerunner.device.isTouch() && forerunner.config.getCustomSettingsValue("EnableGestures", "off") === "on") {
                                 if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                     ev.gesture.preventDefault();
@@ -6192,10 +6191,14 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data && data.ResourceName) {
-                        result.resourceName = data.ResourceName;
+                    if (data && data.Exception) {
+                        result = data;
                     }
-                    result.status = true;
+                    else if (data && data.ResourceName) {
+                        result.resourceName = data.ResourceName;
+                        result.status = true;
+                    }
+                    
                 },
                 fail: function (jqXHR) {
                     result.responseJSON = jqXHR.responseJSON;
@@ -20418,8 +20421,8 @@ $(function () {
                 return;
             }
 
-            if (result.responseJSON && result.responseJSON.ExceptionMessage.substr(0, 21).toLowerCase() == "invalid resource name") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName, createDashboard.title);
+            if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
             } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
             }

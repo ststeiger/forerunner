@@ -177,8 +177,8 @@ $(function () {
                 return;
             }
 
-            if (result.responseJSON && result.responseJSON.ExceptionMessage.substr(0, 21).toLowerCase() == "invalid resource name") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName, createDashboard.title);
+            if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
             } else {
                 forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
             }

@@ -259,24 +259,28 @@ namespace Forerunner.SSRS.Manager
             
 
             rs.Credentials = WSCredentials == null ? null : new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = ReportServerDataSource;
-            builder.InitialCatalog = ReportServerDB;
-            if (useIntegratedSecurity)
+
+            if (UseMobilizerDB)
             {
-                builder.IntegratedSecurity = true;
-            }
-            else
-            {
-               
-                builder.UserID = DBCredentials.UserName;
-                String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
-                builder.Password = Password;
-            }
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                builder.DataSource = ReportServerDataSource;
+                builder.InitialCatalog = ReportServerDB;
+                if (useIntegratedSecurity)
+                {
+                    builder.IntegratedSecurity = true;
+                }
+                else
+                {
+
+                    builder.UserID = DBCredentials.UserName;
+                    String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+                    builder.Password = Password;
+                }
 
 
-            SQLConn = new SqlConnection(builder.ConnectionString);
-            CheckSchema();
+                SQLConn = new SqlConnection(builder.ConnectionString);
+                CheckSchema();
+            }
         }
 
         public void SetCredentials(Credentials Credentials)

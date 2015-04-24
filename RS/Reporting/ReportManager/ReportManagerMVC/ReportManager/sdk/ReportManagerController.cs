@@ -55,7 +55,8 @@ namespace ReportManager.Controllers
    
         static ReportManagerController()
         {
-            ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            if (UseMobilizerDB)
+                ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
         }
 
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)

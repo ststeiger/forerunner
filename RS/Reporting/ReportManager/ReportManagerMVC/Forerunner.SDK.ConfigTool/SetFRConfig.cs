@@ -331,35 +331,42 @@ namespace Forerunner.SDK.ConfigTool
         {
             WriteVerbose("Start TestConnection()");
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = ReportServerDataSource;
-            builder.InitialCatalog = ReportServerDB;
-            bool isNative = String.Compare(IsNative, "true", true) == 0;
-            string dbServerPWD = GetStringFromSecureString(ReportServerDBPWD);
-            if (!isUseIntegratedSecurityForSQL())
-            {
-                builder.UserID = ReportServerDBUser;
-                builder.Password = dbServerPWD;
-            }
-            else
-            {
-                builder.IntegratedSecurity = true;
-            }
-
+            string result = "";
             System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
-            string result;
+            bool isNative = String.Compare(IsNative, "true", true) == 0;
 
-            //Test database connection
-            if (isUseIntegratedSecurityForSQL())
-                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, dbServerPWD);
-            else
-                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
-
-            if (!StaticMessages.testSuccess.Equals(result))
+            if (isUseMobilizerDB())
             {
-                errorMessage.AppendLine(result);
-                errorMessage.AppendLine();
+                WriteVerbose("Testing the DB connection");
+
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                builder.DataSource = ReportServerDataSource;
+                builder.InitialCatalog = ReportServerDB;
+                string dbServerPWD = GetStringFromSecureString(ReportServerDBPWD);
+                if (!isUseIntegratedSecurityForSQL())
+                {
+                    builder.UserID = ReportServerDBUser;
+                    builder.Password = dbServerPWD;
+                }
+                else
+                {
+                    builder.IntegratedSecurity = true;
+                }
+
+                //Test database connection
+                if (isUseIntegratedSecurityForSQL())
+                    result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, ReportServerDBUser, ReportServerDBDomain, dbServerPWD);
+                else
+                    result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+
+                if (!StaticMessages.testSuccess.Equals(result))
+                {
+                    errorMessage.AppendLine(result);
+                    errorMessage.AppendLine();
+                }
             }
+
+            WriteVerbose("Testing the Web Service URL");
 
             //Test web service url connection
             result = ConfigToolHelper.tryWebServiceUrl(!isNative, ReportServerWSUrl);
@@ -676,42 +683,41 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             // DefaultUserDomain
-            string DefaultUserDomainPrompt;
             string userDomain = Environment.GetEnvironmentVariable("USERDOMAIN");
             if ((DefaultUserDomain == null || DefaultUserDomain.Length == 0) &&
                 (userDomain != null && userDomain.Length > 0))
             {
                 DefaultUserDomain = userDomain;
             }
-            AddPrompt("DefaultUserDomain", DefaultUserDomain, "Reporting Services default user login domain", ref descriptions, out DefaultUserDomainPrompt);
 
             // ReportServerWSUrl
             string ReportServerWSUrlPrompt;
             AddPrompt("ReportServerWSUrl", ReportServerWSUrl, "Reporting Services Web Service URL", ref descriptions, out ReportServerWSUrlPrompt);
 
+            // Prompt strings
             string ReportServerDBUserPrompt = "";
             string ReportServerDBPWDPrompt = "ReportServerDBPWD";
             string UseIntegratedSecurityForSQLPrompt = "";
             string ReportServerDataSourcePrompt = "";
-
-            // ReportServerDataSource
-            AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
-
-            // UseIntegratedSecurityForSQL
-            AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
-
-            // ReportServerDBUser
-            AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
-
-            // ReportServerDBPWD
-            var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
-            description.SetParameterType(Type.GetType("System.Security.SecureString"));
-            description.HelpMessage = "Database login password";
-            descriptions.Add(description);
-
             string ReportServerDBPrompt = "";
+
             if (isUseMobilizerDB())
             {
+                // ReportServerDataSource
+                AddPrompt("ReportServerDataSource", ReportServerDataSource, "Database login user name", ref descriptions, out ReportServerDataSourcePrompt);
+
+                // UseIntegratedSecurityForSQL
+                AddPrompt("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL, authenticationHelp, ref descriptions, out UseIntegratedSecurityForSQLPrompt);
+
+                // ReportServerDBUser
+                AddPrompt("ReportServerDBUser", ReportServerDBUser, "Database login user name", ref descriptions, out ReportServerDBUserPrompt);
+
+                // ReportServerDBPWD
+                var description = new System.Management.Automation.Host.FieldDescription(ReportServerDBPWDPrompt);
+                description.SetParameterType(Type.GetType("System.Security.SecureString"));
+                description.HelpMessage = "Database login password";
+                descriptions.Add(description);
+
                 // ReportServerDB
                 AddPrompt("ReportServerDB", ReportServerDB, "Report Server DB Name", ref descriptions, out ReportServerDBPrompt);
             }
@@ -721,7 +727,6 @@ namespace Forerunner.SDK.ConfigTool
             {
                 results = Host.UI.Prompt(null, null, descriptions);
                 AssignResult(ref _licenseKey, LicenseKeyPrompt, results);
-                AssignResult(ref _defaultUserDomain, DefaultUserDomainPrompt, results);
                 AssignResult(ref _reportServerWSUrl, ReportServerWSUrlPrompt, results);
                 AssignResult(ref _reportServerDataSource, ReportServerDataSourcePrompt, results);
                 AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);
@@ -957,7 +962,7 @@ namespace Forerunner.SDK.ConfigTool
             AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
             AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
             AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
-            AssignForerunnerSetting(ref _useMobilizerDB, "UseMobilizerDB", "true");
+            AssignForerunnerSetting(ref _useMobilizerDB, "UseMobilizerDB", "false");
             AssignForerunnerSetting(ref _seperateDB, "SeperateDB", "false");
             AssignForerunnerSetting(ref _isNative, "IsNative", "true");
             AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");

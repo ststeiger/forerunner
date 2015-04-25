@@ -1,4 +1,4 @@
-﻿.fr-param-container { min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -ms-overflow-style:auto; }
+﻿.fr-param-container { position:relative; min-width: 270px; width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -ms-overflow-style:auto; }
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
@@ -183,9 +183,3 @@
 .error { color: #E80C4D; }
 .fr-param-form{}
     .fr-param-form .fr-param-button{ width: 110px; height: 39px; margin-left: 10px; text-align: center; border: 1px solid #8c9eba; cursor: pointer; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
-
-@media only screen and (max-height : 340px) and (orientation : landscape) {
-    .ui-autocomplete {
-        height: 170px;
-    }
-}

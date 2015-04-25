@@ -4661,27 +4661,6 @@ $(function () {
                     index--;
                 }
             }
-
-            /*
-            var smallClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-small";
-            var mediumClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-medium";
-            var largeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-large";
-            var veryLargeClass = "." + me.options.toolClass + " .fr-toolbar-hidden-on-very-large";
-
-            // Remove any previously added fr-toolbar-hidden classes
-            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-core-hidden");
-
-            var width = me.element.width();
-            if (width < 480) {
-                me.element.find(smallClass).addClass("fr-core-hidden");
-            } else if (width < 568) {
-                me.element.find(mediumClass).addClass("fr-core-hidden");
-            } else if (width < 768) {
-                me.element.find(largeClass).addClass("fr-core-hidden");
-            } else {  // Screen >= 769
-                me.element.find(veryLargeClass).addClass("fr-core-hidden");
-            }
-            */
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
@@ -8127,6 +8106,11 @@ $(function () {
                     me._clearBtnStates();
                 }
                 else {
+                    // If the report changes size in a dashboard, it will change the size of the
+                    // containing <div> and therefore the toolbar needs to resize just like the 
+                    // case of a window resize
+                    me.windowResize();
+
                     $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                     var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 

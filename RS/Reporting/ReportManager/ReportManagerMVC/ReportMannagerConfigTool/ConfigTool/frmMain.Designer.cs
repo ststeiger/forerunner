@@ -43,6 +43,7 @@
             this.lblWSUrl = new System.Windows.Forms.Label();
             this.txtWSUrl = new System.Windows.Forms.TextBox();
             this.gbDBLoginInfo = new System.Windows.Forms.GroupBox();
+            this.chkNoDB = new System.Windows.Forms.CheckBox();
             this.lblDomain = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -91,12 +92,12 @@
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
             this.tabUpdate = new System.Windows.Forms.TabPage();
+            this.btnUpdateCheck = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.txtLatestVer = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtCurrVer = new System.Windows.Forms.TextBox();
-            this.btnUpdateCheck = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -200,6 +201,7 @@
             // 
             // gbDBLoginInfo
             // 
+            this.gbDBLoginInfo.Controls.Add(this.chkNoDB);
             this.gbDBLoginInfo.Controls.Add(this.lblDomain);
             this.gbDBLoginInfo.Controls.Add(this.txtDomain);
             this.gbDBLoginInfo.Controls.Add(this.label1);
@@ -215,6 +217,13 @@
             resources.ApplyResources(this.gbDBLoginInfo, "gbDBLoginInfo");
             this.gbDBLoginInfo.Name = "gbDBLoginInfo";
             this.gbDBLoginInfo.TabStop = false;
+            // 
+            // chkNoDB
+            // 
+            resources.ApplyResources(this.chkNoDB, "chkNoDB");
+            this.chkNoDB.Name = "chkNoDB";
+            this.chkNoDB.UseVisualStyleBackColor = true;
+            this.chkNoDB.CheckedChanged += new System.EventHandler(this.NoDB_CheckedChanged);
             // 
             // lblDomain
             // 
@@ -560,6 +569,13 @@
             this.tabUpdate.Name = "tabUpdate";
             this.tabUpdate.UseVisualStyleBackColor = true;
             // 
+            // btnUpdateCheck
+            // 
+            resources.ApplyResources(this.btnUpdateCheck, "btnUpdateCheck");
+            this.btnUpdateCheck.Name = "btnUpdateCheck";
+            this.btnUpdateCheck.UseVisualStyleBackColor = true;
+            this.btnUpdateCheck.Click += new System.EventHandler(this.btnUpdateCheck_Click);
+            // 
             // btnUpdate
             // 
             resources.ApplyResources(this.btnUpdate, "btnUpdate");
@@ -588,13 +604,6 @@
             resources.ApplyResources(this.txtCurrVer, "txtCurrVer");
             this.txtCurrVer.Name = "txtCurrVer";
             this.txtCurrVer.ReadOnly = true;
-            // 
-            // btnUpdateCheck
-            // 
-            resources.ApplyResources(this.btnUpdateCheck, "btnUpdateCheck");
-            this.btnUpdateCheck.Name = "btnUpdateCheck";
-            this.btnUpdateCheck.UseVisualStyleBackColor = true;
-            this.btnUpdateCheck.Click += new System.EventHandler(this.btnUpdateCheck_Click);
             // 
             // frmMain
             // 
@@ -695,6 +704,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtCurrVer;
         private System.Windows.Forms.Button btnUpdateCheck;
+        private System.Windows.Forms.CheckBox chkNoDB;
     }
 }
 

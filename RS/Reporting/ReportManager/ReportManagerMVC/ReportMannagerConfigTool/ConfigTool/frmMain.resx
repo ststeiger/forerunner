@@ -120,723 +120,18 @@
   <metadata name="folderSSRS.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="&gt;&gt;btnUpdateSchema.Name" xml:space="preserve">
-    <value>btnUpdateSchema</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateSchema.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateSchema.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateSchema.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Name" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Name" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;btnTest.Name" xml:space="preserve">
-    <value>btnTest</value>
-  </data>
-  <data name="&gt;&gt;btnTest.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTest.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;btnTest.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Name" xml:space="preserve">
-    <value>btnApply</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnApply.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>449, 291</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="tabPage2.Text" xml:space="preserve">
-    <value>SSRS Connection</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;textBox1.Name" xml:space="preserve">
-    <value>textBox1</value>
-  </data>
-  <data name="&gt;&gt;textBox1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;textBox1.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;textBox1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;btnRemoveEx.Name" xml:space="preserve">
-    <value>btnRemoveEx</value>
-  </data>
-  <data name="&gt;&gt;btnRemoveEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnRemoveEx.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;btnRemoveEx.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;btnAddEx.Name" xml:space="preserve">
-    <value>btnAddEx</value>
-  </data>
-  <data name="&gt;&gt;btnAddEx.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnAddEx.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;btnAddEx.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;btnFolderBrowser.Name" xml:space="preserve">
-    <value>btnFolderBrowser</value>
-  </data>
-  <data name="&gt;&gt;btnFolderBrowser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnFolderBrowser.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;btnFolderBrowser.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblReportServer.Name" xml:space="preserve">
-    <value>lblReportServer</value>
-  </data>
-  <data name="&gt;&gt;lblReportServer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblReportServer.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;lblReportServer.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;txtReportServer.Name" xml:space="preserve">
-    <value>txtReportServer</value>
-  </data>
-  <data name="&gt;&gt;txtReportServer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtReportServer.Parent" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;txtReportServer.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>449, 291</value>
-  </data>
-  <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="tabPage3.Text" xml:space="preserve">
-    <value>SSRS Extensions</value>
-  </data>
-  <data name="&gt;&gt;tabPage3.Name" xml:space="preserve">
-    <value>tabPage3</value>
-  </data>
-  <data name="&gt;&gt;tabPage3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage3.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Name" xml:space="preserve">
-    <value>gbAuthType</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;btnInstallUWS.Name" xml:space="preserve">
-    <value>btnInstallUWS</value>
-  </data>
-  <data name="&gt;&gt;btnInstallUWS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnInstallUWS.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;btnInstallUWS.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;btnTestWeb.Name" xml:space="preserve">
-    <value>btnTestWeb</value>
-  </data>
-  <data name="&gt;&gt;btnTestWeb.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnTestWeb.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;btnTestWeb.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;btnApplyWebServer.Name" xml:space="preserve">
-    <value>btnApplyWebServer</value>
-  </data>
-  <data name="&gt;&gt;btnApplyWebServer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnApplyWebServer.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;btnApplyWebServer.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;lblPort.Name" xml:space="preserve">
-    <value>lblPort</value>
-  </data>
-  <data name="&gt;&gt;lblPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblPort.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;lblPort.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;txtPort.Name" xml:space="preserve">
-    <value>txtPort</value>
-  </data>
-  <data name="&gt;&gt;txtPort.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtPort.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;txtPort.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;lblSiteName.Name" xml:space="preserve">
-    <value>lblSiteName</value>
-  </data>
-  <data name="&gt;&gt;lblSiteName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSiteName.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;lblSiteName.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;txtSiteName.Name" xml:space="preserve">
-    <value>txtSiteName</value>
-  </data>
-  <data name="&gt;&gt;txtSiteName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtSiteName.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;txtSiteName.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;rdoUWS.Name" xml:space="preserve">
-    <value>rdoUWS</value>
-  </data>
-  <data name="&gt;&gt;rdoUWS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rdoUWS.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;rdoUWS.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;rdoIIS.Name" xml:space="preserve">
-    <value>rdoIIS</value>
-  </data>
-  <data name="&gt;&gt;rdoIIS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rdoIIS.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;rdoIIS.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>449, 291</value>
-  </data>
-  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="tabPage1.Text" xml:space="preserve">
-    <value>Web Server</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;btnSplit.Name" xml:space="preserve">
-    <value>btnSplit</value>
-  </data>
-  <data name="&gt;&gt;btnSplit.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnSplit.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnSplit.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;btnMerge.Name" xml:space="preserve">
-    <value>btnMerge</value>
-  </data>
-  <data name="&gt;&gt;btnMerge.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnMerge.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnMerge.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;btnValidate.Name" xml:space="preserve">
-    <value>btnValidate</value>
-  </data>
-  <data name="&gt;&gt;btnValidate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnValidate.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnValidate.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;btnCopy.Name" xml:space="preserve">
-    <value>btnCopy</value>
-  </data>
-  <data name="&gt;&gt;btnCopy.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnCopy.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnCopy.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;btnDeActivate.Name" xml:space="preserve">
-    <value>btnDeActivate</value>
-  </data>
-  <data name="&gt;&gt;btnDeActivate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnDeActivate.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnDeActivate.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;rtbCurLicense.Name" xml:space="preserve">
-    <value>rtbCurLicense</value>
-  </data>
-  <data name="&gt;&gt;rtbCurLicense.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rtbCurLicense.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;rtbCurLicense.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;label4.Name" xml:space="preserve">
-    <value>label4</value>
-  </data>
-  <data name="&gt;&gt;label4.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;btnManualActivation.Name" xml:space="preserve">
-    <value>btnManualActivation</value>
-  </data>
-  <data name="&gt;&gt;btnManualActivation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnManualActivation.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnManualActivation.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;label3.Name" xml:space="preserve">
-    <value>label3</value>
-  </data>
-  <data name="&gt;&gt;label3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;txtNewKey.Name" xml:space="preserve">
-    <value>txtNewKey</value>
-  </data>
-  <data name="&gt;&gt;txtNewKey.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtNewKey.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;txtNewKey.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;btnGetActivationKey.Name" xml:space="preserve">
-    <value>btnGetActivationKey</value>
-  </data>
-  <data name="&gt;&gt;btnGetActivationKey.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnGetActivationKey.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnGetActivationKey.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;btnActivate.Name" xml:space="preserve">
-    <value>btnActivate</value>
-  </data>
-  <data name="&gt;&gt;btnActivate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnActivate.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabActivation.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="tabActivation.Size" type="System.Drawing.Size, System.Drawing">
-    <value>449, 291</value>
-  </data>
-  <data name="tabActivation.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="tabActivation.Text" xml:space="preserve">
-    <value>Activation</value>
-  </data>
-  <data name="&gt;&gt;tabActivation.Name" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;tabActivation.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabActivation.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabActivation.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="btnUpdateCheck.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnUpdateCheck.Location" type="System.Drawing.Point, System.Drawing">
-    <value>211, 89</value>
-  </data>
-  <data name="btnUpdateCheck.Size" type="System.Drawing.Size, System.Drawing">
-    <value>112, 22</value>
-  </data>
-  <data name="btnUpdateCheck.TabIndex" type="System.Int32, mscorlib">
-    <value>26</value>
-  </data>
-  <data name="btnUpdateCheck.Text" xml:space="preserve">
-    <value>Check For Update</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateCheck.Name" xml:space="preserve">
-    <value>btnUpdateCheck</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateCheck.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateCheck.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;btnUpdateCheck.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 127</value>
-  </data>
-  <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>185, 22</value>
-  </data>
-  <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>25</value>
-  </data>
-  <data name="btnUpdate.Text" xml:space="preserve">
-    <value>Upgrade to Latest Version</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Name" xml:space="preserve">
-    <value>btnUpdate</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 72</value>
-  </data>
-  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 13</value>
-  </data>
-  <data name="label7.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="label7.Text" xml:space="preserve">
-    <value>Latest Verion</value>
-  </data>
-  <data name="&gt;&gt;label7.Name" xml:space="preserve">
-    <value>label7</value>
-  </data>
-  <data name="&gt;&gt;label7.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="txtLatestVer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 89</value>
-  </data>
-  <data name="txtLatestVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtLatestVer.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;txtLatestVer.Name" xml:space="preserve">
-    <value>txtLatestVer</value>
-  </data>
-  <data name="&gt;&gt;txtLatestVer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtLatestVer.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;txtLatestVer.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 17</value>
-  </data>
-  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
-    <value>74, 13</value>
-  </data>
-  <data name="label6.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="label6.Text" xml:space="preserve">
-    <value>Current Verion</value>
-  </data>
-  <data name="&gt;&gt;label6.Name" xml:space="preserve">
-    <value>label6</value>
-  </data>
-  <data name="&gt;&gt;label6.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="txtCurrVer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>17, 34</value>
-  </data>
-  <data name="txtCurrVer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtCurrVer.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;txtCurrVer.Name" xml:space="preserve">
-    <value>txtCurrVer</value>
-  </data>
-  <data name="&gt;&gt;txtCurrVer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtCurrVer.Parent" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;txtCurrVer.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="tabUpdate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 22</value>
-  </data>
-  <data name="tabUpdate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>449, 291</value>
-  </data>
-  <data name="tabUpdate.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="tabUpdate.Text" xml:space="preserve">
-    <value>Update</value>
-  </data>
-  <data name="&gt;&gt;tabUpdate.Name" xml:space="preserve">
-    <value>tabUpdate</value>
-  </data>
-  <data name="&gt;&gt;tabUpdate.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabUpdate.Parent" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabUpdate.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="tabMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="tabMain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>457, 317</value>
-  </data>
-  <data name="tabMain.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Name" xml:space="preserve">
-    <value>tabMain</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;tabMain.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;tabMain.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="btnUpdateSchema.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="btnUpdateSchema.Location" type="System.Drawing.Point, System.Drawing">
-    <value>134, 263</value>
+    <value>132, 287</value>
   </data>
   <data name="btnUpdateSchema.Size" type="System.Drawing.Size, System.Drawing">
     <value>98, 22</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnUpdateSchema.TabIndex" type="System.Int32, mscorlib">
     <value>24</value>
   </data>
@@ -854,126 +149,6 @@
   </data>
   <data name="&gt;&gt;btnUpdateSchema.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="&gt;&gt;label5.Name" xml:space="preserve">
-    <value>label5</value>
-  </data>
-  <data name="&gt;&gt;label5.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;txtDefaultUserDomain.Name" xml:space="preserve">
-    <value>txtDefaultUserDomain</value>
-  </data>
-  <data name="&gt;&gt;txtDefaultUserDomain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtDefaultUserDomain.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;txtDefaultUserDomain.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="&gt;&gt;lblDefaultUserDomain.Name" xml:space="preserve">
-    <value>lblDefaultUserDomain</value>
-  </data>
-  <data name="&gt;&gt;lblDefaultUserDomain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDefaultUserDomain.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;lblDefaultUserDomain.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;chkSharepoint.Name" xml:space="preserve">
-    <value>chkSharepoint</value>
-  </data>
-  <data name="&gt;&gt;chkSharepoint.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;chkSharepoint.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;chkSharepoint.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;txtSharePointHostName.Name" xml:space="preserve">
-    <value>txtSharePointHostName</value>
-  </data>
-  <data name="&gt;&gt;txtSharePointHostName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtSharePointHostName.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;txtSharePointHostName.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;lblSharepoint.Name" xml:space="preserve">
-    <value>lblSharepoint</value>
-  </data>
-  <data name="&gt;&gt;lblSharepoint.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblSharepoint.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;lblSharepoint.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;lblWSUrl.Name" xml:space="preserve">
-    <value>lblWSUrl</value>
-  </data>
-  <data name="&gt;&gt;lblWSUrl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblWSUrl.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;lblWSUrl.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;txtWSUrl.Name" xml:space="preserve">
-    <value>txtWSUrl</value>
-  </data>
-  <data name="&gt;&gt;txtWSUrl.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtWSUrl.Parent" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;txtWSUrl.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="gbSSRS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 7</value>
-  </data>
-  <data name="gbSSRS.Size" type="System.Drawing.Size, System.Drawing">
-    <value>211, 237</value>
-  </data>
-  <data name="gbSSRS.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="gbSSRS.Text" xml:space="preserve">
-    <value>Reporting Service Configuration</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Name" xml:space="preserve">
-    <value>gbSSRS</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.Parent" xml:space="preserve">
-    <value>tabPage2</value>
-  </data>
-  <data name="&gt;&gt;gbSSRS.ZOrder" xml:space="preserve">
-    <value>1</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 97</value>
@@ -1191,173 +366,59 @@
   <data name="&gt;&gt;txtWSUrl.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="&gt;&gt;lblDomain.Name" xml:space="preserve">
-    <value>lblDomain</value>
+  <data name="gbSSRS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 7</value>
   </data>
-  <data name="&gt;&gt;lblDomain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="gbSSRS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>211, 274</value>
   </data>
-  <data name="&gt;&gt;lblDomain.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="&gt;&gt;txtDomain.Name" xml:space="preserve">
-    <value>txtDomain</value>
-  </data>
-  <data name="&gt;&gt;txtDomain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtDomain.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;txtDomain.ZOrder" xml:space="preserve">
+  <data name="gbSSRS.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
-  <data name="&gt;&gt;label1.Name" xml:space="preserve">
-    <value>label1</value>
+  <data name="gbSSRS.Text" xml:space="preserve">
+    <value>Reporting Service Configuration</value>
   </data>
-  <data name="&gt;&gt;label1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;gbSSRS.Name" xml:space="preserve">
+    <value>gbSSRS</value>
   </data>
-  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;txtPWD.Name" xml:space="preserve">
-    <value>txtPWD</value>
-  </data>
-  <data name="&gt;&gt;txtPWD.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtPWD.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;txtPWD.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;label2.Name" xml:space="preserve">
-    <value>label2</value>
-  </data>
-  <data name="&gt;&gt;label2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="&gt;&gt;txtUser.Name" xml:space="preserve">
-    <value>txtUser</value>
-  </data>
-  <data name="&gt;&gt;txtUser.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtUser.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;txtUser.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;rdoSQL.Name" xml:space="preserve">
-    <value>rdoSQL</value>
-  </data>
-  <data name="&gt;&gt;rdoSQL.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rdoSQL.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;rdoSQL.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;lblDBName.Name" xml:space="preserve">
-    <value>lblDBName</value>
-  </data>
-  <data name="&gt;&gt;lblDBName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblDBName.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;lblDBName.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;rdoDomain.Name" xml:space="preserve">
-    <value>rdoDomain</value>
-  </data>
-  <data name="&gt;&gt;rdoDomain.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;rdoDomain.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;rdoDomain.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="&gt;&gt;txtDBName.Name" xml:space="preserve">
-    <value>txtDBName</value>
-  </data>
-  <data name="&gt;&gt;txtDBName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtDBName.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;txtDBName.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="&gt;&gt;lblServer.Name" xml:space="preserve">
-    <value>lblServer</value>
-  </data>
-  <data name="&gt;&gt;lblServer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lblServer.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;lblServer.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="&gt;&gt;txtServerName.Name" xml:space="preserve">
-    <value>txtServerName</value>
-  </data>
-  <data name="&gt;&gt;txtServerName.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;txtServerName.Parent" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;txtServerName.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="gbDBLoginInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>225, 7</value>
-  </data>
-  <data name="gbDBLoginInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 237</value>
-  </data>
-  <data name="gbDBLoginInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="gbDBLoginInfo.Text" xml:space="preserve">
-    <value>Database Login Configuration</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Name" xml:space="preserve">
-    <value>gbDBLoginInfo</value>
-  </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Type" xml:space="preserve">
+  <data name="&gt;&gt;gbSSRS.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;gbDBLoginInfo.Parent" xml:space="preserve">
+  <data name="&gt;&gt;gbSSRS.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
-  <data name="&gt;&gt;gbDBLoginInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
+  <data name="&gt;&gt;gbSSRS.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="chkNoDB.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkNoDB.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkNoDB.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 22</value>
+  </data>
+  <data name="chkNoDB.Size" type="System.Drawing.Size, System.Drawing">
+    <value>96, 17</value>
+  </data>
+  <data name="chkNoDB.TabIndex" type="System.Int32, mscorlib">
+    <value>36</value>
+  </data>
+  <data name="chkNoDB.Text" xml:space="preserve">
+    <value>Do not use DB</value>
+  </data>
+  <data name="&gt;&gt;chkNoDB.Name" xml:space="preserve">
+    <value>chkNoDB</value>
+  </data>
+  <data name="&gt;&gt;chkNoDB.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkNoDB.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;chkNoDB.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="lblDomain.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1366,7 +427,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 173</value>
+    <value>7, 205</value>
   </data>
   <data name="lblDomain.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 13</value>
@@ -1387,10 +448,10 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="txtDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 187</value>
+    <value>8, 219</value>
   </data>
   <data name="txtDomain.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 20</value>
@@ -1408,7 +469,7 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtDomain.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1417,7 +478,7 @@
     <value>NoControl</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 137</value>
+    <value>6, 169</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>53, 13</value>
@@ -1438,10 +499,10 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="txtPWD.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 150</value>
+    <value>8, 182</value>
   </data>
   <data name="txtPWD.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
     <value>*</value>
@@ -1462,7 +523,7 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtPWD.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1471,7 +532,7 @@
     <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 99</value>
+    <value>8, 131</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
     <value>33, 13</value>
@@ -1492,10 +553,10 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="txtUser.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 113</value>
+    <value>8, 145</value>
   </data>
   <data name="txtUser.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 20</value>
@@ -1513,7 +574,7 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtUser.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="rdoSQL.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1522,7 +583,7 @@
     <value>NoControl</value>
   </data>
   <data name="rdoSQL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 214</value>
+    <value>118, 246</value>
   </data>
   <data name="rdoSQL.Size" type="System.Drawing.Size, System.Drawing">
     <value>89, 17</value>
@@ -1543,7 +604,7 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;rdoSQL.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="lblDBName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1552,7 +613,7 @@
     <value>NoControl</value>
   </data>
   <data name="lblDBName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 58</value>
+    <value>5, 90</value>
   </data>
   <data name="lblDBName.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 13</value>
@@ -1573,7 +634,7 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;lblDBName.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="rdoDomain.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1582,7 +643,7 @@
     <value>NoControl</value>
   </data>
   <data name="rdoDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 214</value>
+    <value>8, 246</value>
   </data>
   <data name="rdoDomain.Size" type="System.Drawing.Size, System.Drawing">
     <value>104, 17</value>
@@ -1603,10 +664,10 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;rdoDomain.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="txtDBName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 74</value>
+    <value>8, 106</value>
   </data>
   <data name="txtDBName.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 20</value>
@@ -1627,13 +688,13 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtDBName.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="lblServer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="lblServer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 20</value>
+    <value>6, 52</value>
   </data>
   <data name="lblServer.Size" type="System.Drawing.Size, System.Drawing">
     <value>134, 13</value>
@@ -1654,10 +715,10 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;lblServer.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="txtServerName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 36</value>
+    <value>8, 68</value>
   </data>
   <data name="txtServerName.Size" type="System.Drawing.Size, System.Drawing">
     <value>188, 20</value>
@@ -1678,13 +739,37 @@
     <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtServerName.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
+  </data>
+  <data name="gbDBLoginInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>225, 7</value>
+  </data>
+  <data name="gbDBLoginInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>207, 274</value>
+  </data>
+  <data name="gbDBLoginInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="gbDBLoginInfo.Text" xml:space="preserve">
+    <value>Database Login Configuration</value>
+  </data>
+  <data name="&gt;&gt;gbDBLoginInfo.Name" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;gbDBLoginInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbDBLoginInfo.Parent" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;gbDBLoginInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="btnTest.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>238, 263</value>
+    <value>236, 287</value>
   </data>
   <data name="btnTest.Size" type="System.Drawing.Size, System.Drawing">
     <value>88, 22</value>
@@ -1711,7 +796,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnApply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>332, 263</value>
+    <value>330, 287</value>
   </data>
   <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
     <value>109, 22</value>
@@ -1733,6 +818,33 @@
   </data>
   <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
     <value>4</value>
+  </data>
+  <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage2.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>447, 317</value>
+  </data>
+  <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="tabPage2.Text" xml:space="preserve">
+    <value>SSRS Connection</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Name" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabPage2.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="textBox1.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -1770,7 +882,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnRemoveEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>289, 261</value>
+    <value>290, 287</value>
   </data>
   <data name="btnRemoveEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -1797,7 +909,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnAddEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>369, 261</value>
+    <value>370, 287</value>
   </data>
   <data name="btnAddEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -1895,53 +1007,29 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   <data name="&gt;&gt;txtReportServer.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="&gt;&gt;rdoFormAuth.Name" xml:space="preserve">
-    <value>rdoFormAuth</value>
+  <data name="tabPage3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
   </data>
-  <data name="&gt;&gt;rdoFormAuth.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>447, 317</value>
   </data>
-  <data name="&gt;&gt;rdoFormAuth.Parent" xml:space="preserve">
-    <value>gbAuthType</value>
+  <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
   </data>
-  <data name="&gt;&gt;rdoFormAuth.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="tabPage3.Text" xml:space="preserve">
+    <value>SSRS Extensions</value>
   </data>
-  <data name="&gt;&gt;rdoWinAuth.Name" xml:space="preserve">
-    <value>rdoWinAuth</value>
+  <data name="&gt;&gt;tabPage3.Name" xml:space="preserve">
+    <value>tabPage3</value>
   </data>
-  <data name="&gt;&gt;rdoWinAuth.Type" xml:space="preserve">
-    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;tabPage3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;rdoWinAuth.Parent" xml:space="preserve">
-    <value>gbAuthType</value>
+  <data name="&gt;&gt;tabPage3.Parent" xml:space="preserve">
+    <value>tabMain</value>
   </data>
-  <data name="&gt;&gt;rdoWinAuth.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
     <value>1</value>
-  </data>
-  <data name="gbAuthType.Location" type="System.Drawing.Point, System.Drawing">
-    <value>253, 55</value>
-  </data>
-  <data name="gbAuthType.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 71</value>
-  </data>
-  <data name="gbAuthType.TabIndex" type="System.Int32, mscorlib">
-    <value>22</value>
-  </data>
-  <data name="gbAuthType.Text" xml:space="preserve">
-    <value>Authentication Type</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Name" xml:space="preserve">
-    <value>gbAuthType</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Type" xml:space="preserve">
-    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.Parent" xml:space="preserve">
-    <value>tabPage1</value>
-  </data>
-  <data name="&gt;&gt;gbAuthType.ZOrder" xml:space="preserve">
-    <value>0</value>
   </data>
   <data name="rdoFormAuth.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -2003,11 +1091,35 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   <data name="&gt;&gt;rdoWinAuth.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="gbAuthType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>253, 55</value>
+  </data>
+  <data name="gbAuthType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 71</value>
+  </data>
+  <data name="gbAuthType.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="gbAuthType.Text" xml:space="preserve">
+    <value>Authentication Type</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Name" xml:space="preserve">
+    <value>gbAuthType</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnInstallUWS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnInstallUWS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 261</value>
+    <value>6, 287</value>
   </data>
   <data name="btnInstallUWS.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -2034,7 +1146,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnTestWeb.Location" type="System.Drawing.Point, System.Drawing">
-    <value>88, 261</value>
+    <value>86, 287</value>
   </data>
   <data name="btnTestWeb.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -2061,7 +1173,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnApplyWebServer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>367, 261</value>
+    <value>365, 287</value>
   </data>
   <data name="btnApplyWebServer.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -2251,6 +1363,33 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   </data>
   <data name="&gt;&gt;rdoIIS.ZOrder" xml:space="preserve">
     <value>9</value>
+  </data>
+  <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabPage1.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>447, 317</value>
+  </data>
+  <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="tabPage1.Text" xml:space="preserve">
+    <value>Web Server</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Name" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="btnSplit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -2442,7 +1581,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnManualActivation.Location" type="System.Drawing.Point, System.Drawing">
-    <value>117, 261</value>
+    <value>118, 287</value>
   </data>
   <data name="btnManualActivation.Size" type="System.Drawing.Size, System.Drawing">
     <value>151, 22</value>
@@ -2520,7 +1659,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>NoControl</value>
   </data>
   <data name="btnGetActivationKey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 261</value>
+    <value>7, 287</value>
   </data>
   <data name="btnGetActivationKey.Size" type="System.Drawing.Size, System.Drawing">
     <value>105, 22</value>
@@ -2570,6 +1709,237 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
     <value>11</value>
   </data>
+  <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabActivation.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabActivation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>447, 317</value>
+  </data>
+  <data name="tabActivation.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="tabActivation.Text" xml:space="preserve">
+    <value>Activation</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Name" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btnUpdateCheck.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnUpdateCheck.Location" type="System.Drawing.Point, System.Drawing">
+    <value>211, 89</value>
+  </data>
+  <data name="btnUpdateCheck.Size" type="System.Drawing.Size, System.Drawing">
+    <value>112, 22</value>
+  </data>
+  <data name="btnUpdateCheck.TabIndex" type="System.Int32, mscorlib">
+    <value>26</value>
+  </data>
+  <data name="btnUpdateCheck.Text" xml:space="preserve">
+    <value>Check For Update</value>
+  </data>
+  <data name="&gt;&gt;btnUpdateCheck.Name" xml:space="preserve">
+    <value>btnUpdateCheck</value>
+  </data>
+  <data name="&gt;&gt;btnUpdateCheck.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnUpdateCheck.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;btnUpdateCheck.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="btnUpdate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 127</value>
+  </data>
+  <data name="btnUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>185, 22</value>
+  </data>
+  <data name="btnUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="btnUpdate.Text" xml:space="preserve">
+    <value>Upgrade to Latest Version</value>
+  </data>
+  <data name="&gt;&gt;btnUpdate.Name" xml:space="preserve">
+    <value>btnUpdate</value>
+  </data>
+  <data name="&gt;&gt;btnUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnUpdate.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;btnUpdate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label7.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 72</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>69, 13</value>
+  </data>
+  <data name="label7.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Latest Verion</value>
+  </data>
+  <data name="&gt;&gt;label7.Name" xml:space="preserve">
+    <value>label7</value>
+  </data>
+  <data name="&gt;&gt;label7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label7.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;label7.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="txtLatestVer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 89</value>
+  </data>
+  <data name="txtLatestVer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtLatestVer.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;txtLatestVer.Name" xml:space="preserve">
+    <value>txtLatestVer</value>
+  </data>
+  <data name="&gt;&gt;txtLatestVer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtLatestVer.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;txtLatestVer.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label6.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 17</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
+  </data>
+  <data name="label6.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Current Verion</value>
+  </data>
+  <data name="&gt;&gt;label6.Name" xml:space="preserve">
+    <value>label6</value>
+  </data>
+  <data name="&gt;&gt;label6.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label6.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;label6.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="txtCurrVer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>17, 34</value>
+  </data>
+  <data name="txtCurrVer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtCurrVer.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;txtCurrVer.Name" xml:space="preserve">
+    <value>txtCurrVer</value>
+  </data>
+  <data name="&gt;&gt;txtCurrVer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtCurrVer.Parent" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;txtCurrVer.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="tabUpdate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabUpdate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>447, 317</value>
+  </data>
+  <data name="tabUpdate.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="tabUpdate.Text" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="&gt;&gt;tabUpdate.Name" xml:space="preserve">
+    <value>tabUpdate</value>
+  </data>
+  <data name="&gt;&gt;tabUpdate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabUpdate.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabUpdate.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="tabMain.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="tabMain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>455, 343</value>
+  </data>
+  <data name="tabMain.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Name" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabControl, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabMain.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;tabMain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2580,7 +1950,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>457, 317</value>
+    <value>455, 343</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

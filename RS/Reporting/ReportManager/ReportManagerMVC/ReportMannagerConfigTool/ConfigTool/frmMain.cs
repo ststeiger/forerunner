@@ -185,6 +185,11 @@ namespace ReportMannagerConfigTool
             else
                 chkSharepoint.Checked = false;
 
+            if (savedConfig["UseDB"].ToLower() == "false")
+                chkNoDB.Checked = true;
+            else
+                chkNoDB.Checked = false;
+
             winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
             winform.setTextBoxValue(txtDefaultUserDomain, savedConfig["DefaultUserDomain"]);
             winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
@@ -201,34 +206,41 @@ namespace ReportMannagerConfigTool
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = winform.getTextBoxValue(txtServerName);
-            builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
-            if (!rdoDomain.Checked)
-            {
-                builder.UserID = winform.getTextBoxValue(txtUser);
-                builder.Password = winform.getTextBoxValue(txtPWD);
-            }
-            else
-            {
-                builder.IntegratedSecurity = true;
-            }
-
-            Cursor.Current = Cursors.Default;
-            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
             string result;
+            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
 
-            //Test database connection
-            if (rdoDomain.Checked)
-                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
-            else
-                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
-
-            if (!StaticMessages.testSuccess.Equals(result))
+            if (!chkNoDB.Checked)
             {
-                errorMessage.AppendLine(result);
-                errorMessage.AppendLine();
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                builder.DataSource = winform.getTextBoxValue(txtServerName);
+                builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
+                if (!rdoDomain.Checked)
+                {
+                    builder.UserID = winform.getTextBoxValue(txtUser);
+                    builder.Password = winform.getTextBoxValue(txtPWD);
+                }
+                else
+                {
+                    builder.IntegratedSecurity = true;
+                }
+
+                Cursor.Current = Cursors.Default;
+               
+               
+
+                //Test database connection
+                if (rdoDomain.Checked)
+                    result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
+                else
+                    result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+
+                if (!StaticMessages.testSuccess.Equals(result))
+                {
+                    errorMessage.AppendLine(result);
+                    errorMessage.AppendLine();
+                }
             }
+
 
             //Test web service url connection
             result = ConfigToolHelper.tryWebServiceUrl(chkSharepoint.Checked, winform.getTextBoxValue(txtWSUrl));
@@ -252,24 +264,13 @@ namespace ReportMannagerConfigTool
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
+
+
+                ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl),!chkNoDB.Checked, winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
                     rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName),
                     winform.getTextBoxValue(txtDefaultUserDomain));
-
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = winform.getTextBoxValue(txtServerName);
-                builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
-                if (!rdoDomain.Checked)
-                {
-                    builder.UserID = winform.getTextBoxValue(txtUser);
-                    builder.Password = winform.getTextBoxValue(txtPWD);
-                }
-                else
-                {
-                    builder.IntegratedSecurity = true;
-                }
 
                 System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
            
@@ -593,8 +594,11 @@ namespace ReportMannagerConfigTool
 
         private void btnUpdateSchema_Click(object sender, EventArgs e)
         {
-            frmDBLogin frm = new frmDBLogin();
-            frm.ShowDialog();
+            if (!chkNoDB.Checked)
+            {
+                frmDBLogin frm = new frmDBLogin();
+                frm.ShowDialog();
+            }
             
         }
 
@@ -681,6 +685,18 @@ namespace ReportMannagerConfigTool
                     MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
                 }
             }
+        }
+
+        private void NoDB_CheckedChanged(object sender, EventArgs e)
+        {
+
+            txtServerName.Enabled = !chkNoDB.Checked;
+            txtDBName.Enabled = !chkNoDB.Checked;
+            txtUser.Enabled = !chkNoDB.Checked;
+            txtPWD.Enabled = !chkNoDB.Checked;
+            txtDomain.Enabled = !chkNoDB.Checked;
+            btnUpdateSchema.Enabled = !chkNoDB.Checked;
+         
         }
     }
 }

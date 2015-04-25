@@ -504,7 +504,7 @@ $(function () {
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
 
-            explorer.css("background-color", "");
+            me.$reportExplorer.css("background-color", "");
         },
         _transitionToDashboard: function (path, enableEdit) {
             var me = this;

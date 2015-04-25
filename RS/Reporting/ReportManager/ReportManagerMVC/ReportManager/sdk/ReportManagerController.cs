@@ -579,12 +579,12 @@ namespace ReportManager.Controllers
         {
             // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
             try
-            {
+            {                
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
             }
-            catch (Exception ex) 
+            catch (Exception ) 
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{}"), "text/JSON");
             }
         }
 

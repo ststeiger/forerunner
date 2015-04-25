@@ -210,6 +210,10 @@ namespace Forerunner.SSRS.Manager
 
         public static bool ValidateConfig(string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool isRSDB = true)
         {
+            if (!UseMobilizerDB)
+            {
+                return true;
+            }
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;

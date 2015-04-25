@@ -1168,7 +1168,7 @@ namespace Forerunner.SSRS.Manager
             else
                 return "";
         }
-        public void SetProperty(string path, string properties)
+        public string SetProperty(string path, string properties)
         {
             List<Property> excludeName = new List<Property>();
             string newPath = string.Empty;
@@ -1198,6 +1198,8 @@ namespace Forerunner.SSRS.Manager
                 rs.Credentials = GetCredentials();
                 rs.MoveItem(path, newPath);
             }
+
+            return getReturnSuccess();
         }
         public string IsFavorite(string path)
         {

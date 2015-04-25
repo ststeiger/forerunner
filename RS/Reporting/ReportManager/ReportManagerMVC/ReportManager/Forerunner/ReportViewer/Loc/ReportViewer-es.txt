@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"Buscar carpeta creada Failed",
     "addTagsSucceeded":"Añadir etiquetas Succeeded",
     "addTagsFailed":"Añadir etiquetas fallidas",
-    "invalidName":"nombre inválido"
+    "invalidName":"nombre inválido",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",

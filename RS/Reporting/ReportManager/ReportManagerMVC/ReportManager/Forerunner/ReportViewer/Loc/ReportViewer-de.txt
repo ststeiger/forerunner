@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"Suchordner Erstellt fehlgeschlagen",
     "addTagsSucceeded":"Schlagworte hinzufügen Nachfolger",
     "addTagsFailed":"Schlagworte hinzufügen fehlgeschlagen",
-    "invalidName":"ungültiger Name"
+    "invalidName":"ungültiger Name",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",

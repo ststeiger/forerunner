@@ -203,13 +203,13 @@ namespace ReportManager.Controllers
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
-            { 
-                GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
-                resp.StatusCode = HttpStatusCode.OK;
-            }
-            catch
             {
-                resp.StatusCode = HttpStatusCode.BadRequest;
+                var result = GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
             
             return resp;

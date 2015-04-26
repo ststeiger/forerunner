@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"Pasta de Pesquisa Criado Failed",
     "addTagsSucceeded":"Adicionar tags Sucedido",
     "addTagsFailed":"Adicionar tags Falha",
-    "invalidName":"nome inválido"
+    "invalidName":"nome inválido",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",

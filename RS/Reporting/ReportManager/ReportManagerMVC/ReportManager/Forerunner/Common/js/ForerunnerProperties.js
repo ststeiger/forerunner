@@ -535,6 +535,16 @@ $(function () {
                             instance: me.options.rsInstance,
                         },
                         success: function (data) {
+                            data = JSON.parse(data);
+
+                            if (data.Exception) {
+                                me._description = "";
+                                me._isHidden = "False";
+                                me._itemName = "";
+                                forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.properties.title);
+                                return;
+                            }
+
                             if (newPath) {
                                 me.curPath = newPath;
                                 me.options.$appContainer.trigger(events.renameItem, { newPath: me.curPath });
@@ -550,7 +560,7 @@ $(function () {
                             me._description = "";
                             me._isHidden = "False";
                             me._itemName = "";
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.properties.title);
                         }
                     });
                 }

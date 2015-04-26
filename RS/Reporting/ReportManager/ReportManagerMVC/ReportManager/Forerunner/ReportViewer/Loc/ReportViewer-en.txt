@@ -31,7 +31,8 @@
 	"saveSearchFolderFailed":"Search Folder Created Failed",
 	"addTagsSucceeded":"Add Tags Succeeded",
 	"addTagsFailed":"Add Tags Failed",
-  "invalidName":"Invalid Name"
+  "invalidName":"Invalid Name",
+	"propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Click for more detail",

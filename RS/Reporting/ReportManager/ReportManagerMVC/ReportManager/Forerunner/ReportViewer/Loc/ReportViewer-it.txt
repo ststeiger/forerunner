@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"Ricerca cartella Creazione non riuscita",
     "addTagsSucceeded":"Aggiungi Tag Completato",
     "addTagsFailed":"Aggiungi Tag falliti",
-    "invalidName":"nome non valido"
+    "invalidName":"nome non valido",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",

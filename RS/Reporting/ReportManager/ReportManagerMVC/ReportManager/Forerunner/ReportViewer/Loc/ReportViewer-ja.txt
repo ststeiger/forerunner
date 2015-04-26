@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"検索フォルダに失敗しました作成",
     "addTagsSucceeded":"成功タグを追加する",
     "addTagsFailed":"障害タグを追加する",
-    "invalidName":"無効な名前"
+    "invalidName":"無効な名前",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",

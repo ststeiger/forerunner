@@ -23,7 +23,8 @@
     "saveSearchFolderFailed":"Leita Mappa Búið mistókst",
     "addTagsSucceeded":"Bæta Tags Eftirmaður",
     "addTagsFailed":"Bæta Tags mistókst",
-    "invalidName":"ógild nafn"
+    "invalidName":"ógild nafn",
+    "propertyFailed":"Properties updated Failed"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",

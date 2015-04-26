@@ -18966,8 +18966,7 @@ $(function () {
          *
          * @function $.forerunner.reportViewerEZ#windowResize
          */
-        windowResize: function () {
-            
+        windowResize: function () {            
             var me = this;
             if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);

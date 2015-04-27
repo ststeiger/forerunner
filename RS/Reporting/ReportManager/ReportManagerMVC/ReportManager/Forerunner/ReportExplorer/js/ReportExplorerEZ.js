@@ -368,7 +368,6 @@ $(function () {
                 if (me.options.showBreadCrumb === false) {
                     me.DefaultAppTemplate.$linksection.hide();
                 }
-
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
                 if (me.options.isFullScreen)

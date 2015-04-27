@@ -19773,7 +19773,10 @@ $(function () {
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
                 var explorer = $(".fr-report-explorer", me.$reportExplorer);
-                explorer.css("background-color", explorer.css("background-color"));
+                if (me.options.isFullScreen)
+                    $("body").css("background-color", explorer.css("background-color"));                    
+                else
+                    explorer.css("background-color", explorer.css("background-color"));
 
                 if (!path) {// root page
                     path = "/";
@@ -19905,8 +19908,12 @@ $(function () {
 
                 me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
+            
 
-            me.$reportExplorer.css("background-color", "");
+            if (me.options.isFullScreen)
+                $("body").css("background-color", "");
+            else
+                me.$reportExplorer.css("background-color", "");
         },
         _transitionToDashboard: function (path, enableEdit) {
             var me = this;
@@ -19944,7 +19951,10 @@ $(function () {
                 me._trigger(events.afterTransition, null, { type: "Dashboard", path: path, enableEdit: enableEdit });
             }, timeout);
 
-            me.$reportExplorer.css("background-color", "");
+            if (me.options.isFullScreen)
+                $("body").css("background-color", "");
+            else
+                me.$reportExplorer.css("background-color", "");
         },
         /**
          * Transition to Open Dashboard view

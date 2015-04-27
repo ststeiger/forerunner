@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Bæta Tags Eftirmaður",
     "addTagsFailed":"Bæta Tags mistókst",
     "invalidName":"ógild nafn",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Properties uppfærð mistókst"
   },
   "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",

@@ -408,7 +408,7 @@ namespace Forerunner.SSRS.Viewer
 
                     if (execInfo.Parameters.Length != 0 && paramList != null)
                     {
-                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters), "en-us");
+                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(paramList, execInfo.Parameters), null);
                     }
 
 

@@ -16,6 +16,8 @@ namespace ReportMannagerConfigTool
         private static string filePath = ConfigurationManager.AppSettings["ReportManagerWebConfigPath"];
 
         private static string reportServerWSUrl = ConfigurationManager.AppSettings["ReportServerWSUrl"];
+        private static string reportServerUseDB = ConfigurationManager.AppSettings["ReportServerUseDB"];
+        
         private static string reportServerDataSource = ConfigurationManager.AppSettings["ReportServerDataSource"];
         private static string reportServerDB = ConfigurationManager.AppSettings["ReportServerDB"];
         private static string reportServerDBDomain = ConfigurationManager.AppSettings["ReportServerDBDomain"];
@@ -263,10 +265,12 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdb">Report Server Database Name</param>
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
-        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain,
+        public static void UpdateForerunnerWebConfig(string wsurl, bool UseDB  ,string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain,
             string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated, bool isnative, string sharepointhostname, string defaultuserdomain)
         {
             GetAppSettingNode(xmlDoc, reportServerWSUrl).SetAppSettingValue(wsurl);
+
+            GetAppSettingNode(xmlDoc, reportServerUseDB).SetAppSettingValue(UseDB.ToString());
 
             GetAppSettingNode(xmlDoc, reportServerDataSource).SetAppSettingValue(reportserverdatasource);
 
@@ -310,6 +314,7 @@ namespace ReportMannagerConfigTool
             result.Add("IsNative", GetAppSettingNode(xmlDoc, isNative).GetAppSettingValue());
             result.Add("SharePointHostName", GetAppSettingNode(xmlDoc, sharepointHost).GetAppSettingValue());
             result.Add("DefaultUserDomain", GetAppSettingNode(xmlDoc, defaultUserDomain).GetAppSettingValue());
+            result.Add("UseDB", GetAppSettingNode(xmlDoc, reportServerUseDB).GetAppSettingValue());
 
             return result;
         }

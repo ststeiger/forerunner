@@ -24,7 +24,7 @@
     "addTagsSucceeded":"成功タグを追加する",
     "addTagsFailed":"障害タグを追加する",
     "invalidName":"無効な名前",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"プロパティに失敗しました更新さ"
   },
   "errorTag": {
     "moreDetail":"詳細はクリック",

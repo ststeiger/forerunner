@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Ajouter des mots clés Réussi",
     "addTagsFailed":"Ajouter des mots clés perdus",
     "invalidName":"nom invalide",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Propriétés mis à jour Erreur"
   },
   "errorTag": {
     "moreDetail":"Cliquez pour plus de détails",

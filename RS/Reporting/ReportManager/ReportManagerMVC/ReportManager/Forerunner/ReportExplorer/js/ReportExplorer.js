@@ -24,6 +24,7 @@ $(function () {
      * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Object} options.userSettings - User settings used for user specific options
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus - Callback function used to handle input focus event 
      * @example
@@ -50,6 +51,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             userSettings: null,
+            dbConfig: null
         },
         // Constructor
         _create: function () {
@@ -164,6 +166,10 @@ $(function () {
                         break;
                     case "json/forerunner-searchfolder":
                         action = "searchfolder";
+                        if (me.options.dbConfig.UseMobilizerDB !== true) {
+                            //not show the exist search folder if set UseMobilizerDB to false
+                            return null;
+                        }
                         break;
                     default:
                         action = "open";
@@ -380,8 +386,9 @@ $(function () {
                     me.selectedItem = i;
                     isSelected = true;
                 }
+
                 me.rmListItems[i] = me._generatePCListItem(catalogItem, isSelected);
-                me.$UL.append(me.rmListItems[i]);
+                me.rmListItems[i] && me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
             me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
@@ -674,41 +681,46 @@ $(function () {
             var me = this;
 
             //init user setting dialog
-            var $dlg = me.options.$appContainer.find(".fr-us-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.userSettings({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._userSettingsDialog = $dlg;
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                //user settings, subscription, serach folder need mobilizer database support
 
-            //init my subscription dialog
-            $dlg = me.options.$appContainer.find(".fr-mms-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.manageMySubscriptions({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element,
-                    subscriptionModel: me.subscriptionModel
-                });
-                me.options.$appContainer.append($dlg);
-            }
-            me._manageMySubscriptionsDialog = $dlg;
+                var $dlg = me.options.$appContainer.find(".fr-us-section");
+                if ($dlg.length === 0) {
+                    $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.userSettings({
+                        dbConfig: me.options.dbConfig,
+                        $appContainer: me.options.$appContainer,
+                        $reportExplorer: me.element
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._userSettingsDialog = $dlg;
 
-            //init search folder dialog
-            $dlg = me.options.$appContainer.find(".fr-sf-section");
-            if ($dlg.length === 0) {
-                $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.reportExplorerSearchFolder({
-                    $appContainer: me.options.$appContainer,
-                    $reportExplorer: me.element
-                });
-                me.options.$appContainer.append($dlg);
+                //init my subscription dialog
+                $dlg = me.options.$appContainer.find(".fr-mms-section");
+                if ($dlg.length === 0) {
+                    $dlg = new $("<div class='fr-mms-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.manageMySubscriptions({
+                        $appContainer: me.options.$appContainer,
+                        $reportExplorer: me.element,
+                        subscriptionModel: me.subscriptionModel
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._manageMySubscriptionsDialog = $dlg;
+
+                //init search folder dialog
+                $dlg = me.options.$appContainer.find(".fr-sf-section");
+                if ($dlg.length === 0) {
+                    $dlg = new $("<div class='fr-sf-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.reportExplorerSearchFolder({
+                        $appContainer: me.options.$appContainer,
+                        $reportExplorer: me.element
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._searchFolderDialog = $dlg;
             }
-            me._searchFolderDialog = $dlg;
 
             //init linked report dialog
             $dlg = me.options.$appContainer.find(".fr-linked-section");

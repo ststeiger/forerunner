@@ -36,6 +36,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, /** @lends $.forerunner.toolbar */ {
         options: {
             $reportViewer: null,
+            dbConfig: null,
             toolClass: "fr-toolbar"
         },
         _initCallbacks: function () {
@@ -164,8 +165,11 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
-            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI"))
+
+            if (me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
+            }
+
             me.addTools(1, false, [tb.btnParamarea]);
             me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
@@ -176,6 +180,8 @@ $(function () {
             me.windowResize();
         },
         _viewerButtons: function (allButtons) {
+            var me = this;
+
             var listOfButtons = [tb.btnMenu];
 
             //check button button
@@ -190,7 +196,11 @@ $(function () {
                 listOfButtons.pop();
             }
 
-            listOfButtons.push(tb.btnPrint, tb.btnEmailSubscription);
+            listOfButtons.push(tb.btnPrint);
+
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                listOfButtons.push(tb.btnEmailSubscription);
+            }
 
             return listOfButtons;
         },
@@ -264,7 +274,9 @@ $(function () {
         },
         _checkSubscription: function () {
             var me = this;
-            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+            if (me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+                return;
+            }
 
             var permissions = me.options.$reportViewer.reportViewer("getPermissions");
             if (permissions["Create Subscription"] === true) {

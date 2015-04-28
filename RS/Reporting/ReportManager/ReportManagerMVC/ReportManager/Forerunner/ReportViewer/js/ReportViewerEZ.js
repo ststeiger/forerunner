@@ -27,6 +27,7 @@ $(function () {
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
+     * @prop {Object} options.userSettings - Database configuration
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
@@ -58,7 +59,8 @@ $(function () {
             handleWindowResize: true,
             showBreadCrumb: false,
             showParameterArea: "Collapsed",
-            zoom: "100"
+            zoom: "100",
+            dbConfig: null
         },
         _render: function () {
             var me = this;
@@ -95,7 +97,8 @@ $(function () {
                 $unzoomtoolbar: layout.$unzoomsection,
                 toolbarConfigOption: me.options.toolbarConfigOption,
                 zoom: me.options.zoom,
-                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
+                showSubscriptionOnOpen: me.options.showSubscriptionOnOpen,
+                dbConfig: me.options.dbConfig
             });
 
             initializer.render();

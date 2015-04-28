@@ -770,6 +770,20 @@ namespace ReportManager.Controllers
             }
         }
 
+        [HttpGet]
+        public HttpResponseMessage GetDBConfig(string instance = null)
+        {
+            try
+            {
+                var result = GetReportManager(instance).GetDBConfiguration();
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+            }
+            catch
+            {
+                return GetEmptyJSONResponse();
+            }
+        }
+
         private string ToString<T>(T value)
         {
             StringBuilder buffer = new StringBuilder();

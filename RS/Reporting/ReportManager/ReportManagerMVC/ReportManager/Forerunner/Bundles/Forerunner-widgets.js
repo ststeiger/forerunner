@@ -9864,6 +9864,9 @@ $(function () {
             viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
+            if (catalogItem.LocalizedName)
+                name = catalogItem.LocalizedName;
+
             $captiontext.attr("title", name);
             $captiontext.text(name);
             $caption.append($captiontext);
@@ -9878,6 +9881,9 @@ $(function () {
             viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
+            if (catalogItem.LocalizedDescription)
+                description = catalogItem.LocalizedDescription;
+
             if (description) {
                 description = forerunner.helper.htmlDecode(description);
 
@@ -12566,8 +12572,6 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
 
-
-
             RIContext.$HTMLParent.attr("Style", Style);
             RIContext.$HTMLParent.addClass("fr-r-rT");
 
@@ -12669,14 +12673,21 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                
+                if (textExt && textExt.localize)
+                    val = forerunner.localize.getLocalizedValue(val, textExt.localize);
+
                 if (val) {
                     val = me._getNewLineFormatText(val);
+                    
+
                     if (textExt.InputType) {
                         $TextObj.attr("data-origVal", val);
                         $TextObj.val(val);
                     }
                     else
                         $TextObj.text(val);
+
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
 
@@ -15465,6 +15476,11 @@ $(function () {
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
                 forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
+
+                if (me.options.RDLExt[param.Name].localize) {
+                    $label.text(forerunner.localize.getLocalizedValue(param.Prompt, me.options.RDLExt[param.Name].localize));
+                }
+                    
                 //$.each(me._paramValidation[param.Name], function (index, attribute) {
                 //    $element.removeAttr(attribute);
                 //});

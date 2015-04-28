@@ -4201,6 +4201,9 @@ namespace Forerunner.SSRS.Management
 
         private bool executionDateFieldSpecified;
 
+        public string LocalizedName;
+        public string LocalizedDescription;
+
         /// <remarks/>
         [DataMember]
         public string ID

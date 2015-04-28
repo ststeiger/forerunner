@@ -310,6 +310,9 @@ $(function () {
             viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
+            if (catalogItem.LocalizedName)
+                name = catalogItem.LocalizedName;
+
             $captiontext.attr("title", name);
             $captiontext.text(name);
             $caption.append($captiontext);
@@ -324,6 +327,9 @@ $(function () {
             viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
+            if (catalogItem.LocalizedDescription)
+                description = catalogItem.LocalizedDescription;
+
             if (description) {
                 description = forerunner.helper.htmlDecode(description);
 

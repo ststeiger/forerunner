@@ -1581,6 +1581,27 @@ $(function () {
             return langData;
             
         },
+
+        getLocalizedValue: function (val, locObj) {
+            var me = this;
+            var languageList = me._getLanguages();
+            var i;
+
+            if (!languageList)
+                return val;
+
+            for (i = 0; i < languageList.length; i++) {
+                var lang = languageList[i];
+                lang = lang.toLocaleLowerCase();
+
+                if (locObj[lang])
+                    return locObj[lang].value;
+            }
+
+            return val;
+            
+
+        },
         _getLanguages: function () {
             var me = this;
 

@@ -309,7 +309,7 @@ namespace Forerunner.SSRS.Manager
             return null;
         }
 
-        public IEnumerable<CatalogItem> GetItems(string view, string path)
+        public CatalogItem[] GetItems(string view, string path)
         {
             if (view == "favorites")
                 return this.GetFavorites();

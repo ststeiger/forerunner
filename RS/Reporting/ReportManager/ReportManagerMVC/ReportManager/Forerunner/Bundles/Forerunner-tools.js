@@ -1971,23 +1971,21 @@ $(function () {
             selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
 
-            tools: [tp.itemFavorite, tp.itemRecent]
+            tools: [tp.itemFavorite]
         },
         /** @member */
         explorerFindGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-rm-toolbar-find-group",
             visibilityNoWidth: true,
-            tools: [ret.btnKeyword,
-                    ret.btnFind]
+            tools: [ret.btnKeyword, ret.btnFind]
         },
         /** @member */
         explorerItemFindCompositeGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-item-find-composite-group",
             groupContainerClass: null,
-            tools: [rep.itemKeyword,
-                    rep.itemFind]
+            tools: [rep.itemKeyword, rep.itemFind]
         },
         /** @member */
         explorerItemFolderGroup: {
@@ -1995,7 +1993,7 @@ $(function () {
             visible: false,
             selectorClass: "fr-rm-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [rep.itemFav, rep.itemRecent]
+            tools: [rep.itemFav]
         },
         /** @member */
         dashboardItemFolderGroup: {
@@ -2003,10 +2001,16 @@ $(function () {
             visible: false,
             selectorClass: "fr-dashboard-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [dbtp.itemFavorite, dbtp.itemRecent]
+            tools: [dbtp.itemFavorite]
         },
     };
     var tg = forerunner.ssr.tools.groups;
+
+    if (forerunner.config.getDBConfiguration().SeperateDB !== true) {
+        tg.explorerItemFolderGroup.tools.push(rep.itemRecent);
+        tg.itemFolderGroup.tools.push(tp.itemRecent);
+        tg.dashboardItemFolderGroup.tools.push(dbtp.itemRecent);
+    }
 
     if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
         tg.itemFolderGroup.tools.push(tp.itemHome);

@@ -751,6 +751,8 @@ $(function () {
 
         _customSettings: null,
 
+        _dbConfig: null,
+
         _watermarkConfig: {
             useNative: true,
             className: "fr-watermark"
@@ -899,6 +901,36 @@ $(function () {
                 return settings[setting];
             else
                 return defaultval;
+        },
+        // internal used
+        setDBConfiguration: function (dbConfig) {
+            forerunner.config._dbConfig = dbConfig;
+        },
+        // internal used
+        getDBConfiguration: function () {
+            if (forerunner.config._dbConfig === null) {
+                var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetDBConfig";
+
+                $.ajax({
+                    url: url,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        forerunner.config.setDBConfiguration(data);
+                    },
+                    fail: function () {
+                        forerunner.config.setDBConfiguration(null);
+                        console.log("Load database configuration failed");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        forerunner.config.setCustomSettings(null);
+                        console.log("Load mobilizer custom settings.  textStatus: " + textStatus);
+                        console.log(jqXHR);
+                    },
+                });
+            }
+
+            return forerunner.config._dbConfig;
         },
         //internal used
         setWatermarkConfig: function (cfg) {
@@ -2508,6 +2540,7 @@ $(function () {
                 className: "fr-watermark"
             });
         }
+
         forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
         // Put a check in so that this would not barf for the login page.
         if ($.validator) {

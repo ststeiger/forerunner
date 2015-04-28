@@ -300,7 +300,7 @@ set of parameters.</Description>
             <string>umdb</string>
           </Aliases>
           <Description>Use the Mobilizer database. The enables all the extended Mobilizer functionality.</Description>
-          <DefaultValue>true</DefaultValue>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SeperateDB</Name>

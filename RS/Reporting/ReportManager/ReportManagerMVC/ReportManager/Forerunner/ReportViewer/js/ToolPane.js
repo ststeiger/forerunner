@@ -32,6 +32,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
+            dbConfig: null,
             $reportViewer: null,
             toolClass: "fr-toolpane"
         },
@@ -152,7 +153,8 @@ $(function () {
             $(me.element).append($toolpane);
             
             me.addTools(1, false, me._viewerItems());
-            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+
+            if (me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
 
@@ -179,6 +181,7 @@ $(function () {
         },
         _viewerItems: function (allButtons) {
             var me = this;
+
             var listOfItems = [tg.itemVCRGroup, tg.itemFolderGroup];
 
             //check back button
@@ -186,8 +189,12 @@ $(function () {
                 listOfItems.push(tp.itemReportBack);
             }
 
-            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown, tg.itemZoomGroup);
-            listOfItems.push(tp.itemExport, tg.itemExportGroup, tp.itemPrint, tp.itemEmailSubscription);
+            listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown,
+                tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint);
+
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                listOfItems.push(tp.itemEmailSubscription);
+            }
 
             //check admin functions
             var userSettings = me.options.$reportViewer.reportViewer("getUserSettings");
@@ -274,7 +281,10 @@ $(function () {
         },
         _checkSubscription: function () {
             var me = this;
-            if (!me.options.$reportViewer.reportViewer("showSubscriptionUI")) return;
+
+            if (me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+                return;
+            }
 
             var permissions = me.options.$reportViewer.reportViewer("getPermissions");
             if (permissions["Create Subscription"] === true) {

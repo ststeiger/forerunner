@@ -36,6 +36,7 @@ $(function () {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar",
+            dbConfig: null,
             $appContainer: null,
             $reportExplorer: null
         },
@@ -83,17 +84,31 @@ $(function () {
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
 
             //check whether hide home button is enable
-            var toolbarList = [tb.btnMenu, tb.btnBack, tb.btnSetup];
+            var toolbarList = [tb.btnMenu, tb.btnBack];
+
+            //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                toolbarList.push(tb.btnSetup);
+            }
+
             if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                 //add home button based on the user setting
                 toolbarList.push(tb.btnHome);
             }
-            if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
-                //add home button based on the user setting
-                toolbarList.push(tb.btnMySubscriptions);
-            }
 
-            toolbarList.push(tb.btnRecent, tb.btnFav);
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
+                    //add home button based on the user setting
+                    toolbarList.push(tb.btnMySubscriptions);
+                }
+
+                //recent view feature need ReportServerDB support
+                if (me.options.dbConfig.SeperateDB !== true) {
+                    toolbarList.push(tb.btnRecent);
+                }
+
+                toolbarList.push(tb.btnFav);
+            }
 
             if (forerunner.ajax.isFormsAuth()) {
                 toolbarList.push(tb.btnLogOff);

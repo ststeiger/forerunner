@@ -60,6 +60,7 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
+            dbConfig: null,
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {
@@ -81,6 +82,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
+                dbConfig: me.options.dbConfig,
                 rsInstance: me.options.rsInstance,
                 onInputFocus: layout.onInputFocus(),
                 onInputBlur: layout.onInputBlur(),
@@ -341,6 +343,7 @@ $(function () {
                 $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
+                    dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
@@ -393,6 +396,7 @@ $(function () {
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
                     navigateTo: me.options.navigateTo,
+                    dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
                     $reportExplorer: me.$reportExplorer
                 });
@@ -490,7 +494,8 @@ $(function () {
                     showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
                     showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
                     toolbarConfigOption: toolbarConfig,
-                    zoom: urlOptions ? urlOptions.zoom : "100"
+                    zoom: urlOptions ? urlOptions.zoom : "100",
+                    dbConfig: me.options.dbConfig
                 });
 
                 me._setLeftRightPaneStyle();
@@ -535,7 +540,8 @@ $(function () {
                     path: path,
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings(),
-                    handleWindowResize: false
+                    handleWindowResize: false,
+                    dbConfig: me.options.dbConfig
                 });
 
                 me._setLeftRightPaneStyle();

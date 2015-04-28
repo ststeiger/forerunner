@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Добавить метки успешно завершено",
     "addTagsFailed":"Добавить метки Failed",
     "invalidName":"Неправильное имя",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Свойства обновляются удалось"
   },
   "errorTag": {
     "moreDetail":"Подробнее",

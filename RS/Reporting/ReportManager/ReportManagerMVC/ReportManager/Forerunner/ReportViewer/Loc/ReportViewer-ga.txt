@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Add Tags Comharba",
     "addTagsFailed":"Add Tags Theip",
     "invalidName":"an t-ainm neamhbhailí",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Airíonna updated Theip"
   },
   "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",

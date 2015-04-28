@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Schlagworte hinzufügen Nachfolger",
     "addTagsFailed":"Schlagworte hinzufügen fehlgeschlagen",
     "invalidName":"ungültiger Name",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Eigenschaften aktualisiert fehlgeschlagen"
   },
   "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",

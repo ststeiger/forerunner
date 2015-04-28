@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Adauga etichete Reușit",
     "addTagsFailed":"Adauga Tag-uri eșuate",
     "invalidName":"numele invalid",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Proprietăți actualizate eșuat"
   },
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",

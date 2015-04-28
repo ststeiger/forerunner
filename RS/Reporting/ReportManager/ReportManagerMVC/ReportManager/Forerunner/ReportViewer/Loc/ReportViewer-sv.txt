@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Lägg till etiketter Efterföljande",
     "addTagsFailed":"Lägg till etiketter Misslyckade",
     "invalidName":"ogiltigt namn",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Egenskaper uppdaterade Misslyckades"
   },
   "errorTag": {
     "moreDetail":"Klicka för mer information",

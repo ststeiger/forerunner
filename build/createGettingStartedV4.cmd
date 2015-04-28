@@ -43,13 +43,7 @@ if ERRORLEVEL 8 (
 )
 
 :: \Content
-robocopy %SRC_GETTING_STARTED_V4% %DEST_CONTENT% Web.config.transform Global.asax Global.asax.cs /LOG+:%NUGET_PACKAGE_LOG%
-if ERRORLEVEL 8 (
-	goto :Error
-)
-
-:: \Content\App_Start
-robocopy %SRC_GETTING_STARTED_V4%\App_Start %DEST_CONTENT%\App_Start /S /LOG+:%NUGET_PACKAGE_LOG%
+robocopy %SRC_GETTING_STARTED_V4% %DEST_CONTENT% Web.config.transform /LOG+:%NUGET_PACKAGE_LOG%
 if ERRORLEVEL 8 (
 	goto :Error
 )
@@ -61,7 +55,19 @@ if ERRORLEVEL 8 (
 )
 
 :: \Content\Views
-robocopy %SRC_GETTING_STARTED_V4%\Views %DEST_CONTENT%\Views /S /LOG+:%NUGET_PACKAGE_LOG%
+robocopy %SRC_GETTING_STARTED_V4%\Views %DEST_CONTENT%\Views _ViewStart.cshtml /LOG+:%NUGET_PACKAGE_LOG%
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: \Content\Views\Home
+robocopy %SRC_GETTING_STARTED_V4%\Views\Home %DEST_CONTENT%\Views\Home /S /LOG+:%NUGET_PACKAGE_LOG%
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: \Content\Views\Shared
+robocopy %SRC_GETTING_STARTED_V4%\Views\Shared %DEST_CONTENT%\Views\Shared /S /LOG+:%NUGET_PACKAGE_LOG%
 if ERRORLEVEL 8 (
 	goto :Error
 )

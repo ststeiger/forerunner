@@ -1,0 +1,18 @@
+﻿@{
+  ViewBag.Title = "Report Explorer";
+  Layout = "../Shared/_ReportsLayout.cshtml";
+}
+
+<script>
+  $(function () {
+    var $reportArea = $("body");
+
+    // Create the report explorer widget
+    $reportArea.reportExplorerEZ({
+    });
+
+    // Transition to the home catalog view
+    $reportArea.reportExplorerEZ("transitionToReportManager", "/", null);
+
+  })  // function ()
+</script>

@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Añadir etiquetas Succeeded",
     "addTagsFailed":"Añadir etiquetas fallidas",
     "invalidName":"nombre inválido",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Propiedades fueron actualizados correctamente Fallo"
   },
   "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",

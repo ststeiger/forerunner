@@ -270,6 +270,40 @@ namespace Forerunner.SDK.ConfigTool
             }
         }
 
+        // Get the Assembly path of this assembly
+        private string _assemblyPath = null;
+        private string AssemblyPath
+        {
+            get
+            {
+                if (_assemblyPath != null)
+                {
+                    return _assemblyPath;
+                }
+
+                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                _assemblyPath = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
+                return _assemblyPath;
+            }
+        }
+        // Get the default namespace of the project
+        private string _defaultNamespace = null;
+        private string DefaultNamespace
+        {
+            get
+            {
+                if (_defaultNamespace != null)
+                {
+                    return _defaultNamespace;
+                }
+                Project project = GetProject();
+                Properties properties = project.Properties;
+                _defaultNamespace = properties.Item("DefaultNamespace").Value;
+                return _defaultNamespace;
+            }
+        }
+
         #endregion // Parameter properties / definitions
 
         #region Processing methods
@@ -460,12 +494,109 @@ namespace Forerunner.SDK.ConfigTool
                 return true;
             }
 
+            // Create or update all source files needed to support Forerunner SDK
+            CreateMissingFiles();
+            UpdateWebApiConfig();
+            UpdateGlobal();
+
+            WriteVerbose("end UpdateSourceFiles()");
+            return true;
+        }
+        private string GetProjectDirectory()
+        {
+            Project project = GetProject();
+            return Path.GetDirectoryName(project.FullName);
+        }
+        private void CreateMissingFiles()
+        {
+            // Make sure all required files are included in the project
+            CreateMissingFile(@"App_Start\FilterConfig.cs");
+            CreateMissingFile(@"App_Start\WebApiConfig.cs");
+            CreateMissingFile(@"App_Start\RouteConfig.cs");
+            CreateMissingFile(@"Views\Web.config");
+            CreateMissingFile(@"Global.asax");
+            CreateMissingFile(@"Global.asax.cs");
+        }
+        private void CreateMissingFile(string destPath)
+        {
+            string fullPath = Path.Combine(GetProjectDirectory(), destPath);
+
+            if (File.Exists(fullPath))
+            {
+                // If the file exists we are done
+                return;
+            }
+
+            // Make sure the folder structure exists
+            string projPath = GetProjectDirectory();
+            string relativePath = Path.GetDirectoryName(fullPath).Substring(projPath.Length);
+            if (relativePath != null && relativePath.Length > 0)
+            {
+                char[] sep = {'\\'};
+                string[] folders = relativePath.Split(sep);
+                string curFolder = projPath;
+                foreach (string folder in folders)
+                {
+                    if (folder.Length > 0)
+                    {
+                        curFolder = Path.Combine(curFolder, folder);
+                        Directory.CreateDirectory(curFolder);
+                    }
+                }
+            }
+
+            // Create the file and rename the namespace reference
+            string sourcePath = Path.Combine(AssemblyPath, Path.GetFileName(destPath));
+            string source = File.ReadAllText(sourcePath);
+            const string oldValue = "GettingStartedV4";
+            string newValue = DefaultNamespace;
+            string newSource = source.Replace(oldValue, newValue);
+            File.WriteAllText(fullPath, newSource);
+
+            // Now create the project folders and item
+            char[] seps = {'\\'};
+            string[] parts = destPath.Split(seps);
+            Project project = GetProject();
+            AddExistingItem(fullPath, project.ProjectItems, parts);
+        }
+        private ProjectItem AddExistingItem(string fullPath, ProjectItems items, string[] parts)
+        {
+            string[] newParts = null;
+
+            ProjectItem item = null;
+            try
+            {
+                item = items.Item(parts[0]);
+            }
+            catch { }
+
+            if (item == null)
+            {
+                if (parts.Length == 1)
+                {
+                    return items.AddFromFile(Path.Combine(GetProjectDirectory(), fullPath));
+                }
+
+                ProjectItem newItem = items.AddFolder(parts[0]);
+                newParts = new string[parts.Length - 1];
+                Array.Copy(parts, 1, newParts, 0, parts.Length - 1);
+                return AddExistingItem(fullPath, newItem.ProjectItems, newParts);
+            }
+            else if (parts.Length == 1)
+            {
+                return item;
+            }
+
+            newParts = new string[parts.Length - 1];
+            Array.Copy(parts, 1, newParts, 0, parts.Length - 1);
+            return AddExistingItem(fullPath, item.ProjectItems, newParts);
+        }
+        private void UpdateWebApiConfig()
+        {
+            string path = GetLocalFilePathFromProject(@"App_Start", "WebApiConfig.cs");
             string pattern = @"public static void Register\(HttpConfiguration config\)\s*\r\n\s*\{[ \f\t\v]*";
-            string markComment = @"ForerunnerSDK - Set-FRConfig, Automatic edit start, WebApiConfig.cs, Register()";
+            string markComment = @"WebApiConfig.cs, Register()";
             string insertText =
-                "\r\n" +
-                "            // " + markComment + "\r\n" +
-                "            // Keep the comment above and Set-FRConfig will not change this file again\r\n" +
                 "            config.Routes.MapHttpRoute(\r\n" +
                 "                name: \"MobilizerManagerAPI\",\r\n" +
                 "                routeTemplate: \"api/{controller}/{action}/{id}\",\r\n" +
@@ -478,13 +609,27 @@ namespace Forerunner.SDK.ConfigTool
                 "                routeTemplate: \"api/{controller}/{action}/{id}\",\r\n" +
                 "                defaults: new { id = RouteParameter.Optional },\r\n" +
                 "                constraints: new { controller = \"ReportViewer\" }\r\n" +
-                "            );\r\n" +
-                "            // ForerunnerSDK - Set-FRConfig, Automatic edit end;\r\n";
+                "            );\r\n";
 
-            AutomaticEditInsert(@"App_Start", "WebApiConfig.cs", markComment, pattern, insertText);
+            AutomaticEditInsert(path, pattern, markComment, insertText);
+        }
+        private void UpdateGlobal()
+        {
+            string path = GetLocalFilePathFromProject(@"\", "Global.asax.cs");
+            string pattern = @"void Application_Start\(.*\)\s*\r\n\s*\{[ \f\t\v]*";
 
-            WriteVerbose("end UpdateSourceFiles()");
-            return true;
+            // WebApiConfig
+            string markComment1 = @"Global.asax.cs, Application_Start() - WebApiConfig";
+            string searchText1 = @"WebApiConfig.Register";
+            string insertText1 = "            WebApiConfig.Register(System.Web.Http.GlobalConfiguration.Configuration);\r\n";
+            AutomaticEditInsert(path, pattern, markComment1, insertText1, searchText1);
+
+            // FilterConfig
+            string markComment2 = @"Global.asax.cs, Application_Start() - FilterConfig";
+            string searchText2 = @"FilterConfig.RegisterGlobalFilters";
+            string insertText2 = "            FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilters.Filters);\r\n";
+
+            AutomaticEditInsert(path, pattern, markComment2, insertText2, searchText2);
         }
         private bool isUseIntegratedSecurityForSQL()
         {
@@ -614,23 +759,20 @@ namespace Forerunner.SDK.ConfigTool
             }
             return false;
         }
-        private bool AutomaticEditInsert(string projectRelativePath, string filename, string markComment, string pattern, string insertText)
+        private bool AutomaticEditInsert(string path, string pattern, string markComment, string insertText, string searchText = null)
         {
-            // Read the file into a string
-            string path = GetLocalFilePathFromProject(projectRelativePath, filename);
-            if (path == null)
+            if (path == null || !File.Exists(path))
             {
-                WriteWarning("Warning - File: " + Path.Combine(projectRelativePath, filename) + ", not found");
+                WriteWarning("Warning - File: " + path + ", not found");
                 return false;
             }
-            
-            string fileText;
+
+            // Read the file into a string
+            string fileText = File.ReadAllText(path);
+
             // See if we have already made the automatic edit to this file
-            using (StreamReader sr = File.OpenText(path))
-            {
-                fileText = sr.ReadToEnd();
-            }
-            if (fileText.IndexOf(markComment) != -1)
+            if (fileText.IndexOf(markComment) != -1 ||
+                (searchText != null) && fileText.IndexOf(searchText) != -1)
             {
                 // The mark text is already in the file so we are done
                 return true;
@@ -642,20 +784,20 @@ namespace Forerunner.SDK.ConfigTool
 
             if (!match.Success)
             {
-                throw (new Exception("Search pattern: " + pattern + " not found in file: " + filename));
+                throw (new Exception("Search pattern: " + pattern + " not found in file: " + path));
             }
 
             var sb = new StringBuilder();
             sb.Append(fileText.Substring(0, match.Index + match.Length));
+            sb.Append("\r\n" +
+                      "            // Set-FRConfig, Automatic edit start: " + markComment + "\r\n" +
+                      "            // Keep the comment above and Set-FRConfig will not change this edit again\r\n");
             sb.Append(insertText);
+            sb.Append("            // Set-FRConfig, Automatic edit end: " + markComment + "\r\n");
             sb.Append(fileText.Substring(match.Index + match.Length));
 
             // Save the file back
-            using (StreamWriter sw = File.CreateText(path))
-            {
-                sw.Write(sb.ToString());
-            }
-
+            File.WriteAllText(path, sb.ToString());
             return true;
         }
         private void AddPrompt(string name, string currentValue, string helpMessage, ref System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription> descriptions, out string prompt)

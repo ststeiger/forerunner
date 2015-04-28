@@ -24,7 +24,7 @@
     "addTagsSucceeded":"Aggiungi Tag Completato",
     "addTagsFailed":"Aggiungi Tag falliti",
     "invalidName":"nome non valido",
-    "propertyFailed":"Properties updated Failed"
+    "propertyFailed":"Proprietà aggiornati con Failed"
   },
   "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",

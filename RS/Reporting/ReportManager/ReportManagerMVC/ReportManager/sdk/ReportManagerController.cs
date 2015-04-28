@@ -211,8 +211,6 @@ namespace ReportManager.Controllers
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
-            
-            return resp;
         }
 
         [HttpGet]

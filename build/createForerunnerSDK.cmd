@@ -18,6 +18,7 @@ set NUGET_TOOL=%~dp0tools\nuget\nuget.exe
 :: We need to remove the "..\" so that the "/XD" robocopy switch used below will work properly
 call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager" SRC_REPORT_MANAGER
 call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool" SRC_FRCONFIG
+call %~dp0getFullyQualifiedFilePath.cmd "%~dp0..\RS\Reporting\ReportManager\GettingStartedV4\GettingStartedV4" SRC_GETTING_STARTED_V4
 
 set SRC_FORERUNNER="%SRC_REPORT_MANAGER%\Forerunner"
 set SRC_SDK="%SRC_REPORT_MANAGER%\sdk"
@@ -89,19 +90,34 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+:: Getting Started files -> tools
+robocopy %SRC_GETTING_STARTED_V4% %DEST_TOOLS% Global.asax Global.asax.cs /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: Getting Started App_Start files -> tools
+robocopy %SRC_GETTING_STARTED_V4%/App_Start %DEST_TOOLS% FilterConfig.cs WebApiConfig.cs RouteConfig.cs /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+:: Getting Started Views/Web.config files -> tools
+robocopy %SRC_GETTING_STARTED_V4%/Views %DEST_TOOLS% Web.config /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 :: tools
 robocopy %SRC_FRCONFIG_BIN% %DEST_TOOLS% Forerunner.SDK.ConfigTool.dll UWS.Configuration.dll /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )
 
-robocopy %SRC_FRCONFIG% %DEST_TOOLS% Forerunner.SDK.ConfigTool.Help.xml /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+robocopy %SRC_FRCONFIG% %DEST_TOOLS% Forerunner.SDK.ConfigTool-Help.xml /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )
-
-:: The cmdlet help editor named the help file incorrectly so I rename it here
-rename %DEST_TOOLS%\Forerunner.SDK.ConfigTool.Help.xml Forerunner.SDK.ConfigTool-Help.xml
 
 robocopy %SRC_NUGET% %DEST_TOOLS% init.ps1 install.ps1 uninstall.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (

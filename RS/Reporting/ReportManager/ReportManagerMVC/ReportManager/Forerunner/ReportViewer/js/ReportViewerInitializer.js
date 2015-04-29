@@ -47,7 +47,7 @@ $(function () {
         }
 
         me.parameterModel = null;
-        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }

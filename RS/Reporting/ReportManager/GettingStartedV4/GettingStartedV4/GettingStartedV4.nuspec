@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Forerunner_GettingStartedV4</id>
-    <title>HTML5 MVC Report Viewer for SSRS</title>
+    <title>Quick Start Sample for the HTML5 MVC Web Api Report Viewer for SSRS</title>
     <version>$version$</version>
     <authors>ForerunnerSW</authors>
     <owners>ForerunnerSW</owners>
@@ -14,7 +14,7 @@
     <description>With the Getting Started V4 sample you can see exactly how easy it is to browse and view your reports using the Report Explorer widget from the Forerunner SDK package. Just create an empty web project and install.</description>
     <releaseNotes></releaseNotes>
     <copyright>Copyright 2015</copyright>
-    <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Example</tags>
+    <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Mobilizer Example jQuery Widget</tags>
     <dependencies>
       <dependency id="ForerunnerSDK" version="[4.0.230.0,)" />
     </dependencies>

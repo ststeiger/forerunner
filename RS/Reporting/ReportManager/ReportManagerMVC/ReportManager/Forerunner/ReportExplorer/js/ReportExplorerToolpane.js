@@ -36,6 +36,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolpane), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolpane */ {
         options: {
             navigateTo: null,
+            dbConfig: null,
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
@@ -101,16 +102,24 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
-            var toolpaneItems = [tp.itemBack, tp.itemFolders, tg.explorerItemFolderGroup, tp.itemSetup];
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            var toolpaneItems = [tp.itemBack];
 
-            //if (me._isAdmin()) {
-            toolpaneItems.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder);
-            toolpaneItems.push(mi.itemSecurity);
+            //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
+            }
+
+            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                toolpaneItems.push(tp.itemSearchFolder);
+            }
+
+            toolpaneItems.push(tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemSecurity);
+            
             if (lastFetched.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
             }
-            //}
 
             toolpaneItems.push(tg.explorerItemFindGroup);
 

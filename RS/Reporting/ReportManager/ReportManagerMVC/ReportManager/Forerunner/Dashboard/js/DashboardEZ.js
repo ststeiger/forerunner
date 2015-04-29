@@ -41,7 +41,8 @@ $(function () {
             rsInstance: null,
             userSettings: null,
             path: null,
-            handleWindowResize: true
+            handleWindowResize: true,
+            dbConfig: null
         },
         /**
          * Returns the user settings
@@ -163,7 +164,15 @@ $(function () {
                 if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(dtb.btnHome);
                 }
-                listOfButtons.push(dtb.btnRecent, dtb.btnFavorite);
+
+                if (me.options.dbConfig.UseMobilizerDB === true) {
+                    if (me.options.dbConfig.SeperateDB !== true) {
+                        listOfButtons.push(dtb.btnRecent);
+                    }
+
+                    listOfButtons.push(dtb.btnFavorite);
+                }
+                
 
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(dtb.btnLogOff);

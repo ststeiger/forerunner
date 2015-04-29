@@ -437,7 +437,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\MobilizerConfig.ps1"
   File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.dll"
-  File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  File "${LOCALROOT}\Config\Forerunner.SDK.ConfigTool-Help.xml"
   File "${LOCALROOT}\Config\PublishFRExtension.dll"
   File "${LOCALROOT}\Config\PublishFRExtension-Help.xml"
   File "${LOCALROOT}\Config\UWS.Configuration.dll"

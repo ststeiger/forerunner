@@ -37,7 +37,8 @@ $(function () {
             rsInstance: null,
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
-            toolbarConfigOption: constants.toolbarConfigOption.full
+            toolbarConfigOption: constants.toolbarConfigOption.full,
+            dbConfig: null
         };
 
         // Merge options with the default settings
@@ -52,7 +53,7 @@ $(function () {
         }
 
         me.subscriptionModel = null;
-        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
         }
     };
@@ -87,7 +88,12 @@ $(function () {
 
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
-            $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
+            $toolbar.toolbar({
+                dbConfig: me.options.dbConfig,
+                $reportViewer: $viewer,
+                $ReportViewerInitializer: this,
+                $appContainer: me.options.$appContainer
+            });
 
             var tb = forerunner.ssr.tools.mergedButtons;
             var rtb = forerunner.ssr.tools.rightToolbar;
@@ -98,14 +104,24 @@ $(function () {
                 if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     listOfButtons.push(tb.btnHome);
                 }
-                listOfButtons.push(tb.btnRecent, tb.btnFavorite);
+
+                if (me.options.dbConfig.UseMobilizerDB === true) {
+                    if (me.options.dbConfig.SeperateDB !== true) {
+                        listOfButtons.push(tb.btnRecent);
+                    }
+
+                    listOfButtons.push(tb.btnFavorite);
+                }
 
                 if (forerunner.ajax.isFormsAuth()) {
                     listOfButtons.push(tb.btnLogOff);
                 }
                 $toolbar.toolbar("addTools", 12, true, listOfButtons);
-                $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
-                $toolbar.toolbar("disableTools", [tb.btnFav]);
+
+                if (me.options.dbConfig.UseMobilizerDB === true) {
+                    $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
+                    $toolbar.toolbar("disableTools", [tb.btnFav]);
+                }
             }
 
             if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
@@ -136,36 +152,44 @@ $(function () {
                 $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
-            if (me.options.isReportManager || me.options.useReportManagerSettings) {
+            if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
                 $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
             var mi = forerunner.ssr.tools.mergedItems;
-            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
+            var $toolPane = me.options.$toolPane.toolPane({
+                dbConfig: me.options.dbConfig,
+                $reportViewer: $viewer,
+                $ReportViewerInitializer: this,
+                $appContainer: me.options.$appContainer
+            });
+
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
-                $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
-                $toolPane.toolPane("disableTools", [mi.itemFav]);
+                if (me.options.dbConfig.UseMobilizerDB === true) {
+                    $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
+                    $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
+                    $toolPane.toolPane("disableTools", [mi.itemFav]);
 
-                $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                    $toolPane.toolPane("enableTools", [mi.itemFav]);
-                    $toolbar.toolbar("enableTools", [tb.btnFav]);
-                });
+                    $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                        $toolPane.toolPane("enableTools", [mi.itemFav]);
+                        $toolbar.toolbar("enableTools", [tb.btnFav]);
+                    });
 
-                $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                    me.setFavoriteState($viewer.reportViewer("getReportPath"));
-                });
+                    $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                    });
 
-                $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                    me.setFavoriteState($viewer.reportViewer("getReportPath"));
-                });
+                    $viewer.on(events.reportViewerChangeReport(), function (e, data) {
+                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                    });
 
-                $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
-                    if (data.newPath) {
-                        me.setFavoriteState(data.newPath);
-                    }
-                });
+                    $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                        if (data.newPath) {
+                            me.setFavoriteState(data.newPath);
+                        }
+                    });
+                }               
             }
 
             var $nav = me.options.$nav;
@@ -184,25 +208,27 @@ $(function () {
             $dlg = me._findSection("fr-print-section");
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me._findSection("fr-managesubscription-section");
-            $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+            if (me.options.dbConfig.UseMobilizerDB === true) {
+                $dlg = me._findSection("fr-managesubscription-section");
+                $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
 
-            $dlg = me._findSection("fr-emailsubscription-section");
-            $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
+                $dlg = me._findSection("fr-emailsubscription-section");
+                $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
+
+                if (me.parameterModel) {
+                    $dlg = me._findSection("fr-mps-section");
+                    $dlg.manageParamSets({
+                        $appContainer: me.options.$appContainer,
+                        $reportViewer: $viewer,
+                        $reportViewerInitializer: me,
+                        model: me.parameterModel
+                    });
+                    me._manageParamSetsDialog = $dlg;
+                }
+            }
 
             $dlg = me._findSection("fr-dsc-section");
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
-
-            if (me.parameterModel) {
-                $dlg = me._findSection("fr-mps-section");
-                $dlg.manageParamSets({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer,
-                    $reportViewerInitializer: me,
-                    model: me.parameterModel
-                });
-                me._manageParamSetsDialog = $dlg;
-            }
         },
         _findSection: function (sectionClass) {
             var me = this;
@@ -414,7 +440,7 @@ $(function () {
             var me = this;
             var rtb = forerunner.ssr.tools.rightToolbar;
 
-            if (me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+            if (me.parameterModel && me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
                 me.enableTools([rtb.btnSavParam]);
             } else {
                 me.disableTools([rtb.btnSavParam]);

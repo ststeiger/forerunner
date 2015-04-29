@@ -2675,6 +2675,19 @@ namespace Forerunner.SSRS.Manager
             return getReturnSuccess();
         }
 
+        public string GetDBConfiguration()
+        {
+            JsonWriter writer = new JsonTextWriter();
+            writer.WriteStartObject();
+            writer.WriteMember("UseMobilizerDB");
+            writer.WriteBoolean(UseMobilizerDB);
+            writer.WriteMember("SeperateDB");
+            writer.WriteBoolean(SeperateDB);
+            writer.WriteEndObject();
+
+            return writer.ToString();
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

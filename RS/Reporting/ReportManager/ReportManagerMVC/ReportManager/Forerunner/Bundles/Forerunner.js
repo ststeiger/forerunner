@@ -1615,6 +1615,16 @@ $(function () {
             
         },
 
+        /**
+        * Returns the language specific value.
+        *
+        * @param {String} val - The default value if no localized version is found
+        * @param {object} locObj - the json object with teh localization data
+        *
+        * @return {String} Localized value
+        *
+        * @member
+        */
         getLocalizedValue: function (val, locObj) {
             var me = this;
             var languageList = me._getLanguages();

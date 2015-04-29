@@ -9938,7 +9938,6 @@ $(function () {
 
             if (description) {
                 description = forerunner.helper.htmlDecode(description);
-
                 $desctext.attr("title", description);
                 $desctext.text(description);
             }

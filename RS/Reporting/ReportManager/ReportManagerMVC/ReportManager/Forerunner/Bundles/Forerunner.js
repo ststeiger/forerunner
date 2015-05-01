@@ -2364,7 +2364,9 @@ $(function () {
         this.data = initialData || {};
     };
 
-    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError,deleteCurrentRow,insertNewRow) {
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer,
+        getInputs, easySubmit, getParameters, setParamError, deleteCurrentRow, insertNewRow) {
+
         var me = this;
 
         if (RDLExt === null || RDLExt === undefined)

@@ -9012,17 +9012,19 @@ $(function () {
 
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;
+    var genericPropertyTabs = [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension];
+
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags],
+        1: genericPropertyTabs,
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: genericPropertyTabs,
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags],
+        3: genericPropertyTabs,
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        4: genericPropertyTabs,
         // Search Folder
-        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder, propertyEnums.rdlExtension],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {
@@ -9507,7 +9509,6 @@ $(function () {
         _init: function () {
             var me = this;
             me._super();
-
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
@@ -9583,7 +9584,7 @@ $(function () {
                     }
                 }
 
-                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
+                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog" || lastFetched.view === "resource") && lastFetched.path !== "/" && permissions["Update Properties"]) {
                     enableList.push(mi.itemProperty);
                 }
 
@@ -9916,8 +9917,9 @@ $(function () {
             viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
-            if (catalogItem.LocalizedName)
+            if (catalogItem.LocalizedName) {
                 name = catalogItem.LocalizedName;
+            }
 
             $captiontext.attr("title", name);
             $captiontext.text(name);
@@ -9933,8 +9935,9 @@ $(function () {
             viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
-            if (catalogItem.LocalizedDescription)
+            if (catalogItem.LocalizedDescription) {
                 description = catalogItem.LocalizedDescription;
+            }
 
             if (description) {
                 description = forerunner.helper.htmlDecode(description);
@@ -10016,9 +10019,7 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?";
-            url += "path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
+            var url = me.options.reportManagerAPI + "/Resource?path=" + encodeURIComponent(path) + "&instance=" + me.options.rsInstance;
 
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
@@ -10162,7 +10163,7 @@ $(function () {
             me.view = view;
             me.path = path;
 
-            if (me.view === "catalog" || me.view === "searchfolder") {
+            if (me.view === "catalog" || me.view === "searchfolder" || me.view === "resource") {
                 me._checkPermission();
             }
 
@@ -10285,11 +10286,13 @@ $(function () {
         _initExplorerDialogs: function(){
             var me = this;
 
+            var $dlg;
+
             //init user setting dialog
             if (me.options.dbConfig.UseMobilizerDB === true) {
                 //user settings, subscription, serach folder need mobilizer database support
 
-                var $dlg = me.options.$appContainer.find(".fr-us-section");
+                $dlg = me.options.$appContainer.find(".fr-us-section");
                 if ($dlg.length === 0) {
                     $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                     $dlg.userSettings({
@@ -19533,13 +19536,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var genericPropertyTabs = [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension];
+
     var propertyListMap = {
         // Normal explorer folder and resource files except search folder
-        normal: [propertyEnums.description, propertyEnums.tags],
+        normal: genericPropertyTabs,
         // Report/Linked Report
-        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        report: genericPropertyTabs,
         // Search Folder
-        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder, propertyEnums.rdlExtension],
     };
 
     /**
@@ -19891,6 +19896,9 @@ $(function () {
                 }
                 else if (view === "searchfolder") {
                     me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
+                }
+                else if (view === "resource") {
+                    me._setPropertiesTabs(view, path, propertyListMap.normal);
                 }
 
                 me._setSecurity(path);

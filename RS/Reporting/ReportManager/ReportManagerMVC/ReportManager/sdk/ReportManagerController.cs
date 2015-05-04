@@ -191,9 +191,8 @@ namespace ReportManager.Controllers
                     ItemLoc = LocData[c.ID + c.ModifiedDate.Ticks.ToString()];
 
                 //if not loc data use default
-                if (ItemLoc == null) // here should be continue not break.
-                    continue;
-                    //break;
+                if (ItemLoc == null) 
+                    continue;                    
                 
                 //get the first language that matches, if none match it will use default
                 foreach (string l in listOfLanguages)

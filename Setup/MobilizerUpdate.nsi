@@ -387,9 +387,9 @@ Section "ReportManager" SEC01
    nsisXML::create
    nsisXML::load "$INSTDIR\web.config"
    
-   nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']/dependentAssembly/assemblyIdentity [name='Newtonsoft.Json']"
+   nsisXML::select  "//*[@name='Newtonsoft.Json']"
     
-${If} $1 == ""
+${If} $1 == 0
 
    nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']"
    nsisXML::createElementInNS  "dependentAssembly" "urn:schemas-microsoft-com:asm.v1"

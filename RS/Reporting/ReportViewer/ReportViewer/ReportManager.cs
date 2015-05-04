@@ -309,7 +309,7 @@ namespace Forerunner.SSRS.Manager
             return null;
         }
 
-        public IEnumerable<CatalogItem> GetItems(string view, string path)
+        public CatalogItem[] GetItems(string view, string path)
         {
             if (view == "favorites")
                 return this.GetFavorites();
@@ -1440,6 +1440,9 @@ namespace Forerunner.SSRS.Manager
 
                 //Need to try catch and return error
                 return getReturnSuccess();
+            }
+            catch (Exception e) {
+                return getReturnFailed();
             }
             finally
             {

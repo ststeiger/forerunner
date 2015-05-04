@@ -78,7 +78,7 @@ RequestExecutionLevel admin
 !endif
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-InstallDir "$PROGRAMFILES\Forerunner\MobilizerV3\" ; add '\' at the end to prevent MobilizerV* append to the end of user custom select path
+InstallDir "$PROGRAMFILES\Forerunner\MobilizerV4\" ; add '\' at the end to prevent MobilizerV* append to the end of user custom select path
 OutFile "ForerunnerMobilizerUpdate.exe"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -110,6 +110,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
   File "${LOCALROOT}\bin\PdfSharp.dll"
+  File "${LOCALROOT}\bin\Newtonsoft.Json.dll"
   
   SetOutPath "$INSTDIR\sdk"
   File "${LOCALROOT}\sdk\ReportManagerController.cs"
@@ -381,6 +382,15 @@ Section "ReportManager" SEC01
   File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
   File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
 
+  ;update config file
+   nsisXML::create
+   nsisXML::load "$INSTDIR\web.config"
+   nsisXML::select "/configuration/runtime"
+
+   nsisXML::createElement "dependentAssembly"
+   nsisXML::setText '<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />        <bindingRedirect oldVersion="0.0.0.0-4.5.0.0" newVersion="6.0.0.0"/>'
+   nsisXML::appendChild
+   nsisXML::save "$INSTDIR\web.config"
 
 ;This must be the last line of the config tool will not work after install
  SetOutPath "$INSTDIR\Config"
@@ -407,6 +417,11 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
 SectionEnd
+
+Function UpdateConfig
+        
+
+FunctionEnd
 
 Function .onInit
    System::Call 'kernel32::CreateMutexA(i 0, i 0, t "myMutex") i .r1 ?e'

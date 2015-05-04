@@ -1614,6 +1614,37 @@ $(function () {
             return langData;
             
         },
+
+        /**
+        * Returns the language specific value.
+        *
+        * @param {String} val - The default value if no localized version is found
+        * @param {object} locObj - the json object with teh localization data
+        *
+        * @return {String} Localized value
+        *
+        * @member
+        */
+        getLocalizedValue: function (val, locObj) {
+            var me = this;
+            var languageList = me._getLanguages();
+            var i;
+
+            if (!languageList)
+                return val;
+
+            for (i = 0; i < languageList.length; i++) {
+                var lang = languageList[i];
+                lang = lang.toLocaleLowerCase();
+
+                if (locObj[lang])
+                    return locObj[lang].value;
+            }
+
+            return val;
+            
+
+        },
         _getLanguages: function () {
             var me = this;
 
@@ -2333,7 +2364,9 @@ $(function () {
         this.data = initialData || {};
     };
 
-    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer, getInputs, easySubmit, getParameters, setParamError,deleteCurrentRow,insertNewRow) {
+    forerunner.ssr._writeRDLExtActions = function (ObjName, RDLExt, $Control, mapAreaOnly, reportViewer,
+        getInputs, easySubmit, getParameters, setParamError, deleteCurrentRow, insertNewRow) {
+
         var me = this;
 
         if (RDLExt === null || RDLExt === undefined)

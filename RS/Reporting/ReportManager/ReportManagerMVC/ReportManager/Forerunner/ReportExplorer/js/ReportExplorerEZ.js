@@ -29,13 +29,15 @@ $(function () {
         recent: rtp.itemRecent.selectorClass,
     };
 
+    var genericPropertyTabs = [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension];
+
     var propertyListMap = {
         // Normal explorer folder and resource files except search folder
-        normal: [propertyEnums.description, propertyEnums.tags],
+        normal: genericPropertyTabs,
         // Report/Linked Report
-        report: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        report: genericPropertyTabs,
         // Search Folder
-        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder, propertyEnums.rdlExtension],
     };
 
     /**
@@ -387,6 +389,9 @@ $(function () {
                 }
                 else if (view === "searchfolder") {
                     me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
+                }
+                else if (view === "resource") {
+                    me._setPropertiesTabs(view, path, propertyListMap.normal);
                 }
 
                 me._setSecurity(path);

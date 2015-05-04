@@ -29,32 +29,60 @@
 </head>
 
 <body>
+ <div id="fb-root"></div>
+<script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 
-   <!-- Header ================================================== -->
+  <!-- Header ================================================== -->
     <div class="ForerunnerPort Header" style="">
         <div class="ForerunnerPage Center" style="">
 
             <div class="" style="display:block; width: 100%;">
-                <div class="HeaderFont" style="display:block;width: 100%;text-align:right;color:#0b86c6;"><span style="font-size:30px;">855.367.3511</span> | <a style="font-size:14px;" href="/home/contact">CONTACT US</a> </div>
+
+                <div class="HeaderFont" style="display: table; width: 100%; text-align: right; color: #0b86c6;">
+                    <div class="ForerunnerSocial" >&nbsp</div>
+
+                    <div  class="ForerunnerSocial "style=" width:70px;vertical-align:top;"">
+                        <a style="margin-right: 200px;" href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a>
+                        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+                    </div>
+                    <div  class="ForerunnerSocial "style=" width:70px;vertical-align:top;">
+                        <div class="fb-share-button" data-href="https://forerunnersw.com"></div>
+                    </div>
+                    <div  class="ForerunnerSocial "style="width:80px;vertical-align:top;"">
+                        <script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+                        <script type="IN/Share"></script>
+                    </div>
+                    <div  class="ForerunnerSocial "style="  width:300px;">
+                        <span style="font-size: 30px;">855.367.3511</span><a style="font-size: 14px;" href="/contact"> | CONTACT US</a>
+                    </div>
+                </div>
 
                 <div class="" style="display: table; width: 100%;">
                     <div class="ForerunnerTD " style="max-width:350px;">
                         <div class="ForerunnerTD ForerunnerLogo">
-                            <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Software" />
+                            <a href="/"><img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Software" /></a>
                         </div>
                     </div>
                     <div class="ForerunnerTD " style="width:100%;">
                         <div class="Navbar TopNavbar">
                             <div style="float:right;">
                                 <ul>            
-                                    <li id="Index" class="Navitem TopNavitem"><a href="/Home">HOME</a></li>
-                                    <li id="Features" class="Navitem TopNavitem"><a href="/home/features">FEATURES</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem"><a href="/home/developers">DEVELOPERS</a></li>
-                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/home/pricing">PRICING</a></li>
-                                    <li id="Demo" class="Navitem TopNavitem"><a href="/home/demo">DEMO</a></li>
-                                    <li id="Support" class="Navitem TopNavitem"><a href="/home/support">SUPPORT</a></li>
-                                    <li id="About" class="Navitem TopNavitem"><a href="/home/about">ABOUT</a></li>
-                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/Home/register">FREE TRIAL</a></li>                                                            
+                                    <li id="Index" class="Navitem TopNavitem"><a href="/">HOME</a></li>
+                                    <li id="Features" class="Navitem TopNavitem"><a href="/features">FEATURES</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="/developers">DEVELOPERS</a></li>
+                                    <li id="Pricing" class="Navitem TopNavitem"><a href="/pricing">PRICING</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="/demo">DEMO</a></li>
+                                    <li id="Partners" class="Navitem TopNavitem"><a href="/partners">PARTNERS</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="/support">SUPPORT</a></li>
+                                    <li id="BLOG" class="Navitem TopNavitem"><a href="/blog">BLOG</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="/about">ABOUT</a></li>
+                                    <li id="Register" class="DownloadButton Navitem TopNavitem Rounded"><a href="/registerTrial">FREE TRIAL</a></li>                                                            
                                 </ul>
                             </div>                            
                         </div>
@@ -154,6 +182,53 @@
     
     <div class="description">
         Wraps the $.ajax call and if the response status 302 || 401, it will redirect to login page. Additionally this method will set the proper CORS setting to enable cross domain scripting.
+    </div>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getBuildVersion"><span class="type-signature">&lt;static> </span>getBuildVersion<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Get build version on the server side
     </div>
     
     
@@ -536,7 +611,7 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageMySubscriptions.html">manageMySubscriptions</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.contextMenuBase.html">contextMenuBase</a></li><li><a href="$.forerunner.createDashboard.html">createDashboard</a></li><li><a href="$.forerunner.dialogBase.html">dialogBase</a></li><li><a href="$.forerunner.dsCredential.html">dsCredential</a></li><li><a href="$.forerunner.emailSubscription.html">emailSubscription</a></li><li><a href="$.forerunner.forerunnerLinkedReport.html">forerunnerLinkedReport</a></li><li><a href="$.forerunner.forerunnerMoveItem.html">forerunnerMoveItem</a></li><li><a href="$.forerunner.forerunnerProperties.html">forerunnerProperties</a></li><li><a href="$.forerunner.forerunnerSecurity.html">forerunnerSecurity</a></li><li><a href="$.forerunner.history.html">history</a></li><li><a href="$.forerunner.manageMySubscriptions.html">manageMySubscriptions</a></li><li><a href="$.forerunner.manageParamSets.html">manageParamSets</a></li><li><a href="$.forerunner.manageSubscription.html">manageSubscription</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.newFolder.html">newFolder</a></li><li><a href="$.forerunner.pageNav.html">pageNav</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerSearchFolder.html">reportExplorerSearchFolder</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportPrint.html">reportPrint</a></li><li><a href="$.forerunner.reportRender.html">reportRender</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.router.html">router</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.uploadFile.html">uploadFile</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="$.forerunner.viewerBase.html">viewerBase</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.dashboardToolbar.html">dashboardToolbar</a></li><li><a href="forerunner.ssr.tools.dashboardToolPane.html">dashboardToolPane</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolpane.html">reportExplorerToolpane</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.ssr.tools.unZoomToolbar.html">unZoomToolbar</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul>
 		</nav>
 	</div>
 </div>
@@ -544,30 +619,55 @@
  <!-- Footer ================================================== -->
 
  <div style="clear: both"></div>
-    <div class="ForerunnerPort Footer" style="">
+    <div class="ForerunnerPort Footer" style="min-height:230px;">
         <div class="ForerunnerPage Center" style="">
             <div class="" style="width: 100%;">
-                <div class="Navbar BottomNavbar DetailFont" style="float: right;font-size:18px;">
+                <div class="Navbar BottomNavbar DetailFont" style="float: right;">
                     <ul>
-                        <li id="" class="Navitem BottomNavitem"><a href="/Home">HOME</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/features">FEATURES</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/developers">DEVELOPERS</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/pricing">PRICING</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/demo">DEMO</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/support">SUPPORT</a></li>
-                        <li id="" class="Navitem BottomNavitem"><a href="/home/about">ABOUT</a></li>
-                        <li id="" class=" DownloadButton Navitem BottomNavitem  Rounded"><a href="/Home/register">FREE TRIAL</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/">HOME</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/features">FEATURES</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/developers">DEVELOPERS</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/pricing">PRICING</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/demo">DEMO</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/partners">PARTNERS</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/support">SUPPORT</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/about">ABOUT</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/blog">BLOG</a></li>
+                        <li id="" class="Navitem BottomNavitem"><a href="/press">PRESS</a></li>
+                        <li id="" class=" DownloadButton Navitem BottomNavitem  Rounded"><a href="/registerTrial">FREE TRIAL</a></li>
                     </ul>
                 </div>
 
                 <div class="" style="display: block; float: left; padding-top: 20px;">
-                    <div class="FooterContent ">� 2014 Forerunner Software All rights reserved</div>
+                    <div class="FooterContent ">� 2015 Forerunner Software All rights reserved</div>
                     <div class="FooterContent ">855-367-3511 (855-FORE511) </div>
                 </div>
+
+               
             </div>
         </div>
+        
+             <div  class="" style="margin-left: 75px; margin-top:20px;  display:table;float:left;">
+                <div style="display:table-row;">
+                    <div  class="ForerunnerSocial " style=" width:70px;">
+                        <a style="" href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a>
+                        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
+                    </div>
+                    <div  class="ForerunnerSocial Rounded GreyBackgrouud"style="  width:70px;">
+                        <div class="fb-share-button" data-href="https://forerunnersw.com"></div>
+                    </div>
+                    <div  class="ForerunnerSocial  "style="  width:10px;"></div>
+                    <div  class="ForerunnerSocial  "style="width:80px;"">
+                        <script src="//platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+                        <script type="IN/Share"></script>
+                    </div>
+                </div>
+        </div>
+
     </div>
     
+
+
     <!-- Footer ================================================== -->
 
 <script> prettyPrint(); </script>

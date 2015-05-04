@@ -600,6 +600,11 @@ $(function () {
             //Add RDL Ext to parameters
             if (me.options.RDLExt && me.options.RDLExt[param.Name] !== undefined && $element !== undefined) {
                 forerunner.ssr._writeRDLExtActions(param.Name, me.options.RDLExt, $element, undefined, me.options.$reportViewer.element, undefined, undefined, function () { return me._getParamControls.call(me); }, function (c, m) { me._setParamError.call(me, c, m); });
+
+                if (me.options.RDLExt[param.Name].localize) {
+                    $label.text(forerunner.localize.getLocalizedValue(param.Prompt, me.options.RDLExt[param.Name].localize));
+                }
+                    
                 //$.each(me._paramValidation[param.Name], function (index, attribute) {
                 //    $element.removeAttr(attribute);
                 //});

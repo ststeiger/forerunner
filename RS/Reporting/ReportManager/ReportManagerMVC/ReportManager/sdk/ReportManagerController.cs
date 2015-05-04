@@ -10,11 +10,12 @@ using System.Web.Http;
 using System.Text;
 //using System.Web.Script.Serialization;
 using System.Threading.Tasks;
-
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
 using Forerunner.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ReportManager.Controllers
 {
@@ -50,7 +51,8 @@ namespace ReportManager.Controllers
         static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
         static private string MobilizerVersionPath = ConfigurationManager.AppSettings["Forerunner.VersionPath"];        
         static private bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
-
+        static private string DefaultLoc = ConfigurationManager.AppSettings["Forerunner.DefaultLoc"];
+        static private Dictionary<string, JObject> LocData = new Dictionary<string, JObject>();
         static private string EmptyJSONObject = "{}";
    
         static ReportManagerController()
@@ -145,12 +147,75 @@ namespace ReportManager.Controllers
             return resp;
         }
 
+        private void GetLocalizedNames(CatalogItem[] items, string instance)
+        {
+            if (DefaultLoc == null)
+                return;
+
+            
+            //Get Languages            
+            HttpHeaderValueCollection<StringWithQualityHeaderValue> acceptLanguage = this.Request.Headers.AcceptLanguage;
+            List<string> listOfLanguages = new List<string>();
+            foreach (StringWithQualityHeaderValue value in acceptLanguage)
+            {
+                if (value.Value != null && value.Value != "")
+                    listOfLanguages.Add(value.Value.ToLower());
+            }
+
+            //if your first lang is default return
+            if (listOfLanguages[0] == DefaultLoc)
+                return;
+
+            //See if there is localization data for each item
+            foreach (CatalogItem c in items)
+            {
+                JObject ItemLoc = null;
+                if (!LocData.ContainsKey(c.ID+c.ModifiedDate.Ticks.ToString()))
+                {
+                    //save loc data for perf
+                    string ExtProp = GetReportManager(instance).GetProperty(c.Path,"ForerunnerRDLExt");
+                    if (ExtProp != null && ExtProp !="")
+                    {
+                        try
+                        {
+                            JObject o = JObject.Parse(ExtProp);
+                            ItemLoc = (JObject)o["localize"];
+                        }
+                        catch
+                        {
+                        }
+                        LocData.Add(c.ID + c.ModifiedDate.Ticks.ToString(), ItemLoc);                        
+                    }                   
+                }
+                else
+                    ItemLoc = LocData[c.ID + c.ModifiedDate.Ticks.ToString()];
+
+                //if not loc data use default
+                if (ItemLoc == null) 
+                    continue;                    
+                
+                //get the first language that matches, if none match it will use default
+                foreach (string l in listOfLanguages)
+                {                    
+                    if ( l == DefaultLoc)
+                        break;
+                    if (ItemLoc[l] != null)
+                    {
+                        c.LocalizedName = (string)ItemLoc[l]["name"];
+                        c.LocalizedDescription =  (string)ItemLoc[l]["description"];
+                        break;
+                    }
+                }          
+
+            }
+        }
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
             try
             {
-                IEnumerable<CatalogItem> items = GetReportManager(instance).GetItems(view, path);                
+                CatalogItem[] items = GetReportManager(instance).GetItems(view, path);
+                GetLocalizedNames(items,instance);
                 if (items == null)
                 {
                     return GetEmptyJSONResponse();
@@ -169,6 +234,7 @@ namespace ReportManager.Controllers
             try
             {
                 CatalogItem[] matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
+                GetLocalizedNames(matchesItems,instance);
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
             }
             catch (Exception e)
@@ -211,6 +277,7 @@ namespace ReportManager.Controllers
             {
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
+
         }
 
         [HttpGet]

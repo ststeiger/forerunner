@@ -101,7 +101,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: toolPane</h1>
+			<h1 class="page-title">Namespace: forerunnerLinkedReport</h1>
 			 
 
 
@@ -112,7 +112,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    toolPane
+    forerunnerLinkedReport
     </h2>
     
 </header>  
@@ -123,7 +123,7 @@
     
     
         
-            <div class="description">ToolPane widget used with the reportViewer</div>
+            <div class="description">Widget used to manage item linked report</div>
         
         
         
@@ -172,7 +172,7 @@
             
             
             
-            <td class="description last">The options for toolPane
+            <td class="description last">The options for the linked report dialog
                 <h6>Properties</h6>
 
 <table class="props">
@@ -197,7 +197,7 @@
 	
         <tr>
             
-                <td class="name"><code>$reportViewer</code></td>
+                <td class="name"><code>$reportExplorer</code></td>
             
             
             <td class="type">
@@ -213,14 +213,37 @@
             
             
             
-            <td class="description last">The report viewer widget</td>
+            <td class="description last">Report viewer widget</td>
         </tr>
 	
 	
 	
         <tr>
             
-                <td class="name"><code>toolClass</code></td>
+                <td class="name"><code>$appContainer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The container jQuery object that holds the application</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rsInstance</code></td>
             
             
             <td class="type">
@@ -236,7 +259,7 @@
             
             
             
-            <td class="description last">The top level class for this tool (E.g., fr-toolpane)</td>
+            <td class="description last">Optional, Report service instance name</td>
         </tr>
 	
 	
@@ -278,7 +301,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>$("#toolPaneId").toolPane({ $reportViewer: $viewer, toolClass: "fr-toolpane"});Note: ToolPane can be extended by calling the addTools method defined by <a href="$.forerunner.toolBase.html">$.forerunner.toolBase</a></code></pre>
+    <pre class="prettyprint"><code>$("#property").forerunnerLinkedReport({    $appContainer: me.options.$appContainer,    $reportExplorer: me.$explorer});</code></pre>
 
         
     

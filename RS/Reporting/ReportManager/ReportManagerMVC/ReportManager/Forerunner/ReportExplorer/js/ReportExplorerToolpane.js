@@ -98,20 +98,19 @@ $(function () {
         _init: function () {
             var me = this;
             me._super();
-
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
             var toolpaneItems = [tp.itemBack];
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
             
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
@@ -174,7 +173,7 @@ $(function () {
                     }
                 }
 
-                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
+                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog" || lastFetched.view === "resource") && lastFetched.path !== "/" && permissions["Update Properties"]) {
                     enableList.push(mi.itemProperty);
                 }
 

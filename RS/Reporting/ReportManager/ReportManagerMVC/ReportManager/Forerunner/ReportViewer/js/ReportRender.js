@@ -771,8 +771,6 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
 
-
-
             RIContext.$HTMLParent.attr("Style", Style);
             RIContext.$HTMLParent.addClass("fr-r-rT");
 
@@ -874,14 +872,21 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                
+                if (textExt && textExt.localize)
+                    val = forerunner.localize.getLocalizedValue(val, textExt.localize);
+
                 if (val) {
                     val = me._getNewLineFormatText(val);
+                    
+
                     if (textExt.InputType) {
                         $TextObj.attr("data-origVal", val);
                         $TextObj.val(val);
                     }
                     else
                         $TextObj.text(val);
+
                     if (textExt.InputReadOnly === true)
                         $TextObj.attr("readonly", "readonly");
 

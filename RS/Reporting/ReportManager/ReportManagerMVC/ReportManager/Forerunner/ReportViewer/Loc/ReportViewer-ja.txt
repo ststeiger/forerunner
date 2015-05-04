@@ -300,7 +300,9 @@
     "downloadFile":"ダウンロードファイル",
     "deleteConfirm":"あなたは{0}削除してもよろしいですか？",
     "folderNotEmpty":"フォルダ内のサブ項目があり、あなたはそれを削除することはできません。",
-    "move":"移動"
+    "move":"移動",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "common": {
     "submit":"提出する",

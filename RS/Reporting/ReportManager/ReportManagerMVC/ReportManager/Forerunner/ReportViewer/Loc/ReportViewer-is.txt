@@ -301,8 +301,8 @@
     "deleteConfirm":"Ertu viss um að eyða {0}?",
     "folderNotEmpty":"Það er undir lið inni í möppunni, þú getur ekki eyða því.",
     "move":"Færa",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"fjarlægja Favorite",
+    "unFavConfirm":"Ertu viss um að þú viljir fjarlægja {0} frá Augl?"
   },
   "common": {
     "submit":"leggja",

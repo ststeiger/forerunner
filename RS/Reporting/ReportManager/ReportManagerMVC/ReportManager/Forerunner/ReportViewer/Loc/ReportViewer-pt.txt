@@ -301,8 +301,8 @@
     "deleteConfirm":"Tem certeza que deseja excluir {0}?",
     "folderNotEmpty":"Há sub item dentro da pasta, não é possível excluí-lo.",
     "move":"mudança",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Remover favorito",
+    "unFavConfirm":"Tem certeza de que deseja remover {0} da lista favorita?"
   },
   "common": {
     "submit":"submeter",

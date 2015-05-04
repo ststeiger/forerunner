@@ -301,8 +301,8 @@
     "deleteConfirm":"Sigur să ștergeți {0}?",
     "folderNotEmpty":"Nu este sub articol din dosarul, nu se poate șterge",
     "move":"mutare",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Scoateți favorit",
+    "unFavConfirm":"Sigur doriți să eliminați {0} din lista preferată?"
   },
   "common": {
     "submit":"prezenta",

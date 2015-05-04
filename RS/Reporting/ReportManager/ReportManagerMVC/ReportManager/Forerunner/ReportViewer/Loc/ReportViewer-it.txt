@@ -301,8 +301,8 @@
     "deleteConfirm":"Sei sicuro di voler eliminare {0}?",
     "folderNotEmpty":"C'è voce secondaria all'interno della cartella, non è possibile eliminarlo.",
     "move":"mossa",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Rimuovere Favorite",
+    "unFavConfirm":"Sei sicuro di voler rimuovere {0} dalla lista dei preferiti?"
   },
   "common": {
     "submit":"presentare",

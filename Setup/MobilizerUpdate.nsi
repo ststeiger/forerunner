@@ -382,6 +382,15 @@ Section "ReportManager" SEC01
   File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
   File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
 
+  ;update config file
+   nsisXML::create
+   nsisXML::load "$INSTDIR\web.config"
+   nsisXML::select "/configuration/runtime"
+
+   nsisXML::createElement "dependentAssembly"
+   nsisXML::setText '<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />        <bindingRedirect oldVersion="0.0.0.0-4.5.0.0" newVersion="6.0.0.0"/>'
+   nsisXML::appendChild
+   nsisXML::save "$INSTDIR\web.config"
 
 ;This must be the last line of the config tool will not work after install
  SetOutPath "$INSTDIR\Config"
@@ -410,14 +419,7 @@ Section -Post
 SectionEnd
 
 Function UpdateConfig
-         nsisXML::create
-         nsisXML::load "$INSTDIR\web.config"
-         nsisXML::select "/configuration/runtime"
-         
-         nsisXML::createElement "dependentAssembly"
-         nsisXML::setText '<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />        <bindingRedirect oldVersion="0.0.0.0-4.5.0.0" newVersion="6.0.0.0"/>'
-         nsisXML::appendChild
-         nsisXML::save "$INSTDIR\web.config"
+        
 
 FunctionEnd
 

@@ -385,23 +385,22 @@ Section "ReportManager" SEC01
   ;update config file
    nsisXML::create
    nsisXML::load "$INSTDIR\web.config"
-   nsisXML::select "/configuration/runtime/assemblyBinding"
+   nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']"
 
-   nsisXML::createElement "dependentAssembly"
+   nsisXML::createElementInNS  "dependentAssembly" "urn:schemas-microsoft-com:asm.v1"
    nsisXML::appendChild
-   
    StrCpy $1 $2
-   
-   nsisXML::createElement "assemblyIdentity"
+
+   nsisXML::createElementInNS "assemblyIdentity"  "urn:schemas-microsoft-com:asm.v1"
    nsisXML::setAttribute "name" "Newtonsoft.Json"
    nsisXML::setAttribute "publicKeyToken" "30ad4fe6b2a6aeed"
    nsisXML::appendChild
-   
-   nsisXML::createElement "bindingRedirect"
+
+   nsisXML::createElementInNS "bindingRedirect"  "urn:schemas-microsoft-com:asm.v1"
    nsisXML::setAttribute "oldVersion" "0.0.0.0-4.5.0.0"
    nsisXML::setAttribute "newVersion" "6.0.0.0"
    nsisXML::appendChild
-   
+
    nsisXML::save "$INSTDIR\web.config"
 
 ;This must be the last line of the config tool will not work after install

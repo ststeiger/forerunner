@@ -9421,7 +9421,6 @@ $(function () {
                 if (me.options.dbConfig.SeperateDB !== true) {
                     toolbarList.push(tb.btnRecent);
                 }
-
                 toolbarList.push(tb.btnFav);
             }
 

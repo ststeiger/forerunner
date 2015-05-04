@@ -300,7 +300,9 @@
     "downloadFile":"Download File",
     "deleteConfirm":"Sei sicuro di voler eliminare {0}?",
     "folderNotEmpty":"C'è voce secondaria all'interno della cartella, non è possibile eliminarlo.",
-    "move":"mossa"
+    "move":"mossa",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "common": {
     "submit":"presentare",

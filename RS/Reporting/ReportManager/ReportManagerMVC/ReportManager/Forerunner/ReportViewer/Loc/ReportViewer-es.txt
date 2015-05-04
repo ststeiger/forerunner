@@ -301,7 +301,9 @@
     "downloadFile":"Descargar Archivo",
     "deleteConfirm":"¿Seguro eliminar {0}?",
     "folderNotEmpty":"Hay subtema dentro de la carpeta, no puede eliminarlo.",
-    "move":"movimiento"
+    "move":"movimiento",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "common": {
     "submit":"presentar",

@@ -300,7 +300,9 @@
     "downloadFile":"下载文件",
     "deleteConfirm":"确定要删除 {0} 吗?",
     "folderNotEmpty":"该文件夹中包含子项，您不能删除",
-    "move":"移动"
+    "move":"移动",
+    "unFavorite":"移除收藏",
+    "unFavConfirm":"您确定要从收藏列表中移除项 {0} 吗?"
   },
   "common": {
     "submit":"提交",

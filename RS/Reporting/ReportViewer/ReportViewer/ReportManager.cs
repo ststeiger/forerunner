@@ -1441,6 +1441,9 @@ namespace Forerunner.SSRS.Manager
                 //Need to try catch and return error
                 return getReturnSuccess();
             }
+            catch (Exception e) {
+                return getReturnFailed();
+            }
             finally
             {
                 if (impersonator != null)

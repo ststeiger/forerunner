@@ -9033,7 +9033,8 @@ $(function () {
             $reportExplorer: null,
             reportManagerAPI: null,
             rsInstance: null,
-            catalogItem: null
+            catalogItem: null,
+            view: null
         },
         _init: function () {
             var me = this;
@@ -9118,6 +9119,15 @@ $(function () {
                 me._$moveItem.removeClass("fr-toolbase-disabled").addClass("fr-core-cursorpointer");
             }
 
+            me._$unFavorite.off("click").hide();
+            if (me.options.view === "favorites") {
+                me._$unFavorite.on("click", function (event, data) {
+                    me._onClickUnFavorite.apply(me, arguments);
+                });
+
+                me._$unFavorite.show();
+            }
+
             // Call contextMenuBase._init()
             me._super();
         },
@@ -9135,14 +9145,14 @@ $(function () {
             me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
             me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
             me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
+            me._$unFavorite = me.addMenuItem("fr-crx-unFav-id", contextMenu.unFavorite);
         },
         _onClickDelete: function (event, data) {
             var me = this;
             var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
             if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
             
-            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
-            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path) + "&safeFolderDelete=true";
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem?path=" + encodeURIComponent(me.options.catalogItem.Path) + "&safeFolderDelete=true";
 
             if (me.options.rsInstance) {
                 url += "&instance=" + me.options.rsInstance;
@@ -9170,9 +9180,9 @@ $(function () {
         _onClickDownloadFile: function (event, data) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/DownloadFile";
-            url += "?path=" + encodeURIComponent(me.options.catalogItem.Path);
-            url += "&itemtype=" + encodeURIComponent(me.options.catalogItem.Type);
+            var url = me.options.reportManagerAPI + "/DownloadFile?path=" + encodeURIComponent(me.options.catalogItem.Path) +
+                "&itemtype=" + encodeURIComponent(me.options.catalogItem.Type);
+
             if (me.options.rsInstance) {
                 url += "&instance=" + me.options.rsInstance;
             }
@@ -9266,6 +9276,36 @@ $(function () {
 
             $moveItemDlg.one(events.forerunnerMoveItemClose(), function (event, data) {
                 me.options.$reportExplorer.reportExplorer("refresh");
+            });
+
+            me.closeMenu();
+        },
+        _onClickUnFavorite: function (event, data) {
+            var me = this;
+
+            var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
+
+            if (!window.confirm(contextMenu.unFavConfirm.format(itemName))) return;
+
+            var url = me.options.reportManagerAPI + "/UpdateView?view=favorites&action=delete&path=" + me.options.catalogItem.Path;
+
+            if (me.options.rsInstance) {
+                url += "&instance=" + me.options.rsInstance;
+            }
+
+            forerunner.ajax.ajax({
+                dataType: "json",
+                url: url,
+                async: false,
+                success: function (data) {
+                    if (data.Status === "Success") {
+                        me.options.$reportExplorer.reportExplorer("refresh");
+                    }
+                },
+                fail: function (jqXHR) {
+                    console.log("UpdateView failed - " + jqXHR.statusText);
+                    console.log(jqXHR);
+                }
             });
 
             me.closeMenu();
@@ -9969,7 +10009,8 @@ $(function () {
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
-                catalogItem: data.catalogItem
+                catalogItem: data.catalogItem,
+                view: me.view
             });
             me._contextMenu.reportExplorerContextMenu("openMenu", data.pageX, data.pageY);
         },

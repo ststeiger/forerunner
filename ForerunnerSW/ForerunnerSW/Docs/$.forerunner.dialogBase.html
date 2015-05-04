@@ -101,7 +101,7 @@
 <div class="ForerunnerPort" style="">
     <div class="ForerunnerPage Center" style="">
 		<div id="main">
-			<h1 class="page-title">Namespace: toolPane</h1>
+			<h1 class="page-title">Namespace: dialogBase</h1>
 			 
 
 
@@ -112,7 +112,7 @@
     <h2>
         <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
     
-    toolPane
+    dialogBase
     </h2>
     
 </header>  
@@ -123,7 +123,7 @@
     
     
         
-            <div class="description">ToolPane widget used with the reportViewer</div>
+            <div class="description">Base Widget used to contain common dialog functionality.</div>
         
         
         
@@ -172,7 +172,7 @@
             
             
             
-            <td class="description last">The options for toolPane
+            <td class="description last">The options for dialogBase
                 <h6>Properties</h6>
 
 <table class="props">
@@ -197,30 +197,7 @@
 	
         <tr>
             
-                <td class="name"><code>$reportViewer</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The report viewer widget</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>toolClass</code></td>
+                <td class="name"><code>title</code></td>
             
             
             <td class="type">
@@ -236,7 +213,145 @@
             
             
             
-            <td class="description last">The top level class for this tool (E.g., fr-toolpane)</td>
+            <td class="description last">The Title used for in the dialog header</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>iconClass</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Class used to define the dialog icon</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>$appContainer</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The container jQuery object that holds the application</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>actionWord</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Localized string defining the submit text</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>cancelWord</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Localized string defining the cancel text</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>reportManagerAPI</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Path to the REST calls for the reportManager</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>rsInstance</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Optional, Report service instance name</td>
         </tr>
 	
 	
@@ -278,7 +393,7 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>$("#toolPaneId").toolPane({ $reportViewer: $viewer, toolClass: "fr-toolpane"});Note: ToolPane can be extended by calling the addTools method defined by <a href="$.forerunner.toolBase.html">$.forerunner.toolBase</a></code></pre>
+    <pre class="prettyprint"><code>var widgets = <a href="forerunner.ssr.constants.widgets.html">forerunner.ssr.constants.widgets</a>;$.widget(widgets.getFullname(widgets.uploadFile), $.forerunner.dialogBase, { options: {     title: loc.uploadDialog.title     iconClass: "fr-icons24x24-setup",     $appContainer: me.$appContainer },});</code></pre>
 
         
     
@@ -296,6 +411,196 @@
     
     
     
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="closeDialog"><span class="type-signature"></span>closeDialog<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Close  dialog
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="onDialogVisible"><span class="type-signature"></span>onDialogVisible<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Is called when the dialog becomes visible. This is a good function to use ifyou need to do dynamic layout because the position and dimensions of the dialog'selements are all set when this is called.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="openDialog"><span class="type-signature"></span>openDialog<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Open dialog
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
     
     
     

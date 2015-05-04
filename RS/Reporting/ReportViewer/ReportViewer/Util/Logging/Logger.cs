@@ -23,7 +23,7 @@ namespace Forerunner.Logging
             {
                 string path = AppDomain.CurrentDomain.BaseDirectory;
                 DateTime now = DateTime.Now;
-                string fileName = String.Format("Forerunner_V3_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
+                string fileName = String.Format("Forerunner_V4_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
                 string filePath = path + @"\..\LogFiles\" + fileName;
                 TraceListener listener = new TextWriterTraceListener(filePath) { TraceOutputOptions = TraceOptions.DateTime | TraceOptions.ThreadId };
                 ts.Listeners.Add(listener);

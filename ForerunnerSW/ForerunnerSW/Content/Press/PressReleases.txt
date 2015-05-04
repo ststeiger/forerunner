@@ -1,6 +1,35 @@
 ﻿
 [
 {
+"ID": "21",
+"Link": "/press?Article=20",
+"Title":"Forerunner Software announces the Public Availability of Mobilizer 4.0",
+"Description":"Forerunner Software’s Mobilizer 4.0 allows you to leverage the power of SQL Server Reporting Services and take it to the next level across all Mobile and PC browsers. With no per user charges, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI.",
+"Release": "Plano, TX, May 4, 2015",
+"Content": "2015 Forerunner Mobilizer has been helping customers get the most out of SQL Server Reporting Services (SSRS) with robust PC and Mobile reporting.  With universal access from any device and patent pending technology to make any report responsive and optimized for any device, Mobilizer is the most powerful add-on to SSRS on the market. Mobilizer 4.0 adds even more features that customers have been waiting for.
+“Mobilizer 4.0 focused on the features most requested by existing customers to help their business be even more successful,” said Jason Carlson, CEO and Founder of Forerunner Software. With this mindset Forerunner is looking to the future of what customers need in mobile reporting. In Mobilizer 4.0 the following features will now be available:
+<pre>
+	-  Administrative functionality
+		Support for creating hidden reports and folders
+ 		Creating linked reports
+		Move and Rename
+		Updating security settings
+		Uploading Reports
+		CC, BCC, Reply-To in Subscriptions
+	-  Developers
+		NuGet support for Visual Studio
+		Additional events and APIs
+		Custom parameter validation scripts
+	-  Additional options for installation and configuration
+	-  Multi-language support for report names, descriptions, parameter prompts and textboxes
+</pre>	
+Developers will now be able to do even more and faster than ever.  Using the Mobilizer NuGet packages for SSRS makes adding Mobilizer to your applications even easier.  You can now replace your SSRS WebForms control with an HTML5 control in minutes.   With the ability to define custom parameter validation scripts, implement per user access filtering, define global client side scripts and use reports as updateable forms, SSRS reports are more powerful than ever before.
+End users have always been the focus of Forerunner Mobilizer.  Providing the easiest to use and most modern user experience for reporting.  Mobilizer V4 continues to deliver for the end user with easier to create subscriptions and multiple view options.
+
+Visit <a href=http://www.forerunnersw.com> ForerunnerSW.com</a> to download your free trial version of Mobilizer today. Find out for yourself how Mobilizer completely optimizes the end user experience of SSRS for mobile BI and how Mobilizer can cost effectively help your organization leverage the power of Microsoft’s SQL Server Reporting Services (SSRS) faster and easier than ever before.
+"
+  },
+{
 "ID": "20",
 "Link": "/press?Article=20",
 "Title":"Forerunner Software announces the Public Beta Availability of Mobilizer 4.0",

@@ -110,6 +110,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
   File "${LOCALROOT}\bin\PdfSharp.dll"
+  File "${LOCALROOT}\bin\Newtonsoft.Json.dll"
   
   SetOutPath "$INSTDIR\sdk"
   File "${LOCALROOT}\sdk\ReportManagerController.cs"

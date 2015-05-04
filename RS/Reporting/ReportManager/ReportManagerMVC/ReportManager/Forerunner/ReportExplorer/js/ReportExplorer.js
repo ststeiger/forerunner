@@ -368,7 +368,8 @@ $(function () {
                 $reportExplorer: me.element,
                 reportManagerAPI: me.options.reportManagerAPI,
                 rsInstance: me.options.rsInstance,
-                catalogItem: data.catalogItem
+                catalogItem: data.catalogItem,
+                view: me.view
             });
             me._contextMenu.reportExplorerContextMenu("openMenu", data.pageX, data.pageY);
         },

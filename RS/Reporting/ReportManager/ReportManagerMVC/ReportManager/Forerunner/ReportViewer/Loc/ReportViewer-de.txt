@@ -300,7 +300,9 @@
     "downloadFile":"Datei herunterladen",
     "deleteConfirm":"Sind Sie sicher, dass Sie löschen {0}?",
     "folderNotEmpty":"Es gibt Unterpunkt innerhalb des Ordners können Sie nicht löschen.",
-    "move":"Sich Bewegen"
+    "move":"Sich Bewegen",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "common": {
     "submit":"einreichen",

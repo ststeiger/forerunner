@@ -300,7 +300,9 @@
     "downloadFile":"Скачать файл",
     "deleteConfirm":"Вы действительно хотите удалить {0}?",
     "folderNotEmpty":"Существует суб элемент внутри папки, вы не можете удалить его.",
-    "move":"шаг"
+    "move":"шаг",
+    "unFavorite":"Remove Favorite",
+    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "common": {
     "submit":"представлять",

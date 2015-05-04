@@ -308,7 +308,9 @@
   "downloadFile":"Download File",
     "deleteConfirm":"Are you sure to delete {0}?",
 	"folderNotEmpty":"There is sub item inside the folder, you can't delete it.",
-	"move":"Move"
+	"move":"Move",
+	"unFavorite":"Remove Favorite",
+	"unFavConfirm":"Are you sure to remove {0} from favorite list?"
   },
   "security": {
 	"title": "Security",

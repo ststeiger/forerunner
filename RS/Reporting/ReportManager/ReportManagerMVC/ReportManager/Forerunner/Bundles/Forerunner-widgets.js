@@ -10284,12 +10284,13 @@ $(function () {
         },
         _initExplorerDialogs: function(){
             var me = this;
+            var $dlg;
 
             //init user setting dialog
             if (me.options.dbConfig.UseMobilizerDB === true) {
                 //user settings, subscription, serach folder need mobilizer database support
 
-                var $dlg = me.options.$appContainer.find(".fr-us-section");
+                $dlg = me.options.$appContainer.find(".fr-us-section");
                 if ($dlg.length === 0) {
                     $dlg = new $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                     $dlg.userSettings({

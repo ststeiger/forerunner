@@ -4199,6 +4199,11 @@ $(function () {
          */
         addTools: function (index, enabled, tools) {
             var me = this;
+
+            if (tools.length === 0) {
+                return;
+            }
+
             var $toolbar = me.element.find("." + me.options.toolClass);
             me._addChildTools($toolbar, index, enabled, tools);
 
@@ -9651,7 +9656,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             userSettings: null,
-            dbConfig: null
+            dbConfig: {}
         },
         // Constructor
         _create: function () {
@@ -19549,7 +19554,7 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: null,
+            dbConfig: {},
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {

@@ -76,6 +76,11 @@ $(function () {
          */
         addTools: function (index, enabled, tools) {
             var me = this;
+
+            if (tools.length === 0) {
+                return;
+            }
+
             var $toolbar = me.element.find("." + me.options.toolClass);
             me._addChildTools($toolbar, index, enabled, tools);
 

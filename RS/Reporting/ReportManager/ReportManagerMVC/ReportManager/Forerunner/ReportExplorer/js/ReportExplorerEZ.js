@@ -60,7 +60,7 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: null,
+            dbConfig: {},
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {

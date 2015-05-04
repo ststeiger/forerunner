@@ -51,7 +51,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             userSettings: null,
-            dbConfig: null
+            dbConfig: {}
         },
         // Constructor
         _create: function () {

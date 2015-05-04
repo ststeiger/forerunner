@@ -21,6 +21,7 @@
 !include MUI2.nsh
 ; Word Function
 !include WordFunc.nsh
+!include LogicLib.nsh
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -385,8 +386,12 @@ Section "ReportManager" SEC01
   ;update config file
    nsisXML::create
    nsisXML::load "$INSTDIR\web.config"
-   nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']"
+   
+   nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']/dependentAssembly/assemblyIdentity [name='Newtonsoft.Json']"
+    
+${If} $1 == ""
 
+   nsisXML::select  "configuration/runtime/*[namespace-uri()='urn:schemas-microsoft-com:asm.v1' and local-name()='assemblyBinding']"
    nsisXML::createElementInNS  "dependentAssembly" "urn:schemas-microsoft-com:asm.v1"
    nsisXML::appendChild
    StrCpy $1 $2
@@ -402,6 +407,7 @@ Section "ReportManager" SEC01
    nsisXML::appendChild
 
    nsisXML::save "$INSTDIR\web.config"
+${EndIf}
 
 ;This must be the last line of the config tool will not work after install
  SetOutPath "$INSTDIR\Config"

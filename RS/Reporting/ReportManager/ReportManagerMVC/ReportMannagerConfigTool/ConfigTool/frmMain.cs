@@ -689,14 +689,13 @@ namespace ReportMannagerConfigTool
 
         private void NoDB_CheckedChanged(object sender, EventArgs e)
         {
-
             txtServerName.Enabled = !chkNoDB.Checked;
             txtDBName.Enabled = !chkNoDB.Checked;
             txtUser.Enabled = !chkNoDB.Checked;
             txtPWD.Enabled = !chkNoDB.Checked;
-            txtDomain.Enabled = !chkNoDB.Checked;
-            btnUpdateSchema.Enabled = !chkNoDB.Checked;
-         
+            //txtDomain is mainlly controlled by rdoSQL, then chkNoDB
+            txtDomain.Enabled = rdoSQL.Checked ? false : !chkNoDB.Checked;
+            btnUpdateSchema.Enabled = !chkNoDB.Checked;         
         }
     }
 }

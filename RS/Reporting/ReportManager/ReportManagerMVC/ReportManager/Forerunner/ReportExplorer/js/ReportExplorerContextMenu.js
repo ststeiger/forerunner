@@ -20,17 +20,19 @@ $(function () {
 
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;
+    var genericPropertyTabs = [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension];
+
     var propertyListMap = {
         // Folder
-        1: [propertyEnums.description, propertyEnums.tags],
+        1: genericPropertyTabs,
         // Report
-        2: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        2: genericPropertyTabs,
         // Resource
-        3: [propertyEnums.description, propertyEnums.tags],
+        3: genericPropertyTabs,
         // LinkedReport
-        4: [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension],
+        4: genericPropertyTabs,
         // Search Folder
-        searchFolder: [propertyEnums.description, propertyEnums.searchFolder],
+        searchFolder: [propertyEnums.description, propertyEnums.searchFolder, propertyEnums.rdlExtension],
     };
     
     $.widget(widgets.getFullname(widgets.reportExplorerContextMenu), $.forerunner.contextMenuBase, /** @lends $.forerunner.reportExplorerContextMenu */ {

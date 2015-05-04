@@ -98,7 +98,6 @@ $(function () {
         _init: function () {
             var me = this;
             me._super();
-
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
@@ -174,7 +173,7 @@ $(function () {
                     }
                 }
 
-                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog") && lastFetched.path !== "/" && permissions["Update Properties"]) {
+                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog" || lastFetched.view === "resource") && lastFetched.path !== "/" && permissions["Update Properties"]) {
                     enableList.push(mi.itemProperty);
                 }
 

@@ -316,8 +316,9 @@ $(function () {
             viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
-            if (catalogItem.LocalizedName)
+            if (catalogItem.LocalizedName) {
                 name = catalogItem.LocalizedName;
+            }
 
             $captiontext.attr("title", name);
             $captiontext.text(name);
@@ -333,8 +334,9 @@ $(function () {
             viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
-            if (catalogItem.LocalizedDescription)
+            if (catalogItem.LocalizedDescription) {
                 description = catalogItem.LocalizedDescription;
+            }
 
             if (description) {
                 description = forerunner.helper.htmlDecode(description);
@@ -416,9 +418,7 @@ $(function () {
         _renderResource: function (path) {
             var me = this;
 
-            var url = me.options.reportManagerAPI + "/Resource?";
-            url += "path=" + encodeURIComponent(path);
-            url += "&instance=" + me.options.rsInstance;
+            var url = me.options.reportManagerAPI + "/Resource?path=" + encodeURIComponent(path) + "&instance=" + me.options.rsInstance;
 
             var $if = $("<iframe/>");
             $if.addClass("fr-report-explorer fr-core-widget fr-explorer-iframe");
@@ -562,7 +562,7 @@ $(function () {
             me.view = view;
             me.path = path;
 
-            if (me.view === "catalog" || me.view === "searchfolder") {
+            if (me.view === "catalog" || me.view === "searchfolder" || me.view === "resource") {
                 me._checkPermission();
             }
 
@@ -684,6 +684,8 @@ $(function () {
         },
         _initExplorerDialogs: function(){
             var me = this;
+            var $dlg;
+
             var $dlg;
 
             //init user setting dialog

@@ -4199,6 +4199,11 @@ $(function () {
          */
         addTools: function (index, enabled, tools) {
             var me = this;
+
+            if (tools.length === 0) {
+                return;
+            }
+
             var $toolbar = me.element.find("." + me.options.toolClass);
             me._addChildTools($toolbar, index, enabled, tools);
 
@@ -8234,7 +8239,7 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
 
-            if (me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tb.btnEmailSubscription.selectorClass);
             }
 
@@ -8266,7 +8271,7 @@ $(function () {
 
             listOfButtons.push(tb.btnPrint);
 
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true) {
                 listOfButtons.push(tb.btnEmailSubscription);
             }
 
@@ -8342,7 +8347,7 @@ $(function () {
         },
         _checkSubscription: function () {
             var me = this;
-            if (me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 
@@ -8515,7 +8520,7 @@ $(function () {
             
             me.addTools(1, false, me._viewerItems());
 
-            if (me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
 
@@ -8553,7 +8558,7 @@ $(function () {
             listOfItems.push(tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoomDropDown,
                 tg.itemZoomGroup, tp.itemExport, tg.itemExportGroup, tp.itemPrint);
 
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 listOfItems.push(tp.itemEmailSubscription);
             }
 
@@ -8643,7 +8648,7 @@ $(function () {
         _checkSubscription: function () {
             var me = this;
 
-            if (me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === false || !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 return;
             }
 
@@ -9402,7 +9407,7 @@ $(function () {
             var toolbarList = [tb.btnMenu, tb.btnBack];
 
             //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolbarList.push(tb.btnSetup);
             }
 
@@ -9411,7 +9416,7 @@ $(function () {
                 toolbarList.push(tb.btnHome);
             }
 
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
                     //add home button based on the user setting
                     toolbarList.push(tb.btnMySubscriptions);
@@ -9421,7 +9426,6 @@ $(function () {
                 if (me.options.dbConfig.SeperateDB !== true) {
                     toolbarList.push(tb.btnRecent);
                 }
-
                 toolbarList.push(tb.btnFav);
             }
 
@@ -9555,13 +9559,13 @@ $(function () {
             var toolpaneItems = [tp.itemBack];
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
             
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
@@ -9692,7 +9696,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             userSettings: null,
-            dbConfig: null
+            dbConfig: {}
         },
         // Constructor
         _create: function () {
@@ -18490,7 +18494,7 @@ $(function () {
         }
 
         me.parameterModel = null;
-        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
@@ -19608,7 +19612,7 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: null,
+            dbConfig: {},
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {

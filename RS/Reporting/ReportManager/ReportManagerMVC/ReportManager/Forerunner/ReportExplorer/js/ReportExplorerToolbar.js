@@ -87,7 +87,7 @@ $(function () {
             var toolbarList = [tb.btnMenu, tb.btnBack];
 
             //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolbarList.push(tb.btnSetup);
             }
 
@@ -96,7 +96,7 @@ $(function () {
                 toolbarList.push(tb.btnHome);
             }
 
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
                     //add home button based on the user setting
                     toolbarList.push(tb.btnMySubscriptions);
@@ -106,7 +106,6 @@ $(function () {
                 if (me.options.dbConfig.SeperateDB !== true) {
                     toolbarList.push(tb.btnRecent);
                 }
-
                 toolbarList.push(tb.btnFav);
             }
 

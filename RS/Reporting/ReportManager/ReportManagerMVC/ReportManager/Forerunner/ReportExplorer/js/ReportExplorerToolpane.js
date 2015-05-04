@@ -104,13 +104,13 @@ $(function () {
             var toolpaneItems = [tp.itemBack];
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
             var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
             
-            if (me.options.dbConfig.UseMobilizerDB === true) {
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 

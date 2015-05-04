@@ -301,8 +301,8 @@
     "deleteConfirm":"Är du säker på att ta bort {0}?",
     "folderNotEmpty":"Det finns underpost i mappen, kan du inte ta bort den.",
     "move":"Flytta",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Ta bort favorit",
+    "unFavConfirm":"Är du säker på att du vill ta bort {0} från favoritlistan?"
   },
   "common": {
     "submit":"Submit",

@@ -302,8 +302,8 @@
     "deleteConfirm":"¿Seguro eliminar {0}?",
     "folderNotEmpty":"Hay subtema dentro de la carpeta, no puede eliminarlo.",
     "move":"movimiento",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Eliminar favorito",
+    "unFavConfirm":"¿Seguro que desea eliminar {0} de la lista de favoritos?"
   },
   "common": {
     "submit":"presentar",

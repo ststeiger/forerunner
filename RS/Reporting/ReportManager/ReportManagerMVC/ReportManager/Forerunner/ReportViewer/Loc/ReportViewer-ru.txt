@@ -301,8 +301,8 @@
     "deleteConfirm":"Вы действительно хотите удалить {0}?",
     "folderNotEmpty":"Существует суб элемент внутри папки, вы не можете удалить его.",
     "move":"шаг",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Удалить закладку",
+    "unFavConfirm":"Вы уверены, что хотите удалить {0} из списка избранных?"
   },
   "common": {
     "submit":"представлять",

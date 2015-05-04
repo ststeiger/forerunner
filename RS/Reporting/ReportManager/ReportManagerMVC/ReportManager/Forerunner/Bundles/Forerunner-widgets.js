@@ -4199,6 +4199,11 @@ $(function () {
          */
         addTools: function (index, enabled, tools) {
             var me = this;
+
+            if (tools.length === 0) {
+                return;
+            }
+
             var $toolbar = me.element.find("." + me.options.toolClass);
             me._addChildTools($toolbar, index, enabled, tools);
 
@@ -9691,7 +9696,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             userSettings: null,
-            dbConfig: null
+            dbConfig: {}
         },
         // Constructor
         _create: function () {
@@ -18489,7 +18494,7 @@ $(function () {
         }
 
         me.parameterModel = null;
-        if (me.options.isReportManager || me.options.useReportManagerSettings) {
+        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
@@ -19607,7 +19612,7 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: null,
+            dbConfig: {},
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {

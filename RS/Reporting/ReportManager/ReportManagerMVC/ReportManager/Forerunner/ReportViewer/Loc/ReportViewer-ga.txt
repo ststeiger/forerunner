@@ -301,8 +301,8 @@
     "deleteConfirm":"Êtes-vous sûr de vouloir supprimer {0}?",
     "folderNotEmpty":"Il est l'élément de sous dans le dossier, vous ne pouvez pas le supprimer.",
     "move":"mouvement",
-    "unFavorite":"Remove Favorite",
-    "unFavConfirm":"Are you sure to remove {0} from favorite list?"
+    "unFavorite":"Bain Favorite",
+    "unFavConfirm":"An bhfuil tú cinnte gur mian leat a bhaint {0} ó liosta is fearr leat?"
   },
   "common": {
     "submit":"Cuir isteach",

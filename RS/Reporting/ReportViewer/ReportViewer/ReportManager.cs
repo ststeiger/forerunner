@@ -843,7 +843,7 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
                             
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             IF NOT EXISTS (SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID)
                             BEGIN
 	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
@@ -951,7 +951,7 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID = @UID AND ItemID = @IID)
 	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @IID,@UID,@Params 
                             ELSE
@@ -1003,7 +1003,7 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 ParameterModel model;
                 string SQL = @" DECLARE @UID uniqueidentifier
-                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @UID = (SELECT  TOP 1  UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT SavedParameters, UserID FROM ForerunnerUserItemProperties WHERE (UserID = @UID OR UserID IS NULL) AND ItemID = @IID";
 
                 if (SeperateDB)
@@ -1057,7 +1057,7 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @UID = (SELECT  TOP 1  UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             IF NOT EXISTS (SELECT * FROM ForerunnerUserSettings WHERE UserID = @UID)
 	                            INSERT ForerunnerUserSettings (UserID, Settings) SELECT @UID, @Params
                             ELSE
@@ -1100,7 +1100,7 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 string settings;
                 string SQL = @" DECLARE @UID uniqueidentifier
-                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @UID = (SELECT TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT Settings FROM ForerunnerUserSettings WHERE UserID = @UID";
                 
                 if (SeperateDB)
@@ -1219,7 +1219,7 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 bool isFav;
                 string SQL = @" DECLARE @UID uniqueidentifier
-                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
                 if (SeperateDB)
                     SQL = @" SELECT * FROM ForerunnerFavorites WHERE UserID = @DomainUser AND ItemID = @ItemPath";
@@ -1295,7 +1295,7 @@ namespace Forerunner.SSRS.Manager
                 CatalogItem c;
 
                 string SQL = @"DECLARE @UID uniqueidentifier
-                               SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                               SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT DISTINCT Path, Name, ModifiedDate, c.ItemID, Description, MimeType, c.[Type], c.Hidden
                                FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
@@ -1423,7 +1423,7 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
-                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
                 if (SeperateDB)
                     SQL = @"DELETE ForerunnerFavorites WHERE ItemID = @ItemPath AND UserID =  @DomainUser";
@@ -1500,7 +1500,7 @@ namespace Forerunner.SSRS.Manager
                                                                                         
                             IF (@UserSpecific = 1)
                                 BEGIN
-                                    SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                    SELECT @UID = (SELECT TOP 1  UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                     DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
                                 END
                             ELSE
@@ -1626,7 +1626,7 @@ namespace Forerunner.SSRS.Manager
                 impersonator = tryImpersonate();
                 byte[] retval = null;
                 string SQL = @"DECLARE @UID uniqueidentifier
-                               SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                               SELECT @UID = (SELECT TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.ItemID = @IID AND c.ModifiedDate <= f.SaveDate";
 
                 //TODO:  Get the modified date from SSRS and pass in

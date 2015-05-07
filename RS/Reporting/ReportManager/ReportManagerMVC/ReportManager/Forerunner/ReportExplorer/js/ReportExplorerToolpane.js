@@ -36,7 +36,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolpane), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolpane */ {
         options: {
             navigateTo: null,
-            dbConfig: null,
+            dbConfig: {},
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null

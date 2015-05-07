@@ -36,7 +36,7 @@ $(function () {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar",
-            dbConfig: null,
+            dbConfig: {},
             $appContainer: null,
             $reportExplorer: null
         },

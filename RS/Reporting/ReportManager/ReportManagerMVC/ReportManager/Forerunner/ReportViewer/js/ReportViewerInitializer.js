@@ -38,7 +38,7 @@ $(function () {
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            dbConfig: null
+            dbConfig: {}
         };
 
         // Merge options with the default settings

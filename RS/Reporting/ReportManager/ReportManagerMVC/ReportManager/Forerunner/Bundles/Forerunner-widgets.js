@@ -8109,7 +8109,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, /** @lends $.forerunner.toolbar */ {
         options: {
             $reportViewer: null,
-            dbConfig: null,
+            dbConfig: {},
             toolClass: "fr-toolbar"
         },
         _initCallbacks: function () {
@@ -8398,7 +8398,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
-            dbConfig: null,
+            dbConfig: {},
             $reportViewer: null,
             toolClass: "fr-toolpane"
         },
@@ -9356,7 +9356,7 @@ $(function () {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar",
-            dbConfig: null,
+            dbConfig: {},
             $appContainer: null,
             $reportExplorer: null
         },
@@ -9491,7 +9491,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerToolpane), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolpane */ {
         options: {
             navigateTo: null,
-            dbConfig: null,
+            dbConfig: {},
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
@@ -18485,7 +18485,7 @@ $(function () {
             useReportManagerSettings: false,
             $unzoomtoolbar: null,
             toolbarConfigOption: constants.toolbarConfigOption.full,
-            dbConfig: null
+            dbConfig: {}
         };
 
         // Merge options with the default settings
@@ -18960,7 +18960,7 @@ $(function () {
             showBreadCrumb: false,
             showParameterArea: "Collapsed",
             zoom: "100",
-            dbConfig: null
+            dbConfig: {}
         },
         _render: function () {
             var me = this;
@@ -27654,7 +27654,7 @@ $(function () {
             userSettings: null,
             path: null,
             handleWindowResize: true,
-            dbConfig: null
+            dbConfig: {}
         },
         /**
          * Returns the user settings

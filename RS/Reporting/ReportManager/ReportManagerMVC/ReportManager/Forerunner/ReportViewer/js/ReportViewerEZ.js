@@ -60,7 +60,7 @@ $(function () {
             showBreadCrumb: false,
             showParameterArea: "Collapsed",
             zoom: "100",
-            dbConfig: null
+            dbConfig: {}
         },
         _render: function () {
             var me = this;

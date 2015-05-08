@@ -1163,6 +1163,11 @@ namespace Forerunner.SSRS.Manager
             for (int i = 0; i < propertyArray.Length; i++)
             {
                 Property retrieveProp = new Property();
+
+                // Hande SharePoint special, does not seem to support hidden
+                if (!IsNativeRS && propertyArray[i].ToLower() == "hidden")
+                    propertyArray[i] = "ForerunnerHidden";
+
                 retrieveProp.Name = propertyArray[i];
                 props[i] = retrieveProp;
             }            
@@ -1186,6 +1191,9 @@ namespace Forerunner.SSRS.Manager
             {
                 if (prop.Name != "Name")
                 {
+                    // Hande SharePoint special, does not seem to support hidden
+                    if (!IsNativeRS && prop.Name.ToLower() == "hidden")
+                        prop.Name = "ForerunnerHidden";
                     excludeName.Add(prop);
                 }
                 else

@@ -799,7 +799,11 @@ namespace Forerunner
             w.WriteStartObject();
             for (int i = 0; i < properties.Length; i++)
             {
-                w.WriteMember(properties[i].Name);
+                //Handle forerunner hidden special
+                if (properties[i].Name == "ForerunnerHidden")
+                    w.WriteMember("Hidden");
+                else
+                    w.WriteMember(properties[i].Name);
                 w.WriteString(properties[i].Value);
             }
             w.WriteEndObject();

@@ -209,6 +209,23 @@ namespace ReportManager.Controllers
 
             }
         }
+
+        private void GetSharePointHidden(CatalogItem[] items, string instance)
+        {
+            if (IsNativeRS)
+                return;
+
+
+            //See if SharePoint Item is hidden
+            foreach (CatalogItem c in items)
+            {
+                string PropHidden = GetReportManager(instance).GetProperty(c.Path, "ForerunnerHidden");
+                bool hidden = c.Hidden;
+                bool.TryParse(PropHidden,out hidden);
+                c.Hidden = hidden;
+            }
+        }
+
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
@@ -216,6 +233,7 @@ namespace ReportManager.Controllers
             {
                 CatalogItem[] items = GetReportManager(instance).GetItems(view, path);
                 GetLocalizedNames(items,instance);
+                GetSharePointHidden(items, instance);
                 if (items == null)
                 {
                     return GetEmptyJSONResponse();

@@ -32,7 +32,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
-            dbConfig: null,
+            dbConfig: {},
             $reportViewer: null,
             toolClass: "fr-toolpane"
         },

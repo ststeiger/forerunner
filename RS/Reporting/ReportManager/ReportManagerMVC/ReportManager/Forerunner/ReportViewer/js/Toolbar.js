@@ -36,7 +36,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, /** @lends $.forerunner.toolbar */ {
         options: {
             $reportViewer: null,
-            dbConfig: null,
+            dbConfig: {},
             toolClass: "fr-toolbar"
         },
         _initCallbacks: function () {

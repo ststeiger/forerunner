@@ -42,7 +42,7 @@ $(function () {
             userSettings: null,
             path: null,
             handleWindowResize: true,
-            dbConfig: null
+            dbConfig: {}
         },
         /**
          * Returns the user settings

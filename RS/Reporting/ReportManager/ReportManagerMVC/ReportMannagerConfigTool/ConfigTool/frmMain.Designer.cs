@@ -298,6 +298,7 @@
             resources.ApplyResources(this.txtServerName, "txtServerName");
             this.txtServerName.Name = "txtServerName";
             this.txtServerName.Tag = "Server Name";
+            this.txtServerName.TextChanged += new System.EventHandler(this.txtServerName_TextChanged);
             // 
             // btnTest
             // 

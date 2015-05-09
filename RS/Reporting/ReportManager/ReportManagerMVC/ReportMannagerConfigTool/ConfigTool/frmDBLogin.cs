@@ -18,6 +18,12 @@ namespace ReportMannagerConfigTool
         public frmDBLogin()
         {
             InitializeComponent();
+
+        }
+
+        public Control[] GetControls(string Name)
+        {
+            return this.Controls.Find(Name, true);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

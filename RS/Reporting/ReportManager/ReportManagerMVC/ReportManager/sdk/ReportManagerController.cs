@@ -51,6 +51,7 @@ namespace ReportManager.Controllers
         static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
         static private string MobilizerVersionPath = ConfigurationManager.AppSettings["Forerunner.VersionPath"];        
         static private bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
+        static private bool SupportHiddenSPS = ForerunnerUtil.GetAppSetting("Forerunner.SupportHiddenSPS", false);
         static private string DefaultLoc = ConfigurationManager.AppSettings["Forerunner.DefaultLoc"];
         static private Dictionary<string, JObject> LocData = new Dictionary<string, JObject>();
         static private string EmptyJSONObject = "{}";
@@ -212,7 +213,7 @@ namespace ReportManager.Controllers
 
         private void GetSharePointHidden(CatalogItem[] items, string instance)
         {
-            if (IsNativeRS)
+            if (IsNativeRS || !SupportHiddenSPS)
                 return;
 
 

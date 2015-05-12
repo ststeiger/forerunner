@@ -1141,6 +1141,26 @@ namespace Forerunner.SSRS.Manager
             return GetProperty(path, "ID");
 
         }
+        public CatalogItem GetItem(string path)
+        {
+            //Only does ID and ModifiedDate for now, can be extended as needed.
+            CatalogItem ci = new CatalogItem();
+
+            Property[] props = new Property[2];
+            props[0] = new Property();
+            props[0].Name = "ID";
+            props[1] = new Property();
+            props[1].Name = "ModifiedDate";
+
+            props = callGetProperties(path, props);
+            
+            ci.ID = props[0].Value;
+
+            ci.ModifiedDate = DateTimeOffset.Parse(props[1].Value).DateTime;
+            
+            return ci;
+
+        }
         public string GetItemProperty(string path, string propName)
         {
             string property = GetProperty(path, propName);
@@ -2223,9 +2243,15 @@ namespace Forerunner.SSRS.Manager
             return w.ToString();
         }
 
-        public string GetReportTags(string path)
+        public string GetReportTags(string path, string ID = null)
         {
-            string IID = GetItemID(path);
+            string IID;
+
+            if (ID == null)
+                IID = GetItemID(path);
+            else
+                IID = ID;
+
             Impersonator impersonator = null;
             try
             {
@@ -2306,6 +2332,7 @@ namespace Forerunner.SSRS.Manager
                     SQLComm.Parameters.AddWithValue("@Tags", tags);
                     SQLComm.ExecuteNonQuery();
                 }
+                SetProperty(path, "[{\"name\":\"ForerunnerTags\",\"value\":\"true\"}]");
             }
             finally
             {

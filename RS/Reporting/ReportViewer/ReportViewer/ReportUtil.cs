@@ -15,7 +15,7 @@ using Forerunner.SSRS.Manager;
 using Forerunner.Config;
 using Forerunner.Logging;
 using Management = Forerunner.SSRS.Management;
-using Native = Forerunner.SSRS.Management.Native;
+
 
 namespace Forerunner
 {
@@ -676,9 +676,9 @@ namespace Forerunner
             return w.ToString();
         }
 
-        public static Native.SearchCondition[] getNativeSearchCondition(string searchCriteria)
+        public static Management.SearchCondition[] getNativeSearchCondition(string searchCriteria)
         {
-            List<Native.SearchCondition> list = new List<Native.SearchCondition>();
+            List<Management.SearchCondition> list = new List<Management.SearchCondition>();
 
             using (JsonTextReader reader = new JsonTextReader(new StringReader(searchCriteria)))
             {
@@ -691,9 +691,9 @@ namespace Forerunner
                 {
                     foreach (JsonObject obj in criteriaArray)
                     {
-                        Native.SearchCondition condition = new Native.SearchCondition();
+                        Management.SearchCondition condition = new Management.SearchCondition();
                         //Default to search as contains
-                        condition.Condition = Native.ConditionEnum.Contains;
+                        condition.Condition = Management.ConditionEnum.Contains;
                         condition.ConditionSpecified = true;
                         condition.Name = obj["Key"].ToString();
                         condition.Value = obj["Value"].ToString();

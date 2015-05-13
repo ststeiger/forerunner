@@ -225,6 +225,10 @@ namespace ReportManager.Controllers
 
         private CacheData GetCacheData(CatalogItem ci)
         {
+            //if not found return empty
+            if (ci == null)
+                return new CacheData();
+
             string key = ci.ID + (Math.Round(ci.ModifiedDate.Ticks / 1000000000000d, 0) * 1000000000000).ToString();
 
             if (!CachedProperties.ContainsKey(key))

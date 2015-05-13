@@ -11,7 +11,7 @@ namespace Forerunner.SSRS.Management
     {
         private bool IsNative = false;
         private Forerunner.SSRS.Management.Native.ReportingService2005 RSNative = new  Forerunner.SSRS.Management.Native.ReportingService2005();
-        private Forerunner.SSRS.Management.SPS.ReportingService2006 RSSPS = new Forerunner.SSRS.Management.SPS.ReportingService2006();
+        private Forerunner.SSRS.Management.SPS10.ReportingService2010 RSSPS = new Forerunner.SSRS.Management.SPS10.ReportingService2010();
 
         public RSManagementProxy(bool IsNative)
         {
@@ -34,7 +34,7 @@ namespace Forerunner.SSRS.Management
                 if (IsNative)
                     RSNative.Url = value + "/ReportService2005.asmx";
                 else
-                    RSSPS.Url = value + "/ReportService2006.asmx";                
+                    RSSPS.Url = value + "/ReportService2010.asmx";                
             }
         }
 
@@ -80,7 +80,10 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.GetResourceContents(path, out mimetype);
             else
-                return RSSPS.GetResourceContents(path, out mimetype);
+            {
+                mimetype = null;
+                return RSSPS.GetItemDefinition(path);
+            }
         }
         
         public byte[] GetReportDefinition(string path)
@@ -88,7 +91,7 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.GetReportDefinition(path);
             else
-                return RSSPS.GetReportDefinition(path);
+                return RSSPS.GetItemDefinition(path);
         }
 
         public ItemTypeEnum GetItemType(string path)
@@ -96,7 +99,9 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.GetItemType(path);
             else
-                return RSSPS.GetItemType(path);
+            {
+                return  (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), RSSPS.GetItemType(path), true);                 
+            }
         }
 
         public Warning[] CreateReport(string Report, string Parent, bool Overwrite, byte[] Definition, Property[] Properties)
@@ -106,7 +111,7 @@ namespace Forerunner.SSRS.Management
             else
             {
                 Warning[] warnings;
-                RSSPS.CreateReport(Report, Parent, Overwrite, Definition, Properties, out warnings);
+                RSSPS.CreateCatalogItem("Report", Report, Parent, Overwrite, Definition, Properties, out warnings);
                 return warnings;
             }
         }
@@ -116,7 +121,7 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.SetReportDefinition(path, definition);
             else
-                return RSSPS.SetReportDefinition(path, definition);
+                return RSSPS.SetItemDefinition(path, definition,null);
         }
 
         public void SetResourceContents(string Resource, byte[] Contents, string MimeType)
@@ -124,8 +129,13 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 RSNative.SetResourceContents(Resource, Contents, MimeType);
             else
-                RSSPS.SetResourceContents(Resource, Contents, MimeType);
-
+            {
+                Property[] props = new Property[1];
+                props[0] = new Property();
+                props[0].Name = "mimetype";
+                props[0].Value = MimeType;
+                RSSPS.SetItemDefinition(Resource, Contents, null);
+            }
             return;
         }
         public void DeleteItem(string path)
@@ -142,7 +152,11 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 RSNative.CreateResource(Resource, Parent, Overwrite, Contents, MimeType, Properties);
             else
-                RSSPS.CreateResource(Resource, Parent, Overwrite, Contents, MimeType, Properties);
+            {
+                Warning[] warnings;
+                RSSPS.CreateCatalogItem("Resource", Resource, Parent, Overwrite, Contents, Properties, out warnings);
+                //return warnings;
+            }                
 
             return;
         }
@@ -151,7 +165,7 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 RSNative.CreateFolder(Folder, Parent, Properties);
             else
-                RSSPS.CreateFolder(Folder, Parent);
+                RSSPS.CreateFolder(Folder, Parent, Properties);
 
             return;
         }
@@ -174,16 +188,60 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.ListChildren(path, isRecursive);
             else
-                return RSSPS.ListChildren(path);
+                return ConvertCatalogItem( RSSPS.ListChildren(path, isRecursive));
         }
 
-        public CatalogItem[] FindItems(string folder, Native.BooleanOperatorEnum booleanOperator, Native.SearchCondition[] searchCriteria)
+        private CatalogItem[] ConvertCatalogItem(Forerunner.SSRS.Management.SPS10.CatalogItem[] items)
+        {
+            CatalogItem[] NewItems = new CatalogItem[items.Length];
+
+            for (int i = 0; i < items.Length;i++)
+            {
+                NewItems[i] = new CatalogItem();
+                NewItems[i].CreatedBy = items[i].CreatedBy;
+                NewItems[i].CreationDate = items[i].CreationDate;
+                NewItems[i].Description = items[i].Description;
+                
+                NewItems[i].Hidden = items[i].Hidden;
+                NewItems[i].ID = items[i].ID;
+                NewItems[i].ModifiedBy = items[i].ModifiedBy;
+                NewItems[i].ModifiedDate = items[i].ModifiedDate;
+                NewItems[i].Name = items[i].Name;
+                NewItems[i].Path = items[i].Path;
+                NewItems[i].Size = items[i].Size;
+                NewItems[i].VirtualPath = items[i].VirtualPath;
+                NewItems[i].Type = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), items[i].TypeName, true);
+                
+
+            }
+
+            return NewItems;
+        }
+
+        public CatalogItem[] FindItems(string folder,BooleanOperatorEnum booleanOperator, SearchCondition[] searchCriteria)
         {
             if (IsNative)
-            {
                 return RSNative.FindItems(folder, booleanOperator, searchCriteria);
+            else
+            {
+                Property[] props = new Property[1];
+                props[0] = new Property();
+                props[0].Name = "Resursive";
+                props[0].Value = "True";
+
+                Forerunner.SSRS.Management.SPS10.SearchCondition[] NewCond = new Forerunner.SSRS.Management.SPS10.SearchCondition[searchCriteria.Length];
+                for (int i = 0; i < searchCriteria.Length; i++)
+                {
+                    NewCond[i] = new Forerunner.SSRS.Management.SPS10.SearchCondition();
+                    NewCond[i].Condition = searchCriteria[i].Condition;
+                    NewCond[i].ConditionSpecified = true;
+                    NewCond[i].Name = searchCriteria[i].Name;
+                    NewCond[i].Values = new string[1];
+                    NewCond[i].Values[0] = searchCriteria[i].Value;
+                }
+
+                return ConvertCatalogItem(RSSPS.FindItems(folder, booleanOperator, props, NewCond));
             }
-            return null;
         }
 
         public string CreateSubscription(string Report, ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData, ParameterValue[] Parameters)
@@ -207,7 +265,21 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.ListExtensions(ExtensionTypeEnum.Delivery);
             else
-                return RSSPS.ListExtensions(ExtensionTypeEnum.Delivery);
+            {
+                Forerunner.SSRS.Management.SPS10.Extension[] ext = RSSPS.ListExtensions("Delivery");
+                Extension[] NewExt = new Extension[ext.Length];
+                for (int i = 0; i < ext.Length; i++)
+                {
+                    NewExt[i] = new Extension();
+                    NewExt[i].ExtensionType = (ExtensionTypeEnum)Enum.Parse(typeof(ExtensionTypeEnum), ext[i].ExtensionTypeName, true); 
+                    NewExt[i].IsModelGenerationSupported = ext[i].IsModelGenerationSupported;
+                    NewExt[i].LocalizedName = ext[i].LocalizedName;
+                    NewExt[i].Name = ext[i].Name;
+                    NewExt[i].Visible = ext[i].Visible;
+                }
+
+                return NewExt;
+            }
         }
 
         public Schedule[] ListSchedules(string siteName = null)
@@ -281,8 +353,7 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 return RSNative.ListSubscriptions(Report, Owner);
             else
-            // BUGBUG:  Need to have a way to detect 2010 SharePoint endpoints
-                return null;
+                return RSSPS.ListMySubscriptions(Report); 
         }
 
         public void DeleteSubscription(string SubscriptionID)
@@ -306,8 +377,18 @@ namespace Forerunner.SSRS.Management
             if (IsNative)
                 RSNative.SetPolicies(itemPath, policies);
             else
-                RSSPS.SetPolicies(itemPath, policies);
-
+            {
+                try
+                {
+                    RSSPS.SetPolicies(itemPath, policies);
+                }
+                catch (Exception e)
+                {
+                    //Ignore this error.  SSRS and RS doe not pla nice with some permissions
+                    if (e.Message.IndexOf("empty role definition") <0)
+                        throw e;
+                }
+            }
             return;
         }
 
@@ -315,7 +396,7 @@ namespace Forerunner.SSRS.Management
         {
             if (IsNative)
             {
-                Native.SecurityScopeEnum securityScope = (Native.SecurityScopeEnum)Enum.Parse(typeof(Native.SecurityScopeEnum), type, true);
+                SecurityScopeEnum securityScope = (SecurityScopeEnum)Enum.Parse(typeof(SecurityScopeEnum), type, true);
 
                 return RSNative.ListRoles(securityScope);
             }
@@ -323,7 +404,7 @@ namespace Forerunner.SSRS.Management
             {
                 SecurityScopeEnum securityScope = (SecurityScopeEnum)Enum.Parse(typeof(SecurityScopeEnum), type, true);
 
-                return RSSPS.ListRoles(securityScope, itemPath);
+                return RSSPS.ListRoles(type, itemPath);
             }
         }
 
@@ -345,7 +426,7 @@ namespace Forerunner.SSRS.Management
             }
             else
             {
-                // sharepoint not have this Api
+                RSSPS.CreateLinkedItem(linkedReportName, parentPath, link, properties);
             }
         }
 
@@ -357,7 +438,7 @@ namespace Forerunner.SSRS.Management
             }
             else
             {
-                return string.Empty; // sharepoint not have this Api
+                return RSSPS.GetItemLink(linkedReportPath);
             }
         }
 
@@ -369,7 +450,7 @@ namespace Forerunner.SSRS.Management
             }
             else
             {
-                // sharepoint not have this Api
+                RSSPS.SetItemLink(linkedReportPath, link);
             }
         }
 

@@ -7,14 +7,16 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var events = forerunner.ssr.constants.events;
-    var widgets = forerunner.ssr.constants.widgets;
+    var constants = forerunner.ssr.constants;
+    var events = constants.events;
+    var widgets = constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     $.widget(widgets.getFullname(widgets.catalogTree), {
         options: {
             rootPath: null,
             type: null,
+            allowFolderSelection: true,
             containerClass: null,
             catalogTreeClass: null,
             $appContainer: null,
@@ -101,7 +103,7 @@ $(function () {
                     dataCatalogItem: {
                         Path: me.options.rootPath,
                         Name: me.options.rootPath,
-                        Type: forerunner.ssr.constants.itemType.folder
+                        Type: constants.itemType.folder
                     }
                 },
                 children: []
@@ -131,12 +133,10 @@ $(function () {
                     children: []
                 };
 
-                if (item.Type === forerunner.ssr.constants.itemType.folder ||
-                    item.Type === forerunner.ssr.constants.itemType.site) {
+                if (me._isContainerType(item.Type)) {
                     curNode.children.push(newNode);
-
                     me._catalogDataPrefix(newNode, item.children);
-                } else if (item.Type === forerunner.ssr.constants.itemType.report) {
+                } else if (item.Type === constants.itemType.report) {
                     curNode.children.push(newNode);
                     newNode.icon = "jstree-file";
                 }
@@ -172,16 +172,33 @@ $(function () {
                     if (typeof callback === "function") {
                         callback.call(me, data);
                     }
+                    me._trigger(events.getCatalogComplete, null, { success: true });
                 },
                 error: function (data) {
                     console.log(data);
+                    me._trigger(events.getCatalogComplete, null, { success: true });
                 }
             });
-        },        
+        },
+        _isContainerType: function (itemType) {
+            // SharePoint servers may have folders or sites
+            if (itemType === constants.itemType.folder || itemType === constants.itemType.site) {
+                return true;
+            }
+            return false;
+        },
         _onChangedjsTree: function (e, data) {
             var me = this;
+
+            if (!me.options.allowFolderSelection && me._isContainerType(data.node.li_attr.dataCatalogItem.Type)) {
+                if (data.node.children.length > 0) {
+                    me.$tree.jstree("toggle_node", data.node.id);
+                }
+                return;
+            }
             
-            if (me.options.type === "fullCatalog" && data.node.li_attr.dataCatalogItem.Type === 1 && data.node.children.length !== 0) { // if it is the folder item, then 
+            if (me.options.type === "fullCatalog" && me._isContainerType(data.node.li_attr.dataCatalogItem.Type) && data.node.children.length !== 0) {
+                // if it is a container type with children, toggle the node
                 me.$tree.jstree("toggle_node", data.node.id);
                 return;
             }

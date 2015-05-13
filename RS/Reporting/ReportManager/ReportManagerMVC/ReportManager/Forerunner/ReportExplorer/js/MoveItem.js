@@ -44,7 +44,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", move.title, "fr-move-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", move.title, "fr-move-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -127,8 +127,8 @@ $(function () {
             me.$location.catalogTree(catalogTreeOptions);
 
             //after the item is selected this event will be triggered
-            me.$location.off(events.forerunnerCatalogSelected());
-            me.$location.on(events.forerunnerCatalogSelected(), function (e, data) {
+            me.$location.off(events.catalogTreeCatalogSelected());
+            me.$location.on(events.catalogTreeCatalogSelected(), function (e, data) {
                 var location = data.path;
                 me.$location.attr("title", location).val(location);
                 //here me.initHeight already exist,

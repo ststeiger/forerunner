@@ -2165,7 +2165,8 @@ namespace Forerunner.SSRS.Manager
                 //SPS look in all sites
                 List<string> sites = new List<string>();
                 sites.Add(SharePointHostName);
-                sites.AddRange(SharePointSites.Split(';'));
+                if (SharePointSites != null) 
+                    sites.AddRange(SharePointSites.Split(';'));
                 List<Management.Subscription> subs = new List<Management.Subscription>();
 
                 foreach (string site in sites)

@@ -501,6 +501,7 @@ $(function () {
                     me.cachedPolicy = me.tempCachedPolicy || me.cachedPolicy;
                     me.tempCachedPolicy = null;
 
+                    //force refresh
                     me.isInheritParent = false;
                     me._refreshUI();
 
@@ -544,7 +545,10 @@ $(function () {
         _breakInherit: function () {
             var me = this;
 
-            me._setPolicy(JSON.stringify(me.cachedPolicy));
+            var tempPolicy = me.cachedPolicy;
+            me.cachedPolicy = null;
+
+            me._setPolicy(JSON.stringify(tempPolicy));
         },
         _deletePolicy: function (groupuser) {
             var me = this,

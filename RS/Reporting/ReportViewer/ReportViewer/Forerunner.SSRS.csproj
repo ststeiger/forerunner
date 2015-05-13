@@ -96,6 +96,7 @@
     <Compile Include="ReportWriter.cs" />
     <Compile Include="SSRS Proxy\ReportingService2006.cs" />
     <Compile Include="SSRS Proxy\ReportingService200X.cs" />
+    <Compile Include="SSRS Proxy\ReportingService2010.cs" />
     <Compile Include="SSRS Proxy\RSManagmentProxy.cs" />
     <Compile Include="SubscriptionExtensionSettings.cs" />
     <Compile Include="SubscriptionInfo.cs" />

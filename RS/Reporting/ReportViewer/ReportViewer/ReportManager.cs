@@ -328,11 +328,11 @@ namespace Forerunner.SSRS.Manager
             //specify search area, default to search global
             string searchArea = folder == null ? "/" : folder;
             //default search operator to or
-            Management.Native.BooleanOperatorEnum oper = Management.Native.BooleanOperatorEnum.Or;
+            Management.BooleanOperatorEnum oper = Management.BooleanOperatorEnum.Or;
 
             if (searchOperator == "and")
             {
-                oper = Management.Native.BooleanOperatorEnum.And;
+                oper = Management.BooleanOperatorEnum.And;
             }
 
             rs.Credentials = GetCredentials();
@@ -557,13 +557,13 @@ namespace Forerunner.SSRS.Manager
                 report = data.filename;
             }
 
-            var condition = new Management.Native.SearchCondition();
-            condition.Condition = Management.Native.ConditionEnum.Equals;
+            var condition = new Management.SearchCondition();
+            condition.Condition = Management.ConditionEnum.Equals;
             condition.Name = "Name";
             condition.Value = report;
-            Management.Native.SearchCondition[] conditions = new Management.Native.SearchCondition[1];
+            Management.SearchCondition[] conditions = new Management.SearchCondition[1];
             conditions[0] = condition;
-            CatalogItem[] catalogItems = rs.FindItems(data.setResource.parentFolder, Management.Native.BooleanOperatorEnum.And, conditions);
+            CatalogItem[] catalogItems = rs.FindItems(data.setResource.parentFolder, Management.BooleanOperatorEnum.And, conditions);
 
             if (catalogItems == null || catalogItems.Length == 0)
             {
@@ -638,6 +638,17 @@ namespace Forerunner.SSRS.Manager
             SetMissingResourceExtension(ref resourceName, setResource.mimetype);
             setResource.resourceName = resourceName;
 
+            Property[] props = null;
+            
+            //if SPS need to set mimetype as property
+            if (!IsNativeRS)
+            {
+                props = new Property[1];
+                props[0] = new Property();
+                props[0].Name = "mimetype";
+                props[0].Value = setResource.mimetype;
+            }
+
             if (!setResource.overwrite)
             {
                 try
@@ -648,7 +659,7 @@ namespace Forerunner.SSRS.Manager
                                         setResource.overwrite,
                                         contentUTF8,
                                         setResource.mimetype,
-                                        null);
+                                        props);
                     return getSaveCatalogResourceSuccess(resourceName);
                 }
                 catch (System.Web.Services.Protocols.SoapException e)
@@ -695,7 +706,7 @@ namespace Forerunner.SSRS.Manager
                                     setResource.overwrite,
                                     contentUTF8,
                                     setResource.mimetype,
-                                    null);
+                                    props);
             }
 
             return getSaveCatalogResourceSuccess(resourceName);
@@ -1141,6 +1152,19 @@ namespace Forerunner.SSRS.Manager
             return GetProperty(path, "ID");
 
         }
+        public CatalogItem GetItem(string path)
+        {
+            string[] paths = new string[1];
+
+            paths[0] = path;
+            CatalogItem[] items = GetItemsFromPaths(paths);
+
+            if (items.Length > 0)
+                return items[0];
+            else
+                return null;
+
+        }
         public string GetItemProperty(string path, string propName)
         {
             string property = GetProperty(path, propName);
@@ -1163,6 +1187,11 @@ namespace Forerunner.SSRS.Manager
             for (int i = 0; i < propertyArray.Length; i++)
             {
                 Property retrieveProp = new Property();
+
+                // Hande SharePoint special, does not seem to support hidden
+                if (!IsNativeRS && propertyArray[i].ToLower() == "hidden")
+                    propertyArray[i] = "ForerunnerHidden";
+
                 retrieveProp.Name = propertyArray[i];
                 props[i] = retrieveProp;
             }            
@@ -1186,6 +1215,9 @@ namespace Forerunner.SSRS.Manager
             {
                 if (prop.Name != "Name")
                 {
+                    // Hande SharePoint special, does not seem to support hidden
+                    if (!IsNativeRS && prop.Name.ToLower() == "hidden")
+                        prop.Name = "ForerunnerHidden";
                     excludeName.Add(prop);
                 }
                 else
@@ -2124,7 +2156,10 @@ namespace Forerunner.SSRS.Manager
 
         public Management.Subscription[] ListMySubscriptions()
         {
-            return ListSubscriptions(null, null);
+            if (IsNativeRS)
+                return ListSubscriptions(null, null);
+            else
+                return ListSubscriptions(SharePointHostName, null);
         }
 
         public Management.Subscription[] ListSubscriptions(string report, string owner)
@@ -2133,7 +2168,12 @@ namespace Forerunner.SSRS.Manager
             Management.Subscription[] rsList = rs.ListSubscriptions(report, owner);
             List<Management.Subscription> retVal = new List<Management.Subscription>();
             // Filter it out to only Forerunner managed subscription
-            HashSet<string> subscriptionInfos = new HashSet<string>(); 
+            HashSet<string> subscriptionInfos = new HashSet<string>();
+
+            //If it is host name it is all reports in SPS moode
+            if (report == SharePointHostName)
+                report = null;
+
             string IID = report != null ? GetItemID(report) : null;
 
             Impersonator impersonator = null;
@@ -2215,9 +2255,15 @@ namespace Forerunner.SSRS.Manager
             return w.ToString();
         }
 
-        public string GetReportTags(string path)
+        public string GetReportTags(string path, string ID = null)
         {
-            string IID = GetItemID(path);
+            string IID;
+
+            if (ID == null)
+                IID = GetItemID(path);
+            else
+                IID = ID;
+
             Impersonator impersonator = null;
             try
             {
@@ -2298,6 +2344,7 @@ namespace Forerunner.SSRS.Manager
                     SQLComm.Parameters.AddWithValue("@Tags", tags);
                     SQLComm.ExecuteNonQuery();
                 }
+                SetProperty(path, "[{\"name\":\"ForerunnerTags\",\"value\":\"true\"}]");
             }
             finally
             {
@@ -2406,10 +2453,10 @@ namespace Forerunner.SSRS.Manager
  
             for (int i = 0; i < path.Length; i++)
             {
-                Management.Native.SearchCondition[] sca = new Management.Native.SearchCondition[1];
-                sca[0] = new Management.Native.SearchCondition();
+                Management.SearchCondition[] sca = new Management.SearchCondition[1];
+                sca[0] = new Management.SearchCondition();
 
-                sca[0].Condition = Management.Native.ConditionEnum.Equals;
+                sca[0].Condition = Management.ConditionEnum.Equals;
                 sca[0].Name = "Name";
                 sca[0].Value = sca[0].Value + path[i].Split('/').Last();
                 string ItemPath = path[i].Substring(0, path[i].LastIndexOf('/'));
@@ -2417,7 +2464,7 @@ namespace Forerunner.SSRS.Manager
                     ItemPath = "/";
                 try
                 {
-                    list.AddRange(rs.FindItems(ItemPath, Management.Native.BooleanOperatorEnum.And, sca));
+                    list.AddRange(rs.FindItems(ItemPath, Management.BooleanOperatorEnum.And, sca));
                 }
                 catch
                 {

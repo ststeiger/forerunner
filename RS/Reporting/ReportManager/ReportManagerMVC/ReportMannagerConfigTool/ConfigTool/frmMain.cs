@@ -597,6 +597,14 @@ namespace ReportMannagerConfigTool
             if (!chkNoDB.Checked)
             {
                 frmDBLogin frm = new frmDBLogin();
+
+                frm.GetControls("txtServerName")[0].Text = txtServerName.Text;
+                frm.GetControls("txtDBName")[0].Text = txtDBName.Text;
+                frm.GetControls("txtUser")[0].Text = txtUser.Text;
+                frm.GetControls("txtPWD")[0].Text = txtPWD.Text;
+                frm.GetControls("txtDomain")[0].Text = txtDomain.Text;
+                ((RadioButton)frm.GetControls("rdoSQL")[0]).Checked = rdoSQL.Checked;
+
                 frm.ShowDialog();
             }
             
@@ -696,6 +704,11 @@ namespace ReportMannagerConfigTool
             //txtDomain is mainlly controlled by rdoSQL, then chkNoDB
             txtDomain.Enabled = rdoSQL.Checked ? false : !chkNoDB.Checked;
             btnUpdateSchema.Enabled = !chkNoDB.Checked;         
+        }
+
+        private void txtServerName_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

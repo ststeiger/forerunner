@@ -1853,7 +1853,7 @@ $(function () {
         itemSecurity: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-security",
-            imageClass: "fr-icons24x24-tags",
+            imageClass: "fr-icons24x24-security",
             sharedClass: "fr-hide-if-disable",
             text: locData.security.title,
             events: {

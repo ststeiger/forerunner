@@ -1711,11 +1711,11 @@ $(function () {
         /**
          * Returns the action history stack
          *
-         * @function $.forerunner.reportViewer#actionHistory
+         * @function $.forerunner.reportViewer#getActionHistory
          *
          * @return {array} - Action history 
          */
-        actionHistory: function () {
+        getActionHistory: function () {
             return this.actionHistory;
         },
 
@@ -7456,6 +7456,7 @@ $(function () {
                     me.cachedPolicy = me.tempCachedPolicy || me.cachedPolicy;
                     me.tempCachedPolicy = null;
 
+                    //force refresh
                     me.isInheritParent = false;
                     me._refreshUI();
 
@@ -7499,7 +7500,10 @@ $(function () {
         _breakInherit: function () {
             var me = this;
 
-            me._setPolicy(JSON.stringify(me.cachedPolicy));
+            var tempPolicy = me.cachedPolicy;
+            me.cachedPolicy = null;
+
+            me._setPolicy(JSON.stringify(tempPolicy));
         },
         _deletePolicy: function (groupuser) {
             var me = this,
@@ -11792,7 +11796,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", move.title, "fr-move-cancel", common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", move.title, "fr-move-cancel", common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +

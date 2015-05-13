@@ -51,10 +51,20 @@ namespace ReportManager.Controllers
         static private string MobilizerSettingPath = ConfigurationManager.AppSettings["Forerunner.MobilizerSettingPath"];
         static private string MobilizerVersionPath = ConfigurationManager.AppSettings["Forerunner.VersionPath"];        
         static private bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
+        static private bool SupportHiddenSPS = ForerunnerUtil.GetAppSetting("Forerunner.SupportHiddenSPS", true);
         static private string DefaultLoc = ConfigurationManager.AppSettings["Forerunner.DefaultLoc"];
-        static private Dictionary<string, JObject> LocData = new Dictionary<string, JObject>();
+        static private Dictionary<string, CacheData> CachedProperties = new Dictionary<string, CacheData>();
         static private string EmptyJSONObject = "{}";
-   
+
+        public class CacheData
+        {
+            public JObject LocData = null;
+            public bool SPSHidden = false;
+            public byte[] Tags = null;
+            public bool SPSHiddenChecked = false;
+            public bool LocDataChecked = false;
+            public bool TagsChecked = false;
+        }
         static ReportManagerController()
         {
             if (UseMobilizerDB)
@@ -170,11 +180,13 @@ namespace ReportManager.Controllers
             foreach (CatalogItem c in items)
             {
                 JObject ItemLoc = null;
-                if (!LocData.ContainsKey(c.ID+c.ModifiedDate.Ticks.ToString()))
-                {
+                CacheData d = GetCacheData(c);
+
+                if (!d.LocDataChecked)
+                {                    
                     //save loc data for perf
-                    string ExtProp = GetReportManager(instance).GetProperty(c.Path,"ForerunnerRDLExt");
-                    if (ExtProp != null && ExtProp !="")
+                    string ExtProp = GetReportManager(instance).GetProperty(c.Path, "ForerunnerRDLExt");
+                    if (ExtProp != null && ExtProp != "")
                     {
                         try
                         {
@@ -184,11 +196,12 @@ namespace ReportManager.Controllers
                         catch
                         {
                         }
-                        LocData.Add(c.ID + c.ModifiedDate.Ticks.ToString(), ItemLoc);                        
-                    }                   
+                        d.LocData= ItemLoc;
+                    }
+                    d.LocDataChecked = true;
                 }
-                else
-                    ItemLoc = LocData[c.ID + c.ModifiedDate.Ticks.ToString()];
+
+                ItemLoc = d.LocData;
 
                 //if not loc data use default
                 if (ItemLoc == null) 
@@ -209,6 +222,43 @@ namespace ReportManager.Controllers
 
             }
         }
+
+        private CacheData GetCacheData(CatalogItem ci)
+        {
+            //if not found return empty
+            if (ci == null)
+                return new CacheData();
+
+            string key = ci.ID + (Math.Round(ci.ModifiedDate.Ticks / 1000000000000d, 0) * 1000000000000).ToString();
+
+            if (!CachedProperties.ContainsKey(key))
+                CachedProperties.Add(key,new CacheData());
+            
+            return CachedProperties[key];    
+        }
+        private void GetSharePointHidden(CatalogItem[] items, string instance)
+        {
+            if (IsNativeRS || !SupportHiddenSPS)
+                return;
+
+            //See if SharePoint Item is hidden
+            foreach (CatalogItem c in items)
+            {
+                CacheData d = GetCacheData(c);
+                
+                if (!d.SPSHiddenChecked)
+                {
+                    //save for perf                    
+                    string PropHidden = GetReportManager(instance).GetProperty(c.Path, "ForerunnerHidden");
+                    bool hidden = c.Hidden;
+                    bool.TryParse(PropHidden, out hidden);                    
+                    d.SPSHidden = hidden;
+                    d.SPSHiddenChecked = true;
+                }
+                c.Hidden = d.SPSHidden;
+            }
+        }
+
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
@@ -216,6 +266,7 @@ namespace ReportManager.Controllers
             {
                 CatalogItem[] items = GetReportManager(instance).GetItems(view, path);
                 GetLocalizedNames(items,instance);
+                GetSharePointHidden(items, instance);
                 if (items == null)
                 {
                     return GetEmptyJSONResponse();
@@ -537,7 +588,14 @@ namespace ReportManager.Controllers
 
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path)), "text/JSON");
+                CacheData d = GetCacheData(GetReportManager(instance).GetItem(  path));
+                
+                if (!d.TagsChecked)
+                {
+                    d.Tags = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path));
+                    d.TagsChecked = true;
+                }
+                return GetResponseFromBytes(d.Tags, "text/JSON");
             }
             catch (Exception e)
             {

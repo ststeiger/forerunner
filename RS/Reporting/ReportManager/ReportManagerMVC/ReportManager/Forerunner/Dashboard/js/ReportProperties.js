@@ -17,7 +17,7 @@ $(function () {
     var reportProperties = locData.reportProperties;
 
     /**
-     * Widget used to select a new dashbard template
+     * Widget used to select a new dashboard template
      *
      * @namespace $.forerunner.createDashboard
      * @prop {Object} options - The options for the create dashboard dialog
@@ -34,118 +34,95 @@ $(function () {
      *      reportId: e.target.name
      * });
      */
-    $.widget(widgets.getFullname(widgets.reportProperties), {
+    $.widget(widgets.getFullname(widgets.reportProperties), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
         options: {
             reportManagerAPI: null,
             $appContainer: null,
             $dashboardEditor: null,
-            reportId: null
+            reportId: null,
+            title: reportProperties.title,
+            iconClass: "fr-rp-icon-edit"
         },
-        _create: function () {
+        _init: function () {
             var me = this;
+            me._super();
 
-            me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
+            me.$form.addClass("fr-rp-form");
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-rp-icon-edit", reportProperties.title, "fr-rp-cancel", reportProperties.cancel);
-            var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                    headerHtml +
-                    "<form class='fr-rp-form fr-core-dialog-form'>" +
-                        "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
-                        // Dropdown container
-                        "<div class='fr-rp-dropdown-container'>" +
-                            "<input type='text' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' autofocus='autofocus' readonly='readonly' allowblank='false' nullable='false'/><span class='fr-rp-error-span'/>" +
-                            "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
-                                "<div class='fr-rp-dropdown-icon'></div>" +
-                            "</div>" +
-                        "</div>" +
-                        // Toolbar options
-                        "<table>" +
-                            "<tr>" +
-                                "<td>" +
-                                    "<h3>" +
-                                        "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
-                                    "</h3>" +
-                                "</td>" +
-                            "</tr>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
-                                    "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
-                                    "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
-                                    "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
-                                "</td>" +
-                            "<tr>" +
-                        "</table>" +
-                        // Submit conatiner
-                        "<div class='fr-rp-submit fr-core-dialog-submit-container'>" +
-                            "<div class='fr-core-center'>" +
-                                "<input type='button' class='fr-rp-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + reportProperties.submit + "' />" +
-                            "</div>" +
-                        "</div>" +
-                    "</form>" +
-                "</div>");
+            var $main = $(
+                "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
+                // Dropdown container
+                "<div class='fr-rp-dropdown-container'>" +
+                    "<input type='text' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' autofocus='autofocus' readonly='readonly' allowblank='false' nullable='false'/>" +
+                    "<span class='fr-dlb-error-span'/>" +
+                    "<div class='fr-rp-dropdown-iconcontainer fr-core-cursorpointer'>" +
+                        "<div class='fr-rp-dropdown-icon'></div>" +
+                    "</div>" +
+                "</div>" +
+                // Toolbar options
+                "<table>" +
+                    "<tr>" +
+                        "<td>" +
+                            "<h3>" +
+                                "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                            "</h3>" +
+                        "</td>" +
+                    "</tr>" +
+                        "<td>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
+                            "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                        "</td>" +
+                        "<td>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
+                            "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                        "</td>" +
+                        "<td>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
+                            "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
+                        "</td>" +
+                    "<tr>" +
+                "</table>");
 
-            me.element.append($dialog);
-
-            me.$form = me.element.find(".fr-rp-form");
-            me._validateForm(me.$form);
+            me.$formMain.html("");
+            me.$formMain.append($main);
 
             me.$removeReport = me.element.find(".fr-rp-remove-report-id");
+            me.$removeReport.off("click");
             me.$removeReport.on("click", function (e, data) {
                 me._onRemoveReport.apply(me, arguments);
             });
 
             // Toolbar options
             me.$hideToolbar = me.element.find(".fr-rp-hide-toolbar-id");
+            me.$hideToolbar.off("change");
             me.$hideToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
             me.$minimalToolbar = me.element.find(".fr-rp-minimal-toolbar-id");
+            me.$minimalToolbar.off("change");
             me.$minimalToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
             me.$fullToolbar = me.element.find(".fr-rp-full-toolbar-id");
+            me.$fullToolbar.off("change");
             me.$fullToolbar.on("change", function (e, data) {
                 me._onChangeToolbarOption.apply(me, arguments);
             });
 
             me.$dropdown = me.element.find(".fr-rp-dropdown-container");
+            me.$dropdown.find(".fr-rp-dropdown-icon").off("click");
             me.$dropdown.find(".fr-rp-dropdown-icon").on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
             me.$reportInput.watermark(reportProperties.selectReport, forerunner.config.getWatermarkConfig());
+            me.$reportInput.off("click");
             me.$reportInput.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);
             });
-
-            // Hook the cancel and submit events
-            me.element.find(".fr-rp-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
-            me.element.find(".fr-rp-submit-id").on("click", function (e) {
-                me._submit();
-            });
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit();
-            });
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
-            });
-        },
-        _init: function () {
-            var me = this;
 
             me.properties = me.options.$dashboardEditor.getReportProperties(me.options.reportId) || {};
 
@@ -177,15 +154,24 @@ $(function () {
             me.$reportInput.catalogTree({
                 rootPath: "/",
                 type: "fullCatalog",
+                allowFolderSelection: false,
                 $appContainer: me.options.$appContainer,
                 reportManagerAPI: me.options.reportManagerAPI,
                 containerClass: "fr-rp-popup-container",
                 catalogTreeClass: "fr-report-tree-id fr-rp-tree-container"
             });
 
+            me.showLoadingIndictator();
+
+            // Fired after the catalog is returned from the server
+            me.$reportInput.off(events.catalogTreeGetCatalogComplete());
+            me.$reportInput.on(events.catalogTreeGetCatalogComplete(), function (e, data) {
+                me.removeLoadingIndicator();
+            });
+
             //after the item is selected this event will be triggered
-            me.$reportInput.off(events.forerunnerCatalogSelected());
-            me.$reportInput.on(events.forerunnerCatalogSelected(), function (e, data) {
+            me.$reportInput.off(events.catalogTreeCatalogSelected());
+            me.$reportInput.on(events.catalogTreeCatalogSelected(), function (e, data) {
                 var location = data.path;
 
                 // Set the value if this is a report
@@ -198,7 +184,7 @@ $(function () {
                 }
             });
 
-            me._resetValidateMessage();
+            me._validateForm(me.$form);
         },        
         _onRemoveReport: function (e, data) {
             var me = this;
@@ -216,7 +202,7 @@ $(function () {
         _onClickTreeDropdown: function (e) {
             var me = this;
 
-            // Show the popup
+            // Show the dropdown
             var width = me.$dropdown.width() - 2;//minus border width
             me.$reportInput.catalogTree("toggleCatalog", width);
         },
@@ -226,15 +212,6 @@ $(function () {
             } else {
                 $e.prop("checked", false);
             }
-        },
-        /**
-         * Open parameter set dialog
-         *
-         * @function $.forerunner.reportProperties#openDialog
-         */
-        openDialog: function () {
-            var me = this;
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         _triggerClose: function (isSubmit) {
             var me = this;
@@ -270,31 +247,6 @@ $(function () {
             var me = this;
             me._triggerClose(false);
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
-        },
-        _validateForm: function (form) {
-            form.validate({
-                errorPlacement: function (error, element) {
-                    error.appendTo($(element).parent().find("span"));
-                },
-                highlight: function (element) {
-                    $(element).parent().find("span").addClass("fr-rp-error-position");
-                    $(element).addClass("fr-rp-error");
-                },
-                unhighlight: function (element) {
-                    $(element).parent().find("span").removeClass("fr-rp-error-position");
-                    $(element).removeClass("fr-rp-error");
-                }
-            });
-        },
-        _resetValidateMessage: function () {
-            var me = this;
-            var error = locData.validateError;
-
-            jQuery.extend(jQuery.validator.messages, {
-                required: error.required,
-                number: error.number,
-                digits: error.digits
-            });
         },
     }); //$.widget
 });

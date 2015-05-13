@@ -127,8 +127,8 @@ $(function () {
             me.$location.catalogTree(catalogTreeOptions);
 
             //after the item is selected this event will be triggered
-            me.$location.off(events.forerunnerCatalogSelected());
-            me.$location.on(events.forerunnerCatalogSelected(), function (e, data) {
+            me.$location.off(events.catalogTreeCatalogSelected());
+            me.$location.on(events.catalogTreeCatalogSelected(), function (e, data) {
                 var location = data.path;
                 me.$location.attr("title", location).val(location);
                 //here me.initHeight already exist,

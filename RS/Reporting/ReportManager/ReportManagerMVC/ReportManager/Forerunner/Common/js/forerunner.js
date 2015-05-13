@@ -631,9 +631,13 @@ $(function () {
 
             /** @constant */
             catalogSelected: "catalogSelected",
+            /** @constant */
+            getCatalogComplete: "getcatalogcomplete",
             /** widget + event, lowercase */
-            forerunnerCatalogSelected: function () { return (forerunner.ssr.constants.widgets.catalogTree + this.catalogSelected).toLowerCase(); }
-        },
+            catalogTreeCatalogSelected: function () { return (forerunner.ssr.constants.widgets.catalogTree + this.catalogSelected).toLowerCase(); },
+            /** widget + event, lowercase */
+            catalogTreeGetCatalogComplete: function () { return (forerunner.ssr.constants.widgets.catalogTree + this.getCatalogComplete).toLowerCase(); }
+},
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *

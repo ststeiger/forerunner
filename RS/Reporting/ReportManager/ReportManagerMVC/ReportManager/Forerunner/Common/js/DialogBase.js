@@ -46,14 +46,22 @@ $(function () {
             actionWord: locData.dialogBase.submit,
             cancelWord: locData.dialogBase.cancel,
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
+            loadDelay: 500,
             rsInstance: null
         },
         _init: function () {
             var me = this;
+            me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
+            if (me.$loadingIndicator.length === 0) {
+                me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.messages.loading);
+                me.element.append(me.$loadingIndicator);
+            }
             me._hideSubmitError();
         },
         _create: function () {
             var me = this;
+
+            me.loadLock = 0;
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -181,6 +189,43 @@ $(function () {
             }
 
             me.$submitError.show();
+        },
+        /**
+         * Shows the loading Indicator
+         *
+         * @function $.forerunner.dialogBase#showLoadingIndictator
+         */
+        showLoadingIndictator: function () {
+            var me = this;
+            if (me.loadLock === 0) {
+                me.loadLock = 1;
+                setTimeout(function () { me._showLoadingIndictator(); }, me.options.loadDelay);
+            }
+        },
+        _showLoadingIndictator: function () {
+            var me = this;
+
+            if (me.loadLock === 1) {
+                //212 is static value for loading indicator width
+                var scrollLeft = me.element.width() - 212;
+                me.$loadingIndicator.css({
+                    top: me.element.scrollTop() + 100 + "px",
+                    left: (scrollLeft > 0 ? scrollLeft / 2 : 0) + "px"
+                });
+                me.element.mask();
+                me.$loadingIndicator.show();
+            }
+        },
+        /**
+         * Removes the loading Indicator
+         *
+         * @function $.forerunner.reportViewer#removeLoadingIndicator
+         */
+        removeLoadingIndicator: function () {
+            var me = this;
+            me.loadLock = 0;
+            me.element.unmask();
+            me.$loadingIndicator.hide();
         },
         _submit: function () {
             var me = this;

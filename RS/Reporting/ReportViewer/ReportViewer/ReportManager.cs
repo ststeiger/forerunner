@@ -2170,7 +2170,9 @@ namespace Forerunner.SSRS.Manager
 
                 foreach (string site in sites)
                 {
-                    subs.AddRange(ListSubscriptions(site, null));                    
+                    try { subs.AddRange(ListSubscriptions(site, null)); }
+                    catch { }
+
                 }
                 return subs.ToArray();
             }

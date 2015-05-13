@@ -19,6 +19,7 @@ using System.Xml;
 using System.IO;
 using System.Xml.Serialization;
 using Forerunner.SSRS;
+using System.Configuration;
 
 namespace Forerunner.SSRS.Manager
 {
@@ -86,6 +87,7 @@ namespace Forerunner.SSRS.Manager
         static bool QueueThumbnails = ForerunnerUtil.GetAppSetting("Forerunner.QueueThumbnails", false);
         static bool UseMobilizerDB = ForerunnerUtil.GetAppSetting("Forerunner.UseMobilizerDB", true);
         static bool SeperateDB = ForerunnerUtil.GetAppSetting("Forerunner.SeperateDB", false);
+        static string SharePointSites = ConfigurationManager.AppSettings["Forerunner.SharePointSites"];
         static private Dictionary<string, SSRSServer> SSRSServers = new Dictionary<string, SSRSServer>();
         static string MobilizerSetting = string.Empty;
         static string VersionNumber = string.Empty;
@@ -2159,7 +2161,20 @@ namespace Forerunner.SSRS.Manager
             if (IsNativeRS)
                 return ListSubscriptions(null, null);
             else
-                return ListSubscriptions(SharePointHostName, null);
+            {
+                //SPS look in all sites
+                List<string> sites = new List<string>();
+                sites.Add(SharePointHostName);
+                sites.AddRange(SharePointSites.Split(';'));
+                List<Management.Subscription> subs = new List<Management.Subscription>();
+
+                foreach (string site in sites)
+                {
+                    subs.AddRange(ListSubscriptions(site, null));                    
+                }
+                return subs.ToArray();
+            }
+           
         }
 
         public Management.Subscription[] ListSubscriptions(string report, string owner)
@@ -2170,8 +2185,8 @@ namespace Forerunner.SSRS.Manager
             // Filter it out to only Forerunner managed subscription
             HashSet<string> subscriptionInfos = new HashSet<string>();
 
-            //If it is host name it is all reports in SPS moode
-            if (report == SharePointHostName)
+            //If it is my subscription
+            if (owner == null)
                 report = null;
 
             string IID = report != null ? GetItemID(report) : null;

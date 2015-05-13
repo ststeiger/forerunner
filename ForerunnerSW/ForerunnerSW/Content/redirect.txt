@@ -45,3 +45,6 @@
 /video-V4,/video?utm_source=V4&utm_medium=email&utm_campaign=Netp
 /home-V4,/?utm_source=V4&utm_medium=email&utm_campaign=V4
 /trial-V4,/registerTrial?utm_source=V4&utm_medium=email&utm_campaign=V4
+/video-disc,/video?utm_source=All1&utm_medium=email&utm_campaign=disc
+/home-disc,/?utm_source=All1&utm_medium=email&utm_campaign=disc
+/trial-disc,/registerTrial?utm_source=All1&utm_medium=email&utm_campaign=disc

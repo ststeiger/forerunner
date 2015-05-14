@@ -122,8 +122,8 @@ $(function () {
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             me.SaveThumbnail = false;
             me.RDLExtProperty = null;
-            me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);
-
+            me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);            
+            
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -319,7 +319,7 @@ $(function () {
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();            
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.toolbarHeight) + "px");
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
                 $rowHeader.css("visibility", "visible");
             }
             else {
@@ -497,8 +497,10 @@ $(function () {
                 me._setPageCallback = null;
             }
             
-            // Make sure each new page has the zoom factor applied
+            // Make sure each new page has the zoom factor applied or options zoom
             me.zoomToPercent();
+            me._setOptionsZoom();
+
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
@@ -595,9 +597,9 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            var heightScale = (me.element.height() / page.height());
+            var heightScale = (me.element.height()  / page.height());
             if (heightScale - 1 < 0.00001) {
-                heightScale = $(window).height() / $(document).height();
+                heightScale = ($(window).height())/ ($(document).height());
             }
             var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
             me.zoomToPercent(pageWholePageZoom);
@@ -2282,6 +2284,9 @@ $(function () {
             //See if we have RDL extensions
             me._getRDLExtProp();
 
+            if (me.RDLExtProperty.DefaultZoom)
+                me.options.zoom = me.RDLExtProperty.DefaultZoom;
+
             if (me.options.jsonPath) {
                 me._renderJson();
             } else {
@@ -2291,20 +2296,26 @@ $(function () {
             me._addSetPageCallback(function () {
                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
-                if (me.options.zoom) {
-                    if (me.options.zoom === "page width")
-                        me.zoomToPageWidth();
-                    else if (me.options.zoom === "whole page")
-                        me.zoomToWholePage();
-                    else {
-                        try {
-                            var zoomLevel = parseFloat(me.options.zoom);
-                            me.zoomToPercent(zoomLevel);
-                        } catch (e) {
-                        }
+                me._setOptionsZoom();
+            });
+        },
+
+        _setOptionsZoom: function () {
+            var me = this;
+
+            if (me.options.zoom) {
+                if (me.options.zoom === "page width")
+                    me.zoomToPageWidth();
+                else if (me.options.zoom === "whole page")
+                    me.zoomToWholePage();
+                else {
+                    try {
+                        var zoomLevel = parseFloat(me.options.zoom);
+                        me.zoomToPercent(zoomLevel);
+                    } catch (e) {
                     }
                 }
-            });
+            }
         },
         _getRDLExtProp: function () {
             var me = this;

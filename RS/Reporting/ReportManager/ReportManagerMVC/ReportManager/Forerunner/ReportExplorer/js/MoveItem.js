@@ -6,9 +6,12 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var common = locData.common;
+    var move = locData.move;
 
     /**
     * Widget used to support item move
@@ -18,6 +21,8 @@ $(function () {
     * @prop {Object} options.$reportExplorer - Report viewer widget
     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
     * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.title - Dialog title
+    * @prop {String} options.iconClass - Style class of the dialog icon
     *
     * @example
     * $("#dialog").forerunnerMoveItem({
@@ -25,30 +30,21 @@ $(function () {
     *     $reportExplorer: me.$explorer
     * });
     */
-    $.widget(widgets.getFullname(widgets.forerunnerMoveItem), {
+    $.widget(widgets.getFullname(widgets.forerunnerMoveItem), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
         options: {
             $appContainer: null,
             $reportExplorer: null,
             rsInstance: null,
-        },
-        _create: function () {
-
+            title: move.title,
+            iconClass: "fr-icons24x24-tags"
         },
         _init: function () {
             var me = this;
-            var common = locData.common,
-                move = locData.move;
+            me._super();
 
             me.curPath = null;
-            me.element.children().remove();
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", move.title, "fr-move-cancel", common.cancel);
-
-            var $container = new $(
-               "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                   headerHtml +
+            var $main = new $(
                 "<div class='fr-move-container'>" +
                     "<div class='fr-move-prompt fr-core-dialog-description'>" + move.prompt + "</div>" +
                     // Dropdown container
@@ -60,17 +56,12 @@ $(function () {
 		                    "<div class='fr-move-dropdown-icon'></div>" +
 	                    "</div>" +
                     "</div>" +
-                "</div>" +
-                "<div class='fr-core-dialog-submit-container fr-move-submit-container'>" +
-                    "<div class='fr-core-center'>" +
-                        "<input type='button' class='fr-move-submit fr-core-dialog-button' value='" + common.submit + "' />" +
-                        "<input type='button' class='fr-move-cancel fr-core-dialog-button' value='" + common.cancel + "' />" +
-                    "</div>" +
-                "</div>" +
-               "</div>");
+                "</div>");
 
-            me.element.append($container);
-            me.$moveContainer = me.element.find(".fr-move-container");
+            me.$formMain.html("");
+            me.$formMain.append($main);
+
+            me.$moveContainer = me.$formMain.find(".fr-move-container");
             me.$location = me.$moveContainer.find(".fr-move-location");
 
             me._bindEvents();
@@ -78,28 +69,14 @@ $(function () {
         _bindEvents: function () {
             var me = this;
 
+            me.$location.off("click");
             me.$location.on("click", function () {
                 me._openPopup.call(me);
             });
 
+            me.element.find(".fr-move-dropdown-icon").off("click");
             me.element.find(".fr-move-dropdown-icon").on("click", function () {
                 me._openPopup.call(me);
-            });
-
-            me.element.find(".fr-move-submit").on("click", function () {
-                me._submit();
-            });
-
-            me.element.find(".fr-move-cancel").on("click", function () {
-                me.closeDialog();
-            });
-
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit();
-            });
-
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
             });
         },
         setData: function (catalogItem) {
@@ -125,6 +102,13 @@ $(function () {
 
             //initialized catalog tree widget on the location input element
             me.$location.catalogTree(catalogTreeOptions);
+
+            me.showLoadingIndictator();
+
+            me.$location.off(events.catalogTreeGetCatalogComplete());
+            me.$location.on(events.catalogTreeGetCatalogComplete(), function (e, data) {
+                me.removeLoadingIndicator();
+            });
 
             //after the item is selected this event will be triggered
             me.$location.off(events.catalogTreeCatalogSelected());

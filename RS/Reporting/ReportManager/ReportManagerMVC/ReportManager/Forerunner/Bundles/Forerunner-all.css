@@ -982,8 +982,8 @@ table, td, tr div {
 }
 
 .fr-dlb-form { margin-right: 16px; }
-  .fr-dlb-form .fr-dlb-error-span { display: inline; font-size: 10pt; margin-left: 5px; }
-  .fr-dlb-form .fr-dlb-error-position { display: inline; }
+  .fr-dlb-form .fr-dlb-error-span { display: block; font-size: 10pt; margin-left: 5px; }
+  .fr-dlb-form .fr-dlb-error-position { display: block; }
   .fr-dlb-form .fr-dlb-error { border-width: thin; border-color: red; }
     /* This will be made visibe if an error happens */
   .fr-dlb-form .fr-dlb-submit-error { display: none; margin-top: 10px; overflow: auto; }
@@ -1381,8 +1381,6 @@ table, td, tr div {
   .fr-linked-container .fr-linked-dropdown-container { position: relative; }
   .fr-linked-container .fr-linked-input-container .fr-linked-label { width: 84px; display: inline-block; }
   .fr-linked-container .fr-linked-input-container .fr-linked-desp-label { display: inline-block; padding-top: 0; float: left; width: 90px; padding-left: 4px; }
-  .fr-linked-container .fr-linked-error { border: 1px solid red; }
-  .fr-linked-container .fr-linked-error-span { display: block; padding-top: 4px; padding-left: 94px; font-size: 10pt; }
   .fr-linked-container .fr-linked-dropdown-iconcontainer { position: absolute; right: 8px; top: 6px; }
   .fr-linked-container .fr-linked-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
   .fr-linked-container .fr-linked-popup-container { position: absolute; right: 4px; border: 1px solid #424242; background-color: #fff; }

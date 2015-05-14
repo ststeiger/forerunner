@@ -7878,6 +7878,7 @@ $(function () {
             loadDelay: 500,
             rsInstance: null
         },
+        // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _init: function () {
             var me = this;
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
@@ -7886,15 +7887,17 @@ $(function () {
                 me.element.append(me.$loadingIndicator);
             }
             me._hideSubmitError();
+
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
         },
+        // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
             var me = this;
 
             me.loadLock = 0;
 
             me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml(me.options.iconClass, me.options.title, "fr-dlb-cancel-id", me.options.cancelWord);
             var $dialog = $(
@@ -8115,12 +8118,12 @@ $(function () {
                     error.appendTo($(element).parent().find("span"));
                 },
                 highlight: function (element) {
-                    $(element).parent().find("span").addClass("fr-cdb-error-position");
-                    $(element).addClass("fr-cdb-error");
+                    $(element).parent().find("span").addClass("fr-dlb-error-position");
+                    $(element).addClass("fr-dlb-error");
                 },
                 unhighlight: function (element) {
-                    $(element).parent().find("span").removeClass("fr-cdb-error-position");
-                    $(element).removeClass("fr-cdb-error");
+                    $(element).parent().find("span").removeClass("fr-dlb-error-position");
+                    $(element).removeClass("fr-dlb-error");
                 }
             });
         },
@@ -11078,10 +11081,12 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
-    var propertyEnums = forerunner.ssr.constants.properties;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var linked = locData.linkedReport;
+    var common = locData.common;
 
     /**
     * Widget used to manage item linked report
@@ -11091,6 +11096,8 @@ $(function () {
     * @prop {Object} options.$reportExplorer - Report viewer widget
     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
     * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.title - Dialog title
+    * @prop {String} options.iconClass - Style class of the dialog icon
     *
     * @example
     * $("#property").forerunnerLinkedReport({
@@ -11098,75 +11105,57 @@ $(function () {
     *     $reportExplorer: me.$explorer
     * });
     */
-    $.widget(widgets.getFullname(widgets.forerunnerLinkedReport), {
+    $.widget(widgets.getFullname(widgets.forerunnerLinkedReport), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
         options: {
             $appContainer: null,
             $reportExplorer: null,
             reportManagerAPI: null,
-            rsInstance: null
+            rsInstance: null,
+            title: linked.title,
+            iconClass: "fr-icons24x24-tags"
         },
         rootPath: "/",
 
         _create: function () {
             var me = this;
-
-            var linked = locData.linkedReport,
-                common = locData.common;
-
+            me._super();
             me.guid = forerunner.helper.guidGen();
+        },
+        _init: function () {
+            var me = this;
+            me._super();
+            me.$form.addClass("fr-linked-form");
             me.curPath = null;
 
-            me.element.children().remove();
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
-
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", linked.title, "fr-linked-cancel", common.cancel);
-
-            var $container = new $(
-               "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                    headerHtml +
-                    "<form class='fr-linked-form fr-core-dialog-form'>" +
-                        "<div class='fr-linked-container'>" +
-                            "<div class='fr-linked-prompt fr-core-dialog-description'></div>" +
-                             // Dropdown container
-                            "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
-                                "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +
-	                            "<input type='text' name='location' class='fr-core-input fr-linked-input fr-linked-location fr-core-cursorpointer' readonly='true' required='true' allowblank='false' nullable='false'/>" +
-	                            "<div class='fr-linked-dropdown-iconcontainer fr-core-cursorpointer'>" +
-		                            "<div class='fr-linked-dropdown-icon'></div>" +
-	                            "</div>" +
-                                "<span class='fr-linked-error-span'/>" +
-                            "</div>" +
-                            "<div class='fr-linked-input-container'>" +
-                                "<label class='fr-linked-label'>" + common.name + "</label>" +
-                                "<input type='text' name='linkedname' class='fr-core-input fr-linked-input fr-linked-name' autocomplete='off' required='true' />" +
-                                "<span class='fr-linked-error-span' />" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-core-dialog-submit-container fr-linked-submit-container'>" +
-                            "<div class='fr-core-center'>" +
-                                "<input type='button' class='fr-linked-submit fr-core-dialog-button' value='" + common.submit + "' />" +
-                                "<input type='button' class='fr-linked-cancel fr-core-dialog-button' value='" + common.cancel + "' />" +
-                            "</div>" +
-                        "</div>" +
-                    "</form>" +
+            var $main = new $(
+                "<div class='fr-linked-container'>" +
+                    "<div class='fr-linked-prompt fr-core-dialog-description'></div>" +
+                        // Dropdown container
+                    "<div class='fr-linked-input-container fr-linked-dropdown-container'>" +
+                        "<label class='fr-linked-label fr-linked-tree-label' >" + linked.location + "</label>" +
+	                    "<input type='text' name='location' class='fr-core-input fr-linked-input fr-linked-location fr-core-cursorpointer' readonly='true' required='true' allowblank='false' nullable='false'/>" +
+	                    "<div class='fr-linked-dropdown-iconcontainer fr-core-cursorpointer'>" +
+		                    "<div class='fr-linked-dropdown-icon'></div>" +
+	                    "</div>" +
+                        "<span class='fr-dlb-error-span'/>" +
+                    "</div>" +
+                    "<div class='fr-linked-input-container'>" +
+                        "<label class='fr-linked-label'>" + common.name + "</label>" +
+                        "<input type='text' name='linkedname' class='fr-core-input fr-linked-input fr-linked-name' autocomplete='off' required='true' />" +
+                        "<span class='fr-dlb-error-span' />" +
+                    "</div>" +
                 "</div>");
 
-            me.element.append($container);
+            me.$formMain.html("");
+            me.$formMain.append($main);
 
-            me.$form = me.element.find(".fr-linked-form");
-
-            me.$linkContainer = me.element.find(".fr-linked-container");            
+            me.$linkContainer = me.$formMain.find(".fr-linked-container");
             me.$prompt = me.$linkContainer.find(".fr-linked-prompt");
             me.$name = me.$linkContainer.find(".fr-linked-name");
             me.$location = me.$linkContainer.find(".fr-linked-location");
             me.$treeLabel = me.$linkContainer.find(".fr-linked-tree-label");
 
             me._bindEvents();
-        },
-        _init: function () {
-            var me = this;
-
             me._reset();
         },
         _bindEvents: function () {
@@ -11175,28 +11164,14 @@ $(function () {
             me._resetValidateMessage();
             me._validateForm(me.$form);
 
+            me.$location.off("click");
             me.$location.on("click", function () {
                 me._openPopup.call(me);
             });
 
+            me.element.find(".fr-linked-dropdown-icon").off("click");
             me.element.find(".fr-linked-dropdown-icon").on("click", function () {
                 me._openPopup.call(me);
-            });
-
-            me.element.find(".fr-linked-submit").on("click", function () {
-                me._submit();
-            });
-
-            me.element.find(".fr-linked-cancel").on("click", function () {
-                me.closeDialog();
-            });
-
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit();
-            });
-
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
             });
         },
         _submit: function () {
@@ -11245,6 +11220,13 @@ $(function () {
                 catalogTreeClass: "fr-linked-tree-container",
                 rsInstance: me.options.rsInstance
             };
+
+            me.showLoadingIndictator();
+
+            me.$location.off(events.catalogTreeGetCatalogComplete());
+            me.$location.on(events.catalogTreeGetCatalogComplete(), function (e, data) {
+                me.removeLoadingIndicator();
+            });
 
             if (me.isLinkedReport) {
                 me._getReportLink();
@@ -11378,33 +11360,9 @@ $(function () {
                 fail: function (data) {
                 },
             });
-
-        },
-        _validateForm: function ($form) {
-            $form.validate({
-                errorPlacement: function (error, element) {
-                    error.appendTo($(element).siblings(".fr-linked-error-span"));
-                },
-                highlight: function (element) {
-                    $(element).addClass("fr-linked-error");
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass("fr-linked-error");
-                }
-            });
-        },
-        _resetValidateMessage: function () {
-            var me = this;
-            var error = locData.validateError;
-
-            jQuery.extend(jQuery.validator.messages, {
-                required: error.required,
-                number: error.number,
-                digits: error.digits
-            });
         }
-    });
-});
+    });  // $.widget()
+});  // $(function ()
 ///#source 1 1 /Forerunner/ReportExplorer/js/UploadFile.js
 /**
  * @file Contains the upload file dialog widget.
@@ -11758,9 +11716,12 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-    var events = forerunner.ssr.constants.events;
+    var constants = forerunner.ssr.constants;
+    var widgets = constants.widgets;
+    var events = constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var common = locData.common;
+    var move = locData.move;
 
     /**
     * Widget used to support item move
@@ -11770,6 +11731,8 @@ $(function () {
     * @prop {Object} options.$reportExplorer - Report viewer widget
     * @prop {Object} options.$appContainer - The container jQuery object that holds the application
     * @prop {String} options.rsInstance - Optional, Report service instance name
+    * @prop {String} options.title - Dialog title
+    * @prop {String} options.iconClass - Style class of the dialog icon
     *
     * @example
     * $("#dialog").forerunnerMoveItem({
@@ -11777,30 +11740,21 @@ $(function () {
     *     $reportExplorer: me.$explorer
     * });
     */
-    $.widget(widgets.getFullname(widgets.forerunnerMoveItem), {
+    $.widget(widgets.getFullname(widgets.forerunnerMoveItem), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
         options: {
             $appContainer: null,
             $reportExplorer: null,
             rsInstance: null,
-        },
-        _create: function () {
-
+            title: move.title,
+            iconClass: "fr-icons24x24-tags"
         },
         _init: function () {
             var me = this;
-            var common = locData.common,
-                move = locData.move;
+            me._super();
 
             me.curPath = null;
-            me.element.children().remove();
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", move.title, "fr-move-cancel", common.cancel);
-
-            var $container = new $(
-               "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                   headerHtml +
+            var $main = new $(
                 "<div class='fr-move-container'>" +
                     "<div class='fr-move-prompt fr-core-dialog-description'>" + move.prompt + "</div>" +
                     // Dropdown container
@@ -11812,17 +11766,12 @@ $(function () {
 		                    "<div class='fr-move-dropdown-icon'></div>" +
 	                    "</div>" +
                     "</div>" +
-                "</div>" +
-                "<div class='fr-core-dialog-submit-container fr-move-submit-container'>" +
-                    "<div class='fr-core-center'>" +
-                        "<input type='button' class='fr-move-submit fr-core-dialog-button' value='" + common.submit + "' />" +
-                        "<input type='button' class='fr-move-cancel fr-core-dialog-button' value='" + common.cancel + "' />" +
-                    "</div>" +
-                "</div>" +
-               "</div>");
+                "</div>");
 
-            me.element.append($container);
-            me.$moveContainer = me.element.find(".fr-move-container");
+            me.$formMain.html("");
+            me.$formMain.append($main);
+
+            me.$moveContainer = me.$formMain.find(".fr-move-container");
             me.$location = me.$moveContainer.find(".fr-move-location");
 
             me._bindEvents();
@@ -11830,28 +11779,14 @@ $(function () {
         _bindEvents: function () {
             var me = this;
 
+            me.$location.off("click");
             me.$location.on("click", function () {
                 me._openPopup.call(me);
             });
 
+            me.element.find(".fr-move-dropdown-icon").off("click");
             me.element.find(".fr-move-dropdown-icon").on("click", function () {
                 me._openPopup.call(me);
-            });
-
-            me.element.find(".fr-move-submit").on("click", function () {
-                me._submit();
-            });
-
-            me.element.find(".fr-move-cancel").on("click", function () {
-                me.closeDialog();
-            });
-
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._submit();
-            });
-
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
             });
         },
         setData: function (catalogItem) {
@@ -11877,6 +11812,13 @@ $(function () {
 
             //initialized catalog tree widget on the location input element
             me.$location.catalogTree(catalogTreeOptions);
+
+            me.showLoadingIndictator();
+
+            me.$location.off(events.catalogTreeGetCatalogComplete());
+            me.$location.on(events.catalogTreeGetCatalogComplete(), function (e, data) {
+                me.removeLoadingIndicator();
+            });
 
             //after the item is selected this event will be triggered
             me.$location.off(events.catalogTreeCatalogSelected());
@@ -28645,6 +28587,8 @@ $(function () {
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.$dashboardEditor - Dashboard Editor widget
      * @prop {Object} options.reportId - Target Report Id
+     * @prop {String} options.title - Dialog title
+     * @prop {String} options.iconClass - Style class of the dialog icon
      *
      * @example
      * $("#reportPropertiesDialog").reportProperties({

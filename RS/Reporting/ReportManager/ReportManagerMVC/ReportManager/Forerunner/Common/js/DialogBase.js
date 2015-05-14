@@ -49,6 +49,7 @@ $(function () {
             loadDelay: 500,
             rsInstance: null
         },
+        // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _init: function () {
             var me = this;
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
@@ -57,15 +58,17 @@ $(function () {
                 me.element.append(me.$loadingIndicator);
             }
             me._hideSubmitError();
+
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
         },
+        // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
             var me = this;
 
             me.loadLock = 0;
 
             me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml(me.options.iconClass, me.options.title, "fr-dlb-cancel-id", me.options.cancelWord);
             var $dialog = $(
@@ -286,12 +289,12 @@ $(function () {
                     error.appendTo($(element).parent().find("span"));
                 },
                 highlight: function (element) {
-                    $(element).parent().find("span").addClass("fr-cdb-error-position");
-                    $(element).addClass("fr-cdb-error");
+                    $(element).parent().find("span").addClass("fr-dlb-error-position");
+                    $(element).addClass("fr-dlb-error");
                 },
                 unhighlight: function (element) {
-                    $(element).parent().find("span").removeClass("fr-cdb-error-position");
-                    $(element).removeClass("fr-cdb-error");
+                    $(element).parent().find("span").removeClass("fr-dlb-error-position");
+                    $(element).removeClass("fr-dlb-error");
                 }
             });
         },

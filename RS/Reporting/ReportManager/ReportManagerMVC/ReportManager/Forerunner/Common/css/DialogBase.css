@@ -1,6 +1,6 @@
 ﻿.fr-dlb-form { margin-right: 16px; }
-  .fr-dlb-form .fr-dlb-error-span { display: inline; font-size: 10pt; margin-left: 5px; }
-  .fr-dlb-form .fr-dlb-error-position { display: inline; }
+  .fr-dlb-form .fr-dlb-error-span { display: block; font-size: 10pt; margin-left: 5px; }
+  .fr-dlb-form .fr-dlb-error-position { display: block; }
   .fr-dlb-form .fr-dlb-error { border-width: thin; border-color: red; }
     /* This will be made visibe if an error happens */
   .fr-dlb-form .fr-dlb-submit-error { display: none; margin-top: 10px; overflow: auto; }

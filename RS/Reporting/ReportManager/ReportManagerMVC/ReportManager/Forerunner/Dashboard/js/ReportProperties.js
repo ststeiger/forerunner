@@ -25,6 +25,8 @@ $(function () {
      * @prop {Object} options.$appContainer - Dashboard container
      * @prop {Object} options.$dashboardEditor - Dashboard Editor widget
      * @prop {Object} options.reportId - Target Report Id
+     * @prop {String} options.title - Dialog title
+     * @prop {String} options.iconClass - Style class of the dialog icon
      *
      * @example
      * $("#reportPropertiesDialog").reportProperties({

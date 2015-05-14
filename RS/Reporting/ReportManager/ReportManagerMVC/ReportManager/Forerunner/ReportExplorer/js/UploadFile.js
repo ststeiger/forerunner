@@ -104,9 +104,12 @@ $(function () {
             // Change the form to set up a post action and a submit button
             var url = me.options.reportManagerAPI + "UploadFile";
             me.$form.attr({ action: url, method: "post", enctype: "multipart/form-data" });
+
+
             //ie not allow change input type property when it is created, to bypass it create a new one and replace old
             //it was record by #1433
-            if (forerunner.device.isMSIE()) {
+            //This breaks now, not sure why but removing it for now ie8 only
+            if (forerunner.device.isMSIE8()) {
                 var newBtnHtml = me.$submit.prop("outerHTML").replace(/type=[a-z]+/i, "type='submit'");
 
                 me.$submit.replaceWith(newBtnHtml);
@@ -114,6 +117,8 @@ $(function () {
                 me.$submit.attr({ type: "submit" });
             }
 
+            
+            
             me.$decsription = me.element.find(".fr-upf-description");
             me.$uploadFile = me.element.find(".fr-upf-file");
             me.$overwrite = me.element.find(".fr-upf-overwrite-id");

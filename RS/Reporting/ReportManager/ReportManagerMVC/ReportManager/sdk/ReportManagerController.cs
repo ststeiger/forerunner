@@ -76,7 +76,12 @@ namespace ReportManager.Controllers
             Forerunner.SSRS.Manager.ReportManager rm = ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
             
             //If you need to specify your own credentials set them here, otherwise we will the forms auth cookie or the default network credentials
-            //rm.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));            
+            //rm.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));   
+            
+            //If you wish to use the service account
+            //rm.SetCredentials(CredentialCache.DefaultCredentials);
+            //rm.SetDomainUserName("Domain\\ServiceAccountName");
+
             return rm;
         }
 

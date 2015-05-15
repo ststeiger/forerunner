@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ModuleObject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" fVersion="1.1" type="Binary" mclass="External" useSupports="false">
-  <Name>PublishExtension</Name>
+  <Name>PublishFRExtension</Name>
   <Version>1.0.0.0</Version>
   <Description />
   <ModulePath>.\bin\Debug\PublishFRExtension.dll</ModulePath>
@@ -8,34 +8,11 @@
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />
   <Cmdlets>
-    <CmdletObject verb="Publish" noun="Extension">
-      <Name>Publish-Extension</Name>
+    <CmdletObject verb="Add" noun="FRScriptRef">
+      <Name>Add-FRScriptRef</Name>
       <GeneralHelp>
-        <Synopsis>Publishes the RDL Extensions from the given .rdle file into the deployed report (.rdl file) of the same name.</Synopsis>
-        <Description>Publish-FRExtension is designed to work in two environments:
-
-- As an "External Tool" inside of visual Studio
-- As a normal PowerShell command
-
-In either mode Publish-Extension will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for a report (.rdl) file that matches the RDLExtension (.rdle) file of the same name. If it finds a report of the same name deployed on the server and folder, Publish-Extension will publish the RDLExtension into the report. You can also give a folder path for the -i parameter and Publish-Extension will publish all .rdle files in the given folder. A good practice is to created a solution folder (RDLExtensions) inside of you report project solution and keep all your report extensions together with your reports.
-
-To install Publish-Extension as a Visual Studio "External Tool" follow the following steps:
-
-- Add a command to your $profile which imports Publish-Extension as follows:
-  - Import-Module "C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll"
-- In Visual Studio do the following
--  Open the "Tools" -&gt; "External Tools..." dialog
--  Select the "Add" button
--  Set the tool values as follows:
--    Title: Publish RDLE File
--    Command: PowerShell.exe
--    Arguments: -command "Publish-Extension -Verbose -i '$(ItemPath)' -p '&lt;fully qualified path to your .rptproj file&gt;'"
--    Check the "Use Output window" check box
--  Select the "Ok" button
-
-You are now ready to go. Whenever you have a .rdle file open, you can select the new "Publish RDLE File" in the "Tools" menu and your RDLExtension will be published.
-
-</Description>
+        <Synopsis>Adds a script file reference to the given .cshtml file.</Synopsis>
+        <Description>Add-FRScriptRef will add the given script reference (-jsPath) to the .cshtml file ()</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -45,38 +22,14 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ItemPath ProjectFileName ConfigurationName SharePointHost Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="cshtmlPath jsPath InsertBeginning SectionName Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Publish-Extension [-ItemPath &lt;String&gt;] [-ProjectFileName &lt;String&gt;] [-ConfigurationName &lt;String&gt;] [-SharePointHost &lt;String&gt;]</string>
+        <string>Add-FRScriptRef -cshtmlPath &lt;String&gt; -jsPath &lt;String&gt; [-InsertBeginning] [-SectionName &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
-        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
-          <Name>ItemPath</Name>
-          <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
-            <string>System.Management.Automation.ParameterAttribute</string>
-          </Attributes>
-          <Aliases>
-            <string>i</string>
-          </Aliases>
-          <Description>Fully qualified path to the .rdle file or a folder path that contains .rdle files</Description>
-          <DefaultValue />
-        </ParameterDescription>
-        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
-          <Name>ProjectFileName</Name>
-          <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
-            <string>System.Management.Automation.AliasAttribute</string>
-          </Attributes>
-          <Aliases>
-            <string>p</string>
-          </Aliases>
-          <Description>Fully qualified path to the report project file that contains the reports</Description>
-          <DefaultValue />
-        </ParameterDescription>
-        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
-          <Name>ConfigurationName</Name>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>cshtmlPath</Name>
           <Attributes>
             <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
@@ -84,11 +37,35 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
           <Aliases>
             <string>c</string>
           </Aliases>
-          <Description>Project file configuration</Description>
-          <DefaultValue>Debug</DefaultValue>
+          <Description>Fully qualified path to the .cshtml file</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>jsPath</Name>
+          <Attributes>
+            <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>j</string>
+          </Aliases>
+          <Description>Path to the script file (E.g., ~/Scripts/yourFile.js)</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>InsertBeginning</Name>
+          <Attributes>
+            <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>i</string>
+          </Aliases>
+          <Description>Switch to indication to insert the reference at beginning of the script section</Description>
+          <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
-          <Name>SharePointHost</Name>
+          <Name>SectionName</Name>
           <Attributes>
             <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
@@ -96,7 +73,7 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
           <Aliases>
             <string>s</string>
           </Aliases>
-          <Description>URL to the SharePoint host if the host is not a Native SSRS installation</Description>
+          <Description>Section name. Default = 'scripts'</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>

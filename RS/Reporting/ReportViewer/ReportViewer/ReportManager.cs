@@ -366,9 +366,17 @@ namespace Forerunner.SSRS.Manager
             return FormsAuthenticationHelper.GetCredentials();
         }
 
+        private string DomainUserName = null;
+        public void SetDomainUserName(string NewUserName)
+        {
+            DomainUserName = NewUserName;
+        }
         // This must NOT be called when impersonated in the SQL Impersonator block.  This must be called on the web thread!
         private String GetDomainUserName()
         {
+            if (DomainUserName != null)
+                return DomainUserName;
+
             if (credentials != null)
             {
                 System.Net.NetworkCredential networkCredential = (System.Net.NetworkCredential)credentials;

@@ -13,23 +13,23 @@
         public static readonly string connectDBSuccess = "Connection test success!";
 
         public static readonly string ssrsUpdateSuccess = "Configuration file update success!";
-        public static readonly string updateError = "Error occured when update, please try later!";
+        public static readonly string updateError = "Error occured during update, please try later!";
 
         public static readonly string reportServerPathEmpty = "Please select report server folder!";
-        public static readonly string reportServerPathWrong = "Please make sure 'Web.config', 'rsreportserver.config', 'rssrvpolicy.config' and 'bin' folder are all exist in selected folder!";
-        public static readonly string removeExtension = "Are you sure to remove Render Extensions configuration?";
+        public static readonly string reportServerPathWrong = "Please make sure the 'Web.config', 'rsreportserver.config', 'rssrvpolicy.config' and 'bin' folder are all exist in selected folder!";
+        public static readonly string removeExtension = "Are you sure you want to remove Render Extensions configuration?";
         public static readonly string removeCaption = "Remove";
-        public static readonly string removeWebConfigError = "Remove render extension from web.config occured unknown error";
-        public static readonly string removeRSReportServerError = "Remove render extension from rsreportserver.config occured unknown error";
-        public static readonly string removeRSPolicyError = "Remove render extension from rssrvpolicy.config occured unknown error";
+        public static readonly string removeWebConfigError = "Remove render extension from web.config, unknown error";
+        public static readonly string removeRSReportServerError = "Remove render extension from rsreportserver.config ocred, unknown error";
+        public static readonly string removeRSPolicyError = "Remove render extension from rssrvpolicy.config, unknown error";
         public static readonly string removeDone = "Remove completed!";
 
-        public static readonly string updateWebConfigError = "Update web.config occured unknown error";
-        public static readonly string updateRSReportServerError = "Update rsreportserver.config occured unknown error";
-        public static readonly string updateRSPolicyError = "Update rsrvvpolicy.config occured unknown error";
+        public static readonly string updateWebConfigError = "Update web.config,  unknown error";
+        public static readonly string updateRSReportServerError = "Update rsreportserver.config, unknown error";
+        public static readonly string updateRSPolicyError = "Update rsrvvpolicy.config, unknown error";
         public static readonly string updateDone = "Update completed!";
 
-        public static readonly string siteExist = "Site name {0} is already exist, please input another name";
+        public static readonly string siteExist = "Site name {0} already exists, please use another name";
 
         public static readonly string windowsAuth = "Windows";
         public static readonly string formsAuth = "Forms";
@@ -42,12 +42,12 @@
         public static readonly string testSuccess = "Success";
         public static readonly string testFail = "Fail";
         public static readonly string webServiceUrlInvalid = "Web Service Url is invalid: {0}";
-        public static readonly string webServiceUrlError = "Web Service Url is not work: {0}";
+        public static readonly string webServiceUrlError = "Web Service Url does not work: {0}";
         public static readonly string webServiceUrlIncorrect = "Web Service Url is not correct!"; 
 
         public static readonly string ssrs2005url = "/ReportService2005.asmx?wsdl";
-        public static readonly string ssrs2006url = "/ReportService2006.asmx?wsdl";
+        public static readonly string ssrs2010url = "/ReportService2010.asmx?wsdl";
         public static readonly string ssrs2005TargetNS = "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices";
-        public static readonly string ssrs2006TargetNS = "http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices";
+        public static readonly string ssrs2010TargetNS = "http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer";
     }
 }

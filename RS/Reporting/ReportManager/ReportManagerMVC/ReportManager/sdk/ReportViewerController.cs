@@ -44,6 +44,10 @@ namespace ReportManager.Controllers
 
             //If you need to specify your own credentials set them here, otherwise we will the forms auth cookie or the default network credentials
             //rv.SetCredentials(new NetworkCredential("TestAccount",  "TestPWD!","Forerunner"));
+
+            //If you wish to use the service account
+            //rv.SetCredentials(CredentialCache.DefaultCredentials);
+
             return rv;
         }
 

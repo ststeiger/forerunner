@@ -313,7 +313,7 @@
     "description":"Description"
   },
   "security": {
-    "title":"",
+    "title":"Security",
     "edit":"Edit",
     "newPolicy":"New",
     "reset":"Reset",

@@ -377,7 +377,7 @@ namespace ReportMannagerConfigTool
         {
             try
             {
-                url += isSharePoint ? StaticMessages.ssrs2006url : StaticMessages.ssrs2005url;
+                url += isSharePoint ? StaticMessages.ssrs2010url : StaticMessages.ssrs2005url;
                 
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
                 request.Credentials = CredentialCache.DefaultNetworkCredentials;
@@ -395,7 +395,7 @@ namespace ReportMannagerConfigTool
 
                         string targetNamespace = wsdl.SelectSingleNode("wsdl:definitions", nsmgr).Attributes["targetNamespace"].Value;
 
-                        if (targetNamespace.Equals(isSharePoint ? StaticMessages.ssrs2006TargetNS : StaticMessages.ssrs2005TargetNS))
+                        if (targetNamespace.Equals(isSharePoint ? StaticMessages.ssrs2010TargetNS : StaticMessages.ssrs2005TargetNS))
                         {
                             return StaticMessages.testSuccess;
                         }

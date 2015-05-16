@@ -210,8 +210,15 @@ namespace Forerunner.SSRS.Management
                 NewItems[i].Path = items[i].Path;
                 NewItems[i].Size = items[i].Size;
                 NewItems[i].VirtualPath = items[i].VirtualPath;
-                NewItems[i].Type = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), items[i].TypeName, true);
-                
+
+                try
+                {
+                    NewItems[i].Type = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), items[i].TypeName, true);
+                }
+                catch
+                {
+                    NewItems[i].Type = ItemTypeEnum.Unknown;
+                }
 
             }
 

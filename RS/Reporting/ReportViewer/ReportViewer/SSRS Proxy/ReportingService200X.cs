@@ -4492,7 +4492,9 @@ namespace Forerunner.SSRS.Management
 
         /// <remarks/>
         Site=7,
-        
+
+        /// <remarks/>
+        Other = 8,
     }
 
     /// <remarks/>

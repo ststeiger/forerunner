@@ -3439,7 +3439,6 @@ $(function () {
             }
 
             me.pages[pageNum].isRendered = true;
-
             if (me.isDebug) {
                 console.log("RenderPagePost", {
                     page: me.pages[pageNum]

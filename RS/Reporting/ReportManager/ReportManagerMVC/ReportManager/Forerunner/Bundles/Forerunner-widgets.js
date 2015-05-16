@@ -1881,7 +1881,7 @@ $(function () {
                     type: "GET",
                     url: url,
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
@@ -1900,7 +1900,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -2023,7 +2023,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -2530,7 +2530,7 @@ $(function () {
         exportReport: function (exportType) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + encodeURIComponent(me.getReportPath()) + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
             if (me.options.exportCallback !== undefined)
@@ -2743,7 +2743,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -2862,7 +2862,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.getSessionID(),
                         ParameterList: typeof(paramList) === "string" ? paramList : JSON.stringify(paramList),
                         DSCredentials: me.getDataSourceCredential(),
@@ -2878,7 +2878,7 @@ $(function () {
                             
                             if (me.isDebug) {
                                 console.log("refreshParameters", {
-                                    ReportPath: encodeURIComponent(me.reportPath),
+                                    ReportPath: me.reportPath,
                                     SessionID: me.getSessionID(),
                                     ParameterList: paramList,
                                     DSCredentials: me.getDataSourceCredential(),
@@ -3005,7 +3005,7 @@ $(function () {
             me._getRDLExtProp();
 
             if (me.RDLExtProperty.DefaultZoom)
-                me.options.zoom = me.RDLExtProperty.DefaultZoom;
+                me.options.zoom = me.RDLExtProperty.efaultZoom;
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -3053,7 +3053,7 @@ $(function () {
                 async: false,
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
                 data: {
-                    path: encodeURIComponent(me.reportPath),
+                    path: me.reportPath,
                     propertyName: "ForerunnerRDLExt",
                     instance: me.options.rsInstance,
                 },
@@ -3237,7 +3237,7 @@ $(function () {
 
             var dsCredentials = me.getDataSourceCredential();
             var reportJSONData = {
-                ReportPath: encodeURIComponent(me.reportPath),
+                ReportPath: me.reportPath,
                 SessionID: me.sessionID,
                 PageNumber: newPageNum,
                 ParameterList: paramList,
@@ -3247,7 +3247,7 @@ $(function () {
 
             if (me.isDebug) {
                 console.log("LoadPage", {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.sessionID,
                     PageNumber: newPageNum,
                     ParameterList: paramList,
@@ -4010,13 +4010,17 @@ $(function () {
         },
         _load: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters";
             if (me._isLoaded(reportPath)) {
                 return;
             }
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    reportPath: reportPath,
+                    instance: me.options.rsInstance,
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -6155,15 +6159,14 @@ $(function () {
             var me = this;
             var status = false;
 
-            var url = me.options.reportManagerAPI + "/Resource";
-            url += "?path=" + encodeURIComponent(path);
-            if (me.options.rsInstance) {
-                url += "&instance=" + me.options.rsInstance;
-            }
-
+            var url = me.options.reportManagerAPI + "/Resource";            
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance,
+                },
                 async: false,
                 success: function (data) {
                     me.dashboardDef = data;
@@ -6194,7 +6197,7 @@ $(function () {
                 url: url,
                 data: {
                     resourceName: dashboardName,
-                    parentFolder: encodeURIComponent(parentFolder),
+                    parentFolder: parentFolder,
                     overwrite: overwrite,
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",
@@ -8822,7 +8825,7 @@ $(function () {
             var reportViewerAPI = me.options.$reportViewer.reportViewer("getReportViewerAPI");
             var reportPath = me.options.$reportViewer.reportViewer("getReportPath");
             var url = reportViewerAPI + "/Thumbnail/?ReportPath="
-                        + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
+                        + encodeURIComponent(reportPath) + "&SessionID=" + sessionID + "&PageNumber=" + i;
             if (me.options.rsInstance)
                 url += "&instance=" + me.options.rsInstance;
             var $listItem = new $("<LI />");
@@ -9237,15 +9240,15 @@ $(function () {
             var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
             if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
             
-            var url = me.options.reportManagerAPI + "/DeleteCatalogItem?path=" + encodeURIComponent(me.options.catalogItem.Path) + "&safeFolderDelete=true";
-
-            if (me.options.rsInstance) {
-                url += "&instance=" + me.options.rsInstance;
-            }
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
 
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
+                data: {
+                    path: me.options.catalogItem.Path,
+                    instance: me.options.rsInstance,
+                },
                 async: false,
                 success: function (data) {
                     if (data.Warning === "folderNotEmpty") {
@@ -18736,10 +18739,13 @@ $(function () {
             if (me.options.$toolPane !== null) {
                 me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
             }
-            var url = me.options.ReportManagerAPI + "/isFavorite?path=" + path;
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+            var url = me.options.ReportManagerAPI + "/isFavorite";           
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance,
+                },
                 dataType: "json",
                 async: true,
                 success: function (data) {
@@ -21450,9 +21456,12 @@ $(function () {
         },
         getMySubscriptionList: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: true
             })
@@ -21466,9 +21475,13 @@ $(function () {
         },
         getSubscriptionList: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    reportPath:reportPath,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: true
             })
@@ -21483,9 +21496,13 @@ $(function () {
         getSchedules: function () {
             var me = this;
             if (me.schedules) return me.schedules;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -21502,9 +21519,13 @@ $(function () {
         getDeliveryExtensions: function () {
             var me = this;
             //if (me.extensionList) return [me.extensionList];
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions";
             return forerunner.ajax.ajax({
                 url: url,
+                data: {                    
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -21523,9 +21544,14 @@ $(function () {
             var me = this;
             if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
             
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    extension: extensionName,
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -21545,10 +21571,14 @@ $(function () {
         },
         getSubscription: function (subscriptionID) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetSubscription";
             var retval;
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    subscriptionID: subscriptionID,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -21568,9 +21598,13 @@ $(function () {
         },
         deleteSubscription: function (subscriptionID, success, error) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription";
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    subscriptionID: subscriptionID,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: false,
                 success: function (data, textStatus, jqXHR) {

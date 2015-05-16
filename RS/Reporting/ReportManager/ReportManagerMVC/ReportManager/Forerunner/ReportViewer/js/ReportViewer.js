@@ -1161,7 +1161,7 @@ $(function () {
                     type: "GET",
                     url: url,
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
@@ -1180,7 +1180,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -1303,7 +1303,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -1810,7 +1810,7 @@ $(function () {
         exportReport: function (exportType) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + encodeURIComponent(me.getReportPath()) + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
             if (me.options.exportCallback !== undefined)
@@ -2023,7 +2023,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -2142,7 +2142,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.getSessionID(),
                         ParameterList: typeof(paramList) === "string" ? paramList : JSON.stringify(paramList),
                         DSCredentials: me.getDataSourceCredential(),
@@ -2158,7 +2158,7 @@ $(function () {
                             
                             if (me.isDebug) {
                                 console.log("refreshParameters", {
-                                    ReportPath: encodeURIComponent(me.reportPath),
+                                    ReportPath: me.reportPath,
                                     SessionID: me.getSessionID(),
                                     ParameterList: paramList,
                                     DSCredentials: me.getDataSourceCredential(),
@@ -2285,7 +2285,7 @@ $(function () {
             me._getRDLExtProp();
 
             if (me.RDLExtProperty.DefaultZoom)
-                me.options.zoom = me.RDLExtProperty.DefaultZoom;
+                me.options.zoom = me.RDLExtProperty.efaultZoom;
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -2333,7 +2333,7 @@ $(function () {
                 async: false,
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
                 data: {
-                    path: encodeURIComponent(me.reportPath),
+                    path: me.reportPath,
                     propertyName: "ForerunnerRDLExt",
                     instance: me.options.rsInstance,
                 },
@@ -2517,7 +2517,7 @@ $(function () {
 
             var dsCredentials = me.getDataSourceCredential();
             var reportJSONData = {
-                ReportPath: encodeURIComponent(me.reportPath),
+                ReportPath: me.reportPath,
                 SessionID: me.sessionID,
                 PageNumber: newPageNum,
                 ParameterList: paramList,
@@ -2527,7 +2527,7 @@ $(function () {
 
             if (me.isDebug) {
                 console.log("LoadPage", {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.sessionID,
                     PageNumber: newPageNum,
                     ParameterList: paramList,

@@ -129,7 +129,7 @@ namespace ReportManager.Controllers
             byte[] result = null;
             try
             {                
-                result = GetReportViewer(instance).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
+                result = GetReportViewer(instance).GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
                 return GetResponseFromBytes(result, "image/JPEG",true);
 
             }
@@ -146,7 +146,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-               return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
+               return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
             }
             catch (Exception e)
             {
@@ -162,7 +162,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
+                result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

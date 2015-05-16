@@ -217,13 +217,17 @@ $(function () {
         },
         _load: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters";
             if (me._isLoaded(reportPath)) {
                 return;
             }
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    reportPath: reportPath,
+                    instance: me.options.rsInstance,
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {

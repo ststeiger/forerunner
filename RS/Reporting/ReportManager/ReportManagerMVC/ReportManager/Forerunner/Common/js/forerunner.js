@@ -1860,14 +1860,17 @@ $(function () {
         * @return {Object} - Check result for each permission
         * @member
         */
-        hasPermission: function (path, permissions) {
+        hasPermission: function (path, permissions,instance) {
             var permissionData = {};
 
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
-                "?path=" + encodeURIComponent(path) +
-                "&permission=" + permissions;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission";
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    path: path,
+                    permission:permissions,
+                    instance: instance,
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {

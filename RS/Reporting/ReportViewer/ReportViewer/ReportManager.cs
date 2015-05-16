@@ -318,7 +318,7 @@ namespace Forerunner.SSRS.Manager
             else if (view == "recent")
                 return this.GetRecentReports();
             else if (view == "catalog")
-                return this.ListChildren(HttpUtility.UrlDecode(path), false);
+                return this.ListChildren(path, false);
             else if (view == "searchfolder")
                 return this.GetSearchFolderItems(path);
             else
@@ -395,7 +395,7 @@ namespace Forerunner.SSRS.Manager
         private CatalogItem[] callListChildren(string path, Boolean isRecursive)
         {
             rs.Credentials = GetCredentials();
-            return rs.ListChildren(HttpUtility.UrlDecode(path),isRecursive);
+            return rs.ListChildren(path,isRecursive);
         }
 
         private void OpenSQLConn()
@@ -421,7 +421,7 @@ namespace Forerunner.SSRS.Manager
             // No need to impersonate again.
             rs.Credentials = GetCredentials();
 
-            return rs.GetProperties(HttpUtility.UrlDecode(path), props);
+            return rs.GetProperties(path, props);
         }
         private void callSetProperties(string path, Property[] props)
         {
@@ -430,7 +430,7 @@ namespace Forerunner.SSRS.Manager
             // No need to impersonate again.
             rs.Credentials = GetCredentials();
 
-             rs.SetProperties(HttpUtility.UrlDecode(path), props);
+             rs.SetProperties(path, props);
         }
 
         private string[] callGetPermissions(string path)
@@ -462,7 +462,7 @@ namespace Forerunner.SSRS.Manager
         public byte[] GetCatalogResource(string path, out string mimetype)
         {
             rs.Credentials = GetCredentials();
-            byte[] contents = rs.GetResourceContents(HttpUtility.UrlDecode(path), out mimetype);
+            byte[] contents = rs.GetResourceContents(path, out mimetype);
             SetMissingMimetype(path, ref mimetype);
 
             return contents;
@@ -665,7 +665,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     // If we were not told to overwrite then try and create the resource here
                     rs.CreateResource(setResource.resourceName,
-                                        HttpUtility.UrlDecode(setResource.parentFolder),
+                                        setResource.parentFolder,
                                         setResource.overwrite,
                                         contentUTF8,
                                         setResource.mimetype,
@@ -691,7 +691,7 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 // If we were told to overwrite, replace the contents here. We assume the resource exists 
-                var path = CombinePaths(HttpUtility.UrlDecode(setResource.parentFolder), setResource.resourceName);
+                var path = CombinePaths(setResource.parentFolder, setResource.resourceName);
                 path = GetPath(path);
                 rs.SetResourceContents(path, contentUTF8, setResource.mimetype);
             }
@@ -712,7 +712,7 @@ namespace Forerunner.SSRS.Manager
             {
                 // If the resource does not exist yet we need to create it here
                 rs.CreateResource(setResource.resourceName,
-                                    HttpUtility.UrlDecode(setResource.parentFolder),
+                                    setResource.parentFolder,
                                     setResource.overwrite,
                                     contentUTF8,
                                     setResource.mimetype,
@@ -880,7 +880,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath",path);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -945,7 +945,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -989,7 +989,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@Params", parameters);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
@@ -1034,7 +1034,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
@@ -1270,7 +1270,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -1474,7 +1474,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SetUserNameParameters(SQLComm, userName);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
 
                     SQLComm.ExecuteNonQuery();
@@ -1595,7 +1595,7 @@ namespace Forerunner.SSRS.Manager
                     SetUserNameParameters(SQLComm, userName);
 
                     SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
-                    SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@Path", path);
                     if (image == null)
                         SQLComm.Parameters.AddWithValue("@Image", DBNull.Value);                        
                     else
@@ -1680,7 +1680,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     //SQLComm.Prepare();
-                    SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@Path", path);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SetUserNameParameters(SQLComm, userName);
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
@@ -1710,7 +1710,7 @@ namespace Forerunner.SSRS.Manager
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;
-            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
+            foreach (string permission in callGetPermissions(path))
             {
                 if (permission.IndexOf(requiredPermission, StringComparison.OrdinalIgnoreCase) != -1)
                 {
@@ -1726,7 +1726,7 @@ namespace Forerunner.SSRS.Manager
         {
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
-            string[] allPermission = callGetPermissions(HttpUtility.UrlDecode(path));
+            string[] allPermission = callGetPermissions(path);
 
             foreach (string per in permissions.Split(','))
             {
@@ -1760,7 +1760,7 @@ namespace Forerunner.SSRS.Manager
                     {
 
                         sqlImpersonator = tryImpersonate(true);
-                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, true /*!GetServerRendering()*/);
+                        context = new ThreadContext(path, sqlImpersonator, true /*!GetServerRendering()*/);
                         this.SetCredentials(context.NetworkCredential);
                         ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);                       
                     }
@@ -2017,7 +2017,7 @@ namespace Forerunner.SSRS.Manager
                     SQLComm.Parameters.AddWithValue("@SubscriptionID", subscriptionID);
                     SQLComm.Parameters.AddWithValue("@ScheduleID", scheduleID);
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.ExecuteNonQuery();
                 }
             }
@@ -2219,7 +2219,7 @@ namespace Forerunner.SSRS.Manager
                     if (report != null)
                     {
                         SQLComm.Parameters.AddWithValue("@ItemID", IID);
-                        SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(report));
+                        SQLComm.Parameters.AddWithValue("@ItemPath", report);
                     }
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
@@ -2304,7 +2304,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
 
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
@@ -2366,7 +2366,7 @@ namespace Forerunner.SSRS.Manager
                 using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
                     SQLComm.Parameters.AddWithValue("@ItemID", IID);
-                    SQLComm.Parameters.AddWithValue("@ItemPath", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@ItemPath", path);
                     SQLComm.Parameters.AddWithValue("@Tags", tags);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -2484,8 +2484,23 @@ namespace Forerunner.SSRS.Manager
 
                 sca[0].Condition = Management.ConditionEnum.Equals;
                 sca[0].Name = "Name";
+
+                 int lastSlash = path[i].LastIndexOf('/');
+
+                string ItemPath = path[i].Substring(0, lastSlash);
                 sca[0].Value = sca[0].Value + path[i].Split('/').Last();
-                string ItemPath = path[i].Substring(0, path[i].LastIndexOf('/'));
+
+                //handle shrepoint special
+                if (!IsNativeRS)
+                {
+                    int httpLoc = path[i].IndexOf("://");
+                    if (httpLoc == lastSlash-2)
+                    {
+                        ItemPath = "/";
+                        sca[0].Value = path[i].Substring(1);
+                    }
+                }
+                 
                 if (ItemPath == "")
                     ItemPath = "/";
                 try
@@ -2592,7 +2607,7 @@ namespace Forerunner.SSRS.Manager
 
             rs.Credentials = GetCredentials();
 
-            var policyArr = rs.GetPolicies(HttpUtility.UrlDecode(itemPath), out isInheritParent);
+            var policyArr = rs.GetPolicies(itemPath, out isInheritParent);
 
             return JsonUtility.GetPoliciesJson(policyArr, isInheritParent);
         }
@@ -2606,7 +2621,7 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
 
-            return rs.ListRoles(type, HttpUtility.UrlDecode(itemPath));
+            return rs.ListRoles(type, itemPath);
         }
 
         /*
@@ -2615,7 +2630,7 @@ namespace Forerunner.SSRS.Manager
         public string InheritParentSecurity(string itemPath)
         {
             rs.Credentials = GetCredentials();
-            rs.InheridParentSecurity(HttpUtility.UrlDecode(itemPath));
+            rs.InheridParentSecurity(itemPath);
             return getReturnSuccess();
         }
 
@@ -2627,7 +2642,7 @@ namespace Forerunner.SSRS.Manager
             rs.Credentials = GetCredentials();
             Policy[] policyArray = JsonUtility.GetPoliciesFromJson(policies);
 
-            rs.SetPolicies(HttpUtility.HtmlDecode(itemPath), policyArray);
+            rs.SetPolicies(itemPath, policyArray);
 
             return getReturnSuccess();
         }

@@ -22,5 +22,6 @@
 	"ManageSubscriptionUI":"default",
 	"EnableGestures":"on",
 	"BigTablixBatchSize":3000,
-	"AppleFixedToolbarBug":"on"
+	"AppleFixedToolbarBug":"on",
+	"DefaultViewStyle":"list"
 }

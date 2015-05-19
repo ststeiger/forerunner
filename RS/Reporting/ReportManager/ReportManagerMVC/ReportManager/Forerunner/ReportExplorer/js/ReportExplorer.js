@@ -132,6 +132,10 @@ $(function () {
                 reportThumbnailPath += "&instance=" + me.options.rsInstance;
 
             var viewStyle = null;
+
+            if (!me.options.userSettings.viewStyle)
+                me.options.userSettings.viewStyle = forerunner.config.getCustomSettingsValue("DefaultViewStyle", "large")
+
             if (me.options.userSettings.viewStyle === "small") {
                 viewStyle = "-small";
             }

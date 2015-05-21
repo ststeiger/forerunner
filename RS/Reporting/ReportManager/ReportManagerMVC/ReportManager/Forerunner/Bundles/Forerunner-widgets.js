@@ -1218,7 +1218,7 @@ $(function () {
             }
             
             // Make sure each new page has the zoom factor applied or options zoom
-            me.zoomToPercent();
+            //me.zoomToPercent();
             me._setOptionsZoom();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
@@ -1249,6 +1249,11 @@ $(function () {
             var me = this;
             var zoomFactor;
 
+            if (me.zooming === true)
+                return;
+
+            me.zoooming = true;
+
             if (!percent) {
                 // Reset the zoom. This happens during a page change
                 zoomFactor = me.getZoomFactor();
@@ -1257,6 +1262,7 @@ $(function () {
                 zoomFactor = parseFloat(percent);
                 if (isNaN(zoomFactor)) {
                     me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    me.zoooming = false;
                     return false;
                 }
             }
@@ -1276,6 +1282,7 @@ $(function () {
             me.element.hide().show(0);
             if (isPageOption !== true)
                 me.options.zoom = percent;
+            me.zoooming = false;
             return true;
         },
         /**
@@ -1447,30 +1454,26 @@ $(function () {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 0.99;
 
                             if (area > 1000000)
                                 zoomSpeed = 0.90;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                 
                         }
                     });
                     $(me.element).hammer().on("pinchout", function (ev) {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 1.01;
 
                             if (area > 1000000)
                                 zoomSpeed = 1.10;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                            
                         }
 
                     });

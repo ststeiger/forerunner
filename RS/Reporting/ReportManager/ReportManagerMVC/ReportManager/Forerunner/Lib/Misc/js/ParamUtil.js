@@ -156,11 +156,11 @@ $(function () {
   // Add the Param Util button to the right toolbar
   //
   $(document).ready(function (e) {
-    var viewerEZSelector = ".fr-layout-container";
-    var $viewerEZCollection = $(document).find(viewerEZSelector);
+    var reportExplorerEZSelector = ".fr-layout-container";
+    var $reportExplorerEZ = $(document).find(reportExplorerEZSelector);
 
-    if ($viewerEZCollection.length === 0) {
-      console.log("ParamUtil failed - unable to find: " + viewerEZSelector);
+    if ($reportExplorerEZ.length === 0) {
+        console.log("ParamUtil failed - unable to find: " + reportExplorerEZSelector + ", ParamUtil is designed to work with Mobilizer");
       return;
     }
 
@@ -177,43 +177,49 @@ $(function () {
       return $dlg;
     }
 
-    $viewerEZCollection.each(function (index) {
-      var $reportViewerEZ = $(this);
-      var $rightToolbar = $reportViewerEZ.reportViewerEZ("getRightToolbar");
-      var $reportParameter = $reportViewerEZ.reportViewerEZ("getReportParameter");
-      var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
-      var reportPath = $reportViewer.reportViewer("getReportPath");
-
-      var btnGetParameters = {
-        toolType: "button",
-        selectorClass: "fr-putil-getparams-id",
-        imageClass: "fr-putil-getparams-btn",
-        iconClass: "fr-putil-getparams24x24",
-        tooltip: "Parameters Utility",
-        events: {
-          click: function (e) {
-            var paramList = $reportParameter.reportParameter("getParamsList");
-            if (paramList === null) {
-              console.log("ParamUtil - getParamsList returned null");
-              return;
-            }
-            var paramListObj = JSON.parse(paramList);
-            var $pUtilDlg = findDialog($reportViewerEZ, "fr-putil-section")
-            $pUtilDlg.paramUtil({
-              $appContainer: $reportViewerEZ,
-              $reportViewerEZ: $reportViewerEZ,
-              $reportParameter: $reportParameter,
-              reportPath: reportPath,
-              paramListObj: paramListObj
-            });
-            $pUtilDlg.paramUtil("openDialog");
-          }
+    var onAfterTransition = function (e, data) {
+        if (data.type !== "ReportViewer") {
+            // Only process this if we are transitioning to a report viewer
+            return;
         }
-      }
 
-      $rightToolbar.rightToolbar("addTools", 2, true, [btnGetParameters]);
+        // Add the new button to the right toolbar for all report viewers
+        var $reportViewerEZ = $(".fr-layout-mainviewport");
+        var $rightToolbar = $reportViewerEZ.reportViewerEZ("getRightToolbar");
+        var $reportParameter = $reportViewerEZ.reportViewerEZ("getReportParameter");
+        var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+        var reportPath = $reportViewer.reportViewer("getReportPath");
 
-    });
+        var btnGetParameters = {
+            toolType: "button",
+            selectorClass: "fr-putil-getparams-id",
+            imageClass: "fr-putil-getparams-btn",
+            iconClass: "fr-putil-getparams24x24",
+            tooltip: "Parameters Utility",
+            events: {
+                click: function (e) {
+                    var paramList = $reportParameter.reportParameter("getParamsList");
+                    if (paramList === null) {
+                        console.log("ParamUtil - getParamsList returned null");
+                        return;
+                    }
+                    var paramListObj = JSON.parse(paramList);
+                    var $pUtilDlg = findDialog($reportViewerEZ, "fr-putil-section")
+                    $pUtilDlg.paramUtil({
+                        $appContainer: $reportViewerEZ,
+                        $reportViewerEZ: $reportViewerEZ,
+                        $reportParameter: $reportParameter,
+                        reportPath: reportPath,
+                        paramListObj: paramListObj
+                    });
+                    $pUtilDlg.paramUtil("openDialog");
+                }
+            }
+        }
+        $rightToolbar.rightToolbar("addTools", 2, true, [btnGetParameters]);
+    }
+
+    $reportExplorerEZ.on(events.reportExplorerEZAfterTransition(), onAfterTransition);
 
   });  // document ready
 

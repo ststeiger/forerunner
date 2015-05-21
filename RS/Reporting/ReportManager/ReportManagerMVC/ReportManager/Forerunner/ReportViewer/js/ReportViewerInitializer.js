@@ -265,10 +265,13 @@ $(function () {
             if (me.options.$toolPane !== null) {
                 me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
             }
-            var url = me.options.ReportManagerAPI + "/isFavorite?path=" + path;
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+            var url = me.options.ReportManagerAPI + "/isFavorite";           
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance,
+                },
                 dataType: "json",
                 async: true,
                 success: function (data) {

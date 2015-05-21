@@ -498,7 +498,7 @@ $(function () {
             }
             
             // Make sure each new page has the zoom factor applied or options zoom
-            me.zoomToPercent();
+            //me.zoomToPercent();
             me._setOptionsZoom();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
@@ -525,9 +525,14 @@ $(function () {
          *
          * @return {bool} - true = zoom factor change, false = percent not a number
          */
-        zoomToPercent: function (percent) {
+        zoomToPercent: function (percent,isPageOption) {
             var me = this;
             var zoomFactor;
+
+            if (me.zooming === true)
+                return;
+
+            me.zoooming = true;
 
             if (!percent) {
                 // Reset the zoom. This happens during a page change
@@ -537,6 +542,7 @@ $(function () {
                 zoomFactor = parseFloat(percent);
                 if (isNaN(zoomFactor)) {
                     me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    me.zoooming = false;
                     return false;
                 }
             }
@@ -553,7 +559,10 @@ $(function () {
             }
 
             me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-
+            me.element.hide().show(0);
+            if (isPageOption !== true)
+                me.options.zoom = percent;
+            me.zoooming = false;
             return true;
         },
         /**
@@ -567,14 +576,12 @@ $(function () {
                 me._zoomFactor = 100;
             }
 
-            var page = me.$reportAreaContainer.find(".Page");
-            var pageWidthZoom = (me.element.width() / page.width()) * 100;
-            var isPageWidth = Math.abs(pageWidthZoom - me._zoomFactor) < 1;  // To the nearest int is equal here
-
-            if (isPageWidth) {
+            if (me.options.zoom === "page width")
+            {
                 me.zoomToPercent(100);
+                me.options.zoom = "100";
             } else {
-                me.zoomToPercent(pageWidthZoom);
+                me.zoomToPageWidth();
             }
         },
         /**
@@ -585,8 +592,9 @@ $(function () {
         zoomToPageWidth : function() {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            var pageWidthZoom = (me.element.width() / page.width()) * 100;
-            me.zoomToPercent(pageWidthZoom);
+            var pageWidthZoom = (me.element.visibleSize().width / page.width()) * 100;
+            me.zoomToPercent(pageWidthZoom,true);
+            me.options.zoom = "page width";
         },
 
         /**
@@ -597,12 +605,13 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            var heightScale = (me.element.height()  / page.height());
-            if (heightScale - 1 < 0.00001) {
-                heightScale = ($(window).height())/ ($(document).height());
-            }
-            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
-            me.zoomToPercent(pageWholePageZoom);
+            var vSize = me.element.visibleSize();
+            var heightScale = (vSize.height / page.height());
+            var widthScale = (vSize.width / page.width());
+
+            var pageWholePageZoom = Math.min(widthScale * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom, true);
+            me.options.zoom = "whole page";
         },
 
         _addSetPageCallback: function (func) {
@@ -725,30 +734,26 @@ $(function () {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 0.99;
 
                             if (area > 1000000)
                                 zoomSpeed = 0.90;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                 
                         }
                     });
                     $(me.element).hammer().on("pinchout", function (ev) {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 1.01;
 
                             if (area > 1000000)
                                 zoomSpeed = 1.10;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                            
                         }
 
                     });
@@ -1161,7 +1166,7 @@ $(function () {
                     type: "GET",
                     url: url,
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
@@ -1180,7 +1185,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -1303,7 +1308,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -1810,7 +1815,7 @@ $(function () {
         exportReport: function (exportType) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + encodeURIComponent(me.getReportPath()) + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
             if (me.options.exportCallback !== undefined)
@@ -2023,7 +2028,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -2142,7 +2147,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: encodeURIComponent(me.reportPath),
+                        ReportPath: me.reportPath,
                         SessionID: me.getSessionID(),
                         ParameterList: typeof(paramList) === "string" ? paramList : JSON.stringify(paramList),
                         DSCredentials: me.getDataSourceCredential(),
@@ -2158,7 +2163,7 @@ $(function () {
                             
                             if (me.isDebug) {
                                 console.log("refreshParameters", {
-                                    ReportPath: encodeURIComponent(me.reportPath),
+                                    ReportPath: me.reportPath,
                                     SessionID: me.getSessionID(),
                                     ParameterList: paramList,
                                     DSCredentials: me.getDataSourceCredential(),
@@ -2333,7 +2338,7 @@ $(function () {
                 async: false,
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
                 data: {
-                    path: encodeURIComponent(me.reportPath),
+                    path: me.reportPath,
                     propertyName: "ForerunnerRDLExt",
                     instance: me.options.rsInstance,
                 },
@@ -2517,7 +2522,7 @@ $(function () {
 
             var dsCredentials = me.getDataSourceCredential();
             var reportJSONData = {
-                ReportPath: encodeURIComponent(me.reportPath),
+                ReportPath: me.reportPath,
                 SessionID: me.sessionID,
                 PageNumber: newPageNum,
                 ParameterList: paramList,
@@ -2527,7 +2532,7 @@ $(function () {
 
             if (me.isDebug) {
                 console.log("LoadPage", {
-                    ReportPath: encodeURIComponent(me.reportPath),
+                    ReportPath: me.reportPath,
                     SessionID: me.sessionID,
                     PageNumber: newPageNum,
                     ParameterList: paramList,
@@ -2719,7 +2724,6 @@ $(function () {
             }
 
             me.pages[pageNum].isRendered = true;
-
             if (me.isDebug) {
                 console.log("RenderPagePost", {
                     page: me.pages[pageNum]

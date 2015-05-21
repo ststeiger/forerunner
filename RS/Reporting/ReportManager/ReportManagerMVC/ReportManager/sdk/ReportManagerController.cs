@@ -586,7 +586,7 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetReportTags(string path, string instance = null)
         {
-            if (UseMobilizerDB == false)
+            if (UseMobilizerDB == false || path == "/")
             {
                 return GetEmptyJSONResponse();
             }

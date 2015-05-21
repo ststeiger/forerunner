@@ -238,6 +238,37 @@ jQuery.fn.extend({
             collection.push(Obj);
             $(Obj).addUntil(until, collection);
         });
+    },
+    visibleSize : function() {
+        var ret = {};
+
+        var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;        
+        scrollTop = $(window).scrollTop();
+        scrollBot = scrollTop + $(window).height();
+        elTop = this.offset().top;
+        elBottom = elTop + this.outerHeight();
+        visibleTop = elTop < scrollTop ? scrollTop : elTop;
+        visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+        ret.height = visibleBottom - visibleTop;
+
+        //13 is scrollbar width
+        if (ret.height < this.height())
+            ret.height += -13;
+
+        var elLeft, elRight, scrollLeft, scrollRight, visibleLeft, visibleRight;
+        scrollLeft = $(window).scrollLeft();
+        scrollRight = scrollLeft + $(window).width();
+        elLeft = this.offset().left;
+        elRight = elLeft + this.outerWidth();
+        visibleLeft = elLeft < scrollLeft ? scrollLeft : elLeft;
+        visibleRight = elRight > scrollRight ? scrollRight : elRight;
+        ret.width = visibleRight - visibleLeft;
+
+        //13 is scrollbar width
+        if (ret.width < this.width())
+            ret.width += -13;
+
+        return ret;
     }
 
 });
@@ -1860,14 +1891,17 @@ $(function () {
         * @return {Object} - Check result for each permission
         * @member
         */
-        hasPermission: function (path, permissions) {
+        hasPermission: function (path, permissions,instance) {
             var permissionData = {};
 
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission" +
-                "?path=" + encodeURIComponent(path) +
-                "&permission=" + permissions;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/HasPermission";
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    path: path,
+                    permission:permissions,
+                    instance: instance,
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {

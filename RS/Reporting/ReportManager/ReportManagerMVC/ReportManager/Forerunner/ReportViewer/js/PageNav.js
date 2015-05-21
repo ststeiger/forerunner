@@ -77,7 +77,7 @@ $(function () {
             var reportViewerAPI = me.options.$reportViewer.reportViewer("getReportViewerAPI");
             var reportPath = me.options.$reportViewer.reportViewer("getReportPath");
             var url = reportViewerAPI + "/Thumbnail/?ReportPath="
-                        + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
+                        + encodeURIComponent(reportPath) + "&SessionID=" + sessionID + "&PageNumber=" + i;
             if (me.options.rsInstance)
                 url += "&instance=" + me.options.rsInstance;
             var $listItem = new $("<LI />");

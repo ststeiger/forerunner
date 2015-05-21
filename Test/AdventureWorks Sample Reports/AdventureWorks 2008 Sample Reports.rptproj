@@ -7,7 +7,12 @@
       <FullPath>AdventureWorks2008.rds</FullPath>
     </ProjectItem>
   </DataSources>
-  <DataSets />
+  <DataSets>
+    <ProjectItem>
+      <Name>DataSet1.rsd</Name>
+      <FullPath>DataSet1.rsd</FullPath>
+    </ProjectItem>
+  </DataSets>
   <Reports>
     <ProjectItem>
       <Name>Company Sales 2008.rdl</Name>
@@ -49,7 +54,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.16/ReportServer-sps</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/ReportServer</TargetServerURL>
         <TargetFolder>AdventureWorks 2008 Sample Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <StartItem>Company Sales 2008.rdl</StartItem>

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="">
+    <Query>
+      <DataSourceReference>AdventureWorks2008</DataSourceReference>
+      <CommandText>SELECT        CustomerID, PersonID, StoreID, TerritoryID, AccountNumber, rowguid, ModifiedDate
+FROM            Sales.Customer</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="CustomerID">
+        <DataField>CustomerID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="PersonID">
+        <DataField>PersonID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="StoreID">
+        <DataField>StoreID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="TerritoryID">
+        <DataField>TerritoryID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="AccountNumber">
+        <DataField>AccountNumber</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="rowguid">
+        <DataField>rowguid</DataField>
+        <rd:TypeName>System.Guid</rd:TypeName>
+      </Field>
+      <Field Name="ModifiedDate">
+        <DataField>ModifiedDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

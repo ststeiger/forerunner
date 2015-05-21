@@ -31,9 +31,12 @@ $(function () {
         },
         getMySubscriptionList: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListMySubscriptions";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: true
             })
@@ -47,9 +50,13 @@ $(function () {
         },
         getSubscriptionList: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions?reportPath=" + reportPath + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSubscriptions";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    reportPath:reportPath,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: true
             })
@@ -64,9 +71,13 @@ $(function () {
         getSchedules: function () {
             var me = this;
             if (me.schedules) return me.schedules;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListSchedules";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -83,9 +94,13 @@ $(function () {
         getDeliveryExtensions: function () {
             var me = this;
             //if (me.extensionList) return [me.extensionList];
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions?instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/ListDeliveryExtensions";
             return forerunner.ajax.ajax({
                 url: url,
+                data: {                    
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -104,9 +119,14 @@ $(function () {
             var me = this;
             if (me.extensionSettings[extensionName]) return me.extensionSettings[extensionName];
             
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings?extension=" + extensionName + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetExtensionSettings";
             var jqxhr = forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    extension: extensionName,
+                    instance: me.options.rsInstance
+                },
+
                 dataType: "json",
                 async: true
             })
@@ -126,10 +146,14 @@ $(function () {
         },
         getSubscription: function (subscriptionID) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetSubscription";
             var retval;
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    subscriptionID: subscriptionID,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -149,9 +173,13 @@ $(function () {
         },
         deleteSubscription: function (subscriptionID, success, error) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription?subscriptionID=" + subscriptionID + "&instance=" + me.options.rsInstance;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager/DeleteSubscription";
             forerunner.ajax.ajax({
                 url: url,
+                data: {
+                    subscriptionID: subscriptionID,
+                    instance: me.options.rsInstance
+                },
                 dataType: "json",
                 async: false,
                 success: function (data, textStatus, jqXHR) {

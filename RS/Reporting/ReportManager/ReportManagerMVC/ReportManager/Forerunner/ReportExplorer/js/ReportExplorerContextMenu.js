@@ -160,15 +160,15 @@ $(function () {
             var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
             if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
             
-            var url = me.options.reportManagerAPI + "/DeleteCatalogItem?path=" + encodeURIComponent(me.options.catalogItem.Path) + "&safeFolderDelete=true";
-
-            if (me.options.rsInstance) {
-                url += "&instance=" + me.options.rsInstance;
-            }
+            var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
 
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
+                data: {
+                    path: me.options.catalogItem.Path,
+                    instance: me.options.rsInstance,
+                },
                 async: false,
                 success: function (data) {
                     if (data.Warning === "folderNotEmpty") {

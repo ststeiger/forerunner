@@ -38,15 +38,14 @@ $(function () {
             var me = this;
             var status = false;
 
-            var url = me.options.reportManagerAPI + "/Resource";
-            url += "?path=" + encodeURIComponent(path);
-            if (me.options.rsInstance) {
-                url += "&instance=" + me.options.rsInstance;
-            }
-
+            var url = me.options.reportManagerAPI + "/Resource";            
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance,
+                },
                 async: false,
                 success: function (data) {
                     me.dashboardDef = data;
@@ -77,7 +76,7 @@ $(function () {
                 url: url,
                 data: {
                     resourceName: dashboardName,
-                    parentFolder: encodeURIComponent(parentFolder),
+                    parentFolder: parentFolder,
                     overwrite: overwrite,
                     contents: stringified,
                     mimetype: "json/forerunner-dashboard",

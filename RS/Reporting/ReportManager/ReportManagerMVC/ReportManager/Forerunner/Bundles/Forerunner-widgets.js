@@ -1218,7 +1218,7 @@ $(function () {
             }
             
             // Make sure each new page has the zoom factor applied or options zoom
-            me.zoomToPercent();
+            //me.zoomToPercent();
             me._setOptionsZoom();
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
@@ -1245,9 +1245,14 @@ $(function () {
          *
          * @return {bool} - true = zoom factor change, false = percent not a number
          */
-        zoomToPercent: function (percent) {
+        zoomToPercent: function (percent,isPageOption) {
             var me = this;
             var zoomFactor;
+
+            if (me.zooming === true)
+                return;
+
+            me.zoooming = true;
 
             if (!percent) {
                 // Reset the zoom. This happens during a page change
@@ -1257,6 +1262,7 @@ $(function () {
                 zoomFactor = parseFloat(percent);
                 if (isNaN(zoomFactor)) {
                     me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
+                    me.zoooming = false;
                     return false;
                 }
             }
@@ -1273,7 +1279,10 @@ $(function () {
             }
 
             me._trigger(events.zoomChange, null, { zoomFactor: me._zoomFactor, $reportViewer: me.element });
-
+            me.element.hide().show(0);
+            if (isPageOption !== true)
+                me.options.zoom = percent;
+            me.zoooming = false;
             return true;
         },
         /**
@@ -1287,14 +1296,12 @@ $(function () {
                 me._zoomFactor = 100;
             }
 
-            var page = me.$reportAreaContainer.find(".Page");
-            var pageWidthZoom = (me.element.width() / page.width()) * 100;
-            var isPageWidth = Math.abs(pageWidthZoom - me._zoomFactor) < 1;  // To the nearest int is equal here
-
-            if (isPageWidth) {
+            if (me.options.zoom === "page width")
+            {
                 me.zoomToPercent(100);
+                me.options.zoom = "100";
             } else {
-                me.zoomToPercent(pageWidthZoom);
+                me.zoomToPageWidth();
             }
         },
         /**
@@ -1305,8 +1312,9 @@ $(function () {
         zoomToPageWidth : function() {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            var pageWidthZoom = (me.element.width() / page.width()) * 100;
-            me.zoomToPercent(pageWidthZoom);
+            var pageWidthZoom = (me.element.visibleSize().width / page.width()) * 100;
+            me.zoomToPercent(pageWidthZoom,true);
+            me.options.zoom = "page width";
         },
 
         /**
@@ -1317,12 +1325,13 @@ $(function () {
         zoomToWholePage: function () {
             var me = this;
             var page = me.$reportAreaContainer.find(".Page");
-            var heightScale = (me.element.height()  / page.height());
-            if (heightScale - 1 < 0.00001) {
-                heightScale = ($(window).height())/ ($(document).height());
-            }
-            var pageWholePageZoom = Math.min((me.element.width() / page.width()) * 100, heightScale * 100);
-            me.zoomToPercent(pageWholePageZoom);
+            var vSize = me.element.visibleSize();
+            var heightScale = (vSize.height / page.height());
+            var widthScale = (vSize.width / page.width());
+
+            var pageWholePageZoom = Math.min(widthScale * 100, heightScale * 100);
+            me.zoomToPercent(pageWholePageZoom, true);
+            me.options.zoom = "whole page";
         },
 
         _addSetPageCallback: function (func) {
@@ -1445,30 +1454,26 @@ $(function () {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 0.99;
 
                             if (area > 1000000)
                                 zoomSpeed = 0.90;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                 
                         }
                     });
                     $(me.element).hammer().on("pinchout", function (ev) {
                         if (me._allowSwipe === true) {
                             ev.preventDefault();
 
-                            var page = me.element.find(".Page");
-                            var area = page.height() * page.width();
                             var zoomSpeed = 1.01;
 
                             if (area > 1000000)
                                 zoomSpeed = 1.10;
 
                             me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            //me.hide().show(0);
+                            
                         }
 
                     });
@@ -3005,7 +3010,7 @@ $(function () {
             me._getRDLExtProp();
 
             if (me.RDLExtProperty.DefaultZoom)
-                me.options.zoom = me.RDLExtProperty.efaultZoom;
+                me.options.zoom = me.RDLExtProperty.DefaultZoom;
 
             if (me.options.jsonPath) {
                 me._renderJson();
@@ -9859,6 +9864,10 @@ $(function () {
                 reportThumbnailPath += "&instance=" + me.options.rsInstance;
 
             var viewStyle = null;
+
+            if (!me.options.userSettings.viewStyle)
+                me.options.userSettings.viewStyle = forerunner.config.getCustomSettingsValue("DefaultViewStyle", "large")
+
             if (me.options.userSettings.viewStyle === "small") {
                 viewStyle = "-small";
             }

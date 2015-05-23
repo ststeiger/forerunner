@@ -4658,6 +4658,7 @@ $(function () {
 
             var runningWidth = 0;
             var firstOver = null;
+
             $.each(tools, function (index, tool) {
                 var $tool = me.element.find("." + tool.toolInfo.selectorClass);
                 $tool.removeClass("fr-core-hidden");
@@ -4765,7 +4766,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $appContainer: me.options.$appContainer,  $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },
@@ -6236,6 +6237,130 @@ $(function () {
     };
 });
 
+///#source 1 1 /Forerunner/Common/js/FavoriteModel.js
+/**
+ * @file Contains the widget used to add/remove item to/from favorite.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.favoriteModel), {
+        options: {
+            $appContainer: null,
+            isExplorer: null,
+            $toolbar: null,
+            $toolpane: null,
+            rsInstance: null
+        },
+        _constant: {
+            isFavoriteApi: forerunner.config.forerunnerAPIBase() + "ReportManager/isFavorite",
+            updateFavStateApi: forerunner.config.forerunnerAPIBase() + "ReportManager/UpdateView",
+            plusIcon: "fr-icons24x24-favorite-plus",
+            minusIcon: "fr-icons24x24-favorite-minus"
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+
+            // if it is explorer, then put off the get step to setFavoriteState
+            // the toolpane is not ready here
+            !me.options.isExplorer && me._getFavBtnAndItem();
+            me._bindFavClick();
+        },
+        /**
+         * Set item favorite state by the given path.
+         *
+         * @function $.forerunner.favoriteModel#setFavoriteState
+         */
+        setFavoriteState: function(path) {
+            var me = this;
+
+            me.path = path;
+            me._getFavBtnAndItem();
+
+            forerunner.ajax.ajax({
+                url: me._constant.isFavoriteApi,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance
+                },
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    // todo.. check the result return value
+                    me._switchFavIcon(result.IsFavorite);
+                },
+                fail: function () {
+                    me.$btnFav.hide();
+                    me.$itemFavorite.hide();
+                }
+            });
+        },
+        _getFavBtnAndItem: function () {
+            var me = this;
+
+            if (me.options.$toolbar) {
+                me.$btnFav = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
+            }
+
+            if (me.options.$toolpane) {
+                me.$itemFav = me.options.$toolpane.find(".fr-item-update-fav").find("div").first();
+            }
+        },
+        _bindFavClick: function(e, args) {
+            var me = this;
+
+            me.options.$appContainer.off("toolbar-fav-click", me._updateFavState).off("toolpane-fav-click", me._updateFavState);
+
+            me.options.$appContainer.on("toolbar-fav-click", { me: me }, me._updateFavState);
+            me.options.$appContainer.on("toolpane-fav-click", { me: me }, me._updateFavState);
+        },
+        _updateFavState: function (e) {
+            var me = e.data.me,
+                action = "add",
+                $target = e.data.isToolpane ? me.$itemFav : me.$btnFav;
+
+            if ($target.hasClass(me._constant.minusIcon)) {
+                action = "delete";
+            }
+
+            forerunner.ajax.getJSON(me._constant.updateFavStateApi, {
+                view: "favorites",
+                action: action,
+                path: me.path,
+                instance: me.options.rsInstance
+            }, function (result) {
+                me._switchFavIcon(action === "add");
+            }, function () {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
+            });
+        },
+        _switchFavIcon: function (isFavorite) {
+            var me = this;
+
+            if (isFavorite) {
+                me.$btnFav.addClass(me._constant.minusIcon).removeClass(me._constant.plusIcon);
+                me.$itemFav.addClass(me._constant.minusIcon).removeClass(me._constant.plusIcon);
+            } else {
+                me.$btnFav.addClass(me._constant.plusIcon).removeClass(me._constant.minusIcon);
+                me.$itemFav.addClass(me._constant.plusIcon).removeClass(me._constant.minusIcon);
+            }
+        }
+    }); // widgets
+});
 ///#source 1 1 /Forerunner/Common/js/ForerunnerProperties.js
 /**
  * @file Contains the forerunnerProperties widget.
@@ -9421,6 +9546,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
@@ -9441,6 +9567,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
+            path: null,
             navigateTo: null,
             toolClass: "fr-toolbar",
             dbConfig: {},
@@ -9495,6 +9622,9 @@ $(function () {
 
             //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                if (me.options.path !== '/') {
+                    toolbarList.push(mi.btnFav);
+                }
                 toolbarList.push(tb.btnSetup);
             }
 
@@ -9579,6 +9709,7 @@ $(function () {
         options: {
             navigateTo: null,
             dbConfig: {},
+            path: null,
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
@@ -9647,18 +9778,22 @@ $(function () {
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
+                toolpaneItems.push(tp.itemSetup);
+                if (me.options.path !== "/") {
+                    toolpaneItems.push(mi.itemFav);
+                }
+                toolpaneItems.push(tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            //var currentPath = me.options.$reportExplorer.reportExplorer("getCurrentPath");
             
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
             toolpaneItems.push(tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemSecurity);
-            
-            if (lastFetched.path !== "/") {
+
+            if (me.options.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
             }
 
@@ -18529,13 +18664,11 @@ $(function () {
         }
 
         me.parameterModel = null;
+        me.subscriptionModel = null;
         if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
-        }
-
-        me.subscriptionModel = null;
-        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+            // Create the subscription model object for this report
             me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
         }
     };
@@ -18647,6 +18780,15 @@ $(function () {
                 $appContainer: me.options.$appContainer
             });
 
+            //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
+            me.favoriteInstance = null;
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.options.$toolbar,
+                $toolpane: me.options.$toolPane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+
             if (me.options.isReportManager) {
                 if (me.options.dbConfig.UseMobilizerDB === true) {
                     $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
@@ -18659,16 +18801,16 @@ $(function () {
                     });
 
                     $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                         if (data.newPath) {
-                            me.setFavoriteState(data.newPath);
+                            me.favoriteInstance.favoriteModel("setFavoriteState", data.newPath);
                         }
                     });
                 }               
@@ -18736,112 +18878,6 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
-        },
-        setFavoriteState: function (path) {
-            var me = this;
-            me.$btnFavorite = null;
-            if (me.options.$toolbar !== null) {
-                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
-            }
-            me.$itemFavorite = null;
-            if (me.options.$toolPane !== null) {
-                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
-            }
-            var url = me.options.ReportManagerAPI + "/isFavorite";           
-            forerunner.ajax.ajax({
-                url: url,
-                data: {
-                    path: path,
-                    instance: me.options.rsInstance,
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    me.updateFavoriteState(data.IsFavorite);
-                },
-                fail: function () {
-                    if (me.$btnFavorite) {
-                        me.$btnFavorite.hide();
-                    }
-                    if (me.$itemFavorite) {
-                        me.$itemFavorite.hide();
-                    }
-                }
-            });
-        },
-        onClickBtnFavorite: function (e) {
-            var me = this;
-            var $toolbar = e.data.me;
-
-            var action = "add";
-            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        onClickItemFavorite: function (e) {
-            var me = this;
-            var $toolpane = e.data.me;
-
-            var action = "add";
-            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolpane.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        updateFavoriteState: function (isFavorite) {
-            var me = this;
-            if (isFavorite) {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-            }
-            else {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 
@@ -19014,6 +19050,8 @@ $(function () {
             $viewer.addClass("fr-layout-reportviewer");
             layout.$mainsection.append($viewer);
 
+            me.$viewer = $viewer;
+
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
                 $toolPane: layout.$leftpanecontent,
@@ -19090,6 +19128,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -19154,6 +19193,12 @@ $(function () {
          */
         windowResize: function () {            
             var me = this;
+
+            // if the viewer is not visible then do nothing
+            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+                return;
+            }
+
             if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
@@ -19926,12 +19971,17 @@ $(function () {
             //To resolved bug 494 on android
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                if (!path) {// root page
+                    path = "/";
+                }
+
                 me._createReportExplorer(true);
 
                 var $toolbar = layout.$mainheadersection;
                 //add this class to distinguish explorer toolbar and viewer toolbar
                 $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -19968,9 +20018,6 @@ $(function () {
                 else
                     explorer.css("background-color", explorer.css("background-color"));
 
-                if (!path) {// root page
-                    path = "/";
-                }
                 if (!view) {// general catalog page
                     view = "catalog";
                     me._setPropertiesTabs(view, path, propertyListMap.normal);
@@ -19988,6 +20035,7 @@ $(function () {
 
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -19998,6 +20046,14 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
+
+                me.favoriteInstance = $({}).favoriteModel({
+                    $toolbar: $toolbar,
+                    $toolpane: $toolpane,
+                    $appContainer: layout.$container,
+                    rsInstance: me.options.rsInstance
+                });
+                me.favoriteInstance.favoriteModel('setFavoriteState', path);
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
@@ -20134,7 +20190,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    dbConfig: me.options.dbConfig
+                    dbConfig: me.options.dbConfig,
+                    $appContainer: layout.$container
                 });
 
                 me._setLeftRightPaneStyle();
@@ -20178,18 +20235,22 @@ $(function () {
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
                         layout.$mainviewport.dashboardEZ("windowResize");
                     }
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
 
-                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+                    if (me.$reportExplorer && me.$reportExplorer.find('.fr-report-explorer').length) {
+                        me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
 
-                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
-                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
-                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                        if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                            $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        }
                     }
                 });
             });
@@ -27720,7 +27781,8 @@ $(function () {
             userSettings: null,
             path: null,
             handleWindowResize: true,
-            dbConfig: {}
+            dbConfig: {},
+            $appContainer: null
         },
         /**
          * Returns the user settings
@@ -27755,6 +27817,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -27771,6 +27834,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
+
+            // if the dashboard container is not visible then do nothing
+            if (!me.$dashboardContainer || me.$dashboardContainer.is(":visible") === false) {
+                return;
+            }
+
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
@@ -27835,6 +27904,14 @@ $(function () {
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
+
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.$toolbar,
+                $toolpane: me.$toolpane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+            me.favoriteInstance.favoriteModel('setFavoriteState', me.options.path);
 
             if (me.options.isReportManager) {
                 var listOfButtons = [];
@@ -27954,6 +28031,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
@@ -28032,11 +28110,12 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, mi.btnFav, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+            //$(window).resize();
+            me.windowResize();
         },
         _destroy: function () {
         },
@@ -28132,7 +28211,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            var toolItemList = [dbtp.itemEdit, dbtp.itemView];
+            var toolItemList = [dbtp.itemEdit, dbtp.itemView, mi.itemFav];
             if (me._isAdmin()) {
                 toolItemList.push(mi.itemProperty);
             }

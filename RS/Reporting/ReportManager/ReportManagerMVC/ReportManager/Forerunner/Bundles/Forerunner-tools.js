@@ -1943,6 +1943,7 @@ $(function () {
                     tp.itemExportTiff,
                     tp.itemExportWord]
         },
+
         /** @member */
         itemZoomGroup: {
             toolType: toolTypes.toolGroup,

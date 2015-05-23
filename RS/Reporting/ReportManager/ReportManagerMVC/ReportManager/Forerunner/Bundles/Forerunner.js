@@ -2152,12 +2152,11 @@ $(function () {
          * @param {Boolean} flag - true = scale enabled (max = 10.0), false = scale disabled
          */
         allowZoom: function (flag) {
-
             if (this._allowZoomFlag === flag) {
                 return;
             }
 
-            if (flag) {
+            if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=yes' />");
             } else {
@@ -2167,6 +2166,7 @@ $(function () {
 
             this._allowZoomFlag = flag;
         },
+
 
         /** 
          * Gets whether the view port allows zooming

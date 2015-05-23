@@ -135,7 +135,6 @@ $(function () {
 
             forerunner.history.history("start");
 
-
         },
         _onRoute: function (event, data) {
             var me = this;

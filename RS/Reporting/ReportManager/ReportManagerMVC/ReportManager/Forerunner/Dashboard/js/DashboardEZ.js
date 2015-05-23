@@ -42,7 +42,8 @@ $(function () {
             userSettings: null,
             path: null,
             handleWindowResize: true,
-            dbConfig: {}
+            dbConfig: {},
+            $appContainer: null
         },
         /**
          * Returns the user settings
@@ -77,6 +78,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -93,6 +95,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
+
+            // if the dashboard container is not visible then do nothing
+            if (!me.$dashboardContainer || me.$dashboardContainer.is(":visible") === false) {
+                return;
+            }
+
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
@@ -157,6 +165,14 @@ $(function () {
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
+
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.$toolbar,
+                $toolpane: me.$toolpane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+            me.favoriteInstance.favoriteModel('setFavoriteState', me.options.path);
 
             if (me.options.isReportManager) {
                 var listOfButtons = [];

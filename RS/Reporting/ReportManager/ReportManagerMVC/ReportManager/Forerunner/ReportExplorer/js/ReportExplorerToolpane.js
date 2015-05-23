@@ -37,6 +37,7 @@ $(function () {
         options: {
             navigateTo: null,
             dbConfig: {},
+            path: null,
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
@@ -105,18 +106,22 @@ $(function () {
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
+                toolpaneItems.push(tp.itemSetup);
+                if (me.options.path !== "/") {
+                    toolpaneItems.push(mi.itemFav);
+                }
+                toolpaneItems.push(tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            //var currentPath = me.options.$reportExplorer.reportExplorer("getCurrentPath");
             
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
             toolpaneItems.push(tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemSecurity);
-            
-            if (lastFetched.path !== "/") {
+
+            if (me.options.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
             }
 

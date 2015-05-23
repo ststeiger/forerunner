@@ -516,6 +516,7 @@ $(function () {
 
             var runningWidth = 0;
             var firstOver = null;
+
             $.each(tools, function (index, tool) {
                 var $tool = me.element.find("." + tool.toolInfo.selectorClass);
                 $tool.removeClass("fr-core-hidden");
@@ -623,7 +624,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $appContainer: me.options.$appContainer,  $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },

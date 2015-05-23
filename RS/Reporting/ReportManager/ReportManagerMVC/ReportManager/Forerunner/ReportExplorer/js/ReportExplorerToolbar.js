@@ -14,6 +14,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
@@ -34,6 +35,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
+            path: null,
             navigateTo: null,
             toolClass: "fr-toolbar",
             dbConfig: {},
@@ -88,6 +90,9 @@ $(function () {
 
             //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                if (me.options.path !== '/') {
+                    toolbarList.push(mi.btnFav);
+                }
                 toolbarList.push(tb.btnSetup);
             }
 

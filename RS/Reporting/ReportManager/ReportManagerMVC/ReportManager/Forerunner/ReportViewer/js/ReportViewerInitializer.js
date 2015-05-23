@@ -47,13 +47,11 @@ $(function () {
         }
 
         me.parameterModel = null;
+        me.subscriptionModel = null;
         if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
-        }
-
-        me.subscriptionModel = null;
-        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+            // Create the subscription model object for this report
             me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
         }
     };
@@ -165,6 +163,15 @@ $(function () {
                 $appContainer: me.options.$appContainer
             });
 
+            //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
+            me.favoriteInstance = null;
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.options.$toolbar,
+                $toolpane: me.options.$toolPane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+
             if (me.options.isReportManager) {
                 if (me.options.dbConfig.UseMobilizerDB === true) {
                     $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
@@ -177,16 +184,16 @@ $(function () {
                     });
 
                     $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                         if (data.newPath) {
-                            me.setFavoriteState(data.newPath);
+                            me.favoriteInstance.favoriteModel("setFavoriteState", data.newPath);
                         }
                     });
                 }               
@@ -254,112 +261,6 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
-        },
-        setFavoriteState: function (path) {
-            var me = this;
-            me.$btnFavorite = null;
-            if (me.options.$toolbar !== null) {
-                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
-            }
-            me.$itemFavorite = null;
-            if (me.options.$toolPane !== null) {
-                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
-            }
-            var url = me.options.ReportManagerAPI + "/isFavorite";           
-            forerunner.ajax.ajax({
-                url: url,
-                data: {
-                    path: path,
-                    instance: me.options.rsInstance,
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    me.updateFavoriteState(data.IsFavorite);
-                },
-                fail: function () {
-                    if (me.$btnFavorite) {
-                        me.$btnFavorite.hide();
-                    }
-                    if (me.$itemFavorite) {
-                        me.$itemFavorite.hide();
-                    }
-                }
-            });
-        },
-        onClickBtnFavorite: function (e) {
-            var me = this;
-            var $toolbar = e.data.me;
-
-            var action = "add";
-            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        onClickItemFavorite: function (e) {
-            var me = this;
-            var $toolpane = e.data.me;
-
-            var action = "add";
-            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolpane.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        updateFavoriteState: function (isFavorite) {
-            var me = this;
-            if (isFavorite) {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-            }
-            else {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 

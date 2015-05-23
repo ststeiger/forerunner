@@ -76,6 +76,8 @@ $(function () {
             $viewer.addClass("fr-layout-reportviewer");
             layout.$mainsection.append($viewer);
 
+            me.$viewer = $viewer;
+
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
                 $toolPane: layout.$leftpanecontent,
@@ -152,6 +154,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -216,6 +219,12 @@ $(function () {
          */
         windowResize: function () {            
             var me = this;
+
+            // if the viewer is not visible then do nothing
+            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+                return;
+            }
+
             if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }

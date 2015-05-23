@@ -591,7 +591,7 @@ $(function () {
          */
         zoomToPageWidth : function() {
             var me = this;
-            var page = me.$reportAreaContainer.find(".Page");
+            var page = me._getPageSizeObject();
             var pageWidthZoom = (me.element.visibleSize().width / page.width()) * 100;
             me.zoomToPercent(pageWidthZoom,true);
             me.options.zoom = "page width";
@@ -604,7 +604,7 @@ $(function () {
          */
         zoomToWholePage: function () {
             var me = this;
-            var page = me.$reportAreaContainer.find(".Page");
+            var page = me._getPageSizeObject();
             var vSize = me.element.visibleSize();
             var heightScale = (vSize.height / page.height());
             var widthScale = (vSize.width / page.width());
@@ -629,6 +629,17 @@ $(function () {
                 };
             }
         },
+
+        //This is needed for the IOS hack workaround.  Get the table in the page to get real size
+        _getPageSizeObject: function () {
+            var me = this;
+
+            var page = me.$reportAreaContainer.find(".Page");
+           
+            return page.children("table");
+
+        },
+        
         // Windows Phones need to be reloaded in order to change their viewport settings
         // so what we will do in this case is to set our state into the sessionStorage
         // and reload the page. Then in the loadPage function we will check if this is
@@ -657,6 +668,19 @@ $(function () {
             // Now reload the page from the saved state
             window.location.reload();
         },
+
+        /**
+         * Show or hide the toolbar for zooming
+         *
+         * @function $.forerunner.reportViewer#showToolbar
+         *
+         * @param {Boolean} isVisible - true to show toolbar, false to hide
+         */
+        showToolbar: function (isVisible) {
+            var me = this;
+            me._trigger(events.allowZoom, null, { isEnabled: !isVisible });
+        },
+
         /**
          * Set zoom enable or disable
          *
@@ -664,7 +688,7 @@ $(function () {
          *
          * @param {Boolean} isEnabled - True to enable zoom, False to disable
          */
-        allowZoom: function (isEnabled) {
+        allowZoom: function (isEnabled,hideToolBar) {
             var me = this;
 
             if (forerunner.device.isWindowsPhone()) {
@@ -680,7 +704,6 @@ $(function () {
                 forerunner.device.allowZoom(false);
                 me.allowSwipe(true);
             }
-            me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
         /**
@@ -727,45 +750,6 @@ $(function () {
             
             var me = this;
 
-            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") === "on") {
-
-                if (!forerunner.device.isWindowsPhone()) {
-                    $(me.element).hammer().on("pinchin", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-
-                            var zoomSpeed = 0.99;
-
-                            if (area > 1000000)
-                                zoomSpeed = 0.90;
-
-                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                 
-                        }
-                    });
-                    $(me.element).hammer().on("pinchout", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-
-                            var zoomSpeed = 1.01;
-
-                            if (area > 1000000)
-                                zoomSpeed = 1.10;
-
-                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            
-                        }
-
-                    });
-                    $(me.element).hammer().on("doubletap", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-                            me.zoomToPercent(100);
-                            me.hide().show(0);
-                        }
-                    });
-                }
-            }
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {

@@ -65,7 +65,7 @@ $(function () {
         _render: function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
+            
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");

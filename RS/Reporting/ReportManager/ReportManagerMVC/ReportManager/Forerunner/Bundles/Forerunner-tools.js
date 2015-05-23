@@ -1946,7 +1946,7 @@ $(function () {
             visible: false,
             selectorClass: "fr-item-zoom-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [tp.itemZoom, tp.itemZoomPageWidth]
+            tools: [ tp.itemZoomPageWidth]
         },
         /** @member */
         itemZoomPercentCompositeGroup: {

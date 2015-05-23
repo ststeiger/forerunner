@@ -374,39 +374,23 @@ $(function () {
         
         toggleZoom: function () {
             var me = this;
-            var ratio = forerunner.device.zoomLevel();
-            
-            if (me.isZoomed() && !me.wasZoomed) {
-                //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
-                //to fill the full width
-                if (forerunner.device.isAndroid() && me.$topdiv.is(":visible")) {
-                    me.$topdiv.css("width", "100%");
-                    me.$topdiv.css("width", "device-width");
-                }
-                me.wasZoomed = true;
-                return;
-            }
-
-            if (!me.isZoomed() && me.wasZoomed) {
-                var $viewer = $(".fr-layout-reportviewer", me.$container);
-                me._allowZoom(false);
-                me.wasZoomed = false;
-                if (forerunner.device.isAndroid()) {
-                    me.$topdiv.css("width", "100%");
-                    me.$topdiv.fadeOut(10).fadeIn(10);
-                }
-            }
+        
+            if (me.isZoomed() && me.$viewer )
+                me.$viewer.reportViewer("showToolbar", false);
+            else if (me.$viewer)
+                me.$viewer.reportViewer("showToolbar", true);
+            return;
+       
         },
         _allowZoom: function (zoom) {
             var me = this;
-            if (!forerunner.device.isWindowsPhone()) {
-                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", zoom);
-                } else {
-                    forerunner.device.allowZoom(zoom);
-                }
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                me.$viewer.reportViewer("allowZoom", zoom);
+            } else {
+                forerunner.device.allowZoom(zoom);
             }
-        },
+    },
         showUnZoomPane: function () {
             var me = this;
             me._showTopDiv(true);
@@ -416,7 +400,7 @@ $(function () {
         isZoomed: function(){
             var ratio = forerunner.device.zoomLevel();
 
-            if (ratio > 1.15 || ratio < 0.985)
+            if (ratio > 1.25 || ratio < 0.975)
                 return true;
             else
                 return false;
@@ -773,7 +757,7 @@ $(function () {
             var topdiv = me.$topdiv;
             var delay = Number(200);
 
-
+            me._allowZoom(true);
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);

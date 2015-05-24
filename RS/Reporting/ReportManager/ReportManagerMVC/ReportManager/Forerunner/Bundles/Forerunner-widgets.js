@@ -464,7 +464,7 @@ $(function () {
             me.root = ('/' + me.root + '/').replace(rootStripper, '/');
 
             if (oldIE && me._wantsHashChange) {
-                var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
+                var frame = $('<iframe src="javascript:0" tabindex="-1">');
                 me.iframe = frame.hide().appendTo('body')[0].contentWindow;
                 me.navigate(fragment);
             }
@@ -1134,15 +1134,14 @@ $(function () {
                 if (me.$reportAreaContainer) {
 
                     me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight - 100);
+                    //me.$reportAreaContainer.css("width", $(window).width());
+                    //me.$reportAreaContainer.css("height", $(window).height() - me.options.toolbarHeight );                    
                     me.$reportAreaContainer.css("overflow", "auto");
+                    
                     me._ScrollInner = true;
                 }
             }
-            else {
-                me.toolbarHeight = 0;
-            }
+
   
         },
         /**       
@@ -1411,10 +1410,10 @@ $(function () {
         allowZoom: function (isEnabled,hideToolBar) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone()) {
-                me._allowZoomWindowsPhone(isEnabled);
-                return;
-            }
+            //if (forerunner.device.isWindowsPhone()) {
+            //    me._allowZoomWindowsPhone(isEnabled);
+            //    return;
+            //}
 
             if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
@@ -2940,7 +2939,7 @@ $(function () {
                 var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
                 delete sessionStorage.forerunner_zoomReload_actionHistory;
                 var zoomReloadData = JSON.parse(zoomReloadStringData);
-                if (zoomReloadData.actionHistory) {
+                if (zoomReloadData.actionHistory && zoomReloadData.actionHistory[0].ReportPath !== "") {
                     me.actionHistory = zoomReloadData.actionHistory;
                     me.back();
                     return true;
@@ -5514,7 +5513,7 @@ $(function () {
 
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
-                $(document.documentElement).height(window.innerHeight);
+               // $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
@@ -5653,7 +5652,6 @@ $(function () {
             
             // Don't add a window resize call here. It causes a never ending series of window resize
             // events to be triggered
-            //$(window).resize();
             var heightValues = me.getHeightValues();
 
 
@@ -12151,17 +12149,17 @@ $(function () {
             bgLayer.attr("style", style);
 
             if (reportObj.ReportContainer.Trial === 1) {
-                me.element.append(me._getWatermark());
+                //me.element.append(me._getWatermark());
             }
 
             me.element.append(bgLayer);
         },
         _getWatermark: function () {            
-            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px;  pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
 
-            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {            
                 var wtr = $("<DIV/>").html("Evaluation </br></br>" + postText);
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
@@ -12174,7 +12172,7 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isSafariPC())
                 wstyle += "z-index: -1;";
             else
@@ -19050,7 +19048,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                if (me.options.isFullScreen && (forerunner.device.isMobile())) {
                    $viewer.reportViewer("scrollReportBody");
                 }
             });

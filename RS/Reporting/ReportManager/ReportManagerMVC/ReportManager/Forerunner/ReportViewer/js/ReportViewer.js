@@ -414,15 +414,14 @@ $(function () {
                 if (me.$reportAreaContainer) {
 
                     me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight - 100);
+                    //me.$reportAreaContainer.css("width", $(window).width());
+                    //me.$reportAreaContainer.css("height", $(window).height() - me.options.toolbarHeight );                    
                     me.$reportAreaContainer.css("overflow", "auto");
+                    
                     me._ScrollInner = true;
                 }
             }
-            else {
-                me.toolbarHeight = 0;
-            }
+
   
         },
         /**       
@@ -691,10 +690,10 @@ $(function () {
         allowZoom: function (isEnabled,hideToolBar) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone()) {
-                me._allowZoomWindowsPhone(isEnabled);
-                return;
-            }
+            //if (forerunner.device.isWindowsPhone()) {
+            //    me._allowZoomWindowsPhone(isEnabled);
+            //    return;
+            //}
 
             if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
@@ -2220,7 +2219,7 @@ $(function () {
                 var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
                 delete sessionStorage.forerunner_zoomReload_actionHistory;
                 var zoomReloadData = JSON.parse(zoomReloadStringData);
-                if (zoomReloadData.actionHistory) {
+                if (zoomReloadData.actionHistory && zoomReloadData.actionHistory[0].ReportPath !== "") {
                     me.actionHistory = zoomReloadData.actionHistory;
                     me.back();
                     return true;

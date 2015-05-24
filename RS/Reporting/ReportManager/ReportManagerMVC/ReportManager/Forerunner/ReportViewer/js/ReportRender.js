@@ -136,17 +136,17 @@ $(function () {
             bgLayer.attr("style", style);
 
             if (reportObj.ReportContainer.Trial === 1) {
-                me.element.append(me._getWatermark());
+                //me.element.append(me._getWatermark());
             }
 
             me.element.append(bgLayer);
         },
         _getWatermark: function () {            
-            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px;  pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
 
-            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {            
                 var wtr = $("<DIV/>").html("Evaluation </br></br>" + postText);
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
@@ -159,7 +159,7 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isSafariPC())
                 wstyle += "z-index: -1;";
             else

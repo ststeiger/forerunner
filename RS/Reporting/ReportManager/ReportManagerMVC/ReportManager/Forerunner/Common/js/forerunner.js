@@ -2166,7 +2166,6 @@ $(function () {
             this._allowZoomFlag = flag;
         },
 
-
         /** 
          * Gets whether the view port allows zooming
          * @return {Boolean} flag - True if the view port allow zooming.

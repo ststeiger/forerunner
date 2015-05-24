@@ -314,7 +314,7 @@ $(function () {
 
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
-                $(document.documentElement).height(window.innerHeight);
+               // $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
@@ -453,7 +453,6 @@ $(function () {
             
             // Don't add a window resize call here. It causes a never ending series of window resize
             // events to be triggered
-            //$(window).resize();
             var heightValues = me.getHeightValues();
 
 

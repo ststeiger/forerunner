@@ -135,7 +135,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                if (me.options.isFullScreen && (forerunner.device.isMobile())) {
                    $viewer.reportViewer("scrollReportBody");
                 }
             });

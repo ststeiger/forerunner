@@ -2841,6 +2841,90 @@ $(function () {
             }
         },
         /**
+         * Returns the parameter definitions. The paramsDef is needed in the call to setParametersAndUpdate
+         * defined by the report parameter widget.
+         *
+         * @function $.forerunner.reportViewer#getParamsDef
+         *
+         */
+        getParamsDef: function () {
+            var paramsDef = null;
+
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: me.options.reportViewerAPI + "/ParameterJSON",
+                data: {
+                    ReportPath: me.reportPath,
+                    SessionID: me.getSessionID(),
+                    ParameterList: null,
+                    DSCredentials: me.getDataSourceCredential(),
+                    instance: me.options.rsInstance,
+                },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.Exception) {
+                        console.log("getParamsDef - failed:");
+                        console.log(data);
+                    } else {
+                        paramsDef = data;
+                    }
+                }
+            });
+            return paramsDef;
+        },
+        /**
+         * Will extend the existing parameter list by the given paramsArray. This will enable
+         * you to add one or more new parameter values without having to worry about the entire
+         * parameter list.
+         *
+         * This method is an easier way to call refreshParameters.
+         *
+         * @function $.forerunner.reportViewer#setParamsdata
+         *
+         * @param {Object} paramList - Parameter list (type may be string or object).
+         * @param {Boolean} submitForm - Submit form if the parameters are satisfied.
+         */
+        extendParameters: function (paramList, submitForm) {
+            var me = this;
+
+            var newParamsList = typeof (paramList) === "string" ? JSON.parse(paramList) : paramList;
+
+            // Convert the given array into a map
+            var newParamsMap = {};
+            for (var i = 0; i < newParamsList.ParamsList.length; i++) {
+                param = newParamsList.ParamsList[i];
+                newParamsMap[param.Parameter] = param;
+            }
+
+            // Next get the parameter list data
+            var paramsList = JSON.parse(me.options.paramArea.reportParameter("getParamsList"));
+            if (paramsList === null || paramsList.ParamsList === null) {
+                paramsList = {
+                    ParamsList: []
+                }
+            }
+
+            // Convert the ParamsList into a map
+            var paramsMap = {};
+            for (var i = 0; i < paramsList.ParamsList.length; i++) {
+                param = paramsList.ParamsList[i];
+                paramsMap[param.Parameter] = param;
+            }
+
+            // Extend the two maps
+            $.extend(true, paramsMap, newParamsMap);
+
+            // Put the extended map back into the paramsList array
+            paramsList.ParamsList = [];
+            for (param in paramsMap) {
+                paramsList.ParamsList.push(paramsMap[param]);
+            }
+
+            // Refresh the report
+            me.refreshParameters(paramsList, submitForm)
+        },
+        /**
          * Refresh the parameter using the given list
          *
          * @function $.forerunner.reportViewer#refreshParameters

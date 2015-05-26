@@ -2110,8 +2110,9 @@ $(function () {
          * @function $.forerunner.reportViewer#getParamsDef
          *
          */
-        getParamsDef: function () {
-            var paramsDef = null;
+        getParamDefs: function () {
+            var me = this;
+            var paramDefs = null;
 
             forerunner.ajax.ajax({
                 type: "POST",
@@ -2130,28 +2131,28 @@ $(function () {
                         console.log("getParamsDef - failed:");
                         console.log(data);
                     } else {
-                        paramsDef = data;
+                        paramDefs = data;
                     }
                 }
             });
-            return paramsDef;
+            return paramDefs;
         },
         /**
-         * Will extend the existing parameter list by the given paramsArray. This will enable
+         * Will merge the existing parameter list by the given mergeParamsList. This will enable
          * you to add one or more new parameter values without having to worry about the entire
          * parameter list.
          *
-         * This method is an easier way to call refreshParameters.
+         * This method is provided as an easier way to call refreshParameters.
          *
          * @function $.forerunner.reportViewer#setParamsdata
          *
          * @param {Object} paramList - Parameter list (type may be string or object).
          * @param {Boolean} submitForm - Submit form if the parameters are satisfied.
          */
-        extendParameters: function (paramList, submitForm) {
+        extendParameters: function (mergeParamsList, submitForm) {
             var me = this;
 
-            var newParamsList = typeof (paramList) === "string" ? JSON.parse(paramList) : paramList;
+            var newParamsList = typeof (mergeParamsList) === "string" ? JSON.parse(mergeParamsList) : mergeParamsList;
 
             // Convert the given array into a map
             var newParamsMap = {};

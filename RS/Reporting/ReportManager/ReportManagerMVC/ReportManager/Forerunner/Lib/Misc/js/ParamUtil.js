@@ -15,7 +15,8 @@ $(function () {
     var methodOpts = {
         loadReport: "reportViewer.loadReport",
         refreshParameters: "reportViewer.refreshParameters",
-        extendParameters: "reportViewer.extendParameters"
+        extendParameters: "reportViewer.extendParameters",
+        setParametersAndUpdate: "reportParameter.setParametersAndUpdate"
     };
 
     $.widget(widgets.getFullname("paramUtil"), $.forerunner.dialogBase, /** @lends $.forerunner.uploadFile */ {
@@ -76,6 +77,11 @@ $(function () {
             } else if (me.$methodSelect.val() === "extendParameters") {
                 // extendParameters: function (paramsArray, submitForm)
                 $reportViewer.reportViewer("extendParameters", paramList, false);
+            } else if (me.$methodSelect.val() === "setParametersAndUpdate") {
+                // setParametersAndUpdate: function (paramDefs, savedParams, pageNum)
+                var paramDefs = $reportViewer.reportViewer("getParamDefs");
+                var curPage = $reportViewer.reportViewer("getCurPage");
+                me.options.$reportParameter.reportParameter("setParametersAndUpdate", paramDefs, paramList, curPage);
             } else {
                 alert("Error - Unrecognized method: " + me.$methodSelect.val());
             }

@@ -184,6 +184,7 @@
     <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Lib\Misc\js\ParamUtil.js" />
+    <Content Include="Forerunner\Common\js\FavoriteModel.js" />
     <Content Include="Forerunner\ReportExplorer\css\MoveItem.css" />
     <Content Include="Forerunner\Common\css\ForerunnerProperties.css" />
     <Content Include="Forerunner\Common\css\ForerunnerSecurity.css" />

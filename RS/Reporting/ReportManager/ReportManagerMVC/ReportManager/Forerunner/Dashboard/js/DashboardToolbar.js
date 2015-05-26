@@ -13,6 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
@@ -91,11 +92,12 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, mi.btnFav, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+            //$(window).resize();
+            me.windowResize();
         },
         _destroy: function () {
         },

@@ -65,7 +65,7 @@ $(function () {
         _render: function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
+            
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");
@@ -75,6 +75,8 @@ $(function () {
             var $viewer = new $("<DIV />");
             $viewer.addClass("fr-layout-reportviewer");
             layout.$mainsection.append($viewer);
+
+            me.$viewer = $viewer;
 
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
@@ -133,7 +135,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                if (me.options.isFullScreen && (forerunner.device.isMobile())) {
                    $viewer.reportViewer("scrollReportBody");
                 }
             });
@@ -152,6 +154,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -216,6 +219,12 @@ $(function () {
          */
         windowResize: function () {            
             var me = this;
+
+            // if the viewer is not visible then do nothing
+            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+                return;
+            }
+
             if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }

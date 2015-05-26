@@ -464,7 +464,7 @@ $(function () {
             me.root = ('/' + me.root + '/').replace(rootStripper, '/');
 
             if (oldIE && me._wantsHashChange) {
-                var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
+                var frame = $('<iframe src="javascript:0" tabindex="-1">');
                 me.iframe = frame.hide().appendTo('body')[0].contentWindow;
                 me.navigate(fragment);
             }
@@ -1134,15 +1134,14 @@ $(function () {
                 if (me.$reportAreaContainer) {
 
                     me.$reportAreaContainer.css("display", "block");
-                    me.$reportAreaContainer.css("width", $(window).width());
-                    me.$reportAreaContainer.css("height", $(window).height() - me.toolbarHeight - 100);
+                    //me.$reportAreaContainer.css("width", $(window).width());
+                    //me.$reportAreaContainer.css("height", $(window).height() - me.options.toolbarHeight );                    
                     me.$reportAreaContainer.css("overflow", "auto");
+                    
                     me._ScrollInner = true;
                 }
             }
-            else {
-                me.toolbarHeight = 0;
-            }
+
   
         },
         /**       
@@ -1311,7 +1310,7 @@ $(function () {
          */
         zoomToPageWidth : function() {
             var me = this;
-            var page = me.$reportAreaContainer.find(".Page");
+            var page = me._getPageSizeObject();
             var pageWidthZoom = (me.element.visibleSize().width / page.width()) * 100;
             me.zoomToPercent(pageWidthZoom,true);
             me.options.zoom = "page width";
@@ -1324,7 +1323,7 @@ $(function () {
          */
         zoomToWholePage: function () {
             var me = this;
-            var page = me.$reportAreaContainer.find(".Page");
+            var page = me._getPageSizeObject();
             var vSize = me.element.visibleSize();
             var heightScale = (vSize.height / page.height());
             var widthScale = (vSize.width / page.width());
@@ -1349,6 +1348,17 @@ $(function () {
                 };
             }
         },
+
+        //This is needed for the IOS hack workaround.  Get the table in the page to get real size
+        _getPageSizeObject: function () {
+            var me = this;
+
+            var page = me.$reportAreaContainer.find(".Page");
+           
+            return page.children("table");
+
+        },
+        
         // Windows Phones need to be reloaded in order to change their viewport settings
         // so what we will do in this case is to set our state into the sessionStorage
         // and reload the page. Then in the loadPage function we will check if this is
@@ -1377,6 +1387,19 @@ $(function () {
             // Now reload the page from the saved state
             window.location.reload();
         },
+
+        /**
+         * Show or hide the toolbar for zooming
+         *
+         * @function $.forerunner.reportViewer#showToolbar
+         *
+         * @param {Boolean} isVisible - true to show toolbar, false to hide
+         */
+        showToolbar: function (isVisible) {
+            var me = this;
+            me._trigger(events.allowZoom, null, { isEnabled: !isVisible });
+        },
+
         /**
          * Set zoom enable or disable
          *
@@ -1384,13 +1407,13 @@ $(function () {
          *
          * @param {Boolean} isEnabled - True to enable zoom, False to disable
          */
-        allowZoom: function (isEnabled) {
+        allowZoom: function (isEnabled,hideToolBar) {
             var me = this;
 
-            if (forerunner.device.isWindowsPhone()) {
-                me._allowZoomWindowsPhone(isEnabled);
-                return;
-            }
+            //if (forerunner.device.isWindowsPhone()) {
+            //    me._allowZoomWindowsPhone(isEnabled);
+            //    return;
+            //}
 
             if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
@@ -1400,7 +1423,6 @@ $(function () {
                 forerunner.device.allowZoom(false);
                 me.allowSwipe(true);
             }
-            me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
         /**
@@ -1447,45 +1469,6 @@ $(function () {
             
             var me = this;
 
-            if (forerunner.device.isTouch() && !forerunner.device.isAndroid() && forerunner.config.getCustomSettingsValue("EnableGestures", "on") === "on") {
-
-                if (!forerunner.device.isWindowsPhone()) {
-                    $(me.element).hammer().on("pinchin", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-
-                            var zoomSpeed = 0.99;
-
-                            if (area > 1000000)
-                                zoomSpeed = 0.90;
-
-                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                 
-                        }
-                    });
-                    $(me.element).hammer().on("pinchout", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-
-                            var zoomSpeed = 1.01;
-
-                            if (area > 1000000)
-                                zoomSpeed = 1.10;
-
-                            me.zoomToPercent(me._zoomFactor * zoomSpeed);
-                            
-                        }
-
-                    });
-                    $(me.element).hammer().on("doubletap", function (ev) {
-                        if (me._allowSwipe === true) {
-                            ev.preventDefault();
-                            me.zoomToPercent(100);
-                            me.hide().show(0);
-                        }
-                    });
-                }
-            }
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
@@ -3040,7 +3023,7 @@ $(function () {
                 var zoomReloadStringData = sessionStorage.forerunner_zoomReload_actionHistory;
                 delete sessionStorage.forerunner_zoomReload_actionHistory;
                 var zoomReloadData = JSON.parse(zoomReloadStringData);
-                if (zoomReloadData.actionHistory) {
+                if (zoomReloadData.actionHistory && zoomReloadData.actionHistory[0].ReportPath !== "") {
                     me.actionHistory = zoomReloadData.actionHistory;
                     me.back();
                     return true;
@@ -4742,6 +4725,7 @@ $(function () {
 
             var runningWidth = 0;
             var firstOver = null;
+
             $.each(tools, function (index, tool) {
                 var $tool = me.element.find("." + tool.toolInfo.selectorClass);
                 $tool.removeClass("fr-core-hidden");
@@ -4849,7 +4833,7 @@ $(function () {
             var me = this;
             for (var key in toolInfo.events) {
                 if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
+                    $toolEl.on(key, null, { me: me, $appContainer: me.options.$appContainer,  $reportViewer: me.options.$reportViewer, $reportExplorer: me.options.$reportExplorer }, toolInfo.events[key]);
                 }
             }
         },
@@ -5613,7 +5597,7 @@ $(function () {
 
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
-                $(document.documentElement).height(window.innerHeight);
+               // $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
 
@@ -5673,39 +5657,23 @@ $(function () {
         
         toggleZoom: function () {
             var me = this;
-            var ratio = forerunner.device.zoomLevel();
-            
-            if (me.isZoomed() && !me.wasZoomed) {
-                //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
-                //to fill the full width
-                if (forerunner.device.isAndroid() && me.$topdiv.is(":visible")) {
-                    me.$topdiv.css("width", "100%");
-                    me.$topdiv.css("width", "device-width");
-                }
-                me.wasZoomed = true;
-                return;
-            }
-
-            if (!me.isZoomed() && me.wasZoomed) {
-                var $viewer = $(".fr-layout-reportviewer", me.$container);
-                me._allowZoom(false);
-                me.wasZoomed = false;
-                if (forerunner.device.isAndroid()) {
-                    me.$topdiv.css("width", "100%");
-                    me.$topdiv.fadeOut(10).fadeIn(10);
-                }
-            }
+        
+            if (me.isZoomed() && me.$viewer )
+                me.$viewer.reportViewer("showToolbar", false);
+            else if (me.$viewer)
+                me.$viewer.reportViewer("showToolbar", true);
+            return;
+       
         },
         _allowZoom: function (zoom) {
             var me = this;
-            if (!forerunner.device.isWindowsPhone()) {
-                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                    me.$viewer.reportViewer("allowZoom", zoom);
-                } else {
-                    forerunner.device.allowZoom(zoom);
-                }
+
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                me.$viewer.reportViewer("allowZoom", zoom);
+            } else {
+                forerunner.device.allowZoom(zoom);
             }
-        },
+    },
         showUnZoomPane: function () {
             var me = this;
             me._showTopDiv(true);
@@ -5715,7 +5683,7 @@ $(function () {
         isZoomed: function(){
             var ratio = forerunner.device.zoomLevel();
 
-            if (ratio > 1.15 || ratio < 0.985)
+            if (ratio > 1.25 || ratio < 0.975)
                 return true;
             else
                 return false;
@@ -5768,7 +5736,6 @@ $(function () {
             
             // Don't add a window resize call here. It causes a never ending series of window resize
             // events to be triggered
-            //$(window).resize();
             var heightValues = me.getHeightValues();
 
 
@@ -6072,7 +6039,7 @@ $(function () {
             var topdiv = me.$topdiv;
             var delay = Number(200);
 
-
+            me._allowZoom(true);
             if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
@@ -6320,6 +6287,130 @@ $(function () {
     };
 });
 
+///#source 1 1 /Forerunner/Common/js/FavoriteModel.js
+/**
+ * @file Contains the widget used to add/remove item to/from favorite.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var helper = forerunner.helper;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+    $.widget(widgets.getFullname(widgets.favoriteModel), {
+        options: {
+            $appContainer: null,
+            isExplorer: null,
+            $toolbar: null,
+            $toolpane: null,
+            rsInstance: null
+        },
+        _constant: {
+            isFavoriteApi: forerunner.config.forerunnerAPIBase() + "ReportManager/isFavorite",
+            updateFavStateApi: forerunner.config.forerunnerAPIBase() + "ReportManager/UpdateView",
+            plusIcon: "fr-icons24x24-favorite-plus",
+            minusIcon: "fr-icons24x24-favorite-minus"
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+
+            // if it is explorer, then put off the get step to setFavoriteState
+            // the toolpane is not ready here
+            !me.options.isExplorer && me._getFavBtnAndItem();
+            me._bindFavClick();
+        },
+        /**
+         * Set item favorite state by the given path.
+         *
+         * @function $.forerunner.favoriteModel#setFavoriteState
+         */
+        setFavoriteState: function(path) {
+            var me = this;
+
+            me.path = path;
+            me._getFavBtnAndItem();
+
+            forerunner.ajax.ajax({
+                url: me._constant.isFavoriteApi,
+                data: {
+                    path: path,
+                    instance: me.options.rsInstance
+                },
+                dataType: "json",
+                async: true,
+                success: function (result) {
+                    // todo.. check the result return value
+                    me._switchFavIcon(result.IsFavorite);
+                },
+                fail: function () {
+                    me.$btnFav.hide();
+                    me.$itemFavorite.hide();
+                }
+            });
+        },
+        _getFavBtnAndItem: function () {
+            var me = this;
+
+            if (me.options.$toolbar) {
+                me.$btnFav = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
+            }
+
+            if (me.options.$toolpane) {
+                me.$itemFav = me.options.$toolpane.find(".fr-item-update-fav").find("div").first();
+            }
+        },
+        _bindFavClick: function(e, args) {
+            var me = this;
+
+            me.options.$appContainer.off("toolbar-fav-click", me._updateFavState).off("toolpane-fav-click", me._updateFavState);
+
+            me.options.$appContainer.on("toolbar-fav-click", { me: me }, me._updateFavState);
+            me.options.$appContainer.on("toolpane-fav-click", { me: me }, me._updateFavState);
+        },
+        _updateFavState: function (e) {
+            var me = e.data.me,
+                action = "add",
+                $target = e.data.isToolpane ? me.$itemFav : me.$btnFav;
+
+            if ($target.hasClass(me._constant.minusIcon)) {
+                action = "delete";
+            }
+
+            forerunner.ajax.getJSON(me._constant.updateFavStateApi, {
+                view: "favorites",
+                action: action,
+                path: me.path,
+                instance: me.options.rsInstance
+            }, function (result) {
+                me._switchFavIcon(action === "add");
+            }, function () {
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
+            });
+        },
+        _switchFavIcon: function (isFavorite) {
+            var me = this;
+
+            if (isFavorite) {
+                me.$btnFav.addClass(me._constant.minusIcon).removeClass(me._constant.plusIcon);
+                me.$itemFav.addClass(me._constant.minusIcon).removeClass(me._constant.plusIcon);
+            } else {
+                me.$btnFav.addClass(me._constant.plusIcon).removeClass(me._constant.minusIcon);
+                me.$itemFav.addClass(me._constant.plusIcon).removeClass(me._constant.minusIcon);
+            }
+        }
+    }); // widgets
+});
 ///#source 1 1 /Forerunner/Common/js/ForerunnerProperties.js
 /**
  * @file Contains the forerunnerProperties widget.
@@ -8397,10 +8488,7 @@ $(function () {
                 me._clearBtnStates();
             });
 
-            // Hook up the toolbar element events
-            //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-            //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
-            //me.enableTools([tb.btnMenu, tb.btnReportBack]);
+           
         },
         _init: function () {
             var me = this;
@@ -8433,13 +8521,9 @@ $(function () {
                 listOfButtons.push(tb.btnReportBack);
             }
 
-            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup);
 
-            //remove zoom button on android
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfButtons.pop();
-            }
-
+            
             listOfButtons.push(tb.btnPrint);
 
             if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true) {
@@ -8492,15 +8576,7 @@ $(function () {
                 me.removeHideDisable([tb.btnNav]);
             }
 
-            // Since the pinch zoom effects all reports in a dashboard and it is currently
-            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
-            // reports
-            if (me.isDashboard()) {
-                me.disableTools([tb.btnZoom]);
-            } else {
-                me.enableTools([tb.btnZoom]);
-                me.removeHideDisable([tb.btnZoom]);
-            }
+            
         },
         _clearBtnStates: function () {
             var me = this;
@@ -8700,11 +8776,7 @@ $(function () {
             var zoomFactor = me.options.$reportViewer.reportViewer("getZoomFactor").toFixed(0);
             me._$itemPercentage.val(zoomFactor);
 
-            //remove pinch zoom on android browser
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                me.hideTool(tp.itemZoom.selectorClass);
-            }
-            
+           
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
@@ -8792,16 +8864,8 @@ $(function () {
                 me.enableTools([tp.itemNav]);
                 me.removeHideDisable([tp.itemNav]);
             }
-
-            // Since the pinch zoom effects all reports in a dashboard and it is currently
-            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
-            // reports
-            if (me.isDashboard()) {
-                me.disableTools([tp.itemZoom]);
-            } else {
-                me.enableTools([tp.itemZoom]);
-                me.removeHideDisable([tp.itemZoom]);
-            }
+         
+            
         },
         _clearItemStates: function () {
             var me = this;
@@ -9505,6 +9569,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
@@ -9525,6 +9590,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
+            path: null,
             navigateTo: null,
             toolClass: "fr-toolbar",
             dbConfig: {},
@@ -9579,6 +9645,9 @@ $(function () {
 
             //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                if (me.options.path !== '/') {
+                    toolbarList.push(mi.btnFav);
+                }
                 toolbarList.push(tb.btnSetup);
             }
 
@@ -9663,6 +9732,7 @@ $(function () {
         options: {
             navigateTo: null,
             dbConfig: {},
+            path: null,
             toolClass: "fr-toolpane",
             $appContainer: null,
             $reportExplorer: null
@@ -9731,18 +9801,22 @@ $(function () {
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                toolpaneItems.push(tp.itemSetup, tp.itemFolders, tg.explorerItemFolderGroup);
+                toolpaneItems.push(tp.itemSetup);
+                if (me.options.path !== "/") {
+                    toolpaneItems.push(mi.itemFav);
+                }
+                toolpaneItems.push(tp.itemFolders, tg.explorerItemFolderGroup);
             }
 
-            var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
+            //var currentPath = me.options.$reportExplorer.reportExplorer("getCurrentPath");
             
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
             toolpaneItems.push(tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemSecurity);
-            
-            if (lastFetched.path !== "/") {
+
+            if (me.options.path !== "/") {
                 toolpaneItems.push(mi.itemProperty);
             }
 
@@ -12159,17 +12233,17 @@ $(function () {
             bgLayer.attr("style", style);
 
             if (reportObj.ReportContainer.Trial === 1) {
-                me.element.append(me._getWatermark());
+                //me.element.append(me._getWatermark());
             }
 
             me.element.append(bgLayer);
         },
         _getWatermark: function () {            
-            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px;  pointer-events: none;";
 
             var postText = forerunner.config.getCustomSettingsValue("WatermarkPostText", "");
 
-            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {            
                 var wtr = $("<DIV/>").html("Evaluation </br></br>" + postText);
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
@@ -12182,7 +12256,7 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;display: inline-block ;position: fixed; float: left;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isSafariPC())
                 wstyle += "z-index: -1;";
             else
@@ -18613,13 +18687,11 @@ $(function () {
         }
 
         me.parameterModel = null;
+        me.subscriptionModel = null;
         if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
-        }
-
-        me.subscriptionModel = null;
-        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+            // Create the subscription model object for this report
             me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
         }
     };
@@ -18731,6 +18803,15 @@ $(function () {
                 $appContainer: me.options.$appContainer
             });
 
+            //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
+            me.favoriteInstance = null;
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.options.$toolbar,
+                $toolpane: me.options.$toolPane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+
             if (me.options.isReportManager) {
                 if (me.options.dbConfig.UseMobilizerDB === true) {
                     $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
@@ -18743,16 +18824,16 @@ $(function () {
                     });
 
                     $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                        me.setFavoriteState($viewer.reportViewer("getReportPath"));
+                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
                     });
 
                     $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
                         if (data.newPath) {
-                            me.setFavoriteState(data.newPath);
+                            me.favoriteInstance.favoriteModel("setFavoriteState", data.newPath);
                         }
                     });
                 }               
@@ -18820,112 +18901,6 @@ $(function () {
                 model: me.parameterModel
             });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
-        },
-        setFavoriteState: function (path) {
-            var me = this;
-            me.$btnFavorite = null;
-            if (me.options.$toolbar !== null) {
-                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div").first();
-            }
-            me.$itemFavorite = null;
-            if (me.options.$toolPane !== null) {
-                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div").first();
-            }
-            var url = me.options.ReportManagerAPI + "/isFavorite";           
-            forerunner.ajax.ajax({
-                url: url,
-                data: {
-                    path: path,
-                    instance: me.options.rsInstance,
-                },
-                dataType: "json",
-                async: true,
-                success: function (data) {
-                    me.updateFavoriteState(data.IsFavorite);
-                },
-                fail: function () {
-                    if (me.$btnFavorite) {
-                        me.$btnFavorite.hide();
-                    }
-                    if (me.$itemFavorite) {
-                        me.$itemFavorite.hide();
-                    }
-                }
-            });
-        },
-        onClickBtnFavorite: function (e) {
-            var me = this;
-            var $toolbar = e.data.me;
-
-            var action = "add";
-            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        onClickItemFavorite: function (e) {
-            var me = this;
-            var $toolpane = e.data.me;
-
-            var action = "add";
-            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus")) {
-                action = "delete";
-            }
-
-            $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            var url = me.options.ReportManagerAPI + "/UpdateView";
-            forerunner.ajax.getJSON(url,
-                {
-                    view: "favorites",
-                    action: action,
-                    path: $toolpane.options.$reportViewer.reportViewer("getReportPath"),
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.updateFavoriteState.call(me, action === "add");
-                },
-                function () {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
-                }
-            );
-        },
-        updateFavoriteState: function (isFavorite) {
-            var me = this;
-            if (isFavorite) {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-plus");
-                }
-            }
-            else {
-                if (me.$btnFavorite) {
-                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$btnFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-                if (me.$itemFavorite) {
-                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-minus");
-                    me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
-                }
-            }
         }
     };  // ssr.ReportViewerInitializer.prototype
 
@@ -19087,7 +19062,7 @@ $(function () {
         _render: function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
+            
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");
@@ -19097,6 +19072,8 @@ $(function () {
             var $viewer = new $("<DIV />");
             $viewer.addClass("fr-layout-reportviewer");
             layout.$mainsection.append($viewer);
+
+            me.$viewer = $viewer;
 
             var initializer = new forerunner.ssr.ReportViewerInitializer({
                 $toolbar: layout.$mainheadersection,
@@ -19155,7 +19132,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                if (me.options.isFullScreen && (forerunner.device.isiOS())) {
+                if (me.options.isFullScreen && (forerunner.device.isMobile())) {
                    $viewer.reportViewer("scrollReportBody");
                 }
             });
@@ -19174,6 +19151,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -19238,6 +19216,12 @@ $(function () {
          */
         windowResize: function () {            
             var me = this;
+
+            // if the viewer is not visible then do nothing
+            if (!me.$viewer || me.$viewer.is(":visible") === false) {
+                return;
+            }
+
             if (me.DefaultAppTemplate !== null) {
                 me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
             }
@@ -19807,7 +19791,6 @@ $(function () {
 
             forerunner.history.history("start");
 
-
         },
         _onRoute: function (event, data) {
             var me = this;
@@ -20010,12 +19993,17 @@ $(function () {
             //To resolved bug 494 on android
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                if (!path) {// root page
+                    path = "/";
+                }
+
                 me._createReportExplorer(true);
 
                 var $toolbar = layout.$mainheadersection;
                 //add this class to distinguish explorer toolbar and viewer toolbar
                 $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -20052,9 +20040,6 @@ $(function () {
                 else
                     explorer.css("background-color", explorer.css("background-color"));
 
-                if (!path) {// root page
-                    path = "/";
-                }
                 if (!view) {// general catalog page
                     view = "catalog";
                     me._setPropertiesTabs(view, path, propertyListMap.normal);
@@ -20072,6 +20057,7 @@ $(function () {
 
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -20082,6 +20068,14 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
+
+                me.favoriteInstance = $({}).favoriteModel({
+                    $toolbar: $toolbar,
+                    $toolpane: $toolpane,
+                    $appContainer: layout.$container,
+                    rsInstance: me.options.rsInstance
+                });
+                me.favoriteInstance.favoriteModel('setFavoriteState', path);
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
@@ -20218,7 +20212,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    dbConfig: me.options.dbConfig
+                    dbConfig: me.options.dbConfig,
+                    $appContainer: layout.$container
                 });
 
                 me._setLeftRightPaneStyle();
@@ -20262,18 +20257,22 @@ $(function () {
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
                         layout.$mainviewport.dashboardEZ("windowResize");
                     }
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
 
-                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+                    if (me.$reportExplorer && me.$reportExplorer.find('.fr-report-explorer').length) {
+                        me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
 
-                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
-                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
-                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                        if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                            $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        }
                     }
                 });
             });
@@ -27804,7 +27803,8 @@ $(function () {
             userSettings: null,
             path: null,
             handleWindowResize: true,
-            dbConfig: {}
+            dbConfig: {},
+            $appContainer: null
         },
         /**
          * Returns the user settings
@@ -27839,6 +27839,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+
             if (me.options.handleWindowResize) {
                 $(window).on("resize", function (e, data) {
                     helper.delay(me, function () {
@@ -27855,6 +27856,12 @@ $(function () {
          */
         windowResize: function () {
             var me = this;
+
+            // if the dashboard container is not visible then do nothing
+            if (!me.$dashboardContainer || me.$dashboardContainer.is(":visible") === false) {
+                return;
+            }
+
             if (me.options.DefaultAppTemplate === null) {
                 me.layout.windowResize.call(me.layout);
             }
@@ -27919,6 +27926,14 @@ $(function () {
                 $dashboardEditor: me.getDashboardEditor(),
                 enableEdit: me.options.enableEdit
             });
+
+            me.favoriteInstance = $({}).favoriteModel({
+                $toolbar: me.$toolbar,
+                $toolpane: me.$toolpane,
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance
+            });
+            me.favoriteInstance.favoriteModel('setFavoriteState', me.options.path);
 
             if (me.options.isReportManager) {
                 var listOfButtons = [];
@@ -28038,6 +28053,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
+    var mi = forerunner.ssr.tools.mergedButtons;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     /**
@@ -28116,11 +28132,12 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>");
             me.removeAllTools();
 
-            me.addTools(1, true, [dtb.btnMenu, dtb.btnEdit, dtb.btnView]);
+            me.addTools(1, true, [dtb.btnMenu, mi.btnFav, dtb.btnEdit, dtb.btnView]);
             me.enableEdit(me.options.enableEdit);
 
             //trigger window resize event to regulate toolbar buttons visibility
-            $(window).resize();
+            //$(window).resize();
+            me.windowResize();
         },
         _destroy: function () {
         },
@@ -28216,7 +28233,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            var toolItemList = [dbtp.itemEdit, dbtp.itemView];
+            var toolItemList = [dbtp.itemEdit, dbtp.itemView, mi.itemFav];
             if (me._isAdmin()) {
                 toolItemList.push(mi.itemProperty);
             }

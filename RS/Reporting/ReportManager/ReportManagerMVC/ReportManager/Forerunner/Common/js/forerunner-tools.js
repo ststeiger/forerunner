@@ -1415,7 +1415,7 @@ $(function () {
             selectorClass: "fr-rm-keyword-textbox",
             sharedClass: "fr-core-input fr-toolbase-find-textbox",
             tooltip: locData.toolbar.keyword,
-            visibilityOrder: 3,
+            visibilityOrder: 10,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -1447,7 +1447,7 @@ $(function () {
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
             tooltip: locData.toolbar.search,
-            visibilityOrder: 3,
+            visibilityOrder: 10,
             visibilityNoWidth: true,
             events: {
                 click: function (e) {
@@ -1712,10 +1712,11 @@ $(function () {
             selectorClass: "fr-button-update-fav",
             imageClass: "fr-icons24x24-favorite-minus",
             tooltip: locData.toolbar.addToFavorites,
-            visibilityOrder: 5,
+            visibilityOrder: 8,
             events: {
                 click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
+                    //e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
+                    e.data.$appContainer.trigger('toolbar-fav-click');
                 }
             }
         },
@@ -1798,7 +1799,9 @@ $(function () {
             text: locData.toolPane.addToFavorites,
             events: {
                 click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
+                    //e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
+                    e.data.$appContainer.trigger('toolpane-fav-click');
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                 }
             }
         },
@@ -1939,13 +1942,14 @@ $(function () {
                     tp.itemExportTiff,
                     tp.itemExportWord]
         },
+
         /** @member */
         itemZoomGroup: {
             toolType: toolTypes.toolGroup,
             visible: false,
             selectorClass: "fr-item-zoom-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [tp.itemZoom, tp.itemZoomPageWidth]
+            tools: [ tp.itemZoomPageWidth]
         },
         /** @member */
         itemZoomPercentCompositeGroup: {
@@ -1976,6 +1980,7 @@ $(function () {
         explorerFindGroup: {
             toolType: toolTypes.toolGroup,
             selectorClass: "fr-rm-toolbar-find-group",
+            visibilityOrder: 10,
             visibilityNoWidth: true,
             tools: [ret.btnKeyword, ret.btnFind]
         },

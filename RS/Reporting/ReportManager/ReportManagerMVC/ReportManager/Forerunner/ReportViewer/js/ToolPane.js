@@ -163,11 +163,7 @@ $(function () {
             var zoomFactor = me.options.$reportViewer.reportViewer("getZoomFactor").toFixed(0);
             me._$itemPercentage.val(zoomFactor);
 
-            //remove pinch zoom on android browser
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                me.hideTool(tp.itemZoom.selectorClass);
-            }
-            
+           
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
@@ -255,16 +251,8 @@ $(function () {
                 me.enableTools([tp.itemNav]);
                 me.removeHideDisable([tp.itemNav]);
             }
-
-            // Since the pinch zoom effects all reports in a dashboard and it is currently
-            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
-            // reports
-            if (me.isDashboard()) {
-                me.disableTools([tp.itemZoom]);
-            } else {
-                me.enableTools([tp.itemZoom]);
-                me.removeHideDisable([tp.itemZoom]);
-            }
+         
+            
         },
         _clearItemStates: function () {
             var me = this;

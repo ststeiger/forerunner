@@ -135,7 +135,6 @@ $(function () {
 
             forerunner.history.history("start");
 
-
         },
         _onRoute: function (event, data) {
             var me = this;
@@ -338,12 +337,17 @@ $(function () {
             //To resolved bug 494 on android
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
+                if (!path) {// root page
+                    path = "/";
+                }
+
                 me._createReportExplorer(true);
 
                 var $toolbar = layout.$mainheadersection;
                 //add this class to distinguish explorer toolbar and viewer toolbar
                 $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
                 $toolbar.reportExplorerToolbar({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -380,9 +384,6 @@ $(function () {
                 else
                     explorer.css("background-color", explorer.css("background-color"));
 
-                if (!path) {// root page
-                    path = "/";
-                }
                 if (!view) {// general catalog page
                     view = "catalog";
                     me._setPropertiesTabs(view, path, propertyListMap.normal);
@@ -400,6 +401,7 @@ $(function () {
 
                 var $toolpane = layout.$leftpanecontent;
                 $toolpane.reportExplorerToolpane({
+                    path: path,
                     navigateTo: me.options.navigateTo,
                     dbConfig: me.options.dbConfig,
                     $appContainer: layout.$container,
@@ -410,6 +412,14 @@ $(function () {
                 if (view === "search") {
                     $toolpane.reportExplorerToolpane("setSearchKeyword", path);
                 }
+
+                me.favoriteInstance = $({}).favoriteModel({
+                    $toolbar: $toolbar,
+                    $toolpane: $toolpane,
+                    $appContainer: layout.$container,
+                    rsInstance: me.options.rsInstance
+                });
+                me.favoriteInstance.favoriteModel('setFavoriteState', path);
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
@@ -546,7 +556,8 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     userSettings: me._getUserSettings(),
                     handleWindowResize: false,
-                    dbConfig: me.options.dbConfig
+                    dbConfig: me.options.dbConfig,
+                    $appContainer: layout.$container
                 });
 
                 me._setLeftRightPaneStyle();
@@ -590,18 +601,22 @@ $(function () {
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
                     var layout = me.DefaultAppTemplate;
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.dashboardEZ)) {
                         layout.$mainviewport.dashboardEZ("windowResize");
                     }
+
                     if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
 
-                    me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
+                    if (me.$reportExplorer && me.$reportExplorer.find('.fr-report-explorer').length) {
+                        me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
 
-                    var $reportExplorerToolbar = me.getReportExplorerToolbar();
-                    if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
-                        $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        var $reportExplorerToolbar = me.getReportExplorerToolbar();
+                        if (widgets.hasWidget($reportExplorerToolbar, widgets.reportExplorerToolbar)) {
+                            $reportExplorerToolbar.reportExplorerToolbar("windowResize");
+                        }
                     }
                 });
             });

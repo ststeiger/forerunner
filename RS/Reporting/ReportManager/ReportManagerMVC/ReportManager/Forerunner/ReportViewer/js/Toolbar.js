@@ -153,10 +153,7 @@ $(function () {
                 me._clearBtnStates();
             });
 
-            // Hook up the toolbar element events
-            //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-            //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
-            //me.enableTools([tb.btnMenu, tb.btnReportBack]);
+           
         },
         _init: function () {
             var me = this;
@@ -189,13 +186,9 @@ $(function () {
                 listOfButtons.push(tb.btnReportBack);
             }
 
-            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom);
+            listOfButtons.push(tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup);
 
-            //remove zoom button on android
-            if (forerunner.device.isAndroid() && !forerunner.device.isChrome()) {
-                listOfButtons.pop();
-            }
-
+            
             listOfButtons.push(tb.btnPrint);
 
             if (me.options.dbConfig &&  me.options.dbConfig.UseMobilizerDB === true) {
@@ -248,15 +241,7 @@ $(function () {
                 me.removeHideDisable([tb.btnNav]);
             }
 
-            // Since the pinch zoom effects all reports in a dashboard and it is currently
-            // difficult for the user to un-zoom, we will disable the pinch zoom for dashboard
-            // reports
-            if (me.isDashboard()) {
-                me.disableTools([tb.btnZoom]);
-            } else {
-                me.enableTools([tb.btnZoom]);
-                me.removeHideDisable([tb.btnZoom]);
-            }
+            
         },
         _clearBtnStates: function () {
             var me = this;

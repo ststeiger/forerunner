@@ -387,6 +387,8 @@ $(function () {
             newFolder: "newFolder",
             /** @constant */
             forerunnerMoveItem: "forerunnerMoveItem",
+            /** @constant */
+            favoriteModel: "favoriteModel",
 
             /** @constant */
             namespace: "forerunner",

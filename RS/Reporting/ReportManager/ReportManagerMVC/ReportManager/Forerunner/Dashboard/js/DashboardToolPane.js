@@ -84,7 +84,7 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget' />");
             me.removeAllTools();
 
-            var toolItemList = [dbtp.itemEdit, dbtp.itemView];
+            var toolItemList = [dbtp.itemEdit, dbtp.itemView, mi.itemFav];
             if (me._isAdmin()) {
                 toolItemList.push(mi.itemProperty);
             }

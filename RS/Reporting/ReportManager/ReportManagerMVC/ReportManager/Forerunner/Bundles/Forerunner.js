@@ -2149,8 +2149,7 @@ $(function () {
         isMobile: function(){
             var me = this;
 
-            return (me.isiOS() || me.isAndroid() || me.isWindowsPhone());
-            
+            return (me.isiOS() || me.isAndroid() || me.isWindowsPhone());            
         },
 
         _allowZoomFlag : null,

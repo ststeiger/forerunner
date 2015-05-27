@@ -411,7 +411,7 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            //return;
+            //This is only called in full screen on IOS.
             if (!forerunner.device.isChrome() && forerunner.config.getCustomSettingsValue("AppleFixedToolbarBug", "on") === "on") {
                 if (me.$reportAreaContainer) {
                     me.$reportAreaContainer.css("display", "block");

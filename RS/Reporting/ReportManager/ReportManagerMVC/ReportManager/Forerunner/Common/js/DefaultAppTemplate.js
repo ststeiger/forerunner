@@ -59,7 +59,7 @@ $(function () {
             $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
             if (me.options.isFullScreen) {
-                me.$topdiv.css("width", $(window).width());                
+               me.$topdiv.css("width", $(window).width());                
             }
             $mainviewport.append($topdiv);
             //route path link
@@ -207,6 +207,15 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
+
+            //Add double tap to bring up menu.  This resets zoom level on some browsers.
+            me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
+                ev.preventDefault();
+                ev.gesture.preventDefault();
+                me.showSlideoutPane(widgets.toolbar, true);
+
+            });
+           
             // Handle any / all layout changes when the history routes change
             forerunner.history.on(events.historyRoute(), function (e, data) {
                 if (data.name === "transitionToReportManager" ||
@@ -311,6 +320,7 @@ $(function () {
                         e.preventDefault();
                 }
             });
+
 
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
@@ -424,7 +434,9 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
+
+                //This does not seem needed anymore with 8.3
+                if (false && forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
                     if (me._firstTime) {
                         values.containerHeight += 60;
@@ -824,7 +836,6 @@ $(function () {
                     }
                 }
 
-                me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowSwipe", false);
                 }

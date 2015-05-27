@@ -843,7 +843,9 @@ $(function () {
             me.SaveThumbnail = false;
             me.RDLExtProperty = null;
             me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);            
-            
+            me.zoomState = true;
+            me.allowZoom(me.zoomState);
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -1129,16 +1131,24 @@ $(function () {
         scrollReportBody: function () {
             var me = this;
 
-            if (forerunner.config.getCustomSettingsValue("AppleFixedToolbarBug", "on") === "on") {
-
+            //return;
+            if (!forerunner.device.isChrome() && forerunner.config.getCustomSettingsValue("AppleFixedToolbarBug", "on") === "on") {
                 if (me.$reportAreaContainer) {
-
                     me.$reportAreaContainer.css("display", "block");
+                    // me.$reportAreaContainer.css("width", me._getPageSizeObject().width());
                     //me.$reportAreaContainer.css("width", $(window).width());
-                    //me.$reportAreaContainer.css("height", $(window).height() - me.options.toolbarHeight );                    
+                    me.$reportAreaContainer.css("height", $(window).height() - me.options.toolbarHeight );                     
                     me.$reportAreaContainer.css("overflow", "auto");
                     
                     me._ScrollInner = true;
+                }
+            }
+            else {
+                if (me.$reportAreaContainer) {
+                    me.$reportAreaContainer.css("display", "table-cell");
+                    me.$reportAreaContainer.css("overflow", "");
+
+                    me._ScrollInner = false;
                 }
             }
 
@@ -1366,6 +1376,12 @@ $(function () {
         _allowZoomWindowsPhone: function (isEnabled) {
             var me = this;
 
+            //Turn this off, just leave zoom on.
+
+            return;
+            if (!me.reportPath || me.reportPath === "")
+                return;
+
             // Save a copy of the page into the action history
             me.backupCurPage(true);
 
@@ -1410,10 +1426,10 @@ $(function () {
         allowZoom: function (isEnabled,hideToolBar) {
             var me = this;
 
-            //if (forerunner.device.isWindowsPhone()) {
-            //    me._allowZoomWindowsPhone(isEnabled);
-            //    return;
-            //}
+            if (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81()) {
+                me._allowZoomWindowsPhone(isEnabled);
+                return;
+            }
 
             if (isEnabled === true) {
                 forerunner.device.allowZoom(true);
@@ -1467,8 +1483,7 @@ $(function () {
         },
         _touchNav: function () {
             
-            var me = this;
-
+            var me = this;          
 
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("touch release",
                 function (ev) {
@@ -2974,7 +2989,7 @@ $(function () {
                 return;
             }
 
-            if (me.reportPath && me.reportPath !== reportPath) {
+            if (me.reportPath && me.reportPath != "" && me.reportPath !== reportPath) {
                 //Do some clean work if it's a new report
                 me.backupCurPage(true);
                 me.sessionID = "";
@@ -5258,7 +5273,7 @@ $(function () {
             $topdiv.addClass("fr-layout-topdiv fr-core-block");
             me.$topdiv = $topdiv;
             if (me.options.isFullScreen) {
-                me.$topdiv.css("width", $(window).width());                
+               me.$topdiv.css("width", $(window).width());                
             }
             $mainviewport.append($topdiv);
             //route path link
@@ -5406,6 +5421,15 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
+
+            //Add double tap to bring up menu.  This resets zoom level on some browsers.
+            me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
+                ev.preventDefault();
+                ev.gesture.preventDefault();
+                me.showSlideoutPane(widgets.toolbar, true);
+
+            });
+           
             // Handle any / all layout changes when the history routes change
             forerunner.history.on(events.historyRoute(), function (e, data) {
                 if (data.name === "transitionToReportManager" ||
@@ -5510,6 +5534,7 @@ $(function () {
                         e.preventDefault();
                 }
             });
+
 
             //IOS safari has a bug that report the window height wrong
             if (forerunner.device.isiOS()) {
@@ -5623,7 +5648,9 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
+
+                //This does not seem needed anymore with 8.3
+                if (false && forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
                     if (me._firstTime) {
                         values.containerHeight += 60;
@@ -6023,7 +6050,6 @@ $(function () {
                     }
                 }
 
-                me._allowZoom(false);
                 if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowSwipe", false);
                 }
@@ -12149,7 +12175,7 @@ $(function () {
             bgLayer.attr("style", style);
 
             if (reportObj.ReportContainer.Trial === 1) {
-                //me.element.append(me._getWatermark());
+                me.element.append(me._getWatermark());
             }
 
             me.element.append(bgLayer);
@@ -19094,8 +19120,8 @@ $(function () {
             }
 
             me._render();
-
-            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() )) {
+            
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
                 // if the viewer is full screen, we will set up the viewport here. Note that on Windows
                 // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
                 // with the meta tag.

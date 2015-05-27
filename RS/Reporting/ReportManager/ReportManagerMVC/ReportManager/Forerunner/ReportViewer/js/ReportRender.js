@@ -136,7 +136,7 @@ $(function () {
             bgLayer.attr("style", style);
 
             if (reportObj.ReportContainer.Trial === 1) {
-                //me.element.append(me._getWatermark());
+                me.element.append(me._getWatermark());
             }
 
             me.element.append(bgLayer);

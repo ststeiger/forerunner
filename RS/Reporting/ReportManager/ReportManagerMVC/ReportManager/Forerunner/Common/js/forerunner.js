@@ -2096,6 +2096,11 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(Windows Phone)/) !== null;
         },
+        /** @return {Boolean} Returns a boolean that indicates if the device is a Windows Phone */
+        isWindowsPhone81: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(Windows Phone 8.1)/) !== null;
+        },
         /** @return {Boolean} Returns a boolean that indicates if the device is a IE Mobile 9.* */
         isIEMobile9: function () {
             var ua = navigator.userAgent;
@@ -2134,7 +2139,9 @@ $(function () {
         /** @return {Boolean} Returns a boolean that indicates if it is a Chrome browser */
         isChrome : function () {
             var ua = navigator.userAgent;
-            return ua.match(/(Chrome)/) !== null;
+
+            var ret = (ua.match(/(Chrome)/) !== null )||  (ua.match(/(CriOS)/) !== null);
+            return ret;
         },
 
         /** @return {Boolean} Returns a boolean that indicates if it is a Mobile device */
@@ -2155,6 +2162,21 @@ $(function () {
                 return;
             }
 
+            this._allowZoomFlag = flag;
+
+            if (forerunner.device.isWindowsPhone81()) {
+                if (flag === true) {
+                    $("#fr-viewport-style").remove();
+                }
+                else {                    
+                    var $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + "fixed" + ";}</style>");
+                    //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)                
+                    $("head").slice(0).append($viewportStyle);
+                }
+
+                return;
+            }
+
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=yes' />");
@@ -2163,7 +2185,7 @@ $(function () {
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no' />");
             }
 
-            this._allowZoomFlag = flag;
+            
         },
 
         /** 

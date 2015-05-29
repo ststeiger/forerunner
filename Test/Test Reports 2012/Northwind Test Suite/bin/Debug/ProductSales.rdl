@@ -40,13 +40,7 @@
                     <UseValueAsLabel>true</UseValueAsLabel>
                     <Visible>true</Visible>
                   </ChartDataLabel>
-                  <ActionInfo>
-                    <Actions>
-                      <Action>
-                        <Hyperlink>http://www.bing.com.cn</Hyperlink>
-                      </Action>
-                    </Actions>
-                  </ActionInfo>
+                  <ToolTip>=Sum(Fields!total.Value)</ToolTip>
                   <Style />
                   <ChartMarker>
                     <Style />

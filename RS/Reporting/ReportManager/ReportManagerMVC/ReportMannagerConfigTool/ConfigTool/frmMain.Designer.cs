@@ -98,6 +98,8 @@
             this.txtLatestVer = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtCurrVer = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtCores = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -463,6 +465,8 @@
             // 
             // tabActivation
             // 
+            this.tabActivation.Controls.Add(this.label8);
+            this.tabActivation.Controls.Add(this.txtCores);
             this.tabActivation.Controls.Add(this.btnSplit);
             this.tabActivation.Controls.Add(this.btnMerge);
             this.tabActivation.Controls.Add(this.btnValidate);
@@ -606,6 +610,17 @@
             this.txtCurrVer.Name = "txtCurrVer";
             this.txtCurrVer.ReadOnly = true;
             // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.Name = "label8";
+            // 
+            // txtCores
+            // 
+            resources.ApplyResources(this.txtCores, "txtCores");
+            this.txtCores.Name = "txtCores";
+            this.txtCores.ReadOnly = true;
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -706,6 +721,8 @@
         private System.Windows.Forms.TextBox txtCurrVer;
         private System.Windows.Forms.Button btnUpdateCheck;
         private System.Windows.Forms.CheckBox chkNoDB;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtCores;
     }
 }
 

@@ -14180,7 +14180,7 @@ $(function () {
                 State.CellCount += Obj.Cells.length;
             }
             else {
-                CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
+                
                 if (Obj.Cell) {
 
                     if (Obj.Type === "RowHeader") {
@@ -14190,8 +14190,8 @@ $(function () {
                     }
                     LastColIndex = Obj.ColumnIndex;
 
-
                     if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
+                        CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
                         var h = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
                         if (respCols.Columns[Obj.ColumnIndex].Header === undefined)
                             respCols.Columns[Obj.ColumnIndex].Header = new $("<div/>");

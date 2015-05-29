@@ -1391,6 +1391,60 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="label8.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 193</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>162, 13</value>
+  </data>
+  <data name="label8.TabIndex" type="System.Int32, mscorlib">
+    <value>25</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Number of cores on this machine</value>
+  </data>
+  <data name="&gt;&gt;label8.Name" xml:space="preserve">
+    <value>label8</value>
+  </data>
+  <data name="&gt;&gt;label8.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label8.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;label8.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtCores.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 209</value>
+  </data>
+  <data name="txtCores.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="txtCores.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 21</value>
+  </data>
+  <data name="txtCores.TabIndex" type="System.Int32, mscorlib">
+    <value>24</value>
+  </data>
+  <data name="&gt;&gt;txtCores.Name" xml:space="preserve">
+    <value>txtCores</value>
+  </data>
+  <data name="&gt;&gt;txtCores.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtCores.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;txtCores.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="btnSplit.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1416,7 +1470,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnSplit.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>2</value>
   </data>
   <data name="btnMerge.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1443,7 +1497,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnMerge.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>3</value>
   </data>
   <data name="btnValidate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1470,7 +1524,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnValidate.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="btnCopy.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1497,7 +1551,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnCopy.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="btnDeActivate.Location" type="System.Drawing.Point, System.Drawing">
     <value>337, 107</value>
@@ -1521,7 +1575,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnDeActivate.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="rtbCurLicense.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
@@ -1548,7 +1602,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;rtbCurLicense.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1575,7 +1629,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="btnManualActivation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1602,7 +1656,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnManualActivation.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1629,7 +1683,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="txtNewKey.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 23</value>
@@ -1653,7 +1707,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;txtNewKey.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>11</value>
   </data>
   <data name="btnGetActivationKey.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1680,7 +1734,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnGetActivationKey.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>12</value>
   </data>
   <data name="btnActivate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1707,7 +1761,7 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>13</value>
   </data>
   <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>

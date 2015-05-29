@@ -25,6 +25,7 @@ namespace ReportMannagerConfigTool
                 SetReportManagerFolderPath();
                 LoadWebServerConfig();
                 rtbCurLicense.Text = ClientLicense.GetLicenseString();
+                txtCores.Text = ClientLicense.ThisMachine.numberOfCores.ToString();
             }
             catch(Exception ex)
             {

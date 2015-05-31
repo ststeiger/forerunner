@@ -9426,6 +9426,7 @@ $(function () {
                 url: url,
                 data: {
                     path: me.options.catalogItem.Path,
+                    safeFolderDelete: true,
                     instance: me.options.rsInstance,
                 },
                 async: false,

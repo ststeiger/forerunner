@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+  <b>Forerunner SDK:</b>
+  <p>
+    The Forerunner SDK contains all the support need to add the forerunner SDK to an existing Web Application. Forerunner 
+    SDK package contains a readme.txt file. Read this file for addition information about this package. In order to enable
+    Forerunner SDK remember to run the Set-FRConfig in the "Package Mamanger Console" window.
+  </p>
+
+  <p><i>Next Steps</i></p>
+  <p>
+    Once you have installed the SDK Package and run Set-FRConfig you will be ready to add one of the top level widgets to 
+    your project. It is recommended you install the Getting Started package so you can use it as a running baseline as you 
+    add Forerunner SDK support into your own application.
+
+    You will need to have a page to put one of our top level widgets onto such as the Report Viewer EZ. In order to add the viewer,
+    Explorer or Dashboard widgets you will need to make sure your page has the required script and style sheet references. The
+    required references are as follows:
+  </p>
+
+    <pre>
+        &lt;link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet" />
+        &lt;link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet" />
+        &lt;link href="~/Custom/Mobilizer.css" rel="stylesheet" />
+
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jsTree/jstree.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/misc/js/jquery.FRmaphilight.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/Misc/js/moment.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Bundles/forerunner.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Bundles/forerunner-widgets.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.form.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.watermark.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js">&lt;/script>
+        &lt;script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js">&lt;/script>
+    </pre>
+}

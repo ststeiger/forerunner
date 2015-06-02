@@ -166,6 +166,10 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult SamplesV4()
+        {
+            return View();
+        }
         public ActionResult Pricing()
         {
             return View();

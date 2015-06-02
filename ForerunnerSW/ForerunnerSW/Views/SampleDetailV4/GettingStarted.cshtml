@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+  <b>Installing and Running Getting Started:</b>
+  <ol>
+    <li>Open a new Empty Web Project in Visual Studio (2012 or newer)</li>
+    <ul>
+      <li>You can create an Empty project because the Getting Started package will install dependent
+        packages and turn your empty project into an MVC project.
+      </li>
+    </ul>
+    <li>In the "Package Manager Console" window run the command:
+    <a href="http://www.nuget.org/packages/Forerunner_GettingStartedV4/" target="_blank">"Install-Package Forerunner_GettingStartedV4"
+    </a>
+    </li>
+    <li>In the "Package Manager Console" window run the command: "Set-FRConfig -Verbose"
+      <ul>
+        <li>
+          You will be prompted for the "ReportServerWSUrl" setting. This is the URL address of the SSRS Web Service URL. If you are running
+          SSRS on your developer box this will be http://localhost/ReportServer. If not you will need to enter the correct URL. Set-FRConfig 
+          will test the connection and report an error if this is an incorrect address. If you need to, you can rerun Set-FRConfig as many times
+          as you need.
+        </li>
+      </ul>
+    </li>
+  </ol>
+
+  <p>That is all it takes!</p>
+  <p>You can now run the Getting Started sample and see your own reports using the Forerunner SDK.</p>
+  <p><b>Notes:</b></p>
+  <p><i>What You Will See:</i></p>
+  <p>
+    When the sample is run, you will see the Forerunner SDK Report Explorer EZ Widget in full screen mode. This is the same widget that the
+    Mobilizer application uses. So the sample will look and behave very similar to the Mobilizer application.
+  </p>
+  <p><i>Authentication:</i></p>
+  <p>
+    The Getting Started sample uses integrated windows authentication. So your login user credentials must have permission to view reports in
+    order for the sample to run properly. The Forerunner SDK can be configured to use: integrated windows authentication, forms authentication,
+    proxy (hard coded) authentication. Any external form of authentication can be used such as OAuth or LDAP by using a proxy account after the
+    external authentication has accepted a user's credentials.
+  </p>
+  <p><i>Set-FRConfig</i></p>
+  <p>
+    When you run Set-FRConfig with no parameters you are setup with a minimal setup. You can see all the parameters that Set-FRConfig supports by
+    typing "Set-FRConfig -?". Some features will not be enabled because the mobilizer DB is not configured by default. If you wish to enable the DB
+    related features such as Recent or Favorite Reports run "Set-FRConfig -UseMobilizerDB true" and Set-FRConfig will prompt you for the
+    additional configuration information.
+  </p>
+  <p><i>The Forerunner SDK</i></p>
+  <p>
+    This package (I.e., Getting Started) is a thin layer on top of the Forerunner SDK package. The Forerunner SDK package does all the heavy 
+    lifting. Basically what Getting Started does is to add the MVC Controller class as well as the View. If you want to add Forerunner SDK 
+    support to an existing application, install the Forerunner SDK package.
+  </p>
+}

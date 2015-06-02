@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Forerunner SDK samples";
+    ViewBag.Description = "Forerunner SDK provides the following developer samples";
+}
+
+<div class="ForerunnerPort" style="">
+    <div  class="ForerunnerPage Center" style="padding-bottom:100px;">
+        <div  class="ForerunnerPageTitle" style="">Samples</div>
+        <div class="ForerunnerPageSubTitle" style="">Forerunner SDK provides all developer samples as nuget packages now. Click on any of the samples below to see 
+        the details. 
+        </div>
+
+        <table>
+            <tr>
+                <td class="SamplesDescription">
+                    <a class="SamplesItem" onclick="ShowSampleDetail('SampleDetailV4/GettingStarted', 'SamplesDetailId')">Getting Started</a>
+                    <a class="SamplesItem" onclick="ShowSampleDetail('SampleDetailV4/ForerunnerSDK', 'SamplesDetailId')">Forerunner SDK</a>
+                    <a class="SamplesItem" onclick="ShowSampleDetail('SampleDetailV4/V3Archives', 'SamplesDetailId')">V3 Archive Samples</a>
+                </td>
+                <td class="SamplesDetail">
+                    <div id="SamplesDetailId">
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -52,7 +52,10 @@
         if (sample) {
             ShowSampleDetail("SampleDetail/" + sample, "SamplesDetailId");
         }
-
+        var v4Sample = GetURLParameter("V4Sample");
+        if (v4Sample) {
+            ShowSampleDetail("SampleDetailV4/" + v4Sample, "SamplesDetailId");
+        }
     }
 
     function evalNumberParameter(app) {

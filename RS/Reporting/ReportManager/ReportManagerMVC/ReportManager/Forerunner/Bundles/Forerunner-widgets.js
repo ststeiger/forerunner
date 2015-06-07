@@ -1810,6 +1810,12 @@ $(function () {
             else {
                 me.flushCache();
                 me._resetViewer(false);
+                //when exit the report we need to set allowZoom to back manually here
+                //if nto the onRoute event handler will execute window.history.reload before 
+                //reset the allowZoom to false. so page reload and page lost the previous state
+                //fixed #1349 by baotong.wang
+                forerunner.device.allowZoom(false);
+
                 me._trigger(events.back, null, { path: me.reportPath });
             }
         },
@@ -5699,7 +5705,7 @@ $(function () {
             } else {
                 forerunner.device.allowZoom(zoom);
             }
-    },
+        },
         showUnZoomPane: function () {
             var me = this;
             me._showTopDiv(true);
@@ -19132,6 +19138,11 @@ $(function () {
 
             $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
+                //when exit the report we need to set the DefaultAppTemplate.$viewer to undefined
+                //if not then the toggleZoom in the DefaultAppTemplate.js will keep invoke the showToolbar method 
+                //on reportViewer which was destroyed already and throw error - fixed #1349 by baotong.wang
+                layout.$viewer = void 0;
+
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             

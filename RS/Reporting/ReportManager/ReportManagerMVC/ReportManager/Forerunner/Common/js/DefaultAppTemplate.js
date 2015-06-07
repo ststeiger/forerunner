@@ -400,7 +400,7 @@ $(function () {
             } else {
                 forerunner.device.allowZoom(zoom);
             }
-    },
+        },
         showUnZoomPane: function () {
             var me = this;
             me._showTopDiv(true);

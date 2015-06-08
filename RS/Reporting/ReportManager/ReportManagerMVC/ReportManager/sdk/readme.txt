@@ -27,6 +27,6 @@ https://www.forerunnersw.com/registerTrial
 You can find samples of how to create the report viewer and report explorer widgets
 here:
 
-http://www.forerunnersw.com/samples
+http://www.forerunnersw.com/samplesV4
 
 Your done, enjoy!

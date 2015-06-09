@@ -107,6 +107,11 @@ $(function () {
 
             $viewer.on(events.reportViewerBack(), function (e, data) {
                 layout._selectedItemPath = data.path;
+                //when exit the report we need to set the DefaultAppTemplate.$viewer to undefined
+                //if not then the toggleZoom in the DefaultAppTemplate.js will keep invoke the showToolbar method 
+                //on reportViewer which was destroyed already and throw error - fixed #1349 by baotong.wang
+                layout.$viewer = void 0;
+
                 if (me.options.historyBack) {
                     me.options.historyBack();
                 }             

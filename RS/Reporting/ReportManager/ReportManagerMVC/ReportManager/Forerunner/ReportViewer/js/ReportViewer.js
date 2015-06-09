@@ -1090,6 +1090,12 @@ $(function () {
             else {
                 me.flushCache();
                 me._resetViewer(false);
+                //when exit the report we need to set allowZoom to back manually here
+                //if nto the onRoute event handler will execute window.history.reload before 
+                //reset the allowZoom to false. so page reload and page lost the previous state
+                //fixed #1349 by baotong.wang
+                forerunner.device.allowZoom(false);
+
                 me._trigger(events.back, null, { path: me.reportPath });
             }
         },

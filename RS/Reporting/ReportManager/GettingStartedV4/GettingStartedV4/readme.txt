@@ -1,4 +1,4 @@
-﻿ForerunnerGettingStartedV4
+ForerunnerGettingStartedV4
 
 After you have installed the ForerunnerGettingStartedV4 package you
 will need to configure the settings. A Package Manager Console command
@@ -27,6 +27,6 @@ https://www.forerunnersw.com/registerTrial
 You can find samples of how to create the report viewer and report explorer widgets
 here:
 
-http://www.forerunnersw.com/samples
+http://forerunnersw.com/samplesV4
 
 Your done, enjoy!

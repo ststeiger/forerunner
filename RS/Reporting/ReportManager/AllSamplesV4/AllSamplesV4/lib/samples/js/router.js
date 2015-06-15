@@ -118,7 +118,7 @@ $(function () {
             var url = forerunner.config._getVirtualRootBase() + "Help";
             if (data.args[0]) {
                 // If the ApiId parameter is given then this is an API reference
-                url = forerunner.config._getVirtualRootBase() + "Help/Api/foo" + data.args[0];
+                url = forerunner.config._getVirtualRootBase() + "Help/Api/" + data.args[0];
             }
             allSamples.fetch(data.name, url, true, convertLink);
             showSampleSection(data.name);

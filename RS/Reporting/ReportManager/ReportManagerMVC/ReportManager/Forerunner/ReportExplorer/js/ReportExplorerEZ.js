@@ -94,7 +94,7 @@ $(function () {
             me.DefaultAppTemplate.bindExplorerEvents();
         },
 
-        // Initalize our internal navigateTo processing
+        // Initialize our internal navigateTo processing
         _initNavigateTo: function () {
             var me = this;
 
@@ -117,7 +117,8 @@ $(function () {
                     "recent": "transitionToRecent",
                     "editDashboard/:path": "transitionToEditDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
-                }
+                },
+                id: widgets.reportExplorerEZ
             });
 
             // Hook the router route event
@@ -529,7 +530,7 @@ $(function () {
 
             if (me.options.isFullScreen)
                 $("body").css("background-color", "");
-            else
+            else if (me.$reportExplorer)
                 me.$reportExplorer.css("background-color", "");
         },
         _transitionToDashboard: function (path, enableEdit) {

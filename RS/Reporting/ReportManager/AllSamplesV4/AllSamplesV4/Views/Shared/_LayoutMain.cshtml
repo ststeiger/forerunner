@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta charset="utf-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="apple-touch-icon" href="~/iPhoneMobilizer.png" />
+  <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=yes' />
+  <meta name="robots" content="noindex,nofollow">
+
+  <title>@ViewBag.Title</title>
+
+  <script type="text/javascript"> if (!window.console) console = { log: function () { } }; </script>
+
+  <link type="text/css" href="~/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+
+  <!-- Forerunner Stylesheets Start -->
+  <link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
+  <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+  <!-- Forerunner Stylesheets End -->
+
+  <!-- Bootstrap Stylesheets Start -->
+  <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap-theme.min.css" />
+  <!-- Bootstrap Stylesheets Start -->
+
+  <!-- Forerunner Stylesheets Start -->
+  <link href="~/Custom/Mobilizer.css" rel="stylesheet"/>
+  <!-- Forerunner Stylesheets End -->
+
+  <link href="~/lib/samples/css/AllSamples.css" rel="stylesheet" />
+
+  @RenderSection("styles", required: false)
+</head>
+<body>
+  @RenderBody()
+
+  <!-- Forerunner Scripts Start -->
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.11.0.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.form.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/jsTree/jstree.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/misc/js/jquery.FRmaphilight.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/moment.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-widgets.js"></script>
+  <!-- Forerunner Scripts End -->
+
+  <!-- Bootstrap Script Start -->
+  <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+  <!-- Bootstrap Script End -->
+
+  @RenderSection("scripts", required: false)
+</body>
+</html>

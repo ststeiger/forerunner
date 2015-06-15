@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Forerunner SDK All Samples";
+    Layout = "../Shared/_LayoutMain.cshtml";    
+}
+
+@section styles {
+}
+
+@section scripts {
+  <script type="text/javascript" src="~/lib/samples/js/ReportViewerEZ.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/AddButton.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/RemoveButton.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/Dashboard.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/Selector.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/Parameters.js"></script>
+
+  <!-- Report Explorer must be after the router. This enables the routes for the
+       application to be defined before ReportExplorer starts forerunner.history -->
+  <script type="text/javascript" src="~/lib/samples/js/router.js"></script>
+  <script type="text/javascript" src="~/lib/samples/js/ReportExplorerEZ.js"></script>
+}
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="#as-home">All Samples</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li><a href="#as-home">Home</a></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Samples
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#as-explorer">Report Explorer EZ</a></li>
+            <li><a href="#as-viewer">Report Viewer EZ</a></li>
+            <li><a href="#as-addbutton">Add Button</a></li> 
+            <li><a href="#as-removebutton">Remove Button</a></li>
+            <li><a href="#as-dashboard">Dashboard</a></li>
+            <li><a href="#as-selector">Report Selector</a></li>
+            <li><a href="#as-params">Parameters</a></li>
+          </ul>
+        </li>
+        <li><a href="#as-help">API</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="https://forerunnersw.com/">forerunnersw.com</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="as-sample-content">
+  <div id="as-home" class="as-sample-pane"></div>
+  <div id="as-explorer" class="as-sample-pane"></div>
+  <div id="as-viewer" class="as-sample-pane"></div>
+  <div id="as-addbutton" class="as-sample-pane"></div>
+  <div id="as-removebutton" class="as-sample-pane"></div>
+  <div id="as-dashboard" class="as-sample-pane"></div>
+  <div id="as-selector" class="as-sample-pane"></div>
+  <div id="as-params" class="as-sample-pane"></div>
+  <div id="as-help" class="as-sample-pane"></div>
+</div>

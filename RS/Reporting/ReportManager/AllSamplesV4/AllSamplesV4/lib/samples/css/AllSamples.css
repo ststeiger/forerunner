@@ -1,0 +1,33 @@
+﻿.as-sample-content > .as-sample-pane {
+  display: none;
+}
+.as-sample-content > .active {
+  display: block;
+}
+
+.as-icon24x24 {
+    width:24px;
+    height:24px;
+    margin:5px;
+    display:inline-block;
+    background-image:url('../images/MyHome.png');
+}
+.as-icon24x24-home { 
+    background-position: 0 0;
+}
+.as-hidden {
+  display: none;
+}
+.fr-dashboard-report-id {
+  background-color: white;
+}
+.as-report-cell {
+  vertical-align: top;
+}
+.as-report-container {
+  box-shadow: 0 0 7px #545454;
+  margin: 4px 4px 4px 4px; 
+  background-color: white; 
+  position:relative; 
+}
+

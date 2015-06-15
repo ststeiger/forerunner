@@ -3,14 +3,12 @@
 $(function () {
     allSamples.parameters = {
         init: function (target) {
-            var $target = $("#" + target);
-            var $reportArea = $target.find(".as-sample");
-            if ($reportArea.length === 0) {
-                $reportArea = $("<div class='as-sample'></div>")
-                $target.html($reportArea);
-
-                $reportArea.html("<h3>Parameters</h3>");
+            if (allSamples.sampleExists(target)) {
+                // Only create the sample once
+                return;
             }
-        }
-    }
+            var $sampleArea = allSamples.getSampleArea(target);
+            $sampleArea.html("<h3>Parameters</h3>");
+        }  // init
+    }  // allSamples.parameters
 });  // function()

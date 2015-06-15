@@ -18,10 +18,10 @@ $(function () {
         $samplePane.addClass("active");
     }
 
-    // convertLink
+    // convertHelpLink
     //
-    // Converts the URL from a page request to a route. That way we can keep AllSamplesV4 a Single Page Application
-    var convertLink = function (data) {
+    // Converts the Help href from a page request to a route. This is needed to keep AllSamplesV4 a Single Page Application
+    var convertHelpLink = function (data) {
         var html = data.replace(/href=\"\/Help/g, 'href="#as-help');
         return html;
     }
@@ -33,7 +33,7 @@ $(function () {
     // Where:
     //  force = Always refresh target with the contents of url
     //  callback = Allow the contents to be processed before being displayed
-    allSamples.fetch = function (target, url, force, callback) {
+    var fetch = function (target, url, force, callback) {
         var doFetch = force;
         var $target = $("#" + target);
         var $sampleArea = $target.find(".as-sample");
@@ -61,6 +61,29 @@ $(function () {
         }
     }
 
+    // allSamples.sampleExists
+    //
+    // Returns true if the 'as.sample' <div> exists as a child of target
+    allSamples.sampleExists = function (target) {
+        var $target = $("#" + target);
+        var $sampleArea = $target.find(".as-sample");
+        return $sampleArea.length > 0;
+    }
+
+    // allSamples.getSampleArea
+    //
+    // Returns the sample-area child <div> of the given target
+    allSamples.getSampleArea = function (target) {
+        var $target = $("#" + target);
+        var $sampleArea = $target.find(".as-sample");
+        if ($sampleArea.length === 0) {
+            $sampleArea = $("<div class='as-sample'></div>")
+            $target.html($sampleArea);
+        }
+
+        return $sampleArea;
+    }
+
     // allSamples.router
     //
     // Holds the instance of the forerunner router widget. The router widget provides
@@ -81,7 +104,7 @@ $(function () {
         id: routerId
     });
 
-    // onRoute
+    // allSamples.router.onRoute
     //
     // Event handler that processes the forerunner.history route event.
     allSamples.router.onRoute = function (e, data) {
@@ -92,9 +115,10 @@ $(function () {
             showSampleSection("as-explorer");
         } else if (data.name === "as-home") {
             var url = forerunner.config._getVirtualRootBase() + "Home/Home";
-            allSamples.fetch(data.name, url);
+            fetch(data.name, url);
             showSampleSection(data.name);
         } else if (data.name === "as-explorer") {
+            allSamples.reportExplorerEZ.init(data.name);
             showSampleSection(data.name);
         } else if (data.name === "as-viewer") {
             allSamples.reportViewerEZ.init(data.name);
@@ -120,7 +144,7 @@ $(function () {
                 // If the ApiId parameter is given then this is an API reference
                 url = forerunner.config._getVirtualRootBase() + "Help/Api/" + data.args[0];
             }
-            allSamples.fetch(data.name, url, true, convertLink);
+            fetch(data.name, url, true, convertHelpLink);
             showSampleSection(data.name);
         }
     }

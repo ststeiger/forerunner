@@ -20347,6 +20347,9 @@ $(function () {
          */
         getReportExplorer: function () {
             var me = this;
+            if (!me.$reportExplorer) {
+                return null;
+            }
             return me.$reportExplorer;
         },
         /**

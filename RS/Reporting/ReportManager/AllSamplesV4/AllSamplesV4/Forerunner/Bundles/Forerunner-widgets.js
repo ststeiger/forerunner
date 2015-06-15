@@ -20347,9 +20347,11 @@ $(function () {
          */
         getReportExplorer: function () {
             var me = this;
+            if (!me.$reportExplorer) {
+                return null;
+            }
             return me.$reportExplorer;
-        },
-        /**
+        },        /**
          * Get report explorer toolbar object
          *
          * @function $.forerunner.reportExplorerEZ#getReportExplorerToolbar

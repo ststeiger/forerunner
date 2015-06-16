@@ -152,11 +152,17 @@ $(function () {
                 me.buildVersion = newVersion;
             }
 
-            if (forerunner.device.isAllowZoom()) {
-                forerunner.device.allowZoom(false);
-                window.location.reload();
-                return;
-            }
+            // These lines are no longer needed, since Jason changed zoom to always be active. These
+            // lines were causing problems because every new route was causing a reload of the page,
+            // which in turn was causing any initial call to transitionToReportManager (in our
+            // GettingStartedV4 sample) to refresh back to root. Which effectively disables all report
+            // explorer navigation. The original bug fix these lines address was JIRA 1203.
+            //
+            //if (forerunner.device.isAllowZoom()) {
+            //    forerunner.device.allowZoom(false);
+            //    window.location.reload();
+            //    return;
+            //}
 
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];

@@ -460,8 +460,7 @@ Section "ReportManager" SEC01
   File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
   File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
   File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
-  
-
+  File "${RESOURCEROOT}\Forerunner Mobilizer Named Parameter Sets.rtf"
 
 ;This must be the last line of the config tool will not work after install
  SetOutPath "$INSTDIR\Config"
@@ -1074,8 +1073,9 @@ Section Uninstall
   Delete "$INSTDIR\Config\UWS.Configuration.dll"
   Delete "$INSTDIR\InstallInstructions.rtf"
   Delete "$INSTDIR\RDL Extension Documentation.rtf"
-  Delete "$INSTDIR\Forerunner Mobilizer Dashboards.rtf"
   Delete "$INSTDIR\Forerunner Mobilizer Virtual Folders.rtf"
+  Delete "$INSTDIR\Forerunner Mobilizer Dashboards.rtf"
+  Delete "$INSTDIR\Forerunner Mobilizer Named Parameter Sets.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV3\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV3\MobilizerConfigTool.lnk"

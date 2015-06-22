@@ -380,8 +380,9 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"
   File "${RESOURCEROOT}\RDL Extension Documentation.rtf"
-  File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
   File "${RESOURCEROOT}\Forerunner Mobilizer Virtual Folders.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Dashboards.rtf"
+  File "${RESOURCEROOT}\Forerunner Mobilizer Named Parameter Sets.rtf"
 
   ;update config file
    nsisXML::create

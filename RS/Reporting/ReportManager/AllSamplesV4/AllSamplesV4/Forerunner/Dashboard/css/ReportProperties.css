@@ -1,0 +1,31 @@
+﻿.fr-rp-section { display: none; }
+
+.fr-rp-form { margin: 16px 16px 6px 16px; height: 230px; position: relative; overflow: hidden; }
+  .fr-rp-form .fr-rp-dropdown-container { position: relative; margin: 6px 0 0 0; }
+  .fr-rp-form .fr-rp-text-input { display: block; min-width: 375px; padding: 0 22px 0 4px; }
+  .fr-rp-form .fr-rp-dropdown-iconcontainer { position: absolute; right: 4px; top: 3px; }
+  .fr-rp-form .fr-rp-dropdown-icon { height: 18px; width: 18px; background-image: url(../../Common/Images/OpenDropDown.png); background-repeat: no-repeat; }
+  .fr-rp-form .fr-rp-popup-container { position: absolute; border: 1px solid #424242; background-color: white; }
+  .fr-rp-form .fr-rp-tree-container { overflow: scroll; max-height: 164px; }
+  .fr-rp-form .fr-rp-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+  .fr-rp-form .fr-rp-label { height: 20px; display: inline-block; }
+  .fr-rp-form .fr-rp-checkbox { display: inline-block; margin: 0 6px 0 12px; }
+  .fr-rp-form .fr-rp-section-separator { margin-top: 10px; }
+  .fr-rp-form .fr-rp-separator { margin-top: 5px; }
+  .fr-rp-form .fr-rp-dimension-select { margin-left: 5px; padding: 0 4px 0 4px; }
+  .fr-rp-form .fr-rp-slots { margin-left: 5px; width: 32px; text-align: right; }
+  .fr-rp-form .fr-rp-action-button { height: 24px; font-size: 10pt; padding: 0 10px 0 10px; margin-bottom: 5px; }
+
+.fr-rp-icon-edit { background-image: url(../images/edit.png); }
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-rp-form { margin: 8px 8px 0px 8px; }
+    .fr-rp-form .fr-rp-text-input { min-width: 278px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-rp-form { margin: 10px 4px 0 4px; }
+    .fr-rp-form .fr-rp-text-input { min-width: 278px; }
+}

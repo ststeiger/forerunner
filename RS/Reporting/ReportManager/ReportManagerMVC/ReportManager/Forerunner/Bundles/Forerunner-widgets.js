@@ -270,7 +270,7 @@ $(function () {
             return this;
         },
 
-        // Bind all defined routes to `Backbone.history`. We have to reverse the
+        // Bind all defined routes to `Forerunner.history`. We have to reverse the
         // order of the routes here to support behavior where the most general
         // routes can be defined at the bottom of the route map.
         _bindRoutes: function () {
@@ -430,7 +430,7 @@ $(function () {
          *
          *  Notes:
          *  To indicate that you'd like to use HTML5 pushState support in your application,
-         *  use Backbone.history.start({pushState: true}). If you'd like to use pushState,
+         *  use forerunner.history.start({pushState: true}). If you'd like to use pushState,
          *  but have browsers that don't support it natively use full page refreshes
          *  instead, you can add {hashChange: false} to the options. 
          *
@@ -516,7 +516,7 @@ $(function () {
             }
         },
 
-        // Disable Backbone.history, perhaps temporarily. Not useful in a real app,
+        // Disable Forerunner.history, perhaps temporarily. Not useful in a real app,
         // but possibly useful for unit testing Routers.
         stop: function () {
             $(window).off('popstate').off('hashchange');
@@ -19789,7 +19789,7 @@ $(function () {
             me.DefaultAppTemplate.bindExplorerEvents();
         },
 
-        // Initalize our internal navigateTo processing
+        // Initialize our internal navigateTo processing
         _initNavigateTo: function () {
             var me = this;
 
@@ -19812,7 +19812,8 @@ $(function () {
                     "recent": "transitionToRecent",
                     "editDashboard/:path": "transitionToEditDashboard",
                     "searchfolder/:path": "transitionToSearchFolder"
-                }
+                },
+                id: widgets.reportExplorerEZ
             });
 
             // Hook the router route event
@@ -19846,11 +19847,17 @@ $(function () {
                 me.buildVersion = newVersion;
             }
 
-            if (forerunner.device.isAllowZoom()) {
-                forerunner.device.allowZoom(false);
-                window.location.reload();
-                return;
-            }
+            // These lines are no longer needed, since Jason changed zoom to always be active. These
+            // lines were causing problems because every new route was causing a reload of the page,
+            // which in turn was causing any initial call to transitionToReportManager (in our
+            // GettingStartedV4 sample) to refresh back to root. Which effectively disables all report
+            // explorer navigation. The original bug fix these lines address was JIRA 1203.
+            //
+            //if (forerunner.device.isAllowZoom()) {
+            //    forerunner.device.allowZoom(false);
+            //    window.location.reload();
+            //    return;
+            //}
 
             var path, args, keyword, name;
             path = args = keyword = name = data.args[0];
@@ -20224,7 +20231,7 @@ $(function () {
 
             if (me.options.isFullScreen)
                 $("body").css("background-color", "");
-            else
+            else if (me.$reportExplorer)
                 me.$reportExplorer.css("background-color", "");
         },
         _transitionToDashboard: function (path, enableEdit) {
@@ -20346,6 +20353,9 @@ $(function () {
          */
         getReportExplorer: function () {
             var me = this;
+            if (!me.$reportExplorer) {
+                return null;
+            }
             return me.$reportExplorer;
         },
         /**

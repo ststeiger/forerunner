@@ -1,0 +1,2140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Rectangle Name="Rectangle1">
+        <ReportItems>
+          <Chart Name="Chart1">
+            <ChartCategoryHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart1_CategoryGroup1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Metric.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!ord.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=iif(Fields!Metric.Value="TechnicalRisk","Risk",Fields!Metric.Value)</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartCategoryHierarchy>
+            <ChartSeriesHierarchy>
+              <ChartMembers>
+                <ChartMember>
+                  <Group Name="Chart1_SeriesGroup">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Color.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!ColorOrd.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <Label>=iif(Fields!Color.Value ="green", "On Track",iif(Fields!Color.Value ="yellow", "At Risk",iif(Fields!Color.Value ="red", "High Risk","Clear")))</Label>
+                </ChartMember>
+              </ChartMembers>
+            </ChartSeriesHierarchy>
+            <ChartData>
+              <ChartSeriesCollection>
+                <ChartSeries Name="NumRecords">
+                  <ChartDataPoints>
+                    <ChartDataPoint>
+                      <ChartDataPointValues>
+                        <Y>=Sum(Fields!NumRecords.Value)</Y>
+                      </ChartDataPointValues>
+                      <ChartDataLabel>
+                        <Style />
+                      </ChartDataLabel>
+                      <ToolTip>=Sum(Fields!NumRecords.Value)</ToolTip>
+                      <Style>
+                        <Border>
+                          <Color>=iif(Fields!Color.Value="gray","#939598",iif(Fields!Color.Value="green","#A6CE39",iif(Fields!Color.Value="yellow","#FFDA00",iif(Fields!Color.Value="red","#EE4023","#939598"))))</Color>
+                        </Border>
+                        <Color>=iif(Fields!Color.Value="gray","#939598",iif(Fields!Color.Value="green","#A6CE39",iif(Fields!Color.Value="yellow","#FFDA00",iif(Fields!Color.Value="red","#EE4023","#939598"))))</Color>
+                      </Style>
+                      <ChartMarker>
+                        <Style />
+                      </ChartMarker>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </ChartDataPoint>
+                  </ChartDataPoints>
+                  <Style />
+                  <ChartEmptyPoints>
+                    <Style />
+                    <ChartMarker>
+                      <Style />
+                    </ChartMarker>
+                    <ChartDataLabel>
+                      <Style />
+                    </ChartDataLabel>
+                  </ChartEmptyPoints>
+                  <ValueAxisName>Primary</ValueAxisName>
+                  <CategoryAxisName>Primary</CategoryAxisName>
+                  <ChartSmartLabel>
+                    <CalloutLineColor>Black</CalloutLineColor>
+                    <MinMovingDistance>0pt</MinMovingDistance>
+                  </ChartSmartLabel>
+                </ChartSeries>
+              </ChartSeriesCollection>
+            </ChartData>
+            <ChartAreas>
+              <ChartArea Name="Default">
+                <ChartCategoryAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <Border>
+                        <Color>LightGrey</Color>
+                      </Border>
+                      <FontStyle>Normal</FontStyle>
+                      <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                      <Color>White</Color>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption />
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <Interval>1</Interval>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <Angle>-90</Angle>
+                    <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption>Axis Title</Caption>
+                      <Style>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartCategoryAxes>
+                <ChartValueAxes>
+                  <ChartAxis Name="Primary">
+                    <Style>
+                      <Border>
+                        <Color>LightGrey</Color>
+                      </Border>
+                      <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                      <Format>0;(0)</Format>
+                      <Color>White</Color>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption># of Projects</Caption>
+                      <Style>
+                        <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                        <Color>White</Color>
+                      </Style>
+                    </ChartAxisTitle>
+                    <Interval>=iif(SUM(Fields!NumRecords.Value)&lt;10,1,iif(SUM(Fields!NumRecords.Value)&lt;100,5,0))</Interval>
+                    <ChartMajorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                  <ChartAxis Name="Secondary">
+                    <Style>
+                      <Border>
+                        <Color>White</Color>
+                      </Border>
+                      <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                      <Format>0;(0)</Format>
+                      <Color>White</Color>
+                    </Style>
+                    <ChartAxisTitle>
+                      <Caption># of Releases</Caption>
+                      <Style>
+                        <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                        <Color>White</Color>
+                      </Style>
+                      <TextOrientation>Rotated270</TextOrientation>
+                    </ChartAxisTitle>
+                    <ChartMajorGridLines>
+                      <Enabled>False</Enabled>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                        </Border>
+                      </Style>
+                    </ChartMajorGridLines>
+                    <ChartMinorGridLines>
+                      <Style>
+                        <Border>
+                          <Color>Gainsboro</Color>
+                          <Style>Dotted</Style>
+                        </Border>
+                      </Style>
+                    </ChartMinorGridLines>
+                    <ChartMinorTickMarks>
+                      <Length>0.5</Length>
+                    </ChartMinorTickMarks>
+                    <CrossAt>NaN</CrossAt>
+                    <Location>Opposite</Location>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
+                    <LabelsAutoFitDisabled>true</LabelsAutoFitDisabled>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
+                  </ChartAxis>
+                </ChartValueAxes>
+                <Style>
+                  <BackgroundColor>Black</BackgroundColor>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                </Style>
+              </ChartArea>
+            </ChartAreas>
+            <ChartLegends>
+              <ChartLegend Name="Legend1">
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                  <Color>White</Color>
+                </Style>
+                <Position>BottomCenter</Position>
+                <ChartLegendTitle>
+                  <Caption />
+                  <Style>
+                    <FontSize>8pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
+                    <TextAlign>Center</TextAlign>
+                  </Style>
+                </ChartLegendTitle>
+                <AutoFitTextDisabled>true</AutoFitTextDisabled>
+                <HeaderSeparatorColor>Black</HeaderSeparatorColor>
+                <ColumnSeparatorColor>Black</ColumnSeparatorColor>
+              </ChartLegend>
+            </ChartLegends>
+            <ChartTitles>
+              <ChartTitle Name="Title1">
+                <Caption>="Project Metrics"</Caption>
+                <Style>
+                  <BackgroundGradientType>None</BackgroundGradientType>
+                  <FontSize>=Parameters!Font.Value &amp; "pt"</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextAlign>General</TextAlign>
+                  <VerticalAlign>Top</VerticalAlign>
+                  <Color>White</Color>
+                </Style>
+              </ChartTitle>
+            </ChartTitles>
+            <Palette>BrightPastel</Palette>
+            <DynamicHeight>=(Parameters!Height.Value) &amp; "in"</DynamicHeight>
+            <DynamicWidth>=(Parameters!Width.Value) &amp; "in"</DynamicWidth>
+            <ChartBorderSkin>
+              <Style>
+                <BackgroundColor>Gray</BackgroundColor>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <Color>White</Color>
+              </Style>
+            </ChartBorderSkin>
+            <ChartNoDataMessage Name="NoDataMessage">
+              <Caption>No Data Available</Caption>
+              <Style>
+                <BackgroundGradientType>None</BackgroundGradientType>
+                <TextAlign>General</TextAlign>
+                <VerticalAlign>Top</VerticalAlign>
+                <Color>White</Color>
+              </Style>
+            </ChartNoDataMessage>
+            <DataSetName>DataSet1</DataSetName>
+            <Height>3.86111in</Height>
+            <Width>3.2in</Width>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+              </Border>
+              <BackgroundColor>Black</BackgroundColor>
+              <BackgroundGradientType>None</BackgroundGradientType>
+            </Style>
+          </Chart>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Height>3.86111in</Height>
+        <Width>3.2in</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Rectangle>
+      <Tablix Name="Tablix2">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox13">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Segment </Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox13</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox15">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Portfolio </Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox15</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox17">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Service</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox17</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox19">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Application</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox19</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox21">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Work  ID</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox21</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox23">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Work Name</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox23</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Last Modified Date</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox25">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>PM</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox25</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox27">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>PM Confidence</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox27</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox29">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Schedule</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox29</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox31">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value EvaluationMode="Constant">Risk</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox31</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox33">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Cost</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox33</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox35">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Quality</Value>
+                              <Style>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox35</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="SegmentName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!SegmentName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>SegmentName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="PortfolioName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!PortfolioName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>PortfolioName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ServiceName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!ServiceName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ServiceName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Application">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Application.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Application</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ProjectIdentifier">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!WorkID.Value</Value>
+                              <Style>
+                                <TextDecoration>Underline</TextDecoration>
+                                <Color>Blue</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ProjectIdentifier</rd:DefaultName>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>="http://itapps.intel.com/MyITE/Work/redirect.html?" &amp; Fields!WorkID.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ProjectName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!WorkName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ProjectName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="LastModifiedDate">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!LastModifiedDate.Value</Value>
+                              <Style>
+                                <Format>M/d/yy</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>LastModifiedDate</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="PMName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!PMName.Value</Value>
+                              <Style />
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>PMName</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Image Name="Image2">
+                      <Source>Embedded</Source>
+                      <Value>=iif(Fields!PMConfidence.Value="Not Used", "GrayDot",iif(Fields!PMConfidence.Value="green", "GreenDot",iif(Fields!PMConfidence.Value="yellow", "YellowDot", iif(Fields!PMConfidence.Value="red",  "RedDot", "GrayDot"))))</Value>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>27pt</PaddingLeft>
+                        <PaddingTop>5pt</PaddingTop>
+                      </Style>
+                    </Image>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Image Name="Image4">
+                      <Source>Embedded</Source>
+                      <Value>=Microsoft.VisualBasic.Interaction.iif(Fields!Schedule.Value = "Not Used", "GrayDot", Microsoft.VisualBasic.Interaction.iif(Fields!Schedule.Value = "green", "GreenDot", Microsoft.VisualBasic.Interaction.iif(Fields!Schedule.Value = "yellow", "YellowDot", Microsoft.VisualBasic.Interaction.iif(Fields!Schedule.Value = "red", "RedDot", "GrayDot"))))</Value>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>27pt</PaddingLeft>
+                        <PaddingTop>5pt</PaddingTop>
+                      </Style>
+                    </Image>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Image Name="Image5">
+                      <Source>Embedded</Source>
+                      <Value>=Microsoft.VisualBasic.Interaction.iif(Fields!TechnicalRisk.Value = "Not Used", "GrayDot", Microsoft.VisualBasic.Interaction.iif(Fields!TechnicalRisk.Value = "green", "GreenDot", Microsoft.VisualBasic.Interaction.iif(Fields!TechnicalRisk.Value= "yellow", "YellowDot", Microsoft.VisualBasic.Interaction.iif(Fields!TechnicalRisk.Value = "red", "RedDot", "GrayDot"))))</Value>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>27pt</PaddingLeft>
+                        <PaddingTop>5pt</PaddingTop>
+                      </Style>
+                    </Image>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Image Name="Image3">
+                      <Source>Embedded</Source>
+                      <Value>=Microsoft.VisualBasic.Interaction.iif(Fields!Cost.Value = "Not Used", "GrayDot", Microsoft.VisualBasic.Interaction.iif(Fields!Cost.Value = "green", "GreenDot", Microsoft.VisualBasic.Interaction.iif(Fields!Cost.Value = "yellow", "YellowDot", Microsoft.VisualBasic.Interaction.iif(Fields!Cost.Value = "red", "RedDot", "GrayDot"))))</Value>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <PaddingLeft>27pt</PaddingLeft>
+                        <PaddingTop>5pt</PaddingTop>
+                      </Style>
+                    </Image>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Image Name="Image6">
+                      <Source>Embedded</Source>
+                      <Value>=Microsoft.VisualBasic.Interaction.iif(Fields!Quality.Value = "Not Used", "GrayDot", Microsoft.VisualBasic.Interaction.iif(Fields!Quality.Value = "green", "GreenDot", Microsoft.VisualBasic.Interaction.iif(Fields!Quality.Value = "yellow", "YellowDot", Microsoft.VisualBasic.Interaction.iif(Fields!Quality.Value= "red", "RedDot", "GrayDot"))))</Value>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <RightBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>27pt</PaddingLeft>
+                        <PaddingTop>5pt</PaddingTop>
+                      </Style>
+                    </Image>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <KeepWithGroup>After</KeepWithGroup>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="Details" />
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>DataSet2</DataSetName>
+        <Top>3.80083in</Top>
+        <Height>0.5in</Height>
+        <Width>13in</Width>
+        <ZIndex>1</ZIndex>
+        <Visibility>
+          <Hidden>=iif(Parameters!Type.Value="Export",False,True)</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+    </ReportItems>
+    <Height>4.32292in</Height>
+    <Style />
+  </Body>
+  <Width>13in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>OLAPMart</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>b8c653f4-a8a4-44f6-b927-4776424643e3</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="Font">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Width">
+            <Value>=Parameters!Width.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT        GlobalData.dbo.Calculate_FontSizeFromWidth(@Width) AS Font</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Font">
+          <DataField>Font</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Service">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@UserType">
+            <Value>=Parameters!UserType.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>IF (@UserType = 'Segment') SELECT DISTINCT SegmentName AS Label, SegmentID AS Value
+FROM            PPData.[dbo].[vw_NextGen_ActivePortfolioService]
+ORDER BY Label
+
+
+
+
+IF (@UserType = 'Portfolio')
+SELECT DISTINCT Label, Value
+FROM            (SELECT DISTINCT PortfolioName AS Label, PortfolioID AS Value, SegmentID
+FROM            PPData.dbo.vw_NextGen_ActivePortfolioService) AS Temp
+ORDER BY Label 
+
+
+
+IF (@UserType = 'Service')
+SELECT DISTINCT Label, Value
+FROM            (SELECT DISTINCT ServiceName AS Label, ServiceID AS Value
+FROM            PPData.dbo.vw_NextGen_ActivePortfolioService) AS Temp
+WHERE        Label &lt;&gt; ''
+ORDER BY Label</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Label">
+          <DataField>Label</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Service">
+            <Value>=Parameters!Service.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@UserType">
+            <Value>=Parameters!UserType.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>IF (@UserType='Segment')
+SELECT DISTINCT 
+Color, Metric, COUNT(PerfID) AS NumRecords, 
+CASE WHEN Metric = 'PMConfidence' THEN 1 WHEN Metric = 'Schedule' THEN 2 WHEN Metric = 'TechnicalRisk' THEN 3 WHEN Metric =
+'Cost' THEN 4 WHEN Metric = 'Quality' THEN 5 END AS ord, 
+CASE WHEN Color = 'green' THEN 1 WHEN Color = 'yellow' THEN 2 WHEN Color = 'red' THEN 3 WHEN Color = 'gray' THEN 4 END AS ColorOrd
+FROM            (SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(PMConfidence, 
+'gray') AS Color, 'PMConfidence' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Schedule, 
+'gray') AS Color, 'Schedule' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(TechnicalRisk, 
+'gray') AS Color, 'TechnicalRisk' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Cost, 'gray') 
+AS Color, 'Cost' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active') Temp
+WHERE (SegmentID IN (@Service)) 
+GROUP BY Color, Metric
+ORDER BY ord
+
+
+IF (@UserType='Portfolio')
+SELECT DISTINCT 
+Color, Metric, COUNT(PerfID) AS NumRecords, 
+CASE WHEN Metric = 'PMConfidence' THEN 1 WHEN Metric = 'Schedule' THEN 2 WHEN Metric = 'TechnicalRisk' THEN 3 WHEN Metric =
+'Cost' THEN 4 WHEN Metric = 'Quality' THEN 5 END AS ord, 
+CASE WHEN Color = 'green' THEN 1 WHEN Color = 'yellow' THEN 2 WHEN Color = 'red' THEN 3 WHEN Color = 'gray' THEN 4 END AS ColorOrd
+FROM            (SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(PMConfidence, 
+'gray') AS Color, 'PMConfidence' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Schedule, 
+'gray') AS Color, 'Schedule' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(TechnicalRisk, 
+'gray') AS Color, 'TechnicalRisk' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Cost, 'gray') 
+AS Color, 'Cost' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active') Temp
+WHERE (PortfolioID IN (@Service)) 
+GROUP BY Color, Metric
+ORDER BY ord
+
+IF (@UserType='Service')
+SELECT DISTINCT 
+Color, Metric, COUNT(PerfID) AS NumRecords, 
+CASE WHEN Metric = 'PMConfidence' THEN 1 WHEN Metric = 'Schedule' THEN 2 WHEN Metric = 'TechnicalRisk' THEN 3 WHEN Metric =
+'Cost' THEN 4 WHEN Metric = 'Quality' THEN 5 END AS ord, 
+CASE WHEN Color = 'green' THEN 1 WHEN Color = 'yellow' THEN 2 WHEN Color = 'red' THEN 3 WHEN Color = 'gray' THEN 4 END AS ColorOrd
+FROM            (SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(PMConfidence, 
+'gray') AS Color, 'PMConfidence' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Schedule, 
+'gray') AS Color, 'Schedule' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(TechnicalRisk, 
+'gray') AS Color, 'TechnicalRisk' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Cost, 'gray') 
+AS Color, 'Cost' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active'
+UNION
+SELECT DISTINCT 
+ISNULL(pmm.PerformanceID, 0) AS PerfID, pmm.ServiceID, pmm.PortfolioID, SegmentID, IAPID, ISNULL(Quality, 'gray') 
+AS Color, 'Quality' AS Metric
+FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm JOIN
+PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.ServiceID = pmm.ServiceID LEFT JOIN
+PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID
+WHERE        ITStatus = 'Active') Temp
+WHERE (ServiceID IN (@Service)) 
+GROUP BY Color, Metric
+ORDER BY ord</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="NumRecords">
+          <DataField>NumRecords</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Color">
+          <DataField>Color</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Metric">
+          <DataField>Metric</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ord">
+          <DataField>ord</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ColorOrd">
+          <DataField>ColorOrd</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="DataSet2">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@UserType">
+            <Value>=Parameters!UserType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Service">
+            <Value>=Parameters!Service.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>IF (@UserType = 'Segment') SELECT DISTINCT 
+                                                                                       SegmentName, pmm.PortfolioName, pmm.ServiceName, Label AS Application, proj.PMName, 
+                                                                                       CASE WHEN RecordTypeID = 1 THEN pmm.ProgramIdentifier WHEN RecordTypeID = 2 THEN pmm.ProjectIdentifier END AS WorkID, 
+                                                                                       CASE WHEN RecordTypeID = 1 THEN pmm.ProgramName WHEN RecordTypeID = 2 THEN pmm.ProjectName END AS WorkName, 
+                                                                                       ISNULL(PMConfidence, 'gray') AS PMConfidence, ISNULL(Schedule, 'gray') AS Schedule, ISNULL(TechnicalRisk, 'gray') 
+                                                                                       AS TechnicalRisk, ISNULL(Cost, 'gray') AS Cost, ISNULL(Quality, 'gray') AS Quality, LastModifiedDate
+                                                              FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm INNER JOIN
+                                                                                       PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.PortfolioID = pmm.PortfolioID LEFT JOIN
+                                                                                       PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.PerformanceID = pmm.PerformanceID LEFT OUTER JOIN
+                                                                                       EDashData.dbo.vw_EDashApps da ON da.Value = IAPID AND da.ServiceID = pmm.ServiceID AND da.Label&lt;&gt;'SAP NW Portal Internal' LEFT OUTER JOIN
+                                                                                           (SELECT DISTINCT CASE WHEN PMName IS NULL THEN MDGPMName ELSE PMName END AS PMName, ProjectID
+                                                                                             FROM            PPData.dbo.vw_Performance_PMWorkDisplayData) AS proj ON proj.ProjectID = pmm.ProjectIdentifier
+                                                              WHERE        ITStatus = 'Active' AND SegmentID IN (@Service)  IF (@UserType = 'Portfolio')
+                                                                                           SELECT DISTINCT 
+                                                                                                                     SegmentName, pmm.PortfolioName, pmm.ServiceName, Label AS Application, proj.PMName, 
+                                                                                                                     CASE WHEN RecordTypeID = 1 THEN pmm.ProgramIdentifier WHEN RecordTypeID = 2 THEN pmm.ProjectIdentifier END AS
+                                                                                                                      WorkID, 
+                                                                                                                     CASE WHEN RecordTypeID = 1 THEN pmm.ProgramName WHEN RecordTypeID = 2 THEN pmm.ProjectName END AS WorkName,
+                                                                                                                      ISNULL(PMConfidence, 'gray') AS PMConfidence, ISNULL(Schedule, 'gray') AS Schedule, ISNULL(TechnicalRisk, 'gray') 
+                                                                                                                     AS TechnicalRisk, ISNULL(Cost, 'gray') AS Cost, ISNULL(Quality, 'gray') AS Quality, LastModifiedDate
+                                                                                            FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm INNER JOIN
+                                                                                                                     PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.PortfolioID = pmm.PortfolioID LEFT JOIN
+                                                                                                                     PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON dd.ProjectID = pmm.ProjectIdentifier LEFT OUTER JOIN
+                                                                                                                     EDashData.dbo.vw_EDashApps da ON da.Value = IAPID AND da.ServiceID = pmm.ServiceID AND da.Label&lt;&gt;'SAP NW Portal Internal' LEFT OUTER JOIN
+                                                                                                                         (SELECT DISTINCT 
+                                                                                                                                                     CASE WHEN PMName IS NULL THEN MDGPMName ELSE PMName END AS PMName, ProjectID
+                                                                                                                           FROM            PPData.dbo.vw_Performance_PMWorkDisplayData) AS proj ON 
+                                                                                                                     proj.ProjectID = pmm.ProjectIdentifier
+                                                                                            WHERE        ITStatus = 'Active' AND pmm.PortfolioID IN (@Service)   IF (@UserType = 'Service')
+                                                                                                                         SELECT DISTINCT 
+                                                                                                                                                   SegmentName, pmm.PortfolioName, pmm.ServiceName, Label AS Application, proj.PMName, 
+                                                                                                                                                   CASE WHEN RecordTypeID = 1 THEN pmm.ProgramIdentifier WHEN RecordTypeID = 2 THEN pmm.ProjectIdentifier
+                                                                                                                                                    END AS WorkID, 
+                                                                                                                                                   CASE WHEN RecordTypeID = 1 THEN pmm.ProgramName WHEN RecordTypeID = 2 THEN pmm.ProjectName
+                                                                                                                                                    END AS WorkName, ISNULL(PMConfidence, 'gray') AS PMConfidence, ISNULL(Schedule, 'gray') 
+                                                                                                                                                   AS Schedule, ISNULL(TechnicalRisk, 'gray') AS TechnicalRisk, ISNULL(Cost, 'gray') AS Cost, ISNULL(Quality, 
+                                                                                                                                                   'gray') AS Quality, LastModifiedDate
+                                                                                                                          FROM            PPData.dbo.vw_Performance_PMDetailsSummaryMetrics AS pmm INNER JOIN
+                                                                                                                                                   PPData.[dbo].[vw_NextGen_ActivePortfolioService] ps ON ps.PortfolioID = pmm.PortfolioID LEFT JOIN
+                                                                                                                                                   PPData.dbo.vw_Performance_PMWorkDisplayData AS dd ON 
+                                                                                                                                                   dd.ProjectID = pmm.ProjectIdentifier LEFT OUTER JOIN
+                                                                                                                                                   EDashData.dbo.vw_EDashApps da ON da.Value = IAPID AND da.ServiceID = pmm.ServiceID AND da.Label&lt;&gt;'SAP NW Portal Internal' LEFT OUTER JOIN
+                                                                                                                                                       (SELECT DISTINCT 
+                                                                                                                                                                                   CASE WHEN PMName IS NULL THEN MDGPMName ELSE PMName END AS PMName, 
+                                                                                                                                                                                   ProjectID
+                                                                                                                                                         FROM            PPData.dbo.vw_Performance_PMWorkDisplayData) AS proj ON 
+                                                                                                                                                   proj.ProjectID = pmm.ProjectIdentifier
+                                                                                                                          WHERE        ITStatus = 'Active' AND pmm.ServiceID IN (@Service)</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="SegmentName">
+          <DataField>SegmentName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PortfolioName">
+          <DataField>PortfolioName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServiceName">
+          <DataField>ServiceName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Application">
+          <DataField>Application</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PMName">
+          <DataField>PMName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="WorkID">
+          <DataField>WorkID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="WorkName">
+          <DataField>WorkName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PMConfidence">
+          <DataField>PMConfidence</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Schedule">
+          <DataField>Schedule</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TechnicalRisk">
+          <DataField>TechnicalRisk</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Cost">
+          <DataField>Cost</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Quality">
+          <DataField>Quality</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LastModifiedDate">
+          <DataField>LastModifiedDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="Roles">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=User!UserID</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Roles</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>=User!UserID</Value>
+            <Label>UserID</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Width">
+      <DataType>Float</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="3.2"</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Width</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="Height">
+      <DataType>Float</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="4.0"</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Height</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="Font">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Font</DataSetName>
+          <ValueField>Font</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Font</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="Type">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="Column"</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Type</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Column</Value>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Export</Value>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="UserType">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="Service"</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Filter By</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Segment</Value>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Portfolio</Value>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Service</Value>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Service">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Service</DataSetName>
+          <ValueField>Value</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Filter Selection</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Service</DataSetName>
+          <ValueField>Value</ValueField>
+          <LabelField>Label</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+  </ReportParameters>
+  <EmbeddedImages>
+    <EmbeddedImage Name="GreenDot">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAAXNSR0ICQMB9xQAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAAAEZSURBVEjHtZWrEsIwEEUjkUg+AdkZRBNqEAg+AcknICupqkRXYWg6g0EiEJWYpJWVSCQSCZu+hkJSOiEVN27PbO6+kOd5SCXKHIsmxAfFDaVkSxlZtMWqgOMowReAPNuFM8ps3AkMAS4EPH5DG/KD83ygBJdffeoJZwGbD7/ARaa60EIRn+4aYOGpxvflKouKhDfdCtVN+4TcBFNYMDMFreGMrFDek4bBlNvHPztBrpCTKxKP8YxBSJjdC9hkR7x3BniMox4yjsEKZ9kD2EVivs36DBMMk5yPtMmsQz7dfCwhA14zO63WZw0+sMnoP0tyCyzpPi7hJ51d/HlJpKdJLBGY97vu9VCCq+xht66lAwRe5kcWqq+KfwE+NpIl3dK9rAAAAABJRU5ErkJggg==</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="GrayDot">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0ICQMB9xQAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAAAEMSURBVEjHtZUhEoJAGIX/aDRyBCNHMBKNRo/gBYAlQTMSiRzBaCQajUajkaj/c3aZRXcBlyU8ZmDg28e/jwdlWUY2CSE2LBHH8UVXmqYnvhwOPWsDhhLwGlKSJDe+N5oE5gfyMaBBdVEUKyuYbygdoMp9o8N16N4VqoT96IH5fM0rPuaCmdFiwzswX6zmQpWw6R8wVvAF1UYSwe3RNxg5J7Z+9g1GvokP1wXAT/KRBpMAvi3guKUpneAAvrt2w5gq5Hi7QI4PhOLwmQyEAcyufzFwT253vXZDM3kA1z+1KUfSzPko2FtgLHpZn41LvFRdWn9NcI6x/DHzUnc6+DOV7gM0n+kNZIryb5e63mvKeoGfQ2mkAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="RedDot">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0ICQMB9xQAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAAAEISURBVEjHtZUhEsIwEEVXRiJ7hMoeAVmJRHIEjtAqJLKyskdAVlYikUgksgrKX2bLhE5SQljEn53pJC+b9OeHyrIknwaiFCruRK2tG9Ee37O5uT5gxgDUYU4Yc0LNg8DoZvcJOBXmNKjGC8aA6luo1X1nw+3tr2Ohloo3MD4ssOLlVzAYPf/wFxhHUCt0O8LbJ1gsNSgrZ/BWG8w+J7R+0Aazvxl8/AP4ShpucInkWmp33FNIJkSAz1HZEOCKmu22/MMZbxhsNJ0hZjB2/vZK8NU03QqFs21csWkkU6MvBWriDHqJzy7GXmNcep8m7lwe0D5w+5Xd6exjKgsknHyuHbCLxP+pb/4DNUWoHvyAc1UAAAAASUVORK5CYII=</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="YellowDot">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABYAAAAXCAYAAAAP6L+eAAAAAXNSR0ICQMB9xQAAAAlwSFlzAAAXEgAAFxIBZ5/SUgAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAAAEJSURBVEjHtZUhEsIwEEVXRiJ7hMoeAVmJRHIEjtAqJLKyskdAVlYikUgkMqpNd5ktEzpJCWEr/uxMJ3nZpD8/UJYl+GQMpKhiGKC11fdwxu/Z0lwfMCMAVrMkHHPDmgeBsZvTN+BcOKfBqrxgHFD9CrW672y4vf19LNRS8QHGDxtc8fEvGBmafvgbjEdQC3Q7wdsXmC1lhJUT+CgNJp8Dtn6RBpO/CXxdAfwECTe4BHwtpTvWEJIJEeB7VDYEuKImu21XOOMDgZWkM9gMys5fLQTfzdOtEDjbxhWbijM1+lJgTZxBz/HZxdhrikvv00Sd8wOqA7df2Z0uPqa8QELJ59oBuYj9n/rmj/S3UF9g9L7HAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>b208577c-5a44-4cfb-8099-9bb9a8781dee</rd:ReportID>
+</Report>

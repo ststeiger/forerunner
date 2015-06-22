@@ -1,0 +1,18 @@
+﻿.fr-dlb-form { margin-right: 16px; }
+  .fr-dlb-form .fr-dlb-error-span { display: block; font-size: 10pt; margin-left: 5px; }
+  .fr-dlb-form .fr-dlb-error-position { display: block; }
+  .fr-dlb-form .fr-dlb-error { border-width: thin; border-color: red; }
+    /* This will be made visibe if an error happens */
+  .fr-dlb-form .fr-dlb-submit-error { display: none; margin-top: 10px; overflow: auto; }
+
+.fr-dlb-loading-indicator { border: solid 2px #86A5AD; background: white url(../../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px; width: 148px; height: 28px; position: absolute; margin-left: auto; margin-right: auto; padding: 10px 10px 10px 50px; text-align: left; line-height: 27px; font-weight: bold; z-index: 2010; display: none; }
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+    .fr-dlb-form { margin-right: 4px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+    .fr-dlb-form { margin-right: 4px; }
+}

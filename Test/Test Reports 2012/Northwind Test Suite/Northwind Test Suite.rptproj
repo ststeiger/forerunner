@@ -75,16 +75,16 @@
       <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Customer Form.rdl</Name>
+      <FullPath>Customer Form.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Customer Information2.rdl</Name>
       <FullPath>Customer Information2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>CustomerForm.rdl</Name>
       <FullPath>CustomerForm.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Customer Form.rdl</Name>
-      <FullPath>Customer Form.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>CustUpdate.rdl</Name>
@@ -286,6 +286,10 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Project_Metrics.rdl</Name>
+      <FullPath>Project_Metrics.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

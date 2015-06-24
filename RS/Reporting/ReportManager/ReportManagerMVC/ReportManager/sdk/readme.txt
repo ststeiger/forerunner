@@ -1,6 +1,11 @@
 ﻿ForerunnerSDK
 
-After you have installed the ForerunnerSDK package you will need to
+Verify the install-package ran through successfully. If you see any errors
+in the "Package Manager Console", look at the forum article here:
+
+https://forerunnersw.com/SMForum/index.php?topic=92.msg179#msg179
+
+After the ForerunnerSDK package is installed, you will need to
 configure the settings. A Package Manager Console command has been
 supplied to make this as easy as possible.
 

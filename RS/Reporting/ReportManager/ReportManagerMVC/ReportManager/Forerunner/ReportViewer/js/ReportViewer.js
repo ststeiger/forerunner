@@ -659,29 +659,29 @@ $(function () {
             //Turn this off, just leave zoom on.
 
             return;
-            if (!me.reportPath || me.reportPath === "")
-                return;
+            //if (!me.reportPath || me.reportPath === "")
+            //    return;
 
-            // Save a copy of the page into the action history
-            me.backupCurPage(true);
+            //// Save a copy of the page into the action history
+            //me.backupCurPage(true);
 
-            // Make the action history ready to stringify (I.e., remove any unneeded object references)
-            $.each(me.actionHistory, function (index, actionItem) {
-                $.each(actionItem.reportPages, function (index, reportPage) {
-                    reportPage.$container = null;
-                    reportPage.CSS = null;
-                    reportPage.isRendered = false;
-                });
-            });
+            //// Make the action history ready to stringify (I.e., remove any unneeded object references)
+            //$.each(me.actionHistory, function (index, actionItem) {
+            //    $.each(actionItem.reportPages, function (index, reportPage) {
+            //        reportPage.$container = null;
+            //        reportPage.CSS = null;
+            //        reportPage.isRendered = false;
+            //    });
+            //});
 
-            // Save the action history into the session storage
-            sessionStorage.forerunner_zoomReload_actionHistory = JSON.stringify({ actionHistory: me.actionHistory });
+            //// Save the action history into the session storage
+            //sessionStorage.forerunner_zoomReload_actionHistory = JSON.stringify({ actionHistory: me.actionHistory });
 
-            // Save the reuested zoom state
-            sessionStorage.forerunner_zoomReload_userZoom = JSON.stringify({ userZoom: isEnabled ? "zoom" : "fixed" });
+            //// Save the reuested zoom state
+            //sessionStorage.forerunner_zoomReload_userZoom = JSON.stringify({ userZoom: isEnabled ? "zoom" : "fixed" });
 
-            // Now reload the page from the saved state
-            window.location.reload();
+            //// Now reload the page from the saved state
+            //window.location.reload();
         },
 
         /**
@@ -2174,6 +2174,7 @@ $(function () {
             var me = this;
 
             var newParamsList = typeof (mergeParamsList) === "string" ? JSON.parse(mergeParamsList) : mergeParamsList;
+            var param;
 
             // Convert the given array into a map
             var newParamsMap = {};
@@ -2187,12 +2188,12 @@ $(function () {
             if (paramsList === null || paramsList.ParamsList === null) {
                 paramsList = {
                     ParamsList: []
-                }
+                };
             }
 
             // Convert the ParamsList into a map
             var paramsMap = {};
-            for (var i = 0; i < paramsList.ParamsList.length; i++) {
+            for ( i = 0; i < paramsList.ParamsList.length; i++) {
                 param = paramsList.ParamsList[i];
                 paramsMap[param.Parameter] = param;
             }
@@ -2207,7 +2208,7 @@ $(function () {
             }
 
             // Refresh the report
-            me.refreshParameters(paramsList, submitForm)
+            me.refreshParameters(paramsList, submitForm);
         },
         /**
          * Refresh the parameter using the given list
@@ -2360,7 +2361,7 @@ $(function () {
                 return;
             }
 
-            if (me.reportPath && me.reportPath != "" && me.reportPath !== reportPath) {
+            if (me.reportPath && me.reportPath !== "" && me.reportPath !== reportPath) {
                 //Do some clean work if it's a new report
                 me.backupCurPage(true);
                 me.sessionID = "";

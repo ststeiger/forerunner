@@ -1134,7 +1134,10 @@ namespace Forerunner.SSRS.JSONRender
             if (RPL.InspectByte() == 0x0B || RPL.InspectByte() == 0x07)
             {
                 RPL.position++;
-                WriteJSONActionInfoContent();
+
+                //check for empty action
+                if (RPL.InspectByte() != 0xff)
+                    WriteJSONActionInfoContent();
 
                 if (RPL.ReadByte() != 0xFF)
                     ThrowParseError();

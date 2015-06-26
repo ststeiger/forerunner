@@ -1028,11 +1028,11 @@ table, td, tr div {
 
 .fr-report-item-outer-image {background-size: 100%; background-image: url(../../reportexplorer/Images/report_bkg.png); }
 
-.fr-report-item-ear-image { background-size: 100%;background-image: url(../../reportexplorer/Images/report_ear.png); z-index:5; position: absolute;  top: 0px; right: 0px;}
+.fr-report-item-ear-image { background-size: 100%;background-image: url(../../reportexplorer/Images/report_ear.png);position: absolute;  top: 0px; right: 0px;}
 
-.fr-explorer-item-ear-selcted {background-size: 100%; background-image: url(../../reportexplorer/Images/report_ear_selected.png); z-index:5; position: absolute;  top: 0px; right: 0px;}
+.fr-explorer-item-ear-selcted {background-size: 100%; background-image: url(../../reportexplorer/Images/report_ear_selected.png); position: absolute;  top: 0px; right: 0px;}
 
-.fr-explorer-item-earcorner { width: 66px; height: 66px; z-index: 4; position: absolute;  top: 0px; right: 0px;}
+.fr-explorer-item-earcorner { width: 66px; height: 66px; position: absolute;  top: 0px; right: 0px;}
 
 .fr-report-item-inner-image { height: 170px; width: 125px; position: absolute; top: 40px; left: 25px; padding-left: 10px; padding-right: 10px; margin: 4px; }
 

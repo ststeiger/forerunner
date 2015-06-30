@@ -20,7 +20,7 @@ namespace Forerunner.Security
             {
                 string value = ConfigurationManager.AppSettings["Forerunner.ImpersonateCaller"];
 
-                if (String.Equals("true", value.ToLower()))
+                if (value != null && String.Equals("true", value.ToLower()))
                     ImpersonateCallerSet = true;
 
                 CheckConfig = true;

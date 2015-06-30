@@ -653,7 +653,7 @@ $(function () {
                         $(window).scrollLeft(0);
                         me.ResetSize();
                     }, 50);
-                }
+                };
             }
 
             return null;
@@ -678,7 +678,7 @@ $(function () {
                         if (me.ResetSize)
                             me.ResetSize();
                     }, 50);
-                }
+                };
             }
 
             return null;

@@ -200,6 +200,10 @@
       <FullPath>ProductSales.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Project_Metrics.rdl</Name>
+      <FullPath>Project_Metrics.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Report1.rdl</Name>
       <FullPath>Report1.rdl</FullPath>
     </ProjectItem>
@@ -288,8 +292,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Project_Metrics.rdl</Name>
-      <FullPath>Project_Metrics.rdl</FullPath>
+      <Name>Video Test.rdl</Name>
+      <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

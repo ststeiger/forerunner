@@ -8,8 +8,36 @@ using System.Web.Security;
 
 namespace Forerunner.Security
 {
-    internal class CurrentUserImpersonator : IDisposable
+
+    public class CurrentUserImpersonator : IDisposable
     {
+        public static bool ImpersonateCaller = ForerunnerUtil.GetAppSetting("Forerunner.ImpersonateCaller", false);
+        public static void RunAsCurrentUser(Action action)
+        {
+
+            WindowsImpersonationContext impersonationContext = null;
+            WindowsIdentity WI = (WindowsIdentity)HttpContext.Current.User.Identity;
+
+            try
+            {
+                if (ImpersonateCaller)
+                    impersonationContext = WI.Impersonate();
+
+                action.Invoke();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                if (impersonationContext != null)
+                {
+                    impersonationContext.Undo();
+                }
+            }
+        }
+
         public CurrentUserImpersonator()
         {
             if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)

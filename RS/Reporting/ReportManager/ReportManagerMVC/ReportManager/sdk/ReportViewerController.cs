@@ -11,6 +11,7 @@ using Forerunner.SSRS.Viewer;
 using Forerunner;
 using System.IO;
 using Forerunner.Logging;
+using Forerunner.Security;
 
 namespace ReportManager.Controllers
 {
@@ -107,13 +108,17 @@ namespace ReportManager.Controllers
         [ActionName("Image")]
         public HttpResponseMessage Image( string SessionID, string ImageID, string instance = null)
         {
+
+            byte[] retval = null;
+            string mimeType = null;
             try
             {
-                byte[] result = null;
-                string mimeType;
-                result = GetReportViewer(instance).GetImage(SessionID, ImageID, out mimeType);
-                return GetResponseFromBytes(result, mimeType,true);
-            }
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {                    
+                    retval = GetReportViewer(instance).GetImage(SessionID, ImageID, out mimeType);                    
+                });
+                return GetResponseFromBytes(retval, mimeType, true);
+            }            
             catch(Exception e)
             {
                 ExceptionLogGenerator.LogException(e);
@@ -128,8 +133,11 @@ namespace ReportManager.Controllers
         {
             byte[] result = null;
             try
-            {                
-                result = GetReportViewer(instance).GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
+            {
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {
+                    result = GetReportViewer(instance).GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
+                });
                 return GetResponseFromBytes(result, "image/JPEG",true);
 
             }
@@ -146,7 +154,13 @@ namespace ReportManager.Controllers
         {
             try
             {
-               return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
+                Stream result = null;
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {
+                    result = GetReportViewer(postBackValue.Instance).GetReportJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials);
+                });
+
+                return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
             {
@@ -162,7 +176,10 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {
+                    result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
+                });                
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -180,7 +197,11 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(instance).GetDocMapJson(SessionID));
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {
+                    result = Encoding.UTF8.GetBytes(GetReportViewer(instance).GetDocMapJson(SessionID));
+                }); 
+                
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -199,7 +220,10 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(instance).SortReport(SessionID, SortItem, Direction, ClearExistingSort));
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+               {
+                   result = Encoding.UTF8.GetBytes(GetReportViewer(instance).SortReport(SessionID, SortItem, Direction, ClearExistingSort));
+               });
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -216,7 +240,11 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(instance).pingSession(PingSessionID));
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+               {
+                   result = Encoding.UTF8.GetBytes(GetReportViewer(instance).pingSession(PingSessionID));
+               });
+
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -240,7 +268,10 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = GetReportViewer(instance).NavigateTo(NavType,SessionID,UniqueID);
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+               {
+                   result = GetReportViewer(instance).NavigateTo(NavType, SessionID, UniqueID);
+               });
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -258,8 +289,11 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(instance).FindString(SessionID, StartPage, EndPage, FindValue));
-                return GetResponseFromBytes(result, "text/JSON");
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+               {
+                   result = Encoding.UTF8.GetBytes(GetReportViewer(instance).FindString(SessionID, StartPage, EndPage, FindValue));
+               });
+               return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
             {
@@ -275,10 +309,13 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                string mimeType;
-                string fileName;
-                result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ExportType, out mimeType, out fileName);
-                return GetResponseFromBytes(result, mimeType, false, fileName);
+                string mimeType = null;
+                string fileName = null;
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+               {
+                   result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ExportType, out mimeType, out fileName);
+               });
+               return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch(Exception e)
             {
@@ -294,9 +331,13 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                string mimeType;
-                string fileName;
-                result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, PrintPropertyString, out mimeType, out fileName);
+                string mimeType = null;
+                string fileName = null;
+                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                {
+                  result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, PrintPropertyString, out mimeType, out fileName);
+                });
+
                 return GetResponseFromBytes(result, mimeType, false);
             }
             catch (Exception e)

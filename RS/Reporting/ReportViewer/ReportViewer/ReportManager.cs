@@ -223,7 +223,7 @@ namespace Forerunner.SSRS.Manager
             {
                 builder.IntegratedSecurity = true;
             }
-            else
+            else if (DBCredentials.UserName != null && DBCredentials.Password !=null)
             {
                 builder.UserID = DBCredentials.UserName;
                 String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
@@ -275,7 +275,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     builder.IntegratedSecurity = true;
                 }
-                else
+                else if (DBCredentials.UserName != null && DBCredentials.Password !=null)
                 {
 
                     builder.UserID = DBCredentials.UserName;

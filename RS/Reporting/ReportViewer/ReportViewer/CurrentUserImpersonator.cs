@@ -29,10 +29,13 @@ namespace Forerunner.Security
             WindowsImpersonationContext impersonationContext = null;            
             try
             {
-                WindowsIdentity WI = (WindowsIdentity)HttpContext.Current.User.Identity;
+
 
                 if (ImpersonateCallerSet)
+                {
+                    WindowsIdentity WI = (WindowsIdentity)HttpContext.Current.User.Identity;
                     impersonationContext = WI.Impersonate();
+                }
 
                 action.Invoke();
             }

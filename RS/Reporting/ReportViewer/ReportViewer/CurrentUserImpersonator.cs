@@ -5,22 +5,33 @@ using System.Text;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
+using System.Configuration;
 
 namespace Forerunner.Security
 {
-
-    public class CurrentUserImpersonator : IDisposable
+    public static class ImpersonateCaller
     {
-        public static bool ImpersonateCaller = ForerunnerUtil.GetAppSetting("Forerunner.ImpersonateCaller", false);
+        public static bool ImpersonateCallerSet = false;
+        private static bool CheckConfig = false;
+
         public static void RunAsCurrentUser(Action action)
         {
+            if (!CheckConfig)
+            {
+                string value = ConfigurationManager.AppSettings["Forerunner.ImpersonateCaller"];
 
-            WindowsImpersonationContext impersonationContext = null;
-            WindowsIdentity WI = (WindowsIdentity)HttpContext.Current.User.Identity;
+                if (String.Equals("true", value.ToLower()))
+                    ImpersonateCallerSet = true;
 
+                CheckConfig = true;
+            }
+
+            WindowsImpersonationContext impersonationContext = null;            
             try
             {
-                if (ImpersonateCaller)
+                WindowsIdentity WI = (WindowsIdentity)HttpContext.Current.User.Identity;
+
+                if (ImpersonateCallerSet)
                     impersonationContext = WI.Impersonate();
 
                 action.Invoke();
@@ -37,6 +48,10 @@ namespace Forerunner.Security
                 }
             }
         }
+    }
+
+    public class CurrentUserImpersonator : IDisposable
+    {      
 
         public CurrentUserImpersonator()
         {

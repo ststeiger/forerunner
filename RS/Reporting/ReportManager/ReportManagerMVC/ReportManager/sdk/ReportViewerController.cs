@@ -113,7 +113,7 @@ namespace ReportManager.Controllers
             string mimeType = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {                    
                     retval = GetReportViewer(instance).GetImage(SessionID, ImageID, out mimeType);                    
                 });
@@ -134,7 +134,7 @@ namespace ReportManager.Controllers
             byte[] result = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportViewer(instance).GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
                 });
@@ -155,7 +155,7 @@ namespace ReportManager.Controllers
             try
             {
                 Stream result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportViewer(postBackValue.Instance).GetReportJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials);
                 });
@@ -176,7 +176,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(postBackValue.ReportPath, postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
                 });                
@@ -197,7 +197,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = Encoding.UTF8.GetBytes(GetReportViewer(instance).GetDocMapJson(SessionID));
                 }); 
@@ -220,7 +220,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                {
                    result = Encoding.UTF8.GetBytes(GetReportViewer(instance).SortReport(SessionID, SortItem, Direction, ClearExistingSort));
                });
@@ -240,7 +240,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                {
                    result = Encoding.UTF8.GetBytes(GetReportViewer(instance).pingSession(PingSessionID));
                });
@@ -268,7 +268,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                {
                    result = GetReportViewer(instance).NavigateTo(NavType, SessionID, UniqueID);
                });
@@ -289,7 +289,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                {
                    result = Encoding.UTF8.GetBytes(GetReportViewer(instance).FindString(SessionID, StartPage, EndPage, FindValue));
                });
@@ -311,7 +311,7 @@ namespace ReportManager.Controllers
                 byte[] result = null;
                 string mimeType = null;
                 string fileName = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                {
                    result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ExportType, out mimeType, out fileName);
                });
@@ -333,7 +333,7 @@ namespace ReportManager.Controllers
                 byte[] result = null;
                 string mimeType = null;
                 string fileName = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                   result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, PrintPropertyString, out mimeType, out fileName);
                 });

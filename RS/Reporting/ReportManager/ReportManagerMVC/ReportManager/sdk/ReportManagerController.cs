@@ -276,7 +276,7 @@ namespace ReportManager.Controllers
             try
             {
                 CatalogItem[] items = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                  {
                      items = GetReportManager(instance).GetItems(view, path);
                  });
@@ -301,7 +301,7 @@ namespace ReportManager.Controllers
             try
             {
                 CatalogItem[] matchesItems = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                  {
                      matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
                  });
@@ -321,7 +321,7 @@ namespace ReportManager.Controllers
             try
             {
                 string prop = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     prop = GetReportManager(instance).GetItemProperty(path, propertyName);
                 });
@@ -348,7 +348,7 @@ namespace ReportManager.Controllers
             try
             {
                 string result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
                 });
@@ -372,7 +372,7 @@ namespace ReportManager.Controllers
 
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     GetReportManager(instance).SaveThumbnail(ReportPath, SessionID);
                 });
@@ -397,7 +397,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = GetReportManager(instance).GetCatalogImage(ReportPath);
                 });
@@ -415,7 +415,7 @@ namespace ReportManager.Controllers
             string retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = GetReportManager(instance).GetCatalogPermission(path, permission);
                 });
@@ -434,7 +434,7 @@ namespace ReportManager.Controllers
             string mimetype = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
                 });
@@ -451,7 +451,7 @@ namespace ReportManager.Controllers
             string mimetype = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportManager(instance).GetCatalogContents(path, itemtype, out mimetype);
                 });
@@ -467,7 +467,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                    retval= Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource));
                 });
@@ -486,7 +486,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path, safeFolderDelete));
                 });
@@ -509,7 +509,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path));
                 });
@@ -532,7 +532,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).IsFavorite(path));
                 });
@@ -556,7 +556,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath));
                 });
@@ -579,7 +579,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval =Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters));
                 });
@@ -602,7 +602,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings());
                 });
@@ -619,7 +619,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserName());
                 });
@@ -642,7 +642,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings));
                 });
@@ -666,7 +666,7 @@ namespace ReportManager.Controllers
             {
                 info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info));
                 });
@@ -689,7 +689,7 @@ namespace ReportManager.Controllers
             Forerunner.SSRS.Manager.SubscriptionInfo info = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                      info = GetReportManager(instance).GetSubscription(subscriptionID);
                 });
@@ -731,7 +731,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteSubscription(subscriptionID));
                 });
@@ -755,7 +755,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListSubscriptions(reportPath, null)));
                 });
@@ -774,7 +774,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListMySubscriptions()));
                 });
@@ -797,7 +797,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListDeliveryExtensions()));
                 });
@@ -820,7 +820,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).GetExtensionSettings(extension)));
                 });
@@ -843,7 +843,7 @@ namespace ReportManager.Controllers
             byte[] retval = null;
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListSchedules(null)));
                 });
@@ -869,7 +869,7 @@ namespace ReportManager.Controllers
                 
                 if (!d.TagsChecked)
                 {
-                    CurrentUserImpersonator.RunAsCurrentUser(() =>
+                    ImpersonateCaller.RunAsCurrentUser(() =>
                     {
                         d.Tags = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path));
                     });
@@ -899,7 +899,7 @@ namespace ReportManager.Controllers
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
             {
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
                 });
@@ -920,7 +920,7 @@ namespace ReportManager.Controllers
             try
             {
                 string result = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     result = GetReportManager(instance).GetItemPolicies(itemPath);
                 });
@@ -946,7 +946,7 @@ namespace ReportManager.Controllers
             {
 
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(policy.instance).SetItemPolicies(policy.itemPath, policy.policies));
                 });                
@@ -964,7 +964,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListRoles(type, itemPath)));
                 });
@@ -987,7 +987,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(inheritParent.instance).InheritParentSecurity(inheritParent.itemPath)));
                 });
@@ -1006,7 +1006,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath));
                 });
@@ -1025,7 +1025,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerVersion(MobilizerVersionPath));
                 });
@@ -1044,7 +1044,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).GetCatalog(rootPath, showLinkedReport)));
                 });
@@ -1062,7 +1062,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportLink(path));
                 });
@@ -1086,7 +1086,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).SetReportLink(linkedReport.linkedReportPath, linkedReport.newLink));
                 });
@@ -1110,7 +1110,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).CreateLinkedReport(linkedReport.name, linkedReport.parent, linkedReport.link));
                 });
@@ -1127,7 +1127,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(data.instance).NewFolder(data));
                 });
@@ -1197,7 +1197,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data));
                 });
@@ -1223,7 +1223,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(data.instance).MoveItem(data));
                 });
@@ -1242,7 +1242,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] retval = null;
-                CurrentUserImpersonator.RunAsCurrentUser(() =>
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetDBConfiguration());
                 });

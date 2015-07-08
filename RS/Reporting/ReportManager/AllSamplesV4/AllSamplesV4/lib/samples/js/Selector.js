@@ -100,8 +100,8 @@ $(function () {
     var $reportViewerEZ = null;
     var $reportViewer = null;
 
-    // onClickReport will remove any existing report and create a new report viewer for
-    // the given report path.
+    // onClickReport will reload a new report into the given report viewer based upon the report
+    // path defined in e.data.Path
     var onClickReport = function (e) {
         // Get the report item from the event data
         var item = e.data;

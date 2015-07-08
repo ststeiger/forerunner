@@ -199,7 +199,7 @@ namespace AllSamplesV4.Areas.HelpPage
                 if (apiDescription != null)
                 {
                     HelpPageSampleGenerator sampleGenerator = config.GetHelpPageSampleGenerator();
-                    model = GenerateApiModel(apiDescription, sampleGenerator);
+                    model = GenerateApiModel(apiDescription, sampleGenerator, config);
                     config.Properties.TryAdd(modelId, model);
                 }
             }
@@ -208,13 +208,20 @@ namespace AllSamplesV4.Areas.HelpPage
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The exception is recorded as ErrorMessages.")]
-        private static HelpPageApiModel GenerateApiModel(ApiDescription apiDescription, HelpPageSampleGenerator sampleGenerator)
+        private static HelpPageApiModel GenerateApiModel(ApiDescription apiDescription, HelpPageSampleGenerator sampleGenerator, HttpConfiguration config)
         {
             HelpPageApiModel apiModel = new HelpPageApiModel();
             apiModel.ApiDescription = apiDescription;
 
             try
             {
+                // [jont] Used to get any returns tag information and include it in the documentation
+                IResponseDocumentationProvider responseDocProvider = config.Services.GetDocumentationProvider() as IResponseDocumentationProvider;
+                if (responseDocProvider != null)
+                {
+                    apiModel.ResponseDocumentation = responseDocProvider.GetResponseDocumentation(apiDescription.ActionDescriptor);
+                }
+
                 foreach (var item in sampleGenerator.GetSampleRequests(apiDescription))
                 {
                     apiModel.SampleRequests.Add(item.Key, item.Value);

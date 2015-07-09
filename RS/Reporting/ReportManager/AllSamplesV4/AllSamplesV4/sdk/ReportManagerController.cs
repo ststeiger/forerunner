@@ -271,7 +271,7 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// GetItems will return a collection of catalog items based upon the given view string
+        /// GetItems will return an array of catalog items based upon the given view string
         /// and path.
         /// </summary>
         /// <param name="view">View: "catalog", "recent", "favorites" or "searchfolder"</param>
@@ -413,8 +413,8 @@ namespace ReportManager.Controllers
         /// <summary>
         /// SaveReportProperty will save the properties to the given report path
         /// </summary>
-        /// <param name="postValue">Body parameters</param>
-        /// <returns>JSON Object</returns>
+        /// <param name="postValue">JSON object</param>
+        /// <returns>JSON object</returns>
         [HttpPost]
         [ActionName("SaveReportProperty")]
         public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
@@ -437,13 +437,13 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// SaveThumbnail will cause a thumbnail to be generated and saved for the given report path. The UseMobilizerDB
-        /// configuration option must be set to true in order to use SaveThumbnail.
+        /// SaveThumbnail will cause a thumbnail to be generated and saved for the given report path. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="ReportPath">Report path</param>
         /// <param name="SessionID">Current Session ID</param>
         /// <param name="instance"></param>
-        /// <returns>Status OK</returns>
+        /// <returns>Status OK (I.e., 200)</returns>
         [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
@@ -469,7 +469,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Thumbnail will return the requested thumbnail image (I.e. "image/JPEG") 
+        /// Thumbnail will return the requested thumbnail image (I.e. "image/JPEG"). Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="ReportPath">Report path</param>
         /// <param name="DefDate">not used</param>
@@ -583,7 +584,7 @@ namespace ReportManager.Controllers
         /// <summary>
         /// SaveResource will save the given resource defined by the setResource object
         /// </summary>
-        /// <param name="setResource"></param>
+        /// <param name="setResource">JSON object</param>
         /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage SaveResource(SetResource setResource)
@@ -603,6 +604,13 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Will delete the catalog item define by path from the database.
+        /// </summary>
+        /// <param name="path">Path of the item to delete</param>
+        /// <param name="safeFolderDelete">"true" to delete folders that have children</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object indicating status</returns>
         [HttpGet]
         [ActionName("DeleteCatalogItem")]
         public HttpResponseMessage DeleteCatalogItem(string path, string safeFolderDelete, string instance = null)
@@ -622,6 +630,15 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Adds or deletes a report / resource from the favorites view. Requires the
+        /// UseMobilizerDB configuration option.
+        /// </summary>
+        /// <param name="view">Must be "favorites"</param>
+        /// <param name="action">"add" or "delete"</param>
+        /// <param name="path">Path of the report / resource to add or delete from the favaorites view</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object indicating status</returns>
         [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
@@ -646,6 +663,12 @@ namespace ReportManager.Controllers
             
         }
 
+        /// <summary>
+        /// Tests if the given report / resource is contained in the favorites view
+        /// </summary>
+        /// <param name="path">Report / resource path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object</returns>
         [HttpGet]
         public HttpResponseMessage IsFavorite(string path, string instance = null)
         {
@@ -669,6 +692,65 @@ namespace ReportManager.Controllers
             
         }
 
+        /// <summary>
+        /// Returns any named parameter sets for the given reportPath and user
+        /// </summary>
+        /// <param name="reportPath">Report path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object that contains any named parameter sets. E.g.,
+        ///{
+        ///   "canEditAllUsersSet": true,
+        ///   "defaultSetId": "08cd351a-a0df-3e1c-d158-d5ee090f8ad7",
+        ///   "parameterSets": {
+        ///     "08cd351a-a0df-3e1c-d158-d5ee090f8ad7": {
+        ///       "isAllUser": false,
+        ///       "name": "Default",
+        ///       "id": "08cd351a-a0df-3e1c-d158-d5ee090f8ad7",
+        ///       "data": {
+        ///         "ParamsList": [
+        ///           {
+        ///             "Parameter": "StartDate",
+        ///             "IsMultiple": "false",
+        ///             "Type": "DateTime",
+        ///             "Value": "2002-01-01",
+        ///             "UseDefault": null
+        ///           },
+        ///           {
+        ///             "Parameter": "EndDate",
+        ///             "IsMultiple": "false",
+        ///             "Type": "DateTime",
+        ///             "Value": "2003-12-31",
+        ///             "UseDefault": null
+        ///           }
+        ///         ]
+        ///       }
+        ///     },
+        ///     "66512c24-826d-6090-fef9-4a11b9db9bf2": {
+        ///       "name": "Second Named Set",
+        ///       "id": "66512c24-826d-6090-fef9-4a11b9db9bf2",
+        ///       "data": {
+        ///         "ParamsList": [
+        ///           {
+        ///             "Parameter": "StartDate",
+        ///             "IsMultiple": "false",
+        ///             "Type": "DateTime",
+        ///             "Value": "2002-01-01",
+        ///             "UseDefault": null
+        ///           },
+        ///           {
+        ///             "Parameter": "EndDate",
+        ///             "IsMultiple": "false",
+        ///             "Type": "DateTime",
+        ///             "Value": "2003-12-07",
+        ///             "UseDefault": null
+        ///           }
+        ///         ]
+        ///       },
+        ///       "isAllUser": false
+        ///     }
+        ///   }
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetUserParameters(string reportPath, string instance = null)
         {
@@ -692,6 +774,11 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Saves the given named parameter sets
+        /// </summary>
+        /// <param name="saveParams">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
@@ -715,6 +802,18 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns the user settings for the current user
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON object that contains the user setting. E.g.,
+        /// {
+        ///   "responsiveUI": false,
+        ///   "adminUI": true,
+        ///   "email": "",
+        ///   "viewStyle": "large"
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetUserSettings(string instance = null)
         {
@@ -738,6 +837,11 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns the current user name
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>Current user name in text</returns>
         public HttpResponseMessage GetUserName(string instance = null)
         {
             byte[] retval = null;
@@ -755,6 +859,12 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
        }
 
+        /// <summary>
+        /// Saves the given user settings
+        /// </summary>
+        /// <param name="settings">JSON object. E.g., {"responsiveUI":true,"adminUI":true,"email":"","viewStyle":"large"}</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object indicating status</returns>
         [HttpGet]
         public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
         {
@@ -779,6 +889,11 @@ namespace ReportManager.Controllers
             
         }
 
+        /// <summary>
+        /// Creates an email subscription
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage CreateSubscription(SubscriptionInfoPostBack info)
         {
@@ -802,6 +917,102 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the subscription information based upon the given subscription id
+        /// </summary>
+        /// <param name="subscriptionID">Subscription ID</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object containing the requested subscription. E.g.,
+        /// {
+        ///   "SubscriptionID": "d174a766-2063-44f2-a440-1003f7538848",
+        ///   "Report": null,
+        ///   "ExtensionSettings": {
+        ///     "Extension": "Report Server Email",
+        ///     "ParameterValues": [
+        ///       {
+        ///         "Name": "TO",
+        ///         "Value": "TestAccount",
+        ///         "Label": null
+        ///       },
+        ///       {
+        ///         "Name": "Subject",
+        ///         "Value": "@ReportName was executed at @ExecutionTime",
+        ///         "Label": null
+        ///       },
+        ///       {
+        ///         "Name": "IncludeLink",
+        ///         "Value": "True",
+        ///         "Label": null
+        ///       },
+        ///       {
+        ///         "Name": "IncludeReport",
+        ///         "Value": "True",
+        ///         "Label": null
+        ///       },
+        ///       {
+        ///         "Name": "RenderFormat",
+        ///         "Value": "MHTML",
+        ///         "Label": null
+        ///       }
+        ///     ]
+        ///   },
+        ///   "Description": "Send email to TestAccount",
+        ///   "EventType": "TimedSubscription",
+        ///   "SubscriptionSchedule": {
+        ///     "Name": null,
+        ///     "ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c2",
+        ///     "MatchData": "\u003c?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?\u003e\u003cScheduleDefinition xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\u003e\u003cStartDateTime xmlns=\"http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices\"\u003e2013-12-30T02:00:00.000-08:00\u003c/StartDateTime\u003e\u003cWeeklyRecurrence xmlns=\"http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices\"\u003e\u003cWeeksInterval\u003e1\u003c/WeeksInterval\u003e\u003cDaysOfWeek\u003e\u003cSunday\u003etrue\u003c/Sunday\u003e\u003cMonday\u003etrue\u003c/Monday\u003e\u003cTuesday\u003etrue\u003c/Tuesday\u003e\u003cWednesday\u003etrue\u003c/Wednesday\u003e\u003cThursday\u003etrue\u003c/Thursday\u003e\u003cFriday\u003etrue\u003c/Friday\u003e\u003cSaturday\u003etrue\u003c/Saturday\u003e\u003c/DaysOfWeek\u003e\u003c/WeeklyRecurrence\u003e\u003c/ScheduleDefinition\u003e",
+        ///     "IsMobilizerSchedule": false
+        ///   },
+        ///   "Parameters": [
+        ///     {
+        ///       "Name": "MultipleValues",
+        ///       "Value": "1",
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "MultipleValues",
+        ///       "Value": "2",
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "FloatTest",
+        ///       "Value": "1",
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "ProductName",
+        ///       "Value": "Chai",
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "IsCheap",
+        ///       "Value": null,
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "ReportParameter1",
+        ///       "Value": null,
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "IntegerTest",
+        ///       "Value": null,
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "CategoryID",
+        ///       "Value": "1",
+        ///       "Label": null
+        ///     },
+        ///     {
+        ///       "Name": "ProductionDate",
+        ///       "Value": "2014-12-01",
+        ///       "Label": null
+        ///     }
+        ///   ]
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetSubscription(string subscriptionID, string instance = null)
         {
@@ -826,6 +1037,11 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
         }
 
+        /// <summary>
+        /// Updated the subscription based upon the given info parameter
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns>JSON object indication status</returns>
         [HttpPost]
         public HttpResponseMessage UpdateSubscription(SubscriptionInfoPostBack info)
         {
@@ -844,6 +1060,12 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete the subscription defined by the subscription id
+        /// </summary>
+        /// <param name="subscriptionID">Subscription id</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object indicating status</returns>
         [HttpGet]
         public HttpResponseMessage DeleteSubscription(string subscriptionID, string instance = null)
         {
@@ -868,6 +1090,12 @@ namespace ReportManager.Controllers
     
         }
 
+        /// <summary>
+        /// Returns a list of subscriptions for the given report path and current user
+        /// </summary>
+        /// <param name="reportPath">Report Path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object containing the subscription information</returns>
         [HttpGet]
         public HttpResponseMessage ListSubscriptions(string reportPath, string instance = null)
         {
@@ -891,6 +1119,11 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns a list of subscriptions for the current user
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON object the contains the subscription information</returns>
         [HttpGet]
         public HttpResponseMessage ListMySubscriptions(string instance = null)
         {
@@ -910,6 +1143,35 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns an array of delivery extensions
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON array of delivery extension. E.g.,
+        /// [
+        ///   {
+        ///     "ExtensionType": 0,
+        ///     "Name": "Report Server FileShare",
+        ///     "LocalizedName": "Windows File Share",
+        ///     "Visible": true,
+        ///     "IsModelGenerationSupported": false
+        ///   },
+        ///   {
+        ///     "ExtensionType": 0,
+        ///     "Name": "Report Server Email",
+        ///     "LocalizedName": "E-Mail",
+        ///     "Visible": true,
+        ///     "IsModelGenerationSupported": false
+        ///   },
+        ///   {
+        ///     "ExtensionType": 0,
+        ///     "Name": "NULL",
+        ///     "LocalizedName": "Null Delivery Provider",
+        ///     "Visible": true,
+        ///     "IsModelGenerationSupported": false
+        ///   }
+        /// ]
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage ListDeliveryExtensions(string instance = null)
         {
@@ -933,6 +1195,12 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns the extension settings based upon the given extension
+        /// </summary>
+        /// <param name="extension">Extension name</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object that contains the settings</returns>
         [HttpGet]
         public HttpResponseMessage GetExtensionSettings(string extension, string instance = null)
         {
@@ -956,6 +1224,11 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");          
         }
 
+        /// <summary>
+        /// Returns a list of subscription schedules
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON array of schedules</returns>
         [HttpGet]
         public HttpResponseMessage ListSchedules(string instance = null)
         {
@@ -979,6 +1252,19 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "text/JSON");
         }
 
+        /// <summary>
+        /// Returns any / all tags that have been associated with the given report, resource or folder path
+        /// </summary>
+        /// <param name="path">Report, resource or folder path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object containing the tags. E.g.,
+        /// {
+        ///   "Tags": [
+        ///     "\"Products\"",
+        ///     "\"DocMap\""
+        ///   ]
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetReportTags(string path, string instance = null)
         {
@@ -1012,6 +1298,12 @@ namespace ReportManager.Controllers
             public string path { get; set; }
             public string instance { get; set; }
         }
+
+        /// <summary>
+        /// Saves the given report tags back to the database
+        /// </summary>
+        /// <param name="postValue"></param>
+        /// <returns>Status code (E.g., 200 for OK)</returns>
         [HttpPost]
         public HttpResponseMessage SaveReportTags(ReportTagsPostBack postValue)
         {

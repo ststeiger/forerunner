@@ -32,7 +32,13 @@
             <h3>Request body formats</h3>
             @Html.DisplayFor(apiModel => apiModel.SampleRequests, "Samples")
         }
-    } 
+    }
+  
+    @if (!String.IsNullOrEmpty(Model.ResponseDocumentation))
+    {      
+        <h2>Response Information</h2> 
+        <p>@Html.Raw(@Model.ResponseDocumentation)</p>
+    }
 
     @if (hasResponseSamples)
     {

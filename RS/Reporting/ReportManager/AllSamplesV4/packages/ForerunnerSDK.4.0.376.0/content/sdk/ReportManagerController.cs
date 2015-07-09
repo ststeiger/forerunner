@@ -16,6 +16,7 @@ using Forerunner;
 using Forerunner.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Forerunner.Security;
 
 namespace ReportManager.Controllers
 {
@@ -67,8 +68,13 @@ namespace ReportManager.Controllers
         }
         static ReportManagerController()
         {
-            if (UseMobilizerDB)
-                ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            try
+            {
+                if (UseMobilizerDB)
+                    ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+            }
+            catch { }
+
         }
 
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
@@ -264,12 +270,25 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// GetItems will return a collection of catalog items based upon the given view string
+        /// and path.
+        /// </summary>
+        /// <param name="view">View: "catalog", "recent", "favorites" or "searchfolder"</param>
+        /// <param name="path">Folder path. Used when the view is either "catalog" or "searchfolder"</param>
+        /// <param name="instance">Instance name</param>
+        /// <returns></returns>
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
             try
             {
-                CatalogItem[] items = GetReportManager(instance).GetItems(view, path);
+                CatalogItem[] items = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                 {
+                     items = GetReportManager(instance).GetItems(view, path);
+                 });
+
                 GetLocalizedNames(items,instance);
                 GetSharePointHidden(items, instance);
                 if (items == null)
@@ -289,7 +308,11 @@ namespace ReportManager.Controllers
         {
             try
             {
-                CatalogItem[] matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
+                CatalogItem[] matchesItems = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                 {
+                     matchesItems = GetReportManager(instance).FindItems(folder, searchOperator, searchCriteria);
+                 });
                 GetLocalizedNames(matchesItems,instance);
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(matchesItems)), "text/JSON");
             }
@@ -305,7 +328,13 @@ namespace ReportManager.Controllers
             // This endpoint does not write to the Mobilizer DB and is therefore safe for all customers
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetItemProperty(path, propertyName)), "text/JSON");
+                string prop = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    prop = GetReportManager(instance).GetItemProperty(path, propertyName);
+                });
+                
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(prop), "text/JSON");
             }
             catch (Exception e)
             {
@@ -326,7 +355,11 @@ namespace ReportManager.Controllers
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
             {
-                var result = GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
+                string result = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    result = GetReportManager(postValue.instance).SetProperty(postValue.path, postValue.properties);
+                });
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
             }
             catch (Exception e)
@@ -345,7 +378,16 @@ namespace ReportManager.Controllers
                 return GetNotImplementedResponse();
             }
 
-            GetReportManager(instance).SaveThumbnail(ReportPath, SessionID);
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    GetReportManager(instance).SaveThumbnail(ReportPath, SessionID);
+                });
+
+            }
+            catch { }
+
             HttpResponseMessage resp = this.Request.CreateResponse();
             resp.StatusCode = HttpStatusCode.OK;
             return resp;
@@ -359,7 +401,18 @@ namespace ReportManager.Controllers
             {
                 return GetNotFoundResponse();
             }
-            return GetResponseFromBytes(GetReportManager(instance).GetCatalogImage(ReportPath), "image/JPEG",true);            
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = GetReportManager(instance).GetCatalogImage(ReportPath);
+                });
+            }
+            catch { }
+
+            return GetResponseFromBytes(retval, "image/JPEG",true);            
         }
 
         [HttpGet]
@@ -367,7 +420,18 @@ namespace ReportManager.Controllers
         public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
         {
             // This endpoint does not write to the ReportServer DB and is therefore safe for all customers
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetCatalogPermission(path, permission)), "text/JSON");
+            string retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = GetReportManager(instance).GetCatalogPermission(path, permission);
+                });
+            }
+            catch { }
+            
+            
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(retval), "text/JSON");
         }
 
         [HttpGet]
@@ -376,7 +440,14 @@ namespace ReportManager.Controllers
         {
             byte[] result = null;
             string mimetype = null;
-            result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
+                });
+            }
+            catch { }
             return GetResponseFromBytes(result, mimetype);
         }
 
@@ -386,7 +457,15 @@ namespace ReportManager.Controllers
         {
             byte[] result = null;
             string mimetype = null;
-            result = GetReportManager(instance).GetCatalogContents(path, itemtype, out mimetype);
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    result = GetReportManager(instance).GetCatalogContents(path, itemtype, out mimetype);
+                });
+            }
+            catch { }
+            
             return GetDownloadResponseFromBytes(result, mimetype, path);
         }
 
@@ -395,7 +474,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                   retval= Encoding.UTF8.GetBytes(GetReportManager(setResource.rsInstance).SaveCatalogResource(setResource));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception e)
             {
@@ -407,7 +491,19 @@ namespace ReportManager.Controllers
         [ActionName("DeleteCatalogItem")]
         public HttpResponseMessage DeleteCatalogItem(string path, string safeFolderDelete, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path, safeFolderDelete)), "text/JSON");
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteCatalogItem(path, safeFolderDelete));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
@@ -417,7 +513,21 @@ namespace ReportManager.Controllers
             {
                 return GetNotImplementedResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
+            
         }
 
         [HttpGet]
@@ -427,7 +537,20 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).IsFavorite(path)), "text/JSON");
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).IsFavorite(path));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
+            
         }
 
         [HttpGet]
@@ -437,8 +560,22 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath)), "text/JSON");
+            
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
+
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
@@ -446,7 +583,20 @@ namespace ReportManager.Controllers
             {
                 return GetNotImplementedResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval =Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
@@ -456,13 +606,38 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings()), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings());
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         public HttpResponseMessage GetUserName(string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserName()), "text/JSON");
-        }
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserName());
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
+       }
 
         [HttpGet]
         public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
@@ -471,7 +646,21 @@ namespace ReportManager.Controllers
             {
                 return GetNotImplementedResponse();
             }
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings)), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
+            
         }
 
         [HttpPost]
@@ -484,7 +673,12 @@ namespace ReportManager.Controllers
             try
             {
                 info.Report = System.Web.HttpUtility.UrlDecode(info.Report);
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(info.Instance).CreateSubscription(info));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception e)
             {
@@ -499,7 +693,20 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            Forerunner.SSRS.Manager.SubscriptionInfo info = GetReportManager(instance).GetSubscription(subscriptionID);
+
+            Forerunner.SSRS.Manager.SubscriptionInfo info = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                     info = GetReportManager(instance).GetSubscription(subscriptionID);
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
         }
 
@@ -528,8 +735,21 @@ namespace ReportManager.Controllers
             {
                 return GetNotImplementedResponse();
             }
-            string retVal = GetReportManager(instance).DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(retVal), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).DeleteSubscription(subscriptionID));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
+    
         }
 
         [HttpGet]
@@ -539,15 +759,39 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            Subscription[] subscriptions = GetReportManager(instance).ListSubscriptions(reportPath, null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListSubscriptions(reportPath, null)));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
         public HttpResponseMessage ListMySubscriptions(string instance = null)
         {
-            Subscription[] subscriptions = GetReportManager(instance).ListMySubscriptions();
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListMySubscriptions()));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
@@ -557,8 +801,20 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            Extension[] extensions = GetReportManager(instance).ListDeliveryExtensions();
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensions)), "text/JSON"); 
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListDeliveryExtensions()));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
@@ -568,8 +824,20 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            ExtensionParameter[] extensionSettings = GetReportManager(instance).GetExtensionSettings(extension);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensionSettings)), "text/JSON"); 
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).GetExtensionSettings(extension)));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");          
         }
 
         [HttpGet]
@@ -579,8 +847,20 @@ namespace ReportManager.Controllers
             {
                 return GetEmptyJSONResponse();
             }
-            SubscriptionSchedule[] schedules = GetReportManager(instance).ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON");
+
+            byte[] retval = null;
+            try
+            {
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListSchedules(null)));
+                });
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
+            return GetResponseFromBytes(retval, "text/JSON");
         }
 
         [HttpGet]
@@ -597,7 +877,10 @@ namespace ReportManager.Controllers
                 
                 if (!d.TagsChecked)
                 {
-                    d.Tags = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path));
+                    ImpersonateCaller.RunAsCurrentUser(() =>
+                    {
+                        d.Tags = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportTags(path));
+                    });
                     d.TagsChecked = true;
                 }
                 return GetResponseFromBytes(d.Tags, "text/JSON");
@@ -624,7 +907,11 @@ namespace ReportManager.Controllers
             HttpResponseMessage resp = this.Request.CreateResponse();
             try
             {
-                GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
+                });
+                
                 resp.StatusCode = HttpStatusCode.OK;
             }
             catch
@@ -640,7 +927,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                string result = GetReportManager(instance).GetItemPolicies(itemPath);
+                string result = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    result = GetReportManager(instance).GetItemPolicies(itemPath);
+                });
+                
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
             }
             catch (Exception e)
@@ -660,8 +952,13 @@ namespace ReportManager.Controllers
         {
             try
             {
-                var result = GetReportManager(policy.instance).SetItemPolicies(policy.itemPath, policy.policies);
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(policy.instance).SetItemPolicies(policy.itemPath, policy.policies));
+                });                
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception e)
             {
@@ -674,8 +971,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                var result = GetReportManager(instance).ListRoles(type, itemPath);
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).ListRoles(type, itemPath)));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception e)
             {
@@ -693,8 +994,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                var result = GetReportManager(inheritParent.instance).InheritParentSecurity(inheritParent.itemPath);
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(result)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(inheritParent.instance).InheritParentSecurity(inheritParent.itemPath)));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception e)
             {
@@ -707,8 +1012,13 @@ namespace ReportManager.Controllers
         {
             // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
             try
-            {                
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath)), "text/JSON");
+            {
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerSetting(MobilizerSettingPath));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception ) 
             {
@@ -722,7 +1032,13 @@ namespace ReportManager.Controllers
             // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerVersion(MobilizerVersionPath)), "text/plain");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerVersion(MobilizerVersionPath));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
+
             }
             catch (Exception ex)
             {
@@ -735,13 +1051,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                var catalogs = GetReportManager(instance).GetCatalog(rootPath, showLinkedReport);
-                if (catalogs == null)
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
                 {
-                    return GetEmptyJSONResponse();
-                }
-
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(catalogs)), "text/JSON");
+                    retval = Encoding.UTF8.GetBytes(ToString(GetReportManager(instance).GetCatalog(rootPath, showLinkedReport)));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception ex)
             {
@@ -754,7 +1069,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportLink(path)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetReportLink(path));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception ex)
             {
@@ -773,8 +1093,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                string result = GetReportManager(linkedReport.instance).SetReportLink(linkedReport.linkedReportPath, linkedReport.newLink);
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).SetReportLink(linkedReport.linkedReportPath, linkedReport.newLink));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception ex)
             {
@@ -793,7 +1117,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).CreateLinkedReport(linkedReport.name, linkedReport.parent, linkedReport.link)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(linkedReport.instance).CreateLinkedReport(linkedReport.name, linkedReport.parent, linkedReport.link));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (Exception ex)
             {
@@ -805,7 +1134,13 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.instance).NewFolder(data)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(data.instance).NewFolder(data));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
+
             }
             catch (Exception e)
             {
@@ -869,7 +1204,12 @@ namespace ReportManager.Controllers
 
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data)), "text/html");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(data.setResource.rsInstance).UploadFile(data));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
             }
             catch (ArgumentException e)
             {
@@ -890,7 +1230,13 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(data.instance).MoveItem(data)), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(data.instance).MoveItem(data));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
+
             }
             catch (Exception e)
             {
@@ -903,8 +1249,12 @@ namespace ReportManager.Controllers
         {
             try
             {
-                var result = GetReportManager(instance).GetDBConfiguration();
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), "text/JSON");
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetDBConfiguration());
+                });
+                return GetResponseFromBytes(retval, "text/JSON");                
             }
             catch
             {

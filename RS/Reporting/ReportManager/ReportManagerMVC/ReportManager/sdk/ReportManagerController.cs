@@ -270,6 +270,61 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// GetItems will return a collection of catalog items based upon the given view string
+        /// and path.
+        /// </summary>
+        /// <param name="view">View: "catalog", "recent", "favorites" or "searchfolder"</param>
+        /// <param name="path">Folder path. Used when the view is either "catalog" or "searchfolder"</param>
+        /// <param name="instance">Instance name</param>
+        /// <returns>JSON object that contains a CatalogItem array, E.g.,
+        /// [{
+        ///   "LocalizedName": null,
+        ///   "LocalizedDescription": null,
+        ///   "ID": "6211fb02-9662-4ef9-8dc6-b1236b722fe7",
+        ///   "Name": "AdventureWorks 2008 Sample Reports",
+        ///   "Path": "/AdventureWorks 2008 Sample Reports",
+        ///   "VirtualPath": null,
+        ///   "Type": 1,
+        ///   "Size": 0,
+        ///   "SizeSpecified": false,
+        ///   "Description": null,
+        ///   "Hidden": false,
+        ///   "HiddenSpecified": false,
+        ///   "CreationDate": "\/Date(1404870950527)\/",
+        ///   "CreationDateSpecified": true,
+        ///   "ModifiedDate": "\/Date(1429580966090)\/",
+        ///   "ModifiedDateSpecified": true,
+        ///   "CreatedBy": "jonto-i7\\Jon",
+        ///   "ModifiedBy": "JONTO-I7\\TestAccount",
+        ///   "MimeType": null,
+        ///   "ExecutionDate": "\/Date(-62135568000000)\/",
+        ///   "ExecutionDateSpecified": false
+        ///},
+        ///{
+        ///   "LocalizedName": null,
+        ///   "LocalizedDescription": null,
+        ///   "ID": "f8118cba-c72b-4027-8cc7-dbc45fe45909",
+        ///   "Name": "AdventureWorks 2008R2",
+        ///   "Path": "/AdventureWorks 2008R2",
+        ///   "VirtualPath": null,
+        ///   "Type": 1,
+        ///   "Size": 0,
+        ///   "SizeSpecified": false,
+        ///   "Description": null,
+        ///   "Hidden": false,
+        ///   "HiddenSpecified": false,
+        ///   "CreationDate": "\/Date(1404870634657)\/",
+        ///   "CreationDateSpecified": true,
+        ///   "ModifiedDate": "\/Date(1404870637327)\/",
+        ///   "ModifiedDateSpecified": true,
+        ///   "CreatedBy": "jonto-i7\\Jon",
+        ///   "ModifiedBy": "jonto-i7\\Jon",
+        ///   "MimeType": null,
+        ///   "ExecutionDate": "\/Date(-62135568000000)\/",
+        ///   "ExecutionDateSpecified": false
+        ///}]
+        ///</returns>
         [HttpGet]
         public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
@@ -295,6 +350,14 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// FindItems will return an array of CatalogItems based upon the given search criteria
+        /// </summary>
+        /// <param name="folder">Folder path, null will default to "/"</param>
+        /// <param name="searchOperator">Defaults to "or" unless "and" is passed</param>
+        /// <param name="searchCriteria">A JSON object. E.g., {"SearchCriteria":[{"Key":"Name","Value":"search value"},{"Key":"Description","Value":"search value"}]}</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object that contains a CatalogItem array</returns>
         [HttpGet]
         public HttpResponseMessage FindItems(string folder, string searchOperator, string searchCriteria, string instance = null) 
         {
@@ -314,6 +377,13 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// ReportProperty will return back a list of property values based on the given property names
+        /// </summary>
+        /// <param name="path">Respource path</param>
+        /// <param name="propertyName">Comma delimited list of property names. E.g., "Hidden,Description,ForerunnerRDLExt,Name"</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object. E.g., {"Hidden":"False","Name":"jonto"}</returns>
         [HttpGet]
         public HttpResponseMessage ReportProperty(string path, string propertyName, string instance = null)
         {
@@ -340,6 +410,11 @@ namespace ReportManager.Controllers
             public string instance { get; set; }
         }
 
+        /// <summary>
+        /// SaveReportProperty will save the properties to the given report path
+        /// </summary>
+        /// <param name="postValue">JSON object</param>
+        /// <returns>JSON object</returns>
         [HttpPost]
         [ActionName("SaveReportProperty")]
         public HttpResponseMessage SaveReportProperty(SaveReprotPropertyPostBack postValue)
@@ -361,6 +436,14 @@ namespace ReportManager.Controllers
 
         }
 
+        /// <summary>
+        /// SaveThumbnail will cause a thumbnail to be generated and saved for the given report path. The UseMobilizerDB
+        /// configuration option must be set to true in order to use SaveThumbnail.
+        /// </summary>
+        /// <param name="ReportPath">Report path</param>
+        /// <param name="SessionID">Current Session ID</param>
+        /// <param name="instance"></param>
+        /// <returns>Status OK</returns>
         [HttpGet]
         [ActionName("SaveThumbnail")]
         public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
@@ -385,6 +468,13 @@ namespace ReportManager.Controllers
             return resp;
         }
 
+        /// <summary>
+        /// Thumbnail will return the requested thumbnail image (I.e. "image/JPEG") 
+        /// </summary>
+        /// <param name="ReportPath">Report path</param>
+        /// <param name="DefDate">not used</param>
+        /// <param name="instance"></param>
+        /// <returns>"image/JPEG"</returns>
         [HttpGet]
         [ActionName("Thumbnail")]
         public HttpResponseMessage Thumbnail(string ReportPath,string DefDate, string instance = null)
@@ -407,6 +497,21 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(retval, "image/JPEG",true);            
         }
 
+        /// <summary>
+        /// HasPermission will return a JSON object that defines the given permission settings
+        /// </summary>
+        /// <param name="path">Resource path</param>
+        /// <param name="permission">Comma delimited list of permissions. E.g., "Create Resource,Update Properties,Update Security Policies,Create Report,Create Folder"</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object. E.g., 
+        /// {
+        ///     "Create Resource":true,
+        ///     "Update Properties":true,
+        ///     "Update Security Policies":true,
+        ///     "Create Report":true,
+        ///     "Create Folder":true
+        /// }
+        /// </returns>
         [HttpGet]
         [ActionName("HasPermission")]
         public HttpResponseMessage HasPermission(string path, string permission, string instance = null)
@@ -426,6 +531,13 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(retval), "text/JSON");
         }
 
+        /// <summary>
+        /// Resource returns the requested resource in the default mime type for that object.
+        /// for instance if you store a .pdf file in SSRS the mime type would be "application/pdf"
+        /// </summary>
+        /// <param name="path">Resource path</param>
+        /// <param name="instance"></param>
+        /// <returns>Object of the default mime type, E.g., "application/pdf"</returns>
         [HttpGet]
         [ActionName("Resource")]
         public HttpResponseMessage Resource(string path, string instance = null)
@@ -443,6 +555,13 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(result, mimetype);
         }
 
+        /// <summary>
+        /// DownloadFile will download the given resource using the default mime type
+        /// </summary>
+        /// <param name="path">Resource / report path</param>
+        /// <param name="itemtype">CatalogItem item type</param>
+        /// <param name="instance"></param>
+        /// <returns>Object of the default mime type. E.g., "xml/forerunner-report"</returns>
         [HttpGet]
         [ActionName("DownloadFile")]
         public HttpResponseMessage DownloadFile(string path, string itemtype, string instance = null)
@@ -461,6 +580,11 @@ namespace ReportManager.Controllers
             return GetDownloadResponseFromBytes(result, mimetype, path);
         }
 
+        /// <summary>
+        /// SaveResource will save the given resource defined by the setResource object
+        /// </summary>
+        /// <param name="setResource">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage SaveResource(SetResource setResource)
         {

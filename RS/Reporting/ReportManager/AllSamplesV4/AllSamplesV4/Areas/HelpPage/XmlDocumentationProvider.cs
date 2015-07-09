@@ -9,9 +9,17 @@ using System.Xml.XPath;
 namespace AllSamplesV4.Areas.HelpPage
 {
     /// <summary>
+    /// [jont] Add this to support the returns tag
+    /// </summary>
+    public interface IResponseDocumentationProvider
+    {
+        string GetResponseDocumentation(HttpActionDescriptor actionDescriptor);
+    }
+
+    /// <summary>
     /// A custom <see cref="IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
     /// </summary>
-    public class XmlDocumentationProvider : IDocumentationProvider
+    public class XmlDocumentationProvider : IDocumentationProvider, IResponseDocumentationProvider
     {
         private XPathNavigator _documentNavigator;
         private const string MethodExpression = "/doc/members/member[@name='M:{0}']";
@@ -29,6 +37,26 @@ namespace AllSamplesV4.Areas.HelpPage
             }
             XPathDocument xpath = new XPathDocument(documentPath);
             _documentNavigator = xpath.CreateNavigator();
+        }
+
+        /// <summary>
+        /// [jont] Read the returns tag
+        /// </summary>
+        /// <param name="actionDescriptor"></param>
+        /// <returns></returns>
+        public string GetResponseDocumentation(HttpActionDescriptor actionDescriptor)
+        {
+            XPathNavigator methodNode = GetMethodNode(actionDescriptor);
+            if (methodNode != null)
+            {
+                XPathNavigator returnsNode = methodNode.SelectSingleNode("returns");
+                if (returnsNode != null)
+                {
+                    return "<pre>" + returnsNode.Value.Trim() + "</pre>";
+                }
+            }
+
+            return null;
         }
 
         public virtual string GetDocumentation(HttpActionDescriptor actionDescriptor)
@@ -106,7 +134,7 @@ namespace AllSamplesV4.Areas.HelpPage
                 return String.Format(CultureInfo.InvariantCulture, "{0}{{{1}}}", typeName, String.Join(",", argumentTypeNames));
             }
 
-            return type.FullName;
+            return type.FullName.Replace('+', '.');
         }
     }
 }

@@ -1041,7 +1041,7 @@ namespace ReportManager.Controllers
         /// Updated the subscription based upon the given info parameter
         /// </summary>
         /// <param name="info">JSON object</param>
-        /// <returns>JSON object indication status</returns>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage UpdateSubscription(SubscriptionInfoPostBack info)
         {
@@ -1330,6 +1330,40 @@ namespace ReportManager.Controllers
             return resp;
         }
 
+        /// <summary>
+        /// Returns the security policies for the given itemPath
+        /// </summary>
+        /// <param name="itemPath">Item path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object containing the policies. E.g.,
+        /// {
+        ///   "isInheritParent": true,
+        ///   "policyArr": [
+        ///     {
+        ///       "GroupUserName": "BUILTIN\\Administrators",
+        ///       "Roles": [
+        ///         {
+        ///           "Name": "Content Manager",
+        ///           "Description": ""
+        ///         }
+        ///       ]
+        ///     },
+        ///     {
+        ///       "GroupUserName": "jonto-i7\\Jon",
+        ///       "Roles": [
+        ///         {
+        ///           "Name": "Browser",
+        ///           "Description": ""
+        ///         },
+        ///         {
+        ///           "Name": "Content Manager",
+        ///           "Description": ""
+        ///         }
+        ///       ]
+        ///     }
+        ///   ]
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetItemPolicies(string itemPath, string instance = null)
         {
@@ -1355,6 +1389,12 @@ namespace ReportManager.Controllers
             public string policies { get; set; }
             public string instance { get; set; }
         }
+
+        /// <summary>
+        /// Sets the security polices for the given itemPath
+        /// </summary>
+        /// <param name="policy">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage SetItemPolicies(SetPolicy policy)
         {
@@ -1374,6 +1414,36 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns an array of security roles 
+        /// </summary>
+        /// <param name="type">"Catalog"</param>
+        /// <param name="itemPath">Report, Folder or resource path</param>
+        /// <param name="instance"></param>
+        /// <returns>
+        /// [
+        ///   {
+        ///     "Name": "Browser",
+        ///     "Description": "May view folders, reports and subscribe to reports."
+        ///   },
+        ///   {
+        ///     "Name": "Content Manager",
+        ///     "Description": "May manage content in the Report Server.  This includes folders, reports and resources."
+        ///   },
+        ///   {
+        ///     "Name": "My Reports",
+        ///     "Description": "May publish reports and linked reports; manage folders, reports and resources in a users My Reports folder."
+        ///   },
+        ///   {
+        ///     "Name": "Publisher",
+        ///     "Description": "May publish reports and linked reports to the Report Server."
+        ///   },
+        ///   {
+        ///     "Name": "Report Builder",
+        ///     "Description": "May view report definitions."
+        ///   }
+        /// ]
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage ListRoles(string type, string itemPath, string instance = null)
         {
@@ -1397,6 +1467,12 @@ namespace ReportManager.Controllers
             public string itemPath { get; set; }
             public string instance { get; set; }
         }
+
+        /// <summary>
+        /// Returns the inherited security from the parent
+        /// </summary>
+        /// <param name="inheritParent">JSON object</param>
+        /// <returns>JSON object containing the security settings</returns>
         [HttpPost]
         public HttpResponseMessage InheritParentSecurity(InheritSecurity inheritParent)
         {
@@ -1415,6 +1491,40 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the Mobilizer settings defined via the file referenced in the configuration appSettings
+        /// "Forerunner.MobilizerSettingPath"
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON object with the settings. E.g., 
+        ///  {
+        /// 	"MaxBigDropdownItem": 50,
+        /// 	"MinItemToEnableBigDropdownOnTouch": 20,
+        /// 	"EnableCascadingTree": "on",
+        /// 	"MaxResponsiveResolution": 1280,
+        /// 	"FullScreenPageNavSize" : 768,
+        /// 	"DefaultResponsiveTablix" : "on",
+        /// 	"FirefoxPDFbug":"on",
+        /// 	"ParameterPaneWidth":"350",
+        /// 	"showHomeButton":"off",
+        /// 	"showSubscriptionUI":"on",
+        /// 	"FancyTooltips":"on",
+        /// 	"ImageAreaHighligh": "on",
+        /// 	"ImageAreaHighlighBorderColor": "0000ff",
+        /// 	"ImageAreaHighlighBorderWidth": "2",
+        /// 	"HideDisabledTool":"on",
+        /// 	"WatermarkPostText":"",
+        /// 	"DefaultSubscriptionFormat":"MHTML",
+        /// 	"URLActionNewTab": "off",
+        /// 	"Debug":"off",
+        /// 	"SubscriptionInputSize":"50",
+        /// 	"ManageSubscriptionUI":"default",
+        /// 	"EnableGestures":"on",
+        /// 	"BigTablixBatchSize":3000,
+        /// 	"AppleFixedToolbarBug":"on",
+        /// 	"DefaultViewStyle":"list"
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetMobilizerSetting(string instance = null)
         {
@@ -1434,6 +1544,11 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the current Mobilizer version number
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>Version number in text format</returns>
         [HttpGet]
         public HttpResponseMessage GetMobilizerVersion(string instance = null)
         {
@@ -1454,6 +1569,41 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns back the entire catalog (so this can be expensive). It is usefully when presenting a dialog
+        /// where the user can select a report such as the Link Report feature.
+        /// </summary>
+        /// <param name="rootPath">Root path to start the search</param>
+        /// <param name="showLinkedReport">"true" or "false"</param>
+        /// <param name="instance"></param>
+        /// <returns>
+        /// {
+        ///   "children": [
+        ///     {
+        ///       "children": [
+        ///         {
+        ///           "children": null,
+        ///           "Name": "Company Sales 2008",
+        ///           "Path": "/AdventureWorks 2008 Sample Reports/Company Sales 2008",
+        ///           "Type": 2
+        ///         },
+        ///         {
+        ///           "children": null,
+        ///           "Name": "Employee Sales Summary 2008",
+        ///           "Path": "/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008",
+        ///           "Type": 2
+        ///         }
+        ///       ],
+        ///       "Name": "AdventureWorks 2008 Sample Reports",
+        ///       "Path": "/AdventureWorks 2008 Sample Reports",
+        ///       "Type": 1
+        ///     }
+        ///   ],
+        ///   "Name": "/",
+        ///   "Path": "/",
+        ///   "Type": 1
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetCatalog(string rootPath, bool showLinkedReport, string instance = null)
         {
@@ -1472,6 +1622,16 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns the actual path of the original report given a linked report path
+        /// </summary>
+        /// <param name="path">Linked report path</param>
+        /// <param name="instance"></param>
+        /// <returns>JSON object that contains the actual path. E.g.,
+        /// {
+        ///     "linkedReport":"/AdventureWorks 2008 Sample Reports/Company Sales 2008"
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetReportLink(string path, string instance = null)
         {
@@ -1496,6 +1656,13 @@ namespace ReportManager.Controllers
             public string newLink { set; get; }
             public string instance { set; get; }
         }
+
+        /// <summary>
+        /// Sets the actual report path, i.e., newLink, for a linked report, 
+        /// i.e., linkedReportPath
+        /// </summary>
+        /// <param name="linkedReport">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage SetReportLink(SetLinkedReport linkedReport)
         {
@@ -1520,6 +1687,12 @@ namespace ReportManager.Controllers
             public string link { set; get; }
             public string instance { set; get; }
         }
+
+        /// <summary>
+        /// Creates a new linked report
+        /// </summary>
+        /// <param name="linkedReport">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage CreateLinkedReport(LinkedReport linkedReport)
         {
@@ -1537,6 +1710,12 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
             }
         }
+
+        /// <summary>
+        /// Creates a new folder with the given properties
+        /// </summary>
+        /// <param name="data">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage NewFolder(NewFolderData data)
         {
@@ -1555,6 +1734,14 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
         }
+
+        /// <summary>
+        /// Uploads the given file to the server. This method accepts a Post request with
+        /// enctype: "multipart/form-data". The multiparts are: file, filename, overwrite,
+        /// parentfolder and rsinstance. Mobilizer using the jQuery ajaxForm plugin to
+        /// help format the request properly.
+        /// </summary>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage UploadFile()
         {
@@ -1633,6 +1820,11 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Moves the curFullPath to the newFullPath
+        /// </summary>
+        /// <param name="data">JSON object</param>
+        /// <returns>JSON object indicating status</returns>
         [HttpPost]
         public HttpResponseMessage MoveItem(MoveItemData data)
         {
@@ -1652,6 +1844,16 @@ namespace ReportManager.Controllers
             }
         }
 
+        /// <summary>
+        /// Returns a subset of Mobilizer appSettings as a JSON object
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <returns>JSON object which contains a subset of the appSettings. E.g.,
+        /// {
+        ///     "UseMobilizerDB":true,
+        ///     "SeperateDB":false
+        /// }
+        /// </returns>
         [HttpGet]
         public HttpResponseMessage GetDBConfig(string instance = null)
         {

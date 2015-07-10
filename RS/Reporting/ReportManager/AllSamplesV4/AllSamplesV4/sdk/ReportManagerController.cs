@@ -664,7 +664,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Tests if the given report / resource is contained in the favorites view
+        /// Tests if the given report / resource is contained in the favorites view. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="path">Report / resource path</param>
         /// <param name="instance"></param>
@@ -693,7 +694,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns any named parameter sets for the given reportPath and user
+        /// Returns any named parameter sets for the given reportPath and user. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="reportPath">Report path</param>
         /// <param name="instance"></param>
@@ -775,7 +777,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Saves the given named parameter sets
+        /// Saves the given named parameter sets. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="saveParams">JSON object</param>
         /// <returns>JSON object indicating status</returns>
@@ -803,7 +806,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns the user settings for the current user
+        /// Returns the user settings for the current user. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="instance"></param>
         /// <returns>JSON object that contains the user setting. E.g.,
@@ -860,7 +864,8 @@ namespace ReportManager.Controllers
        }
 
         /// <summary>
-        /// Saves the given user settings
+        /// Saves the given user settings. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="settings">JSON object. E.g., {"responsiveUI":true,"adminUI":true,"email":"","viewStyle":"large"}</param>
         /// <param name="instance"></param>
@@ -890,7 +895,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Creates an email subscription
+        /// Creates an email subscription. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="info">JSON object</param>
         /// <returns>JSON object indicating status</returns>
@@ -918,7 +924,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns the subscription information based upon the given subscription id
+        /// Returns the subscription information based upon the given subscription id. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="subscriptionID">Subscription ID</param>
         /// <param name="instance"></param>
@@ -1038,7 +1045,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Updated the subscription based upon the given info parameter
+        /// Updated the subscription based upon the given info parameter. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="info">JSON object</param>
         /// <returns>JSON object indicating status</returns>
@@ -1061,7 +1069,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Delete the subscription defined by the subscription id
+        /// Delete the subscription defined by the subscription id. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="subscriptionID">Subscription id</param>
         /// <param name="instance"></param>
@@ -1091,7 +1100,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns a list of subscriptions for the given report path and current user
+        /// Returns a list of subscriptions for the given report path and current user. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="reportPath">Report Path</param>
         /// <param name="instance"></param>
@@ -1144,7 +1154,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns an array of delivery extensions
+        /// Returns an array of delivery extensions. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="instance"></param>
         /// <returns>JSON array of delivery extension. E.g.,
@@ -1196,7 +1207,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns the extension settings based upon the given extension
+        /// Returns the extension settings based upon the given extension. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="extension">Extension name</param>
         /// <param name="instance"></param>
@@ -1225,7 +1237,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns a list of subscription schedules
+        /// Returns a list of subscription schedules. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="instance"></param>
         /// <returns>JSON array of schedules</returns>
@@ -1253,7 +1266,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Returns any / all tags that have been associated with the given report, resource or folder path
+        /// Returns any / all tags that have been associated with the given report,
+        /// resource or folder path. Requires the UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="path">Report, resource or folder path</param>
         /// <param name="instance"></param>
@@ -1300,7 +1314,8 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Saves the given report tags back to the database
+        /// Saves the given report tags back to the database. Requires the
+        /// UseMobilizerDB configuration option.
         /// </summary>
         /// <param name="postValue">JSON object</param>
         /// <returns>Status code (E.g., 200 for OK)</returns>

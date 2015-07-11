@@ -34,21 +34,21 @@
   <h3>Samples:</h3>
   <p>
     All samples are selectable from the "Samples" button on the navigation bar. Additionally they are selectable below.
-    Each sample is contained in single javascript file. All sample javascript files are in the folder <b>~/lib/js</b>. You
+    Each sample is contained in single javascript file. All sample javascript files are in the folder <b>~/lib/samples/js</b>. You
     should find each sample to be very straight forward and fully annotated with comments.
   </p>
   <p>
-    Each sample defines a oject with an init() method. All the code you will need is contained in these init() functions.
+    Each sample defines an object with an init() method. All the code you will need is contained in these init() functions.
   </p>
 
   <ul>
     <li>
       <h4><a href="~/#as-explorer">Report Explorer EZ</a></h4>
-      <p>File: <b>~/lib/js/ReportExplorerEZ.js</b></p>
+      <p>File: <b>~/lib/samples/js/ReportExplorerEZ.js</b></p>
       <p>
         This sample is similar to the <a href="http://www.nuget.org/packages/Forerunner_GettingStartedV4/" target="_blank">Forerunner_GettingStartedV4</a>
         sample application. In that it creates <a href="https://forerunnersw.com/Docs/$.forerunner.reportExplorerEZ.html" target="_blank">reportExplorerEZ widget</a>. The
-        main difference is that this sample is loaded into a &lt;div&gt; and is not fullscreen.
+        main difference is that this sample is loaded into a &lt;div&gt; and is not full screen.
       </p>
       <p>
         This sample differs from the viewer samples in a few subtle ways as follows:
@@ -61,7 +61,7 @@
         <li>
           In order to hide tools in the report explorer, the calls must be placed inside the AfterTransition event
           handler. This is done in order to make sure the report manager and / or report viewer widgets, and their associated
-          tool bars are created before the call to hidetool is executed.
+          tool bars are created before the call to hideTool is executed.
         </li>
       </ul>
       <p>
@@ -70,7 +70,7 @@
     </li>
     <li>
       <h4><a href="~/#as-viewer">Report Viewer EZ</a></h4>
-      <p>File: <b>~/lib/js/ReportViewerEZ.js</b></p>
+      <p>File: <b>~/lib/samples/js/ReportViewerEZ.js</b></p>
       <p>
         This sample demonstrates how very simple it is to create a <a href="https://forerunnersw.com/Docs/$.forerunner.reportViewerEZ.html" target="_blank">
         reportViewerEZ widget</a> and include it on your page. In this sample the reportViewerEZ widget is created and then
@@ -79,7 +79,7 @@
     </li>
     <li>
       <h4><a href="~/#as-addbutton">Add Button</a></h4>
-      <p>File: <b>~/lib/js/AddButton.js</b></p>
+      <p>File: <b>~/lib/samples/js/AddButton.js</b></p>
       <p>
         The Add Button sample is another very simple sample. All you need to do is:
       </p>
@@ -92,37 +92,37 @@
           the loadReport method.
         </li>
         <li>
-          Define a button variable. Note that we include the unminified file: <b>~/Forerunner/Bundles/Forerunner-tools.js</b>. This file has the definitions for all
-          the Mobilizer buttuns and tool pane items. Use that file as a reference source for how to define buttons and items.
+          Define a button variable. Note that we include the un-minified file: <b>~/Forerunner/Bundles/Forerunner-tools.js</b>. This file has the definitions for all
+          the Mobilizer buttons and tool pane items. Use that file as a reference source for how to define buttons and items.
         </li>
         <li>
           Get the <a href="https://forerunnersw.com/Docs/$.forerunner.toolbar.html" target="_blank">toolbar widget</a> and then call
           the addTools method. Note that the addTools method is defined in the <a href="https://forerunnersw.com/Docs/$.forerunner.toolBase.html" target="_blank">
-          toolbase widget</a> but since toolbar is derived from toolbase, you can call any / all the methods defined in toolbase.
+          toolBase widget</a> but since toolbar is derived from toolBase, you can call any / all the methods defined in toolBase.
         </li>
       </ol>
     </li>
     <li>
       <h4><a href="~/#as-removebutton">Remove Button</a></h4>
-      <p>File: <b>~/lib/js/RemoveButton.js</b></p>
+      <p>File: <b>~/lib/samples/js/RemoveButton.js</b></p>
       <p>
         This sample creates a viewer like the previous few samples. It then gets the tool pane and toolbar widget from the reportViewerEZ
         widget. Next you will want to find the specific selector class for any button you may want to hide in your browser of choice. An
-        easy way to find the selector class is to do an "Inspect element" on the button you want to hide. Once you find the actal selector
+        easy way to find the selector class is to do an "Inspect element" on the button you want to hide. Once you find the actual selector
         class, go to the file: <b>~/Forerunner/Bundles/Forerunner-tools.js</b> and find the symbolic name defined for the button (like in
         the sample). You then need to cause a style of display: "none"; to be defined on the button.
       </p>
     </li>
     <li>
       <h4><a href="~/#as-dashboard">Dashboard</a></h4>
-      <p>File: <b>~/lib/js/Dashboard.js</b></p>
+      <p>File: <b>~/lib/samples/js/Dashboard.js</b></p>
       <p>
         The dashboard sample is basically the same as the ReportViewerEZ sample except done three separate times.
       </p>
     </li>
     <li>
       <h4><a href="~/#as-selector">Report Selector</a></h4>
-      <p>File: <b>~/lib/js/Selector.js</b></p>
+      <p>File: <b>~/lib/samples/js/Selector.js</b></p>
       <p>
         The report selector sample is a good one to look at to see how to call the
         <a href="#as-help/Api/GET-api-ReportManager-GetItems_view_path_instance" target="_blank">GetItems</a> REST API call.
@@ -131,7 +131,7 @@
     </li>
     <li>
       <h4><a href="~/#as-params">Parameters</a></h4>
-      <p>File: <b>~/lib/js/Parameters.js</b></p>
+      <p>File: <b>~/lib/samples/js/Parameters.js</b></p>
       <p>
         The parameters sample again creates a ReportViewerEZ and calls loadReport. Where this sample is different is that the
         call to loadReport now contains a parameters object that gets passed in. If you want to know more about the parameter
@@ -164,13 +164,13 @@
   </ol>
   <p>
     Each new section that is shown onscreen is done via a single server round trip and then it is just a client side context switch. This
-    enables this application to only load information from the server when it is needed and thereby operates very effeciently. To see how
-    the context switching works, you can look at the sample file: <b>~/lib/js/router.js</b>.
+    enables this application to only load information from the server when it is needed and thereby operates very efficiently. To see how
+    the context switching works, you can look at the sample file: <b>~/lib/samples/js/router.js</b>.
   </p>
   <h4>Browser History</h4>
   <p>
-    The Forerunner SDK contains two wigets that allow this sample as well as your own applications to use the browser history. I.e.,
-    hashtag navigation. The sample file <b>~/lib/js/router.js</b> provides the sample code for how to use the Forerunner SDK
+    The Forerunner SDK contains two widgets that allow this sample as well as your own applications to use the browser history. I.e.,
+    hashtag navigation. The sample file <b>~/lib/samples/js/router.js</b> provides the sample code for how to use the Forerunner SDK
     <a href="https://forerunnersw.com/Docs/$.forerunner.router.html" target="_blank">router widget</a> along with the 
     <a href="https://forerunnersw.com/Docs/$.forerunner.history.html" target="_blank"> Forerunner.history singleton widget</a>. The
     advantages of using browser history (a.k.a., hashtag navigation) is that the browser forward and back buttons work as expected

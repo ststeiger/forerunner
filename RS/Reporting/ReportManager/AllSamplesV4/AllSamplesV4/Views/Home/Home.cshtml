@@ -10,13 +10,172 @@
     <title></title>
 </head>
 <body>
-  <h3>Forerunner SDK All Samples V4</h3>
+  @* Introduction *@
+  <h2>Forerunner SDK All Samples</h2>
   <p>
-    This application demonstrates a number of usefull techniques for working with the Forerunner SDK.
-    In addition to all the javascript samples there is also a page that documents the REST API calls.
-    The following Samples are currently available:
-
-    <a href="~/#as-viewer">Report Viewer EZ</a>
+    This application demonstrates a number of useful techniques for working with the Forerunner SDK.
+    The primary areas that are instructive are:
   </p>
+  <ol>
+    <li>The Javascript Samples</li>
+    <li>The REST API Documentation</li>
+    <li>The Application itself</li>
+  </ol>
+  <p>
+    All sample files as well as the REST API controllers are fully annotated with comments.
+  </p>
+  <p>
+    This application was created by first installing the <a href="http://www.nuget.org/packages/ForerunnerSDK/" target="_blank">ForerunnerSDK nuget package</a>.
+    In addition the ForerunnerSDK package you might find the  <a href="http://www.nuget.org/packages/Forerunner_GettingStartedV4/" target="_blank">Forerunner_GettingStartedV4</a> 
+    useful as well.
+  </p>
+ 
+  @* Samples *@
+  <h3>Samples:</h3>
+  <p>
+    All samples are selectable from the "Samples" button on the navigation bar. Additionally they are selectable below.
+    Each sample is contained in single javascript file. All sample javascript files are in the folder <b>~/lib/samples/js</b>. You
+    should find each sample to be very straight forward and fully annotated with comments.
+  </p>
+  <p>
+    Each sample defines an object with an init() method. All the code you will need is contained in these init() functions.
+  </p>
+
+  <ul>
+    <li>
+      <h4><a href="~/#as-explorer">Report Explorer EZ</a></h4>
+      <p>File: <b>~/lib/samples/js/ReportExplorerEZ.js</b></p>
+      <p>
+        This sample is similar to the <a href="http://www.nuget.org/packages/Forerunner_GettingStartedV4/" target="_blank">Forerunner_GettingStartedV4</a>
+        sample application. In that it creates <a href="https://forerunnersw.com/Docs/$.forerunner.reportExplorerEZ.html" target="_blank">reportExplorerEZ widget</a>. The
+        main difference is that this sample is loaded into a &lt;div&gt; and is not full screen.
+      </p>
+      <p>
+        This sample differs from the viewer samples in a few subtle ways as follows:
+      </p>
+      <ul>
+        <li>
+          The init() call is done immediately in this sample. That is needed because the reportExplorerEZ widget starts
+          the Forerunner.history widget and must be called very early in order to start the browser history support.
+        </li>
+        <li>
+          In order to hide tools in the report explorer, the calls must be placed inside the AfterTransition event
+          handler. This is done in order to make sure the report manager and / or report viewer widgets, and their associated
+          tool bars are created before the call to hideTool is executed.
+        </li>
+      </ul>
+      <p>
+
+      </p>
+    </li>
+    <li>
+      <h4><a href="~/#as-viewer">Report Viewer EZ</a></h4>
+      <p>File: <b>~/lib/samples/js/ReportViewerEZ.js</b></p>
+      <p>
+        This sample demonstrates how very simple it is to create a <a href="https://forerunnersw.com/Docs/$.forerunner.reportViewerEZ.html" target="_blank">
+        reportViewerEZ widget</a> and include it on your page. In this sample the reportViewerEZ widget is created and then
+        a call is made to the loadReport method. Basically that is all it takes.
+      </p>
+    </li>
+    <li>
+      <h4><a href="~/#as-addbutton">Add Button</a></h4>
+      <p>File: <b>~/lib/samples/js/AddButton.js</b></p>
+      <p>
+        The Add Button sample is another very simple sample. All you need to do is:
+      </p>
+      <ol>
+        <li>
+          Create the <a href="https://forerunnersw.com/Docs/$.forerunner.reportViewerEZ.html" target="_blank">reportViewerEZ widget</a>
+        </li>
+        <li>
+          Get the <a href="https://forerunnersw.com/Docs/$.forerunner.reportViewer.html" target="_blank">reportViewer widget</a> and call
+          the loadReport method.
+        </li>
+        <li>
+          Define a button variable. Note that we include the un-minified file: <b>~/Forerunner/Bundles/Forerunner-tools.js</b>. This file has the definitions for all
+          the Mobilizer buttons and tool pane items. Use that file as a reference source for how to define buttons and items.
+        </li>
+        <li>
+          Get the <a href="https://forerunnersw.com/Docs/$.forerunner.toolbar.html" target="_blank">toolbar widget</a> and then call
+          the addTools method. Note that the addTools method is defined in the <a href="https://forerunnersw.com/Docs/$.forerunner.toolBase.html" target="_blank">
+          toolBase widget</a> but since toolbar is derived from toolBase, you can call any / all the methods defined in toolBase.
+        </li>
+      </ol>
+    </li>
+    <li>
+      <h4><a href="~/#as-removebutton">Remove Button</a></h4>
+      <p>File: <b>~/lib/samples/js/RemoveButton.js</b></p>
+      <p>
+        This sample creates a viewer like the previous few samples. It then gets the tool pane and toolbar widget from the reportViewerEZ
+        widget. Next you will want to find the specific selector class for any button you may want to hide in your browser of choice. An
+        easy way to find the selector class is to do an "Inspect element" on the button you want to hide. Once you find the actual selector
+        class, go to the file: <b>~/Forerunner/Bundles/Forerunner-tools.js</b> and find the symbolic name defined for the button (like in
+        the sample). You then need to cause a style of display: "none"; to be defined on the button.
+      </p>
+    </li>
+    <li>
+      <h4><a href="~/#as-dashboard">Dashboard</a></h4>
+      <p>File: <b>~/lib/samples/js/Dashboard.js</b></p>
+      <p>
+        The dashboard sample is basically the same as the ReportViewerEZ sample except done three separate times.
+      </p>
+    </li>
+    <li>
+      <h4><a href="~/#as-selector">Report Selector</a></h4>
+      <p>File: <b>~/lib/samples/js/Selector.js</b></p>
+      <p>
+        The report selector sample is a good one to look at to see how to call the
+        <a href="#as-help/Api/GET-api-ReportManager-GetItems_view_path_instance" target="_blank">GetItems</a> REST API call.
+        We built this sample for a customer who wanted this style of report selector. 
+      </p>
+    </li>
+    <li>
+      <h4><a href="~/#as-params">Parameters</a></h4>
+      <p>File: <b>~/lib/samples/js/Parameters.js</b></p>
+      <p>
+        The parameters sample again creates a ReportViewerEZ and calls loadReport. Where this sample is different is that the
+        call to loadReport now contains a parameters object that gets passed in. If you want to know more about the parameter
+        definitions see the forum article here to see how to enable the
+        <a href="https://forerunnersw.com/SMForum/index.php?topic=60.msg79#msg79" target="_blank">paramUtil dialog</a>.
+      </p>
+    </li>
+  </ul>
+
+  @* API *@
+  <h3>API</h3>
+  <p>
+    The REST API endpoints are all annotated with documentation comments. The <a href="#as-help" target="_blank">API</a> navigation
+    bar button will generate the help page for the API calls. This page was adapted from the 
+    <a href="https://curah.microsoft.com/282829/how-to-create-help-pages-for-aspnet-web-api" target="_blank">Microsoft Web API Help Page</a>
+    information presented here.
+  </p>
+
+   @* About *@
+  <h3>About the All Samples Application</h3>
+  <h4>Single Page Application (SPA)</h4>
+  <p>
+    This application is built as an SPA. It is also built using <a href="http://getbootstrap.com/" target="_blank">bootstrap.js</a>. Specifically
+    the navigation bar is from bootstrap. Using bootstrap in this application enables the following:
+  </p>
+  <ol>
+    <li>It demonstrates that the forerunner SDK is compatible with bootstrap.</li>
+    <li>it enables the navigation bar to be responsive. So in addition to the Forerunner SDK widgets, the application
+  itself is also responsive to difference device sizes.</li>
+  </ol>
+  <p>
+    Each new section that is shown onscreen is done via a single server round trip and then it is just a client side context switch. This
+    enables this application to only load information from the server when it is needed and thereby operates very efficiently. To see how
+    the context switching works, you can look at the sample file: <b>~/lib/samples/js/router.js</b>.
+  </p>
+  <h4>Browser History</h4>
+  <p>
+    The Forerunner SDK contains two widgets that allow this sample as well as your own applications to use the browser history. I.e.,
+    hashtag navigation. The sample file <b>~/lib/samples/js/router.js</b> provides the sample code for how to use the Forerunner SDK
+    <a href="https://forerunnersw.com/Docs/$.forerunner.router.html" target="_blank">router widget</a> along with the 
+    <a href="https://forerunnersw.com/Docs/$.forerunner.history.html" target="_blank"> Forerunner.history singleton widget</a>. The
+    advantages of using browser history (a.k.a., hashtag navigation) is that the browser forward and back buttons work as expected
+    and the user can bookmark any place in your application and then get back to the same context.
+  </p>
+
 </body>
 </html>

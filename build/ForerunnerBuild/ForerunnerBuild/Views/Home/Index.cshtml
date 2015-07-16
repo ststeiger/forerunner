@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                 <h2>@ViewBag.Message</h2>
+            </hgroup>
+            
+        </div>
+    </section>
+}
+<h3>Click on the link to start an official build:</h3>
+<ol class="round">
+    <li class="">
+        <a href="#" onclick="run(5);">Version 5</a><a  style="padding-left:30px;"  href="#" onclick="run(4);">Version 4</a><a style="padding-left:30px;" href="#" onclick="run(3);">Version 3</a>
+        <div id="Run"></div>
+    </li>
+
+    <li class="">       
+        <a href="#" onclick="status(4);">Status</a>
+        <div id="Status"></div>
+    </li>
+
+   
+</ol>
+
+<script>
+    function run(version) {
+        $.ajax({
+            url: "/api/build/RunBuild",
+            data: {
+                version: version                
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.run)
+                    $("#Run").html("<p>Mobilizer version " + version + " build started</p>");
+                else
+                    $("#Run").html("<p>Mobilizer version " + version + " build failed to start</p>");
+            },
+            fail: function () {
+                $("#Run").html("<p>Mobilizer version " + version + " build failed to start</p>");
+            }
+        });
+    }
+
+    setInterval( function() {status();},3000);
+
+    function status() {
+        $("#Status").html("<p></p>");
+        $.ajax({
+            url: "/api/build/BuildStatus",
+            dataType: "json",
+            success: function (data) {
+                var htmlOut = "";
+                for (var i = 0; i < data.processes.length; i++) {
+                    htmlOut += "<p>build " + data.processes[i].build + " running</p>";
+                }
+                $("#Status").html(htmlOut);
+            },
+            fail: function () {
+                $("#Status").html("<p>Status failed</p>");
+            }
+        });
+    }
+
+</script>

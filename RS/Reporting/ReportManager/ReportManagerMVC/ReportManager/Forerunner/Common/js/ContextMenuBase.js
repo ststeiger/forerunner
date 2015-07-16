@@ -13,8 +13,14 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var contextMenu = locData.contextMenu;
+    var locData;
+    var contextMenu;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        contextMenu = locData.contextMenu;
+    });
+
+    
 
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;

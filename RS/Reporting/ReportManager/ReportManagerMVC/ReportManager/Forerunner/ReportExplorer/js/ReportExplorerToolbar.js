@@ -17,7 +17,8 @@ $(function () {
     var mi = forerunner.ssr.tools.mergedButtons;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+   
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -82,55 +83,65 @@ $(function () {
             var me = this;
             me._super();
 
-            me.element.empty();
-            me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
 
-            //check whether hide home button is enable
-            var toolbarList = [tb.btnMenu, tb.btnBack];
+                me.element.empty();
+                me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
 
-            //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                if (me.options.path !== '/') {
-                    toolbarList.push(mi.btnFav);
+                //check whether hide home button is enable
+                var toolbarList = [tb.btnMenu, tb.btnBack];
+
+                //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
+                if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                    if (me.options.path !== "/") {
+                        toolbarList.push(mi.btnFav);
+                    }
+                    toolbarList.push(tb.btnSetup);
                 }
-                toolbarList.push(tb.btnSetup);
-            }
 
-            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
-                //add home button based on the user setting
-                toolbarList.push(tb.btnHome);
-            }
-
-            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
+                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
                     //add home button based on the user setting
-                    toolbarList.push(tb.btnMySubscriptions);
+                    toolbarList.push(tb.btnHome);
                 }
 
-                //recent view feature need ReportServerDB support
-                if (me.options.dbConfig.SeperateDB !== true) {
-                    toolbarList.push(tb.btnRecent);
-                }
-                toolbarList.push(tb.btnFav);
-            }
+                if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                    if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
+                        //add home button based on the user setting
+                        toolbarList.push(tb.btnMySubscriptions);
+                    }
 
-            if (forerunner.ajax.isFormsAuth()) {
+                    //recent view feature need ReportServerDB support
+                    if (me.options.dbConfig.SeperateDB !== true) {
+                        toolbarList.push(tb.btnRecent);
+                    }
+                    toolbarList.push(tb.btnFav);
+                }
+
                 toolbarList.push(tb.btnLogOff);
-            }
+                
 
-            toolbarList.push(tg.explorerFindGroup);
 
-            me.addTools(1, true, toolbarList);
-            me._initCallbacks();
+                toolbarList.push(tg.explorerFindGroup);
 
-            // Hold onto the folder buttons for later
-            var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
-            var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
-            var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
-            me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+                me.addTools(1, true, toolbarList);
 
-            // Make sure the tools are configured properly
-            me.windowResize();
+                forerunner.ajax.isFormsAuth(function (isForms) {
+                    if (!isForms)
+                        me.hideTool(tb.btnLogOff.selectorClass);
+                });
+
+                me._initCallbacks();
+
+                // Hold onto the folder buttons for later
+                var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
+                var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
+                var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
+                me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+                // Make sure the tools are configured properly
+                me.windowResize();
+            });
         },
         _create: function () {
         }

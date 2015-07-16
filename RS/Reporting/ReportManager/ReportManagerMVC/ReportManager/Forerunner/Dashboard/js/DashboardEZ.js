@@ -128,89 +128,100 @@ $(function () {
                 me.layout = me.options.DefaultAppTemplate;
             }
 
-            me._checkPermission();
+            me._checkPermission(function () {
 
-            forerunner.device.allowZoom(false);
-            me.layout.$mainsection.html(null);
+                forerunner.device.allowZoom(false);
+                me.layout.$mainsection.html(null);
 
-            me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
-            me.layout.$mainsection.append(me.$dashboardContainer);
-            me.$dashboardContainer.dashboardEditor({
-                $appContainer: me.layout.$container,
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                rsInstance: me.options.rsInstance,
-                handleWindowResize: false
-            });
+                me.$dashboardContainer = $("<div class='fr-dashboard'></div>");
+                me.layout.$mainsection.append(me.$dashboardContainer);
+                me.$dashboardContainer.dashboardEditor({
+                    $appContainer: me.layout.$container,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    rsInstance: me.options.rsInstance,
+                    handleWindowResize: false
+                });
 
-            me.$toolbar = me.layout.$mainheadersection;
-            me.$toolbar.dashboardToolbar({
-                navigateTo: me.options.navigateTo,
-                $appContainer: me.layout.$container,
-                $dashboardEZ: me.element,
-                $dashboardEditor: me.getDashboardEditor(),
-                enableEdit: me.options.enableEdit
-            });
+                me.$toolbar = me.layout.$mainheadersection;
+                me.$toolbar.dashboardToolbar({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: me.layout.$container,
+                    $dashboardEZ: me.element,
+                    $dashboardEditor: me.getDashboardEditor(),
+                    enableEdit: me.options.enableEdit
+                });
 
-            var $lefttoolbar = me.layout.$leftheader;
-            if ($lefttoolbar !== null) {
-                $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
-            }
-
-            me.$toolpane = me.layout.$leftpanecontent;
-            me.$toolpane.dashboardToolPane({
-                navigateTo: me.options.navigateTo,
-                $appContainer: me.layout.$container,
-                $dashboardEZ: me.element,
-                $dashboardEditor: me.getDashboardEditor(),
-                enableEdit: me.options.enableEdit
-            });
-
-            me.favoriteInstance = $({}).favoriteModel({
-                $toolbar: me.$toolbar,
-                $toolpane: me.$toolpane,
-                $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
-            });
-            me.favoriteInstance.favoriteModel('setFavoriteState', me.options.path);
-
-            if (me.options.isReportManager) {
-                var listOfButtons = [];
-
-                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
-                    listOfButtons.push(dtb.btnHome);
+                var $lefttoolbar = me.layout.$leftheader;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $appContainer: me.layout.$container });
                 }
 
-                if (me.options.dbConfig.UseMobilizerDB === true) {
-                    if (me.options.dbConfig.SeperateDB !== true) {
-                        listOfButtons.push(dtb.btnRecent);
+                me.$toolpane = me.layout.$leftpanecontent;
+                me.$toolpane.dashboardToolPane({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: me.layout.$container,
+                    $dashboardEZ: me.element,
+                    $dashboardEditor: me.getDashboardEditor(),
+                    enableEdit: me.options.enableEdit
+                });
+
+                me.favoriteInstance = $({}).favoriteModel({
+                    $toolbar: me.$toolbar,
+                    $toolpane: me.$toolpane,
+                    $appContainer: me.options.$appContainer,
+                    rsInstance: me.options.rsInstance
+                });
+                me.favoriteInstance.favoriteModel("setFavoriteState", me.options.path);
+
+                if (me.options.isReportManager) {
+                    var listOfButtons = [];
+
+                    if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
+                        listOfButtons.push(dtb.btnHome);
                     }
 
-                    listOfButtons.push(dtb.btnFavorite);
+                    if (me.options.dbConfig.UseMobilizerDB === true) {
+                        if (me.options.dbConfig.SeperateDB !== true) {
+                            listOfButtons.push(dtb.btnRecent);
+                        }
+
+                        listOfButtons.push(dtb.btnFavorite);
+                    }
+
+
+                   listOfButtons.push(dtb.btnLogOff);
+
+                    me.$toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
+                    me.$toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
+                    
+                    forerunner.ajax.isFormsAuth(function (isForms) {
+                        if (!isForms)
+                            me.$toolbar.dashboardToolbar("hideTool", dtb.btnLogOff.selectorClass);
+                    });
+
+
                 }
-                
 
-                if (forerunner.ajax.isFormsAuth()) {
-                    listOfButtons.push(dtb.btnLogOff);
+                if (me.options.historyBack) {
+                    me.$toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
+                    me.$toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
                 }
-                me.$toolbar.dashboardToolbar("addTools", 4, true, listOfButtons);
-                me.$toolpane.dashboardToolPane("addTools", 1, true, [dtp.itemFolders, tg.dashboardItemFolderGroup]);
-            }
 
-            if (me.options.historyBack) {
-                me.$toolbar.dashboardToolbar("addTools", 2, true, [dtb.btnBack]);
-                me.$toolpane.dashboardToolPane("addTools", 3, true, [dtp.itemBack]);
-            }
-
-            me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
-            me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+                me.layout.$rightheaderspacer.height(me.layout.$topdiv.height());
+                me.layout.$leftheaderspacer.height(me.layout.$topdiv.height());
+            });
         },
-        _checkPermission: function () {
+        _checkPermission: function (done) {
             var me = this;
             //Update Content: update resource content (dashboard)
             //for more properties, add to the list
             var permissionList = ["Update Content", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","));
+            me.permissions = forerunner.ajax.hasPermission(me.options.path, permissionList.join(","), function (permission) {
+                me.permissions = permission;
+                if (done)
+                    done();
+            });
         },
         /**
          * Get current path user permission

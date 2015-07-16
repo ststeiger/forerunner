@@ -964,7 +964,7 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         //gotoCurrent: true,
-                        dateFormat: forerunner.ssr._internal.getDateFormat(),
+                        dateFormat: forerunner.ssr._internal.getDateFormat(me.options.$reportViewer.locData),
                         onClose: function () {
                             var $input = $control;
                             $input.removeAttr("disabled").removeClass("datepicker-focus");
@@ -2276,7 +2276,7 @@ $(function () {
                 //Take care of the big dropdown list
                 return $param.attr("backendValue");
             } else if ($param.attr("datatype").toLowerCase() === "datetime") {
-                var m = moment($param.val(), forerunner.ssr._internal.getMomentDateFormat(), true);
+                var m = moment($param.val(), forerunner.ssr._internal.getMomentDateFormat(me.options.$reportViewer.locData), true);
 
                 //hard code a sql server accept date format here to parse all culture
                 //date format to it. It's ISO 8601 format below 
@@ -2349,8 +2349,12 @@ $(function () {
                 return null;
             }
 
-            var dateFormat = forerunner.ssr._internal.getStandardMomentDateFormat();
+            var dateFormat = forerunner.ssr._internal.getStandardMomentDateFormat(me.options.$reportViewer.locData);
             var m = moment(defaultDatetime, dateFormat);
+
+            //check for saved paramter default format
+            if (defaultDatetime.substr(4, 1) === "/")
+                m = moment(defaultDatetime,"YYYY/MM/DD");            
 
             if (!m.isValid()) {
                 me._DebugLog("_getDateTimeFromDefault", {

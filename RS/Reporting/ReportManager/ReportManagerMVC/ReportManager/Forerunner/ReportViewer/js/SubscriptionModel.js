@@ -16,7 +16,10 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
 
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {

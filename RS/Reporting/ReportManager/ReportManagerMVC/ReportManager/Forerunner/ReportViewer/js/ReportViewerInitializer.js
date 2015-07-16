@@ -10,7 +10,10 @@ $(function () {
     var events = constants.events;
     var toolTypes = ssr.constants.toolTypes;
     var widgets = constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -111,10 +114,14 @@ $(function () {
                     listOfButtons.push(tb.btnFavorite);
                 }
 
-                if (forerunner.ajax.isFormsAuth()) {
-                    listOfButtons.push(tb.btnLogOff);
-                }
+                listOfButtons.push(tb.btnLogOff);
+
                 $toolbar.toolbar("addTools", 12, true, listOfButtons);
+
+                forerunner.ajax.isFormsAuth(function (isForms) {
+                    if (!isForms)
+                        $toolbar.toolbar("hideTool", tb.btnLogOff.selectorClass);                        
+                });
 
                 if (me.options.dbConfig.UseMobilizerDB === true) {
                     $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);

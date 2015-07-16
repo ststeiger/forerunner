@@ -6,8 +6,12 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var messages = locData.messages;
+    var locData;
+    var messages;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        messages = locData.messages;
+    });
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -104,8 +108,12 @@ $(function () {
         },
         loadTemplate: function (templateName) {
             var me = this;
-            var template = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName, "text");
-            me.dashboardDef.template = template;
+
+            var locData;
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text", function (loc) {
+                me.dashboardDef.template = loc;
+            });
+
         },
 
     };

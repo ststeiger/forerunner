@@ -13,8 +13,14 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var createDashboard = locData.createDashboard;
+    var locData;
+    var createDashboard ;
+
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer","json", function (loc) {
+        locData = loc;
+        createDashboard = locData.createDashboard;
+    });
+    
     var ssr = forerunner.ssr;
 
     /**
@@ -48,12 +54,17 @@ $(function () {
 
             me.$select = me.element.find(".fr-cdb-template-name");
 
-            var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
-            var templates = dashboards.templates;
-            for (var key in templates) {
-                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
-                me.$select.append($option);
-            }
+            //var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
+            var dashboards;
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                dashboards = loc;
+
+                var templates = dashboards.templates;
+                for (var key in templates) {
+                    var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
+                    me.$select.append($option);
+                }
+            });
         },
         _init: function () {
             var me = this;

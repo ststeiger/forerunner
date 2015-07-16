@@ -85,6 +85,9 @@ namespace ForerunnerBuild.Controllers
             if (version == 3)
                 workingFolder = @"c:\github\forerunner_v3";
 
+            if (version == 4)
+                workingFolder = @"c:\github\forerunnerV4";
+
             lock (runningBuilds)
             {
                 if (runningBuilds.ContainsKey(version))

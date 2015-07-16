@@ -16,7 +16,13 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    //dont load at file parse, file will be loaded when called.
+    setTimeout(function () {
+        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+            locData = loc;
+        });
+    }, 1);
 
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
@@ -94,7 +100,7 @@ $(function () {
             me.reportPath = modelData.reportPath;
             //restore prior select set id
             me.currentSetId = modelData.currentSetId || null;
-            
+
             me._triggerModelChange();
         },
         cloneServerData: function () {
@@ -184,7 +190,7 @@ $(function () {
             data.optionArray = me.getOptionArray(me.serverData.parameterSets);
             return data;
         },
-        _triggerModelChange: function() {
+        _triggerModelChange: function () {
             var me = this;
             me._trigger(events.modelChanged, null, me._modelChangeData());
         },
@@ -228,8 +234,7 @@ $(function () {
                     reportPath: reportPath,
                     instance: me.options.rsInstance,
                 },
-                dataType: "json",
-                async: false,
+                dataType: "json",         
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
@@ -256,7 +261,7 @@ $(function () {
                 }
             });
         },
-        _saveModel: function(success, error) {
+        _saveModel: function (success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
             forerunner.ajax.post(
@@ -340,4 +345,5 @@ $(function () {
         }
 
     });  // $.widget(
+    
 });  // $(function ()

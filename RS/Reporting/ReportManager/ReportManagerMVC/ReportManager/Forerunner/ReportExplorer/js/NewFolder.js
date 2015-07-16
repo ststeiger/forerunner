@@ -12,8 +12,14 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var newFolder = locData.newFolder;
+    var locData;
+    var newFolder;
+
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        newFolder = locData.newFolder;
+    });
+  
     var helper = forerunner.helper;
 
     /**
@@ -33,8 +39,7 @@ $(function () {
      * });
      */
     $.widget(widgets.getFullname(widgets.newFolder), $.forerunner.dialogBase, /** @lends $.forerunner.newFolder */ {
-        options: {
-            title: newFolder.title,
+        options: {            
             iconClass: "fr-nfd-new-folder-icon",
             parentFolder: "",
             $reportExplorer: null
@@ -43,6 +48,7 @@ $(function () {
             var me = this;
             me._super();
 
+            if (!me.options.title) me.options.title = newFolder.title;
             var description = newFolder.description.replace("{0}", me.options.parentFolder);
 
             var $main = $(

@@ -12,7 +12,11 @@ $(function () {
     var tp = forerunner.ssr.tools.toolpane;
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    //var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;    
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
 
     /**
      * ToolPane widget used with the reportViewer
@@ -154,6 +158,12 @@ $(function () {
             
             me.addTools(1, false, me._viewerItems());
 
+            forerunner.ajax.isFormsAuth(function (isForms) {
+                if (!isForms)
+                    me.hideTool(tp.itemLogOff.selectorClass);
+            });
+
+
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true && !me.options.$reportViewer.reportViewer("showSubscriptionUI")) {
                 me.hideTool(tp.itemEmailSubscription.selectorClass);
             }
@@ -198,12 +208,7 @@ $(function () {
                 listOfItems.push(mi.itemProperty);
             }
 
-            listOfItems.push(tg.itemFindGroup);
-
-            //check authentication type to show log off button or not 
-            if (forerunner.ajax.isFormsAuth()) {
-                listOfItems.push(mi.itemLogOff);
-            }
+            listOfItems.push(tg.itemFindGroup);   
 
             return listOfItems;
         },

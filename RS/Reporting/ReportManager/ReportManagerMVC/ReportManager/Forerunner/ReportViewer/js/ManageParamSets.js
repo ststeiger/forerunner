@@ -12,8 +12,13 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var manageParamSets = locData.manageParamSets;
+    var locData;
+    var manageParamSets;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        manageParamSets = locData.manageParamSets;
+    });
+    
 
     /**
      * Widget used to manage parameter set

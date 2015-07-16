@@ -32,82 +32,90 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-            var userSettings = locData.userSettings;
-            var unit = locData.unit;
+            
+            
+           
+            var locData;
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+                var userSettings = locData.userSettings;
+                var unit = locData.unit;
 
-            var buildVersion = forerunner.ajax.getBuildVersion();
+                me.element.html("");
+                me.element.off(events.modalDialogGenericSubmit);
+                me.element.off(events.modalDialogGenericCancel);
 
-            me.element.html("");
-            me.element.off(events.modalDialogGenericSubmit);
-            me.element.off(events.modalDialogGenericCancel);
-
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
-            var $theForm = new $(
-            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                headerHtml +
-                // form
-                "<form class='fr-us-form fr-core-dialog-form'>" +
-                    "<table>" +
-                        "<tr>" +
-                            "<td>" +
-                                "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                            "</td>" +
-                            "<td>" +
-                                "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-                            "</td>" +
-                        "</tr>" +
-                        "<tr>" +
-                            "<td>" +
-                                "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
-                            "</td>" +
-                            "<td>" +
-                                "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
-                            "</td>" +
-                        "</tr>" +
-                         "<tr>" +
-                            "<td>" +
-                                "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
-                            "</td>" +
-                            "<td>" +
-                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
-                                "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
-                                "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
-                                 "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
-                                "</select" +
-                            "</td>" +
-                        "</tr>" +
-                    "</table>" +
-                    // Ok button
-                    "<div class='fr-core-dialog-submit-container'>" +
-                        "<div class='fr-core-center'>" +
-                        "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
+                var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
+                var $theForm = new $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    // form
+                    "<form class='fr-us-form fr-core-dialog-form'>" +
+                        "<table>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                                "</td>" +
+                            "</tr>" +
+                            "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                                "</td>" +
+                            "</tr>" +
+                             "<tr>" +
+                                "<td>" +
+                                    "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
+                                "</td>" +
+                                "<td>" +
+                                    "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
+                                    "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
+                                    "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
+                                     "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
+                                    "</select" +
+                                "</td>" +
+                            "</tr>" +
+                        "</table>" +
+                        // Ok button
+                        "<div class='fr-core-dialog-submit-container'>" +
+                            "<div class='fr-core-center'>" +
+                            "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
+                        "</div>" +
+                    "</form>" +
+                    "<div class='fr-buildversion-container'>" +
                     "</div>" +
-                "</form>" +
-                "<div class='fr-buildversion-container'>" +
-                    buildVersion +
-                "</div>" +
-            "</div>");
+                "</div>");
 
-            me.element.append($theForm);
+                me.element.append($theForm);
 
-            //disable form auto submit when click enter on the keyboard
-            me.element.find(".fr-us-form").on("submit", function () { return false; });
+                //Set build number            
+                forerunner.ajax.getBuildVersion(function (version) {
+                    me.element.find(".fr-buildversion-container").html(version);
+                });
 
-            me.element.find(".fr-us-submit-id").on("click", function (e) {
-                me._saveSettings();
-            });
+                //disable form auto submit when click enter on the keyboard
+                me.element.find(".fr-us-form").on("submit", function () { return false; });
 
-            me.element.find(".fr-us-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
+                me.element.find(".fr-us-submit-id").on("click", function (e) {
+                    me._saveSettings();
+                });
 
-            me.element.on(events.modalDialogGenericSubmit, function () {
-                me._saveSettings();
-            });
+                me.element.find(".fr-us-cancel").on("click", function (e) {
+                    me.closeDialog();
+                });
 
-            me.element.on(events.modalDialogGenericCancel, function () {
-                me.closeDialog();
+                me.element.on(events.modalDialogGenericSubmit, function () {
+                    me._saveSettings();
+                });
+
+                me.element.on(events.modalDialogGenericCancel, function () {
+                    me.closeDialog();
+                });
             });
         },
         _getSettings: function () {

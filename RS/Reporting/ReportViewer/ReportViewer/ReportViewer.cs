@@ -931,7 +931,6 @@ namespace Forerunner.SSRS.Viewer
             rs.ExecutionHeaderValue = execHeader;
             try
             {
-                GetServerRendering();
                 if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else
@@ -945,8 +944,6 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                if (GetServerInfo().ServerRendering)
-                    format = "ForerunnerThumbnail";
                 if (!GetServerInfo().MHTMLRendering)
                 {
                    // Support for Express and Web that do not support MHTML                
@@ -961,14 +958,10 @@ namespace Forerunner.SSRS.Viewer
                 result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                if (!GetServerInfo().ServerRendering)
-                {
-                    ThreadPool.QueueUserWorkItem(this.GenerateImage, result);
-                    waitHandle.WaitOne();
-                    return imageResult;
-                }
-                else
-                    return result;
+                ThreadPool.QueueUserWorkItem(this.GenerateImage, result);
+                waitHandle.WaitOne();
+                return imageResult;
+
             }
             catch (Exception e)
             {

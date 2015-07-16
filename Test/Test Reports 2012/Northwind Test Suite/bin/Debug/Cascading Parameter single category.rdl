@@ -390,34 +390,6 @@ WHERE        ([Order Details].ProductID = 1)</CommandText>
         </DataSetReference>
       </ValidValues>
     </ReportParameter>
-    <ReportParameter Name="StartDate">
-      <DataType>DateTime</DataType>
-      <Prompt>Start Date</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Order</DataSetName>
-          <ValueField>OrderDate</ValueField>
-          <LabelField>OrderDate</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="EndDate">
-      <DataType>DateTime</DataType>
-      <DefaultValue>
-        <DataSetReference>
-          <DataSetName>ReportOrders</DataSetName>
-          <ValueField>ShippedDate</ValueField>
-        </DataSetReference>
-      </DefaultValue>
-      <Prompt>End Date</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Order</DataSetName>
-          <ValueField>ShippedDate</ValueField>
-          <LabelField>ShippedDate</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>1fbbd23b-e63f-4878-9354-19c8824461af</rd:ReportID>

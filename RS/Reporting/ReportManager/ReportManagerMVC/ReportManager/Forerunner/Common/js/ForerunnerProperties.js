@@ -13,7 +13,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+   
 
     /**
     * Widget used to manage property
@@ -42,6 +43,9 @@ $(function () {
         _init: function () {
             var me = this;
 
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+            
             me.guid = forerunner.helper.guidGen();
 
             me.element.html("");
@@ -82,6 +86,7 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
+          });
         },
         _create: function () {
             
@@ -526,8 +531,7 @@ $(function () {
 
                     forerunner.ajax.ajax({
                         type: "POST",
-                        dataType: "text",
-                        async: false,
+                        dataType: "text",                        
                         url: forerunner.config.forerunnerAPIBase() + "ReportManager/SaveReportProperty/",
                         data: {                            
                             path: me.curPath,
@@ -555,6 +559,7 @@ $(function () {
                                 forerunner.cache.itemProperty[path].Name = itemName;
                                 forerunner.cache.itemProperty[path].Description = descriptionInput;
                             }
+                            me.closeDialog();
                         },
                         fail: function (data) {
                             me._description = "";
@@ -629,15 +634,7 @@ $(function () {
 
             var content = me._getSearchFolder();
 
-            if (content) {
-                content = JSON.parse(content);//replace(/"/g, '')
-                //me.$sfForm.find(".fr-sf-foldername").val(content.name)
-                me.$sfForm.find(".fr-sf-foldertags").val(content.tags.replace(/"/g, ""));
-            }
-            else {
-                //me.$sfForm.find(".fr-sf-foldername").val("")
-                me.$sfForm.find(".fr-sf-foldertags").val("");
-            }
+           
         },
         _getSearchFolder: function () {
             var me = this;
@@ -645,8 +642,7 @@ $(function () {
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager/Resource";
 
             forerunner.ajax.ajax({
-                url: url,
-                async: false,
+                url: url,                
                 type: "GET",
                 dataType: "text",
                 data: {
@@ -655,6 +651,13 @@ $(function () {
                 },
                 success: function (data) {
                     me._searchFolder = data;
+                    if (me._searchFolder) {
+                        me._searchFolder = JSON.parse(me._searchFolder);//replace(/"/g, '')
+                        me.$sfForm.find(".fr-sf-foldertags").val(me._searchFolder.tags.replace(/"/g, ""));
+                    }
+                    else {
+                        me.$sfForm.find(".fr-sf-foldertags").val("");
+                    }
                 },
                 error: function (data) { }
             });
@@ -702,32 +705,48 @@ $(function () {
                 return;
             }
 
-            forerunner.ajax.ajax({
-                type: "GET",
-                dataType: "text",
-                url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty",
-                async: false,
-                data: {
-                    path: path,
-                    propertyName: "Hidden,Description,ForerunnerRDLExt,Name",
-                    instance: me.options.rsInstance,
-                },
-                success: function (data) {
-                    try {
-                        me.property = forerunner.cache.itemProperty[path] = JSON.parse(data);
-                    } catch (e) {
-                        me.property = forerunner.cache.itemProperty[path] = data;
-                    }
+            //setup wait loop
+            var loop = function () {
+                if (me._locked)
+                    setTimeout(loop, 5);
+                else
+                    callback.call(context || me, me.property);
+            };
 
-                    if (typeof callback === "function") {
-                        callback.call(context || me, me.property);
-                    }
-                    return;
-                },
-                fail: function (data) {
+            if (me._locked) {
+                loop();
+            }
+            else {
 
-                },
-            });
+                me._locked = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    dataType: "text",
+                    url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty",
+                    data: {
+                        path: path,
+                        propertyName: "Hidden,Description,ForerunnerRDLExt,Name",
+                        instance: me.options.rsInstance,
+                    },
+                    success: function (data) {
+
+                        try {
+                            me.property = forerunner.cache.itemProperty[path] = JSON.parse(data);
+                        } catch (e) {
+                            me.property = forerunner.cache.itemProperty[path] = data;
+                        }
+                        me._locked = false;
+
+                        if (typeof callback === "function") {
+                            callback.call(context || me, me.property);
+                        }
+                        return;
+                    },
+                    fail: function (data) {
+                        me._locked = false;
+                    },
+                });
+            }
         }
     });
 });

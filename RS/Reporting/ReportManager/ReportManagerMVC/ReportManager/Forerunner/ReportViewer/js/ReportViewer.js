@@ -173,13 +173,17 @@ $(function () {
                 me.reportPath = data.newPath || me.reportPath;
             });
         },
-        _checkPermission: function (path) {
+        _checkPermission: function (path,done) {
             var me = this;
             //Create Subscription: create subscription
             //update properties: update report properties (tags)
             //for more properties, add to the list
             var permissionList = ["Create Subscription", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","));
+            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","),me.options.rsInstance, function (permission) {
+                me.permissions = permission;
+                if (done)
+                    done();
+            });
         },
         /**
          * Get current user permission
@@ -848,23 +852,24 @@ $(function () {
 
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
-            me._resetContextIfInvalid();
-            me.scrollLeft = 0;
-            me.scrollTop = 0;
+            me._resetContextIfInvalid(function () {
+                me.scrollLeft = 0;
+                me.scrollTop = 0;
 
-            if (newPageNum > me.numPages && me.numPages !==0 ) {
-                newPageNum = 1;
-            }
-            if (newPageNum < 1) {
-                newPageNum = me.numPages;
-            }
-            
-            if (newPageNum !== me.curPage) {
-                if (me.lock === 0) {
-                    me.lock = 1;
-                    me._loadPage(newPageNum, false);
+                if (newPageNum > me.numPages && me.numPages !== 0) {
+                    newPageNum = 1;
                 }
-            }
+                if (newPageNum < 1) {
+                    newPageNum = me.numPages;
+                }
+
+                if (newPageNum !== me.curPage) {
+                    if (me.lock === 0) {
+                        me.lock = 1;
+                        me._loadPage(newPageNum, false);
+                    }
+                }
+            });
         },
         _hideDocMap: function() {
             var me = this;
@@ -879,45 +884,54 @@ $(function () {
         },
         _showDocMap: function () {
             var me = this;
-            me._resetContextIfInvalid();
-            var docMap = me.options.docMapArea;
-            docMap.reportDocumentMap({ $reportViewer: me });
 
-            //get the doc map
-            if (!me.docMapData) {
-                forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/DocMapJSON/",
-                    data: {
-                        SessionID: me.sessionID,
-                        instance: me.options.rsInstance,
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        me.docMapData = data;
-                        docMap.reportDocumentMap("write", data);
-                    },
-                    fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
-                });
-            }
+            //do this after get data
+            var done = function () {
+                var pos = me.getScrollPosition();
 
-            var pos = me.getScrollPosition();
+                me.savedTop = pos.top;
+                me.savedLeft = pos.left;
 
-            me.savedTop = pos.top;
-            me.savedLeft = pos.left;
+                me.element.mask();
+                me.options.docMapArea.slideUpShow();
+                me._trigger(events.showDocMap);
 
-            me.element.mask();
-            docMap.slideUpShow();
-            me._trigger(events.showDocMap);
+                //if doc map opened from toolpane, DefaultAppTemplate will pass savePosition here.
+                setTimeout(function () {
+                    if (me.options.savePosition) {
+                        me.savedTop = me.options.savePosition.top;
+                        me.savedLeft = me.options.savePosition.left;
+                        me.options.savePosition = null;
+                    }
+                }, 100);
+            };
 
-            //if doc map opened from toolpane, DefaultAppTemplate will pass savePosition here.
-            setTimeout(function () {
-                if (me.options.savePosition) {
-                    me.savedTop = me.options.savePosition.top;
-                    me.savedLeft = me.options.savePosition.left;
-                    me.options.savePosition = null;
+
+            me._resetContextIfInvalid(function () {
+                var docMap = me.options.docMapArea;
+                docMap.reportDocumentMap({ $reportViewer: me });
+
+                //get the doc map
+                if (!me.docMapData) {
+                    forerunner.ajax.ajax({
+                        url: me.options.reportViewerAPI + "/DocMapJSON/",
+                        data: {
+                            SessionID: me.sessionID,
+                            instance: me.options.rsInstance,
+                        },
+                        dataType: "json",      
+                        success: function (data) {
+                            me.docMapData = data;
+                            docMap.reportDocumentMap("write", data);
+                            done();
+                        },                        
+                        fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
+                    });
                 }
-            }, 100);
+                else
+                    done();
+                
+            });
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report
@@ -1109,32 +1123,33 @@ $(function () {
          */
         showNav: function () {
             var me = this;
-            me._resetContextIfInvalid();
-            if (me.pageNavOpen) {//close nav
-                me.pageNavOpen = false;
-                if (window.removeEventListener) {
-                    window.removeEventListener("orientationchange", me._handleOrientation, false);
+            me._resetContextIfInvalid(function () {
+                if (me.pageNavOpen) {//close nav
+                    me.pageNavOpen = false;
+                    if (window.removeEventListener) {
+                        window.removeEventListener("orientationchange", me._handleOrientation, false);
+                    }
+                    else {
+                        window.detachEvent("orientationchange", me._handleOrientation);
+                    }
+                    me.element.unmask(function () { me.showNav.call(me); });
                 }
-                else {
-                    window.detachEvent("orientationchange", me._handleOrientation);
+                else {//open nav
+                    me.pageNavOpen = true;
+                    if (window.addEventListener) {
+                        window.addEventListener("orientationchange", me._handleOrientation, false);
+                    } else {
+                        window.attachEvent("orientationchange", me._handleOrientation);
+                    }
+                    me.element.mask(function () { me.showNav.call(me); });
                 }
-                me.element.unmask(function() { me.showNav.call(me);});
-            }
-            else {//open nav
-                me.pageNavOpen = true;
-                if (window.addEventListener) {
-                    window.addEventListener("orientationchange", me._handleOrientation, false);
-                } else {
-                    window.attachEvent("orientationchange", me._handleOrientation);
-                }
-                me.element.mask(function() { me.showNav.call(me);});
-            }
 
-            if (me.options.pageNavArea){
-                me.options.pageNavArea.pageNav("showNav");
-            }
-            me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
-            me._reLayoutPage(me.curPage);
+                if (me.options.pageNavArea) {
+                    me.options.pageNavArea.pageNav("showNav");
+                }
+                me._trigger(events.showNav, null, { newPageNum: me.curPage, path: me.reportPath, open: me.pageNavOpen });
+                me._reLayoutPage(me.curPage);
+            });
         },
         _handleOrientation: function () {
             var me = this;
@@ -1174,17 +1189,16 @@ $(function () {
                         SessionID: me.sessionID,
                         Instance: me.options.rsInstance,
                     },
-                    async: true,
                     success: function (data) {
                         //console.log("Saved");
                     }
                 });
             }
         },
-        _prepareAction: function () {
+        _prepareAction: function (done) {
             var me = this;
 
-            if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
+            if (me.togglePageNum !== me.curPage || me.togglePageNum === 0) {                
                 forerunner.ajax.ajax({
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
@@ -1195,14 +1209,21 @@ $(function () {
                         ParameterList: "",
                         instance: me.options.rsInstance,
                     },
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
+                    dataType: "json",                    
+                    success: function (data) {                        
+                     
                         me.togglePageNum = me.curPage;
+                    },
+                    done: function(){
+                        if (done)
+                            done();
                     },
                     fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
+            else if (done)
+                done();
+                
         },
         _updateSortState: function (id, direction, clear) {
             var me = this;
@@ -1222,7 +1243,7 @@ $(function () {
                     ClearExistingSort: clear,
                     instance: me.options.rsInstance,
                 },
-                async: false,
+
             });
         },
 
@@ -1254,14 +1275,15 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._resetContextIfInvalid();
+            me._resetContextIfInvalid(function () {
 
-            if (direction === sortDirection.asc)
-                newDir = sortDirection.desc;
-            else
-                newDir = sortDirection.asc;
+                if (direction === sortDirection.asc)
+                    newDir = sortDirection.desc;
+                else
+                    newDir = sortDirection.asc;
 
-            me._callSort(id, newDir, clear);
+                me._callSort(id, newDir, clear);
+            });
         },
 
         _callSort: function (id, newDir, clear) {
@@ -1298,7 +1320,7 @@ $(function () {
         invalidateReportContext : function() {
             this._isReportContextValid = false;
         },
-        _callGetReportJSON: function () {
+        _callGetReportJSON: function (done) {
             var me = this;
             var paramList = null;
             if (me.paramLoaded) {
@@ -1321,7 +1343,11 @@ $(function () {
                     success: function (data) {
                         me._isReportContextValid = true;
                     },
-                    async: false
+                    done: function ()
+                    {
+                        if (done)
+                            done();
+                    }
                 });           
 
         },
@@ -1334,7 +1360,7 @@ $(function () {
             }
         },
 
-        _getToggleResult: function (toggleID) {
+        _getToggleResult: function (toggleID,done) {
             var me = this;
             return forerunner.ajax.ajax({
                 dataType: "json",
@@ -1345,7 +1371,7 @@ $(function () {
                     UniqueID: toggleID,
                     instance: me.options.rsInstance,
                 },
-                async: false,
+
             });
         },
         
@@ -1354,6 +1380,7 @@ $(function () {
             // Must synchronously replay one-by-one
             var keys = me.reportStates.toggleStates.keys();
             for (var i = 0; i < keys.length; i++) {
+                //Made async, should queue in order.  If nat may need to change
                 me._getToggleResult(keys[i]);
             }
         },
@@ -1372,10 +1399,13 @@ $(function () {
             me.lock = 1;
 
             me.showLoadingIndictator();
-            me._resetContextIfInvalid();
-            me._prepareAction();
+            me._resetContextIfInvalid(function () {
+                me._prepareAction(function () {
+                    me._callToggle(toggleID, scrollID);
+                });
+            });
             
-            me._callToggle(toggleID, scrollID);
+            
         },
         
         _callToggle: function (toggleID, scrollID) {
@@ -1405,16 +1435,25 @@ $(function () {
             );
         },
 
-        _resetContextIfInvalid: function () {
+        _resetContextIfInvalid: function (done) {
             var me = this;
             me._revertUnsubmittedParameters();
             if (!me._isReportContextValid) {
-                me._callGetReportJSON();
-                // Replay sort states
-                me._replaySortStates();
-                // Replay toggle states
-                me._replayToggleStates();
+                me._callGetReportJSON(function () {
+                    // Replay sort states
+                    me._replaySortStates(function () {
+                        // Replay toggle states
+                        me._replayToggleStates(function () {
+                            if (done)
+                                done();
+                        });
+                    });
+                });
             }
+            else if (done)
+                done();
+                
+            
         },
 
         _revertUnsubmittedParameters: function () {
@@ -1437,31 +1476,33 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._resetContextIfInvalid();
-            me._prepareAction();
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
-                {
-                    NavType: navigateType.bookmark,
-                    SessionID: me.sessionID,
-                    UniqueID: bookmarkID,
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    if (data.NewPage === me.curPage) {
-                        me._navToLink(bookmarkID);
-                        me.lock = 0;
-                    } else {
-                        if (data.NewPage !== undefined && data.NewPage > 0) {
-                            me.backupCurPage();
-                            me._loadPage(data.NewPage, false, bookmarkID);
-                        } else {
-                            me._showMessageBox(me.locData.messages.bookmarkNotFound);
-                            me.lock = 0;
-                        }
-                    }
-                },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
-            );
+            me._resetContextIfInvalid(function () {
+                me._prepareAction(function () {
+                    forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                        {
+                            NavType: navigateType.bookmark,
+                            SessionID: me.sessionID,
+                            UniqueID: bookmarkID,
+                            instance: me.options.rsInstance,
+                        },
+                        function (data) {
+                            if (data.NewPage === me.curPage) {
+                                me._navToLink(bookmarkID);
+                                me.lock = 0;
+                            } else {
+                                if (data.NewPage !== undefined && data.NewPage > 0) {
+                                    me.backupCurPage();
+                                    me._loadPage(data.NewPage, false, bookmarkID);
+                                } else {
+                                    me._showMessageBox(me.locData.messages.bookmarkNotFound);
+                                    me.lock = 0;
+                                }
+                            }
+                        },
+                        function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    );
+                });
+            });
         },
 
         /**
@@ -1491,57 +1532,59 @@ $(function () {
                 return;
             me.lock = 1;
             me.showLoadingIndictator();
-            me._resetContextIfInvalid();
-            me._prepareAction();
-            if (me.isDebug) {
-                console.log("DrillThough", { session: me.sessionID, drillThrough: drillthroughID});
-            }
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
-                {
-                    NavType: navigateType.drillThrough,
-                    SessionID: me.sessionID,
-                    UniqueID: drillthroughID,
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.backupCurPage(true);
-                    if (data.Exception) {
-                        me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
-                        me.removeLoadingIndicator();
-                        me.lock = 0;
+            me._resetContextIfInvalid(function () {
+                me._prepareAction(function () {
+                    if (me.isDebug) {
+                        console.log("DrillThough", { session: me.sessionID, drillThrough: drillthroughID });
                     }
-                    else {
-                        me.renderError = false;
-                        me.sessionID = data.SessionID;
-                        me.RDLExtProperty = null;
-                        if (me.origionalReportPath === "")
-                            me.origionalReportPath = me.reportPath;
-                        me.reportPath = data.ReportPath;
-                        if (me.options.parameterModel)
-                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, true);
+                    forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                        {
+                            NavType: navigateType.drillThrough,
+                            SessionID: me.sessionID,
+                            UniqueID: drillthroughID,
+                            instance: me.options.rsInstance,
+                        },
+                        function (data) {
+                            me.backupCurPage(true);
+                            if (data.Exception) {
+                                me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
+                                me.removeLoadingIndicator();
+                                me.lock = 0;
+                            }
+                            else {
+                                me.renderError = false;
+                                me.sessionID = data.SessionID;
+                                me.RDLExtProperty = null;
+                                if (me.origionalReportPath === "")
+                                    me.origionalReportPath = me.reportPath;
+                                me.reportPath = data.ReportPath;
+                                if (me.options.parameterModel)
+                                    me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, true);
 
-                        me._trigger(events.drillThrough, null, { path: data.ReportPath });
-                        if (me.isDebug) {
-                            console.log("DrillThough", { drillReport: data.ReportPath, data: data });
-                        }
-                        if (data.CredentialsRequired) {
-                            me.$reportAreaContainer.find(".Page").detach();
-                            me._setScrollLocation(0, 0);
-                            me._writeDSCredential(data.Credentials);
-                        }
-                        else if (data.ParametersRequired) {
-                            me.$reportAreaContainer.find(".Page").detach();
-                            me._setScrollLocation(0, 0);
-                            me._showParameters(1, data.Parameters);
-                        }
-                        else {
-                            me._setScrollLocation(0, 0);
-                            me._loadPage(1, false, null, null, true);
-                        }
-                    }
-                },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
-            );
+                                me._trigger(events.drillThrough, null, { path: data.ReportPath });
+                                if (me.isDebug) {
+                                    console.log("DrillThough", { drillReport: data.ReportPath, data: data });
+                                }
+                                if (data.CredentialsRequired) {
+                                    me.$reportAreaContainer.find(".Page").detach();
+                                    me._setScrollLocation(0, 0);
+                                    me._writeDSCredential(data.Credentials);
+                                }
+                                else if (data.ParametersRequired) {
+                                    me.$reportAreaContainer.find(".Page").detach();
+                                    me._setScrollLocation(0, 0);
+                                    me._showParameters(1, data.Parameters);
+                                }
+                                else {
+                                    me._setScrollLocation(0, 0);
+                                    me._loadPage(1, false, null, null, true);
+                                }
+                            }
+                        },
+                        function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    );
+                });
+            });
         },
         /**
          * Navigate to the Document Map
@@ -1555,21 +1598,22 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._resetContextIfInvalid();
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
-                {
-                    NavType: navigateType.docMap,
-                    SessionID: me.sessionID,
-                    UniqueID: docMapID,
-                    instance: me.options.rsInstance,
-                },
-                function (data) {
-                    me.backupCurPage(false,true);
-                    me.hideDocMap();
-                    me._loadPage(data.NewPage, false, docMapID);
-                },
-                function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
-            );
+            me._resetContextIfInvalid(function () {
+                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                    {
+                        NavType: navigateType.docMap,
+                        SessionID: me.sessionID,
+                        UniqueID: docMapID,
+                        instance: me.options.rsInstance,
+                    },
+                    function (data) {
+                        me.backupCurPage(false, true);
+                        me.hideDocMap();
+                        me._loadPage(data.NewPage, false, docMapID);
+                    },
+                    function (jqXHR, textStatus, errorThrown, request) { me.lock = 0; me._writeError(jqXHR, textStatus, errorThrown, request); }
+                );
+            });
         },
         /**
          * Push the current page into the action history stack
@@ -1662,72 +1706,73 @@ $(function () {
             if (forerunner.dialog.isMessageBoxVisible())
                 return;
 
-            me._resetContextIfInvalid();
-            //input new keyword
-            if (!me.findKeyword || me.findKeyword !== keyword) {
-                me.resetFind();
-                me.findKeyword = keyword;
-            }
-
-            me._trigger(events.find);
-
-            if (me.finding && !findInNewPage) {
-                me._findNext(keyword);
-            }
-            else {
-                if (startPage === undefined)
-                    startPage = me.getCurPage();
-
-                if (endPage === undefined)
-                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
-
-                if (startPage > endPage) {
+            me._resetContextIfInvalid(function () {
+                //input new keyword
+                if (!me.findKeyword || me.findKeyword !== keyword) {
                     me.resetFind();
-                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
-                    return;
+                    me.findKeyword = keyword;
                 }
 
-                //markup find start page
-                if (me.findStartPage === null)
-                    me.findStartPage = startPage;
+                me._trigger(events.find);
 
-                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/FindString/",
-                    {
-                        SessionID: me.sessionID,
-                        StartPage: startPage,
-                        EndPage: endPage,
-                        FindValue: keyword,
-                        instance: me.options.rsInstance,
-                    },
-                    function (data) {
-                        if (data.NewPage !== 0) {//keyword exist
-                            me.finding = true;
-                            if (data.NewPage !== me.getCurPage()) {
-                                me._addSetPageCallback(function () { me._setFindHighlight(keyword); });
-                                me.pages[data.NewPage] = null;
-                                me._loadPage(data.NewPage, false);
-                            } else {
-                                me._setFindHighlight(keyword);
+                if (me.finding && !findInNewPage) {
+                    me._findNext(keyword);
+                }
+                else {
+                    if (startPage === undefined)
+                        startPage = me.getCurPage();
+
+                    if (endPage === undefined)
+                        endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
+
+                    if (startPage > endPage) {
+                        me.resetFind();
+                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                        return;
+                    }
+
+                    //markup find start page
+                    if (me.findStartPage === null)
+                        me.findStartPage = startPage;
+
+                    forerunner.ajax.getJSON(me.options.reportViewerAPI + "/FindString/",
+                        {
+                            SessionID: me.sessionID,
+                            StartPage: startPage,
+                            EndPage: endPage,
+                            FindValue: keyword,
+                            instance: me.options.rsInstance,
+                        },
+                        function (data) {
+                            if (data.NewPage !== 0) {//keyword exist
+                                me.finding = true;
+                                if (data.NewPage !== me.getCurPage()) {
+                                    me._addSetPageCallback(function () { me._setFindHighlight(keyword); });
+                                    me.pages[data.NewPage] = null;
+                                    me._loadPage(data.NewPage, false);
+                                } else {
+                                    me._setFindHighlight(keyword);
+                                }
                             }
-                        }
-                        else {//keyword not exist
-                            if (me.findStartPage !== 1) {
-                                me.findEndPage = me.findStartPage - 1;
-                                me.find(keyword, 1, me.findEndPage, true);
-                                me.findStartPage = 1;
+                            else {//keyword not exist
+                                if (me.findStartPage !== 1) {
+                                    me.findEndPage = me.findStartPage - 1;
+                                    me.find(keyword, 1, me.findEndPage, true);
+                                    me.findStartPage = 1;
+                                }
+                                else {
+                                    if (me.finding === true)
+                                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                                    else
+                                        me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
+                                    me.resetFind();
+                                }
                             }
-                            else {
-                                if (me.finding === true)
-                                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
-                                else
-                                    me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
-                                me.resetFind();
-                            }
-                        }
-                    },
-                    function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
-                );
-            }
+                        },
+                        function (jqXHR, textStatus, errorThrown, request) { me._writeError(jqXHR, textStatus, errorThrown, request); }
+                    );
+                }
+            });
         },
         _findNext: function (keyword) {
             var me = this;
@@ -1818,14 +1863,19 @@ $(function () {
          */
         exportReport: function (exportType) {
             var me = this;
-            me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + encodeURIComponent(me.getReportPath()) + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+            me._resetContextIfInvalid(function () {
+                var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + encodeURIComponent(me.getReportPath()) + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
+                if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            if (me.options.exportCallback !== undefined)
-                me.options.exportCallback(url);
-            else
-                window.open(url);
+                if (me.options.exportCallback !== undefined)
+                    me.options.exportCallback(url);
+                else {
+                    var w = window.open(url);
+                    //meeded for IE8.
+                    w.location.href = url;
+                }
+
+            });
         },       
         /**
          * Show print dialog, close it if opened
@@ -1919,24 +1969,25 @@ $(function () {
          */
         printReport: function (printPropertyList) {
             var me = this;
-            me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
-            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
+            me._resetContextIfInvalid(function () {
+                var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
+                if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
-                window.open(url);
-            }
-            else {
-                var pif = me.element.find(".fr-print-iframe");
-                if (pif.length === 1) pif.detach();
+                if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                    window.open(url);
+                }
+                else {
+                    var pif = me.element.find(".fr-print-iframe");
+                    if (pif.length === 1) pif.detach();
 
-                pif = $("<iframe/>");
-                pif.addClass("fr-print-iframe");
-                pif.attr("name", me.viewerID);
-                pif.attr("src", url);
-                pif.hide();
-                me.element.append(pif);
-            }
+                    pif = $("<iframe/>");
+                    pif.addClass("fr-print-iframe");
+                    pif.attr("name", me.viewerID);
+                    pif.attr("src", url);
+                    pif.hide();
+                    me.element.append(pif);
+                }
+            });
            
         },
         _setPrint: function (pageLayout) {
@@ -2039,7 +2090,6 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 dataType: "json",
-                async: false,
                 done: function (data) {
                     if (data.Debug) {
                         // Fix up the ReportPath and SessionID if this data is from customer data
@@ -2130,10 +2180,15 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#getParamsDef
          *
+         * @param {function} done(Object) - callback function, if specified this function is async
          */
-        getParamDefs: function () {
+        getParamDefs: function (done) {
             var me = this;
             var paramDefs = null;
+            var doAsync = false;
+
+            if (done)
+                doAsync = true;
 
             forerunner.ajax.ajax({
                 type: "POST",
@@ -2146,7 +2201,7 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 dataType: "json",
-                async: false,
+                async: doAsync,
                 success: function (data) {
                     if (data.Exception) {
                         console.log("getParamsDef - failed:");
@@ -2154,9 +2209,11 @@ $(function () {
                     } else {
                         paramDefs = data;
                     }
-                }
+                    if (done)
+                        done(paramDefs);
+                }             
             });
-            return paramDefs;
+            
         },
         /**
          * Will merge the existing parameter list by the given mergeParamsList. This will enable
@@ -2244,7 +2301,7 @@ $(function () {
                         instance: me.options.rsInstance,
                     },
                     dataType: "json",
-                    async: false,
+            
                     success: function (data) {
                         if (data.Exception) {
                             me._renderPageError(me.$reportContainer, data);
@@ -2353,45 +2410,47 @@ $(function () {
             if (sessionID)
                 me.sessionID = sessionID;
 
-            me._checkPermission(reportPath);
-            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
+            me._checkPermission(reportPath, function () {
+                me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
-            if (me._reloadFromSessionStorage()) {
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
-                return;
-            }
+                if (me._reloadFromSessionStorage()) {
+                    me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() });
+                    return;
+                }
 
-            if (me.reportPath && me.reportPath !== "" && me.reportPath !== reportPath) {
-                //Do some clean work if it's a new report
-                me.backupCurPage(true);
-                me.sessionID = "";
-                me.flushCache();
-                me.hideDocMap();
-                me.element.unmask();
-            }
-            
-            me._resetViewer();
+                if (me.reportPath && me.reportPath !== "" && me.reportPath !== reportPath) {
+                    //Do some clean work if it's a new report
+                    me.backupCurPage(true);
+                    me.sessionID = "";
+                    me.flushCache();
+                    me.hideDocMap();
+                    me.element.unmask();
+                }
 
-            me.reportPath = reportPath ? reportPath : "/";
-            me.pageNum = pageNum ? pageNum : 1;
-            me.savedParameters = parameters ? parameters : null;
+                me._resetViewer();
 
-            //See if we have RDL extensions
-            me._getRDLExtProp();
+                me.reportPath = reportPath ? reportPath : "/";
+                me.pageNum = pageNum ? pageNum : 1;
+                me.savedParameters = parameters ? parameters : null;
 
-            if (me.RDLExtProperty.DefaultZoom)
-                me.options.zoom = me.RDLExtProperty.DefaultZoom;
+                //See if we have RDL extensions
+                me._getRDLExtProp(function () {
 
-            if (me.options.jsonPath) {
-                me._renderJson();
-            } else {
-                me._loadParameters(me.pageNum);
-            }
+                    if (me.RDLExtProperty.DefaultZoom)
+                        me.options.zoom = me.RDLExtProperty.DefaultZoom;
 
-            me._addSetPageCallback(function () {
-                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
-                me._setOptionsZoom();
+                    if (me.options.jsonPath) {
+                        me._renderJson();
+                    } else {
+                        me._loadParameters(me.pageNum);
+                    }
+
+                    me._addSetPageCallback(function () {
+                        //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                        me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                        me._setOptionsZoom();
+                    });
+                });
             });
         },
 
@@ -2412,20 +2471,21 @@ $(function () {
                 }
             }
         },
-        _getRDLExtProp: function () {
+        _getRDLExtProp: function (done) {
             var me = this;
 
             me.property = forerunner.cache.itemProperty[me.reportPath];
 
             if (me.property) {
-                me.RDLExtProperty =  forerunner.helper.JSONParse(me.property.ForerunnerRDLExt) || null;
+                me.RDLExtProperty = forerunner.helper.JSONParse(me.property.ForerunnerRDLExt) || {};
+                if (done)
+                    done();
                 return;
             }
 
             forerunner.ajax.ajax({
                 type: "GET",
-                dataType: "json",
-                async: false,
+                dataType: "json",                
                 url: forerunner.config.forerunnerAPIBase() + "ReportManager/ReportProperty/",
                 data: {
                     path: me.reportPath,
@@ -2433,13 +2493,21 @@ $(function () {
                     instance: me.options.rsInstance,
                 },
                 success: function (data) {
-                    if (data && JSON.stringify(data) !== "{}") {
-                        if (!forerunner.cache.itemProperty[me.reportPath])
-                            forerunner.cache.itemProperty[me.reportPath] = {};
+                    if (!forerunner.cache.itemProperty[me.reportPath])
+                        forerunner.cache.itemProperty[me.reportPath] = {};
 
-                        me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = forerunner.helper.JSONParse(data);
+                    if (data && JSON.stringify(data) !== "{}") {
+                        forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = forerunner.helper.JSONParse(data);
                     }
-                }
+                    else
+                        forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt = {};
+
+                    me.RDLExtProperty = forerunner.cache.itemProperty[me.reportPath].ForerunnerRDLExt;
+                    
+                    if (done)
+                        done();
+                },
+
             });
         },
         /**
@@ -2558,8 +2626,7 @@ $(function () {
                 {
                     type: "GET",
                     dataType: "json",
-                    url: me.options.jsonPath,
-                    async: false,
+                    url: me.options.jsonPath,                    
                     done: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
                         if (!loadOnly) {
@@ -2637,45 +2704,45 @@ $(function () {
             });
 
             //If not loaded load RDLExt
-            if (!me.RDLExtProperty)
-                me._getRDLExtProp();
+            
+                me._getRDLExtProp(function () {
 
-            forerunner.ajax.ajax(
-                {
-                    type: "POST",
-                    dataType: "json",
-                    url: me.options.reportViewerAPI + "/ReportJSON/",
-                    data: reportJSONData, 
-                    async: true,
-                    done: function (data) {
- 
-                        me._writePage(data, newPageNum, loadOnly);
-                        if (!loadOnly) {
-                            if (data.ReportContainer) {
-                                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                    forerunner.ajax.ajax(
+                        {
+                            type: "POST",
+                            dataType: "json",
+                            url: me.options.reportViewerAPI + "/ReportJSON/",
+                            data: reportJSONData,                            
+                            done: function (data) {
+
+                                me._writePage(data, newPageNum, loadOnly);
+                                if (!loadOnly) {
+                                    if (data.ReportContainer) {
+                                        me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                                    }
+
+                                    if (!me.element.is(":visible"))
+                                        me.element.show();  //scrollto does not work with the slide in functions:(                            
+                                    if (bookmarkID)
+                                        me._navToLink(bookmarkID);
+                                    if (flushCache !== true)
+                                        me._cachePages(newPageNum);
+                                    if (respToggleReplay)
+                                        me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
+
+                                    if (scrollID) {
+                                        el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
+                                        if (el.length === 1)
+                                            $("html, body").animate({ scrollTop: el.offset().top - 50 }, 500);
+                                    }
+                                    me._updateTableHeaders(me);
+                                    me._saveThumbnail();
+                                }
+                            },
+                            fail: function (jqXHR, textStatus, errorThrown, request) {
+                                me._writeError(jqXHR, textStatus, errorThrown, request);
                             }
-
-                            if (!me.element.is(":visible"))
-                                me.element.show();  //scrollto does not work with the slide in functions:(                            
-                            if (bookmarkID)
-                                me._navToLink(bookmarkID);
-                            if (flushCache !== true)
-                                me._cachePages(newPageNum);
-                            if (respToggleReplay)
-                                me._getPageContainer(newPageNum).reportRender("replayRespTablix", respToggleReplay);
-
-                            if (scrollID) {
-                                el = me.element.find("div[data-uniqName=\"" + scrollID + "\"]");
-                                if (el.length === 1)
-                                    $("html, body").animate({ scrollTop: el.offset().top-50 }, 500);
-                            }
-                            me._updateTableHeaders(me);
-                            me._saveThumbnail();
-                        }
-                    },
-                    fail: function (jqXHR, textStatus, errorThrown, request) {
-                        me._writeError(jqXHR, textStatus, errorThrown, request);
-                    }
+                        });
                 });
         },
         _writeError: function (jqXHR, textStatus, errorThrown,request) {

@@ -18,9 +18,10 @@
      <link href="~/Forerunner/ReportExplorer/css/ReportExplorerIE8.css" rel="stylesheet"/>
 	 <script src="~/Forerunner/Lib/Misc/js/css3-mediaqueries.js "></script>
      <![endif]-->
+    @RenderSection("scripts", required: false)
 </head>
 <body>
     @RenderBody()
-    @RenderSection("scripts", required: false)
+    
 </body>
 </html>

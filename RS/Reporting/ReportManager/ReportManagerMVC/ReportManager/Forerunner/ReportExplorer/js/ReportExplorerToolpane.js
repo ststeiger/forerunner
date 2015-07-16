@@ -17,7 +17,10 @@ $(function () {
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
     var itemActiveClass = "fr-toolbase-persistent-active-light";
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -103,6 +106,9 @@ $(function () {
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
 
             var toolpaneItems = [tp.itemBack];
+            var tg = forerunner.ssr.tools.groups;
+            var rep = forerunner.ssr.tools.reportExplorerToolpane;
+            var dbtp = forerunner.ssr.tools.dashboardToolPane;
 
             //add UseMoblizerDB check for setting, searchfolder, recent, favorite on the explorer toolpane
             if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
@@ -119,6 +125,22 @@ $(function () {
                 toolpaneItems.push(tp.itemSearchFolder);
             }
 
+           
+
+            if (me.options.dbConfig.SeperateDB !== true) {
+                
+                tg.explorerItemFolderGroup.tools.push(rep.itemRecent);
+                tg.itemFolderGroup.tools.push(tp.itemRecent);
+                tg.dashboardItemFolderGroup.tools.push(dbtp.itemRecent);
+            }
+
+
+            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
+                tg.itemFolderGroup.tools.push(tp.itemHome);
+                tg.explorerItemFolderGroup.tools.push(rep.itemHome);
+                tg.dashboardItemFolderGroup.tools.push(dbtp.itemHome);
+            }
+
             toolpaneItems.push(tp.itemCreateDashboard, tp.itemUploadFile, tp.itemNewFolder, mi.itemSecurity);
 
             if (me.options.path !== "/") {
@@ -127,12 +149,16 @@ $(function () {
 
             toolpaneItems.push(tg.explorerItemFindGroup);
 
-            // Only show the log off is we are configured for forms authentication
-            if (forerunner.ajax.isFormsAuth()) {
-                toolpaneItems.push(tp.itemLogOff);
-            }
-
+          
+            toolpaneItems.push(tp.itemLogOff);
+          
             me.addTools(1, true, toolpaneItems);
+
+            // Only show the log off is we are configured for forms authentication
+            forerunner.ajax.isFormsAuth(function (isForms) {
+                if (!isForms)
+                    me.hideTool(tp.itemLogOff.selectorClass);
+            });
 
             // Hold onto the folder buttons for later
             var $itemHome = me.element.find("." + tp.itemHome.selectorClass);
@@ -163,7 +189,7 @@ $(function () {
                 var lastFetched = me.options.$reportExplorer.reportExplorer("getLastFetched");
                 var permissions = me.options.$reportExplorer.reportExplorer("getPermission");
 
-                if (lastFetched.view === "catalog") {
+                if (lastFetched && lastFetched.view === "catalog") {
 
                     if (permissions["Create Resource"]) {
                         enableList.push(tp.itemSearchFolder, tp.itemCreateDashboard, tp.itemUploadFile);
@@ -178,7 +204,7 @@ $(function () {
                     }
                 }
 
-                if ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog" || lastFetched.view === "resource") && lastFetched.path !== "/" && permissions["Update Properties"]) {
+                if (lastFetched && ((lastFetched.view === "searchfolder" || lastFetched.view === "catalog" || lastFetched.view === "resource") && lastFetched.path !== "/" && permissions["Update Properties"])) {
                     enableList.push(mi.itemProperty);
                 }
 

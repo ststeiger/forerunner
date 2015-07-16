@@ -9,7 +9,10 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -104,7 +107,6 @@ $(function () {
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
-                async: false,
                 success: function (data) {
                     me.refresh();
                 },
@@ -134,7 +136,7 @@ $(function () {
             var viewStyle = null;
 
             if (!me.options.userSettings.viewStyle)
-                me.options.userSettings.viewStyle = forerunner.config.getCustomSettingsValue("DefaultViewStyle", "large")
+                me.options.userSettings.viewStyle = forerunner.config.getCustomSettingsValue("DefaultViewStyle", "large");
 
             if (me.options.userSettings.viewStyle === "small") {
                 viewStyle = "-small";
@@ -503,7 +505,7 @@ $(function () {
             forerunner.ajax.ajax({
                 dataType: "json",
                 url: url,
-                async: false,
+         
                 data: {
                     folder: "",
                     searchOperator: "",
@@ -567,9 +569,14 @@ $(function () {
             me.view = view;
             me.path = path;
 
+            me.showLoadingIndictator();
             if (me.view === "catalog" || me.view === "searchfolder" || me.view === "resource") {
-                me._checkPermission();
+                me._checkPermission(function () {
+                    me._fetch(view, path);
+                });
             }
+            else
+                me._fetch(view, path);
 
             if (me.options.explorerSettings) {
                 me._initOverrides();
@@ -579,7 +586,7 @@ $(function () {
                 $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
 
-            me._fetch(view, path);
+           
         },
         /**
          * Will refresh the current report explorer view from the server
@@ -621,8 +628,7 @@ $(function () {
             if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 dataType: "json",
-                url: url,
-                async: true,
+                url: url,                
                 data: {
                     view: view,
                     path: path
@@ -668,13 +674,17 @@ $(function () {
                 }
             }
         },
-        _checkPermission: function () {
+        _checkPermission: function (done) {
             var me = this;
             //create resource: create resource file (search folder/dashboard)
             //update properties: update report properties (tags)
             //for more properties, add to the list
             var permissionList = ["Create Resource", "Update Properties", "Update Security Policies", "Create Report", "Create Folder"];
-            me.permissions = forerunner.ajax.hasPermission(me.path, permissionList.join(","));
+            forerunner.ajax.hasPermission(me.path, permissionList.join(","),me.options.rsInstance, function (permission) {
+                me.permissions = permission;
+                if (done)
+                    done();
+            });
         },
         /**
          * Get user permission for current path
@@ -871,8 +881,7 @@ $(function () {
             var url = me.options.reportManagerAPI + "/SaveResource";
             
             forerunner.ajax.ajax({
-                url: url,
-                async: false,
+                url: url,       
                 type: "POST",
                 dataType: "text",
                 data: {

@@ -26,131 +26,135 @@ $(function () {
             $.extend(this.options, options);
         }
     };
-
+     
+    
     ssr.DefaultAppTemplate.prototype = {
         render: function () {
             var me = this;
-            var $container = me.options.$container;
-            $container.addClass("fr-layout-container");
-            me.$container = $container;
-            var $leftpane = new $("<div />");
-            $leftpane.addClass("fr-layout-leftpane");
-            me.$leftpane = $leftpane;
-            var $leftheader = new $("<div />");
-            $leftheader.addClass("fr-layout-leftheader");
-            me.$leftheader = $leftheader;
-            var $leftheaderspacer = new $("<div />");
-            $leftheaderspacer.addClass("fr-layout-leftheaderspacer");
-            me.$leftheaderspacer = $leftheaderspacer;
-            var $leftpanecontent = new $("<div />");
-            $leftpanecontent.addClass("fr-layout-leftpanecontent");
-            me.$leftpanecontent = $leftpanecontent;
-            $leftpane.append($leftheader);
-            $leftpane.append($leftheaderspacer);
-            $leftpane.append($leftpanecontent);
-            $container.append($leftpane);
-            //main view port
-            var $mainviewport = new $("<div />");
-            $mainviewport.addClass("fr-layout-mainviewport");
-            me.$mainviewport = $mainviewport;
-            $container.append($mainviewport);
-            //top div
-            var $topdiv = new $("<div />");
-            $topdiv.addClass("fr-layout-topdiv fr-core-block");
-            me.$topdiv = $topdiv;
-            if (me.options.isFullScreen) {
-               me.$topdiv.css("width", $(window).width());                
-            }
-            $mainviewport.append($topdiv);
-            //route path link
-            var $linksection = new $("<div />");
-            $linksection.addClass("fr-layout-linksection");
-            me.$linksection = $linksection;
-            $topdiv.append($linksection);
-            var $mainheadersection = new $("<div />");
-            $mainheadersection.addClass("fr-layout-mainheadersection");
-            me.$mainheadersection = $mainheadersection;
-            $topdiv.append($mainheadersection);
-            var $topdivspacer = new $("<div />");
-            $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
-            me.$topdivspacer = $topdivspacer;
-            $mainviewport.append($topdivspacer);
-            // Page section
-            var $pagesection = new $("<div />");
-            $pagesection.addClass("fr-layout-pagesection");
-            me.$pagesection = $pagesection;
-            $mainviewport.append($pagesection);
-            me.$mainsection = new $("<div />");
-            me.$mainsection.addClass("fr-layout-mainsection");
-            me.$pagesection.append(me.$mainsection);
-            me.$docmapsection = new $("<div />");
-            me.$docmapsection.addClass("fr-layout-docmapsection");
-            me.$pagesection.append(me.$docmapsection);
-            //bottom div
-            var $bottomdiv = new $("<div />");
-            $bottomdiv.addClass("fr-layout-bottomdiv");
-            me.$bottomdiv = $bottomdiv;
-            $mainviewport.append($bottomdiv);
-            var $bottomdivspacer = new $("<div />");
-            $bottomdivspacer.addClass("fr-layout-bottomdivspacer");
-            me.$bottomdivspacer = $bottomdivspacer;
-            $mainviewport.append($bottomdivspacer);
-            //right pane
-            var $rightpane = new $("<div />");
-            $rightpane.addClass("fr-layout-rightpane");
-            me.$rightpane = $rightpane;
-            var $rightheader = new $("<div />");
-            $rightheader.addClass("fr-layout-rightheader");
-            me.$rightheader = $rightheader;
-            var $rightheaderspacer = new $("<div />");
-            $rightheaderspacer.addClass("fr-layout-rightheaderspacer");
-            me.$rightheaderspacer = $rightheaderspacer;
-            var $rightpanecontent = new $("<div />");
-            $rightpanecontent.addClass("fr-layout-rightpanecontent");
-            me.$rightpanecontent = $rightpanecontent;
-            $rightpane.append($rightheader);
-            $rightpane.append($rightheaderspacer);
-            $rightpane.append($rightpanecontent);
-            $container.append($rightpane);
-            //Property Dialog Section
-            var $propertySection = new $("<div />");
-            $propertySection.addClass("fr-properties-section");
-            me.$propertySection = $propertySection;
-            $container.append($propertySection);
-            //Security Dialog Section
-            var $securitySection = new $("<div />");
-            $securitySection.addClass("fr-security-section");
-            me.$securitySection = $securitySection;
-            $container.append($securitySection);
-            //Upload File Section
-            var $uploadFileSection = new $("<div />");
-            $uploadFileSection.addClass("fr-upf-section");
-            me.$uploadFileSection = $uploadFileSection;
-            $container.append($uploadFileSection);
 
-            // Define the unzoom toolbar
-            var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
-            me.$unzoomsection = $unzoomsection;
-            $mainviewport.append(me.$unzoomsection);
+                var $container = me.options.$container;
+                $container.addClass("fr-layout-container");
+                me.$container = $container;
+                var $leftpane = new $("<div />");
+                $leftpane.addClass("fr-layout-leftpane");
+                me.$leftpane = $leftpane;
+                var $leftheader = new $("<div />");
+                $leftheader.addClass("fr-layout-leftheader");
+                me.$leftheader = $leftheader;
+                var $leftheaderspacer = new $("<div />");
+                $leftheaderspacer.addClass("fr-layout-leftheaderspacer");
+                me.$leftheaderspacer = $leftheaderspacer;
+                var $leftpanecontent = new $("<div />");
+                $leftpanecontent.addClass("fr-layout-leftpanecontent");
+                me.$leftpanecontent = $leftpanecontent;
+                $leftpane.append($leftheader);
+                $leftpane.append($leftheaderspacer);
+                $leftpane.append($leftpanecontent);
+                $container.append($leftpane);
+                //main view port
+                var $mainviewport = new $("<div />");
+                $mainviewport.addClass("fr-layout-mainviewport");
+                me.$mainviewport = $mainviewport;
+                $container.append($mainviewport);
+                //top div
+                var $topdiv = new $("<div />");
+                $topdiv.addClass("fr-layout-topdiv fr-core-block");
+                me.$topdiv = $topdiv;
+                if (me.options.isFullScreen) {
+                    me.$topdiv.css("width", $(window).width());
+                }
+                $mainviewport.append($topdiv);
+                //route path link
+                var $linksection = new $("<div />");
+                $linksection.addClass("fr-layout-linksection");
+                me.$linksection = $linksection;
+                $topdiv.append($linksection);
+                var $mainheadersection = new $("<div />");
+                $mainheadersection.addClass("fr-layout-mainheadersection");
+                me.$mainheadersection = $mainheadersection;
+                $topdiv.append($mainheadersection);
+                var $topdivspacer = new $("<div />");
+                $topdivspacer.addClass("fr-layout-topdivspacer  fr-core-block");
+                me.$topdivspacer = $topdivspacer;
+                $mainviewport.append($topdivspacer);
+                // Page section
+                var $pagesection = new $("<div />");
+                $pagesection.addClass("fr-layout-pagesection");
+                me.$pagesection = $pagesection;
+                $mainviewport.append($pagesection);
+                me.$mainsection = new $("<div />");
+                me.$mainsection.addClass("fr-layout-mainsection");
+                me.$pagesection.append(me.$mainsection);
+                me.$docmapsection = new $("<div />");
+                me.$docmapsection.addClass("fr-layout-docmapsection");
+                me.$pagesection.append(me.$docmapsection);
+                //bottom div
+                var $bottomdiv = new $("<div />");
+                $bottomdiv.addClass("fr-layout-bottomdiv");
+                me.$bottomdiv = $bottomdiv;
+                $mainviewport.append($bottomdiv);
+                var $bottomdivspacer = new $("<div />");
+                $bottomdivspacer.addClass("fr-layout-bottomdivspacer");
+                me.$bottomdivspacer = $bottomdivspacer;
+                $mainviewport.append($bottomdivspacer);
+                //right pane
+                var $rightpane = new $("<div />");
+                $rightpane.addClass("fr-layout-rightpane");
+                me.$rightpane = $rightpane;
+                var $rightheader = new $("<div />");
+                $rightheader.addClass("fr-layout-rightheader");
+                me.$rightheader = $rightheader;
+                var $rightheaderspacer = new $("<div />");
+                $rightheaderspacer.addClass("fr-layout-rightheaderspacer");
+                me.$rightheaderspacer = $rightheaderspacer;
+                var $rightpanecontent = new $("<div />");
+                $rightpanecontent.addClass("fr-layout-rightpanecontent");
+                me.$rightpanecontent = $rightpanecontent;
+                $rightpane.append($rightheader);
+                $rightpane.append($rightheaderspacer);
+                $rightpane.append($rightpanecontent);
+                $container.append($rightpane);
+                //Property Dialog Section
+                var $propertySection = new $("<div />");
+                $propertySection.addClass("fr-properties-section");
+                me.$propertySection = $propertySection;
+                $container.append($propertySection);
+                //Security Dialog Section
+                var $securitySection = new $("<div />");
+                $securitySection.addClass("fr-security-section");
+                me.$securitySection = $securitySection;
+                $container.append($securitySection);
+                //Upload File Section
+                var $uploadFileSection = new $("<div />");
+                $uploadFileSection.addClass("fr-upf-section");
+                me.$uploadFileSection = $uploadFileSection;
+                $container.append($uploadFileSection);
 
-            me._initPropertiesDialog();
-            me._initSecurityDialog();
-            me._initUploadFileDialog();
+                // Define the unzoom toolbar
+                var $unzoomsection = new $("<div class=fr-layout-unzoomsection />");
+                me.$unzoomsection = $unzoomsection;
+                $mainviewport.append(me.$unzoomsection);
 
-            me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
-            //dashboard report toolbar height, used for each report floating header
-            me.outerToolbarHeight = me.isDashboard ? $("body").children(".fr-layout-mainviewport").children(".fr-layout-topdiv").height() : 0;
+                me._initPropertiesDialog();
+                me._initSecurityDialog();
+                me._initUploadFileDialog();
+
+                me.isDashboard = me.$container.hasClass("fr-dashboard-report-id");
+                //dashboard report toolbar height, used for each report floating header
+                me.outerToolbarHeight = me.isDashboard ? $("body").children(".fr-layout-mainviewport").children(".fr-layout-topdiv").height() : 0;
+
+                if (!me.options.isFullScreen) {
+                    me._makePositionAbsolute();
+                }
+
+                me.bindEvents();
+
+                //Cannot get zoom event so fake it
+                setInterval(function () {
+                    me.toggleZoom();
+                }, 100);
+                
             
-            if (!me.options.isFullScreen) {
-                me._makePositionAbsolute();
-            }
-
-            me.bindEvents();
-
-            //Cannot get zoom event so fake it
-            setInterval(function () {
-                me.toggleZoom();
-            }, 100);
             return this;
         },
 

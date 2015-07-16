@@ -13,8 +13,14 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var reportProperties = locData.reportProperties;
+    var locData;
+    var reportProperties;
+
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        reportProperties = locData.reportProperties;
+    });
+ 
 
     /**
      * Widget used to select a new dashboard template
@@ -41,13 +47,14 @@ $(function () {
             reportManagerAPI: null,
             $appContainer: null,
             $dashboardEditor: null,
-            reportId: null,
-            title: reportProperties.title,
+            reportId: null,            
             iconClass: "fr-rp-icon-edit"
         },
         _init: function () {
             var me = this;
             me._super();
+
+            if (!me.options.title) me.options.title = reportProperties.title;
 
             me.$form.addClass("fr-rp-form");
 

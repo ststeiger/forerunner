@@ -12,8 +12,13 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var uploadFile = locData.uploadFile;
+    var locData;
+    var uploadFile;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        uploadFile = locData.uploadFile;
+    });
+    
     var helper = forerunner.helper;
 
     /**
@@ -34,8 +39,7 @@ $(function () {
      * });
      */
     $.widget(widgets.getFullname(widgets.uploadFile), $.forerunner.dialogBase, /** @lends $.forerunner.uploadFile */ {
-        options: {
-            title: uploadFile.title,
+        options: {            
             iconClass: "fr-upf-upload-file-icon",
             itemType: "",
             parentFolder: "",
@@ -45,6 +49,11 @@ $(function () {
             var me = this;
             me._super();
 
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+                uploadFile = locData.uploadFile;
+            
+            if (!me.options.title) me.options.title = uploadFile.title;
             var description = uploadFile.description.replace("{0}", me.options.parentFolder);
 
             var $table = $(
@@ -177,6 +186,7 @@ $(function () {
             // us to have the look and feel we want and also be compatible on all browsers
             me.$browseContainer = me.element.find(".fr-upf-browse-btn-container");
             me.$browseBtn = me.element.find(".fr-upf-browse-id");
+            });
         },
         _submit: function () {
             // We are taking this processing away because the "real" form submit processing will handles
@@ -212,7 +222,7 @@ $(function () {
             
             if (forerunner.device.isMSIE()) {
                 //for IE it will show the fakepath for security, so need to do a parse to get the right filename
-                filePath = e.target.value.replace(/C:\\fakepath\\/i, '');
+                filePath = e.target.value.replace(/C:\\fakepath\\/i, "");
             } else if (me.$inputFile[0] && me.$inputFile[0].files && me.$inputFile[0].files[0] && me.$inputFile[0].files[0].name) {
                 filePath = me.$inputFile[0].files[0].name;
             }

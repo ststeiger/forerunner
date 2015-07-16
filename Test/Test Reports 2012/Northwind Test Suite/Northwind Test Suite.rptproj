@@ -303,8 +303,8 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
-        <TargetFolder>Northwind Test Suite</TargetFolder>
+        <TargetServerURL>http://demo.forerunnersw.com/reportserver</TargetServerURL>
+        <TargetFolder>Northwind Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>
         <TargetReportPartFolder>Report Parts</TargetReportPartFolder>

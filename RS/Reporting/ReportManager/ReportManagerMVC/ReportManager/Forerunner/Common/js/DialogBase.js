@@ -13,7 +13,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+   
 
     /**
      * Base Widget used to contain common dialog functionality.
@@ -40,11 +41,8 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.dialogBase), {
         options: {
-            title: locData.dialogBase.title,
             iconClass: "fr-icons24x24-setup",
             $appContainer: null,
-            actionWord: locData.dialogBase.submit,
-            cancelWord: locData.dialogBase.cancel,
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             loadDelay: 500,
             rsInstance: null
@@ -52,6 +50,14 @@ $(function () {
         // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _init: function () {
             var me = this;
+
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+            
+            if (!me.options.title) me.options.title = locData.dialogBase.title;
+            if (!me.options.actionWord) me.options.actionWord = locData.dialogBase.submit;
+            if (!me.options.cancelWord) me.options.cancelWord = locData.dialogBase.cancel;
+
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
             if (me.$loadingIndicator.length === 0) {
                 me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.messages.loading);
@@ -61,6 +67,7 @@ $(function () {
 
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
+            });
         },
         // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
@@ -309,4 +316,5 @@ $(function () {
             });
         }
     }); //$.widget
+    
 });

@@ -16,7 +16,10 @@ $(function () {
     var helper = forerunner.helper;
     var constants = forerunner.ssr.constants;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
@@ -67,31 +70,34 @@ $(function () {
         },
         _createReportExplorer: function (showmainesection) {
             var me = this;
-            var layout = me.DefaultAppTemplate;
+            
+            forerunner.ajax.getUserSetting(me.options.rsInstance,function(settings){
+                var layout = me.DefaultAppTemplate;
 
-            var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
-            layout.$mainsection.html(null);
-            if (showmainesection)
-                layout.$mainsection.show();
-            else
-                layout.$mainsection.hide();
-            layout.$docmapsection.hide();
+                var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
+                layout.$mainsection.html(null);
+                if (showmainesection)
+                    layout.$mainsection.show();
+                else
+                    layout.$mainsection.hide();
+                layout.$docmapsection.hide();
 
-            me.$reportExplorer = layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
-                forerunnerPath: forerunner.config.forerunnerFolder(),
-                selectedItemPath: currentSelectedPath,
-                navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container,
-                explorerSettings: me.options.explorerSettings,
-                dbConfig: me.options.dbConfig,
-                rsInstance: me.options.rsInstance,
-                onInputFocus: layout.onInputFocus(),
-                onInputBlur: layout.onInputBlur(),
-                userSettings: me._getUserSettings()
+                me.$reportExplorer = layout.$mainsection.reportExplorer({
+                    reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+                    forerunnerPath: forerunner.config.forerunnerFolder(),
+                    selectedItemPath: currentSelectedPath,
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container,
+                    explorerSettings: me.options.explorerSettings,
+                    dbConfig: me.options.dbConfig,
+                    rsInstance: me.options.rsInstance,
+                    onInputFocus: layout.onInputFocus(),
+                    onInputBlur: layout.onInputBlur(),
+                    userSettings: settings
+                });
+
+                me.DefaultAppTemplate.bindExplorerEvents();
             });
-
-            me.DefaultAppTemplate.bindExplorerEvents();
         },
 
         // Initialize our internal navigateTo processing
@@ -141,16 +147,18 @@ $(function () {
             var me = this;
 
             //check the build version on the server each time when route happen
-            //if not match then force refresh the browser
-            var newVersion = forerunner.ajax.getBuildVersion(),
-                options;
-
-            if (me.buildVersion && me.buildVersion !== newVersion) {
-                window.location.reload(true);
-                return;
-            } else {
-                me.buildVersion = newVersion;
-            }
+            //if not match then force refresh the browser            
+            var options;
+            var newVersion;
+            
+            forerunner.ajax.getBuildVersion(function (newVersion) {                
+                if (me.buildVersion && me.buildVersion !== newVersion) {
+                    window.location.reload(true);
+                    return;
+                } else {
+                    me.buildVersion = newVersion;
+                }
+            });
 
             // These lines are no longer needed, since Jason changed zoom to always be active. These
             // lines were causing problems because every new route was causing a reload of the page,
@@ -348,87 +356,91 @@ $(function () {
                     path = "/";
                 }
 
-                me._createReportExplorer(true);
+                //Needs to get users setting first
+                forerunner.ajax.getUserSetting(me.options.rsInstance, function (settings) {
+                    me._createReportExplorer(true);
 
-                var $toolbar = layout.$mainheadersection;
-                //add this class to distinguish explorer toolbar and viewer toolbar
-                $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
-                $toolbar.reportExplorerToolbar({
-                    path: path,
-                    navigateTo: me.options.navigateTo,
-                    dbConfig: me.options.dbConfig,
-                    $appContainer: layout.$container,
-                    $reportExplorer: me.$reportExplorer
+
+                    var $toolbar = layout.$mainheadersection;
+                    //add this class to distinguish explorer toolbar and viewer toolbar
+                    $toolbar.addClass("fr-explorer-tb").removeClass("fr-viewer-tb");
+                    $toolbar.reportExplorerToolbar({
+                        path: path,
+                        navigateTo: me.options.navigateTo,
+                        dbConfig: me.options.dbConfig,
+                        $appContainer: layout.$container,
+                        $reportExplorer: me.$reportExplorer
+                    });
+
+                    me._setLeftRightPaneStyle();
+
+                    $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+                    if (view === "search") {
+                        $toolbar.reportExplorerToolbar("setSearchKeyword", path);
+                    }
+
+                    me.$reportExplorer.one(events.reportExplorerBeforeFetch(), function (e, data) {
+                        $toolbar.reportExplorerToolbar("disableAllTools");
+                    });
+
+                    me.$reportExplorer.one(events.reportExplorerAfterFetch(), function (e, data) {
+                        $toolbar.reportExplorerToolbar("enableAllTools");
+                    });
+
+                    var $lefttoolbar = layout.$leftheader;
+                    if ($lefttoolbar !== null) {
+                        $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
+                    }
+
+                    if (me.options.showBreadCrumb === false) {
+                        me.DefaultAppTemplate.$linksection.hide();
+                    }
+                    layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                    var explorer = $(".fr-report-explorer", me.$reportExplorer);
+                    if (me.options.isFullScreen)
+                        $("body").css("background-color", explorer.css("background-color"));
+                    else
+                        explorer.css("background-color", explorer.css("background-color"));
+
+                    if (!view) {// general catalog page
+                        view = "catalog";
+                        me._setPropertiesTabs(view, path, propertyListMap.normal);
+                    }
+                    else if (view === "searchfolder") {
+                        me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
+                    }
+                    else if (view === "resource") {
+                        me._setPropertiesTabs(view, path, propertyListMap.normal);
+                    }
+
+                    me._setSecurity(path);
+
+                    me.$reportExplorer.reportExplorer("load", view, path);
+
+                    var $toolpane = layout.$leftpanecontent;
+                    $toolpane.reportExplorerToolpane({
+                        path: path,
+                        navigateTo: me.options.navigateTo,
+                        dbConfig: me.options.dbConfig,
+                        $appContainer: layout.$container,
+                        $reportExplorer: me.$reportExplorer
+                    });
+
+                    $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
+                    if (view === "search") {
+                        $toolpane.reportExplorerToolpane("setSearchKeyword", path);
+                    }
+
+                    me.favoriteInstance = $({}).favoriteModel({
+                        $toolbar: $toolbar,
+                        $toolpane: $toolpane,
+                        $appContainer: layout.$container,
+                        rsInstance: me.options.rsInstance
+                    });
+                    me.favoriteInstance.favoriteModel("setFavoriteState", path);
+
+                    me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
                 });
-
-                me._setLeftRightPaneStyle();
-
-                $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
-                if (view === "search") {
-                    $toolbar.reportExplorerToolbar("setSearchKeyword", path);
-                }
-
-                me.$reportExplorer.one(events.reportExplorerBeforeFetch(), function (e, data) {
-                    $toolbar.reportExplorerToolbar("disableAllTools");
-                });
-
-                me.$reportExplorer.one(events.reportExplorerAfterFetch(), function (e, data) {
-                    $toolbar.reportExplorerToolbar("enableAllTools");
-                });
-
-                var $lefttoolbar = layout.$leftheader;
-                if ($lefttoolbar !== null) {
-                    $lefttoolbar.leftToolbar({ $appContainer: layout.$container });
-                }
-
-                if (me.options.showBreadCrumb === false) {
-                    me.DefaultAppTemplate.$linksection.hide();
-                }
-                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                var explorer = $(".fr-report-explorer", me.$reportExplorer);
-                if (me.options.isFullScreen)
-                    $("body").css("background-color", explorer.css("background-color"));                    
-                else
-                    explorer.css("background-color", explorer.css("background-color"));
-
-                if (!view) {// general catalog page
-                    view = "catalog";
-                    me._setPropertiesTabs(view, path, propertyListMap.normal);
-                }
-                else if (view === "searchfolder") {
-                    me._setPropertiesTabs(view, path, propertyListMap.searchFolder);
-                }
-                else if (view === "resource") {
-                    me._setPropertiesTabs(view, path, propertyListMap.normal);
-                }
-
-                me._setSecurity(path);
-
-                me.$reportExplorer.reportExplorer("load", view, path);
-
-                var $toolpane = layout.$leftpanecontent;
-                $toolpane.reportExplorerToolpane({
-                    path: path,
-                    navigateTo: me.options.navigateTo,
-                    dbConfig: me.options.dbConfig,
-                    $appContainer: layout.$container,
-                    $reportExplorer: me.$reportExplorer
-                });
-
-                $toolpane.reportExplorerToolpane("setFolderItemActive", viewToItemMap[view]);
-                if (view === "search") {
-                    $toolpane.reportExplorerToolpane("setSearchKeyword", path);
-                }
-
-                me.favoriteInstance = $({}).favoriteModel({
-                    $toolbar: $toolbar,
-                    $toolpane: $toolpane,
-                    $appContainer: layout.$container,
-                    rsInstance: me.options.rsInstance
-                });
-                me.favoriteInstance.favoriteModel('setFavoriteState', path);
-
-                me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);
         },
         _setLeftRightPaneStyle: function () {
@@ -464,10 +476,7 @@ $(function () {
                 layout.$rightpanecontent.css({ top: (toolpaneheaderheight + offset) });
             }
         },
-        _getUserSettings: function () {
-            var me = this;
-            return forerunner.ajax.getUserSetting(me.options.rsInstance);
-        },
+ 
         /**
          * Transition to ReportViewer view
          *
@@ -495,42 +504,45 @@ $(function () {
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
-                var toolbarConfig = constants.toolbarConfigOption.full;
-                if (urlOptions && !urlOptions.showToolbar) {
-                    toolbarConfig = constants.toolbarConfigOption.hide;
-                }
 
-                layout.$mainviewport.reportViewerEZ({
-                    DefaultAppTemplate: layout,
-                    path: path,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    isFullScreen: me.options.isFullScreen,
-                    isReportManager: urlOptions ? urlOptions.isReportManager : true,
-                    useReportManagerSettings: urlOptions? urlOptions.useReportManagerSettings : true,
-                    rsInstance: me.options.rsInstance,
-                    savedParameters: params,
-                    userSettings: me._getUserSettings(),
-                    handleWindowResize: false,
-                    showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
-                    showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
-                    showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
-                    toolbarConfigOption: toolbarConfig,
-                    zoom: urlOptions ? urlOptions.zoom : "100",
-                    dbConfig: me.options.dbConfig
+                forerunner.ajax.getUserSetting(me.options.rsInstance,function(settings){
+                    var toolbarConfig = constants.toolbarConfigOption.full;
+                    if (urlOptions && !urlOptions.showToolbar) {
+                        toolbarConfig = constants.toolbarConfigOption.hide;
+                    }
+
+                    layout.$mainviewport.reportViewerEZ({
+                        DefaultAppTemplate: layout,
+                        path: path,
+                        navigateTo: me.options.navigateTo,
+                        historyBack: me.options.historyBack,
+                        isFullScreen: me.options.isFullScreen,
+                        isReportManager: urlOptions ? urlOptions.isReportManager : true,
+                        useReportManagerSettings: urlOptions? urlOptions.useReportManagerSettings : true,
+                        rsInstance: me.options.rsInstance,
+                        savedParameters: params,
+                        userSettings: settings,
+                        handleWindowResize: false,
+                        showBreadCrumb: urlOptions ? urlOptions.showBreadCrumb : me.options.showBreadCrumb,
+                        showParameterArea: urlOptions ? urlOptions.showParameterArea : "Collapsed",
+                        showSubscriptionOnOpen: urlOptions ? urlOptions.showSubscriptionOnOpen : false,
+                        toolbarConfigOption: toolbarConfig,
+                        zoom: urlOptions ? urlOptions.zoom : "100",
+                        dbConfig: me.options.dbConfig
+                    });
+
+                    me._setLeftRightPaneStyle();
+
+                    var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
+                    if ($reportViewer && path !== null) {
+                        path = String(path).replace(/%2f/g, "/");
+                        layout.$mainsection.fadeIn("fast");
+                        $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
+                    }
+                    layout.$mainviewport.reportViewerEZ("windowResize");
+
+                    me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
                 });
-
-                me._setLeftRightPaneStyle();
-
-                var $reportViewer = layout.$mainviewport.reportViewerEZ("getReportViewer");
-                if ($reportViewer && path !== null) {
-                    path = String(path).replace(/%2f/g, "/");
-                    layout.$mainsection.fadeIn("fast");
-                    $reportViewer.reportViewer("loadReport", path, urlOptions ? urlOptions.section : 1, params);
-                }
-                layout.$mainviewport.reportViewerEZ("windowResize");
-
-                me._trigger(events.afterTransition, null, { type: "ReportViewer", path: path, params: params, urlOptions: urlOptions });
             }, timeout);
             
 
@@ -552,29 +564,32 @@ $(function () {
             //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
             //To resolved bug 909, 845, 811 on iOS
             var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
+
             setTimeout(function () {
-                var $dashboardEZ = layout.$mainviewport.dashboardEZ({
-                    DefaultAppTemplate: layout,
-                    navigateTo: me.options.navigateTo,
-                    historyBack: me.options.historyBack,
-                    isReportManager: true,
-                    enableEdit: enableEdit,
-                    path: path,
-                    rsInstance: me.options.rsInstance,
-                    userSettings: me._getUserSettings(),
-                    handleWindowResize: false,
-                    dbConfig: me.options.dbConfig,
-                    $appContainer: layout.$container
+                forerunner.ajax.getUserSetting(me.options.rsInstance, function (settings) {
+                    var $dashboardEZ = layout.$mainviewport.dashboardEZ({
+                        DefaultAppTemplate: layout,
+                        navigateTo: me.options.navigateTo,
+                        historyBack: me.options.historyBack,
+                        isReportManager: true,
+                        enableEdit: enableEdit,
+                        path: path,
+                        rsInstance: me.options.rsInstance,
+                        userSettings: settings,
+                        handleWindowResize: false,
+                        dbConfig: me.options.dbConfig,
+                        $appContainer: layout.$container
+                    });
+
+                    me._setLeftRightPaneStyle();
+                    layout.$mainsection.fadeIn("fast");
+
+                    var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
+                    $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
+                    $dashboardEZ.dashboardEZ("enableEdit", enableEdit, true);
+
+                    me._trigger(events.afterTransition, null, { type: "Dashboard", path: path, enableEdit: enableEdit });
                 });
-
-                me._setLeftRightPaneStyle();
-                layout.$mainsection.fadeIn("fast");
-
-                var $dashboardEditor = $dashboardEZ.dashboardEZ("getDashboardEditor");
-                $dashboardEditor.dashboardEditor("openDashboard", path, enableEdit);
-                $dashboardEZ.dashboardEZ("enableEdit", enableEdit, true);
-
-                me._trigger(events.afterTransition, null, { type: "Dashboard", path: path, enableEdit: enableEdit });
             }, timeout);
 
             if (me.options.isFullScreen)
@@ -617,7 +632,7 @@ $(function () {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
 
-                    if (me.$reportExplorer && me.$reportExplorer.find('.fr-report-explorer').length) {
+                    if (me.$reportExplorer && me.$reportExplorer.find(".fr-report-explorer").length) {
                         me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
 
                         var $reportExplorerToolbar = me.getReportExplorerToolbar();
@@ -630,6 +645,9 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+            
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
                 $container: me.element,
                 isFullScreen: me.options.isFullScreen
@@ -640,6 +658,8 @@ $(function () {
             if (!me.options.navigateTo) {
                 me._initNavigateTo();
             }
+            });
+
         },
         _setPropertiesTabs: function (view, path, propertyList) {
             var me = this;

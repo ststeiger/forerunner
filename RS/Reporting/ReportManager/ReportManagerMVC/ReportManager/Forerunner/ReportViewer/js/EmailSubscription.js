@@ -16,7 +16,10 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
 
     /**
      * Widget used to create email subscription
@@ -145,10 +148,11 @@ $(function () {
                             }
                         }
                     } else {
-                        var userName = forerunner.ajax.getUserName();
-                        me.$to.val(userName);
-                        me.$desc.val(locData.subscription.description.format(userName));
-                        me.$subject.val(locData.subscription.subject);
+                        forerunner.ajax.getUserName(me.options.subscriptionModel.subscriptionModel("option", "rsInstance"), function (userName) {
+                            me.$to.val(userName);
+                            me.$desc.val(locData.subscription.description.format(userName));
+                            me.$subject.val(locData.subscription.subject);
+                        });
                     }
                 }
 
@@ -184,7 +188,7 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
-                if (me._canEditComment)
+                if (me.$comment.val() && me.$comment.val() !== "")
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeLink", "Value": me.$includeLink.is(":checked") ? "True" : "False" });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "IncludeReport", "Value": me.$includeReport.is(":checked") ? "True" : "False" });
@@ -214,9 +218,9 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    if (me._canEditComment) {
-                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
-                    }
+
+                    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(":checked") ? "True" : "False";
                     }
@@ -285,16 +289,20 @@ $(function () {
                 validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
                 me._sharedSchedule[data[i].ScheduleID] = data[i];
             }
-            data = forerunner.config.getMobilizerSharedSchedule();
-            if (data) {
-                for (i = 0; i < data.length; i++) {
-                    validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
-                    me._sharedSchedule[data[i].ScheduleID] = data[i];
+
+
+           forerunner.config.getMobilizerSharedSchedule(function (schedule) {
+                data = schedule;
+                if (data) {
+                    for (i = 0; i < data.length; i++) {
+                        validValues.push({ Value: data[i].ScheduleID, Label: data[i].Name });
+                        me._sharedSchedule[data[i].ScheduleID] = data[i];
+                    }
                 }
-            }
-            me.$sharedSchedule = me._createDropDownForValidValues(validValues);
-            me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
-            me.$sharedSchedule.addClass("fr-email-schedule");
+                me.$sharedSchedule = me._createDropDownForValidValues(validValues);
+                me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
+                me.$sharedSchedule.addClass("fr-email-schedule");
+            });
         },
         _initProcessingOptions: function () {
             var me = this;
@@ -449,10 +457,11 @@ $(function () {
                 me.$cc.parent().parent().hide();
                 me.$replyTo.parent().parent().hide();
             }
-            me._canEditComment = forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription").hasPermission === true;
-            if (!me._canEditComment) {
-                me.$comment.parent().parent().hide();
-            }
+            forerunner.ajax.hasPermission(me.options.reportPath, "Create Any Subscription", me.options.subscriptionModel.subscriptionModel("option","rsInstance"), function (canEditComment) {
+                if (canEditComment) {
+                    me.$comment.parent().parent().hide();
+                }
+            });
             me.$lastRow = me._createTableRow();
             me.$colOfLastRow = me.$lastRow.children(":first");
             me.$theTable.append(me.$lastRow);

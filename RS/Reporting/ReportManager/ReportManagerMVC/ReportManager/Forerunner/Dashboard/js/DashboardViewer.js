@@ -10,9 +10,16 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var toolbar = locData.toolbar;
-    var messages = locData.messages;
+    var locData;
+    var toolbar;
+    var messages;
+
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+        toolbar = locData.toolbar;
+        messages = locData.messages;
+    });
+
 
     /**
      * Widget used to view dashboards

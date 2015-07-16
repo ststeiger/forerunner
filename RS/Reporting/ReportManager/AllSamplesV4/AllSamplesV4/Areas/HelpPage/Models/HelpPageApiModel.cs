@@ -11,6 +11,12 @@ namespace AllSamplesV4.Areas.HelpPage.Models
     public class HelpPageApiModel
     {
         /// <summary>
+        /// [jont] Added support for the returns tag. From the article here:
+        ///     http://blogs.msdn.com/b/yaohuang1/archive/2012/12/10/asp-net-web-api-help-page-part-3-advanced-help-page-customizations.aspx
+        /// </summary>
+        public string ResponseDocumentation { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="HelpPageApiModel"/> class.
         /// </summary>
         public HelpPageApiModel()

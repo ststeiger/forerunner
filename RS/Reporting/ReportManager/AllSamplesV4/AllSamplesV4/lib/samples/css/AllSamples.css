@@ -1,6 +1,9 @@
 ﻿/* forerunner SDK overrides */
 .fr-dashboard-report-id { background-color: white; }
 
+/* Bootstrap overrides */
+.navbar { margin-bottom: 0; }
+
 /* AllSamples styles */
 .as-sample-content > .as-sample-pane { display: none; }
 .as-sample-content > .active { display: block; }

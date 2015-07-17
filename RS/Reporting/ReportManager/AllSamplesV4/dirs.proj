@@ -4,7 +4,7 @@
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
     <ProjectFiles Include="AllSamplesV4\AllSamplesV4.csproj" />
-    <ProjectFiles Include="AllSamplesV4\SetASConfig.csproj" />
+    <ProjectFiles Include="SetASConfig\SetASConfig.csproj" />
   </ItemGroup> 
 	<!-- Insert any customizations for targets here -->
   <Import Project="AllSamplesV4.traversal.targets"/>

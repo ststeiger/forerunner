@@ -37,14 +37,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>App_data\XmlDocument.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Forerunner.Json, Version=0.9.12915.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.376.0\lib\Forerunner.Json.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\Forerunner.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.376.0\lib\Forerunner.SQLReporting.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\Forerunner.SQLReporting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -56,7 +57,7 @@
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.376.0\lib\PdfSharp.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\PdfSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
@@ -318,37 +319,38 @@
     <Content Include="Forerunner\ReportViewer\css\Toolbar.css" />
     <Content Include="Forerunner\ReportViewer\css\ToolPane.css" />
     <Content Include="Forerunner\ReportViewer\css\tooltips.css" />
-    <Content Include="Forerunner\ReportViewer\images\ajax-loader1.gif" />
-    <Content Include="Forerunner\ReportViewer\images\calendar.png" />
-    <Content Include="Forerunner\ReportViewer\images\Collapse.png" />
-    <Content Include="Forerunner\ReportViewer\images\DeleteSubscription.png" />
-    <Content Include="Forerunner\ReportViewer\images\DocMap_Collapse.png" />
-    <Content Include="Forerunner\ReportViewer\images\DocMap_Expand.png" />
-    <Content Include="Forerunner\ReportViewer\images\Drilldown_Collapse.gif" />
-    <Content Include="Forerunner\ReportViewer\images\Drilldown_Expand.gif" />
-    <Content Include="Forerunner\ReportViewer\images\EditSubscription.png" />
-    <Content Include="Forerunner\ReportViewer\images\EmptyIndent.gif" />
-    <Content Include="Forerunner\ReportViewer\images\Expand.png" />
-    <Content Include="Forerunner\ReportViewer\images\JSTree32px.png" />
-    <Content Include="Forerunner\ReportViewer\images\JSTree40px.png" />
-    <Content Include="Forerunner\ReportViewer\images\JSTreeThrobber.gif" />
-    <Content Include="Forerunner\ReportViewer\images\NavigationClose.png" />
-    <Content Include="Forerunner\ReportViewer\images\NewEmail_btn.png" />
-    <Content Include="Forerunner\ReportViewer\images\NotSorted.gif" />
-    <Content Include="Forerunner\ReportViewer\images\page-loading.GIF" />
-    <Content Include="Forerunner\ReportViewer\images\Parameter_Collapse.png" />
-    <Content Include="Forerunner\ReportViewer\images\Parameter_Expand.png" />
-    <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
-    <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
-    <Content Include="Forerunner\ReportViewer\images\print_portrait.png" />
-    <Content Include="Forerunner\ReportViewer\images\print_portrait_1.png" />
-    <Content Include="Forerunner\ReportViewer\images\SortAccending.gif" />
-    <Content Include="Forerunner\ReportViewer\images\SortDecending.gif" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\bkg_toolbar.jpg" />
-    <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
-    <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
+    <Content Include="Forerunner\ReportViewer\Images\ajax-loader1.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\Images\Collapse.png" />
+    <Content Include="Forerunner\ReportViewer\Images\DeleteSubscription.png" />
+    <Content Include="Forerunner\ReportViewer\Images\DocMap_Collapse.png" />
+    <Content Include="Forerunner\ReportViewer\Images\DocMap_Expand.png" />
+    <Content Include="Forerunner\ReportViewer\Images\Drilldown_Collapse.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\Drilldown_Expand.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\EditSubscription.png" />
+    <Content Include="Forerunner\ReportViewer\Images\EmptyIndent.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\Expand.png" />
+    <Content Include="Forerunner\ReportViewer\Images\JSTree32px.png" />
+    <Content Include="Forerunner\ReportViewer\Images\JSTree40px.png" />
+    <Content Include="Forerunner\ReportViewer\Images\JSTreeThrobber.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\NavigationClose.png" />
+    <Content Include="Forerunner\ReportViewer\Images\NewEmail_btn.png" />
+    <Content Include="Forerunner\ReportViewer\Images\NotSorted.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\page-loading.GIF" />
+    <Content Include="Forerunner\ReportViewer\Images\Parameter_Collapse.png" />
+    <Content Include="Forerunner\ReportViewer\Images\Parameter_Expand.png" />
+    <Content Include="Forerunner\ReportViewer\Images\print_landscape.png" />
+    <Content Include="Forerunner\ReportViewer\Images\print_landscape_1.png" />
+    <Content Include="Forerunner\ReportViewer\Images\print_portrait.png" />
+    <Content Include="Forerunner\ReportViewer\Images\print_portrait_1.png" />
+    <Content Include="Forerunner\ReportViewer\Images\SortAccending.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\SortDecending.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\Toolbar\bkg_toolbar.jpg" />
+    <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png" />
+    <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-AU.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-GB.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
@@ -442,14 +444,14 @@
     <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
-    <Content Include="Forerunner\ReportViewer\images\toolpane\Thumbs.db" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\Thumbs.db" />
-    <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />
-    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
-    <Content Include="Forerunner\Common\images\ToolbarIcons\Thumbs.db" />
     <Content Include="AllSamplesV4.nuspec" />
     <Content Include="Web.config.transform" />
     <Content Include="Init.ps1" />
+    <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
+    <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
+    <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />
+    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
+    <Content Include="Forerunner\Common\images\ToolbarIcons\Thumbs.db" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

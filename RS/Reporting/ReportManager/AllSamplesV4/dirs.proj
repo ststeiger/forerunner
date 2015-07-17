@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 	<!-- Insert any customizations for settings here --> 
-	<Import Project="PublishExtension.setting"/> 
+	<Import Project="AllSamples.setting"/> 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
     <ProjectFiles Include="AllSamplesV4\AllSamplesV4.csproj" />

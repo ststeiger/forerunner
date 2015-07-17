@@ -9,7 +9,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+  
 
     /**
     * Widget used to manage item security
@@ -38,6 +39,9 @@ $(function () {
         _init: function () {
             var me = this;
 
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+            
             me.guid = forerunner.helper.guidGen();
             me.curPath = null;
 
@@ -105,6 +109,7 @@ $(function () {
             });
 
             me._bindEvents();
+            });
         },
         _bindEvents: function(){
             var me = this;

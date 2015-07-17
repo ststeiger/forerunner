@@ -12,7 +12,10 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+    var locData;
+    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+        locData = loc;
+    });
     /**
      * Widget used to create search folder
      *
@@ -123,7 +126,7 @@ $(function () {
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = '"' + $.trim(tagsList[i]) + '"';
+                    tagsList[i] = "''" + $.trim(tagsList[i]) + "''";
                 }
 
                 var searchfolder = {

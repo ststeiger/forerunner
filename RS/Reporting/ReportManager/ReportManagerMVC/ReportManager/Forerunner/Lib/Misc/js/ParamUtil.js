@@ -79,9 +79,12 @@ $(function () {
                 $reportViewer.reportViewer("extendParameters", paramList, false);
             } else if (me.$methodSelect.val() === "setParametersAndUpdate") {
                 // setParametersAndUpdate: function (paramDefs, savedParams, pageNum)
-                var paramDefs = $reportViewer.reportViewer("getParamDefs");
-                var curPage = $reportViewer.reportViewer("getCurPage");
-                me.options.$reportParameter.reportParameter("setParametersAndUpdate", paramDefs, paramList, curPage);
+                var paramDefs;
+                $reportViewer.reportViewer("getParamDefs", function (paramDefs) {
+                    var curPage = $reportViewer.reportViewer("getCurPage");
+                    me.options.$reportParameter.reportParameter("setParametersAndUpdate", paramDefs, paramList, curPage);
+                });
+                
             } else {
                 alert("Error - Unrecognized method: " + me.$methodSelect.val());
             }

@@ -9,9 +9,12 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var linked = locData.linkedReport;
-    var common = locData.common;
+    var locData;
+    var linked;
+    var common;
+  
+
+ 
 
     /**
     * Widget used to manage item linked report
@@ -36,7 +39,7 @@ $(function () {
             $reportExplorer: null,
             reportManagerAPI: null,
             rsInstance: null,
-            title: linked.title,
+           
             iconClass: "fr-icons24x24-tags"
         },
         rootPath: "/",
@@ -48,10 +51,18 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                locData = loc;
+                linked = locData.linkedReport;
+                common = locData.common;
+            
+
             me._super();
             me.$form.addClass("fr-linked-form");
             me.curPath = null;
 
+            if (!me.options.title) me.options.title= linked.title;
+            
             var $main = new $(
                 "<div class='fr-linked-container'>" +
                     "<div class='fr-linked-prompt fr-core-dialog-description'></div>" +
@@ -82,6 +93,7 @@ $(function () {
 
             me._bindEvents();
             me._reset();
+            });
         },
         _bindEvents: function () {
             var me = this;

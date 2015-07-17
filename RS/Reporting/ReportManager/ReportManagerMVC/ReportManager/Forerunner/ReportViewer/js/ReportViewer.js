@@ -1824,8 +1824,11 @@ $(function () {
 
             if (me.options.exportCallback !== undefined)
                 me.options.exportCallback(url);
-            else
-                window.open(url);
+            else {
+                var w = window.open(url);
+                //meeded for IE8.
+                w.location.href = url;
+            }
         },       
         /**
          * Show print dialog, close it if opened

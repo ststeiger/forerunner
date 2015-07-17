@@ -96,6 +96,7 @@
     <Compile Include="..\ReportMannagerConfigTool\LicenseUtil.cs">
       <Link>LicenseUtil.cs</Link>
     </Compile>
+    <Compile Include="FRCmdlet.cs" />
     <Compile Include="SetFRConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

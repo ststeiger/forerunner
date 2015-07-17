@@ -21,7 +21,7 @@ $(function () {
             $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
 
             // Load the new report
-            $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+            $reportViewer.reportViewer("loadReport", allSamples.settings.reportPath1);
 
             // Create a new button for home. It will be visible on the page as a yellow colored home icon
             var myBtn = {

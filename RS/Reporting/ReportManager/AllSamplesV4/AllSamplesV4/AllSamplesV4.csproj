@@ -125,9 +125,7 @@
     <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
-    <Content Include="Forerunner\Bundles\Forerunner.js" />
     <Content Include="Forerunner\Bundles\Forerunner.min.js" />
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
@@ -388,6 +386,8 @@
     <Content Include="lib\bootstrap\js\bootstrap.min.js" />
     <Content Include="lib\bootstrap\js\npm.js" />
     <Content Include="lib\samples\js\ReportExplorerEZ.js" />
+    <Content Include="lib\samples\js\settings.js" />
+    <Content Include="readme.txt" />
     <Content Include="sdk\readme.txt" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -429,9 +429,6 @@
     <Content Include="lib\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_LayoutMain.cshtml" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
-      <DependentUpon>Forerunner-widgets.js</DependentUpon>
-    </Content>
     <Content Include="Views\Home\Home.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
@@ -450,6 +447,9 @@
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />
     <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
     <Content Include="Forerunner\Common\images\ToolbarIcons\Thumbs.db" />
+    <Content Include="AllSamplesV4.nuspec" />
+    <Content Include="Web.config.transform" />
+    <Content Include="Init.ps1" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

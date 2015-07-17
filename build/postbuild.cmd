@@ -59,6 +59,11 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
+call %~dp0createAllSamplesV4.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
 echo PostBuild SUCCEEDED. >> %POSTBUILD_LOG%
 type %POSTBUILD_LOG% >> %BUILD_LOG%
 exit /b 0

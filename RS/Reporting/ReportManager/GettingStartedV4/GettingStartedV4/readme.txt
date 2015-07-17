@@ -12,7 +12,7 @@ has been supplied to make this as easy as possible.
 The new command is named Set-FRConfig and you run it  from the
 Package Manager console window:
 
-"Tools" -> "NuGet Package Manage" -> "Package Manager Console".
+"Tools" -> "NuGet Package Manager" -> "Package Manager Console".
 
 You can run Set-FRConfig as follows:
 

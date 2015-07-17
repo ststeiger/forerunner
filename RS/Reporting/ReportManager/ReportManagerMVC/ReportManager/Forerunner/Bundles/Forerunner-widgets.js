@@ -2549,6 +2549,7 @@ $(function () {
                 //meeded for IE8.
                 w.location.href = url;
             }
+
         },       
         /**
          * Show print dialog, close it if opened
@@ -17565,6 +17566,7 @@ $(function () {
             //check for saved paramter default format
             if (defaultDatetime.substr(4, 1) === "/")
                 m = moment(defaultDatetime, "YYYY/MM/DD");
+
 
             if (!m.isValid()) {
                 me._DebugLog("_getDateTimeFromDefault", {

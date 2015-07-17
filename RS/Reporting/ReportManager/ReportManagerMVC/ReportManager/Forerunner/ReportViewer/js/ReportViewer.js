@@ -1829,6 +1829,7 @@ $(function () {
                 //meeded for IE8.
                 w.location.href = url;
             }
+
         },       
         /**
          * Show print dialog, close it if opened

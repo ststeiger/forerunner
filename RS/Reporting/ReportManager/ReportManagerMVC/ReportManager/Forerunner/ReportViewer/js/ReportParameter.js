@@ -2356,6 +2356,7 @@ $(function () {
             if (defaultDatetime.substr(4, 1) === "/")
                 m = moment(defaultDatetime, "YYYY/MM/DD");
 
+
             if (!m.isValid()) {
                 me._DebugLog("_getDateTimeFromDefault", {
                     defaultDatetime: defaultDatetime,

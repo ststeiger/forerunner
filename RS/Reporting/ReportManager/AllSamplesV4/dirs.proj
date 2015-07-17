@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="PublishExtension.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+    <ProjectFiles Include="AllSamplesV4\AllSamplesV4.csproj" />
+    <ProjectFiles Include="AllSamplesV4\SetASConfig.csproj" />
+  </ItemGroup> 
+	<!-- Insert any customizations for targets here -->
+  <Import Project="AllSamplesV4.traversal.targets"/>
+</Project>

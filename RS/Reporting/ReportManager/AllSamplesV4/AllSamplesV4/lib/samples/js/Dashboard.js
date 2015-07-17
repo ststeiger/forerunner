@@ -31,19 +31,19 @@ $(function () {
             });
             var $reportViewer1 = $reportViewerEZ1.reportViewerEZ("getReportViewer");
 
-            $reportViewer1.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008");
+            $reportViewer1.reportViewer("loadReport", allSamples.settings.reportPath1);
 
             var $reportViewerEZ2 = $sampleArea.find(".report2-id").reportViewerEZ({
                 isFullScreen: false
             });
             var $reportViewer2 = $reportViewerEZ2.reportViewerEZ("getReportViewer");
-            $reportViewer2.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Sales Order Detail 2008");
+            $reportViewer2.reportViewer("loadReport", allSamples.settings.reportPath2);
 
             var $reportViewerEZ3 = $sampleArea.find(".report3-id").reportViewerEZ({
                 isFullScreen: false
             });
             var $reportViewer3 = $reportViewerEZ3.reportViewerEZ("getReportViewer");
-            $reportViewer3.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Sales Trend 2008");
+            $reportViewer3.reportViewer("loadReport", allSamples.settings.reportPath3);
 
         }  // init
     }  // allSamples.dashboard

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Forerunner_AllSamplesV4</id>
+    <title>Contains all version 4 Samples for the HTML5 MVC Web Api Report Viewer for SSRS</title>
+    <version>$version$</version>
+    <authors>ForerunnerSW</authors>
+    <owners>ForerunnerSW</owners>
+    <licenseUrl>https://www.forerunnersw.com/content/license.rtf</licenseUrl>
+    <projectUrl>https://www.forerunnersw.com/</projectUrl>
+    <iconUrl>https://www.forerunnersw.com/content/img/ForerunnerNugetIcon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>This package allows you to create the All Samples V4 web application using the Forerunner SDK. This sample contains a number of client side examples as well as documention on the REST API, all wrapped up in a Single Pgae Application (SPA). It is integrated with bootstrap.js and demontrates not only the ForerunnerSDK but how to create a responsive SPA. Inclusing how to setup hashtag navigation.</summary>
+    <description>This package allows you to create the All Samples V4 web application using the Forerunner SDK. This sample contains a number of client side examples as well as documention on the REST API, all wrapped up in a Single Pgae Application (SPA). It is integrated with bootstrap.js and demontrates not only the ForerunnerSDK but how to create a responsive SPA. Inclusing how to setup hashtag navigation. Just create an empty web project and install.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Mobilizer Example jQuery Widget bootstrap hashtag</tags>
+    <dependencies>
+      <dependency id="ForerunnerSDK" version="[4.0.230.0,)" />
+    </dependencies>
+  </metadata>
+</package>

@@ -17,7 +17,7 @@ $(function () {
 
             // Get the reportViewer widget from reportViewerEZ and load the report
             var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
-            $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+            $reportViewer.reportViewer("loadReport", allSamples.settings.reportPath1);
 
             // Remove the export button from the report viewer tool pane
             var $toolPane = $reportViewerEZ.reportViewerEZ("getToolPane");

@@ -64,7 +64,7 @@ $(function () {
             //  Accessories
             //      Bottles and Cages
             //      Helmets
-            $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, parameters);
+            $reportViewer.reportViewer("loadReport", allSamples.settings.reportPath1, 1, parameters);
 
         }  // init
     }  // allSamples.parameters

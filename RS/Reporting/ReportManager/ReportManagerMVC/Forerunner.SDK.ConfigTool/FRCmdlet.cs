@@ -245,7 +245,7 @@ namespace Forerunner.Powershell
             // Create the file and rename the namespace reference
             string sourcePath = Path.Combine(AssemblyPath, Path.GetFileName(destPath));
 
-            if (File.Exists(fullPath))
+            if (File.Exists(sourcePath))
             {
                 string source = File.ReadAllText(sourcePath);
 

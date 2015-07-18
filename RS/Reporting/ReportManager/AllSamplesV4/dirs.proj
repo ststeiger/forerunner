@@ -4,7 +4,7 @@
 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
-		<!-- <ProjectFiles Include="SetASConfig\SetASConfig.csproj" /> -->
+		<ProjectFiles Include="SetASConfig\SetASConfig.csproj" />
 	</ItemGroup> 
 
 	<!-- Insert any customizations for targets here --> 

@@ -5783,6 +5783,7 @@ $(function () {
         toggleZoom: function () {
             var me = this;
         
+            //Only hide on mobile
             if (forerunner.isMobile()) {
                 if (me.isZoomed() && me.$viewer && me.$viewer.data("forerunner-reportViewer"))
                     me.$viewer.reportViewer("showToolbar", false);

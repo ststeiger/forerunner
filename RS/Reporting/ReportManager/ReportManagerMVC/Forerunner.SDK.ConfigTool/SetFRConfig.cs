@@ -7,7 +7,6 @@ using System.Security;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Management.Automation;
-using System.Text.RegularExpressions;
 using System.IO;
 
 using EnvDTE;
@@ -15,11 +14,12 @@ using EnvDTE80;
 
 using ReportMannagerConfigTool;
 using ForerunnerLicense;
+using Forerunner.Powershell;
 
 namespace Forerunner.SDK.ConfigTool
 {
     [Cmdlet(VerbsCommon.Set, "FRConfig")]
-    public class SetFRConfig : PSCmdlet
+    public class SetFRConfig : FRCmdlet
     {
         public SetFRConfig()
         {
@@ -225,36 +225,6 @@ namespace Forerunner.SDK.ConfigTool
             set { _versionPath = value; }
         }
 
-        private string _projectName;
-        [Parameter(HelpMessage = "Explicitly defines which project you want configured")]
-        [Alias("pr")]
-        public string ProjectName
-        {
-            get
-            {
-                return _projectName;
-            }
-            set
-            {
-                _projectName = value;
-            }
-        }
-
-        private string _webConfigPath;
-        [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
-        [Alias("w")]
-        public string WebConfigPath
-        {
-            get
-            {
-                return _webConfigPath;
-            }
-            set
-            {
-                _webConfigPath = value;
-            }
-        }
-
         private SwitchParameter _skipLicenseCheck;
         [Parameter(HelpMessage = "Causes Set-FRConfig to skip the license check")]
         [Alias("sl")]
@@ -267,40 +237,6 @@ namespace Forerunner.SDK.ConfigTool
             set
             {
                 _skipLicenseCheck = value;
-            }
-        }
-
-        // Get the Assembly path of this assembly
-        private string _assemblyPath = null;
-        private string AssemblyPath
-        {
-            get
-            {
-                if (_assemblyPath != null)
-                {
-                    return _assemblyPath;
-                }
-
-                string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                _assemblyPath = Path.GetDirectoryName(Uri.UnescapeDataString(uri.Path));
-                return _assemblyPath;
-            }
-        }
-        // Get the default namespace of the project
-        private string _defaultNamespace = null;
-        private string DefaultNamespace
-        {
-            get
-            {
-                if (_defaultNamespace != null)
-                {
-                    return _defaultNamespace;
-                }
-                Project project = GetProject();
-                Properties properties = project.Properties;
-                _defaultNamespace = properties.Item("DefaultNamespace").Value;
-                return _defaultNamespace;
             }
         }
 
@@ -346,8 +282,6 @@ namespace Forerunner.SDK.ConfigTool
             WriteProgress(new ProgressRecord(processingId, activity, "CheckTargetFramework()"));
             CheckTargetFramework();
 
-            // Return this (I.e., the FRConfigTool) to the pipeline this will enable the user to
-            // call individual public methods such as ActivateLicense()
             WriteObject("Set-FRConfig complete");
         }
         protected override void EndProcessing()
@@ -447,42 +381,6 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End ActivateLicense()");
             return true;
         }
-        private Boolean UpdateWebConfig()
-        {
-            WriteVerbose("Start UpdateWebConfig()");
-
-            SetForerunnerSetting("IsNative", IsNative);
-            SetForerunnerSetting("SharePointHost", SharePointHost);
-            SetForerunnerSetting("DefaultUserDomain", DefaultUserDomain);
-            SetForerunnerSetting("ReportServerWSUrl", ReportServerWSUrl);
-            SetForerunnerSetting("ReportServerDataSource", ReportServerDataSource);
-            SetForerunnerSetting("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL);
-            SetForerunnerSetting("UseMobilizerDB", UseMobilizerDB);
-            SetForerunnerSetting("SeperateDB", SeperateDB);
-            SetForerunnerSetting("ReportServerDB", ReportServerDB);
-            SetForerunnerSetting("ReportServerDBUser", ReportServerDBUser);
-
-            // Need to get and set the encrypted value here
-            if (ReportServerDBPWD != null && ReportServerDBPWD.Length > 0)
-            {
-                string password = GetStringFromSecureString(ReportServerDBPWD);
-                string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
-                SetForerunnerSetting("ReportServerDBPWD", encryptedPWD);
-            }
-
-            SetForerunnerSetting("ReportServerDBDomain", ReportServerDBDomain);
-            SetForerunnerSetting("ReportServerTimeout", ReportServerTimeout);
-            SetForerunnerSetting("IgnoreSSLErrors", IgnoreSSLErrors);
-            SetForerunnerSetting("QueueThumbnails", QueueThumbnails);
-            SetForerunnerSetting("MobilizerSettingPath", MobilizerSettingPath);
-            SetForerunnerSetting("VersionPath", VersionPath);
-
-            WriteVerbose("Saving Forerunner settings: " + appConfig.FilePath);
-            appConfig.Save();
-
-            WriteVerbose("End UpdateWebConfig()");
-            return true;
-        }
         private Boolean UpdateSourceFiles()
         {
             WriteVerbose("Start UpdateSourceFiles()");
@@ -502,11 +400,6 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("end UpdateSourceFiles()");
             return true;
         }
-        private string GetProjectDirectory()
-        {
-            Project project = GetProject();
-            return Path.GetDirectoryName(project.FullName);
-        }
         private void CreateMissingFiles()
         {
             // Make sure all required files are included in the project
@@ -516,80 +409,6 @@ namespace Forerunner.SDK.ConfigTool
             CreateMissingFile(@"Views\Web.config");
             CreateMissingFile(@"Global.asax");
             CreateMissingFile(@"Global.asax.cs");
-        }
-        private void CreateMissingFile(string destPath)
-        {
-            string fullPath = Path.Combine(GetProjectDirectory(), destPath);
-
-            if (File.Exists(fullPath))
-            {
-                // If the file exists we are done
-                return;
-            }
-
-            // Make sure the folder structure exists
-            string projPath = GetProjectDirectory();
-            string relativePath = Path.GetDirectoryName(fullPath).Substring(projPath.Length);
-            if (relativePath != null && relativePath.Length > 0)
-            {
-                char[] sep = {'\\'};
-                string[] folders = relativePath.Split(sep);
-                string curFolder = projPath;
-                foreach (string folder in folders)
-                {
-                    if (folder.Length > 0)
-                    {
-                        curFolder = Path.Combine(curFolder, folder);
-                        Directory.CreateDirectory(curFolder);
-                    }
-                }
-            }
-
-            // Create the file and rename the namespace reference
-            string sourcePath = Path.Combine(AssemblyPath, Path.GetFileName(destPath));
-            string source = File.ReadAllText(sourcePath);
-            const string oldValue = "GettingStartedV4";
-            string newValue = DefaultNamespace;
-            string newSource = source.Replace(oldValue, newValue);
-            File.WriteAllText(fullPath, newSource);
-
-            // Now create the project folders and item
-            char[] seps = {'\\'};
-            string[] parts = destPath.Split(seps);
-            Project project = GetProject();
-            AddExistingItem(fullPath, project.ProjectItems, parts);
-        }
-        private ProjectItem AddExistingItem(string fullPath, ProjectItems items, string[] parts)
-        {
-            string[] newParts = null;
-
-            ProjectItem item = null;
-            try
-            {
-                item = items.Item(parts[0]);
-            }
-            catch { }
-
-            if (item == null)
-            {
-                if (parts.Length == 1)
-                {
-                    return items.AddFromFile(Path.Combine(GetProjectDirectory(), fullPath));
-                }
-
-                ProjectItem newItem = items.AddFolder(parts[0]);
-                newParts = new string[parts.Length - 1];
-                Array.Copy(parts, 1, newParts, 0, parts.Length - 1);
-                return AddExistingItem(fullPath, newItem.ProjectItems, newParts);
-            }
-            else if (parts.Length == 1)
-            {
-                return item;
-            }
-
-            newParts = new string[parts.Length - 1];
-            Array.Copy(parts, 1, newParts, 0, parts.Length - 1);
-            return AddExistingItem(fullPath, item.ProjectItems, newParts);
         }
         private void UpdateWebApiConfig()
         {
@@ -759,59 +578,6 @@ namespace Forerunner.SDK.ConfigTool
             }
             return false;
         }
-        private bool AutomaticEditInsert(string path, string pattern, string markComment, string insertText, string searchText = null)
-        {
-            if (path == null || !File.Exists(path))
-            {
-                WriteWarning("Warning - File: " + path + ", not found");
-                return false;
-            }
-
-            // Read the file into a string
-            string fileText = File.ReadAllText(path);
-
-            // See if we have already made the automatic edit to this file
-            if (fileText.IndexOf(markComment) != -1 ||
-                (searchText != null) && fileText.IndexOf(searchText) != -1)
-            {
-                // The mark text is already in the file so we are done
-                return true;
-            }
-
-            // Do the automatic insert
-            Regex regex = new Regex(pattern);
-            Match match = regex.Match(fileText);
-
-            if (!match.Success)
-            {
-                throw (new Exception("Search pattern: " + pattern + " not found in file: " + path));
-            }
-
-            var sb = new StringBuilder();
-            sb.Append(fileText.Substring(0, match.Index + match.Length));
-            sb.Append("\r\n" +
-                      "            // Set-FRConfig, Automatic edit start: " + markComment + "\r\n" +
-                      "            // Keep the comment above and Set-FRConfig will not change this edit again\r\n");
-            sb.Append(insertText);
-            sb.Append("            // Set-FRConfig, Automatic edit end: " + markComment + "\r\n");
-            sb.Append(fileText.Substring(match.Index + match.Length));
-
-            // Save the file back
-            File.WriteAllText(path, sb.ToString());
-            return true;
-        }
-        private void AddPrompt(string name, string currentValue, string helpMessage, ref System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription> descriptions, out string prompt)
-        {
-            const string returnEqualsFormat = "{0} (return = '{1}')";
-            prompt = name;
-            if (currentValue != null && currentValue.Length > 0)
-            {
-                prompt = String.Format(returnEqualsFormat, prompt, currentValue);
-            }
-            var description = new System.Management.Automation.Host.FieldDescription(prompt);
-            description.HelpMessage = helpMessage;
-            descriptions.Add(description);
-        }
         private void PromptForMissingParameters()
         {
             var descriptions = new System.Collections.ObjectModel.Collection<System.Management.Automation.Host.FieldDescription>();
@@ -914,61 +680,6 @@ namespace Forerunner.SDK.ConfigTool
                 Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
             }
         }
-        private static readonly string forerunnerPrefix = "Forerunner.";
-        private string GetForerunnerSetting(string name)
-        {
-            string key = forerunnerPrefix + name;
-            if (appConfig.AppSettings.Settings[key] != null)
-            {
-                return appConfig.AppSettings.Settings[key].Value;
-            }
-
-            return null;
-        }
-        private void SetForerunnerSetting(string name, string value)
-        {
-            string fullName = forerunnerPrefix + name;
-            appConfig.AppSettings.Settings.Remove(fullName);
-            appConfig.AppSettings.Settings.Add(fullName, value);
-        }
-        private void AssignResult(ref string prop, string resultsKey, Dictionary<string, PSObject> results)
-        {
-            PSObject value = null;
-            bool hasValue = results.TryGetValue(resultsKey, out value);
-            if (!hasValue)
-            {
-                // Nothing to assign here this key was not prompted for
-                return;
-            }
-
-            string result = (string)value.BaseObject;
-            if (result == null || result.Length == 0)
-            {
-                // If the user just hit return the we keep whatever value we have
-                return;
-            }
-
-            prop = result;
-        }
-        private void AssignForerunnerSetting(ref string prop, string name, string defaultValue = null)
-        {
-            if (prop != null && prop.Length > 0)
-            {
-                // Always take parameters that are specified on the command line
-                return;
-            }
-
-            var value = GetForerunnerSetting(name);
-            if (value != null && value.Length > 0)
-            {
-                // Take the value from the given web.config file (app settings)
-                prop = value;
-                return;
-            }
-
-            // Otherwise assign the default value (or null)
-            prop = defaultValue;
-        }
         private void CheckTargetFramework()
         {
             WriteVerbose("Start CheckTargetFramework()");
@@ -981,7 +692,7 @@ namespace Forerunner.SDK.ConfigTool
             }
 
             const uint net45 = 0x40005;
-            Project project = GetProject();
+            Project project = DefaultProject;
             if (project == null)
             {
                 return;
@@ -997,121 +708,22 @@ namespace Forerunner.SDK.ConfigTool
 
             WriteVerbose("End CheckTargetFramework()");
         }
-        private Project GetProject()
-        {
-            string prjKindCSharpProject = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}";
-            var dte = (DTE2)GetVariableValue("DTE");
-            if (dte == null)
-            {
-                return null;
-            }
-            Project project = null;
-            var solution = (Solution)dte.Solution;
-            var solutionProjects = (Projects)solution.Projects;
-
-            // If we don't have the project name, try to heuristically get the project
-            foreach (Project p in solutionProjects)
-            {
-                if (ProjectName != null)
-                {
-                    if (String.Compare(ProjectName, p.Name, true) == 0)
-                    {
-                        project = p;
-                        break;
-                    }
-                }
-                else if (prjKindCSharpProject == p.Kind)
-                {
-                    if (project != null)
-                    {
-                        throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
-                    }
-                    project = p;
-                }
-            }
-
-            return project;
-        }
-        private string GetLocalFilePathFromProject(string projectRelativePath, string filename)
-        {
-            Project project = GetProject();
-            if (project == null)
-            {
-                if (ProjectName != null)
-                {
-                    throw new Exception("The given -ProjectName: " + ProjectName + " doesn't exist in the solution");
-                }
-                throw new Exception("Unable to determine which project you want configured. Use the -ProjectName switch");
-            }
-
-            var projectItems = (ProjectItems)project.ProjectItems;
-            string fullPath = GetFullPath(project.FullName, projectRelativePath, filename);
-            ProjectItem projectItem = GetProjectItem(projectItems, fullPath);
-            if (projectItem == null)
-            {
-                return null;
-            }
-            var properties = (Properties)projectItem.Properties;
-            var property = (Property)properties.Item("LocalPath");
-            return property.Value;
-        }
-        private string GetFullPath(string projectFullName, string projectRelativePath, string filename)
-        {
-            int index = projectFullName.LastIndexOf(@"\");
-            string path = projectRelativePath.Substring(0, 1) == @"\" ? projectRelativePath : @"\" + projectRelativePath;
-            return Path.Combine(projectFullName.Substring(0, index) + path, filename);
-        }
-        private ProjectItem GetProjectItem(ProjectItems items, string fullPath)
-        {
-            foreach (ProjectItem item in items)
-            {
-                string itemFullPath = item.Properties.Item("FullPath").Value;
-                if (String.Compare(itemFullPath, fullPath, true) == 0)
-                {
-                    return item;
-                }
-
-                ProjectItems items2 = item.ProjectItems;
-                if (items2 != null && items2.Count > 0)
-                {
-                    ProjectItem item2 = GetProjectItem(items2, fullPath);
-                    if (item2 != null)
-                    {
-                        return item2;
-                    }
-                }
-            }
-            return null;
-        }
         private void LoadWebConfig()
         {
-            string webConfigPath = WebConfigPath;
-            if (webConfigPath == null)
-            {
-                webConfigPath = GetLocalFilePathFromProject(@"\", "web.config");
-                if (webConfigPath == null)
-                {
-                    throw (new Exception("Error - Unable to find file: web.config, try setting -WebConfigPath"));
-                }
-            }
-            System.Configuration.ExeConfigurationFileMap configFileMap = new System.Configuration.ExeConfigurationFileMap();
-            configFileMap.ExeConfigFilename = webConfigPath;
-            appConfig = System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configFileMap, System.Configuration.ConfigurationUserLevel.None);
-
-            AssignForerunnerSetting(ref _reportServerWSUrl, "ReportServerWSUrl", "http://localhost/ReportServer");
-            AssignForerunnerSetting(ref _reportServerDataSource, "ReportServerDataSource", ".");
-            AssignForerunnerSetting(ref _reportServerDB, "ReportServerDB", "ReportServer");
-            AssignForerunnerSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
-            AssignForerunnerSetting(ref _reportServerDBUser, "ReportServerDBUser");
-            AssignForerunnerSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
-            AssignForerunnerSetting(ref _useMobilizerDB, "UseMobilizerDB", "false");
-            AssignForerunnerSetting(ref _seperateDB, "SeperateDB", "false");
-            AssignForerunnerSetting(ref _isNative, "IsNative", "true");
-            AssignForerunnerSetting(ref _sharePointHost, "SharePointHost");
-            AssignForerunnerSetting(ref _defaultUserDomain, "DefaultUserDomain");
+            AssignAppSetting(ref _reportServerWSUrl, "ReportServerWSUrl", "http://localhost/ReportServer");
+            AssignAppSetting(ref _reportServerDataSource, "ReportServerDataSource", ".");
+            AssignAppSetting(ref _reportServerDB, "ReportServerDB", "ReportServer");
+            AssignAppSetting(ref _reportServerDBDomain, "ReportServerDBDomain");
+            AssignAppSetting(ref _reportServerDBUser, "ReportServerDBUser");
+            AssignAppSetting(ref _useIntegratedSecurityForSQL, "UseIntegratedSecurityForSQL");
+            AssignAppSetting(ref _useMobilizerDB, "UseMobilizerDB", "false");
+            AssignAppSetting(ref _seperateDB, "SeperateDB", "false");
+            AssignAppSetting(ref _isNative, "IsNative", "true");
+            AssignAppSetting(ref _sharePointHost, "SharePointHost");
+            AssignAppSetting(ref _defaultUserDomain, "DefaultUserDomain");
 
             // The password is a different pattern
-            string password = GetForerunnerSetting("ReportServerDBPWD");
+            string password = GetAppSetting("ReportServerDBPWD");
             if (password != null)
             {
                 var decrypted = Forerunner.SSRS.Security.Encryption.Decrypt(password);
@@ -1122,10 +734,45 @@ namespace Forerunner.SDK.ConfigTool
                 }
             }
         }
+        private Boolean UpdateWebConfig()
+        {
+            WriteVerbose("Start UpdateWebConfig()");
+
+            SetAppSetting("IsNative", IsNative);
+            SetAppSetting("SharePointHost", SharePointHost);
+            SetAppSetting("DefaultUserDomain", DefaultUserDomain);
+            SetAppSetting("ReportServerWSUrl", ReportServerWSUrl);
+            SetAppSetting("ReportServerDataSource", ReportServerDataSource);
+            SetAppSetting("UseIntegratedSecurityForSQL", UseIntegratedSecurityForSQL);
+            SetAppSetting("UseMobilizerDB", UseMobilizerDB);
+            SetAppSetting("SeperateDB", SeperateDB);
+            SetAppSetting("ReportServerDB", ReportServerDB);
+            SetAppSetting("ReportServerDBUser", ReportServerDBUser);
+
+            // Need to get and set the encrypted value here
+            if (ReportServerDBPWD != null && ReportServerDBPWD.Length > 0)
+            {
+                string password = GetStringFromSecureString(ReportServerDBPWD);
+                string encryptedPWD = Forerunner.SSRS.Security.Encryption.Encrypt(password);
+                SetAppSetting("ReportServerDBPWD", encryptedPWD);
+            }
+
+            SetAppSetting("ReportServerDBDomain", ReportServerDBDomain);
+            SetAppSetting("ReportServerTimeout", ReportServerTimeout);
+            SetAppSetting("IgnoreSSLErrors", IgnoreSSLErrors);
+            SetAppSetting("QueueThumbnails", QueueThumbnails);
+            SetAppSetting("MobilizerSettingPath", MobilizerSettingPath);
+            SetAppSetting("VersionPath", VersionPath);
+
+            WriteVerbose("Saving Forerunner settings: " + AppConfig.FilePath);
+            AppConfig.Save();
+
+            WriteVerbose("End UpdateWebConfig()");
+            return true;
+        }
 
         // Private Data
         //
-        private System.Configuration.Configuration appConfig { get; set; }
         private bool needsActivation = false;
         private const string authenticationPrompt = "Use Integrated Security For SQL (return = false)";
         private const string authenticationHelp = "true = domain authentication, false = SQL";

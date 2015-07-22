@@ -5,6 +5,7 @@
 	<ItemGroup>
     <ProjectFiles Include="ReportManager\ReportManagerMVC\dirs.proj" />
     <ProjectFiles Include="ReportManager\PublishExtension\dirs.proj" />
+    <ProjectFiles Include="ReportManager\AllSamplesV4\dirs.proj" />
     <ProjectFiles Include="ReportViewer\dirs.proj" />
 		<ProjectFiles Include="SecurityExtensions\dirs.proj"/> 
 	</ItemGroup> 

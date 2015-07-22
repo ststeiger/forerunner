@@ -67,6 +67,12 @@ call %~dp0createGettingStartedV4.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
+
+echo Running createAllSamplesV4 >> %BUILD_LOG%
+call %~dp0createAllSamplesV4.cmd %BUILD_RELEASE% %BUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
 exit /b 0
 
 :InitError

@@ -5695,10 +5695,12 @@ $(function () {
         toggleZoom: function () {
             var me = this;
         
-            if (me.isZoomed() && me.$viewer && me.$viewer.data("forerunner-reportViewer"))
-                me.$viewer.reportViewer("showToolbar", false);
-            else if (me.$viewer && me.$viewer.data("forerunner-reportViewer"))
-                me.$viewer.reportViewer("showToolbar", true);
+            if (forerunner.isMobile()) {
+                if (me.isZoomed() && me.$viewer && me.$viewer.data("forerunner-reportViewer"))
+                    me.$viewer.reportViewer("showToolbar", false);
+                else if (me.$viewer && me.$viewer.data("forerunner-reportViewer"))
+                    me.$viewer.reportViewer("showToolbar", true);
+            }
             return;
        
         },

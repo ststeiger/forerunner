@@ -5695,6 +5695,7 @@ $(function () {
         toggleZoom: function () {
             var me = this;
         
+            //Only hide on mobile
             if (forerunner.isMobile()) {
                 if (me.isZoomed() && me.$viewer && me.$viewer.data("forerunner-reportViewer"))
                     me.$viewer.reportViewer("showToolbar", false);
@@ -20133,7 +20134,7 @@ $(function () {
                     $appContainer: layout.$container,
                     rsInstance: me.options.rsInstance
                 });
-                me.favoriteInstance.favoriteModel('setFavoriteState', path);
+                me.favoriteInstance.favoriteModel("setFavoriteState", path);
 
                 me._trigger(events.afterTransition, null, { type: "ReportManager", path: path, view: view });
             }, timeout);

@@ -3,7 +3,7 @@
   <Name>Forerunner.SDK.ConfigTool</Name>
   <Version>1.0.0.0</Version>
   <Description />
-  <ModulePath>C:\Users\Jon\Documents\GitHub\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\Forerunner.SDK.ConfigTool\bin\Release\Forerunner.SDK.ConfigTool.dll</ModulePath>
+  <ModulePath>.\bin\Release\Forerunner.SDK.ConfigTool.dll</ModulePath>
   <HasManifest>false</HasManifest>
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />
@@ -35,10 +35,10 @@ set of parameters.</Description>
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL UseMobilizerDB SeperateDB ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath ProjectName WebConfigPath SkipLicenseCheck Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LicenseKey IsNative SharePointHost DefaultUserDomain ReportServerWSUrl ReportServerDataSource UseIntegratedSecurityForSQL ImpersonateCaller UseMobilizerDB SeperateDB ReportServerDB ReportServerDBUser ReportServerDBPWD ReportServerDBDomain ReportServerTimeout IgnoreSSLErrors QueueThumbnails MobilizerSettingPath VersionPath SkipLicenseCheck ProjectName WebConfigPath Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-UseMobilizerDB &lt;String&gt;] [-SeperateDB &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-ProjectName &lt;String&gt;] [-WebConfigPath &lt;String&gt;] [-SkipLicenseCheck]</string>
+        <string>Set-FRConfig [-LicenseKey &lt;String&gt;] [-IsNative &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-DefaultUserDomain &lt;String&gt;] [-ReportServerWSUrl &lt;String&gt;] [-ReportServerDataSource &lt;String&gt;] [-UseIntegratedSecurityForSQL &lt;String&gt;] [-ImpersonateCaller &lt;String&gt;] [-UseMobilizerDB &lt;String&gt;] [-SeperateDB &lt;String&gt;] [-ReportServerDB &lt;String&gt;] [-ReportServerDBUser &lt;String&gt;] [-ReportServerDBPWD &lt;SecureString&gt;] [-ReportServerDBDomain &lt;String&gt;] [-ReportServerTimeout &lt;String&gt;] [-IgnoreSSLErrors &lt;String&gt;] [-QueueThumbnails &lt;String&gt;] [-MobilizerSettingPath &lt;String&gt;] [-VersionPath &lt;String&gt;] [-SkipLicenseCheck] [-ProjectName &lt;String&gt;] [-WebConfigPath &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -92,8 +92,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerWSUrl</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>ssrs</string>
@@ -104,8 +104,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDataSource</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>ds</string>
@@ -116,8 +116,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>UseIntegratedSecurityForSQL</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>ia</string>
@@ -152,8 +152,8 @@ set of parameters.</Description>
         <ParameterDescription type="SecureString" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerDBPWD</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>p</string>
@@ -176,8 +176,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportServerTimeout</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>t</string>
@@ -188,8 +188,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>IgnoreSSLErrors</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>i</string>
@@ -212,8 +212,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>MobilizerSettingPath</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>m</string>
@@ -293,8 +293,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>UseMobilizerDB</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>umdb</string>
@@ -305,8 +305,8 @@ set of parameters.</Description>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SeperateDB</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>sdb</string>
@@ -325,6 +325,18 @@ set of parameters.</Description>
           </Aliases>
           <Description>Causes Set-FRConfig to skip the license check processing</Description>
           <DefaultValue>off</DefaultValue>
+        </ParameterDescription>
+        <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>ImpersonateCaller</Name>
+          <Attributes>
+            <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>im</string>
+          </Aliases>
+          <Description>Impersonate the logged in user. This setting is needed sometimes to get IIS to properly handle windows authentication.</Description>
+          <DefaultValue>false</DefaultValue>
         </ParameterDescription>
       </Parameters>
       <Examples />

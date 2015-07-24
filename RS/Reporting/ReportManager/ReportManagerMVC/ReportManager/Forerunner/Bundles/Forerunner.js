@@ -798,7 +798,14 @@ $(function () {
         _endsWith : function(str, suffix) {
             return str.indexOf(suffix, str.length - suffix.length);
         },
-        _getVirtualRootBase: function () {
+        setVirtualRootBase: function (virtualRootBase) {
+            if (this._endsWith(virtualRootBase, "/") === -1) {
+                this._virtualRootBase = virtualRootBase + "/";
+            } else {
+                this._virtualRootBase = virtualRootBase;
+            }
+        },
+        virtualRootBase: function () {
             if (!this._virtualRootBase) {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
@@ -825,7 +832,7 @@ $(function () {
          */
         forerunnerFolder: function () {
             if (this._forerunnerFolderPath) return this._forerunnerFolderPath;
-            return this._getVirtualRootBase() + "forerunner/";
+            return this.virtualRootBase() + "forerunner/";
         },
         /**
         * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
@@ -847,7 +854,7 @@ $(function () {
          */
         forerunnerAPIBase: function () {
             if (this._apiBase) return this._apiBase;
-            return this._getVirtualRootBase() + "api/";
+            return this.virtualRootBase() + "api/";
         },
         /**
         * Override the api base.  By default, it is the vroot + /api.

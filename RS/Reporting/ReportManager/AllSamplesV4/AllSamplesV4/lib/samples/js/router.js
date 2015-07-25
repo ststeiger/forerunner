@@ -139,10 +139,10 @@ $(function () {
             allSamples.parameters.init(data.name);
             showSampleSection(data.name);
         } else if (data.name === "as-help") {
-            var url = forerunner.config._getVirtualRootBase() + "Help";
+            var url = forerunner.config.virtualRootBase() + "Help";
             if (data.args[0]) {
                 // If the ApiId parameter is given then this is an API reference
-                url = forerunner.config._getVirtualRootBase() + "Help/Api/" + data.args[0];
+                url = forerunner.config.virtualRootBase() + "Help/Api/" + data.args[0];
             }
             fetch(data.name, url, true, convertHelpLink);
             showSampleSection(data.name);

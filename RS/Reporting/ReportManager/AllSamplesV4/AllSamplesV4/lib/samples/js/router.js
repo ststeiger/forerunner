@@ -114,7 +114,7 @@ $(function () {
             // Show the as-explorer section for any / all reportExplorerEZ routes
             showSampleSection("as-explorer");
         } else if (data.name === "as-home") {
-            var url = forerunner.config._getVirtualRootBase() + "Home/Home";
+            var url = forerunner.config.virtualRootBase() + "Home/Home";
             fetch(data.name, url);
             showSampleSection(data.name);
         } else if (data.name === "as-explorer") {

@@ -103,6 +103,16 @@ namespace Forerunner.SDK.ConfigTool
             set { _useIntegratedSecurityForSQL = value; }
         }
 
+        // <add key="Forerunner.ImpersonateCaller" value="" />
+        private string _impersonateCaller;
+        [Parameter(HelpMessage = "Impersonate vsThemeColors logged in user")]
+        [Alias("im")]
+        public string ImpersonateCaller
+        {
+            get { return _impersonateCaller; }
+            set { _impersonateCaller = value; }
+        }
+
         // <add key="Forerunner.UseMobilizerDB" value="true" />
         private string _useMobilizerDB;
         [Parameter(HelpMessage = "Don't allow any use of the Mobilizer DB functions")]
@@ -721,6 +731,7 @@ namespace Forerunner.SDK.ConfigTool
             AssignAppSetting(ref _isNative, "IsNative", "true");
             AssignAppSetting(ref _sharePointHost, "SharePointHost");
             AssignAppSetting(ref _defaultUserDomain, "DefaultUserDomain");
+            AssignAppSetting(ref _impersonateCaller, "ImpersonateCaller", "false");
 
             // The password is a different pattern
             string password = GetAppSetting("ReportServerDBPWD");
@@ -748,6 +759,7 @@ namespace Forerunner.SDK.ConfigTool
             SetAppSetting("SeperateDB", SeperateDB);
             SetAppSetting("ReportServerDB", ReportServerDB);
             SetAppSetting("ReportServerDBUser", ReportServerDBUser);
+            SetAppSetting("ImpersonateCaller", ImpersonateCaller);
 
             // Need to get and set the encrypted value here
             if (ReportServerDBPWD != null && ReportServerDBPWD.Length > 0)

@@ -797,7 +797,25 @@ $(function () {
         _endsWith : function(str, suffix) {
             return str.indexOf(suffix, str.length - suffix.length);
         },
-        _getVirtualRootBase: function () {
+        /**
+        * Override the base virtual root
+        *
+        * @param {String} virtualRootBase - API Base.
+        */
+        setVirtualRootBase: function (virtualRootBase) {
+            if (this._endsWith(virtualRootBase, "/") === -1) {
+                this._virtualRootBase = virtualRootBase + "/";
+            } else {
+                this._virtualRootBase = virtualRootBase;
+            }
+        },
+        /**
+         * Base virtual root used to get URLs for API and resources
+         *
+         * @return {String} - Virtual Root (E.g., http://localhost/testApp)
+         * @member
+         */
+        virtualRootBase: function () {
             if (!this._virtualRootBase) {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
@@ -814,7 +832,7 @@ $(function () {
                     }
                 }
             }
-            return this._virtualRootBase ===  null ? "" : this._virtualRootBase;
+            return this._virtualRootBase === null ? "" : this._virtualRootBase;
         },
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
@@ -824,7 +842,7 @@ $(function () {
          */
         forerunnerFolder: function () {
             if (this._forerunnerFolderPath) return this._forerunnerFolderPath;
-            return this._getVirtualRootBase() + "forerunner/";
+            return this.virtualRootBase() + "forerunner/";
         },
         /**
         * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
@@ -846,7 +864,7 @@ $(function () {
          */
         forerunnerAPIBase: function () {
             if (this._apiBase) return this._apiBase;
-            return this._getVirtualRootBase() + "api/";
+            return this.virtualRootBase() + "api/";
         },
         /**
         * Override the api base.  By default, it is the vroot + /api.

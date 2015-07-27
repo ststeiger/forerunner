@@ -148,7 +148,14 @@ namespace Forerunner.SSRS.JSONRender
                             break;
                         case "String":
                             //Total hack for shareed Style ID.  Much faster than searching later
-                            string value =  r.RPL.ReadString();
+                            string value;
+
+                            //IDs can not be NULL, bug in RPL an lenght encoding
+                            if (PropArray[i].Name == "ID")
+                                 value =  r.RPL.ReadString(true);
+                            else
+                                value = r.RPL.ReadString();
+
                             if (PropArray[i].Name == "SID")
                                 r.LastID = value;
                             if (PropArray[i].MakeTemp) tmp.Value =value; else w.WriteString(value);
@@ -496,6 +503,10 @@ namespace Forerunner.SSRS.JSONRender
                     if (RPL.ReadByte() != 0xFF)
                         ThrowParseError("WriteJSONReportContent: End Tag not Found");
                     w.WriteEndObject();
+
+                    //There should not be an extra FF here, but if so step over
+                    if (RPL.InspectByte() == 0xFF)
+                        RPL.ReadByte();
 
                     //Sections
                     LoopObjectArray("Sections", 0x15, this.WriteJSONSections);
@@ -2258,12 +2269,17 @@ namespace Forerunner.SSRS.JSONRender
                 retval = false;
             return retval;
         }
-        public string ReadString()
+        public string ReadString(bool notNull = false)
         {
             int length;
             string retval;
 
             length = GetLength(0);
+            
+            //There seems to be a bug in RPL that the length is encoded wrong on some IDs
+            if (length == 0 && notNull)
+                length = GetLength(0);
+
             retval = Encoding.Unicode.GetString(GetByteArray(length), 0, length);
             return retval;
 
@@ -2274,6 +2290,7 @@ namespace Forerunner.SSRS.JSONRender
             int retval;
 
             Len = ReadByte();
+
             if (Len > 127)
             {
                 retval = Len - 128;

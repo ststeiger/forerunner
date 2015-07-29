@@ -177,9 +177,7 @@ $(function () {
             if (data.Debug) {
                 me._debug = data.Debug;
             }
-
-            if (me.$params === null) me._render();
-
+         
             me.options.pageNum = pageNum;
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
@@ -251,6 +249,8 @@ $(function () {
                     LoadedForDefault: me._loadedForDefault
                 });
             }
+
+            me._trigger(events.loaded);
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);

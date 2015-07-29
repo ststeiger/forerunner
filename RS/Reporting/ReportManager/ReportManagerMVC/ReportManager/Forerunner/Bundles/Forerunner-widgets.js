@@ -3230,6 +3230,11 @@ $(function () {
             if (paramList && typeof paramList === "object")
                 paramList =JSON.stringify(paramList);
 
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });                
+            });
+
             me._loadPage(pageNum, false, null, paramList, true);
         },
         /**
@@ -15391,9 +15396,7 @@ $(function () {
             if (data.Debug) {
                 me._debug = data.Debug;
             }
-
-            if (me.$params === null) me._render();
-
+         
             me.options.pageNum = pageNum;
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
@@ -15465,6 +15468,8 @@ $(function () {
                     LoadedForDefault: me._loadedForDefault
                 });
             }
+
+            me._trigger(events.loaded);
             if (submitForm !== false) {
                 if (data.DefaultValueCount === parseInt(data.Count, 10) && me._loadedForDefault)
                     me._submitForm(pageNum);

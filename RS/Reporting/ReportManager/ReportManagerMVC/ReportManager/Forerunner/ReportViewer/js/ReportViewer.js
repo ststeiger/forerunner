@@ -2510,6 +2510,11 @@ $(function () {
             if (paramList && typeof paramList === "object")
                 paramList =JSON.stringify(paramList);
 
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });                
+            });
+
             me._loadPage(pageNum, false, null, paramList, true);
         },
         /**

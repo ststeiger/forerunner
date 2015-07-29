@@ -542,6 +542,11 @@ $(function () {
             reportParameterRender: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.render).toLowerCase(); },
 
             /** @constant */
+            loaded: "loaded",
+            /** widget + event, lowercase */
+            reportParameterLoaded: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loaded).toLowerCase(); },
+
+            /** @constant */
             submit: "submit",
             /** widget + event, lowercase */
             reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },

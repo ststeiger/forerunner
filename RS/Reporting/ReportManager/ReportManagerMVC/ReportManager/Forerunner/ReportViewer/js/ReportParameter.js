@@ -2353,7 +2353,7 @@ $(function () {
             var m = moment(defaultDatetime, dateFormat);
 
             //check for saved paramter default format
-            if (defaultDatetime.substr(4, 1) === "/")
+            if (defaultDatetime.substr(4, 1) === "/" && defaultDatetime.substr(7, 1) === "/")
                 m = moment(defaultDatetime, "YYYY/MM/DD");
 
 

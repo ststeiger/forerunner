@@ -390,7 +390,7 @@ $(function () {
             var me = this;
         
             //Only hide on mobile
-            if (forerunner.isMobile()) {
+            if (forerunner.device.isMobile()) {
                 if (me.isZoomed() && me.$viewer && me.$viewer.data("forerunner-reportViewer"))
                     me.$viewer.reportViewer("showToolbar", false);
                 else if (me.$viewer && me.$viewer.data("forerunner-reportViewer"))

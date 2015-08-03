@@ -183,6 +183,8 @@
     <Content Include="Forerunner\Common\css\ContextMenuBase.css" />
     <Content Include="Forerunner\Common\css\DialogBase.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\ParamUtil.js" />
     <Content Include="Forerunner\Common\js\FavoriteModel.js" />
     <Content Include="Forerunner\ReportExplorer\css\MoveItem.css" />
@@ -329,12 +331,9 @@
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_888888_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\jquery-ui-1.10.3.forerunner.css" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.min.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.3.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.3.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
     <Content Include="Forerunner\Lib\jsTree\jstree.js" />
     <Content Include="Forerunner\Lib\jsTree\themes\default\32px.png" />

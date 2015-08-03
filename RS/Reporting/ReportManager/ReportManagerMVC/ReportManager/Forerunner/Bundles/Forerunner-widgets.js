@@ -766,6 +766,7 @@ $(function () {
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @prop {String} options.zoom - Zoom factor, default to 100.
      * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
+     * @prop {function (url)} options.printCallback - call back function for print, will call instead of window.open
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -2647,19 +2648,23 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
-                window.open(url);
-            }
+            if (me.options.printCallback !== undefined)
+                me.options.printCallback(url);
             else {
-                var pif = me.element.find(".fr-print-iframe");
-                if (pif.length === 1) pif.detach();
+                if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                    window.open(url);
+                }
+                else {
+                    var pif = me.element.find(".fr-print-iframe");
+                    if (pif.length === 1) pif.detach();
 
-                pif = $("<iframe/>");
-                pif.addClass("fr-print-iframe");
-                pif.attr("name", me.viewerID);
-                pif.attr("src", url);
-                pif.hide();
-                me.element.append(pif);
+                    pif = $("<iframe/>");
+                    pif.addClass("fr-print-iframe");
+                    pif.attr("name", me.viewerID);
+                    pif.attr("src", url);
+                    pif.hide();
+                    me.element.append(pif);
+                }
             }
            
         },

@@ -898,13 +898,13 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveUserParameters(string path, string parameters)
+        public string SaveUserParameters(string path, string parameters,string userName = null)
         {
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
 
             string userParameters = model.GetUserParameters(ParameterModel.GeneratedFields.Exclude);
-            string returnValue = SaveUserParamatersInternal(path, userParameters);
+            string returnValue = SaveUserParamatersInternal(path, userParameters, userName);
             if (returnValue.IndexOf("Success", StringComparison.InvariantCultureIgnoreCase) == -1)
             {
                 return returnValue;
@@ -963,11 +963,17 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        private string SaveUserParamatersInternal(string path, string parameters)
+        private string SaveUserParamatersInternal(string path, string parameters,string userNameParam = null)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetDomainUserName();
+            string userName = null;
+
+            if (userNameParam == null)
+                userName = GetDomainUserName();
+            else
+                userName = userNameParam;
+
             try
             {
                 impersonator = tryImpersonate();
@@ -1014,11 +1020,17 @@ namespace Forerunner.SSRS.Manager
             string[] stringTokens = userNameWithDomain.Split('\\');
             return stringTokens[stringTokens.Length - 1];
         }
-        public string GetUserParameters(string path)
+        public string GetUserParameters(string path, string userNameParam = null)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
-            string userName = GetDomainUserName();
+            string userName = null;
+
+            if (userNameParam == null)
+                userName = GetDomainUserName();
+            else
+                userName = userNameParam;
+
             try
             {
                 impersonator = tryImpersonate();

@@ -25,6 +25,9 @@ namespace ReportManager.Controllers
         public string reportPath { get; set; }
         public string parameters { get; set; }
         public string Instance { get; set; }
+
+        [System.ComponentModel.DefaultValue(null)]
+        public string UserName { get; set; } 
     }
 
     public class SubscriptionInfoPostBack : Forerunner.SSRS.Manager.SubscriptionInfo
@@ -754,7 +757,7 @@ namespace ReportManager.Controllers
         /// }
         /// </returns>
         [HttpGet]
-        public HttpResponseMessage GetUserParameters(string reportPath, string instance = null)
+        public HttpResponseMessage GetUserParameters(string reportPath, string instance = null, string userName = null)
         {
             if (UseMobilizerDB == false)
             {
@@ -766,7 +769,7 @@ namespace ReportManager.Controllers
             {
                 ImpersonateCaller.RunAsCurrentUser(() =>
                 {
-                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath));
+                    retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath,userName));
                 });
             }
             catch (Exception e)
@@ -795,7 +798,7 @@ namespace ReportManager.Controllers
             {
                 ImpersonateCaller.RunAsCurrentUser(() =>
                 {
-                    retval =Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters));
+                    retval =Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParameters(saveParams.reportPath, saveParams.parameters,saveParams.UserName));
                 });
             }
             catch (Exception e)
@@ -803,7 +806,7 @@ namespace ReportManager.Controllers
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
             return GetResponseFromBytes(retval, "text/JSON");
-        }
+        }       
 
         /// <summary>
         /// Returns the user settings for the current user. Requires the

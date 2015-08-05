@@ -27,6 +27,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
             rsInstance: null,
+            userName: null
         },
         _create: function () {
             var me = this;
@@ -65,6 +66,25 @@ $(function () {
             }
 
             return !me.isCurrentSetAllUser();
+        },
+        addSet:function(parameterList,name,isDefault,isAllUser){
+            var me = this;
+            var newSet = me.getNewSet(parameterList);
+            newSet.name = name;
+            if (isDefault ===true)
+                me.serverData.defaultSetId = newSet.id;
+            if (isAllUser === true)
+                newSet.isAllUser = true;
+            me.serverData.parameterSets[newSet.id] = newSet;
+            me._saveModel();
+        },
+        removeSet: function(id){
+            var me = this;
+
+            delete me.serverData.parameterSets[id];
+            if (me.serverData.defaultSetId === id)
+                me.serverData.defaultSetId = null;
+            me._saveModel();
         },
         _addNewSet: function (parameterList) {
             var me = this;
@@ -221,18 +241,21 @@ $(function () {
 
             return count;
         },
-        _load: function (reportPath) {
+        _load: function (reportPath,done) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters";
             if (me._isLoaded(reportPath)) {
+                if (done) done();
                 return;
             }
+
 
             forerunner.ajax.ajax({
                 url: url,
                 data: {
                     reportPath: reportPath,
                     instance: me.options.rsInstance,
+                    userName: me.options.userName
                 },
                 dataType: "json",         
                 success: function (data) {
@@ -253,23 +276,28 @@ $(function () {
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
+                    if (done) done();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
                     me.currentSetId = null;
                     me.serverData = null;
+                    if (done) done();
                 }
             });
         },
         _saveModel: function (success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
+
+
             forerunner.ajax.post(
                 url,
                 {
                     reportPath: me.reportPath,
                     parameters: JSON.stringify(me.serverData),
                     Instance: me.options.rsInstance,
+                    userName: me.options.userName
                 },
                 function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
@@ -307,33 +335,40 @@ $(function () {
                 }
             }
         },
-        getCurrentParameterList: function (reportPath, isSkipSetDefault) {
+        getAllParameterSets: function (reportPath,done)
+        {
+            var me = this;
+
+            me._load(reportPath, function () {
+                done(me.serverData.parameterSets);
+            });
+        },
+        
+        getCurrentParameterList: function (reportPath, isSkipSetDefault,done) {
             var me = this;
             var currentParameterList = null;
-            me._load(reportPath);
+            me._load(reportPath, function () {
 
-            //isSkipSetDefault: used for drill through scenario, don't need to set default set id.
-            if (isSkipSetDefault === true) {
-                me.currentSetId = null;
-                me._triggerModelChange();
-                return;
-            }
-
-            if (me.serverData) {
-                var parameterSet;
-                if (me.currentSetId) {
-                    parameterSet = me.serverData.parameterSets[me.currentSetId];
-                } else if (me.serverData.defaultSetId) {
-                    me.currentSetId = me.serverData.defaultSetId;
-                    parameterSet = me.serverData.parameterSets[me.serverData.defaultSetId];
-                    me._triggerModelChange();
-                } else {
-                    return null;
+                //isSkipSetDefault: used for drill through scenario, don't need to set default set id.
+                if (isSkipSetDefault === true) {
+                    me.currentSetId = null;
+                    me._triggerModelChange();                    
                 }
-                if (parameterSet && parameterSet.data) {
-                    currentParameterList = JSON.stringify(parameterSet.data);
+                else if (me.serverData) {
+                    var parameterSet = null;
+                    if (me.currentSetId) {
+                        parameterSet = me.serverData.parameterSets[me.currentSetId];
+                    } else if (me.serverData.defaultSetId) {
+                        me.currentSetId = me.serverData.defaultSetId;
+                        parameterSet = me.serverData.parameterSets[me.serverData.defaultSetId];
+                        me._triggerModelChange();
+                    }
+                    if (parameterSet && parameterSet.data) {
+                        currentParameterList = JSON.stringify(parameterSet.data);
+                    }
                 }
-            }
+                if (done) done(currentParameterList);
+            });
             return currentParameterList;
         },
         getCurrentSet: function () {

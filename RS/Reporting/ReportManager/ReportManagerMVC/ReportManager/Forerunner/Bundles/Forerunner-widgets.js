@@ -12340,7 +12340,7 @@ $(function () {
          *
          * @function $.forerunner.reportRender#writeError
          *
-         * @param {object} errorData - Error data object
+         * @param {object} errorData - Error data object.
          */
         writeError: function (errorData) {
             var me = this;

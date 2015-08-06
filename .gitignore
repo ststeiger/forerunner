@@ -692,14 +692,6 @@ ForerunnerSW/ForerunnerSW/Views/Home/Register.cshtml
 ForerunnerSW/ForerunnerSW/Views/Home/Support.cshtml
 ForerunnerSW/ForerunnerSW/Views/Shared/_Layout.cshtml
 ForerunnerSW/ForerunnerSW/Views/Shared/Error.cshtml
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.min.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner-widgets.min.js.map
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.min.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Bundles/Forerunner.min.js.map
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Common/js/forerunner.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/js/ReportRender.js
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Web.config
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite.rptproj.user

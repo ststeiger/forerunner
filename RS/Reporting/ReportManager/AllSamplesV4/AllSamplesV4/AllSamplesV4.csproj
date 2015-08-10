@@ -41,11 +41,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Forerunner.Json, Version=0.9.12915.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\Forerunner.Json.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.418.0\lib\Forerunner.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\Forerunner.SQLReporting.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.418.0\lib\Forerunner.SQLReporting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -57,7 +57,7 @@
       <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PdfSharp, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\ForerunnerSDK.4.0.395.0\lib\PdfSharp.dll</HintPath>
+      <HintPath>..\packages\ForerunnerSDK.4.0.418.0\lib\PdfSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http">
@@ -369,6 +369,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
+    <Content Include="Forerunner\version.txt" />
     <Content Include="Global.asax" />
     <Content Include="lib\samples\css\AllSamples.css" />
     <Content Include="lib\samples\images\GetParameters.png" />

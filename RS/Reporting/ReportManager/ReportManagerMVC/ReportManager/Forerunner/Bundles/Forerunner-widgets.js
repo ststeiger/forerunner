@@ -766,6 +766,7 @@ $(function () {
      * @prop {String} options.showSubscriptionUI - Show Subscription UI if the user has permissions.  Default to false.
      * @prop {String} options.zoom - Zoom factor, default to 100.
      * @prop {function (url)} options.exportCallback - call back function for all exports, will call instead of window.open
+     * @prop {function (url)} options.printCallback - call back function for print, will call instead of window.open
      * @example
      * $("#reportViewerId").reportViewer();
      * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, parameters);
@@ -2647,19 +2648,23 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
 
-            if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
-                window.open(url);
-            }
+            if (me.options.printCallback !== undefined)
+                me.options.printCallback(url);
             else {
-                var pif = me.element.find(".fr-print-iframe");
-                if (pif.length === 1) pif.detach();
+                if ((forerunner.device.isFirefox() && forerunner.config.getCustomSettingsValue("FirefoxPDFbug", "on").toLowerCase() === "on") || forerunner.device.isMobile()) {
+                    window.open(url);
+                }
+                else {
+                    var pif = me.element.find(".fr-print-iframe");
+                    if (pif.length === 1) pif.detach();
 
-                pif = $("<iframe/>");
-                pif.addClass("fr-print-iframe");
-                pif.attr("name", me.viewerID);
-                pif.attr("src", url);
-                pif.hide();
-                me.element.append(pif);
+                    pif = $("<iframe/>");
+                    pif.addClass("fr-print-iframe");
+                    pif.attr("name", me.viewerID);
+                    pif.attr("src", url);
+                    pif.hide();
+                    me.element.append(pif);
+                }
             }
            
         },
@@ -12242,7 +12247,6 @@ $(function () {
             me._tablixStream = {};
             me.RDLExt = RDLExt ? RDLExt : {};
 
-
             if (me.RDLExt.ForceResponsive !== undefined)
                 me.options.responsive = me.RDLExt.ForceResponsive;
 
@@ -14133,19 +14137,22 @@ $(function () {
             if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
                 $FixedRowHeader.append($Row.clone(true, true));
             }
-            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex] && RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
 
 
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
-            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
+            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidth && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
                     HasFixedCols = true;
             }
 
             var $Drilldown;
-            CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
+            CellHeight = 0
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex])
+                CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
+
             if (Obj.Type === "BodyRow") {
 
                 //Handle missing cells
@@ -17572,7 +17579,10 @@ $(function () {
             var m = moment(defaultDatetime, dateFormat);
 
             //check for saved paramter default format
-            if (defaultDatetime.substr(4, 1) === "/" && defaultDatetime.substr(7, 1) === "/")
+            if (defaultDatetime.length > 7 &&  
+                ( (defaultDatetime.substr(4, 1) === "/" && defaultDatetime.substr(7, 1) === "/") ||
+                defaultDatetime.substr(4, 1) === "-" && defaultDatetime.substr(7, 1) === "-")
+                )
                 m = moment(defaultDatetime, "YYYY/MM/DD");
 
 

@@ -98,7 +98,6 @@ $(function () {
             me._tablixStream = {};
             me.RDLExt = RDLExt ? RDLExt : {};
 
-
             if (me.RDLExt.ForceResponsive !== undefined)
                 me.options.responsive = me.RDLExt.ForceResponsive;
 
@@ -1989,19 +1988,22 @@ $(function () {
             if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
                 $FixedRowHeader.append($Row.clone(true, true));
             }
-            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex] && RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
 
 
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
-            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
+            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidth && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
                     HasFixedCols = true;
             }
 
             var $Drilldown;
-            CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
+            CellHeight = 0
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex])
+                CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
+
             if (Obj.Type === "BodyRow") {
 
                 //Handle missing cells

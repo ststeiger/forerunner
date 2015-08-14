@@ -1,0 +1,41 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+  <b>Installing and Running All Samples:</b>
+  <ol>
+    <li>Open a new Empty Web Project in Visual Studio (2012 or newer)</li>
+    <ul>
+      <li>You can create an Empty project because the All Samples package will install dependent
+        packages and turn your empty project into a Web MVC / Web API project.
+      </li>
+    </ul>
+    <li>In the "Package Manager Console" window run the command:
+    <a href="https://www.nuget.org/packages/Forerunner_AllSamplesV4/" target="_blank">"Install-Package Forerunner_AllSamplesV4"
+    </a>
+    </li>
+    <li>
+      Once the package has installed, it will present a readme file. The readme file will instruct you 
+      how to configure the All Samples package.
+    </li>
+  </ol>
+
+  <p>That is all it takes!</p>
+  <p>You can now run the All samples web application and see your own reports.</p>
+  <p><b>Notes:</b></p>
+  <p><i>What You Will See:</i></p>
+  <p>
+    This package allows you to create the All Samples V4 web application which includes the Forerunner SDK.
+    This sample contains a number of client side examples as well as documention on the REST API, all wrapped
+    up in a Single Page Application (SPA). It is integrated with bootstrap.js and demontrates not only 
+    the ForerunnerSDK but how to create a responsive SPA. Including how to setup hashtag navigation.
+  </p>
+  <p><i>Authentication:</i></p>
+  <p>
+    The All Samples application uses integrated windows authentication. So your login user credentials must have permission to view reports in
+    order for the sample to run properly. The Forerunner SDK can be configured to use: integrated windows authentication, forms authentication,
+    proxy (hard coded) authentication. Any external form of authentication can be used such as OAuth or LDAP by using a proxy account after the
+    external authentication has accepted a user's credentials.
+  </p>
+}

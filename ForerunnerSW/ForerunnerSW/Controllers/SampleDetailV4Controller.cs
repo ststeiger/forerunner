@@ -19,6 +19,10 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult AllSamples()
+        {
+            return View();
+        }
         public ActionResult V3Archives()
         {
             return View();

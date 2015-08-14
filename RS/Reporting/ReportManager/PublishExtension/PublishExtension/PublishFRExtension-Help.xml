@@ -326,7 +326,7 @@
 		<maml:para>Publish-ForerunnerRDLExt is designed to work in two environments:</maml:para>
 		<maml:para>- As an &quot;External Tool&quot; inside of visual Studio
 - As a normal PowerShell command</maml:para>
-		<maml:para>In either mode Publish-ForerunnerRDLExt will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for custome report property named &#39;ForerunnerRDLExt. If it finds the ForerunnerRDLExt property it will publish the value to the deployed report. In this way the RDL Extension can be associated with the report file and be published directly from the report file itself.</maml:para>
+		<maml:para>In either mode Publish-ForerunnerRDLExt will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for custom report property named &#39;ForerunnerRDLExt. If it finds the ForerunnerRDLExt property it will publish the value to the deployed report. In this way the RDL Extension can be associated with the report file and be published directly from the report file itself.</maml:para>
 		<maml:para>To install Publish-ForerunnerRDLExt as a Visual Studio &quot;External Tool&quot; follow the following steps:</maml:para>
 		<maml:para>- Add a command to your $profile which imports Publish-Extension as follows:
   - Import-Module &quot;C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll&quot;
@@ -339,7 +339,7 @@
 -    Arguments: -command &quot;Publish-ForerunnerRDLExt -Verbose -p $(ProjectDir)$(ProjectFileName)&quot;
 -    Check the &quot;Use Output window&quot; check box
 -  Select the &quot;Ok&quot; button</maml:para>
-		<maml:para>You are now ready to go. Whenever you have a .rdle file open, you can select the new &quot;Publish RDLE File&quot; in the &quot;Tools&quot; menu and your RDLExtension will be published.</maml:para>
+		<maml:para>You are now ready to go. You can select the new &quot;Publish RDL Extensions&quot; in the &quot;Tools&quot; menu and your RDLExtension will be published.</maml:para>
 	</maml:description>
 	<command:syntax>
 		<command:syntaxItem>

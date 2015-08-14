@@ -200,7 +200,7 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
 - As an "External Tool" inside of visual Studio
 - As a normal PowerShell command
 
-In either mode Publish-ForerunnerRDLExt will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for custome report property named 'ForerunnerRDLExt. If it finds the ForerunnerRDLExt property it will publish the value to the deployed report. In this way the RDL Extension can be associated with the report file and be published directly from the report file itself.
+In either mode Publish-ForerunnerRDLExt will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for custom report property named 'ForerunnerRDLExt. If it finds the ForerunnerRDLExt property it will publish the value to the deployed report. In this way the RDL Extension can be associated with the report file and be published directly from the report file itself.
 
 To install Publish-ForerunnerRDLExt as a Visual Studio "External Tool" follow the following steps:
 
@@ -216,7 +216,7 @@ To install Publish-ForerunnerRDLExt as a Visual Studio "External Tool" follow th
 -    Check the "Use Output window" check box
 -  Select the "Ok" button
 
-You are now ready to go. Whenever you have a .rdle file open, you can select the new "Publish RDLE File" in the "Tools" menu and your RDLExtension will be published.
+You are now ready to go. You can select the new "Publish RDL Extensions" in the "Tools" menu and your RDLExtension will be published.
 
 </Description>
         <Notes />

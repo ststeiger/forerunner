@@ -128,8 +128,8 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ItemPath</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>i</string>
@@ -140,8 +140,8 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ProjectFileName</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>p</string>
@@ -164,8 +164,8 @@ You are now ready to go. Whenever you have a .rdle file open, you can select the
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SharePointHost</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>s</string>
@@ -228,17 +228,17 @@ You are now ready to go. You can select the new "Publish RDL Extensions" in the 
         <ReturnTypeDescription />
       </GeneralHelp>
       <ParamSets>
-        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ReportPath ProjectFileName ConfigurationName SharePointHost PromptForUsername Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
+        <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ReportPath AllReportProperties ProjectFileName ConfigurationName SharePointHost PromptForUsername Verbose Debug ErrorAction WarningAction ErrorVariable WarningVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Publish-ForerunnerRDLExt [-ReportPath &lt;String&gt;] [-ProjectFileName &lt;String&gt;] [-ConfigurationName &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-PromptForUsername]</string>
+        <string>Publish-ForerunnerRDLExt [-ReportPath &lt;String&gt;] [-AllReportProperties] [-ProjectFileName &lt;String&gt;] [-ConfigurationName &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-PromptForUsername]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ReportPath</Name>
           <Attributes>
-            <string>System.Management.Automation.AliasAttribute</string>
             <string>System.Management.Automation.ParameterAttribute</string>
+            <string>System.Management.Automation.AliasAttribute</string>
           </Attributes>
           <Aliases>
             <string>r</string>
@@ -249,8 +249,8 @@ You are now ready to go. You can select the new "Publish RDL Extensions" in the 
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>ProjectFileName</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>p</string>
@@ -273,8 +273,8 @@ You are now ready to go. You can select the new "Publish RDL Extensions" in the 
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
           <Name>SharePointHost</Name>
           <Attributes>
-            <string>System.Management.Automation.ParameterAttribute</string>
             <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
           </Attributes>
           <Aliases>
             <string>s</string>
@@ -292,6 +292,18 @@ You are now ready to go. You can select the new "Publish RDL Extensions" in the 
             <string>u</string>
           </Aliases>
           <Description>Put this switch on the command line if you need to be prompted for the username and password</Description>
+          <DefaultValue />
+        </ParameterDescription>
+        <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
+          <Name>AllReportProperties</Name>
+          <Attributes>
+            <string>System.Management.Automation.AliasAttribute</string>
+            <string>System.Management.Automation.ParameterAttribute</string>
+          </Attributes>
+          <Aliases>
+            <string>a</string>
+          </Aliases>
+          <Description>Publishes all custom report properties not only the ForerunnerRDLExt property.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>

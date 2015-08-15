@@ -352,6 +352,13 @@
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>AllReportProperties</maml:name>
+				<maml:description>
+					<maml:para>Publishes all custom report properties not only the ForerunnerRDLExt property.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 				<maml:name>ProjectFileName</maml:name>
 				<maml:description>
 					<maml:para>Fully qualified path to the report project file.</maml:para>
@@ -434,6 +441,18 @@
 			<maml:name>PromptForUsername</maml:name>
 			<maml:description>
 				<maml:para>Put this switch on the command line if you need to be prompted for the username and password</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>AllReportProperties</maml:name>
+			<maml:description>
+				<maml:para>Publishes all custom report properties not only the ForerunnerRDLExt property.</maml:para>
 			</maml:description>
 			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			<dev:type>

@@ -260,7 +260,26 @@ namespace PublishExtension
 
         protected void PublishProperty(PublishManifest manifest, string filePath, string propertyName, string propertyValue)
         {
-            WriteObject("PublishProperty - Report: '" + Path.GetFileName(filePath) + "', " + "Property: " + propertyName);
+            // Set the RDL Extension property
+            Property reportProperty = new Property();
+            reportProperty.Name = propertyName;
+            reportProperty.Value = propertyValue;
+
+            Property[] properties = new Property[1];
+            properties[0] = reportProperty;
+
+            PublishProperties(manifest, filePath, properties);
+        }
+
+        protected void PublishProperties(PublishManifest manifest, string filePath, Property[] properties)
+        {
+            string propertyNames = "";
+            foreach (Property prop in properties)
+            {
+                propertyNames += prop.Name + ", ";
+            }
+
+            WriteObject("PublishProperty - Report: '" + Path.GetFileName(filePath) + "', " + "Properties: " + propertyNames);
 
             // Configure the Report Server Proxy
             rs.Url = manifest.TargetServerURL;
@@ -272,15 +291,6 @@ namespace PublishExtension
             {
                 rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
             }
-
-            // Set the RDL Extension property
-            Property reportProperty = new Property();
-            //reportProperty.Name = "ForerunnerRDLExt";
-            reportProperty.Name = propertyName;
-            reportProperty.Value = propertyValue;
-
-            Property[] properties = new Property[1];
-            properties[0] = reportProperty;
 
             string path = GetPath(manifest.TargetFolder, filePath);
             rs.SetProperties(path, properties);

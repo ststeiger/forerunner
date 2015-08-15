@@ -21,6 +21,10 @@ namespace PublishExtension
         [Alias("r")]
         public string ReportPath { get; set; }
 
+        [Parameter(HelpMessage = "Publish all custom report parameters")]
+        [Alias("a")]
+        public SwitchParameter AllReportProperties { get; set; }
+
         #endregion  // Parameter properties / definitions
 
         #region Processing methods
@@ -94,6 +98,62 @@ namespace PublishExtension
         }
 
         private void PublishReport(string path, PublishManifest manifest)
+        {
+            if (AllReportProperties.IsPresent)
+            {
+                PublishAllReportProperties(path, manifest);
+            }
+            else
+            {
+                PublishRDLExtProperty(path, manifest);
+            }
+        }
+
+        private void PublishAllReportProperties(string path, PublishManifest manifest)
+        {
+            List<Property> properties = new List<Property>();
+
+            var rdlDoc = new XmlDocument();
+            rdlDoc.Load(path);
+
+            // <Reports)
+            XmlNodeList customProperties = rdlDoc.GetElementsByTagName("CustomProperty");
+            foreach (XmlNode customProperty in customProperties)
+            {
+                string name = "";
+                string value = "";
+
+                System.Collections.IEnumerator enumerator = customProperty.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    XmlNode node = (XmlNode)enumerator.Current;
+                    if (String.Compare(node.LocalName, "Name", true) == 0)
+                    {
+                        name = node.InnerText;
+                    }
+                    else if (String.Compare(node.LocalName, "Value", true) == 0)
+                    {
+                        value = node.InnerText;
+                    }
+                }
+
+                if (name.Length > 0 && value.Length > 0)
+                {
+                    Property property = new Property();
+                    property.Name = name;
+                    property.Value = value;
+                    properties.Add(property);
+                }
+            }
+
+            if (properties.Count > 0)
+            {
+                PublishProperties(manifest, path, properties.ToArray());
+            }
+
+        }
+
+        private void PublishRDLExtProperty(string path, PublishManifest manifest)
         {
             string value;
             bool foundName;

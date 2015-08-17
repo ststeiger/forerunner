@@ -335,6 +335,7 @@
     <Content Include="Views\SampleDetailV4\GettingStarted.cshtml" />
     <Content Include="Views\SampleDetailV4\ForerunnerSDK.cshtml" />
     <Content Include="Views\SampleDetailV4\V3Archives.cshtml" />
+    <Content Include="Views\SampleDetailV4\AllSamples.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

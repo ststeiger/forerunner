@@ -154,7 +154,7 @@
 		<maml:para>Publish-FRExtension is designed to work in two environments:</maml:para>
 		<maml:para>- As an &quot;External Tool&quot; inside of visual Studio
 - As a normal PowerShell command</maml:para>
-		<maml:para>In either mode Publish-Extension will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for a report (.rdl) file that matches the RDLExtension (.rdle) file of the same name. If it finds a report of the same name deployed on the server and folder, Publish-Extension will publish the RDLExtension into the report. You can also give a folder path for the -i parameter and Publish-Extension will publish all .rdle files in the given folder. A good practice is to created a solution folder (RDLExtensions) inside of you report project solution and keep all your report extensions together with your reports.</maml:para>
+		<maml:para>In either mode Publish-FRExtension will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for a report (.rdl) file that matches the RDLExtension (.rdle) file of the same name. If it finds a report of the same name deployed on the server and folder, Publish-Extension will publish the RDLExtension into the report. You can also give a folder path for the -i parameter and Publish-Extension will publish all .rdle files in the given folder. A good practice is to created a solution folder (RDLExtensions) inside of you report project solution and keep all your report extensions together with your reports.</maml:para>
 		<maml:para>To install Publish-Extension as a Visual Studio &quot;External Tool&quot; follow the following steps:</maml:para>
 		<maml:para>- Add a command to your $profile which imports Publish-Extension as follows:
   - Import-Module &quot;C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll&quot;
@@ -164,7 +164,7 @@
 -  Set the tool values as follows:
 -    Title: Publish RDLE File
 -    Command: PowerShell.exe
--    Arguments: -command &quot;Publish-Extension -Verbose -i &#39;$(ItemPath)&#39; -p &#39;&lt;fully qualified path to your .rptproj file&gt;&#39;&quot;
+-    Arguments: -command &quot;Publish-FRExtension -Verbose -i &#39;$(ItemPath)&#39; -p &#39;&lt;fully qualified path to your .rptproj file&gt;&#39;&quot;
 -    Check the &quot;Use Output window&quot; check box
 -  Select the &quot;Ok&quot; button</maml:para>
 		<maml:para>You are now ready to go. Whenever you have a .rdle file open, you can select the new &quot;Publish RDLE File&quot; in the &quot;Tools&quot; menu and your RDLExtension will be published.</maml:para>
@@ -199,6 +199,13 @@
 					<maml:para>URL to the SharePoint host if the host is not a Native SSRS installation</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>PromptForUsername</maml:name>
+				<maml:description>
+					<maml:para>Put this switch on the command line if you need to be prompted for the username and password</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
 			</command:parameter>
 		</command:syntaxItem>
 	</command:syntax>
@@ -247,6 +254,209 @@
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
 				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>PromptForUsername</maml:name>
+			<maml:description>
+				<maml:para>Put this switch on the command line if you need to be prompted for the username and password</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors></command:terminatingErrors>
+	<command:nonTerminatingErrors></command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para />
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<!--Generated by PS Cmdlet Help Editor-->
+	<command:details>
+		<command:name>Publish-ForerunnerRDLExt</command:name>
+		<maml:description>
+			<maml:para>Publishes the RDL Extensions for one or all report(s) from the given report project file (-p)</maml:para>
+		</maml:description>
+		<maml:copyright>
+			<maml:para />
+		</maml:copyright>
+		<command:verb>Publish</command:verb>
+		<command:noun>ForerunnerRDLExt</command:noun>
+		<dev:version />
+	</command:details>
+	<maml:description>
+		<maml:para>Publish-ForerunnerRDLExt is designed to work in two environments:</maml:para>
+		<maml:para>- As an &quot;External Tool&quot; inside of visual Studio
+- As a normal PowerShell command</maml:para>
+		<maml:para>In either mode Publish-ForerunnerRDLExt will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for custom report property named &#39;ForerunnerRDLExt. If it finds the ForerunnerRDLExt property it will publish the value to the deployed report. In this way the RDL Extension can be associated with the report file and be published directly from the report file itself.</maml:para>
+		<maml:para>To install Publish-ForerunnerRDLExt as a Visual Studio &quot;External Tool&quot; follow the following steps:</maml:para>
+		<maml:para>- Add a command to your $profile which imports Publish-Extension as follows:
+  - Import-Module &quot;C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll&quot;
+- In Visual Studio do the following
+-  Open the &quot;Tools&quot; -&gt; &quot;External Tools...&quot; dialog
+-  Select the &quot;Add&quot; button
+-  Set the tool values as follows:
+-    Title: Publish RDL Extensions
+-    Command: PowerShell.exe
+-    Arguments: -command &quot;Publish-ForerunnerRDLExt -Verbose -p $(ProjectDir)$(ProjectFileName)&quot;
+-    Check the &quot;Use Output window&quot; check box
+-  Select the &quot;Ok&quot; button</maml:para>
+		<maml:para>You are now ready to go. You can select the new &quot;Publish RDL Extensions&quot; in the &quot;Tools&quot; menu and your RDLExtension will be published.</maml:para>
+	</maml:description>
+	<command:syntax>
+		<command:syntaxItem>
+			<maml:name>Publish-ForerunnerRDLExt</maml:name>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ReportPath</maml:name>
+				<maml:description>
+					<maml:para>The filename and extension of the report. If this parameter is omitted, all report RDL extensions will be published.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>AllReportProperties</maml:name>
+				<maml:description>
+					<maml:para>Publishes all custom report properties not only the ForerunnerRDLExt property.</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ProjectFileName</maml:name>
+				<maml:description>
+					<maml:para>Fully qualified path to the report project file.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>ConfigurationName</maml:name>
+				<maml:description>
+					<maml:para>The project configuration to publish.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>SharePointHost</maml:name>
+				<maml:description>
+					<maml:para>URL to the SharePoint host if the host is not a Native SSRS installation</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>PromptForUsername</maml:name>
+				<maml:description>
+					<maml:para>Put this switch on the command line if you need to be prompted for the username and password</maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ReportPath</maml:name>
+			<maml:description>
+				<maml:para>The filename and extension of the report. If this parameter is omitted, all report RDL extensions will be published.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ProjectFileName</maml:name>
+			<maml:description>
+				<maml:para>Fully qualified path to the report project file.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>ConfigurationName</maml:name>
+			<maml:description>
+				<maml:para>The project configuration to publish.</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue>DEBUG</dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>SharePointHost</maml:name>
+			<maml:description>
+				<maml:para>URL to the SharePoint host if the host is not a Native SSRS installation</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>PromptForUsername</maml:name>
+			<maml:description>
+				<maml:para>Put this switch on the command line if you need to be prompted for the username and password</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>AllReportProperties</maml:name>
+			<maml:description>
+				<maml:para>Publishes all custom report properties not only the ForerunnerRDLExt property.</maml:para>
+			</maml:description>
+			<command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+			<dev:type>
+				<maml:name>SwitchParameter</maml:name>
 				<maml:uri/>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>

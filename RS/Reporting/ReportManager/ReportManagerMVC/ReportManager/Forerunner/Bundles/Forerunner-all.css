@@ -1566,7 +1566,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
     .fr-param-container * { box-sizing:border-box; -moz-box-sizing:border-box; -webkit-box-sizing:border-box; }
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
-.fr-param, .fr-param-client { margin: 4px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; }
+.fr-param, .fr-param-client { margin: 4px; font-size: 13px; color: black; padding: 4px; border: solid 1px #1F98C7; }
 .fr-param-width { width:180px; }
 .fr-param-dropdown-input { margin-bottom: 0px;outline:none; width: 156px; overflow:hidden;margin:0px;border:none;white-space:nowrap; -ms-text-overflow:ellipsis; -o-text-overflow:ellipsis; text-overflow:ellipsis;}
 .fr-param-dropdown-div { border: 1px solid #1f98c7; margin:2px 4px; background-color:white; }

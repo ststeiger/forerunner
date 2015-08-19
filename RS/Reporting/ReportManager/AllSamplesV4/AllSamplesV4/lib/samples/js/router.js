@@ -84,6 +84,18 @@ $(function () {
         return $sampleArea;
     }
 
+    // onWindowResize
+    //
+    // The min-height of the sample container <div> needs to be set for the case where 
+    // the report may need to have required parameters entered before it can be rendered.
+    // In the case where the report is rendered the size of the report will determine the
+    // height of the sample <div>.
+    $(window).on("resize", function (e, data) {
+        $asSample = $(".as-sample");
+        var minHeight = $(window).height() - $(".navbar-inverse").outerHeight(true);
+        $asSample.css({ minHeight: minHeight + "px" });
+    });
+
     // allSamples.router
     //
     // Holds the instance of the forerunner router widget. The router widget provides

@@ -1,0 +1,13 @@
+﻿body, table, div, p, dl {
+    font-family: 'Segoe UI',Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    font-stretch: normal;
+    line-height: 22px;
+}
+
+.contents {
+  margin-bottom: 20px;
+}

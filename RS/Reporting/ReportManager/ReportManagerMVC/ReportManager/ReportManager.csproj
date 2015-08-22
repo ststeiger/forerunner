@@ -139,6 +139,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="doxygen\MainPage.cs" />
     <Compile Include="Filters\LoginPrepAttribute.cs" />
     <Compile Include="sdk\ReportManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -156,6 +157,10 @@
     <Content Include="Custom\Mobilizer.css" />
     <Content Include="Custom\MobilizerSettings.txt" />
     <Content Include="Custom\MobilizerSharedSchedule.txt" />
+    <Content Include="doxygen\customdoxygen.css" />
+    <Content Include="doxygen\footer.html" />
+    <Content Include="doxygen\header.html" />
+    <Content Include="doxygen\readme.txt" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css">
       <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
     </Content>
@@ -536,6 +541,7 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
+    <Content Include="doxygen\Doxyfile" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

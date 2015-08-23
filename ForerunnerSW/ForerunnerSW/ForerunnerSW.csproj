@@ -184,6 +184,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CmdletDetailController.cs" />
     <Compile Include="Controllers\SampleDetailV4Controller.cs" />
     <Compile Include="Controllers\PR.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -395,6 +396,12 @@
     <Content Include="Views\SampleDetailV4\ForerunnerSDK.cshtml" />
     <Content Include="Views\SampleDetailV4\V3Archives.cshtml" />
     <Content Include="Views\SampleDetailV4\AllSamples.cshtml" />
+    <Content Include="Views\Home\Cmdlets.cshtml" />
+    <Content Include="Views\CmdletDetail\PublishForerunnerRDLExt.cshtml" />
+    <Content Include="Views\CmdletDetail\Summary.cshtml" />
+    <Content Include="Views\CmdletDetail\AddFRScriptRef.cshtml" />
+    <Content Include="Views\CmdletDetail\PublishFRExtension.cshtml" />
+    <Content Include="Views\CmdletDetail\SetFRConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

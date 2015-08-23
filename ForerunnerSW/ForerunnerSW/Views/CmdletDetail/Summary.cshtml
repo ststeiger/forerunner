@@ -1,0 +1,54 @@
+﻿@{
+  Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+  <b>Forerunner SDK PowerShell Cmdlets:</b>
+  <p>
+    In order to use the cmdlets you must first have PowerShell setup and configured. If 
+    you are new to PowerShell you can find helpful here:
+  </p>
+  <p>
+    <a href="https://technet.microsoft.com/en-us/library/hh857337.aspx" target="_blank">Getting Started with Windows PowerShell</a>
+  </p>
+  <p>
+    Once PowerShell is setup you are ready to use the cmdlets. The following cmdlets are included with the Forerunner SDK:
+  </p>
+  <ul>
+    <li>
+      <b>Publish-ForerunnerRDLExt</b>
+      <p>
+        Publish-ForerunnerRDLExt will publish the custom report property ForerunnerRDLExt to the server instance of the report. It
+        uses the TargetServerURL and TargetFolder properties from the given report project (-p). Publish-ForerunnerRDLExt has the
+        advantage of keeping your RDL Extension definitions associated with your report project.
+      </p>
+    </li>
+    <li>
+      <b>Publish-FRExtension</b>
+      <p>
+        Publish-FRExtension will publish your RDL Extension cantained in a separate file to the server instance of the report. It
+        uses the TargetServerURL and TargetFolder properties from the given report project (-p). Publish-FRExtension has the advantage
+        of keeping your RDL Extension definitions in a separate file. Since the RDL Extension is a JSON string, in Visual Studio 2013
+        and newer you can use a JSON editor with this file.
+      </p>
+    </li>
+    <li>
+      <b>Add-FRScriptRef</b>
+      <p>
+        If you use RDL Extensions with the Mobilizer project you may choose to add a custom script reference to the Mobilizer Index.cshtml
+        file. Each time you upgrade Mobilizer to a new version you will loose your custom reference. Add-FRScriptRef helps with this case by
+        automating the process of adding your script reference.
+      </p>
+    </li>
+    <li>
+      <b>Set-FRConfig</b>
+      <p>
+        Set-FRConfig does a very similar function to the Mobilizer setup program. Set-FRConfig was originally created to configure end user
+        projects without the need to run the Mobilizer setup program. Set-FRConfig can be used to automate the setup of Mobilizer also without
+        using the Mobilizer setup program.
+
+        It is recommended you use Set-FRConfig to configure your own projects and the Mobilizer setup program to configure Mobilizer.
+      </p>
+    </li>
+  </ul>
+}

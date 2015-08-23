@@ -1,0 +1,176 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+  <h1 style="text-align: center;"><strong>Publish-FRExtension</strong></h1>
+<h2><strong>Synopsis</strong></h2>
+<p style="margin-left: 40px;">Publishes the RDL Extensions from the given .rdle file into the deployed report (.rdl file) of the same name.</p>
+<h2><strong>Syntax</strong></h2>
+<span style="margin-left: 40px;">Publish-FRExtension [-ItemPath &lt;String&gt;] [-ProjectFileName &lt;String&gt;] [-ConfigurationName &lt;String&gt;] [-SharePointHost &lt;String&gt;] [-PromptForUsername] [&lt;CommonParameters&gt;]
+
+</span>
+<h2><strong>Description</strong></h2>
+<p style="margin-left: 40px;">Publish-FRExtension is designed to work in two environments:<br />
+<br />
+- As an &quot;External Tool&quot; inside of visual Studio<br />
+- As a normal PowerShell command<br />
+<br />
+In either mode Publish-FRExtension will use the TargetServerURL and TargetFolder properties from the given report project (-p) and look for a report (.rdl) file that matches the RDLExtension (.rdle) file of the same name. If it finds a report of the same name deployed on the server and folder, Publish-Extension will publish the RDLExtension into the report. You can also give a folder path for the -i parameter and Publish-Extension will publish all .rdle files in the given folder. A good practice is to created a solution folder (RDLExtensions) inside of you report project solution and keep all your report extensions together with your reports.<br />
+<br />
+To install Publish-Extension as a Visual Studio &quot;External Tool&quot; follow the following steps:<br />
+<br />
+- Add a command to your $profile which imports Publish-Extension as follows:<br />
+  - Import-Module &quot;C:\Program Files (x86)\Forerunner\MobilizerV3\Config\PublishExtension.dll&quot;<br />
+- In Visual Studio do the following<br />
+-  Open the &quot;Tools&quot; -&gt; &quot;External Tools...&quot; dialog<br />
+-  Select the &quot;Add&quot; button<br />
+-  Set the tool values as follows:<br />
+-&nbsp;&nbsp;&nbsp;&nbsp;Title: Publish RDLE File<br />
+-&nbsp;&nbsp;&nbsp;&nbsp;Command: PowerShell.exe<br />
+-&nbsp;&nbsp;&nbsp;&nbsp;Arguments: -command &quot;Publish-FRExtension -Verbose -i &;39;$(ItemPath)&;39; -p &;39;&lt;fully qualified path to your .rptproj file&gt;&;39;&quot;<br />
+-&nbsp;&nbsp;&nbsp;&nbsp;Check the &quot;Use Output window&quot; check box<br />
+-  Select the &quot;Ok&quot; button<br />
+<br />
+You are now ready to go. Whenever you have a .rdle file open, you can select the new &quot;Publish RDLE File&quot; in the &quot;Tools&quot; menu and your RDLExtension will be published.<br />
+<br />
+</p>
+<h2><strong>Parameters</strong></h2>
+<h3><strong>-ItemPath</strong> <em style="font-weight: 100;">&lt;String&gt;</em></h3>
+<p style="margin-left: 40px; text-align: left;">Fully qualified path to the .rdle file or a folder path that contains .rdle files</p>
+<table border="1" style="margin-left: 40px;">
+	<tbody>
+		<tr>
+			<td>Required?</td>
+			<td>False</td>
+		</tr>
+		<tr>
+			<td>Position?</td>
+			<td>named</td>
+		</tr>
+		<tr>
+			<td>Default value</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Accept pipeline input?</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>Accept wildcard characters?</td>
+			<td>False</td>
+		</tr>
+	</tbody>
+</table>
+<h3><strong>-ProjectFileName</strong> <em style="font-weight: 100;">&lt;String&gt;</em></h3>
+<p style="margin-left: 40px; text-align: left;">Fully qualified path to the report project file that contains the reports</p>
+<table border="1" style="margin-left: 40px;">
+	<tbody>
+		<tr>
+			<td>Required?</td>
+			<td>False</td>
+		</tr>
+		<tr>
+			<td>Position?</td>
+			<td>named</td>
+		</tr>
+		<tr>
+			<td>Default value</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Accept pipeline input?</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>Accept wildcard characters?</td>
+			<td>False</td>
+		</tr>
+	</tbody>
+</table>
+<h3><strong>-ConfigurationName</strong> <em style="font-weight: 100;">&lt;String&gt;</em></h3>
+<p style="margin-left: 40px; text-align: left;">Project file configuration</p>
+<table border="1" style="margin-left: 40px;">
+	<tbody>
+		<tr>
+			<td>Required?</td>
+			<td>False</td>
+		</tr>
+		<tr>
+			<td>Position?</td>
+			<td>named</td>
+		</tr>
+		<tr>
+			<td>Default value</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Accept pipeline input?</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>Accept wildcard characters?</td>
+			<td>False</td>
+		</tr>
+	</tbody>
+</table>
+<h3><strong>-SharePointHost</strong> <em style="font-weight: 100;">&lt;String&gt;</em></h3>
+<p style="margin-left: 40px; text-align: left;">URL to the SharePoint host if the host is not a Native SSRS installation</p>
+<table border="1" style="margin-left: 40px;">
+	<tbody>
+		<tr>
+			<td>Required?</td>
+			<td>False</td>
+		</tr>
+		<tr>
+			<td>Position?</td>
+			<td>named</td>
+		</tr>
+		<tr>
+			<td>Default value</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Accept pipeline input?</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>Accept wildcard characters?</td>
+			<td>False</td>
+		</tr>
+	</tbody>
+</table>
+<h3><strong>-PromptForUsername</strong> <em style="font-weight: 100;">&lt;SwitchParameter&gt;</em></h3>
+<p style="margin-left: 40px; text-align: left;">Put this switch on the command line if you need to be prompted for the username and password</p>
+<table border="1" style="margin-left: 40px;">
+	<tbody>
+		<tr>
+			<td>Required?</td>
+			<td>False</td>
+		</tr>
+		<tr>
+			<td>Position?</td>
+			<td>named</td>
+		</tr>
+		<tr>
+			<td>Default value</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>Accept pipeline input?</td>
+			<td>false</td>
+		</tr>
+		<tr>
+			<td>Accept wildcard characters?</td>
+			<td>False</td>
+		</tr>
+	</tbody>
+</table>
+<h3>&lt;CommonParameters&gt;</h3>
+<p style="margin-left: 40px;">This cmdlet supports the common parameters: Verbose, Debug,<br />
+ErrorAction, ErrorVariable, WarningAction, WarningVariable,<br />
+OutBuffer, PipelineVariable, and OutVariable. For more information, see<br />
+about_CommonParameters (<a href="http://go.microsoft.com/fwlink/?LinkID=113216">http://go.microsoft.com/fwlink/?LinkID=113216</a>).</p>
+<h2><strong>Related links</strong></h2>
+
+}

@@ -948,10 +948,9 @@ $(function () {
                     async: doAsync,
                     success: function (data) {
                         forerunner.config._forerunnerSharedSchedule = data.SharedSubscriptions;
-                    },
-                    done: function () {
                         if (done) done(me._forerunnerSharedSchedule);
                     },
+
                     fail: function () {
                         console.log("Load mobilizer custom settings failed");
                     },

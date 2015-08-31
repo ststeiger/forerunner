@@ -158,11 +158,12 @@ $(function () {
 
                 //build schedule field after format
                 if (data2 !== undefined) {
-                    me._initSharedSchedule(data2);
-                    if (subscriptionID) {
-                        subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
-                        me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
-                    }
+                    me._initSharedSchedule(data2, function () {
+                        if (subscriptionID) {
+                            subscriptionInfo = me.options.subscriptionModel.subscriptionModel("getSubscription", subscriptionID);
+                            me.$sharedSchedule.val(subscriptionInfo.SubscriptionSchedule.ScheduleID);
+                        }
+                    });
                 }
             });
         },
@@ -280,7 +281,7 @@ $(function () {
             return me.options.subscriptionModel.subscriptionModel("getExtensionSettings", "Report Server Email");
         },
         _sharedSchedule: {},
-        _initSharedSchedule:function(data) {
+        _initSharedSchedule:function(data,done) {
             var me = this;
             var validValues = [];
             var i;
@@ -302,6 +303,7 @@ $(function () {
                 me.$sharedSchedule = me._createDropDownForValidValues(validValues);
                 me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
                 me.$sharedSchedule.addClass("fr-email-schedule");
+                done();
             });
         },
         _initProcessingOptions: function () {

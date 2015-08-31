@@ -170,6 +170,10 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Cmdlets()
+        {
+            return View();
+        }
         public ActionResult Pricing()
         {
             return View();

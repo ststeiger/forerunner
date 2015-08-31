@@ -407,11 +407,17 @@ ${If} $1 == 0
 
    nsisXML::createElementInNS "bindingRedirect"  "urn:schemas-microsoft-com:asm.v1"
    nsisXML::setAttribute "oldVersion" "0.0.0.0-4.5.0.0"
-   nsisXML::setAttribute "newVersion" "6.0.0.0"
+   nsisXML::setAttribute "newVersion" "7.0.0.0"
    nsisXML::appendChild
 
    nsisXML::save "$INSTDIR\web.config"
+${Else}
+   nsisXML::select  "//*[@name='Newtonsoft.Json']/following-sibling::*[1]"
+   nsisXML::setAttribute "newVersion" "7.0.0.0"
+   nsisXML::save "$INSTDIR\web.config"
 ${EndIf}
+
+
 
 ;This must be the last line of the config tool will not work after install
  SetOutPath "$INSTDIR\Config"

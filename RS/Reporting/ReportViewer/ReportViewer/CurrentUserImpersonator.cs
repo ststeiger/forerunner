@@ -39,7 +39,7 @@ namespace Forerunner.Security
 
                 action.Invoke();
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 throw;
             }

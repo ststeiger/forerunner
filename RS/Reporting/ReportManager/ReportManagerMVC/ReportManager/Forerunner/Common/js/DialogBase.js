@@ -57,7 +57,8 @@ $(function () {
             if (!me.options.title) me.options.title = locData.dialogBase.title;
             if (!me.options.actionWord) me.options.actionWord = locData.dialogBase.submit;
             if (!me.options.cancelWord) me.options.cancelWord = locData.dialogBase.cancel;
-
+            me._render();
+           
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
             if (me.$loadingIndicator.length === 0) {
                 me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.messages.loading);
@@ -71,6 +72,8 @@ $(function () {
         },
         // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
+        },
+        _render: function () {
             var me = this;
 
             me.loadLock = 0;

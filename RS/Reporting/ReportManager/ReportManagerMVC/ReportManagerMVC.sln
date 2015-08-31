@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		WE-settings.xml = WE-settings.xml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.Json", "..\..\ReportViewer\JSON\src\Jayrock.Json\Forerunner.Json.csproj", "{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSONRenderingExtension", "..\..\ReportViewer\Rendering Extension\JSONRenderingExtension\JSONRenderingExtension.csproj", "{133AA341-B1A5-4E95-9E00-F4E2B44DD6D9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportManagerConfigTool", "ReportMannagerConfigTool\ReportManagerConfigTool.csproj", "{9DB1DB48-5245-41ED-B4F8-706DB9352A25}"
@@ -32,6 +30,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfSharp", "..\..\ReportViewer\PDFsharp\code\PdfSharp\PdfSharp.csproj", "{5384CE57-1F94-4D22-860D-2E9C1AC12DDF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.SDK.ConfigTool", "Forerunner.SDK.ConfigTool\Forerunner.SDK.ConfigTool.csproj", "{BE5CAF57-D90F-48D1-9573-DD1597DB739B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSONWriter", "..\..\ReportViewer\JSONWriter\JSONWriter\JSONWriter.csproj", "{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,12 +53,6 @@ Global
 		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Publish|Any CPU.ActiveCfg = Release|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Publish|Any CPU.Build.0 = Release|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{133AA341-B1A5-4E95-9E00-F4E2B44DD6D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{133AA341-B1A5-4E95-9E00-F4E2B44DD6D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{133AA341-B1A5-4E95-9E00-F4E2B44DD6D9}.Publish|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,6 +95,12 @@ Global
 		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE5CAF57-D90F-48D1-9573-DD1597DB739B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4E0F7E8-B67F-4AF7-9C08-615D2C3D0229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

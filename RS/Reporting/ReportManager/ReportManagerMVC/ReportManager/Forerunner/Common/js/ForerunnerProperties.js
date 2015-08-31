@@ -586,7 +586,7 @@ $(function () {
                 var me = this;
 
                 if (typeof data === "object" && data.ForerunnerRDLExt) {
-                    me._rdl = data.ForerunnerRDLExt;
+                    me._rdl = JSON.stringify( data.ForerunnerRDLExt);
                     me.$rdlInput.val(me._rdl);
                 }
             }, me);

@@ -647,6 +647,29 @@ GROUP BY DATEPART(yy, SOH.OrderDate), PC.Name, PS.Name,
       <Prompt>End Date</Prompt>
     </ReportParameter>
   </ReportParameters>
+  <CustomProperties>
+    <CustomProperty>
+      <Name>ForerunnerRDLExt</Name>
+      <Value>{
+"Textbox6":{
+"localize":{
+"en-au":{"value":"Austrainian"},
+"fr":{"value":"French"}
+}},
+
+"StartDate":{"localize":{
+"en-au":{"value":"Au Start"},
+"fr":{"value":"French Start"}
+}},
+
+
+"localize":{
+"en-au":{"name":"Aus Comp Sales"},
+"fr":{"name":"FR Comp Sales","description":"This cool French description"}
+}
+}</Value>
+    </CustomProperty>
+  </CustomProperties>
   <EmbeddedImages>
     <EmbeddedImage Name="logoback">
       <MIMEType>image/jpeg</MIMEType>

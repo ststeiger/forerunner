@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Jayrock.Json;
+using Forerunner.JSONWriter;
 using Forerunner.SSRS.Execution;
 using ForerunnerLicense;
 using System.Configuration;
@@ -15,6 +15,8 @@ using Forerunner.SSRS.Manager;
 using Forerunner.Config;
 using Forerunner.Logging;
 using Management = Forerunner.SSRS.Management;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 namespace Forerunner
@@ -175,14 +177,14 @@ namespace Forerunner
 
             using (JsonTextReader reader = new JsonTextReader(new StringReader(parameterList)))
             {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
+                JObject jsonObj = new JObject();
+                jsonObj = JObject.Parse(parameterList);
 
-                JsonArray parameterArray = jsonObj["ParamsList"] as JsonArray;
+                JArray parameterArray = jsonObj["ParamsList"] as JArray;
 
                 if (parameterArray != null)
                 {
-                    foreach (JsonObject obj in parameterArray)
+                    foreach (JObject obj in parameterArray)
                     {
                         //if parameter use default then don't include this parameter
                         if (obj["UseDefault"] != null && obj["UseDefault"].ToString().ToLower() == "true")
@@ -218,7 +220,7 @@ namespace Forerunner
                             }
                             else
                             {
-                                JsonArray multipleValues = obj["Value"] as JsonArray;
+                                JArray multipleValues = obj["Value"] as JArray;
                                 foreach (String value in multipleValues)
                                 {
                                     ParameterValue pv = new ParameterValue();
@@ -276,36 +278,35 @@ namespace Forerunner
         internal static string GetPrintPDFDevInfo(string propertyString)
         {
             StringBuilder printProperty = new StringBuilder();
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(propertyString)))
+            
+            JObject jsonObj = new JObject();
+            jsonObj = JObject.Parse(propertyString);
+
+            JArray propertyList = jsonObj["PrintPropertyList"] as JArray;
+
+            printProperty.Append("<DeviceInfo>");
+            foreach (JObject obj in propertyList)
             {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
-
-                JsonArray propertyList = jsonObj["PrintPropertyList"] as JsonArray;
-
-                printProperty.Append("<DeviceInfo>");
-                foreach (JsonObject obj in propertyList)
-                {
-                    printProperty.Append("<");
-                    printProperty.Append(obj["key"].ToString());
-                    printProperty.Append(">");
-                    printProperty.Append(obj["value"].ToString());
-                    printProperty.Append("in");
-                    printProperty.Append("</");
-                    printProperty.Append(obj["key"].ToString());
-                    printProperty.Append(">");
-                }
-                printProperty.Append("</DeviceInfo>");
-
-                return printProperty.ToString();
+                printProperty.Append("<");
+                printProperty.Append(obj["key"].ToString());
+                printProperty.Append(">");
+                printProperty.Append(obj["value"].ToString());
+                printProperty.Append("in");
+                printProperty.Append("</");
+                printProperty.Append(obj["key"].ToString());
+                printProperty.Append(">");
             }
+            printProperty.Append("</DeviceInfo>");
+
+            return printProperty.ToString();
+            
         }
 
         public static string WriteExceptionJSON(Exception e, String userName = null)
         {
             try
             {
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("Exception");
                 w.WriteStartObject();
@@ -382,7 +383,7 @@ namespace Forerunner
 
         public static string ConvertParamemterToJSON(ReportParameter [] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             bool DefaultExist = false;
             int DefaultValueCount = 0;
             w.WriteStartObject();
@@ -491,7 +492,7 @@ namespace Forerunner
             return w.ToString();
         }
 
-        public static void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap, JsonWriter w)
+        public static void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap, JSONTextWriter w)
         {
             
             w.WriteMember("Label");
@@ -516,7 +517,7 @@ namespace Forerunner
 
         internal static string GetDocMapJSON(DocumentMapNode DocumentMap)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
 
             w.WriteStartObject();
             w.WriteMember("DocumentMap");
@@ -618,12 +619,12 @@ namespace Forerunner
             List<DataSourceCredentials> list = new List<DataSourceCredentials>();
             using (JsonTextReader reader = new JsonTextReader(new StringReader(credentials)))
             {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
+                JObject jsonObj = new JObject();
+                jsonObj = JObject.Parse(credentials);
 
-                JsonArray credArray = jsonObj["CredentialList"] as JsonArray;
+                JArray credArray = jsonObj["CredentialList"] as JArray;
 
-                foreach (JsonObject obj in credArray)
+                foreach (JObject obj in credArray)
                 {
                     DataSourceCredentials credential = new DataSourceCredentials();
                     credential.DataSourceName = obj["DataSourceID"].ToString();
@@ -638,14 +639,14 @@ namespace Forerunner
 
         internal static string GetDataSourceCredentialJSON(DataSourcePrompt[] prompts, string reportPath, string sessionID, string numPages = "1")
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("ReportPath");
             w.WriteString(reportPath);
             w.WriteMember("SessionID");
             w.WriteString(sessionID);
             w.WriteMember("NumPages");
-            w.WriteNumber(numPages);
+            w.WriteNumber(int.Parse(numPages));
             w.WriteMember("CredentialsRequired");
             w.WriteBoolean(true);
             w.WriteMember("CredentialsList");
@@ -669,9 +670,9 @@ namespace Forerunner
 
         public static string ConvertListToJSON(List<string> listOfStrings)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
 
-            w.WriteStringArray(listOfStrings);
+            w.WriteStringArray(listOfStrings.ToArray());
 
             return w.ToString();
         }
@@ -680,41 +681,36 @@ namespace Forerunner
         {
             List<Management.SearchCondition> list = new List<Management.SearchCondition>();
 
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(searchCriteria)))
+            JObject jsonObj = new JObject();
+            jsonObj = JObject.Parse(searchCriteria);
+
+            JArray criteriaArray = jsonObj["SearchCriteria"] as JArray;
+
+            if (criteriaArray != null)
             {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
-
-                JsonArray criteriaArray = jsonObj["SearchCriteria"] as JsonArray;
-
-                if (criteriaArray != null)
+                foreach (JObject obj in criteriaArray)
                 {
-                    foreach (JsonObject obj in criteriaArray)
-                    {
-                        Management.SearchCondition condition = new Management.SearchCondition();
-                        //Default to search as contains
-                        condition.Condition = Management.ConditionEnum.Contains;
-                        condition.ConditionSpecified = true;
-                        condition.Name = obj["Key"].ToString();
-                        condition.Value = obj["Value"].ToString();
+                    Management.SearchCondition condition = new Management.SearchCondition();
+                    //Default to search as contains
+                    condition.Condition = Management.ConditionEnum.Contains;
+                    condition.ConditionSpecified = true;
+                    condition.Name = obj["Key"].ToString();
+                    condition.Value = obj["Value"].ToString();
 
-                        list.Add(condition);
-                    }
+                    list.Add(condition);
                 }
-
-                return list.ToArray();
+     
             }
+            return list.ToArray();
+            
         }
 
         public static string GetSearchFolderTags(string searchFolderContent)
         {
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(searchFolderContent)))
-            {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
-                //JsonString tags = jsonObj["tags"] as JsonString;
-                return jsonObj["tags"].ToString();
-            }
+            JObject jsonObj = new JObject();
+            jsonObj = JObject.Parse(searchFolderContent);
+            //JsonString tags = jsonObj["tags"] as JsonString;
+            return jsonObj["tags"].ToString();            
         }
 
         //convert json string to the Policy array
@@ -722,42 +718,40 @@ namespace Forerunner
         {
             List<Management.Policy> policies = new List<Management.Policy>();
 
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(jsonStr)))
+           JObject jsonObj = new JObject();
+           JArray  policyArray = JArray.Parse(jsonStr);
+
+           foreach (JObject obj in policyArray)
             {
-                JsonArray policyArray = new JsonArray();
-                policyArray.Import(reader);                
-                
-                foreach (JsonObject obj in policyArray)
+                Management.Policy policy = new Management.Policy();
+
+                policy.GroupUserName = obj["GroupUserName"].ToString();
+
+                JArray roleArray = obj["Roles"] as JArray;
+
+                List<Management.Role> roleList = new List<Management.Role>();
+
+                foreach (JObject jsonRole in roleArray)
                 {
-                    Management.Policy policy = new Management.Policy();
+                    Management.Role role = new Management.Role();
 
-                    policy.GroupUserName = obj["GroupUserName"].ToString();
+                    role.Name = jsonRole["Name"].ToString();
 
-                    JsonArray roleArray = obj["Roles"] as JsonArray;
-
-                    List<Management.Role> roleList = new List<Management.Role>();
-
-                    foreach (JsonObject jsonRole in roleArray)
-                    {
-                        Management.Role role = new Management.Role();
-
-                        role.Name = jsonRole["Name"].ToString();
-
-                        roleList.Add(role);
-                    }
-
-                    policy.Roles = roleList.ToArray();
-
-                    policies.Add(policy);
+                    roleList.Add(role);
                 }
+
+                policy.Roles = roleList.ToArray();
+
+                policies.Add(policy);
             }
+            
 
             return policies.ToArray();
         }
 
         public static string GetPoliciesJson(Management.Policy[] policy, bool isInheritParent)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
 
             w.WriteStartObject();
             w.WriteMember("isInheritParent");
@@ -794,7 +788,7 @@ namespace Forerunner
 
         public static string GetPropertyJson(Management.Property [] properties)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
 
             w.WriteStartObject();
             for (int i = 0; i < properties.Length; i++)
@@ -802,9 +796,15 @@ namespace Forerunner
                 //Handle forerunner hidden special
                 if (properties[i].Name == "ForerunnerHidden")
                     w.WriteMember("Hidden");
+
                 else
                     w.WriteMember(properties[i].Name);
-                w.WriteString(properties[i].Value);
+
+                //Special case JSON property
+                if (properties[i].Name == "ForerunnerRDLExt")
+                    w.WriteJSON(properties[i].Value);
+                else
+                    w.WriteString(properties[i].Value);
             }
             w.WriteEndObject();
 
@@ -815,21 +815,19 @@ namespace Forerunner
         {
             List<Management.Property> propertyList = new List<Management.Property>();
 
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(propertyJson)))
+            JArray policyArray = new JArray();
+            policyArray = JArray.Parse(propertyJson);
+
+            foreach (JObject obj in policyArray)
             {
-                JsonArray policyArray = new JsonArray();
-                policyArray.Import(reader);
+                Management.Property property = new Management.Property();
 
-                foreach (JsonObject obj in policyArray)
-                {
-                    Management.Property property = new Management.Property();
+                property.Name = obj["name"].ToString();
+                property.Value = obj["value"].ToString();
 
-                    property.Name = obj["name"].ToString();
-                    property.Value = obj["value"].ToString();
-
-                    propertyList.Add(property);
-                }
+                propertyList.Add(property);
             }
+            
 
             return propertyList.ToArray();
         }

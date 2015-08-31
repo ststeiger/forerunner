@@ -46,9 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -549,6 +549,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ReportViewer\JSONWriter\JSONWriter\JSONWriter.csproj">
+      <Project>{a4e0f7e8-b67f-4af7-9c08-615d2c3d0229}</Project>
+      <Name>JSONWriter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj">
       <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
       <Name>Forerunner.SSRS</Name>

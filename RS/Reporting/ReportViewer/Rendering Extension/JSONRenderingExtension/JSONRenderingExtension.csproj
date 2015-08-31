@@ -97,9 +97,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\JSON\src\Jayrock.Json\Forerunner.Json.csproj">
-      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
-      <Name>Forerunner.Json</Name>
+    <ProjectReference Include="..\..\JSONWriter\JSONWriter\JSONWriter.csproj">
+      <Project>{a4e0f7e8-b67f-4af7-9c08-615d2c3d0229}</Project>
+      <Name>JSONWriter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

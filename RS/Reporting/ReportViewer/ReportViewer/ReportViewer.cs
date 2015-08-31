@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using Forerunner.SSRS.Execution;
-using Jayrock.Json;
+using Forerunner.JSONWriter;
 using System.Diagnostics;
 using Forerunner.SSRS.JSONRender;
 using System.Security.Principal;
@@ -224,7 +224,7 @@ namespace Forerunner.SSRS.Viewer
             if (SessionID == "DebugPlaceholderSession")
                 return "";
 
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             rs.Credentials = GetCredentials();
 
@@ -261,6 +261,16 @@ namespace Forerunner.SSRS.Viewer
             w.WriteString("No SessionID");
             w.WriteEndObject();
             return w.ToString();
+        }
+
+        private Stream GetUTF8Bytes(string result)
+        {
+            int length = Encoding.UTF8.GetByteCount(result);
+            MemoryStream mem = new MemoryStream(length);
+
+
+            mem.Write(Encoding.UTF8.GetBytes(result), 0, length);
+            return mem;
         }
 
         private Stream GetUTF8Bytes(StringWriter result)
@@ -329,7 +339,7 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
             int numPages = 1;
             bool hasDocMap = false;
-            StringWriter JSON = new StringWriter();
+            JSONTextWriter JSON = new JSONTextWriter();
 
             try
             {
@@ -402,7 +412,7 @@ namespace Forerunner.SSRS.Viewer
                         else
                         {
                             JSON.Write(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum));
-                            return GetUTF8Bytes(JSON);
+                            return GetUTF8Bytes(JSON.ToString());
                         }
                     }
 
@@ -437,9 +447,9 @@ namespace Forerunner.SSRS.Viewer
                 {
                     //Write the RPL and throw
                     if (IsDebug == "WRPL")
-                         ExceptionLogGenerator.LogExceptionWithRPL("Debug", new MemoryStream(result)); 
+                         ExceptionLogGenerator.LogExceptionWithRPL("Debug", new MemoryStream(result));
 
-                    JsonWriter w = new JsonTextWriter();
+                    JSONTextWriter w = new JSONTextWriter();
   
                     //Read Report Object
                     w.WriteStartObject();
@@ -461,10 +471,10 @@ namespace Forerunner.SSRS.Viewer
                     else
                     {
                         rw = new ReportJSONWriter(new MemoryStream(result));
-                        JSON = new StringWriter(rw.RPLToJSON(numPages).GetStringBuilder());
-                        JSON.GetStringBuilder().Insert(0, w.ToString());
+                        JSON = rw.RPLToJSON(numPages);
+                        JSON.Insert(0, w);
                         JSON.Write("}");
-                        ms = GetUTF8Bytes(JSON) as MemoryStream;
+                        ms = GetUTF8Bytes(JSON.ToString()) as MemoryStream;
                     }
 
                     
@@ -488,7 +498,7 @@ namespace Forerunner.SSRS.Viewer
                         LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
                 }
                 //this should never be called
-                return GetUTF8Bytes(JSON);
+                return GetUTF8Bytes(JSON.ToString());
             }
 
             catch (Exception e)
@@ -497,7 +507,7 @@ namespace Forerunner.SSRS.Viewer
                 ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
-                return GetUTF8Bytes(JSON);
+                return GetUTF8Bytes(JSON.ToString());
             }
 
         }
@@ -624,7 +634,7 @@ namespace Forerunner.SSRS.Viewer
                         break;
                 }
                 int newPage = rs.Sort(SortItem, SortDirection, ClearExistingSort, out ReportItem, out NumPages);
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");
                 w.WriteNumber(newPage);
@@ -658,7 +668,7 @@ namespace Forerunner.SSRS.Viewer
 
                 result = rs.ToggleItem(ToggleID);
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("Result");
                 w.WriteBoolean(result);
@@ -689,7 +699,7 @@ namespace Forerunner.SSRS.Viewer
                 string UniqueName = string.Empty;
                 int NewPage = rs.NavigateBookmark(BookmarkID, out UniqueName);
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");
                 w.WriteNumber(NewPage);
@@ -721,7 +731,7 @@ namespace Forerunner.SSRS.Viewer
 
                 ExecutionInfo execInfo = rs.LoadDrillthroughTarget(DrillthroughID);
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("SessionID");
                 w.WriteString(execInfo.ExecutionID);
@@ -735,15 +745,13 @@ namespace Forerunner.SSRS.Viewer
                 if (execInfo.CredentialsRequired)
                 {
                     w.WriteMember("Credentials");
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, execInfo.ReportPath, execInfo.ExecutionID, execInfo.NumPages.ToString())));
-                    w.WriteFromReader(r);
+                    w.Write(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, execInfo.ReportPath, execInfo.ExecutionID, execInfo.NumPages.ToString()));
                 }
 
                 if (execInfo.Parameters.Length != 0)
                 {
                     w.WriteMember("Parameters");
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
-                    w.WriteFromReader(r);
+                    w.Write(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages));
                 }
 
                 w.WriteEndObject();
@@ -770,7 +778,7 @@ namespace Forerunner.SSRS.Viewer
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 int NewPage = rs.NavigateDocumentMap(DocMapID);
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");
                 w.WriteNumber(NewPage);
@@ -797,7 +805,7 @@ namespace Forerunner.SSRS.Viewer
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 int NewPage = rs.FindString(StartPage, EndPage, FindString);
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");
                 w.WriteNumber(NewPage);

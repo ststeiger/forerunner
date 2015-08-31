@@ -1993,6 +1993,57 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
       <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
+  <CustomProperties>
+    <CustomProperty>
+      <Name>ForerunnerRDLExt</Name>
+      <Value>{
+  "StartDate": {
+    "JavaScriptActions": [
+      {
+        "On": "blur",
+        "Code": "var c = $(e.data.element);\nvar dt = new Date(Date.parse(c.val()));\nif ( dt.getFullYear() &lt; 2001) \n\n{e.data.setParamError(c,\"Invalid Date\"); }  \nelse\n{e.data.setParamError(c);}"
+      }
+    ]
+  },
+  "EndDate": {
+    "JavaScriptActions": [
+      {
+        "On": "blur",
+        "Code": "var c = $(e.data.element);\nvar et = new Date(Date.parse(c.val()));\n var p = e.data.getParameters(); \nvar s = $(p.StartDate);\nvar st = new Date(Date.parse(s.val()));\nif ( st &gt; et) \n\n{e.data.setParamError(c,\"Invalid Date\"); }  \nelse\n{e.data.setParamError(c);}"
+      }
+    ]
+  },
+  "FullName": {
+    "JavaScriptActions": [
+      {
+        "SharedAction": "ChangeBorder"
+      }
+    ]
+  },
+  "SaleAmountEmp": {
+    "JavaScriptActions": [
+      {
+        "SharedAction": "ChangeBorder"
+      }
+    ]
+  },
+  "SharedActions": {
+    "ChangeBorder": {
+      "JavaScriptActions": [
+        {
+          "On": "mouseenter",
+          "Code": "$(e.data.element).closest('TR').css('outline','5px solid navy'); $('body').hide().show(0);"
+        },
+        {
+          "On": "mouseleave",
+          "Code": "$(e.data.element).closest('TR').css('outline',''); $('body').hide().show(0);"
+        }
+      ]
+    }
+  }
+}</Value>
+    </CustomProperty>
+  </CustomProperties>
   <EmbeddedImages>
     <EmbeddedImage Name="tires">
       <MIMEType>image/jpeg</MIMEType>

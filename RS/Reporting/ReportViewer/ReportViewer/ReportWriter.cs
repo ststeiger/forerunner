@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using Jayrock.Json;
+using Forerunner.JSONWriter;
 using ForerunnerLicense;
 using Forerunner.Logging;
 
@@ -14,10 +14,10 @@ namespace Forerunner.SSRS.JSONRender
 {
 
     internal class ReportJSONWriter : IDisposable
-    {       
-        JsonWriter w = new JsonTextWriter();
-        JsonWriter s = new JsonTextWriter();
-        JsonWriter tmpWriter = new JsonTextWriter();
+    {
+        JSONTextWriter w = new JSONTextWriter();
+        JSONTextWriter s = new JSONTextWriter();
+        JSONTextWriter tmpWriter = new JSONTextWriter();
         string LastID = null;
 
         byte majorVersion;
@@ -108,10 +108,10 @@ namespace Forerunner.SSRS.JSONRender
                 NumProp++;
             }
 
-            internal void WriteMemeber(byte Code, ReportJSONWriter r,JsonWriter jw)
+            internal void WriteMemeber(byte Code, ReportJSONWriter r, JSONTextWriter jw)
             {
                 int i;
-                JsonWriter w = jw;
+                JSONTextWriter w = jw;
                 for (i = 0; i < NumProp; i++)
                 {
                     if (PropArray[i].RPLCode == Code)
@@ -227,7 +227,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 Write(r, r.w, EndCode);
             }
-            public void Write(ReportJSONWriter r, JsonWriter w, Byte EndCode = 0xFF)
+            public void Write(ReportJSONWriter r, JSONTextWriter w, Byte EndCode = 0xFF)
             {
 
                 //If RPLPRopertyBagCode is 0xFF then there is no Object code just arbitrary properties
@@ -286,7 +286,7 @@ namespace Forerunner.SSRS.JSONRender
 
         //Semaphone for Dev sku to limite concurency
         private static Semaphore _lock = new Semaphore(1, 1);
-        public StringWriter RPLToJSON(int NumPages)
+        public JSONTextWriter RPLToJSON(int NumPages)
         {
 
 //#if !DEBUG           
@@ -363,23 +363,19 @@ namespace Forerunner.SSRS.JSONRender
                 //JsonReader r = new JsonBufferReader(JsonBuffer.From(s.ToString()));
                 //w.WriteFromReader(r);
 
-                StringWriter sw = (w as JsonTextWriter).InnerWriter as StringWriter;
-
-                //Write shared Styles
-                StringWriter styles = new StringWriter();
-                styles.Write("{");
+                w.Write("{");
                 int count = 0;
                 foreach (KeyValuePair<string, string> entry in SharedStyles)
                 {
-                    styles.Write("\"" + entry.Key + "\":" + entry.Value);
+                    w.Write("\"" + entry.Key + "\":" + entry.Value);
                     if (++count < SharedStyles.Count)
-                        styles.Write(",");
+                        w.Write(",");
                 }
 
                 //Add styles to reports and and object
-                sw.Write(styles);
-                sw.Write("}}");
-                return sw;
+                
+                w.Write("}}");
+                return w;
             }
             finally
             {
@@ -822,7 +818,7 @@ namespace Forerunner.SSRS.JSONRender
             
             //reset temp writer
             tmpWriter.Close();
-            tmpWriter = new JsonTextWriter();
+            tmpWriter = new JSONTextWriter();
             
         }
         private Boolean WriteJSONElements(byte ObjectType = 0x00, int DeRef = 0)
@@ -2076,7 +2072,7 @@ namespace Forerunner.SSRS.JSONRender
         {
             return WriteJSONStyle(w,false);
         }
-        private Boolean WriteJSONStyle(JsonWriter jw,Boolean shared)
+        private Boolean WriteJSONStyle(JSONTextWriter jw, Boolean shared)
         {
             if (RPL.ReadByte() != 0x06)                
                 ThrowParseError("Not a Style Element");

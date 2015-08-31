@@ -11,7 +11,7 @@ using Forerunner.SSRS.Management;
 using Forerunner.Security;
 using Forerunner.Logging;
 using Forerunner.Subscription;
-using Jayrock.Json;
+using Forerunner.JSONWriter;
 using System.Threading;
 using System.Web.Security;
 using System.Security.Principal;
@@ -627,7 +627,7 @@ namespace Forerunner.SSRS.Manager
         }
         private string getSaveCatalogResourceSuccess(string resourceName)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("Status");
             w.WriteString("Success");
@@ -1292,7 +1292,7 @@ namespace Forerunner.SSRS.Manager
                 }
 
                 //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("IsFavorite");
                 w.WriteBoolean(isFav);
@@ -1736,7 +1736,7 @@ namespace Forerunner.SSRS.Manager
 
         public string GetCatalogPermission(string path, string permissions)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             string[] allPermission = callGetPermissions(path);
 
@@ -2265,7 +2265,7 @@ namespace Forerunner.SSRS.Manager
 
         private string getReturnSuccess()
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("Status");
             w.WriteString("Success");
@@ -2275,7 +2275,7 @@ namespace Forerunner.SSRS.Manager
 
         private string getReturnWarning(string message)
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("Warning");
             w.WriteString(message);
@@ -2285,7 +2285,7 @@ namespace Forerunner.SSRS.Manager
 
         private string getReturnFailed()
         {
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("Status");
             w.WriteString("Failed");
@@ -2327,7 +2327,7 @@ namespace Forerunner.SSRS.Manager
                     }
                 }
 
-                JsonWriter w = new JsonTextWriter();
+                JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("Tags");
                 if (tags == "")
@@ -2703,7 +2703,7 @@ namespace Forerunner.SSRS.Manager
         public string GetReportLink(string linkedReportPath)
         {
             rs.Credentials = GetCredentials();
-            JsonWriter w = new JsonTextWriter();
+            JSONTextWriter w = new JSONTextWriter();
             w.WriteStartObject();
             w.WriteMember("linkedReport");
             w.WriteString(rs.GetReportLink(linkedReportPath));
@@ -2780,7 +2780,7 @@ namespace Forerunner.SSRS.Manager
 
         public string GetDBConfiguration()
         {
-            JsonWriter writer = new JsonTextWriter();
+            JSONTextWriter writer = new JSONTextWriter();
             writer.WriteStartObject();
             writer.WriteMember("UseMobilizerDB");
             writer.WriteBoolean(UseMobilizerDB);

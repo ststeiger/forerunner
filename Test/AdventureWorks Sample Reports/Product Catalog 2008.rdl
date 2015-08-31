@@ -1,98 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <Description>Adventure Works full product catalog with pictures. This report illustrates the use of embedded images, database images, page breaks, page footers, a tablix with three nested row groups and details but no grouping cells, conditional formatting, and a document map.</Description>
-  <DataSources>
-    <DataSource Name="AdventureWorks2008">
-      <DataSourceReference>AdventureWorks2008</DataSourceReference>
-      <rd:DataSourceID>e40b0b2a-d9a5-4a43-8b7f-2783c169d473</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="ProductCatalog">
-      <Fields>
-        <Field Name="Subcategory">
-          <DataField>Subcategory</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Model">
-          <DataField>Model</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Category">
-          <DataField>Category</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Description">
-          <DataField>Description</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LargePhoto">
-          <DataField>LargePhoto</DataField>
-          <rd:TypeName>System.Byte[]</rd:TypeName>
-        </Field>
-        <Field Name="Product">
-          <DataField>Product</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="LargePhotoFileName">
-          <DataField>LargePhotoFileName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ProductNumber">
-          <DataField>ProductNumber</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Color">
-          <DataField>Color</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Size">
-          <DataField>Size</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Weight">
-          <DataField>Weight</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="StandardCost">
-          <DataField>StandardCost</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Style">
-          <DataField>Style</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Class">
-          <DataField>Class</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="ListPrice">
-          <DataField>ListPrice</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT      
-   PS.Name AS Subcategory, PM.Name AS Model, 
-   PC.Name AS Category, PD.Description, PP.LargePhoto, PP.LargePhotoFileName, P.Name AS Product, P.ProductNumber, 
-   P.Color, P.Size, P.Weight, P.StandardCost, P.Style, P.Class, P.ListPrice
-FROM Production.Product P INNER JOIN
-   Production.ProductSubcategory PS INNER JOIN
-   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID 
-      ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
-   Production.ProductProductPhoto PPP ON P.ProductID = PPP.ProductID INNER JOIN
-   Production.ProductPhoto PP ON PPP.ProductPhotoID = PP.ProductPhotoID LEFT OUTER JOIN
-   Production.ProductDescription PD INNER JOIN
-   Production.ProductModel PM INNER JOIN
-   Production.ProductModelProductDescriptionCulture PMPDCL ON PM.ProductModelID = PMPDCL.ProductModelID ON 
-   PD.ProductDescriptionID = PMPDCL.ProductDescriptionID ON P.ProductModelID = PM.ProductModelID
-WHERE (PMPDCL.CultureID = 'en')</CommandText>
-        <Timeout>30</Timeout>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Tablix Name="Tablix1">
@@ -1248,18 +1155,6 @@ WHERE (PMPDCL.CultureID = 'en')</CommandText>
       </BottomBorder>
     </Style>
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="ShowDescription">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>False</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Description?</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-  </ReportParameters>
   <Width>6.94792in</Width>
   <Page>
     <PageHeader>
@@ -1358,6 +1253,143 @@ WHERE (PMPDCL.CultureID = 'en')</CommandText>
     <BottomMargin>0.5in</BottomMargin>
     <Style />
   </Page>
+  <Description>Adventure Works full product catalog with pictures. This report illustrates the use of embedded images, database images, page breaks, page footers, a tablix with three nested row groups and details but no grouping cells, conditional formatting, and a document map.</Description>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="AdventureWorks2008">
+      <DataSourceReference>AdventureWorks2008</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>e40b0b2a-d9a5-4a43-8b7f-2783c169d473</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="ProductCatalog">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <CommandText>SELECT      
+   PS.Name AS Subcategory, PM.Name AS Model, 
+   PC.Name AS Category, PD.Description, PP.LargePhoto, PP.LargePhotoFileName, P.Name AS Product, P.ProductNumber, 
+   P.Color, P.Size, P.Weight, P.StandardCost, P.Style, P.Class, P.ListPrice
+FROM Production.Product P INNER JOIN
+   Production.ProductSubcategory PS INNER JOIN
+   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID 
+      ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
+   Production.ProductProductPhoto PPP ON P.ProductID = PPP.ProductID INNER JOIN
+   Production.ProductPhoto PP ON PPP.ProductPhotoID = PP.ProductPhotoID LEFT OUTER JOIN
+   Production.ProductDescription PD INNER JOIN
+   Production.ProductModel PM INNER JOIN
+   Production.ProductModelProductDescriptionCulture PMPDCL ON PM.ProductModelID = PMPDCL.ProductModelID ON 
+   PD.ProductDescriptionID = PMPDCL.ProductDescriptionID ON P.ProductModelID = PM.ProductModelID
+WHERE (PMPDCL.CultureID = 'en')</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Subcategory">
+          <DataField>Subcategory</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Model">
+          <DataField>Model</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Category">
+          <DataField>Category</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Description">
+          <DataField>Description</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LargePhoto">
+          <DataField>LargePhoto</DataField>
+          <rd:TypeName>System.Byte[]</rd:TypeName>
+        </Field>
+        <Field Name="Product">
+          <DataField>Product</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LargePhotoFileName">
+          <DataField>LargePhotoFileName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProductNumber">
+          <DataField>ProductNumber</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Color">
+          <DataField>Color</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Size">
+          <DataField>Size</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Weight">
+          <DataField>Weight</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="StandardCost">
+          <DataField>StandardCost</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Style">
+          <DataField>Style</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Class">
+          <DataField>Class</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ListPrice">
+          <DataField>ListPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="ShowDescription">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>False</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Description?</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
+  <CustomProperties>
+    <CustomProperty>
+      <Name>ForerunnerRDLExt</Name>
+      <Value>{
+  "Tablix1": {
+    "ColHeaderRow": 0,
+    "BackgroundColor": "#F2F2F2",
+    "ColumnHeaders": [
+      "ProdModel",
+      "Textbox71",
+      "Textbox72",
+      "Textbox3",
+      "Textbox73",
+      "Textbox74",
+      "Textbox75",
+      "Textbox76",
+      "Textbox77"
+    ]
+  },
+      "Textbox71": {"Class": "SubHeader"},
+      "Textbox72": {"Class": "SubHeader"},
+      "Textbox3": {"Class": "SubHeader"},
+      "Textbox73": {"Class": "SubHeader"},
+      "Textbox74": {"Class": "SubHeader"},
+      "Textbox75": {"Class": "SubHeader"},
+      "Textbox76": {"Class": "SubHeader"},
+      "Textbox77": {"Class": "SubHeader"}
+}</Value>
+    </CustomProperty>
+  </CustomProperties>
   <EmbeddedImages>
     <EmbeddedImage Name="cover4">
       <MIMEType>image/jpeg</MIMEType>
@@ -1524,6 +1556,6 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP///yH5BAEAAP8ALAAAAAABAAEAQAgEAP8FBAA7</Im
     </EmbeddedImage>
   </EmbeddedImages>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportID>a167c9a9-d06b-4e3c-b5c6-3bd78858a01a</rd:ReportID>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>a167c9a9-d06b-4e3c-b5c6-3bd78858a01a</rd:ReportID>
 </Report>

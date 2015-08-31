@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Jayrock.Json;
+using Forerunner.JSONWriter;
 using Microsoft.ReportingServices.Interfaces;
 using System.Collections.Specialized;
 using System.Collections;
@@ -73,7 +73,7 @@ namespace Forerunner.RenderingExtensions
                 Logger.Trace(LogType.Info, "JSONRenderer.Render " + report.Name);
                 bool retval;
                 RenderStreams = createAndRegisterStream;
-                StringWriter sw;
+                JSONTextWriter sw;
 
                 Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
                 retval = GetRPL().Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));

@@ -74,7 +74,16 @@ namespace ReportManager.Controllers
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
                 if (fileName != null)
-                    resp.Content.Headers.Add("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(fileName));
+                {
+                    try
+                    {
+                        resp.Content.Headers.Add("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(fileName));
+                    }
+                    catch
+                    {
+                        resp.Content.Headers.Add("Content-Disposition", "attachment;filename=temp." + fileName.Substring(fileName.LastIndexOf(".")));
+                    }
+                }
             }
             else
                 resp.StatusCode = HttpStatusCode.NotFound;

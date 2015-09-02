@@ -864,7 +864,9 @@ $(function () {
 
             //setup orientation change
             if (!forerunner.device.isMSIE8())
-                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+                window.addEventListener("orientationchange", function () {
+                    me._ReRender.call(me);
+                }, false);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);

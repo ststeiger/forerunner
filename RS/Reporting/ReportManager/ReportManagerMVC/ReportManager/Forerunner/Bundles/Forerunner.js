@@ -988,7 +988,7 @@ $(function () {
         getDBConfiguration: function (done) {
             var me = this;
 
-            if (forerunner.config._dbConfig === null) {
+            if (forerunner.config._dbConfig === null || jQuery.isEmptyObject(forerunner.config._dbConfig)) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetDBConfig";
                 var doAsync = false;
                 if (done)
@@ -1003,13 +1003,15 @@ $(function () {
                         if (done) done(forerunner.config._dbConfig);
                     },
                     fail: function () {
-                        forerunner.config.setDBConfiguration(null);
+                        forerunner.config.setDBConfiguration({});
                         console.log("Load database configuration failed");
+                        if (done) done(forerunner.config._dbConfig);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        forerunner.config.setCustomSettings(null);
+                        forerunner.config.setDBConfiguration({});
                         console.log("Load mobilizer custom settings.  textStatus: " + textStatus);
                         console.log(jqXHR);
+                        if (done) done(forerunner.config._dbConfig);
                     },
                 });
             }

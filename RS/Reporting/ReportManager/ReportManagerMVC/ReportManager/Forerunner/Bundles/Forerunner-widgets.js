@@ -5528,13 +5528,15 @@ $(function () {
             var events = forerunner.ssr.constants.events;
 
 
-            //Add double tap to bring up menu.  This resets zoom level on some browsers.
-            me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
-                ev.preventDefault();
-                ev.gesture.preventDefault();
-                me.showSlideoutPane(widgets.toolbar, true);
+            if (forerunner.device.isMobile()) {
+                //Add double tap to bring up menu.  This resets zoom level on some browsers.
+                me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
+                    ev.preventDefault();
+                    ev.gesture.preventDefault();
+                    me.showSlideoutPane(widgets.toolbar, true);
 
-            });
+                });
+            }
            
             // Handle any / all layout changes when the history routes change
             forerunner.history.on(events.historyRoute(), function (e, data) {

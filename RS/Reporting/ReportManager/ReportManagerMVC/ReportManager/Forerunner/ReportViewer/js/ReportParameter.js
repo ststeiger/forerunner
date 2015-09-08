@@ -615,7 +615,9 @@ $(function () {
             //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
-                if (param.QueryParameter === false) {
+
+                //DOn't show nullable if has valid value list, null would have to be in the list
+                if (param.ValidValues === "") {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
                 }
 

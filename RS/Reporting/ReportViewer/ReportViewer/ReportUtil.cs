@@ -241,7 +241,7 @@ namespace Forerunner
                             {
                                 ParameterValue pv = new ParameterValue();
                                 pv.Name = obj["Parameter"].ToString();
-                                pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
+                                pv.Value = obj["Value"].Type == Newtonsoft.Json.Linq.JTokenType.Null ? null : obj["Value"].ToString();
                                 list.Add(pv);
                             }
                         }

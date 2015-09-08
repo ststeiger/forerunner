@@ -111,13 +111,19 @@ namespace Forerunner.JSONWriter
         }
         public void WriteString(string Value)
         {
-            string NewVal = "";
-            if (Value != null)
+            StringBuilder NewVal = new StringBuilder(Value);
+
+            //escape special char
+            //escape newline
+           // if (Value != null)
             {
-                NewVal = Value.Replace("\\", "\\\\");
-                NewVal = NewVal.Replace("\"", "\\\"");
+                NewVal = NewVal
+                    .Replace("\\", "\\\\")
+                    .Replace("\"", "\\\"")
+                    .Replace("\n", "\\n")
+                    .Replace("\r", "\\r");
             }
-           Append(NewVal, true);
+           Append(NewVal.ToString(), true);
             
         }
         public void WriteBoolean(Boolean Value)

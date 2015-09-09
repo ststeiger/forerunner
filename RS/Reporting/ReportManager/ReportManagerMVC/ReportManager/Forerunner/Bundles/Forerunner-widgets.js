@@ -19087,11 +19087,11 @@ $(function () {
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
-     * @prop {Boolean} options.userSettings - Custom user setting
-     * @prop {Object} options.userSettings - Database configuration
+     * @prop {Object} options.userSettings - Custom user setting
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
-     * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {String} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      * @prop {String} options.zoom- Zoom factor. Defaults to 100.
@@ -19099,8 +19099,8 @@ $(function () {
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
-     *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack
+     *  navigateTo: navigateTo,
+     *  historyBack: historyBack
      *  isReportManager: false,
      *  userSettings: userSettings
      * });

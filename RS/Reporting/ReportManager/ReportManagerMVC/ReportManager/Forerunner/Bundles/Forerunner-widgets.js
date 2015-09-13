@@ -9000,8 +9000,8 @@ $(function () {
             me.addTools(1, false, me._viewerItems());
 
             forerunner.ajax.isFormsAuth(function (isForms) {
-                if (!isForms)
-                    me.hideTool(tp.itemLogOff.selectorClass);
+                if (!isForms && forerunner.ssr.tools.toolpane.itemLogOff)
+                    me.hideTool(forerunner.ssr.tools.toolpane.itemLogOff.selectorClass);
             });
 
 
@@ -19386,11 +19386,11 @@ $(function () {
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
-     * @prop {Boolean} options.userSettings - Custom user setting
-     * @prop {Object} options.userSettings - Database configuration
+     * @prop {Object} options.userSettings - Custom user setting
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
-     * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {String} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      * @prop {String} options.zoom- Zoom factor. Defaults to 100.
@@ -19420,7 +19420,7 @@ $(function () {
             showBreadCrumb: false,
             showParameterArea: "Collapsed",
             zoom: "100",
-            dbConfig: {}
+            dbConfig: null
         },
         _render: function () {
             var me = this;
@@ -19545,36 +19545,41 @@ $(function () {
                 me.DefaultAppTemplate.$linksection.hide();
             }
 
-            me._render();
-            
-            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
-                // if the viewer is full screen, we will set up the viewport here. Note that on Windows
-                // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
-                // with the meta tag.
-                var $viewportStyle = $("#fr-viewport-style");
-                if ($viewportStyle.length === 0) {
-                    var userZoom = "fixed";
-                    if (sessionStorage.forerunner_zoomReload_userZoom) {
-                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
-                        delete sessionStorage.forerunner_zoomReload_userZoom;
-                        var zoomReloadData = JSON.parse(zoomReloadStringData);
-                        if (zoomReloadData.userZoom) {
-                            userZoom = zoomReloadData.userZoom;
+            forerunner.config.getDBConfiguration(function (config) {
+                if (me.options.dbConfig == null)
+                    me.options.dbConfig = config;
+
+                me._render();
+
+                if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
+                    // if the viewer is full screen, we will set up the viewport here. Note that on Windows
+                    // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
+                    // with the meta tag.
+                    var $viewportStyle = $("#fr-viewport-style");
+                    if ($viewportStyle.length === 0) {
+                        var userZoom = "fixed";
+                        if (sessionStorage.forerunner_zoomReload_userZoom) {
+                            var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                            delete sessionStorage.forerunner_zoomReload_userZoom;
+                            var zoomReloadData = JSON.parse(zoomReloadStringData);
+                            if (zoomReloadData.userZoom) {
+                                userZoom = zoomReloadData.userZoom;
+                            }
+                        }
+
+                        $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
+                        //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
+                        var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                        $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
+
+                        // Show the unzoom toolbar
+                        if (userZoom === "zoom") {
+                            forerunner.device.allowZoom(true);
+                            me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
                         }
                     }
-
-                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
-                    //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                    var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
-                    $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
-
-                    // Show the unzoom toolbar
-                    if (userZoom === "zoom") {
-                        forerunner.device.allowZoom(true);
-                        me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
-                    }
                 }
-            }
+            });
         },
         /**
          * Call this function when the handleWindowResize is set to true. It
@@ -20084,6 +20089,7 @@ $(function () {
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation in the report
      *                                          viewer toolbar. Defaults to true.
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {String} options.rsInstance - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
@@ -20095,13 +20101,13 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: {},
+            dbConfig: null,
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {
             var me = this;
-            
-            forerunner.ajax.getUserSetting(me.options.rsInstance,function(settings){
+                       
+            forerunner.ajax.getUserSetting(me.options.rsInstance, function (settings) {
                 var layout = me.DefaultAppTemplate;
 
                 var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
@@ -20127,7 +20133,7 @@ $(function () {
                 });
 
                 me.DefaultAppTemplate.bindExplorerEvents();
-            });
+            });            
         },
 
         // Initialize our internal navigateTo processing
@@ -20677,17 +20683,27 @@ $(function () {
             var me = this;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
                 locData = loc;
-            
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
-                $container: me.element,
-                isFullScreen: me.options.isFullScreen
-            }).render();
-            
-            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
-            if (!me.options.navigateTo) {
-                me._initNavigateTo();
-            }
+                forerunner.config.getCustomSettings(function (settings) {
+                    if (me.options.explorerSettings == null)
+                        me.options.explorerSettings = settings;
+
+                    forerunner.config.getDBConfiguration(function (config) {
+                        if (me.options.dbConfig == null)
+                            me.options.dbConfig = config;
+
+                        me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                            $container: me.element,
+                            isFullScreen: me.options.isFullScreen
+                        }).render();
+
+                        me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+
+                        if (!me.options.navigateTo) {
+                            me._initNavigateTo();
+                        }
+                    });
+                });
             });
 
         },

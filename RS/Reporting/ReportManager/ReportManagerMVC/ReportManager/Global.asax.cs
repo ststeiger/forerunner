@@ -27,6 +27,7 @@ namespace ReportManager
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
+
         protected void Application_End()
         {
             System.Diagnostics.Trace.Flush();

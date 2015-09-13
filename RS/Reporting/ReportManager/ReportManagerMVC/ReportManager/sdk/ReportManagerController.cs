@@ -59,7 +59,7 @@ namespace ReportManager.Controllers
         static private string DefaultLoc = ConfigurationManager.AppSettings["Forerunner.DefaultLoc"];
         static private Dictionary<string, CacheData> CachedProperties = new Dictionary<string, CacheData>();
         static private string EmptyJSONObject = "{}";
-
+   
         public class CacheData
         {
             public JObject LocData = null;
@@ -108,7 +108,7 @@ namespace ReportManager.Controllers
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
-            }
+             }
 
             return resp;
         }
@@ -1577,6 +1577,33 @@ namespace ReportManager.Controllers
                 ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).ReadMobilizerVersion(MobilizerVersionPath));
+                });
+                return GetResponseFromBytes(retval, "text/JSON");
+
+            }
+            catch (Exception ex)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(ex)), "text/JSON");
+            }
+        }
+
+        /// <summary>
+        /// Returns the requested loc file
+        /// </summary>
+        /// <param name="LocFile"></param>
+        /// <param name="instance"></param>
+        /// <returns>Returns the requested loc file</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage GetMobilizerLocFile(string LocFile,string instance = null)
+        {
+            // This endpoint does not read or write to the ReportServer DB and is therefore safe for all customers
+            try
+            {
+                byte[] retval = null;
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    retval = GetReportManager(instance).ReadMobilizerLocFile(LocFile);
                 });
                 return GetResponseFromBytes(retval, "text/JSON");
 

@@ -32,7 +32,7 @@ namespace ReportManager.Controllers
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = ForerunnerUtil.GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
-        
+
         static  ReportViewerController()
         {
             ForerunnerUtil.CheckSSLConfig();
@@ -73,6 +73,7 @@ namespace ReportManager.Controllers
 
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
+ 
                 if (fileName != null)
                 {
                     try
@@ -472,10 +473,11 @@ namespace ReportManager.Controllers
         [ActionName("LoginUrl")]
         public HttpResponseMessage LoginUrl()
         {
+            string response = "";
             try
             {
                 string loginUrl = Forerunner.Security.AuthenticationMode.GetLoginUrl();
-                string response = "{\"LoginUrl\" : \"" + loginUrl + "\"}";
+                response = "{\"LoginUrl\" : \"" + loginUrl + "\"}";
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(response), "text/JSON");
             }
             catch (Exception e)

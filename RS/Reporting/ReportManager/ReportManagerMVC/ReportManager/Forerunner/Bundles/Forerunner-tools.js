@@ -547,7 +547,7 @@ $(function () {
             visibilityOrder: 2,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
                 }
             }
         }
@@ -1351,7 +1351,7 @@ $(function () {
             visibilityOrder: 2,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
                 }
             }
         },
@@ -1530,7 +1530,7 @@ $(function () {
             text:  function () { return locData.toolbar.logOff; },
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-logOff"]);
                 }
             }
@@ -1781,7 +1781,7 @@ $(function () {
             visibilityOrder: 12,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + + "../Login/LogOff?returnUrl=" + window.location.href;
                 }
             }
         }
@@ -1844,7 +1844,7 @@ $(function () {
             text:  function () { return locData.toolbar.logOff; },
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
                 }
             }
         },

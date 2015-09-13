@@ -159,8 +159,8 @@ $(function () {
             me.addTools(1, false, me._viewerItems());
 
             forerunner.ajax.isFormsAuth(function (isForms) {
-                if (!isForms)
-                    me.hideTool(tp.itemLogOff.selectorClass);
+                if (!isForms && forerunner.ssr.tools.toolpane.itemLogOff)
+                    me.hideTool(forerunner.ssr.tools.toolpane.itemLogOff.selectorClass);
             });
 
 

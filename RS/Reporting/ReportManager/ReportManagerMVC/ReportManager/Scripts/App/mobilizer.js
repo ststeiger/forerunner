@@ -8,13 +8,7 @@ $(function () {
         //If CORS support needed
         //forerunner.config.enableCORSWithCredentials = true;
 
-        forerunner.config.getCustomSettings(function (settings) {
-            forerunner.config.getDBConfiguration(function (config) {
-                me.explorer = $("body").reportExplorerEZ({
-                    explorerSettings: settings,
-                    dbConfig: config
-                });
-            });
-        });           
+        me.explorer = $("body").reportExplorerEZ({
+        });
     });
 });

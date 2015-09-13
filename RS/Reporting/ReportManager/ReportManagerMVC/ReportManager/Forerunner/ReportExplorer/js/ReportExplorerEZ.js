@@ -54,6 +54,7 @@ $(function () {
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation in the report
      *                                          viewer toolbar. Defaults to true.
 	 * @prop {Object} options.explorerSettings - Optional,Object that stores custom explorer style settings
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {String} options.rsInstance - Optional,Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ();
@@ -65,13 +66,13 @@ $(function () {
             isFullScreen: true,
             showBreadCrumb: true,
             explorerSettings: null,
-            dbConfig: {},
+            dbConfig: null,
             rsInstance: null,
         },
         _createReportExplorer: function (showmainesection) {
             var me = this;
-            
-            forerunner.ajax.getUserSetting(me.options.rsInstance,function(settings){
+                       
+            forerunner.ajax.getUserSetting(me.options.rsInstance, function (settings) {
                 var layout = me.DefaultAppTemplate;
 
                 var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
@@ -97,7 +98,7 @@ $(function () {
                 });
 
                 me.DefaultAppTemplate.bindExplorerEvents();
-            });
+            });            
         },
 
         // Initialize our internal navigateTo processing
@@ -647,17 +648,27 @@ $(function () {
             var me = this;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
                 locData = loc;
-            
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
-                $container: me.element,
-                isFullScreen: me.options.isFullScreen
-            }).render();
-            
-            me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
-            if (!me.options.navigateTo) {
-                me._initNavigateTo();
-            }
+                forerunner.config.getCustomSettings(function (settings) {
+                    if (me.options.explorerSettings == null)
+                        me.options.explorerSettings = settings;
+
+                    forerunner.config.getDBConfiguration(function (config) {
+                        if (me.options.dbConfig == null)
+                            me.options.dbConfig = config;
+
+                        me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                            $container: me.element,
+                            isFullScreen: me.options.isFullScreen
+                        }).render();
+
+                        me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+
+                        if (!me.options.navigateTo) {
+                            me._initNavigateTo();
+                        }
+                    });
+                });
             });
 
         },

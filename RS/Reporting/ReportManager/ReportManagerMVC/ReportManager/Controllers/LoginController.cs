@@ -69,7 +69,7 @@ namespace ReportManager.Controllers
         {
             if (returnUrl == null)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");                
             }
             else
             {
@@ -78,11 +78,18 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public ActionResult LogOff()
+        public ActionResult LogOff(string returnUrl)
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            if (returnUrl == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return Redirect(returnUrl);
+            }
         }
     }
 }

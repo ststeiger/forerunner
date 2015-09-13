@@ -903,7 +903,7 @@ $(function () {
                 if (done)
                     doAsync = true;
 
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: doAsync,                    
@@ -994,7 +994,7 @@ $(function () {
                 if (done)
                     doAsync = true;
 
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: doAsync,
@@ -1848,7 +1848,8 @@ $(function () {
                 // This does not need to be wrapped because this should
                 // not require authn,
                 forerunner.ajax.ajax({
-                    url: locFileLocation + "-" + lang + ".txt",
+                    url: forerunner.config.forerunnerAPIBase() + "reportManager/GetMobilizerLocFile" ,
+                    data: { LocFile: locFileLocation + "-" + lang + ".txt" },
                     dataType: dataType,
                     async: doAsync,
                     success: function (data) {
@@ -1907,30 +1908,42 @@ $(function () {
             var doAsync = false;
             if (done)
                 doAsync = true;
+            
+            //setup wait loop
+            var loop = function () {
+                if (me.getLoginURLLock === true)
+                    setTimeout(loop, 5);
+                else
+                    done(me.loginUrl);
+            };
+            if (me.getLoginURLLock === true && doAsync=== true) {
+                loop();                
+            }
 
-            if (!me.loginUrl) {
-                var returnValue = null;
+
+            if (!me.loginUrl && me.getLoginURLLock !== true) {
+                me.getLoginURLLock = true;
                 forerunner.ajax.ajax({
                     url: forerunner.config.forerunnerAPIBase() + "reportViewer/LoginUrl",
                     dataType: "json",
                     async: doAsync,
                     success: function (data) {
-                        me.loginUrl = data.LoginUrl;
+                        me.loginUrl = data.LoginUrl.replace("~", "");;
+                        me.getLoginURLLock = false;
                         if (done)
                             done(me.loginUrl);
                     },
                     fail: function () {
-                        returnValue = null;
+                        me.loginUrl = "";
+                        me.getLoginURLLock = false;
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        returnValue = null;
+                        me.loginUrl = "";
+                        me.getLoginURLLock = false;
                     },
                 });
 
-                if (returnValue) {
-                    this.loginUrl = returnValue.LoginUrl.replace("~", "");
-                }
-            }
+            }           
             else if (done)
                 done(me.loginUrl);
 
@@ -1940,14 +1953,16 @@ $(function () {
         _handleRedirect: function (data) {
             var me = this;
             if (data.status === 401 || data.status === 302) {
-                    me._getLoginUrl(function (loginUrl ) {
+                me._getLoginUrl(function (loginUrl) {
                     var urlParts = document.URL.split("#");
-                    var redirectTo = forerunner.config.forerunnerFolder() + "../" + loginUrl + "?ReturnUrl=" + urlParts[0];
-                    if (urlParts.length > 1) {
-                        redirectTo += "&HashTag=";
-                        redirectTo += urlParts[1];
+                    if (loginUrl !== "" && urlParts[0].indexOf("?ReturnUrl") < 0 ) {                        
+                        var redirectTo =  loginUrl + "?ReturnUrl=" + urlParts[0];
+                        if (urlParts.length > 1) {
+                            redirectTo += "&HashTag=";
+                            redirectTo += urlParts[1];
+                        }
+                        window.location.href = redirectTo;
                     }
-                    window.location.href = redirectTo;
                 });
             }
         },
@@ -1970,7 +1985,8 @@ $(function () {
             
             if (forerunner.config.enableCORSWithCredentials) {
                 options.xhrFields = {
-                    withCredentials: true
+                    withCredentials: true,
+                    crossDomain:true
                 };
             }
 
@@ -2004,14 +2020,12 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            // TODO V4
-            // We need to enable CORS support
-            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            //if (enableWithCredentials) {
-            //    options.xhrFields = {
-            //        withCredentials: true
-            //    };
-            //}
+            if (forerunner.config.enableCORSWithCredentials) {
+                options.xhrFields = {
+                    withCredentials: true,
+                    crossDomain: true
+                };
+            }
 
             return $.getJSON(url, options)
             .done(function (data) {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Configuration;
 using System.Configuration;
+using System.Web;
 
 namespace Forerunner.Security
 {
@@ -19,8 +20,11 @@ namespace Forerunner.Security
                 {
                     AuthenticationSection sec = (AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication");
                     instance.mode = sec.Mode;
-                    if (instance.mode == System.Web.Configuration.AuthenticationMode.Forms)
-                    instance.loginUrl = sec.Forms.LoginUrl; 
+                    if (instance.mode == System.Web.Configuration.AuthenticationMode.Forms){
+                        string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+
+                        instance.loginUrl = baseUrl + sec.Forms.LoginUrl.Replace("~",""); 
+                    }
                     isInit = true;
                 }
             }

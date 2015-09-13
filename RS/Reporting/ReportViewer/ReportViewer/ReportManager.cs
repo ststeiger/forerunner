@@ -2570,6 +2570,52 @@ namespace Forerunner.SSRS.Manager
             return MobilizerSetting;
         }
 
+        private Dictionary<string,byte[]> LocFiles = new Dictionary<string,byte[]>();
+        static private string LocFileFolder = ConfigurationManager.AppSettings["Forerunner.LocFileFolder"];
+
+        public byte[] ReadMobilizerLocFile(string path)
+        {
+            if (LocFileFolder == null || LocFileFolder == "")
+                LocFileFolder = "forerunner/reportViewer/Loc/";
+
+            byte[] result = null;
+            string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + LocFileFolder + Path.GetFileName(path);
+
+            if (!LocFiles.TryGetValue(filePath, out result))
+            {
+                lock (LocFiles)
+                {
+
+                    if (File.Exists(filePath))
+                        {
+                            result = File.ReadAllBytes(filePath);
+                            LocFiles.Add(filePath, result);
+                        }
+                        else
+                        {
+                            LocFiles.Add(path, null);
+                        }
+
+                        //watch the version file.
+                        if (File.Exists(filePath))
+                        {
+                            FileSystemWatcher watcher = new FileSystemWatcher();
+
+                            watcher.Path = Path.GetDirectoryName(filePath);
+                            watcher.Filter = Path.GetFileName(filePath);
+
+                            //if the file change re-read the content and set the version number
+                            watcher.Changed += new FileSystemEventHandler(MobilizerLocFile_OnChange);
+
+                            //begin watching.
+                            watcher.EnableRaisingEvents = true;
+                        }
+                    }
+                }
+            return result;
+            }
+        
+
         public string ReadMobilizerVersion(string path)
         {
             if (VersionNumber == null || VersionNumber == String.Empty)
@@ -2603,6 +2649,19 @@ namespace Forerunner.SSRS.Manager
             }
 
             return VersionNumber;
+        }
+
+        private void MobilizerLocFile_OnChange(object sender, FileSystemEventArgs e)
+        {
+            byte[] result = null;
+
+            result = File.ReadAllBytes(e.FullPath);
+            lock (LocFiles)
+            {
+                LocFiles[e.FullPath] = result;                
+            }
+            
+            
         }
 
         private void MobilizerVersion_OnChange(object sender, FileSystemEventArgs e)

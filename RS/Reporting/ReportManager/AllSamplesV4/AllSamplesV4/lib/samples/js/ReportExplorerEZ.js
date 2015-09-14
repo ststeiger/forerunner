@@ -14,9 +14,12 @@ $(function () {
             }
             $sampleArea = allSamples.getSampleArea(target);
 
+            var dbConfig = forerunner.config.getDBConfiguration();
+
             // Create the report explorer widget
             $sampleArea.reportExplorerEZ({
-                isFullScreen: false
+                isFullScreen: false,
+                dbConfig: dbConfig
             });
 
             var events = forerunner.ssr.constants.events;

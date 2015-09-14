@@ -7,8 +7,11 @@
   $(function () {
     var $reportArea = $("body");
 
+    var dbConfig = forerunner.config.getDBConfiguration();
+
     // Create the report explorer widget
     $reportArea.reportExplorerEZ({
+      dbConfig: dbConfig
     });
 
   })  // function ()

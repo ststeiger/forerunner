@@ -379,7 +379,9 @@
     <Compile Include="sdk\ReportViewerController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Forerunner\ReportViewer\images\toolpane\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\images\Toolbar\Thumbs.db" />
     <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />

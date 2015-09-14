@@ -5528,13 +5528,15 @@ $(function () {
             var events = forerunner.ssr.constants.events;
 
 
-            //Add double tap to bring up menu.  This resets zoom level on some browsers.
-            me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
-                ev.preventDefault();
-                ev.gesture.preventDefault();
-                me.showSlideoutPane(widgets.toolbar, true);
+            if (forerunner.device.isMobile()) {
+                //Add double tap to bring up menu.  This resets zoom level on some browsers.
+                me.$container.hammer({ stop_browser_behavior: { userSelect: false } }).on("doubletap", function (ev) {
+                    ev.preventDefault();
+                    ev.gesture.preventDefault();
+                    me.showSlideoutPane(widgets.toolbar, true);
 
-            });
+                });
+            }
            
             // Handle any / all layout changes when the history routes change
             forerunner.history.on(events.historyRoute(), function (e, data) {
@@ -15841,7 +15843,7 @@ $(function () {
             //for cascading hidden elements, don't add null / use default checkbox constraint
             //they are assist elements to generate parameter list
             if (!$parent.hasClass("fr-param-tree-hidden")) {
-                if (param.QueryParameter === false) {
+                if (param.ValidValues === "") {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
                 }
 
@@ -19085,11 +19087,11 @@ $(function () {
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
-     * @prop {Boolean} options.userSettings - Custom user setting
-     * @prop {Object} options.userSettings - Database configuration
+     * @prop {Object} options.userSettings - Custom user setting
+     * @prop {Object} options.dbConfig - Database configuration
      * @prop {String} options.rsInstance - Report service instance name
      * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isReportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
-     * @prop {Boolean} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
+     * @prop {String} options.toolbarConfigOption - Defaults to forerunner.ssr.constants.toolbarConfigOption.full
      * @prop {Boolean} options.handleWindowResize - Handle the window resize events automatically. In cases such as dashboards this can be set to false. Call resize in this case.
      * @prop {Boolean} options.showBreadCrumb - A flag to determine whether show breadcrumb navigation upon the toolbar. Defaults to false.
      * @prop {String} options.zoom- Zoom factor. Defaults to 100.
@@ -19097,8 +19099,8 @@ $(function () {
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
-     *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack
+     *  navigateTo: navigateTo,
+     *  historyBack: historyBack
      *  isReportManager: false,
      *  userSettings: userSettings
      * });
@@ -21014,9 +21016,12 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
+                if (me.$cc.val() !== "" && me.$cc.val() !== null && me.$cc.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
+                if (me.$bcc.val() !== "" && me.$bcc.val() !== null && me.$bcc.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
+                if (me.$replyTo.val() !== "" && me.$replyTo.val() !== null && me.$replyTo.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });

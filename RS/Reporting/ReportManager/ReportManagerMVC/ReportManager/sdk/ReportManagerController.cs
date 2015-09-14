@@ -1872,6 +1872,7 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetDBConfig(string instance = null)
         {
+            
             try
             {
                 byte[] retval = null;

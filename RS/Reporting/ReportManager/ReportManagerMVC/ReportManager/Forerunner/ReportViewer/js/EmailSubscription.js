@@ -180,9 +180,12 @@ $(function () {
                 me._subscriptionData.ExtensionSettings.Extension = "Report Server Email";
                 me._subscriptionData.ExtensionSettings.ParameterValues = [];
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "TO", "Value": me.$to.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
-                me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
+                if (me.$cc.val() !== "" && me.$cc.val() !== null && me.$cc.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "CC", "Value": me.$cc.val() });
+                if (me.$bcc.val() !== "" && me.$bcc.val() !== null && me.$bcc.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "BCC", "Value": me.$bcc.val() });
+                if (me.$replyTo.val() !== "" && me.$replyTo.val() !== null && me.$replyTo.val() !== undefined)
+                    me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "ReplyTo", "Value": me.$replyTo.val() });
                 me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Subject", "Value": me.$subject.val() });
                 if (me._canEditComment)
                     me._subscriptionData.ExtensionSettings.ParameterValues.push({ "Name": "Comment", "Value": me.$comment.val() });

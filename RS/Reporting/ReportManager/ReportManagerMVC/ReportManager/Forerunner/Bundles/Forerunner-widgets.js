@@ -4551,10 +4551,12 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
-            if (toolInfo.tooltip) {
-                $tool.attr("title", toolInfo.tooltip);
-            }
-
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                if (toolInfo.tooltip) {
+                    $tool.attr("title", toolInfo.tooltip);
+                }
+            });
+            
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
             }
@@ -4960,11 +4962,14 @@ $(function () {
             var text;
             var me = this;
 
+            //Make sure loc files is loaded
             if (typeof toolInfo.text === "function")
                 text = toolInfo.text({ $reportViewer: me.options.$reportViewer });
             else
                 text = toolInfo.text;
+            
             return text;
+            
         },
         _removeEvent: function ($toolEl, toolInfo) {
             var me = this;
@@ -5002,7 +5007,11 @@ $(function () {
             //inilialize widget data
             me.frozen = false;
 
-            me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
+            forerunner.config.getCustomSettings(function () {
+                me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
+            });
+
+            
         }
     });  // $.widget
 
@@ -19047,12 +19056,7 @@ $(function () {
 
         me.parameterModel = null;
         me.subscriptionModel = null;
-        if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
-            // Create the parameter model object for this report
-            me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
-            // Create the subscription model object for this report
-            me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
-        }
+       
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -19063,13 +19067,8 @@ $(function () {
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;
-
             var userSettings = me.options.userSettings;
-            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
-                userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
-            }
 
-            me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
                 jsonPath: me.options.jsonPath,
@@ -19083,162 +19082,185 @@ $(function () {
                 showSubscriptionOnOpen: me.options.showSubscriptionOnOpen
             });
 
-            // Create / render the toolbar
-            var $toolbar = me.options.$toolbar;
-            $toolbar.toolbar({
-                dbConfig: me.options.dbConfig,
-                $reportViewer: $viewer,
-                $ReportViewerInitializer: this,
-                $appContainer: me.options.$appContainer
-            });
 
-            var tb = forerunner.ssr.tools.mergedButtons;
-            var rtb = forerunner.ssr.tools.rightToolbar;
+            forerunner.config.getDBConfiguration(function (config) {
+                if (me.options.dbConfig === null)
+                    me.options.dbConfig = config;
 
-            if (me.options.isReportManager) {
-                var listOfButtons = [];
-                //add home button if user enable it
-                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
-                    listOfButtons.push(tb.btnHome);
+                if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+                    // Create the parameter model object for this report
+                    me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
+                    // Create the subscription model object for this report
+                    me.subscriptionModel = $({}).subscriptionModel({ rsInstance: me.options.rsInstance });
                 }
 
-                if (me.options.dbConfig.UseMobilizerDB === true) {
-                    if (me.options.dbConfig.SeperateDB !== true) {
-                        listOfButtons.push(tb.btnRecent);
-                    }
+               
 
-                    listOfButtons.push(tb.btnFavorite);
+                if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
+                    userSettings = forerunner.ajax.getUserSetting(me.options.rsInstance);
                 }
 
-                listOfButtons.push(tb.btnLogOff);
+                me.options.$docMap.hide();
+               
 
-                $toolbar.toolbar("addTools", 12, true, listOfButtons);
-
-                forerunner.ajax.isFormsAuth(function (isForms) {
-                    if (!isForms)
-                        $toolbar.toolbar("hideTool", tb.btnLogOff.selectorClass);                        
+                // Create / render the toolbar
+                var $toolbar = me.options.$toolbar;
+                $toolbar.toolbar({
+                    dbConfig: me.options.dbConfig,
+                    $reportViewer: $viewer,
+                    $ReportViewerInitializer: me,
+                    $appContainer: me.options.$appContainer
                 });
 
-                if (me.options.dbConfig.UseMobilizerDB === true) {
-                    $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
-                    $toolbar.toolbar("disableTools", [tb.btnFav]);
-                }
-            }
+                var tb = forerunner.ssr.tools.mergedButtons;
+                var rtb = forerunner.ssr.tools.rightToolbar;
 
-            if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
-                $toolbar.hide();
-            } else {
-                if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
-                    $toolbar.toolbar("configure", me.options.toolbarConfigOption);
-                }
-                // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
-                var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
+                if (me.options.isReportManager) {
+                    var listOfButtons = [];
+                    //add home button if user enable it
+                    if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
+                        listOfButtons.push(tb.btnHome);
+                    }
 
-                $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
-                $toolbar.show();
-            }
-
-            var $unzoomtoolbar = me.options.$unzoomtoolbar;
-            if ($unzoomtoolbar !== null) {
-                $unzoomtoolbar.unzoomToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
-            }
-
-            var $lefttoolbar = me.options.$lefttoolbar;
-            if ($lefttoolbar !== null) {
-                $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
-            }
-
-            var $righttoolbar = me.options.$righttoolbar;
-            if ($righttoolbar !== null) {
-                $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
-            }
-
-            if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
-            }
-
-            // Create / render the menu pane
-            var mi = forerunner.ssr.tools.mergedItems;
-            var $toolPane = me.options.$toolPane.toolPane({
-                dbConfig: me.options.dbConfig,
-                $reportViewer: $viewer,
-                $ReportViewerInitializer: this,
-                $appContainer: me.options.$appContainer
-            });
-
-            //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
-            me.favoriteInstance = null;
-            me.favoriteInstance = $({}).favoriteModel({
-                $toolbar: me.options.$toolbar,
-                $toolpane: me.options.$toolPane,
-                $appContainer: me.options.$appContainer,
-                rsInstance: me.options.rsInstance
-            });
-
-            if (me.options.isReportManager) {
-                if (me.options.dbConfig.UseMobilizerDB === true) {
-                    $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
-                    $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
-                    $toolPane.toolPane("disableTools", [mi.itemFav]);
-
-                    $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                        $toolPane.toolPane("enableTools", [mi.itemFav]);
-                        $toolbar.toolbar("enableTools", [tb.btnFav]);
-                    });
-
-                    $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
-                    });
-
-                    $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                        me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
-                    });
-
-                    $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
-                        if (data.newPath) {
-                            me.favoriteInstance.favoriteModel("setFavoriteState", data.newPath);
+                    if (me.options.dbConfig.UseMobilizerDB === true) {
+                        if (me.options.dbConfig.SeperateDB !== true) {
+                            listOfButtons.push(tb.btnRecent);
                         }
+
+                        listOfButtons.push(tb.btnFavorite);
+                    }
+
+                    listOfButtons.push(tb.btnLogOff);
+
+                    $toolbar.toolbar("addTools", 12, true, listOfButtons);
+
+                    forerunner.ajax.isFormsAuth(function (isForms) {
+                        if (!isForms)
+                            $toolbar.toolbar("hideTool", tb.btnLogOff.selectorClass);
                     });
-                }               
-            }
 
-            var $nav = me.options.$nav;
-            if ($nav !== null) {
-                $nav.pageNav({ $reportViewer: $viewer, $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
-                $viewer.reportViewer("option", "pageNavArea", $nav);
-            }
-            
-            var $paramarea = me.options.$paramarea;
-            if ($paramarea !== null) {
-                $paramarea.reportParameter({ $reportViewer: $viewer });
-                $viewer.reportViewer("option", "paramArea", $paramarea);
-            }
-
-            var $dlg;
-            $dlg = me._findSection("fr-print-section");
-            $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
-
-            if (me.options.dbConfig.UseMobilizerDB === true) {
-                $dlg = me._findSection("fr-managesubscription-section");
-                $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
-
-                $dlg = me._findSection("fr-emailsubscription-section");
-                $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
-
-                if (me.parameterModel) {
-                    $dlg = me._findSection("fr-mps-section");
-                    $dlg.manageParamSets({
-                        $appContainer: me.options.$appContainer,
-                        $reportViewer: $viewer,
-                        $reportViewerInitializer: me,
-                        model: me.parameterModel
-                    });
-                    me._manageParamSetsDialog = $dlg;
+                    if (me.options.dbConfig.UseMobilizerDB === true) {
+                        $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
+                        $toolbar.toolbar("disableTools", [tb.btnFav]);
+                    }
                 }
-            }
 
-            $dlg = me._findSection("fr-dsc-section");
-            $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+                if (me.options.toolbarConfigOption === constants.toolbarConfigOption.hide) {
+                    $toolbar.hide();
+                } else {
+                    if (me.options.toolbarConfigOption && me.options.toolbarConfigOption !== constants.toolbarConfigOption.full) {
+                        $toolbar.toolbar("configure", me.options.toolbarConfigOption);
+                    }
+                    // Let the report viewer know the height of the toolbar (toolbar height + route link section height)
+                    var toolbarHeight = $toolbar.outerHeight() + (me.options.$routeLink.is(":visible") ? me.options.$routeLink.outerHeight() : 0);
+
+                    $viewer.reportViewer("option", "toolbarHeight", toolbarHeight);
+                    $toolbar.show();
+                }
+
+                var $unzoomtoolbar = me.options.$unzoomtoolbar;
+                if ($unzoomtoolbar !== null) {
+                    $unzoomtoolbar.unzoomToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
+                }
+
+                var $lefttoolbar = me.options.$lefttoolbar;
+                if ($lefttoolbar !== null) {
+                    $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
+                }
+
+                var $righttoolbar = me.options.$righttoolbar;
+                if ($righttoolbar !== null) {
+                    $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: me, $appContainer: me.options.$appContainer });
+                }
+
+                if (me.options.dbConfig.UseMobilizerDB === true && (me.options.isReportManager || me.options.useReportManagerSettings)) {
+                    $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                }
+
+                // Create / render the menu pane
+                var mi = forerunner.ssr.tools.mergedItems;
+                var $toolPane = me.options.$toolPane.toolPane({
+                    dbConfig: me.options.dbConfig,
+                    $reportViewer: $viewer,
+                    $ReportViewerInitializer: me,
+                    $appContainer: me.options.$appContainer
+                });
+
+                //favoriteModel dependence on toolbar and toolpane, so run initialization after those done
+                me.favoriteInstance = null;
+                me.favoriteInstance = $({}).favoriteModel({
+                    $toolbar: me.options.$toolbar,
+                    $toolpane: me.options.$toolPane,
+                    $appContainer: me.options.$appContainer,
+                    rsInstance: me.options.rsInstance
+                });
+
+                if (me.options.isReportManager) {
+                    if (me.options.dbConfig.UseMobilizerDB === true) {
+                        $toolPane.toolPane("addTools", 2, true, [mi.itemFolders]);
+                        $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
+                        $toolPane.toolPane("disableTools", [mi.itemFav]);
+
+                        $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                            $toolPane.toolPane("enableTools", [mi.itemFav]);
+                            $toolbar.toolbar("enableTools", [tb.btnFav]);
+                        });
+
+                        $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                            me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
+                        });
+
+                        $viewer.on(events.reportViewerChangeReport(), function (e, data) {
+                            me.favoriteInstance.favoriteModel("setFavoriteState", $viewer.reportViewer("getReportPath"));
+                        });
+
+                        $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                            if (data.newPath) {
+                                me.favoriteInstance.favoriteModel("setFavoriteState", data.newPath);
+                            }
+                        });
+                    }
+                }
+
+                var $nav = me.options.$nav;
+                if ($nav !== null) {
+                    $nav.pageNav({ $reportViewer: $viewer, $appContainer: me.options.$appContainer, rsInstance: me.options.rsInstance });
+                    $viewer.reportViewer("option", "pageNavArea", $nav);
+                }
+
+                var $paramarea = me.options.$paramarea;
+                if ($paramarea !== null) {
+                    $paramarea.reportParameter({ $reportViewer: $viewer });
+                    $viewer.reportViewer("option", "paramArea", $paramarea);
+                }
+
+                var $dlg;
+                $dlg = me._findSection("fr-print-section");
+                $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+                if (me.options.dbConfig.UseMobilizerDB === true) {
+                    $dlg = me._findSection("fr-managesubscription-section");
+                    $dlg.manageSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel });
+
+                    $dlg = me._findSection("fr-emailsubscription-section");
+                    $dlg.emailSubscription({ $appContainer: me.options.$appContainer, $reportViewer: $viewer, subscriptionModel: me.subscriptionModel, userSettings: userSettings });
+
+                    if (me.parameterModel) {
+                        $dlg = me._findSection("fr-mps-section");
+                        $dlg.manageParamSets({
+                            $appContainer: me.options.$appContainer,
+                            $reportViewer: $viewer,
+                            $reportViewerInitializer: me,
+                            model: me.parameterModel
+                        });
+                        me._manageParamSetsDialog = $dlg;
+                    }
+                }
+
+                $dlg = me._findSection("fr-dsc-section");
+            
+                $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+            });
         },
         _findSection: function (sectionClass) {
             var me = this;
@@ -19545,41 +19567,39 @@ $(function () {
                 me.DefaultAppTemplate.$linksection.hide();
             }
 
-            forerunner.config.getDBConfiguration(function (config) {
-                if (me.options.dbConfig == null)
-                    me.options.dbConfig = config;
+            
 
-                me._render();
+            me._render();
 
-                if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
-                    // if the viewer is full screen, we will set up the viewport here. Note that on Windows
-                    // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
-                    // with the meta tag.
-                    var $viewportStyle = $("#fr-viewport-style");
-                    if ($viewportStyle.length === 0) {
-                        var userZoom = "fixed";
-                        if (sessionStorage.forerunner_zoomReload_userZoom) {
-                            var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
-                            delete sessionStorage.forerunner_zoomReload_userZoom;
-                            var zoomReloadData = JSON.parse(zoomReloadStringData);
-                            if (zoomReloadData.userZoom) {
-                                userZoom = zoomReloadData.userZoom;
-                            }
-                        }
-
-                        $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
-                        //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                        var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
-                        $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
-
-                        // Show the unzoom toolbar
-                        if (userZoom === "zoom") {
-                            forerunner.device.allowZoom(true);
-                            me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
+                // if the viewer is full screen, we will set up the viewport here. Note that on Windows
+                // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
+                // with the meta tag.
+                var $viewportStyle = $("#fr-viewport-style");
+                if ($viewportStyle.length === 0) {
+                    var userZoom = "fixed";
+                    if (sessionStorage.forerunner_zoomReload_userZoom) {
+                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                        delete sessionStorage.forerunner_zoomReload_userZoom;
+                        var zoomReloadData = JSON.parse(zoomReloadStringData);
+                        if (zoomReloadData.userZoom) {
+                            userZoom = zoomReloadData.userZoom;
                         }
                     }
+
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
+                    //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
+                    var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
+
+                    // Show the unzoom toolbar
+                    if (userZoom === "zoom") {
+                        forerunner.device.allowZoom(true);
+                        me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+                    }
                 }
-            });
+            }
+            
         },
         /**
          * Call this function when the handleWindowResize is set to true. It
@@ -19669,10 +19689,11 @@ $(function () {
          * 
          * @return {Object} - report viewer jQuery object
          */
-        getReportViewer: function () {
+        getReportViewer: function (done) {
             var me = this;
 
             if (me.DefaultAppTemplate) {
+
                 var $viewer = me.DefaultAppTemplate.$mainsection.find(".fr-layout-reportviewer");
                 if ($viewer.length !== 0) {
                     return $viewer;

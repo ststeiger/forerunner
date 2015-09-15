@@ -51,7 +51,9 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            tooltip: function () { return  locData.toolbar.menu;},
+            tooltip: function () {
+                return locData.toolbar.menu;
+            },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.menuClick, null, {});
@@ -1780,7 +1782,7 @@ $(function () {
             visibilityOrder: 12,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + + "../Login/LogOff?returnUrl=" + window.location.href;
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
                 }
             }
         }

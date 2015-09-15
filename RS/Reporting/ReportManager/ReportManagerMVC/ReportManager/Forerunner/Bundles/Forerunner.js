@@ -984,6 +984,39 @@ $(function () {
         setDBConfiguration: function (dbConfig) {
             forerunner.config._dbConfig = dbConfig;
         },
+
+        /**
+         * Initialize Forerunner objects
+         * Must be called first, function is Async
+         *
+         * @param {function} done - function to call when done
+         */
+        initialize: function (done){
+            var me = this;
+
+            var loop = function () {
+                if (me.configDone === true && me.settingsDone === true && me.locDone === true) {
+                    if (done)
+                        done();
+                }
+                else {
+                    setTimeout(loop, 5);
+                }
+            }
+
+            me.getDBConfiguration(function () {
+                me.configDone = true;
+            });
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                me.locDone = true
+            });
+            
+            me.getCustomSettings(function () {
+                me.settingsDone = true;
+            });
+            loop();
+        },
+        
         // internal used
         getDBConfiguration: function (done) {
             var me = this;
@@ -1009,7 +1042,7 @@ $(function () {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         forerunner.config.setDBConfiguration({});
-                        console.log("Load mobilizer custom settings.  textStatus: " + textStatus);
+                        console.log("Load mobilizer configuration failed.  textStatus: " + textStatus);
                         console.log(jqXHR);
                         if (done) done(forerunner.config._dbConfig);
                     },
@@ -1928,7 +1961,7 @@ $(function () {
                     dataType: "json",
                     async: doAsync,
                     success: function (data) {
-                        me.loginUrl = data.LoginUrl.replace("~", "");;
+                        me.loginUrl = data.LoginUrl.replace("~", "");
                         me.getLoginURLLock = false;
                         if (done)
                             done(me.loginUrl);
@@ -2019,25 +2052,17 @@ $(function () {
         */
         getJSON: function (url, options, done, fail) {
             var me = this;
+            
+            var requestOptions = {};
+            requestOptions.data = options;
+            requestOptions.done = done;
+            requestOptions.fail = fail;
+            requestOptions.dataType = "json";
+            requestOptions.url = url;
 
-            if (forerunner.config.enableCORSWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true,
-                    crossDomain: true
-                };
-            }
+            return me.ajax(requestOptions);
 
-            return $.getJSON(url, options)
-            .done(function (data) {
-                if (done)
-                    done(data);
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                me._handleRedirect(jqXHR);
-                console.log(jqXHR);
-                if (fail)
-                    fail(jqXHR, textStatus, errorThrown, this);
-            });
+            
         },
         /**
         * Makes a "POST" type ajax request and if the response status 401 or 302, it will redirect to login page. 

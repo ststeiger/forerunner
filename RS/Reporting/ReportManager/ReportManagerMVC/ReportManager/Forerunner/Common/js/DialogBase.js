@@ -13,7 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
    
 
     /**
@@ -51,24 +51,21 @@ $(function () {
         _init: function () {
             var me = this;
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-            
-            if (!me.options.title) me.options.title = locData.dialogBase.title;
-            if (!me.options.actionWord) me.options.actionWord = locData.dialogBase.submit;
-            if (!me.options.cancelWord) me.options.cancelWord = locData.dialogBase.cancel;
+            if (!me.options.title) me.options.title = locData.getLocData().dialogBase.title;
+            if (!me.options.actionWord) me.options.actionWord = locData.getLocData().dialogBase.submit;
+            if (!me.options.cancelWord) me.options.cancelWord = locData.getLocData().dialogBase.cancel;
             me._render();
            
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
             if (me.$loadingIndicator.length === 0) {
-                me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.messages.loading);
+                me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.getLocData().messages.loading);
                 me.element.append(me.$loadingIndicator);
             }
             me._hideSubmitError();
 
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
-            });
+      
         },
         // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
@@ -143,7 +140,7 @@ $(function () {
         //  JsonUtility.WriteExceptionJSON(e)
         _showExceptionError: function (errorData) {
             var me = this;
-            var errorTag = locData.errorTag;
+            var errorTag = locData.getLocData().errorTag;
             var $cell;
 
             me.$submitError.html("");
@@ -310,7 +307,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,

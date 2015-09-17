@@ -9,16 +9,10 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var toolbar;
     var messages;
 
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        toolbar = locData.toolbar;
-        messages = locData.messages;
-    });
-    
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
 
     /**
@@ -200,6 +194,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.toolbar = locData.getLocData().toolbar;
+            me.messages = locData.getLocData().messages;
             me._super();
         },
         _destroy: function () {

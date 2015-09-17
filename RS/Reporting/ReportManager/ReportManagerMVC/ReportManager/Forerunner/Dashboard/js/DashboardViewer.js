@@ -10,16 +10,9 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var toolbar;
     var messages;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        toolbar = locData.toolbar;
-        messages = locData.messages;
-    });
-
 
     /**
      * Widget used to view dashboards
@@ -125,6 +118,9 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.toolbar = locData.getLocData().toolbar;
+            me.messages = locData.getLocData().messages;
+
             me.model.clearState();
             me.element.html("");
         },

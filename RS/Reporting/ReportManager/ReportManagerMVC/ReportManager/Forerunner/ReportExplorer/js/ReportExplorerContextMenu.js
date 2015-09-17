@@ -13,15 +13,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
     var contextMenu;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        contextMenu = locData.contextMenu;
-    });
-
-
     var itemType = forerunner.ssr.constants.itemType;
 
     // folder properties data
@@ -52,6 +45,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.contextMenu = locData.getLocData().contextMenu;
+
             var catalog = me.options.catalogItem;
 
             // Get the permissions for the path define in the catalogItem option

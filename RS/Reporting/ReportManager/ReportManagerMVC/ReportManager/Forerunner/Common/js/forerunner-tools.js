@@ -17,14 +17,7 @@ forerunner.ssr.tools = forerunner.ssr.tools || {};
 $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData;
-    
-    //dont load at file parse, file will be loaded when called.
-    setTimeout(function () {
-        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-            locData = loc;
-        });
-    }, 1);
+    var locData = forerunner.localize;       
 
     var exportType = forerunner.ssr.constants.exportType;
 
@@ -39,7 +32,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-reportback-button",
             imageClass: "fr-icons24x24-reportback",
-            tooltip: function () { return locData.toolbar.back; },
+            tooltip: function () { return locData.getLocData().toolbar.back; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("back");
@@ -52,7 +45,7 @@ $(function () {
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
             tooltip: function () {
-                return locData.toolbar.menu;
+                return locData.getLocData().toolbar.menu;
             },
             events: {
                 click: function (e) {
@@ -66,7 +59,7 @@ $(function () {
             selectorClass: "fr-toolbar-nav-button",
             imageClass: "fr-icons24x24-nav",
             sharedClass: "fr-hide-if-disable",
-            tooltip: function () { return locData.toolbar.navigation; },
+            tooltip: function () { return locData.getLocData().toolbar.navigation; },
             visibilityOrder: 7,
             events: {
                 click: function (e) {
@@ -80,7 +73,7 @@ $(function () {
             selectorClass: "fr-toolbar-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
             sharedClass: "fr-toolbase-config-minimal fr-toolbase-config-edit fr-hide-if-disable",
-            tooltip: function () { return  locData.toolbar.paramarea; },
+            tooltip: function () { return  locData.getLocData().toolbar.paramarea; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.paramAreaClick, null, {});
@@ -92,7 +85,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-refresh-button",
             imageClass: "fr-icons24x24-refresh",
-            tooltip:  function () { return locData.toolbar.refresh; },
+            tooltip:  function () { return locData.getLocData().toolbar.refresh; },
             visibilityOrder: 15,
             events: {
                 click: function (e) {
@@ -105,7 +98,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-firstpage-button",
             imageClass: "fr-icons24x24-firstpage",
-            tooltip:  function () { return locData.toolbar.firstPage; },
+            tooltip:  function () { return locData.getLocData().toolbar.firstPage; },
             visibilityOrder: 4,
             events: {
                 click: function (e) {
@@ -118,7 +111,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-prev-button",
             imageClass: "fr-icons24x24-prev",
-            tooltip: function () { return  locData.toolbar.previousPage; },
+            tooltip: function () { return  locData.getLocData().toolbar.previousPage; },
             visibilityOrder: 4,
             events: {
                 click: function (e) {
@@ -132,7 +125,7 @@ $(function () {
             selectorClass: "fr-toolbar-reportpage-textbox",
             sharedClass: "fr-core-input",
             //inputType: "number",
-            tooltip:  function () { return locData.toolbar.reportPage; },
+            tooltip:  function () { return locData.getLocData().toolbar.reportPage; },
             visibilityOrder: 1,
             events: {
                 keydown: function (e) {
@@ -179,7 +172,7 @@ $(function () {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-pageOf-button",
             sharedClass: "fr-core-toolbar-text",
-            text:  function () { return locData.toolbar.pageOf; },
+            text:  function () { return locData.getLocData().toolbar.pageOf; },
             visibilityOrder: 1
         },
         /** @member */
@@ -194,7 +187,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-next-button",
             imageClass: "fr-icons24x24-next",
-            tooltip:  function () { return locData.toolbar.next; },
+            tooltip:  function () { return locData.getLocData().toolbar.next; },
             visibilityOrder: 4,
             events: {
                 click: function (e) {
@@ -207,7 +200,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-lastpage-button",
             imageClass: "fr-icons24x24-lastpage",
-            tooltip:  function () { return locData.toolbar.lastPage; },
+            tooltip:  function () { return locData.getLocData().toolbar.lastPage; },
             visibilityOrder: 4,
             events: {
                 click: function (e) {
@@ -221,7 +214,7 @@ $(function () {
             selectorClass: "fr-toolbar-documentmap-button",
             sharedClass: "fr-hide-if-disable",
             imageClass: "fr-icons24x24-documentmap",
-            tooltip: function () { return  locData.toolbar.docMap; },
+            tooltip: function () { return  locData.getLocData().toolbar.docMap; },
             visibilityOrder: 6,
             events: {
                 click: function (e) {
@@ -234,7 +227,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-toolbar-keyword-textbox",
             sharedClass: "fr-toolbase-find-textbox fr-core-input",
-            tooltip: function () { return  locData.toolbar.keyword; },
+            tooltip: function () { return  locData.getLocData().toolbar.keyword; },
             visibilityOrder: 10,
             events: {
                 keydown: function (e) {
@@ -260,7 +253,7 @@ $(function () {
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
-            tooltip:  function () { return locData.toolbar.find; },
+            tooltip:  function () { return locData.getLocData().toolbar.find; },
             visibilityOrder: 10,
             visibilityNoWidth: true,
             events: {
@@ -278,7 +271,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportXML",
             sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-mobile",
             toolStateClass: null,
-            text:  function () { return locData.exportType.xml; },
+            text:  function () { return locData.getLocData().exportType.xml; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -295,7 +288,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportCSV",
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
-            text:  function () { return locData.exportType.csv; },
+            text:  function () { return locData.getLocData().exportType.csv; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -312,7 +305,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportPDF",
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
-            text:  function () { return locData.exportType.pdf; },
+            text:  function () { return locData.getLocData().exportType.pdf; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -329,7 +322,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportMHT",
             sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-mobile",
             toolStateClass: null,
-            text:  function () { return locData.exportType.mhtml; },
+            text:  function () { return locData.getLocData().exportType.mhtml; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -346,7 +339,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportExcel",
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
-            text: function () { return  locData.exportType.excel; },
+            text: function () { return  locData.getLocData().exportType.excel; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -363,7 +356,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportTIFF",
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
-            text: function () { return  locData.exportType.tiff; },
+            text: function () { return  locData.getLocData().exportType.tiff; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -380,7 +373,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportWord",
             sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
-            text:  function () { return locData.exportType.word; },
+            text:  function () { return locData.getLocData().exportType.word; },
             visibilityOrder: 8,
             visibilityNoWidth: true,
             events: {
@@ -395,7 +388,7 @@ $(function () {
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
             sharedClass: "fr-toolbase-show-if-mobile fr-hide-if-disable",
-            tooltip:  function () { return locData.toolPane.zoom; },
+            tooltip:  function () { return locData.getLocData().toolPane.zoom; },
             visibilityOrder: 11,
             events: {
                 click: function (e) {
@@ -408,7 +401,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-print-button",
             imageClass: "fr-icons24x24-printreport",
-            tooltip:  function () { return locData.toolbar.print; },
+            tooltip:  function () { return locData.getLocData().toolbar.print; },
             visibilityOrder: 13,
             events: {
                 click: function (e) {
@@ -424,7 +417,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-email-button",
             imageClass: "fr-icons24x24-emailsubscription",
-            tooltip: function () { return  locData.subscription.email; },
+            tooltip: function () { return  locData.getLocData().subscription.email; },
             visibilityOrder: 14,
             events: {
                 click: function (e) {
@@ -438,7 +431,7 @@ $(function () {
             selectorClass: "fr-toolbar-credential-button",
             imageClass: "fr-icons24x24-dataSourceCred",
             sharedClass: "fr-hide-if-disable",
-            tooltip:  function () { return locData.toolbar.dsCredential; },
+            tooltip:  function () { return locData.getLocData().toolbar.dsCredential; },
             visibilityOrder: 9,
             events: {
                 click: function (e) {
@@ -459,7 +452,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
-            tooltip: function () { return  locData.toolbar.menu; },
+            tooltip: function () { return  locData.getLocData().toolbar.menu; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.menuClick, null, {});
@@ -471,7 +464,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-button-back",
             imageClass: "fr-icons24x24-back",
-            tooltip: function () { return  locData.toolbar.back; },
+            tooltip: function () { return  locData.getLocData().toolbar.back; },
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("back", null);
@@ -483,7 +476,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-edit-button",
             imageClass: "fr-icons24x24-editdashboard",
-            tooltip:  function () { return locData.toolbar.editDashboard; },
+            tooltip:  function () { return locData.getLocData().toolbar.editDashboard; },
             events: {
                 click: function (e) {
                     e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", true);
@@ -495,7 +488,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-toolbar-view-button",
             imageClass: "fr-icons24x24-createdashboard",
-            tooltip: function () { return  locData.toolbar.viewDashboard; },
+            tooltip: function () { return  locData.getLocData().toolbar.viewDashboard; },
             events: {
                 click: function (e) {
                     e.data.me.options.$dashboardEZ.dashboardEZ("enableEdit", false);
@@ -507,7 +500,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-button-home",
             imageClass: "fr-icons24x24-home",
-            tooltip: function () { return  locData.toolbar.home; },
+            tooltip: function () { return  locData.getLocData().toolbar.home; },
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("home", null);
@@ -519,7 +512,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-button-recent",
             imageClass: "fr-icons24x24-recent",
-            tooltip: function () { return  locData.toolbar.recent; },
+            tooltip: function () { return  locData.getLocData().toolbar.recent; },
             visibilityOrder: 1,
             events: {
                 click: function (e) {
@@ -532,7 +525,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-button-favorite",
             imageClass: "fr-icons24x24-favorites",
-            tooltip: function () { return  locData.toolbar.favorites; },
+            tooltip: function () { return  locData.getLocData().toolbar.favorites; },
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("favorites", null);
@@ -544,7 +537,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-dashboard-button-logOff",
             imageClass: "fr-icons24x24-logout",
-            tooltip: function () { return  locData.toolbar.logOff; },
+            tooltip: function () { return  locData.getLocData().toolbar.logOff; },
             visibilityOrder: 2,
             events: {
                 click: function (e) {
@@ -565,7 +558,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-dashboardtoolpane-edit-button",
             imageClass: "fr-icons24x24-editdashboard",
-            text:  function () { return locData.toolPane.editDashboard; },
+            text:  function () { return locData.getLocData().toolPane.editDashboard; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-edit-button"]);
@@ -578,7 +571,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-dashboardtoolpane-view-button",
             imageClass: "fr-icons24x24-createdashboard",
-            text: function () { return  locData.toolPane.viewDashboard; },
+            text: function () { return  locData.getLocData().toolPane.viewDashboard; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-view-button"]);
@@ -591,7 +584,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-dashboardtoolpane-back",
             imageClass: "fr-icons24x24-reportback",
-            text:  function () { return locData.toolPane.back; },
+            text:  function () { return locData.getLocData().toolPane.back; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-dashboardtoolpane-back"]);
@@ -607,7 +600,7 @@ $(function () {
             imageClass: "fr-icons24x24-homeBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
             toolStateClass: null,
-            text: function () { return  locData.toolPane.home; },
+            text: function () { return  locData.getLocData().toolPane.home; },
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("home", null);
@@ -621,7 +614,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
-            text: function () { return  locData.toolbar.recent; },
+            text: function () { return  locData.getLocData().toolbar.recent; },
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -635,7 +628,7 @@ $(function () {
             selectorClass: "fr-dashboardtoolpane-favorite",
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-dashboardtoolpane-dropdown-item-text",
-            text: function () { return  locData.toolPane.favorites; },
+            text: function () { return  locData.getLocData().toolPane.favorites; },
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             events: {
@@ -649,7 +642,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-dashboard-item-folders",
             imageClass: "fr-icons24x24-folders",
-            text: function () { return  locData.toolPane.views; },
+            text: function () { return  locData.getLocData().toolPane.views; },
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
@@ -677,7 +670,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-nav",
             imageClass: "fr-icons24x24-nav",
-            text: function () { return  locData.toolPane.navigation; },
+            text: function () { return  locData.getLocData().toolPane.navigation; },
             sharedClass: "fr-hide-if-disable",
             events: {
                 click: function (e) {
@@ -694,7 +687,7 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom-blue",
             sharedClass: "fr-toolbase-show-if-mobile fr-hide-if-disable",
-            text: function () { return  locData.toolPane.zoom; },
+            text: function () { return  locData.getLocData().toolPane.zoom; },
             itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
@@ -710,7 +703,7 @@ $(function () {
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
             imageClass: "fr-icons24x24-zoom-to-page-width",
-            text: function () { return  locData.toolPane.zoomPageWidth; },
+            text: function () { return  locData.getLocData().toolPane.zoomPageWidth; },
             itemTextClass: "fr-toolpane-dropdown-item-text",
             events: {
                 click: function (e) {
@@ -724,7 +717,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-item-zoom-percent-textbox",
             sharedClass: "fr-core-input",
-            tooltip:  function () { return locData.toolPane.zoomPercent; },
+            tooltip:  function () { return locData.getLocData().toolPane.zoomPercent; },
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -749,8 +742,8 @@ $(function () {
             toolStateClass: null,
             sharedClass: "fr-toolbase-overlayed-button",
             imageClass: "fr-toolbase-zoom-icon",
-            text:  function () { return locData.toolPane.find;},
-            tooltip: function () { return  locData.toolbar.find;},
+            text:  function () { return locData.getLocData().toolPane.find;},
+            tooltip: function () { return  locData.getLocData().toolbar.find;},
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-zoom-percent-textbox").val());
@@ -763,7 +756,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-zoom-drop-down",
             imageClass: "fr-icons24x24-zoom",
-            text: function () { return  locData.toolPane.zoomDropdown; },
+            text: function () { return  locData.getLocData().toolPane.zoomDropdown; },
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
@@ -784,7 +777,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-reportback",
             imageClass: "fr-icons24x24-reportback",
-            text:  function () { return locData.toolPane.back; },
+            text:  function () { return locData.getLocData().toolPane.back; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("back");
@@ -797,7 +790,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-refresh",
             imageClass: "fr-icons24x24-refresh",
-            text:  function () { return locData.toolPane.refresh; },
+            text:  function () { return locData.getLocData().toolPane.refresh; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("refreshReport");
@@ -810,7 +803,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-firstpage",
             imageClass: "fr-icons24x24-firstpage",
-            tooltip: function () { return  locData.toolbar.firstPage; },
+            tooltip: function () { return  locData.getLocData().toolbar.firstPage; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -823,7 +816,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-prev",
             imageClass: "fr-icons24x24-prev",
-            tooltip:  function () { return locData.toolbar.previousPage; },
+            tooltip:  function () { return locData.getLocData().toolbar.previousPage; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -837,7 +830,7 @@ $(function () {
             selectorClass: "fr-item-textbox-reportpage",
             sharedClass: "fr-core-input",
             //inputType: "number",
-            tooltip:  function () { return locData.toolbar.reportPage; },
+            tooltip:  function () { return locData.getLocData().toolbar.reportPage; },
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -885,7 +878,7 @@ $(function () {
             toolType: toolTypes.plainText,
             selectorClass: "fr-toolbar-pageOf-button",
             sharedClass: "fr-core-toolbar-text",
-            text:  function () { return locData.toolPane.pageOf; }
+            text:  function () { return locData.getLocData().toolPane.pageOf; }
         },
         /** @member */
         itemNumPages: {
@@ -898,7 +891,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-next",
             imageClass: "fr-icons24x24-next",
-            tooltip:  function () { return locData.toolbar.next; },
+            tooltip:  function () { return locData.getLocData().toolbar.next; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -911,7 +904,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-lastpage",
             imageClass: "fr-icons24x24-lastpage",
-            tooltip: function () { return  locData.toolbar.lastPage; },
+            tooltip: function () { return  locData.getLocData().toolbar.lastPage; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -925,7 +918,7 @@ $(function () {
             selectorClass: "fr-id-documentmap",
             imageClass: "fr-icons24x24-documentmap",
             sharedClass: "fr-hide-if-disable",
-            text:  function () { return locData.toolPane.docMap; },
+            text:  function () { return locData.getLocData().toolPane.docMap; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showDocMap");
@@ -943,7 +936,7 @@ $(function () {
             itemTextClass: "fr-toolpane-dropdown-item-text",
             sharedClass: "fr-toolbase-hide-if-mobile",
             toolStateClass: null,
-            text: function () { return  locData.exportType.xml; },
+            text: function () { return  locData.getLocData().exportType.xml; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -959,7 +952,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportCSV",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text:  function () { return locData.exportType.csv; },
+            text:  function () { return locData.getLocData().exportType.csv; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -975,7 +968,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportPDF",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text:  function () { return locData.exportType.pdf; },
+            text:  function () { return locData.getLocData().exportType.pdf; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -992,7 +985,7 @@ $(function () {
             itemTextClass: "fr-toolpane-dropdown-item-text",
             sharedClass: "fr-toolbase-hide-if-mobile",
             toolStateClass: null,
-            text: function () { return  locData.exportType.mhtml; },
+            text: function () { return  locData.getLocData().exportType.mhtml; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -1008,7 +1001,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportExcel",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text:  function () { return locData.exportType.excel; },
+            text:  function () { return locData.getLocData().exportType.excel; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
@@ -1024,7 +1017,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportTIFF",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text: function () { return  locData.exportType.tiff; },
+            text: function () { return  locData.getLocData().exportType.tiff; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -1040,7 +1033,7 @@ $(function () {
             imageClass: "fr-icons25x31-exportWord",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text:  function () { return locData.exportType.word; },
+            text:  function () { return locData.getLocData().exportType.word; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.word);
@@ -1052,7 +1045,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-export",
             imageClass: "fr-icons24x24-export",
-            text: function () { return  locData.toolbar.exportMenu; },
+            text: function () { return  locData.getLocData().toolbar.exportMenu; },
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
@@ -1072,7 +1065,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-item-keyword-textbox",
             sharedClass: "fr-toolbase-find-textbox fr-core-input",
-            tooltip: function () { return  locData.toolbar.keyword; },
+            tooltip: function () { return  locData.getLocData().toolbar.keyword; },
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -1099,8 +1092,8 @@ $(function () {
             toolStateClass: null,
             sharedClass: "fr-toolbase-overlayed-button",
             imageClass: "fr-toolbase-find-icon",
-            text:  function () { return locData.toolPane.find; },
-            tooltip: function () { return  locData.toolbar.find; },
+            text:  function () { return locData.getLocData().toolPane.find; },
+            tooltip: function () { return  locData.getLocData().toolbar.find; },
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-keyword-textbox").val());
@@ -1114,7 +1107,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-printreport",
             imageClass: "fr-icons24x24-printreport",
-            text:  function () { return locData.toolPane.print; },
+            text:  function () { return locData.getLocData().toolPane.print; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
@@ -1127,7 +1120,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-emailsubscription",
             imageClass: "fr-icons24x24-emailsubscription",
-            text:  function () { return locData.subscription.email; },
+            text:  function () { return locData.getLocData().subscription.email; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showEmailSubscription");
@@ -1141,7 +1134,7 @@ $(function () {
             selectorClass: "fr-item-credential",
             imageClass: "fr-icons24x24-dataSourceCred",
             sharedClass: "fr-hide-if-disable",
-            text: function () { return  locData.toolPane.dsCredential; },
+            text: function () { return  locData.getLocData().toolPane.dsCredential; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showDSCredential");
@@ -1157,7 +1150,7 @@ $(function () {
             imageClass: "fr-icons24x24-homeBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
-            text: function () { return  locData.toolPane.home; },
+            text: function () { return  locData.getLocData().toolPane.home; },
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
@@ -1171,7 +1164,7 @@ $(function () {
             imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
-            text:  function () { return locData.toolbar.recent; },
+            text:  function () { return locData.getLocData().toolbar.recent; },
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1186,7 +1179,7 @@ $(function () {
             imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
-            text:  function () { return locData.toolPane.favorites; },
+            text:  function () { return locData.getLocData().toolPane.favorites; },
             toolStateClass: null,
             events: {
                 click: function (e) {
@@ -1207,7 +1200,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-unzoom-button",
             imageClass: "fr-icons24x24-unzoom",
-            tooltip:  function () { return locData.toolbar.unzoom; },
+            tooltip:  function () { return locData.getLocData().toolbar.unzoom; },
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("allowZoom", false);
@@ -1227,7 +1220,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-ltb-menu-button",
             imageClass: "fr-icons24x24-menu",
-            tooltip:  function () { return locData.toolbar.menu; },
+            tooltip:  function () { return locData.getLocData().toolbar.menu; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.menuClick, null, {});
@@ -1247,7 +1240,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rtb-paramarea-button",
             imageClass: "fr-icons24x24-paramarea",
-            tooltip:  function () { return locData.toolbar.paramarea; },
+            tooltip:  function () { return locData.getLocData().toolbar.paramarea; },
             events: {
                 click: function (e) {
                     e.data.me._trigger(events.paramAreaClick, null, {});
@@ -1259,7 +1252,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rtb-manage_sets",
             imageClass: "fr-icons24x24-parameterSets",
-            tooltip: function () { return  locData.toolbar.parameterSets; },
+            tooltip: function () { return  locData.getLocData().toolbar.parameterSets; },
             events: {
                 click: function (e) {
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
@@ -1278,7 +1271,7 @@ $(function () {
                 return initializer.getParameterModel.call(initializer);
             },
             modelChange: events.parameterModelChanged(),
-            tooltip: function () { return  locData.toolbar.selectSet; },
+            tooltip: function () { return  locData.getLocData().toolbar.selectSet; },
             alwaysChange: function (e) {
                 var $select = $(".fr-layout-rightheader select");
                 var id = $select.val();
@@ -1291,7 +1284,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rtb-save-param",
             imageClass: "fr-icons24x24-save-param",
-            tooltip:  function () { return locData.toolbar.saveParam; },
+            tooltip:  function () { return locData.getLocData().toolbar.saveParam; },
             events: {
                 click: function (e) {
                     var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
@@ -1299,10 +1292,10 @@ $(function () {
                     parameterModel.parameterModel("save",
                         parameterList,
                         function (data) {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().messages.saveParamSuccess, locData.getLocData().toolbar.saveParam);
                         },
                         function () {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().messages.saveParamFailed, locData.getLocData().toolbar.saveParam);
                         }
                     );
                 }
@@ -1322,7 +1315,7 @@ $(function () {
             selectorClass: "fr-rm-button-menu",
             imageClass: "fr-icons24x24-menu",
             tooltip: function () {
-                return locData.toolbar.menu;
+                return locData.getLocData().toolbar.menu;
             },
             events: {
                 click: function (e) {
@@ -1335,7 +1328,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-home",
             imageClass: "fr-icons24x24-home",
-            tooltip: function () { return  locData.toolbar.home; },
+            tooltip: function () { return  locData.getLocData().toolbar.home; },
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1348,7 +1341,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
-            tooltip:  function () { return locData.toolbar.logOff; },
+            tooltip:  function () { return locData.getLocData().toolbar.logOff; },
             visibilityOrder: 2,
             events: {
                 click: function (e) {
@@ -1361,7 +1354,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-back",
             imageClass: "fr-icons24x24-back",
-            tooltip:  function () { return locData.toolbar.back; },
+            tooltip:  function () { return locData.getLocData().toolbar.back; },
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1374,7 +1367,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-fav",
             imageClass: "fr-icons24x24-favorites",
-            tooltip:  function () { return locData.toolbar.favorites; },
+            tooltip:  function () { return locData.getLocData().toolbar.favorites; },
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1387,7 +1380,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-recent",
             imageClass: "fr-icons24x24-recent",
-            tooltip:  function () { return locData.toolbar.recent; },
+            tooltip:  function () { return locData.getLocData().toolbar.recent; },
             visibilityOrder: 1,
             events: {
                 click: function (e) {
@@ -1401,7 +1394,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-setup",
             imageClass: "fr-icons24x24-setup",
-            tooltip: function () { return  locData.toolbar.userSettings; },
+            tooltip: function () { return  locData.getLocData().toolbar.userSettings; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
@@ -1414,7 +1407,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-mms",
             imageClass: "fr-icons24x24-emailsubscription",
-            tooltip: function () { return  locData.subscription.manageSubscription; },
+            tooltip: function () { return  locData.getLocData().subscription.manageSubscription; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showManageMySubscriptionsDialog");
@@ -1426,14 +1419,14 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-keyword-textbox",
             sharedClass: "fr-core-input fr-toolbase-find-textbox",
-            tooltip: function () { return  locData.toolbar.keyword; },
+            tooltip: function () { return  locData.getLocData().toolbar.keyword; },
             visibilityOrder: 10,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
                         var keyword = $.trim(this.value);
                         if (keyword === "") {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                             return;
                         }
 
@@ -1458,14 +1451,14 @@ $(function () {
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
-            tooltip:  function () { return locData.toolbar.search; },
+            tooltip:  function () { return locData.getLocData().toolbar.search; },
             visibilityOrder: 10,
             visibilityNoWidth: true,
             events: {
                 click: function (e) {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-keyword-textbox").val());
                     if (keyword === "") {
-                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                         return;
                     }
 
@@ -1478,7 +1471,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-searchfolder",
             imageClass: "fr-icons24x24-dataSourceCred",
-            tooltip: function () { return  locData.toolbar.searchFolder; },
+            tooltip: function () { return  locData.getLocData().toolbar.searchFolder; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
@@ -1498,7 +1491,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-home",
             imageClass: "fr-icons24x24-homeBlue",
-            text: function () { return  locData.toolbar.home; },
+            text: function () { return  locData.getLocData().toolbar.home; },
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
             events: {
@@ -1515,7 +1508,7 @@ $(function () {
             selectorClass: "fr-rm-item-createdashboard",
             imageClass: "fr-icons24x24-createdashboard",
             sharedClass: "fr-hide-if-disable",
-            text: function () { return  locData.toolbar.createDashboard; },
+            text: function () { return  locData.getLocData().toolbar.createDashboard; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showCreateDashboardDialog");
@@ -1528,7 +1521,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-logOff",
             imageClass: "fr-icons24x24-logout",
-            text:  function () { return locData.toolbar.logOff; },
+            text:  function () { return locData.getLocData().toolbar.logOff; },
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
@@ -1541,7 +1534,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-back",
             imageClass: "fr-icons24x24-back",
-            text:  function () { return locData.toolbar.back; },
+            text:  function () { return locData.getLocData().toolbar.back; },
             events: {
                 click: function (e) {
                     e.data.me.freezeEnableDisable(false);
@@ -1555,7 +1548,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-fav",
             imageClass: "fr-icons24x24-favoritesBlue",
-            text: function () { return  locData.toolbar.favorites; },
+            text: function () { return  locData.getLocData().toolbar.favorites; },
             itemTextClass: "fr-toolpane-dropdown-item-text",
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
@@ -1572,7 +1565,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-recent",
             imageClass: "fr-icons24x24-recentBlue",
-            text:  function () { return locData.toolbar.recent; },
+            text:  function () { return locData.getLocData().toolbar.recent; },
             itemTextClass: "fr-toolpane-dropdown-item-text",
             itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
             toolStateClass: null,
@@ -1589,7 +1582,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-setup",
             imageClass: "fr-icons24x24-setup",
-            text:  function () { return locData.toolbar.userSettings; },
+            text:  function () { return locData.getLocData().toolbar.userSettings; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
@@ -1601,14 +1594,14 @@ $(function () {
         itemKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-rm-item-keyword",
-            tooltip: function () { return  locData.toolbar.keyword; },
+            tooltip: function () { return  locData.getLocData().toolbar.keyword; },
             sharedClass: "fr-core-input fr-toolbase-find-textbox",
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
                         var keyword = $.trim(this.value);
                         if (keyword === "") {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                             return;
                         }
 
@@ -1633,12 +1626,12 @@ $(function () {
             toolContainerClass: null,
             imageClass: "fr-toolbase-find-icon",
             toolStateClass: null,
-            tooltip: function () { return  locData.toolbar.find; },
+            tooltip: function () { return  locData.getLocData().toolbar.find; },
             events: {
                 click: function (e) {
                     var keyword = $.trim(e.data.me.element.find(".fr-rm-item-keyword").val());
                     if (keyword === "") {
-                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                        forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                         return;
                     }
 
@@ -1651,7 +1644,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-rm-item-folders",
             imageClass: "fr-icons24x24-folders",
-            text: function () { return  locData.toolPane.views; },
+            text: function () { return  locData.getLocData().toolPane.views; },
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
@@ -1672,7 +1665,7 @@ $(function () {
             selectorClass: "fr-rm-item-searchfolder",
             imageClass: "fr-icons24x24-searchfolder",
             sharedClass: "fr-hide-if-disable",
-            text:  function () { return locData.toolbar.searchFolder; },
+            text:  function () { return locData.getLocData().toolbar.searchFolder; },
             events: {
                 click: function (e) {
                     e.data.$reportExplorer.reportExplorer("showExplorerSearchFolderDialog");
@@ -1686,7 +1679,7 @@ $(function () {
             selectorClass: "fr-rm-item-upload-file",
             imageClass: "fr-upf-upload-file-icon",
             sharedClass: "fr-hide-if-disable",
-            text: function () { return  locData.uploadFile.title; },
+            text: function () { return  locData.getLocData().uploadFile.title; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showUploadFileDialog");
@@ -1700,7 +1693,7 @@ $(function () {
             selectorClass: "fr-rm-item-new-folder",
             imageClass: "fr-nfd-new-folder-icon",
             sharedClass: "fr-hide-if-disable",
-            text: function () { return  locData.newFolder.title; },
+            text: function () { return  locData.getLocData().newFolder.title; },
             events: {
                 click: function (e) {
                     e.data.me.options.$reportExplorer.reportExplorer("showNewFolderDialog");
@@ -1723,7 +1716,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-update-fav",
             imageClass: "fr-icons24x24-favorite-minus",
-            tooltip:  function () { return locData.toolbar.addToFavorites; },
+            tooltip:  function () { return locData.getLocData().toolbar.addToFavorites; },
             visibilityOrder: 8,
             events: {
                 click: function (e) {
@@ -1738,7 +1731,7 @@ $(function () {
             selectorClass: "fr-button-favorite",
             sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-favorites",
-            tooltip:  function () { return locData.toolbar.favorites; },
+            tooltip:  function () { return locData.getLocData().toolbar.favorites; },
             visibilityOrder: 2,
             events: {
                 click: function (e) {
@@ -1752,7 +1745,7 @@ $(function () {
             selectorClass: "fr-button-recent",
             sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-recent",
-            tooltip: function () { return  locData.toolbar.recent; },
+            tooltip: function () { return  locData.getLocData().toolbar.recent; },
             visibilityOrder: 3,
             events: {
                 click: function (e) {
@@ -1766,7 +1759,7 @@ $(function () {
             selectorClass: "fr-button-home",
             sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-home",
-            tooltip:  function () { return locData.toolbar.home; },
+            tooltip:  function () { return locData.getLocData().toolbar.home; },
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
@@ -1778,7 +1771,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
-            tooltip:  function () { return locData.toolbar.logOff; },
+            tooltip:  function () { return locData.getLocData().toolbar.logOff; },
             visibilityOrder: 12,
             events: {
                 click: function (e) {
@@ -1808,7 +1801,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-update-fav",
             imageClass: "fr-icons24x24-favorite-minus",
-            text:  function () { return locData.toolPane.addToFavorites; },
+            text:  function () { return locData.getLocData().toolPane.addToFavorites; },
             events: {
                 click: function (e) {
                     //e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
@@ -1822,7 +1815,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-folders",
             imageClass: "fr-icons24x24-folders",
-            text:  function () { return locData.toolPane.views; },
+            text:  function () { return locData.getLocData().toolPane.views; },
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
@@ -1842,7 +1835,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-logOff",
             imageClass: "fr-icons24x24-logout",
-            text:  function () { return locData.toolbar.logOff; },
+            text:  function () { return locData.getLocData().toolbar.logOff; },
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + window.location.href;
@@ -1855,7 +1848,7 @@ $(function () {
             selectorClass: "fr-item-property",
             imageClass: "fr-icons24x24-tags",
             sharedClass: "fr-hide-if-disable",
-            text: function () { return  locData.properties.title; },
+            text: function () { return  locData.getLocData().properties.title; },
             events: {
                 click: function (e) {
                     var $propertyDlg = e.data.me.options.$appContainer.children(".fr-properties-section");
@@ -1870,7 +1863,7 @@ $(function () {
             selectorClass: "fr-item-security",
             imageClass: "fr-icons24x24-security",
             sharedClass: "fr-hide-if-disable",
-            text:  function () { return locData.security.title; },
+            text:  function () { return locData.getLocData().security.title; },
             events: {
                 click: function (e) {
                     var $propertyDlg = e.data.me.options.$appContainer.children(".fr-security-section");
@@ -1917,7 +1910,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-export-button",
             imageClass: "fr-icons24x24-export",
-            tooltip: function () { return locData.toolbar.exportMenu; },
+            tooltip: function () { return locData.getLocData().toolbar.exportMenu; },
             dropdown: true,
             visibilityOrder: 8,
             tools: [tb.btnExportXML,

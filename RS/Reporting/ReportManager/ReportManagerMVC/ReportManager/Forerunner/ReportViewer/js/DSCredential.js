@@ -12,13 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var dsCredential;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        dsCredential = locData.dsCredential;
-    });
   
     /**
      * Widget used to manage report datasource credential
@@ -43,6 +38,9 @@ $(function () {
         _create: function () {
         },
         _init: function () {
+            var me = this;
+
+            me.dsCredential = locData.getLocData().dsCredential;
         },
         _initBody: function () {
             var me = this;
@@ -265,7 +263,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,

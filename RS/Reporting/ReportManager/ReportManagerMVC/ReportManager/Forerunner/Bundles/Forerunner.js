@@ -995,7 +995,8 @@ $(function () {
             var me = this;
 
             var loop = function () {
-                if (me.configDone === true && me.settingsDone === true && me.locDone === true) {
+                if (me._configDone === true && me._settingsDone === true && me._locDone === true) {
+                    forerunner.ssr._internal.init();
                     if (done)
                         done();
                 }
@@ -1004,15 +1005,16 @@ $(function () {
                 }
             }
 
+            forerunner.config._initAsync = true;
             me.getDBConfiguration(function () {
-                me.configDone = true;
+                me._configDone = true;
             });
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locDone = true
+            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                me._locDone = true
             });
             
             me.getCustomSettings(function () {
-                me.settingsDone = true;
+                me._settingsDone = true;
             });
             loop();
         },
@@ -1024,7 +1026,7 @@ $(function () {
             if (forerunner.config._dbConfig === null || jQuery.isEmptyObject(forerunner.config._dbConfig)) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetDBConfig";
                 var doAsync = false;
-                if (done)
+                if (forerunner.config._initAsync === true)
                     doAsync = true;
 
                 forerunner.ajax.ajax({
@@ -1716,19 +1718,22 @@ $(function () {
                 
         },
 
-
+        locFileLocation: forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer",
+        getLocData: function () {
+            return forerunner.localize._getLocData(forerunner.localize.locFileLocation, "json")
+        },
         /**
          * Returns the language specific data.
          *
          * @param {String} locFileLocation - The localization file location without the language qualifier
          * @param {String} dataType - optional, ajax dataType. defaults to "json"
-         * @param {function} done(Object) - callback function, if specified this function is async
+         * @param {function} done(Object) - callback function
          *
          * @return {Object} Localization data
          *
          * @member
          */
-        getLocData: function (locFileLocation, dataType,done) {
+        _getLocData: function (locFileLocation, dataType,done) {
             var me = this;
             var langData = null;
 
@@ -1861,7 +1866,7 @@ $(function () {
                 me._locData[locFileLocation] = {};
 
             var doAsync = false;
-            if (done)
+            if (forerunner.config._initAsync === true)
                 doAsync = true;
 
 
@@ -2191,7 +2196,7 @@ $(function () {
                 }
 
                 var doAsync = false;
-                if (done)
+                if (forerunner.config._initAsync === true)
                     doAsync = true;
 
                 forerunner.ajax.ajax({
@@ -2829,7 +2834,7 @@ $(function () {
 
         cultureDateFormat: null,
         _setDateFormat: function (locData) {
-            var format = locData.datepicker.dateFormat;
+            var format = locData.getLocData().datepicker.dateFormat;
             forerunner.ssr._internal.cultureDateFormat = format;
         },
         getDateFormat: function (locData) {
@@ -2854,28 +2859,33 @@ $(function () {
 
             return [format, formatSimple];
         },
-        
-    };
-    $(document).ready(function () {
-        //For IE browser when set placeholder browser will trigger an input event if it's Chinese
-        //to avoid conflict (like auto complete) with other widget not use placeholder to do it
-        //Anyway IE native support placeholder property from IE10 on, so not big deal
-        //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-        if (forerunner.device.isMSIE()) {
-            forerunner.config.setWatermarkConfig({
-                useNative: false,
-                className: "fr-watermark"
-            });
-        }
+  
+        init: function () {
+            var me = this;
 
-        forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
-        // Put a check in so that this would not barf for the login page.
-        if ($.validator) {
-            var locData;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer","json", function (loc) {
-                locData = loc;
+            //Only init once
+            if (me.initDone === true)
+                return;
+            else
+                me.initDone = true;
 
-                var error = locData.validateError;
+            //For IE browser when set placeholder browser will trigger an input event if it's Chinese
+            //to avoid conflict (like auto complete) with other widget not use placeholder to do it
+            //Anyway IE native support placeholder property from IE10 on, so not big deal
+            //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+            if (forerunner.device.isMSIE()) {
+                forerunner.config.setWatermarkConfig({
+                    useNative: false,
+                    className: "fr-watermark"
+                });
+            }
+
+            forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
+            // Put a check in so that this would not barf for the login page.
+            if ($.validator) {
+            
+                var locData = forerunner.localize;
+                var error = locData.getLocData().validateError;
 
                 //replace error message with custom data
                 jQuery.extend(jQuery.validator.messages, {
@@ -2929,9 +2939,8 @@ $(function () {
                     },
                     error.invalidTree
                 );
-             });
-            }            
-         });
-    
+            }      
+        }
+    }
 });
 

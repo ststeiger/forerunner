@@ -170,6 +170,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            forerunner.ssr._internal.init();
+
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {

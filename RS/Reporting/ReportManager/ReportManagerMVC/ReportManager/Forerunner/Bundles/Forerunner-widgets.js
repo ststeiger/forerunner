@@ -640,7 +640,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
-    var locData;
+    var locData = forerunner.localize;
     /**
      * The viewerBase widget is used as a base namespace for the reportViewer and the reportExplorer
      * widgets
@@ -658,25 +658,18 @@ $(function () {
         _create: function () {
             var me = this;
             
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-                me.loadLock = 0;
-            });
         },
         _init: function ($viewerContainer) {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-                me.loadLock = 0;
+            me.loadLock = 0;
 
-                me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
-                if (me.$loadingIndicator.length === 0) {
-                    me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
-                    me.element.append(me.$loadingIndicator);
-                }
+            me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
+            if (me.$loadingIndicator.length === 0) {
+                me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(locData.getLocData().messages.loading);
+                me.element.append(me.$loadingIndicator);
+            }
 
-                me.$viewerContainer = $viewerContainer;
-            });
+            me.$viewerContainer = $viewerContainer;
         },
         /**
          * Shows the loading Indicator
@@ -806,6 +799,7 @@ $(function () {
         // Constructor
         _create: function () {
             var me = this;
+            forerunner.ssr._internal.init();
 
             // Make sure the viewerBase _create gets called
             me._super();
@@ -853,6 +847,8 @@ $(function () {
             me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);            
             me.zoomState = true;
             me.allowZoom(me.zoomState);
+
+            me.locData = forerunner.localize;
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -1655,7 +1651,7 @@ $(function () {
                             docMap.reportDocumentMap("write", data);
                             done();
                         },                        
-                        fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
+                        fail: function () { me._showMessageBox(me.locData.getLocData().messages.docmapShowFailed); }
                     });
                 }
                 else
@@ -1948,7 +1944,7 @@ $(function () {
                         if (done)
                             done();
                     },
-                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.getLocData().messages.prepareActionFailed); }
                 });
             }
             else if (done)
@@ -2224,7 +2220,7 @@ $(function () {
                                     me.backupCurPage();
                                     me._loadPage(data.NewPage, false, bookmarkID);
                                 } else {
-                                    me._showMessageBox(me.locData.messages.bookmarkNotFound);
+                                    me._showMessageBox(me.locData.getLocData().messages.bookmarkNotFound);
                                     me.lock = 0;
                                 }
                             }
@@ -2457,7 +2453,7 @@ $(function () {
 
                     if (startPage > endPage) {
                         me.resetFind();
-                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                         return;
                     }
 
@@ -2492,9 +2488,9 @@ $(function () {
                                 }
                                 else {
                                     if (me.finding === true)
-                                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                                     else
-                                        me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.keyNotFound, me._findDone);
                                     me.resetFind();
                                 }
                             }
@@ -2516,7 +2512,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
@@ -2528,7 +2524,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
@@ -2536,7 +2532,7 @@ $(function () {
                     }
                 }
                 else {
-                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }
@@ -3984,14 +3980,8 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    //dont load at file parse, file will be loaded when called.
-    setTimeout(function () {
-        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-            locData = loc;
-        });
-    }, 1);
-
+    var locData = forerunner.localize;
+    
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
             rsInstance: null,
@@ -4057,7 +4047,7 @@ $(function () {
         _addNewSet: function (parameterList) {
             var me = this;
             var newSet = me.getNewSet(parameterList);
-            newSet.name = locData.parameterModel.defaultName;
+            newSet.name = locData.getLocData().parameterModel.defaultName;
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -4166,7 +4156,7 @@ $(function () {
             // Add the "<select set>" option
             optionArray.unshift({
                 id: me.selectSetId,
-                name: locData.parameterModel.selectSet
+                name: locData.getLocData().parameterModel.selectSet
             });
             return optionArray;
         },
@@ -4230,7 +4220,7 @@ $(function () {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
                         var newSet = me._addNewSet((data.ParamsList instanceof Array) ? data : data.ParamsList);
-                        newSet.name = locData.parameterModel.defaultName;
+                        newSet.name = locData.getLocData().parameterModel.defaultName;
                     }
                     else if (data) {
                         me.serverData = data;
@@ -5158,7 +5148,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var locData;
+            var locData = forerunner.localize;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
                 locData = loc;
 
@@ -5166,14 +5156,14 @@ $(function () {
                     "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                         "<div class='fr-messagebox-innerpage'>" +
                             "<div class='fr-core-dialog-header'>" +
-                                "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
+                                "<div class='fr-messagebox-title'>" + locData.getLocData().dialog.title + "</div>" +
                             "</div>" +
                             "<div class='fr-messagebox-content'>" +
                                 "<span class='fr-messagebox-msg'/>" +
                             "</div>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+                                    "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.getLocData().dialog.close + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -5238,11 +5228,7 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var events = constants.events;
     var widgets = constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
-
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.catalogTree), {
         options: {
@@ -5257,7 +5243,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            var common = locData.common;
+            var common = locData.getLocData().common;
 
             me.$catalogTree = new $(
                 "<div class='fr-catalog fr-popup-container fr-core-hidden'>" +
@@ -6362,12 +6348,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var locData;
+    var locData = forerunner.localize;
     var messages;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        messages = locData.messages;
-    });
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -6376,6 +6358,8 @@ $(function () {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             rsInstance: null
         };
+
+        me.messages = locData.getLocData().messages;
 
         // Merge options with the default settings
         if (options) {
@@ -6465,7 +6449,7 @@ $(function () {
         loadTemplate: function (templateName) {
             var me = this;
 
-            var locData;
+            var locData = forerunner.localize;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text", function (loc) {
                 me.dashboardDef.template = loc;
             });
@@ -6491,10 +6475,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.favoriteModel), {
         options: {
@@ -6586,7 +6567,7 @@ $(function () {
             }, function (result) {
                 me._switchFavIcon(action === "add");
             }, function () {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.favoriteFailed);
             });
         },
         _switchFavIcon: function (isFavorite) {
@@ -6618,7 +6599,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
+    var locData = forerunner.localize;
    
 
     /**
@@ -6647,17 +6628,14 @@ $(function () {
         },
         _init: function () {
             var me = this;
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-            
+           
             me.guid = forerunner.helper.guidGen();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.properties.title, "fr-properties-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.getLocData().properties.title, "fr-properties-cancel", locData.getLocData().common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -6667,7 +6645,7 @@ $(function () {
                    "</div>" +
                    "<div class='fr-core-dialog-submit-container fr-properties-submit-container'>" +
                        "<div class='fr-core-center'>" +
-                           "<input type='button' class='fr-properties-submit fr-core-dialog-submit fr-core-dialog-button' value='" + locData.properties.submit + "' />" +
+                           "<input type='button' class='fr-properties-submit fr-core-dialog-submit fr-core-dialog-button' value='" + locData.getLocData().properties.submit + "' />" +
                        "</div>" +
                    "</div>" +
                "</div>");
@@ -6691,7 +6669,7 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-          });
+    
         },
         _create: function () {
             
@@ -6817,24 +6795,24 @@ $(function () {
         },
         _createDescription: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.properties.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.getLocData().properties.title + "</a></li>");
 
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<form class='fr-properties-form fr-property-form'>" +
                         "<div class='fr-name-div'>" + 
-                            "<label class='fr-name-label'>" + locData.common.name + "</label>" +
-                            "<span class='fr-readonly-span'>"+ locData.properties.readonly + "</span>" + 
+                            "<label class='fr-name-label'>" + locData.getLocData().common.name + "</label>" +
+                            "<span class='fr-readonly-span'>"+ locData.getLocData().properties.readonly + "</span>" + 
                             "<input type='text' class='fr-core-input fr-property-input fr-name-text fr-property-name' name='Name' required='true'>" +
                             "<span class='fr-error-span' />" +
                         "</div>" +
                         "<div>" +
-                            "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
+                            "<label class='fr-description-label'>" + locData.getLocData().properties.description + "</label>" +
                             "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
                         "<div>" +
                         "<div class='fr-visibility-container'>" +
                             "<label class='fr-visibility-label'>"+
-                                "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + 
+                                "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.getLocData().visibility.label + 
                             "</label>" +
                         "</div>" +
                     "</form>" +
@@ -6867,11 +6845,11 @@ $(function () {
         },
         _createRDLExtension: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.rdlExtension + "'><a href='#" + me.guid + "_" + "RDL" + "'>" + locData.RDLExt.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.rdlExtension + "'><a href='#" + me.guid + "_" + "RDL" + "'>" + locData.getLocData().RDLExt.title + "</a></li>");
 
             var $rdlDiv = new $(
                 "<div id='" + me.guid + "_" + "RDL" + "'  class='fr-property-container fr-rdl-container'>" +
-                    "<label class='fr-rdl-label'>" + locData.RDLExt.dialogTitle + "</label>" +
+                    "<label class='fr-rdl-label'>" + locData.getLocData().RDLExt.dialogTitle + "</label>" +
                     "<textarea rows='5' class='fr-core-input fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
                 "</div>");
 
@@ -6882,16 +6860,16 @@ $(function () {
         },
         _createTags: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.tags + "'><a href='#" + me.guid + "_" + "tags" + "'>" + locData.tags.tags + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.tags + "'><a href='#" + me.guid + "_" + "tags" + "'>" + locData.getLocData().tags.tags + "</a></li>");
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
                     "<div class='fr-tag-input-div'>" +
-                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<label class='fr-tag-label'>" + locData.getLocData().tags.tags + "</label>" +
                         "<textarea class='fr-core-input fr-property-input fr-tag-text' rows='5' name='tags' />" +
                     "</div>" +
                     "<div class='fr-tag-prompt-div'>" +
-                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.getLocData().tags.prompt + "</label>" +
                     "</div>" +
                 "</div>");
 
@@ -6917,7 +6895,7 @@ $(function () {
                                 //"</td>" +
                             //"</tr>" +
                             "<tr>" +
-                                "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
+                                "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.tags + ":</label></td>" +
                                 "<td>" +
                                     "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
                                     "<span class='fr-error-span' />" +
@@ -6925,7 +6903,7 @@ $(function () {
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
-                                "<td><label class='fr-sf-label-prompt'>" + locData.searchFolder.prompt + "</label></td>" +
+                                "<td><label class='fr-sf-label-prompt'>" + locData.getLocData().searchFolder.prompt + "</label></td>" +
                             "<tr>" +
                         "</table>" +
                     "</form>" +
@@ -7057,7 +7035,7 @@ $(function () {
                     },
                     fail: function (data) {
                         me._tags = null;
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.addTagsFailed, locData.getLocData().toolPane.tags);
                     }
                 });
             }
@@ -7150,7 +7128,7 @@ $(function () {
                                 me._description = "";
                                 me._isHidden = "False";
                                 me._itemName = "";
-                                forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.properties.title);
+                                forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().properties.title);
                                 return;
                             }
 
@@ -7170,7 +7148,7 @@ $(function () {
                             me._description = "";
                             me._isHidden = "False";
                             me._itemName = "";
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.properties.title);
+                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.addTagsFailed, locData.getLocData().properties.title);
                         }
                     });
                 }
@@ -7367,7 +7345,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
+    var locData = forerunner.localize;
   
 
     /**
@@ -7396,9 +7374,6 @@ $(function () {
         },
         _init: function () {
             var me = this;
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
             
             me.guid = forerunner.helper.guidGen();
             me.curPath = null;
@@ -7407,7 +7382,7 @@ $(function () {
             //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.security.title, "fr-security-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.getLocData().security.title, "fr-security-cancel", locData.getLocData().common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -7421,25 +7396,25 @@ $(function () {
                         "</div>" +
                         "<div class='fr-security-layer layer-2'>" +
                             "<div class='header'>" +
-                              "<span class='fr-security-label'>" + locData.security.groupuser + "</span>" +
+                              "<span class='fr-security-label'>" + locData.getLocData().security.groupuser + "</span>" +
                               "<input type='text' class='fr-core-input fr-security-input fr-security-groupuser'>" +
                             "</div>" +
-                            "<div class='prompt'>" + locData.security.prompt + "</div>" +
+                            "<div class='prompt'>" + locData.getLocData().security.prompt + "</div>" +
                             "<ul class='fr-security-list'></ul>" +
                         "</div>" +
                     "</div>" +
                    "<div class='fr-core-dialog-submit-container fr-security-submit-container'>" +
                        "<div class='fr-core-center'>" +
                            "<div class='operate-0'>" +
-                                "<input type='button' class='fr-security-edit fr-core-dialog-button' value='" + locData.security.editSecurity + "' />" +
+                                "<input type='button' class='fr-security-edit fr-core-dialog-button' value='" + locData.getLocData().security.editSecurity + "' />" +
                            "</div>" +
                            "<div class='operate-1'>" +
-                                "<input type='button' class='fr-security-new fr-security-btn fr-core-dialog-button' value='" + locData.security.newPolicy + "' />" +
-                                "<input type='button' class='fr-security-revert fr-security-btn fr-core-dialog-button' value='" + locData.security.revert + "' />" +
+                                "<input type='button' class='fr-security-new fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().security.newPolicy + "' />" +
+                                "<input type='button' class='fr-security-revert fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().security.revert + "' />" +
                            "</div>" +
                            "<div class='operate-2'>" +
-                                "<input type='button' class='fr-security-submit fr-security-btn fr-core-dialog-button' value='" + locData.common.submit + "' />" +
-                                "<input type='button' class='fr-security-cancel fr-security-btn fr-core-dialog-button' value='" + locData.common.cancel + "' />" +
+                                "<input type='button' class='fr-security-submit fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().common.submit + "' />" +
+                                "<input type='button' class='fr-security-cancel fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().common.cancel + "' />" +
                            "</div>" +
                        "</div>" +
                    "</div>" +
@@ -7466,8 +7441,7 @@ $(function () {
                 me._clickCancel();
             });
 
-            me._bindEvents();
-            });
+            me._bindEvents();           
         },
         _bindEvents: function(){
             var me = this;
@@ -7490,14 +7464,14 @@ $(function () {
                 if (me.isInheritParent || me.isRoot) {
                     me.closeDialog();
                 } else {
-                    if (!confirm(locData.security.revertConfirm.format(me.parentName))) return;
+                    if (!confirm(locData.getLocData().security.revertConfirm.format(me.parentName))) return;
 
                     me._inheritParentPolicy();
                 }
             });
 
             me.$operate0.on("click", function () {
-                if (!confirm(locData.security.editConfirm.format(me.parentName))) return;
+                if (!confirm(locData.getLocData().security.editConfirm.format(me.parentName))) return;
 
                 me._breakInherit();
             });
@@ -7544,7 +7518,7 @@ $(function () {
             });
 
             me.$layer1.delegate(".delete", "click", function (e) {
-                if (!confirm(locData.security.deleteConfirm)) return;
+                if (!confirm(locData.getLocData().security.deleteConfirm)) return;
 
                 var groupuser = $(this).siblings("span").text();
                 me._deletePolicy(groupuser);
@@ -7750,7 +7724,7 @@ $(function () {
             var groupuser = me.$groupuser.val();
 
             if ($.trim(groupuser) === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.accountMsg);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().security.accountMsg);
                 return null;
             }
 
@@ -7764,7 +7738,7 @@ $(function () {
 
             //at least one role need select
             if (Roles.length === 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.roleEmptyMsg);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().security.roleEmptyMsg);
                 return null;
             }
 
@@ -7942,12 +7916,12 @@ $(function () {
                 tpl = "<li>" +
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.deleteBtn + "</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
+                            "<a href='javascript:void(0);' class='tip' title='" + locData.getLocData().security.detail + "'>...</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.getLocData().common.deleteBtn + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.getLocData().common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +
-                           "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
+                           "<span class='tit'>" + locData.getLocData().security.roles + ":&nbsp;</span>" +
                            "<span class='txt'>" + names.join(", ") + "</span>" +
                        "</div></li>";
 
@@ -7966,10 +7940,10 @@ $(function () {
                        "<div class='role-name'>" +
                             "<span class='chk'><input class='acc-chk' type='checkbox' data-acc='" + data[i].Name + "' /></span>" +
                             "<span class='acc-name'>" + data[i].Name + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title=" + locData.security.desp + ">...</a>" +
+                            "<a href='javascript:void(0);' class='tip' title=" + locData.getLocData().security.desp + ">...</a>" +
                        "</div>" +
                         "<div class='desp'>" +
-                           "<span class='tit'>" + locData.security.desp + ":&nbsp;</span>" +
+                           "<span class='tit'>" + locData.getLocData().security.desp + ":&nbsp;</span>" +
                            "<span class='txt'>" + data[i].Description + "</span>" +
                        "</div></li>";
 
@@ -7985,12 +7959,12 @@ $(function () {
             //index = strTemp.lastIndexOf("/");
             //var returnStr = strTemp.substring(index + 1);
 
-            //return returnStr === "" ? locData.security.home : returnStr;
+            //return returnStr === "" ? locData.getLocData().security.home : returnStr;
             var parentPath = forerunner.helper.getParentPath(curPath);
             return parentPath === null ? "/" : parentPath;
         },
         _getItemName: function (curPath) {
-            return forerunner.helper.getCurrentItemName(curPath, locData.security.home);
+            return forerunner.helper.getCurrentItemName(curPath, locData.getLocData().security.home);
         }
     });
 });
@@ -8010,14 +7984,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
     var contextMenu;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        contextMenu = locData.contextMenu;
-    });
-
-    
 
     // folder properties data
     var propertyEnums = forerunner.ssr.constants.properties;
@@ -8102,6 +8070,7 @@ $(function () {
         _init: function () {
             var me = this;
 
+            me.contextMenu = locData.getLocData().contextMenu;
             // Title
             if (me._title) {
                 me._$title.text(me._title);
@@ -8256,7 +8225,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
    
 
     /**
@@ -8294,24 +8263,21 @@ $(function () {
         _init: function () {
             var me = this;
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-            
-            if (!me.options.title) me.options.title = locData.dialogBase.title;
-            if (!me.options.actionWord) me.options.actionWord = locData.dialogBase.submit;
-            if (!me.options.cancelWord) me.options.cancelWord = locData.dialogBase.cancel;
+            if (!me.options.title) me.options.title = locData.getLocData().dialogBase.title;
+            if (!me.options.actionWord) me.options.actionWord = locData.getLocData().dialogBase.submit;
+            if (!me.options.cancelWord) me.options.cancelWord = locData.getLocData().dialogBase.cancel;
             me._render();
            
             me.$loadingIndicator = me.element.find(".fr-dlb-loading-indicator");
             if (me.$loadingIndicator.length === 0) {
-                me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.messages.loading);
+                me.$loadingIndicator = $("<div class='fr-dlb-loading-indicator' ></div>").text(locData.getLocData().messages.loading);
                 me.element.append(me.$loadingIndicator);
             }
             me._hideSubmitError();
 
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
-            });
+      
         },
         // Call first (I.e., me._super()) in any widget that derives from DialogBase
         _create: function () {
@@ -8386,7 +8352,7 @@ $(function () {
         //  JsonUtility.WriteExceptionJSON(e)
         _showExceptionError: function (errorData) {
             var me = this;
-            var errorTag = locData.errorTag;
+            var errorTag = locData.getLocData().errorTag;
             var $cell;
 
             me.$submitError.html("");
@@ -8553,7 +8519,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -8582,12 +8548,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
-    var locData;
-    setTimeout(function () {
-        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-            locData = loc;
-        });
-    }, 2);
+    var locData = forerunner.localize;
+
 
     /**
      * Toobar widget used by the reportViewer
@@ -8642,7 +8604,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -8863,10 +8825,8 @@ $(function () {
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
     //var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var locData;    
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;    
+
 
     /**
      * ToolPane widget used with the reportViewer
@@ -8909,7 +8869,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 
@@ -9154,10 +9114,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Widget used to show page navigation
@@ -9350,7 +9308,7 @@ $(function () {
             var $close = $("<DIV />");
             $close.addClass("fr-nav-close-container");
 
-            var $span = $("<SPAN>" + locData.paramPane.cancel + "</SPAN>");
+            var $span = $("<SPAN>" + locData.getLocData().paramPane.cancel + "</SPAN>");
             $span.addClass("fr-nav-close");
             $close.append($span);
 
@@ -9490,15 +9448,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
     var contextMenu;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        contextMenu = locData.contextMenu;
-    });
-
-
     var itemType = forerunner.ssr.constants.itemType;
 
     // folder properties data
@@ -9529,6 +9480,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.contextMenu = locData.getLocData().contextMenu;
+
             var catalog = me.options.catalogItem;
 
             // Get the permissions for the path define in the catalogItem option
@@ -9824,7 +9777,7 @@ $(function () {
     var mi = forerunner.ssr.tools.mergedButtons;
     var tg = forerunner.ssr.tools.groups;
     var btnActiveClass = "fr-toolbase-persistent-active-state";
-    var locData;
+    var locData = forerunner.localize;
    
 
     /**
@@ -9884,71 +9837,68 @@ $(function () {
             var me = this;
             me.enableTools([tb.btnMenu, tb.btnBack, tb.btnFav, tb.btnRecent, tg.explorerFindGroup]);
 
-            me.element.find(".fr-rm-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-rm-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
         },
         _init: function () {
             var me = this;
             me._super();
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
 
-                me.element.empty();
-                me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
+            me.element.empty();
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-toolbar fr-core-widget'/>"));
 
-                //check whether hide home button is enable
-                var toolbarList = [tb.btnMenu, tb.btnBack];
+            //check whether hide home button is enable
+            var toolbarList = [tb.btnMenu, tb.btnBack];
 
-                //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
-                if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                    if (me.options.path !== "/") {
-                        toolbarList.push(mi.btnFav);
-                    }
-                    toolbarList.push(tb.btnSetup);
+            //add UseMoblizerDB check for setting, subscriptions, recent, favorite on the explorer toolbar
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                if (me.options.path !== "/") {
+                    toolbarList.push(mi.btnFav);
                 }
+                toolbarList.push(tb.btnSetup);
+            }
 
-                if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
+            if (forerunner.config.getCustomSettingsValue("showHomeButton", "off") === "on") {
+                //add home button based on the user setting
+                toolbarList.push(tb.btnHome);
+            }
+
+            if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
+                if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
                     //add home button based on the user setting
-                    toolbarList.push(tb.btnHome);
+                    toolbarList.push(tb.btnMySubscriptions);
                 }
 
-                if (me.options.dbConfig && me.options.dbConfig.UseMobilizerDB === true) {
-                    if (forerunner.config.getCustomSettingsValue("showSubscriptionUI", "off") === "on") {
-                        //add home button based on the user setting
-                        toolbarList.push(tb.btnMySubscriptions);
-                    }
-
-                    //recent view feature need ReportServerDB support
-                    if (me.options.dbConfig.SeperateDB !== true) {
-                        toolbarList.push(tb.btnRecent);
-                    }
-                    toolbarList.push(tb.btnFav);
+                //recent view feature need ReportServerDB support
+                if (me.options.dbConfig.SeperateDB !== true) {
+                    toolbarList.push(tb.btnRecent);
                 }
+                toolbarList.push(tb.btnFav);
+            }
 
-                toolbarList.push(tb.btnLogOff);
+            toolbarList.push(tb.btnLogOff);
                 
 
 
-                toolbarList.push(tg.explorerFindGroup);
+            toolbarList.push(tg.explorerFindGroup);
 
-                me.addTools(1, true, toolbarList);
+            me.addTools(1, true, toolbarList);
 
-                forerunner.ajax.isFormsAuth(function (isForms) {
-                    if (!isForms)
-                        me.hideTool(tb.btnLogOff.selectorClass);
-                });
-
-                me._initCallbacks();
-
-                // Hold onto the folder buttons for later
-                var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
-                var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
-                var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
-                me.folderBtns = [$btnHome, $btnRecent, $btnFav];
-
-                // Make sure the tools are configured properly
-                me.windowResize();
+            forerunner.ajax.isFormsAuth(function (isForms) {
+                if (!isForms)
+                    me.hideTool(tb.btnLogOff.selectorClass);
             });
+
+            me._initCallbacks();
+
+            // Hold onto the folder buttons for later
+            var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
+            var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
+            var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
+            me.folderBtns = [$btnHome, $btnRecent, $btnFav];
+
+            // Make sure the tools are configured properly
+            me.windowResize();
         },
         _create: function () {
         }
@@ -9975,10 +9925,8 @@ $(function () {
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
     var itemActiveClass = "fr-toolbase-persistent-active-light";
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -10124,7 +10072,7 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-rm-item-keyword").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
 
             me._updateBtnStates();
         },
@@ -10188,10 +10136,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -10238,7 +10184,7 @@ $(function () {
         // Constructor
         _create: function () {
             var me = this;
-
+            forerunner.ssr._internal.init();
             // Make sure the viewerBase _create gets called
             me._super();
         },
@@ -10669,7 +10615,7 @@ $(function () {
             var me = this;
 
             if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                 return;
             }
 
@@ -10692,7 +10638,7 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().messages.catalogsLoadFailed);
                     }
                     else {
                         if (data.length) {
@@ -10711,14 +10657,14 @@ $(function () {
 
                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: me.path });
                     me.removeLoadingIndicator();
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.catalogsLoadFailed);
                 }
             });
         },
         _showNotFound: function () {
             var me = this;
             var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
-            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.getLocData().explorerSearch.notFound + "</div>");
             $explorer.append($notFound);
             me.element.append($explorer);
         },
@@ -10815,7 +10761,7 @@ $(function () {
             }).done(
                  function (data) {
                      if (data.Exception) {
-                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().messages.catalogsLoadFailed);
                      }
                      else {
                          me._render(data);
@@ -10828,7 +10774,7 @@ $(function () {
                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                     me.removeLoadingIndicator();
                     console.log(textStatus);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.getLocData().messages.catalogsLoadFailed);
                 });
         },
         _initCallbacks: function () {
@@ -11075,10 +11021,10 @@ $(function () {
                     //refresh the page if search folder created succeeded
                     location.reload(true);
                     //bug 1078, not show succeeded dialig, instead just close current dialog
-                    //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
+                    //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.saveSearchFolderSucceeded, locData.getLocData().toolbar.searchFolder);
                 },
                 error: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.saveSearchFolderFailed, locData.getLocData().toolbar.searchFolder);
                 }
             });
         },
@@ -11243,88 +11189,85 @@ $(function () {
             
             
            
-            var locData;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                var userSettings = locData.userSettings;
-                var unit = locData.unit;
+            var locData = forerunner.localize;
+            var userSettings = locData.getLocData().userSettings;
+            var unit = locData.getLocData().unit;
 
-                me.element.html("");
-                me.element.off(events.modalDialogGenericSubmit);
-                me.element.off(events.modalDialogGenericCancel);
+            me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
-                var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
-                var $theForm = new $(
-                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                    headerHtml +
-                    // form
-                    "<form class='fr-us-form fr-core-dialog-form'>" +
-                        "<table>" +
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-setup", userSettings.title, "fr-us-cancel", userSettings.cancel);
+            var $theForm = new $(
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
+                // form
+                "<form class='fr-us-form fr-core-dialog-form'>" +
+                    "<table>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
+                        "<tr>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
+                            "</td>" +
+                        "</tr>" +
                             "<tr>" +
-                                "<td>" +
-                                    "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
-                                "</td>" +
-                            "</tr>" +
-                            "<tr>" +
-                                "<td>" +
-                                    "<label class='fr-us-label'>" + userSettings.AdminUI + "</label>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<input class='fr-us-admin-ui-id fr-us-checkbox'  name='adminUI' type='checkbox'/>" +
-                                "</td>" +
-                            "</tr>" +
-                             "<tr>" +
-                                "<td>" +
-                                    "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
-                                "</td>" +
-                                "<td>" +
-                                    "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
-                                    "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
-                                    "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
-                                     "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
-                                    "</select" +
-                                "</td>" +
-                            "</tr>" +
-                        "</table>" +
-                        // Ok button
-                        "<div class='fr-core-dialog-submit-container'>" +
-                            "<div class='fr-core-center'>" +
-                            "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
-                        "</div>" +
-                    "</form>" +
-                    "<div class='fr-buildversion-container'>" +
+                            "<td>" +
+                                "<label class='fr-us-label'>" + userSettings.ViewStyle + "</label>" +
+                            "</td>" +
+                            "<td>" +
+                                "<select class='fr-us-viewStyle-id fr-us-dropdown  '  name='viewStyle' list='viewStyles'>" +
+                                "<option value='" + "large" + "'>" + userSettings.ViewStyleLarge + "</option>" +
+                                "<option value='" + "small" + "'>" + userSettings.ViewStyleSmall + "</option>" +
+                                    "<option value='" + "list" + "'>" + userSettings.ViewStyleList + "</option>" +
+                                "</select" +
+                            "</td>" +
+                        "</tr>" +
+                    "</table>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
                     "</div>" +
-                "</div>");
+                "</form>" +
+                "<div class='fr-buildversion-container'>" +
+                "</div>" +
+            "</div>");
 
-                me.element.append($theForm);
+            me.element.append($theForm);
 
-                //Set build number            
-                forerunner.ajax.getBuildVersion(function (version) {
-                    me.element.find(".fr-buildversion-container").html(version);
-                });
-
-                //disable form auto submit when click enter on the keyboard
-                me.element.find(".fr-us-form").on("submit", function () { return false; });
-
-                me.element.find(".fr-us-submit-id").on("click", function (e) {
-                    me._saveSettings();
-                });
-
-                me.element.find(".fr-us-cancel").on("click", function (e) {
-                    me.closeDialog();
-                });
-
-                me.element.on(events.modalDialogGenericSubmit, function () {
-                    me._saveSettings();
-                });
-
-                me.element.on(events.modalDialogGenericCancel, function () {
-                    me.closeDialog();
-                });
+            //Set build number            
+            forerunner.ajax.getBuildVersion(function (version) {
+                me.element.find(".fr-buildversion-container").html(version);
             });
+
+            //disable form auto submit when click enter on the keyboard
+            me.element.find(".fr-us-form").on("submit", function () { return false; });
+
+            me.element.find(".fr-us-submit-id").on("click", function (e) {
+                me._saveSettings();
+            });
+
+            me.element.find(".fr-us-cancel").on("click", function (e) {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });            
         },
         _getSettings: function () {
             var me = this;
@@ -11412,10 +11355,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     /**
      * Widget used to create search folder
      *
@@ -11445,7 +11386,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.getLocData().searchFolder.title, "fr-sf-cancel", locData.getLocData().searchFolder.cancel);
 
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -11454,27 +11395,27 @@ $(function () {
                         "<form class='fr-core-dialog-form fr-sf-form'>" +
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
-                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
+                                    "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.name + ":</label></td>" +
                                     "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' />" +
                                          "<span class='fr-sf-error-span' />" +
                                     "</td>" +
                                 "</tr>" +
                                 "<tr>" +
-                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
+                                    "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.tags + ":</label></td>" +
                                     "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
                                         "<span class='fr-sf-error-span' />" +
                                     "</td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
-                                    "<td><label class='fr-sf-label-prompt'>" + locData.searchFolder.prompt + "</label></td>" +
+                                    "<td><label class='fr-sf-label-prompt'>" + locData.getLocData().searchFolder.prompt + "</label></td>" +
                                 "<tr>" +
                             "</table>" +
                         "</form>" +
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.getLocData().searchFolder.submit + "' />" +
                         "</div>" +
                         "<div class='fr-sf-location' />" +
                     "</div>" +
@@ -11482,8 +11423,8 @@ $(function () {
 
             me.element.append($container);
 
-            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
-            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldername").watermark(locData.getLocData().searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldertags").watermark(locData.getLocData().searchFolder.tags, forerunner.config.getWatermarkConfig());
 
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({
@@ -11573,12 +11514,10 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var linked;
     var common;
   
-
- 
 
     /**
     * Widget used to manage item linked report
@@ -11615,10 +11554,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                linked = locData.linkedReport;
-                common = locData.common;
+            linked = locData.getLocData().linkedReport;
+            common = locData.getLocData().common;
             
 
             me._super();
@@ -11657,7 +11594,7 @@ $(function () {
 
             me._bindEvents();
             me._reset();
-            });
+            
         },
         _bindEvents: function () {
             var me = this;
@@ -11732,14 +11669,14 @@ $(function () {
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);
-                prompt = locData.linkedReport.edit.format(me.curPath);
-                treeLabel = locData.linkedReport.report;
+                prompt = locData.getLocData().linkedReport.edit.format(me.curPath);
+                treeLabel = locData.getLocData().linkedReport.report;
 
                 catalogTreeOptions.type = "fullCatalog";
             } else {
                 me.$name.removeAttr("disabled");
-                prompt = locData.linkedReport.create.format(me.curPath);
-                treeLabel = locData.linkedReport.locatiton;
+                prompt = locData.getLocData().linkedReport.create.format(me.curPath);
+                treeLabel = locData.getLocData().linkedReport.locatiton;
 
                 catalogTreeOptions.type = "subCatalog";
             }
@@ -11879,13 +11816,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var uploadFile;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        uploadFile = locData.uploadFile;
-    });
-    
     var helper = forerunner.helper;
 
     /**
@@ -11914,12 +11846,9 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            uploadFile = locData.getLocData().uploadFile;
             me._super();
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                uploadFile = locData.uploadFile;
-            
+         
             if (!me.options.title) me.options.title = uploadFile.title;
             var description = uploadFile.description.replace("{0}", me.options.parentFolder);
 
@@ -12053,7 +11982,7 @@ $(function () {
             // us to have the look and feel we want and also be compatible on all browsers
             me.$browseContainer = me.element.find(".fr-upf-browse-btn-container");
             me.$browseBtn = me.element.find(".fr-upf-browse-id");
-            });
+           
         },
         _submit: function () {
             // We are taking this processing away because the "real" form submit processing will handles
@@ -12113,14 +12042,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var newFolder;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        newFolder = locData.newFolder;
-    });
-  
     var helper = forerunner.helper;
 
     /**
@@ -12147,6 +12070,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.newFolder = locData.getLocData().newFolder;
+
             me._super();
 
             if (!me.options.title) me.options.title = newFolder.title;
@@ -12215,7 +12140,7 @@ $(function () {
                 },
                 fail: function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status === 400) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.newFolder.fileExists, locData.newFolder.fileExists);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().newFolder.fileExists, locData.getLocData().newFolder.fileExists);
                         return;
                     }
 
@@ -12241,11 +12166,9 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var common;
     var move ;
-
-
 
     /**
     * Widget used to support item move
@@ -12275,10 +12198,8 @@ $(function () {
             var me = this;
             me._super();
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                common = locData.common;
-                move = locData.move;
+            common = locData.getLocData().common;
+            move = locData.getLocData().move;
             
             if (!me.options.title) me.options.title = move.title;
             me.curPath = null;
@@ -12304,7 +12225,7 @@ $(function () {
             me.$location = me.$moveContainer.find(".fr-move-location");
 
             me._bindEvents();
-            });
+            
         },
         _bindEvents: function () {
             var me = this;
@@ -12639,7 +12560,7 @@ $(function () {
          */
         writeError: function (errorData) {
             var me = this;
-            var errorTag = me.options.reportViewer.locData.errorTag;
+            var errorTag = me.options.reportViewer.locData.getLocData().errorTag;
             var $cell;
 
             if (errorData.Exception.Type === "LicenseException") {
@@ -13565,10 +13486,10 @@ $(function () {
             }
 
 
-            //NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;            
+            //NewImage.alt = me.options.reportViewer.locData.getLocData().messages.imageNotDisplay;            
             //NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 
-            NewImage.attr("alt", me.options.reportViewer.locData.messages.imageNotDisplay);
+            NewImage.attr("alt", me.options.reportViewer.locData.getLocData().messages.imageNotDisplay);
             NewImage.attr("src", this._getImageURL(RIContext.RS, ImageName));
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
@@ -14303,7 +14224,7 @@ $(function () {
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
             TS.State = { "LastRowIndex": 0, "LastObjType": "", "StartIndex": 0, CellCount: 0 };
-            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.getLocData().messages.loading);
             me._writeTablixRowBatch(TS);
 
             HasFixedRows = TS.HasFixedRows;
@@ -15589,10 +15510,10 @@ $(function () {
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
                        "<div class='fr-param-submit-container'>" +
-                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
+                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
                        "</div>" +
                        "<div class='fr-param-cancel-container'>" +
-                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.paramPane.cancel + "</span>" +
+                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
                        "</div>" +
                     "</div>" +
                 "</form>" +
@@ -15727,7 +15648,7 @@ $(function () {
             }
 
             if (me._reportDesignError !== null) {
-                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
+                me._reportDesignError += me.options.$reportViewer.locData.getLocData().messages.contactAdmin;
             }
 
             me.$form.validate({
@@ -16036,7 +15957,7 @@ $(function () {
                 $.each(me.$datepickers, function (index, datePicker) {
                     $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
                         .datepicker("option", "buttonImageOnly", true)
-                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
+                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.getLocData().paramPane.datePicker);
                 });
 
                 $(window).off("resize", me._paramWindowResize);
@@ -16236,7 +16157,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, forerunner.config.getWatermarkConfig());
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.getLocData().paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -16279,7 +16200,7 @@ $(function () {
                 });
 
                 var $label = new $("<Label class='fr-param-option-label' />");
-                $label.html(me.options.$reportViewer.locData.paramPane.nullField);
+                $label.html(me.options.$reportViewer.locData.getLocData().paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
@@ -16314,7 +16235,7 @@ $(function () {
             $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
             var $label = new $("<label class='fr-param-option-label' />");
-            $label.text(me.options.$reportViewer.locData.paramPane.useDefault);
+            $label.text(me.options.$reportViewer.locData.getLocData().paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
             $container.append($checkbox).append($label);
@@ -16413,7 +16334,7 @@ $(function () {
         },
         _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var paramPane = me.options.$reportViewer.locData.paramPane;
+            var paramPane = me.options.$reportViewer.locData.getLocData().paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
@@ -16705,7 +16626,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var defaultSelect = me.options.$reportViewer.locData.paramPane.select;
+            var defaultSelect = me.options.$reportViewer.locData.getLocData().paramPane.select;
             var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
@@ -17632,7 +17553,7 @@ $(function () {
             }
 
             var required = !!$(param).attr("required");
-            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+            if (required && param.value === me.options.$reportViewer.locData.getLocData().paramPane.required) {
                 return false;
             }
 
@@ -18041,7 +17962,7 @@ $(function () {
         },
         _getDatePickerLoc: function () {
             var me = this;
-            return me.options.$reportViewer.locData.datepicker;
+            return me.options.$reportViewer.locData.getLocData().datepicker;
         },
         //handle window resize action
         _paramWindowResize: function (event, data) {
@@ -18283,14 +18204,12 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-            });
+            me.locData = forerunner.localize;
+
         },
         _initBody: function () {
             var me = this;
-            var print = me.locData.print;
+            var print = me.locData.getLocData().print;
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -18382,7 +18301,7 @@ $(function () {
         },
         _createItems: function (pageLayout) {
             var me = this;
-            var print = me.locData.print;
+            var print = me.locData.getLocData().print;
             var unit = print.unit;
             pageLayout = pageLayout || me._printData;
 
@@ -18566,7 +18485,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = me.locData.validateError;
+            var error = me.locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -18578,7 +18497,7 @@ $(function () {
         _unitConvert: function (milimeter) {
             var me = this;
             //if inch is the country's culture unit then convert milimeter to inch
-            if (me.locData.print.unit === "in") {
+            if (me.locData.getLocData().print.unit === "in") {
                 return Math.round(milimeter / 25.4 * 100) / 100;
             }
             else {
@@ -18588,7 +18507,7 @@ $(function () {
         //if inch is the country's culture unit then the source should be inch, otherwise it should be mm (RPL Default).
         _generateUnitConvert: function (source) {
             var me = this;
-            if (me.locData.print.unit === "mm") {
+            if (me.locData.getLocData().print.unit === "mm") {
                 return Math.round(source / 25.4 * 100) / 100;
             }
             else {
@@ -18623,13 +18542,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var manageParamSets;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        manageParamSets = locData.manageParamSets;
-    });
-    
 
     /**
      * Widget used to manage parameter set
@@ -18771,6 +18685,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+
+            manageParamSets = locData.getLocData().manageParamSets;
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -18992,7 +18908,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -19015,10 +18931,8 @@ $(function () {
     var events = constants.events;
     var toolTypes = ssr.constants.toolTypes;
     var widgets = constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+   
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -19552,6 +19466,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            forerunner.ssr._internal.init();
+
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
@@ -19779,13 +19695,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var dsCredential;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        dsCredential = locData.dsCredential;
-    });
   
     /**
      * Widget used to manage report datasource credential
@@ -19810,6 +19721,9 @@ $(function () {
         _create: function () {
         },
         _init: function () {
+            var me = this;
+
+            me.dsCredential = locData.getLocData().dsCredential;
         },
         _initBody: function () {
             var me = this;
@@ -20032,7 +19946,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -20072,10 +19986,8 @@ $(function () {
     var helper = forerunner.helper;
     var constants = forerunner.ssr.constants;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
@@ -20305,7 +20217,7 @@ $(function () {
         _getLink: function (path, $container, index, transitionName) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
-                name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
+                name = (forerunner.helper.getCurrentItemName(path) || locData.getLocData().toolbar.home),
                 $link = new $("<span />"),
                 $arrowTag,
                 $forerunnerViewLink,
@@ -20314,20 +20226,20 @@ $(function () {
             $link.addClass("fr-location-link");
             index++;
             if (parentPath === null) {
-                $link.text(locData.toolbar.home);
+                $link.text(locData.getLocData().toolbar.home);
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
 
                 //show forerunner view name in breadcrumb, search/favorite/recent
                 switch (transitionName) {
                     case "transitionToSearch":
-                        forerunerViewText = locData.toolbar.search;
+                        forerunerViewText = locData.getLocData().toolbar.search;
                         break;
                     case "transitionToFavorites":
-                        forerunerViewText = locData.toolbar.favorites;
+                        forerunerViewText = locData.getLocData().toolbar.favorites;
                         break;
                     case "transitionToRecent":
-                        forerunerViewText = locData.toolbar.recent;
+                        forerunerViewText = locData.getLocData().toolbar.recent;
                         break;
                 }
 
@@ -20676,6 +20588,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+            forerunner.ssr._internal.init();
 
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
@@ -20702,30 +20615,28 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
 
-                forerunner.config.getCustomSettings(function (settings) {
-                    if (me.options.explorerSettings == null)
-                        me.options.explorerSettings = settings;
+            forerunner.config.getCustomSettings(function (settings) {
+            if (me.options.explorerSettings == null)
+                me.options.explorerSettings = settings;
 
-                    forerunner.config.getDBConfiguration(function (config) {
-                        if (me.options.dbConfig == null)
-                            me.options.dbConfig = config;
+            forerunner.config.getDBConfiguration(function (config) {
+                if (me.options.dbConfig == null)
+                    me.options.dbConfig = config;
 
-                        me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
-                            $container: me.element,
-                            isFullScreen: me.options.isFullScreen
-                        }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
 
-                        me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
-                        if (!me.options.navigateTo) {
-                            me._initNavigateTo();
-                        }
-                    });
-                });
+                if (!me.options.navigateTo) {
+                    me._initNavigateTo();
+                }
             });
+        });
+    
 
         },
         _setPropertiesTabs: function (view, path, propertyList) {
@@ -20801,10 +20712,8 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
     * Widget used to manage subscription
@@ -20846,14 +20755,14 @@ $(function () {
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
-            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
+            $deleteIcon.attr("title", locData.getLocData().subscription.deleteSubscription);
             $deleteIcon.on("click", function () {
                 me.options.subscriptionModel.subscriptionModel("deleteSubscription",
                     subInfo.SubscriptionID,
                     function () { me._renderList(); }, function () { me._showDeletionFailure(); });
             });
             $editIcon.addClass("fr-sub-edit-icon");
-            $editIcon.attr("title", locData.subscription.edit);
+            $editIcon.attr("title", locData.getLocData().subscription.edit);
             $editIcon.on("click", function () {
                 me._editSubscription(subInfo.Path, subInfo.SubscriptionID);
             });
@@ -20887,7 +20796,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -20905,7 +20814,7 @@ $(function () {
             me.element.off(events.modalDialogGenericCancel);
 
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.getLocData().subscription.manageSubscription, "fr-managesubscription-cancel", locData.getLocData().subscription.cancel);
             me.$container.append(headerHtml);
 
             // Make these async calls and cache the results before they are needed.
@@ -20914,7 +20823,7 @@ $(function () {
             me.element.append(me.$container);
 
             me.$emptyPrompt = me._createDiv(["fr-sub-empty-prompt"]);
-            me.$emptyPrompt.text(locData.subscription.emptyPrompt);
+            me.$emptyPrompt.text(locData.getLocData().subscription.emptyPrompt);
             me.$container.append(me.$emptyPrompt);
 
             me.$listcontainer = me._createDiv(["fr-sub-list-container"]);
@@ -20983,14 +20892,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
     var createDashboard ;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer","json", function (loc) {
-        locData = loc;
-        createDashboard = locData.createDashboard;
-    });
-    
     var ssr = forerunner.ssr;
 
     /**
@@ -21038,6 +20941,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            
+            me.createDashboard = locData.getLocData().createDashboard;
 
             // Reinitialize the fields
             me.$dashboardName.val("");
@@ -21159,9 +21064,9 @@ $(function () {
             }
 
             if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
             } else {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, createDashboard.title);
             }
         },
         /**
@@ -21199,7 +21104,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -21228,10 +21133,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     /**
      * Widget used to create email subscription
@@ -21362,8 +21264,8 @@ $(function () {
                     } else {
                         forerunner.ajax.getUserName(me.options.subscriptionModel.subscriptionModel("option", "rsInstance"), function (userName) {
                             me.$to.val(userName);
-                            me.$desc.val(locData.subscription.description.format(userName));
-                            me.$subject.val(locData.subscription.subject);
+                            me.$desc.val(locData.getLocData().subscription.description.format(userName));
+                            me.$subject.val(locData.getLocData().subscription.subject);
                         });
                     }
                 }
@@ -21486,7 +21388,7 @@ $(function () {
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
-            me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.format, me.$renderFormat));
         },
         _initExtensionOptions: function () {
             var me = this;
@@ -21513,7 +21415,7 @@ $(function () {
                     }
                 }
                 me.$sharedSchedule = me._createDropDownForValidValues(validValues);
-                me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
+                me.$theTable.append(me._createTableRow(locData.getLocData().subscription.schedule, me.$sharedSchedule));
                 me.$sharedSchedule.addClass("fr-email-schedule");
                 done();
             });
@@ -21612,8 +21514,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew) :
-                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.getLocData().subscription.email, "fr-email-cancel", locData.getLocData().subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.getLocData().subscription.addNew) :
+                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.getLocData().subscription.email, "fr-email-cancel", locData.getLocData().subscription.cancel);
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -21624,42 +21526,42 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.subscription.descriptionPlaceholder
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.getLocData().subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$desc.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.descriptionPlaceholder, me.$desc));
 
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.subscription.toPlaceholder
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.getLocData().subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$to.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.toPlaceholder, me.$to));
 
-            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.subscription.toPlaceholder
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.getLocData().subscription.toPlaceholder
             me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.ccPlaceholder, me.$cc));
 
-            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.subscription.toPlaceholder
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.getLocData().subscription.toPlaceholder
             me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.bccPlaceholder, me.$bcc));
 
-            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.subscription.toPlaceholder
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.getLocData().subscription.toPlaceholder
             me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.replyToPlaceholder, me.$replyTo));
 
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.subscription.subjectPlaceholder
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.getLocData().subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$subject.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.subjectPlaceholder, me.$subject));
 
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
             me.$includeReport = me._createCheckBox();
             me.$includeReport.addClass("fr-email-include");
-            me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
-            me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.includeLink, me.$includeLink));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.includeReport, me.$includeReport));
 
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.getLocData().subscription.commentPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.commentPlaceholder, me.$comment));
             
 
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
@@ -21682,13 +21584,13 @@ $(function () {
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "submit");
-            me.$submitButton.val(locData.subscription.save);
+            me.$submitButton.val(locData.getLocData().subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
-                me.$deleteButton.val(locData.subscription.deleteSubscription);
+                me.$deleteButton.val(locData.getLocData().subscription.deleteSubscription);
                 me.$submitContainer.append(me.$deleteButton);
             }
             me.$theForm.append(me.$submitContainer);
@@ -21749,7 +21651,7 @@ $(function () {
                     subscriptionInfo,
                     function () { me.closeDialog(); },
                     function (data) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.getLocData().subscription.saveFailed);
                     });
             }
         },
@@ -21765,7 +21667,7 @@ $(function () {
                "deleteSubscription",
                me._subscriptionID,
                function () { me.closeDialog(); },
-               function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
+               function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().subscription.deleteFailed); });
         },
         /**
          * Open email subscription dialog
@@ -21820,10 +21722,8 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
     * Widget used to manage subscription
@@ -21867,14 +21767,14 @@ $(function () {
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
-            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
+            $deleteIcon.attr("title", locData.getLocData().subscription.deleteSubscription);
             $deleteIcon.on("click", function () {
                 me.options.subscriptionModel.subscriptionModel("deleteSubscription",
                     subInfo.SubscriptionID,
                     function () { me._renderList(); }, function () { me._showDeletionFailure(); });
             });
             $editIcon.addClass("fr-sub-edit-icon");
-            $editIcon.attr("title", locData.subscription.edit);
+            $editIcon.attr("title", locData.getLocData().subscription.edit);
             $editIcon.on("click", function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
@@ -21907,7 +21807,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -21923,7 +21823,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.getLocData().subscription.manageSubscription, "fr-managesubscription-cancel", locData.getLocData().subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.getLocData().subscription.addNew);
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");
@@ -22001,10 +21901,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {
@@ -22169,7 +22066,7 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
                         success(data);
@@ -28537,10 +28434,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
     var mi = forerunner.ssr.tools.mergedButtons;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Toobar widget used by the dashboard
@@ -28646,10 +28541,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var dbtp = forerunner.ssr.tools.dashboardToolPane;
     var mi = forerunner.ssr.tools.mergedItems;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * ToolPane widget used with the dashboard
@@ -28764,16 +28657,9 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var toolbar;
     var messages;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        toolbar = locData.toolbar;
-        messages = locData.messages;
-    });
-
 
     /**
      * Widget used to view dashboards
@@ -28879,6 +28765,9 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.toolbar = locData.getLocData().toolbar;
+            me.messages = locData.getLocData().messages;
+
             me.model.clearState();
             me.element.html("");
         },
@@ -29023,16 +28912,10 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var toolbar;
     var messages;
 
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        toolbar = locData.toolbar;
-        messages = locData.messages;
-    });
-    
     var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 50;
 
     /**
@@ -29214,6 +29097,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.toolbar = locData.getLocData().toolbar;
+            me.messages = locData.getLocData().messages;
             me._super();
         },
         _destroy: function () {
@@ -29237,14 +29122,8 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var reportProperties;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        reportProperties = locData.reportProperties;
-    });
- 
 
     /**
      * Widget used to select a new dashboard template
@@ -29276,6 +29155,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.reportProperties = locData.getLocData().reportProperties;
+
             me._super();
 
             if (!me.options.title) me.options.title = reportProperties.title;

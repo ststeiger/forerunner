@@ -12,13 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var uploadFile;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        uploadFile = locData.uploadFile;
-    });
-    
     var helper = forerunner.helper;
 
     /**
@@ -47,12 +42,9 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            uploadFile = locData.getLocData().uploadFile;
             me._super();
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                uploadFile = locData.uploadFile;
-            
+         
             if (!me.options.title) me.options.title = uploadFile.title;
             var description = uploadFile.description.replace("{0}", me.options.parentFolder);
 
@@ -186,7 +178,7 @@ $(function () {
             // us to have the look and feel we want and also be compatible on all browsers
             me.$browseContainer = me.element.find(".fr-upf-browse-btn-container");
             me.$browseBtn = me.element.find(".fr-upf-browse-id");
-            });
+           
         },
         _submit: function () {
             // We are taking this processing away because the "real" form submit processing will handles

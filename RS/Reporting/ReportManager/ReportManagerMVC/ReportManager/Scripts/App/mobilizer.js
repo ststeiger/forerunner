@@ -8,7 +8,11 @@ $(function () {
         //If CORS support needed
         //forerunner.config.enableCORSWithCredentials = true;
 
-        me.explorer = $("body").reportExplorerEZ({
+        forerunner.config.initialize(function () {
+            me.explorer = $("body").reportExplorerEZ({
+                
+            });
         });
+        
     });
 });

@@ -12,14 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var newFolder;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        newFolder = locData.newFolder;
-    });
-  
     var helper = forerunner.helper;
 
     /**
@@ -46,6 +40,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.newFolder = locData.getLocData().newFolder;
+
             me._super();
 
             if (!me.options.title) me.options.title = newFolder.title;
@@ -114,7 +110,7 @@ $(function () {
                 },
                 fail: function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status === 400) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.newFolder.fileExists, locData.newFolder.fileExists);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().newFolder.fileExists, locData.getLocData().newFolder.fileExists);
                         return;
                     }
 

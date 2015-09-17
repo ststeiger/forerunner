@@ -15,12 +15,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var tb = forerunner.ssr.tools.toolbar;
     var tg = forerunner.ssr.tools.groups;
-    var locData;
-    setTimeout(function () {
-        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-            locData = loc;
-        });
-    }, 2);
+    var locData = forerunner.localize;
+
 
     /**
      * Toobar widget used by the reportViewer
@@ -75,7 +71,7 @@ $(function () {
                     //we need to put keyword textbox watermark initialize code here, we call enableTools above it will re-bind each buttons' events
                     //but in watermark plug-in it also bind a focus/blur event to the textbox, enableTools only re-bind the event we defined in 
                     //forerunner-tools.js so need to make sure the blur event from watermark actually work
-                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-toolbar-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 

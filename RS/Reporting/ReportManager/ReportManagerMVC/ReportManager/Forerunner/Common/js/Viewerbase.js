@@ -9,7 +9,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
-    var locData;
+    var locData = forerunner.localize;
     /**
      * The viewerBase widget is used as a base namespace for the reportViewer and the reportExplorer
      * widgets
@@ -27,25 +27,18 @@ $(function () {
         _create: function () {
             var me = this;
             
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-                me.loadLock = 0;
-            });
         },
         _init: function ($viewerContainer) {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-                me.loadLock = 0;
+            me.loadLock = 0;
 
-                me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
-                if (me.$loadingIndicator.length === 0) {
-                    me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
-                    me.element.append(me.$loadingIndicator);
-                }
+            me.$loadingIndicator = me.element.find(".fr-report-loading-indicator");
+            if (me.$loadingIndicator.length === 0) {
+                me.$loadingIndicator = $("<div class='fr-report-loading-indicator' ></div>").text(locData.getLocData().messages.loading);
+                me.element.append(me.$loadingIndicator);
+            }
 
-                me.$viewerContainer = $viewerContainer;
-            });
+            me.$viewerContainer = $viewerContainer;
         },
         /**
          * Shows the loading Indicator

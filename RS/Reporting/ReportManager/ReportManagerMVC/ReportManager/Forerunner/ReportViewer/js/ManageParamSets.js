@@ -12,13 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var manageParamSets;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        manageParamSets = locData.manageParamSets;
-    });
-    
 
     /**
      * Widget used to manage parameter set
@@ -160,6 +155,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+
+            manageParamSets = locData.getLocData().manageParamSets;
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -381,7 +378,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,

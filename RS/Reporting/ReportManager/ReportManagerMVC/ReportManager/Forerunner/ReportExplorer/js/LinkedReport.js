@@ -9,12 +9,10 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var linked;
     var common;
   
-
- 
 
     /**
     * Widget used to manage item linked report
@@ -51,10 +49,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                linked = locData.linkedReport;
-                common = locData.common;
+            linked = locData.getLocData().linkedReport;
+            common = locData.getLocData().common;
             
 
             me._super();
@@ -93,7 +89,7 @@ $(function () {
 
             me._bindEvents();
             me._reset();
-            });
+            
         },
         _bindEvents: function () {
             var me = this;
@@ -168,14 +164,14 @@ $(function () {
             if (me.isLinkedReport) {
                 me._getReportLink();
                 me.$name.attr("disabled", true);
-                prompt = locData.linkedReport.edit.format(me.curPath);
-                treeLabel = locData.linkedReport.report;
+                prompt = locData.getLocData().linkedReport.edit.format(me.curPath);
+                treeLabel = locData.getLocData().linkedReport.report;
 
                 catalogTreeOptions.type = "fullCatalog";
             } else {
                 me.$name.removeAttr("disabled");
-                prompt = locData.linkedReport.create.format(me.curPath);
-                treeLabel = locData.linkedReport.locatiton;
+                prompt = locData.getLocData().linkedReport.create.format(me.curPath);
+                treeLabel = locData.getLocData().linkedReport.locatiton;
 
                 catalogTreeOptions.type = "subCatalog";
             }

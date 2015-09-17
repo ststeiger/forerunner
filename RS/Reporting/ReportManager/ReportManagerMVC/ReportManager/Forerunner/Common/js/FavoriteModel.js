@@ -13,10 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.favoriteModel), {
         options: {
@@ -108,7 +105,7 @@ $(function () {
             }, function (result) {
                 me._switchFavIcon(action === "add");
             }, function () {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.favoriteFailed);
             });
         },
         _switchFavIcon: function (isFavorite) {

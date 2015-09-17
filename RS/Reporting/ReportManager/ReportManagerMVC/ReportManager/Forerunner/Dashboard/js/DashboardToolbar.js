@@ -14,10 +14,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var dtb = forerunner.ssr.tools.dashboardToolbar;
     var mi = forerunner.ssr.tools.mergedButtons;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Toobar widget used by the dashboard

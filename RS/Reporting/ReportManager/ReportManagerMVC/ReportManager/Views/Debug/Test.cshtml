@@ -5,11 +5,11 @@
 
 @section styles {
     <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+    <link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet" />
     <link href="~/Custom/Mobilizer.css" rel="stylesheet"/>
 }
 
 @section scripts{
-  
   <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.11.3.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js"></script>
@@ -19,7 +19,7 @@
   <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.js"></script>
   <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/History.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Common/js/Viewerbase.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Common/js/Viewerbase.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/DialogBase.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/ReportViewer.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportExplorer/js/ParameterModel.js"></script>
@@ -30,6 +30,7 @@
   <script type="text/javascript" src="~/Forerunner/Common/js/ForerunnerProperties.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/ContextMenuBase.js"></script>
   <script type="text/javascript" src="~/Forerunner/Common/js/ForerunnerSecurity.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Common/js/FavoriteModel.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/Toolbar.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/ToolPane.js"></script>
   <script type="text/javascript" src="~/Forerunner/ReportViewer/js/PageNav.js"></script>
@@ -70,15 +71,14 @@
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardViewer.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardEditor.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/ReportProperties.js"></script>
-
+  
   <script>
     // forerunner is the top level global object
     var forerunner = forerunner || {};
 
     $(document).ready(function () {
     
-        forerunner.config.getCustomSettings(function (settings) {
-            forerunner.config.getDBConfiguration(function (config) {
+        forerunner.config.initialize(function(){
                 //explorer = $("body").reportExplorerEZ({
                 //    explorerSettings: settings,
                 //    dbConfig: config,
@@ -113,24 +113,30 @@
                     }]
                 }
 
-                //var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+                var $reportViewerEZ = $('body').reportViewerEZ({ });
+                var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+                
+                $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+                var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
+                $toolbar.hide();
+                $toolbar.show();
 
-                var parameterModel = $({}).parameterModel({ userName: "Forerunner\\testaccount" });
-                parameterModel.parameterModel("getAllParameterSets", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008",  function (params) {
+                //var parameterModel = $({}).parameterModel({ userName: "Forerunner\\testaccount" });
+                //parameterModel.parameterModel("getAllParameterSets", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008",  function (params) {
 
-                    parameterModel.parameterModel("addSet", defaultParamsList, "TestAdd", false);
-                    for (var set in params) {
+                //    parameterModel.parameterModel("addSet", defaultParamsList, "TestAdd", false);
+                //    for (var set in params) {
                         
-                        if (params[set].name === "TestAdd")
-                            parameterModel.parameterModel("removeSet", params[set].id);
-                    }
+                //        if (params[set].name === "TestAdd")
+                //            parameterModel.parameterModel("removeSet", params[set].id);
+                //    }
                     
 
                     
-                });
+                //});
 
 
-            });
+           
         });           
     });
 

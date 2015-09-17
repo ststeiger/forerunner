@@ -11,10 +11,8 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var dbtp = forerunner.ssr.tools.dashboardToolPane;
     var mi = forerunner.ssr.tools.mergedItems;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * ToolPane widget used with the dashboard

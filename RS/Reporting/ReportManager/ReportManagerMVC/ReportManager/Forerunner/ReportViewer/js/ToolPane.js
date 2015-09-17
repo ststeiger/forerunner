@@ -13,10 +13,8 @@ $(function () {
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
     //var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-    var locData;    
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;    
+
 
     /**
      * ToolPane widget used with the reportViewer
@@ -59,7 +57,7 @@ $(function () {
                         me.disableTools([tp.itemCredential]);
                     }
 
-                    me.element.find(".fr-item-keyword-textbox").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+                    me.element.find(".fr-item-keyword-textbox").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
                 }
             });
 

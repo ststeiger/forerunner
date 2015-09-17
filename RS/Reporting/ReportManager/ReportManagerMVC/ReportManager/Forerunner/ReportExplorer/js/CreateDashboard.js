@@ -13,14 +13,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var helper = forerunner.helper;
-    var locData;
+    var locData = forerunner.localize;
     var createDashboard ;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer","json", function (loc) {
-        locData = loc;
-        createDashboard = locData.createDashboard;
-    });
-    
     var ssr = forerunner.ssr;
 
     /**
@@ -68,6 +62,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            
+            me.createDashboard = locData.getLocData().createDashboard;
 
             // Reinitialize the fields
             me.$dashboardName.val("");
@@ -189,9 +185,9 @@ $(function () {
             }
 
             if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
             } else {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.createFailed, createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, createDashboard.title);
             }
         },
         /**
@@ -229,7 +225,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = locData.validateError;
+            var error = locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,

@@ -138,6 +138,9 @@ namespace Forerunner.AS.ConfigTool
             properties.Item("WebApplication.StartPageUrl").Value = @"#as-home";
             properties.Item("WebApplication.DebugStartAction").Value = 1;
 
+            // Make sure windows authentication is enabled
+            properties.Item("WebApplication.WindowsAuthenticationEnabled").Value = true;
+
             WriteVerbose("End UpdateProjectSettings()");
         }
         private void UpdateReportPaths()

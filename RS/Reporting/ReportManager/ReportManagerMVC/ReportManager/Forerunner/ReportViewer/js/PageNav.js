@@ -12,10 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Widget used to show page navigation
@@ -208,7 +206,7 @@ $(function () {
             var $close = $("<DIV />");
             $close.addClass("fr-nav-close-container");
 
-            var $span = $("<SPAN>" + locData.paramPane.cancel + "</SPAN>");
+            var $span = $("<SPAN>" + locData.getLocData().paramPane.cancel + "</SPAN>");
             $span.addClass("fr-nav-close");
             $close.append($span);
 

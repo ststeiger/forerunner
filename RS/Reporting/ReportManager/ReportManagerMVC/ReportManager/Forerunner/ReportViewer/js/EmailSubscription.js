@@ -16,10 +16,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     /**
      * Widget used to create email subscription
@@ -150,8 +147,8 @@ $(function () {
                     } else {
                         forerunner.ajax.getUserName(me.options.subscriptionModel.subscriptionModel("option", "rsInstance"), function (userName) {
                             me.$to.val(userName);
-                            me.$desc.val(locData.subscription.description.format(userName));
-                            me.$subject.val(locData.subscription.subject);
+                            me.$desc.val(locData.getLocData().subscription.description.format(userName));
+                            me.$subject.val(locData.getLocData().subscription.subject);
                         });
                     }
                 }
@@ -274,7 +271,7 @@ $(function () {
             var value = forerunner.config.getCustomSettingsValue("DefaultSubscriptionFormat", "MHTML");
             me.$renderFormat.val(value);
             me.$renderFormat.addClass(".fr-email-renderformat");
-            me.$theTable.append(me._createTableRow(locData.subscription.format, me.$renderFormat));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.format, me.$renderFormat));
         },
         _initExtensionOptions: function () {
             var me = this;
@@ -301,7 +298,7 @@ $(function () {
                     }
                 }
                 me.$sharedSchedule = me._createDropDownForValidValues(validValues);
-                me.$theTable.append(me._createTableRow(locData.subscription.schedule, me.$sharedSchedule));
+                me.$theTable.append(me._createTableRow(locData.getLocData().subscription.schedule, me.$sharedSchedule));
                 me.$sharedSchedule.addClass("fr-email-schedule");
                 done();
             });
@@ -400,8 +397,8 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$outerContainer = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew) :
-                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.subscription.email, "fr-email-cancel", locData.subscription.cancel);
+            var headerHtml = subscripitonID ? forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.getLocData().subscription.email, "fr-email-cancel", locData.getLocData().subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.getLocData().subscription.addNew) :
+                forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-emailsubscription", locData.getLocData().subscription.email, "fr-email-cancel", locData.getLocData().subscription.cancel);
 
             me.$theForm = new $("<FORM />");
             me.$theForm.addClass("fr-email-form");
@@ -412,42 +409,42 @@ $(function () {
             me.$theTable = new $("<TABLE />");
             me.$theTable.addClass("fr-email-table");
             me.$theForm.append(me.$theTable);
-            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.subscription.descriptionPlaceholder
+            me.$desc = me._createInputWithPlaceHolder(["fr-email-description"], "text", "desc", "");  //locData.getLocData().subscription.descriptionPlaceholder
             me.$desc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$desc.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.descriptionPlaceholder, me.$desc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.descriptionPlaceholder, me.$desc));
 
-            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.subscription.toPlaceholder
+            me.$to = me._createInputWithPlaceHolder(["fr-email-to"], "text", "to", "");  //locData.getLocData().subscription.toPlaceholder
             me.$to.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$to.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.toPlaceholder, me.$to));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.toPlaceholder, me.$to));
 
-            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.subscription.toPlaceholder
+            me.$cc = me._createInputWithPlaceHolder(["fr-email-cc"], "text", "cc", "");  //locData.getLocData().subscription.toPlaceholder
             me.$cc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.ccPlaceholder, me.$cc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.ccPlaceholder, me.$cc));
 
-            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.subscription.toPlaceholder
+            me.$bcc = me._createInputWithPlaceHolder(["fr-email-bcc"], "text", "bcc", "");  //locData.getLocData().subscription.toPlaceholder
             me.$bcc.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.bccPlaceholder, me.$bcc));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.bccPlaceholder, me.$bcc));
 
-            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.subscription.toPlaceholder
+            me.$replyTo = me._createInputWithPlaceHolder(["fr-email-replyTo"], "text", "replyTo", "");  //locData.getLocData().subscription.toPlaceholder
             me.$replyTo.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
-            me.$theTable.append(me._createTableRow(locData.subscription.replyToPlaceholder, me.$replyTo));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.replyToPlaceholder, me.$replyTo));
 
-            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.subscription.subjectPlaceholder
+            me.$subject = me._createInputWithPlaceHolder(["fr-email-subject"], "text", "subject", "");  // locData.getLocData().subscription.subjectPlaceholder
             me.$subject.attr("maxlength", forerunner.config.getCustomSettingsValue("SubscriptionInputSize", "100"));
             me.$subject.prop("required", true);
-            me.$theTable.append(me._createTableRow(locData.subscription.subjectPlaceholder, me.$subject));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.subjectPlaceholder, me.$subject));
 
             me.$includeLink = me._createCheckBox();
             me.$includeLink.addClass("fr-email-include");
             me.$includeReport = me._createCheckBox();
             me.$includeReport.addClass("fr-email-include");
-            me.$theTable.append(me._createTableRow(locData.subscription.includeLink, me.$includeLink));
-            me.$theTable.append(me._createTableRow(locData.subscription.includeReport, me.$includeReport));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.includeLink, me.$includeLink));
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.includeReport, me.$includeReport));
 
-            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.subscription.commentPlaceholder);
-            me.$theTable.append(me._createTableRow(locData.subscription.commentPlaceholder, me.$comment));
+            me.$comment = me._createTextAreaWithPlaceHolder(["fr-email-comment"], "Comment", locData.getLocData().subscription.commentPlaceholder);
+            me.$theTable.append(me._createTableRow(locData.getLocData().subscription.commentPlaceholder, me.$comment));
             
 
             if (!me.options.userSettings || !me.options.userSettings.adminUI) {
@@ -470,13 +467,13 @@ $(function () {
 
             me.$submitContainer = me._createDiv(["fr-email-submit-container"]);
             me.$submitButton = me._createInputWithPlaceHolder(["fr-email-submit-id", "fr-core-dialog-submit", "fr-core-dialog-button"], "submit");
-            me.$submitButton.val(locData.subscription.save);
+            me.$submitButton.val(locData.getLocData().subscription.save);
             me.$submitContainer.append(me.$submitButton);
             
             
             if (subscripitonID) {
                 me.$deleteButton = me._createInputWithPlaceHolder(["fr-email-delete-id", "fr-core-dialog-delete"], "button");
-                me.$deleteButton.val(locData.subscription.deleteSubscription);
+                me.$deleteButton.val(locData.getLocData().subscription.deleteSubscription);
                 me.$submitContainer.append(me.$deleteButton);
             }
             me.$theForm.append(me.$submitContainer);
@@ -537,7 +534,7 @@ $(function () {
                     subscriptionInfo,
                     function () { me.closeDialog(); },
                     function (data) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.subscription.saveFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message ? data.Exception.Message : locData.getLocData().subscription.saveFailed);
                     });
             }
         },
@@ -553,7 +550,7 @@ $(function () {
                "deleteSubscription",
                me._subscriptionID,
                function () { me.closeDialog(); },
-               function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.subscription.deleteFailed); });
+               function () { forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().subscription.deleteFailed); });
         },
         /**
          * Open email subscription dialog

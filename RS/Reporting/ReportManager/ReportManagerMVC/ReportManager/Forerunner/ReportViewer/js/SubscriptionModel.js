@@ -16,10 +16,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.subscriptionModel), {
         options: {
@@ -184,7 +181,7 @@ $(function () {
                     instance: me.options.rsInstance
                 },
                 dataType: "json",
-                async: false,
+                async: true,
                 success: function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
                         success(data);

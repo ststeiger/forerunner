@@ -79,6 +79,7 @@ $(function () {
         // Constructor
         _create: function () {
             var me = this;
+            forerunner.ssr._internal.init();
 
             // Make sure the viewerBase _create gets called
             me._super();
@@ -126,6 +127,8 @@ $(function () {
             me.isDebug = (forerunner.config.getCustomSettingsValue("Debug", "off") === "on" ? true : false);            
             me.zoomState = true;
             me.allowZoom(me.zoomState);
+
+            me.locData = forerunner.localize;
 
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -928,7 +931,7 @@ $(function () {
                             docMap.reportDocumentMap("write", data);
                             done();
                         },                        
-                        fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
+                        fail: function () { me._showMessageBox(me.locData.getLocData().messages.docmapShowFailed); }
                     });
                 }
                 else
@@ -1221,7 +1224,7 @@ $(function () {
                         if (done)
                             done();
                     },
-                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.getLocData().messages.prepareActionFailed); }
                 });
             }
             else if (done)
@@ -1497,7 +1500,7 @@ $(function () {
                                     me.backupCurPage();
                                     me._loadPage(data.NewPage, false, bookmarkID);
                                 } else {
-                                    me._showMessageBox(me.locData.messages.bookmarkNotFound);
+                                    me._showMessageBox(me.locData.getLocData().messages.bookmarkNotFound);
                                     me.lock = 0;
                                 }
                             }
@@ -1730,7 +1733,7 @@ $(function () {
 
                     if (startPage > endPage) {
                         me.resetFind();
-                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                         return;
                     }
 
@@ -1765,9 +1768,9 @@ $(function () {
                                 }
                                 else {
                                     if (me.finding === true)
-                                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                                     else
-                                        me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.keyNotFound, me._findDone);
                                     me.resetFind();
                                 }
                             }
@@ -1789,7 +1792,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
@@ -1801,7 +1804,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
@@ -1809,7 +1812,7 @@ $(function () {
                     }
                 }
                 else {
-                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }

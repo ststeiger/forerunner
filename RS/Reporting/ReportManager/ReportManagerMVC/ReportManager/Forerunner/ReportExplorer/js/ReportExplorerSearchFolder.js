@@ -12,10 +12,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     /**
      * Widget used to create search folder
      *
@@ -45,7 +43,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);            
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.searchFolder.title, "fr-sf-cancel", locData.searchFolder.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-searchfolder", locData.getLocData().searchFolder.title, "fr-sf-cancel", locData.getLocData().searchFolder.cancel);
 
             var $container = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -54,27 +52,27 @@ $(function () {
                         "<form class='fr-core-dialog-form fr-sf-form'>" +
                             "<table class='fr-sf-table'>" +
                                 "<tr>" +
-                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.name + ":</label></td>" +
+                                    "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.name + ":</label></td>" +
                                     "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldername' name='foldername' required='true' />" +
                                          "<span class='fr-sf-error-span' />" +
                                     "</td>" +
                                 "</tr>" +
                                 "<tr>" +
-                                    "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
+                                    "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.tags + ":</label></td>" +
                                     "<td><input type='text' class='fr-core-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
                                         "<span class='fr-sf-error-span' />" +
                                     "</td>" +
                                 "</tr>" +
                                 "<tr class='fr-sf-prompt'>" +
                                     "<td></td>" +
-                                    "<td><label class='fr-sf-label-prompt'>" + locData.searchFolder.prompt + "</label></td>" +
+                                    "<td><label class='fr-sf-label-prompt'>" + locData.getLocData().searchFolder.prompt + "</label></td>" +
                                 "<tr>" +
                             "</table>" +
                         "</form>" +
                     "</div>" +
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
-                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.searchFolder.submit + "' />" +
+                            "<input type='button' class='fr-sf-submit-id fr-sf-button fr-core-dialog-button' value='" + locData.getLocData().searchFolder.submit + "' />" +
                         "</div>" +
                         "<div class='fr-sf-location' />" +
                     "</div>" +
@@ -82,8 +80,8 @@ $(function () {
 
             me.element.append($container);
 
-            me.element.find(".fr-sf-foldername").watermark(locData.searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
-            me.element.find(".fr-sf-foldertags").watermark(locData.searchFolder.tags, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldername").watermark(locData.getLocData().searchFolder.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-sf-foldertags").watermark(locData.getLocData().searchFolder.tags, forerunner.config.getWatermarkConfig());
 
             me.$form = $container.find(".fr-sf-form");
             me.$form.validate({

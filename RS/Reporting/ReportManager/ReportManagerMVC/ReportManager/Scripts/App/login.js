@@ -3,7 +3,7 @@
 $(function () {
     $(document).ready(function () {
         //var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + 'ReportViewer/loc/ReportViewer');
-        var locData;
+        var locData = forerunner.localize;
         forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer","json", function (loc) {
             locData = loc;
 

@@ -69,10 +69,10 @@ $(function () {
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
                        "<div class='fr-param-submit-container'>" +
-                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
+                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.getLocData().paramPane.viewReport + "'/>" +
                        "</div>" +
                        "<div class='fr-param-cancel-container'>" +
-                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.paramPane.cancel + "</span>" +
+                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.getLocData().paramPane.cancel + "</span>" +
                        "</div>" +
                     "</div>" +
                 "</form>" +
@@ -207,7 +207,7 @@ $(function () {
             }
 
             if (me._reportDesignError !== null) {
-                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
+                me._reportDesignError += me.options.$reportViewer.locData.getLocData().messages.contactAdmin;
             }
 
             me.$form.validate({
@@ -516,7 +516,7 @@ $(function () {
                 $.each(me.$datepickers, function (index, datePicker) {
                     $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png")
                         .datepicker("option", "buttonImageOnly", true)
-                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
+                        .datepicker("option", "buttonText", me.options.$reportViewer.locData.getLocData().paramPane.datePicker);
                 });
 
                 $(window).off("resize", me._paramWindowResize);
@@ -716,7 +716,7 @@ $(function () {
             //to avoid conflict (like auto complete) with other widget not use placeholder to do it
             //Anyway IE native support placeholder property from IE10 on, so not big deal
             //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
-            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, forerunner.config.getWatermarkConfig());
+            $control.attr("required", "true").watermark(me.options.$reportViewer.locData.getLocData().paramPane.required, forerunner.config.getWatermarkConfig());
             $control.addClass("fr-param-required");
             me._paramValidation[param.Name].push("required");
         },
@@ -759,7 +759,7 @@ $(function () {
                 });
 
                 var $label = new $("<Label class='fr-param-option-label' />");
-                $label.html(me.options.$reportViewer.locData.paramPane.nullField);
+                $label.html(me.options.$reportViewer.locData.getLocData().paramPane.nullField);
                 $label.on("click", function () { $checkbox.trigger("click"); });
 
                 $container.append($checkbox).append($label);
@@ -794,7 +794,7 @@ $(function () {
             $checkbox.on("click", function () { me._triggerUseDefaultClick.call(me, param, $control, $checkbox, predefinedValue, $hidden); });
 
             var $label = new $("<label class='fr-param-option-label' />");
-            $label.text(me.options.$reportViewer.locData.paramPane.useDefault);
+            $label.text(me.options.$reportViewer.locData.getLocData().paramPane.useDefault);
             $label.on("click", function () { $checkbox.trigger("click"); });
 
             $container.append($checkbox).append($label);
@@ -893,7 +893,7 @@ $(function () {
         },
         _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var paramPane = me.options.$reportViewer.locData.paramPane;
+            var paramPane = me.options.$reportViewer.locData.getLocData().paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
@@ -1185,7 +1185,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var defaultSelect = me.options.$reportViewer.locData.paramPane.select;
+            var defaultSelect = me.options.$reportViewer.locData.getLocData().paramPane.select;
             var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
@@ -2112,7 +2112,7 @@ $(function () {
             }
 
             var required = !!$(param).attr("required");
-            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+            if (required && param.value === me.options.$reportViewer.locData.getLocData().paramPane.required) {
                 return false;
             }
 
@@ -2521,7 +2521,7 @@ $(function () {
         },
         _getDatePickerLoc: function () {
             var me = this;
-            return me.options.$reportViewer.locData.datepicker;
+            return me.options.$reportViewer.locData.getLocData().datepicker;
         },
         //handle window resize action
         _paramWindowResize: function (event, data) {

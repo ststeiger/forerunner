@@ -170,6 +170,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            forerunner.ssr._internal.init();
+
             me._super();
 
             if (me.options.DefaultAppTemplate === null) {
@@ -185,41 +187,39 @@ $(function () {
                 me.DefaultAppTemplate.$linksection.hide();
             }
 
-            forerunner.config.getDBConfiguration(function (config) {
-                if (me.options.dbConfig == null)
-                    me.options.dbConfig = config;
+            
 
-                me._render();
+            me._render();
 
-                if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
-                    // if the viewer is full screen, we will set up the viewport here. Note that on Windows
-                    // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
-                    // with the meta tag.
-                    var $viewportStyle = $("#fr-viewport-style");
-                    if ($viewportStyle.length === 0) {
-                        var userZoom = "fixed";
-                        if (sessionStorage.forerunner_zoomReload_userZoom) {
-                            var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
-                            delete sessionStorage.forerunner_zoomReload_userZoom;
-                            var zoomReloadData = JSON.parse(zoomReloadStringData);
-                            if (zoomReloadData.userZoom) {
-                                userZoom = zoomReloadData.userZoom;
-                            }
-                        }
-
-                        $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
-                        //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
-                        var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
-                        $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
-
-                        // Show the unzoom toolbar
-                        if (userZoom === "zoom") {
-                            forerunner.device.allowZoom(true);
-                            me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+            if (me.options.isFullScreen && (forerunner.device.isWindowsPhone() && !forerunner.device.isWindowsPhone81())) {
+                // if the viewer is full screen, we will set up the viewport here. Note that on Windows
+                // Phone 8, the equivalent of the user-zoom setting only works with @-ms-viewport and not
+                // with the meta tag.
+                var $viewportStyle = $("#fr-viewport-style");
+                if ($viewportStyle.length === 0) {
+                    var userZoom = "fixed";
+                    if (sessionStorage.forerunner_zoomReload_userZoom) {
+                        var zoomReloadStringData = sessionStorage.forerunner_zoomReload_userZoom;
+                        delete sessionStorage.forerunner_zoomReload_userZoom;
+                        var zoomReloadData = JSON.parse(zoomReloadStringData);
+                        if (zoomReloadData.userZoom) {
+                            userZoom = zoomReloadData.userZoom;
                         }
                     }
+
+                    $viewportStyle = $("<style id=fr-viewport-style>@-ms-viewport {width:auto; user-zoom:" + userZoom + ";}</style>");
+                    //-ms-overflow-style: none; will enable the scroll again in IEMobile 10.0 (WP8)
+                    var $IEMobileScrollStyle = $("<style>ul.fr-nav-container, .fr-layout-leftpane, .fr-layout-rightpane { -ms-overflow-style: none; }</style>");
+                    $("head").slice(0).append($viewportStyle).append($IEMobileScrollStyle);
+
+                    // Show the unzoom toolbar
+                    if (userZoom === "zoom") {
+                        forerunner.device.allowZoom(true);
+                        me.DefaultAppTemplate.showUnZoomPane.call(me.DefaultAppTemplate);
+                    }
                 }
-            });
+            }
+            
         },
         /**
          * Call this function when the handleWindowResize is set to true. It
@@ -309,10 +309,11 @@ $(function () {
          * 
          * @return {Object} - report viewer jQuery object
          */
-        getReportViewer: function () {
+        getReportViewer: function (done) {
             var me = this;
 
             if (me.DefaultAppTemplate) {
+
                 var $viewer = me.DefaultAppTemplate.$mainsection.find(".fr-layout-reportviewer");
                 if ($viewer.length !== 0) {
                     return $viewer;

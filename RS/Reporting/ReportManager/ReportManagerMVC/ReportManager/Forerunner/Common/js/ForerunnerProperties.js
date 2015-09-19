@@ -13,7 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
+    var locData = forerunner.localize;
    
 
     /**
@@ -42,17 +42,14 @@ $(function () {
         },
         _init: function () {
             var me = this;
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-            
+           
             me.guid = forerunner.helper.guidGen();
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.properties.title, "fr-properties-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-tags", locData.getLocData().properties.title, "fr-properties-cancel", locData.getLocData().common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -62,7 +59,7 @@ $(function () {
                    "</div>" +
                    "<div class='fr-core-dialog-submit-container fr-properties-submit-container'>" +
                        "<div class='fr-core-center'>" +
-                           "<input type='button' class='fr-properties-submit fr-core-dialog-submit fr-core-dialog-button' value='" + locData.properties.submit + "' />" +
+                           "<input type='button' class='fr-properties-submit fr-core-dialog-submit fr-core-dialog-button' value='" + locData.getLocData().properties.submit + "' />" +
                        "</div>" +
                    "</div>" +
                "</div>");
@@ -86,7 +83,7 @@ $(function () {
             me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
-          });
+    
         },
         _create: function () {
             
@@ -212,24 +209,24 @@ $(function () {
         },
         _createDescription: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.properties.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.description + "'><a href='#" + me.guid + "_" + "description" + "'>" + locData.getLocData().properties.title + "</a></li>");
 
             var $descriptionDiv = new $(
                 "<div id='" + me.guid + "_" + "description" + "' class='fr-property-container fr-description-container'>" +
                     "<form class='fr-properties-form fr-property-form'>" +
                         "<div class='fr-name-div'>" + 
-                            "<label class='fr-name-label'>" + locData.common.name + "</label>" +
-                            "<span class='fr-readonly-span'>"+ locData.properties.readonly + "</span>" + 
+                            "<label class='fr-name-label'>" + locData.getLocData().common.name + "</label>" +
+                            "<span class='fr-readonly-span'>"+ locData.getLocData().properties.readonly + "</span>" + 
                             "<input type='text' class='fr-core-input fr-property-input fr-name-text fr-property-name' name='Name' required='true'>" +
                             "<span class='fr-error-span' />" +
                         "</div>" +
                         "<div>" +
-                            "<label class='fr-description-label'>" + locData.properties.description + "</label>" +
+                            "<label class='fr-description-label'>" + locData.getLocData().properties.description + "</label>" +
                             "<textarea class='fr-core-input fr-property-input fr-description-id fr-description-text' rows='5' name='Description' />" +
                         "<div>" +
                         "<div class='fr-visibility-container'>" +
                             "<label class='fr-visibility-label'>"+
-                                "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.visibility.label + 
+                                "<input type='checkbox' name='visibility' class='fr-property-visibility'>" + locData.getLocData().visibility.label + 
                             "</label>" +
                         "</div>" +
                     "</form>" +
@@ -262,11 +259,11 @@ $(function () {
         },
         _createRDLExtension: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.rdlExtension + "'><a href='#" + me.guid + "_" + "RDL" + "'>" + locData.RDLExt.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.rdlExtension + "'><a href='#" + me.guid + "_" + "RDL" + "'>" + locData.getLocData().RDLExt.title + "</a></li>");
 
             var $rdlDiv = new $(
                 "<div id='" + me.guid + "_" + "RDL" + "'  class='fr-property-container fr-rdl-container'>" +
-                    "<label class='fr-rdl-label'>" + locData.RDLExt.dialogTitle + "</label>" +
+                    "<label class='fr-rdl-label'>" + locData.getLocData().RDLExt.dialogTitle + "</label>" +
                     "<textarea rows='5' class='fr-core-input fr-property-input fr-rdl-id fr-rdl-text' name='RDL' />" +
                 "</div>");
 
@@ -277,16 +274,16 @@ $(function () {
         },
         _createTags: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.tags + "'><a href='#" + me.guid + "_" + "tags" + "'>" + locData.tags.tags + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.tags + "'><a href='#" + me.guid + "_" + "tags" + "'>" + locData.getLocData().tags.tags + "</a></li>");
 
             var $tagsDiv = new $(
                 "<div id='" + me.guid + "_" + "tags" + "'  class='fr-property-container fr-tag-container'>" +
                     "<div class='fr-tag-input-div'>" +
-                        "<label class='fr-tag-label'>" + locData.tags.tags + "</label>" +
+                        "<label class='fr-tag-label'>" + locData.getLocData().tags.tags + "</label>" +
                         "<textarea class='fr-core-input fr-property-input fr-tag-text' rows='5' name='tags' />" +
                     "</div>" +
                     "<div class='fr-tag-prompt-div'>" +
-                        "<label class='fr-tag-label-prompt'>" + locData.tags.prompt + "</label>" +
+                        "<label class='fr-tag-label-prompt'>" + locData.getLocData().tags.prompt + "</label>" +
                     "</div>" +
                 "</div>");
 
@@ -312,7 +309,7 @@ $(function () {
                                 //"</td>" +
                             //"</tr>" +
                             "<tr>" +
-                                "<td><label class='fr-sf-label'>" + locData.searchFolder.tags + ":</label></td>" +
+                                "<td><label class='fr-sf-label'>" + locData.getLocData().searchFolder.tags + ":</label></td>" +
                                 "<td>" +
                                     "<input type='text' class='fr-core-input fr-property-input fr-sf-text fr-sf-foldertags' name='tags' required='true' />" +
                                     "<span class='fr-error-span' />" +
@@ -320,7 +317,7 @@ $(function () {
                             "</tr>" +
                             "<tr class='fr-sf-prompt'>" +
                                 "<td></td>" +
-                                "<td><label class='fr-sf-label-prompt'>" + locData.searchFolder.prompt + "</label></td>" +
+                                "<td><label class='fr-sf-label-prompt'>" + locData.getLocData().searchFolder.prompt + "</label></td>" +
                             "<tr>" +
                         "</table>" +
                     "</form>" +
@@ -452,7 +449,7 @@ $(function () {
                     },
                     fail: function (data) {
                         me._tags = null;
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.toolPane.tags);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.addTagsFailed, locData.getLocData().toolPane.tags);
                     }
                 });
             }
@@ -545,7 +542,7 @@ $(function () {
                                 me._description = "";
                                 me._isHidden = "False";
                                 me._itemName = "";
-                                forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.properties.title);
+                                forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().properties.title);
                                 return;
                             }
 
@@ -565,7 +562,7 @@ $(function () {
                             me._description = "";
                             me._isHidden = "False";
                             me._itemName = "";
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.addTagsFailed, locData.properties.title);
+                            forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.addTagsFailed, locData.getLocData().properties.title);
                         }
                     });
                 }

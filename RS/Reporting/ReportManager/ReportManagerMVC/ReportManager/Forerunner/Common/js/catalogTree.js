@@ -10,11 +10,7 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var events = constants.events;
     var widgets = constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
-
+    var locData = forerunner.localize;
 
     $.widget(widgets.getFullname(widgets.catalogTree), {
         options: {
@@ -29,7 +25,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            var common = locData.common;
+            var common = locData.getLocData().common;
 
             me.$catalogTree = new $(
                 "<div class='fr-catalog fr-popup-container fr-core-hidden'>" +

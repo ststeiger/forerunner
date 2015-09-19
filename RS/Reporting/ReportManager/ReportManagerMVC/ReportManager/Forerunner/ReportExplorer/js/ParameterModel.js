@@ -16,14 +16,8 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    //dont load at file parse, file will be loaded when called.
-    setTimeout(function () {
-        forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-            locData = loc;
-        });
-    }, 1);
-
+    var locData = forerunner.localize;
+    
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
             rsInstance: null,
@@ -89,7 +83,7 @@ $(function () {
         _addNewSet: function (parameterList) {
             var me = this;
             var newSet = me.getNewSet(parameterList);
-            newSet.name = locData.parameterModel.defaultName;
+            newSet.name = locData.getLocData().parameterModel.defaultName;
             if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
@@ -198,7 +192,7 @@ $(function () {
             // Add the "<select set>" option
             optionArray.unshift({
                 id: me.selectSetId,
-                name: locData.parameterModel.selectSet
+                name: locData.getLocData().parameterModel.selectSet
             });
             return optionArray;
         },
@@ -262,7 +256,7 @@ $(function () {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.
                         var newSet = me._addNewSet((data.ParamsList instanceof Array) ? data : data.ParamsList);
-                        newSet.name = locData.parameterModel.defaultName;
+                        newSet.name = locData.getLocData().parameterModel.defaultName;
                     }
                     else if (data) {
                         me.serverData = data;

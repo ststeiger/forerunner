@@ -13,14 +13,8 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var reportProperties;
-
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        reportProperties = locData.reportProperties;
-    });
- 
 
     /**
      * Widget used to select a new dashboard template
@@ -52,6 +46,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.reportProperties = locData.getLocData().reportProperties;
+
             me._super();
 
             if (!me.options.title) me.options.title = reportProperties.title;

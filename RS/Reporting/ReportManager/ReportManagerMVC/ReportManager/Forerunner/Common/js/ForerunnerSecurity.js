@@ -9,7 +9,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
+    var locData = forerunner.localize;
   
 
     /**
@@ -38,9 +38,6 @@ $(function () {
         },
         _init: function () {
             var me = this;
-
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
             
             me.guid = forerunner.helper.guidGen();
             me.curPath = null;
@@ -49,7 +46,7 @@ $(function () {
             //me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.security.title, "fr-security-cancel", locData.common.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-security", locData.getLocData().security.title, "fr-security-cancel", locData.getLocData().common.cancel);
 
             var $container = new $(
                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -63,25 +60,25 @@ $(function () {
                         "</div>" +
                         "<div class='fr-security-layer layer-2'>" +
                             "<div class='header'>" +
-                              "<span class='fr-security-label'>" + locData.security.groupuser + "</span>" +
+                              "<span class='fr-security-label'>" + locData.getLocData().security.groupuser + "</span>" +
                               "<input type='text' class='fr-core-input fr-security-input fr-security-groupuser'>" +
                             "</div>" +
-                            "<div class='prompt'>" + locData.security.prompt + "</div>" +
+                            "<div class='prompt'>" + locData.getLocData().security.prompt + "</div>" +
                             "<ul class='fr-security-list'></ul>" +
                         "</div>" +
                     "</div>" +
                    "<div class='fr-core-dialog-submit-container fr-security-submit-container'>" +
                        "<div class='fr-core-center'>" +
                            "<div class='operate-0'>" +
-                                "<input type='button' class='fr-security-edit fr-core-dialog-button' value='" + locData.security.editSecurity + "' />" +
+                                "<input type='button' class='fr-security-edit fr-core-dialog-button' value='" + locData.getLocData().security.editSecurity + "' />" +
                            "</div>" +
                            "<div class='operate-1'>" +
-                                "<input type='button' class='fr-security-new fr-security-btn fr-core-dialog-button' value='" + locData.security.newPolicy + "' />" +
-                                "<input type='button' class='fr-security-revert fr-security-btn fr-core-dialog-button' value='" + locData.security.revert + "' />" +
+                                "<input type='button' class='fr-security-new fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().security.newPolicy + "' />" +
+                                "<input type='button' class='fr-security-revert fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().security.revert + "' />" +
                            "</div>" +
                            "<div class='operate-2'>" +
-                                "<input type='button' class='fr-security-submit fr-security-btn fr-core-dialog-button' value='" + locData.common.submit + "' />" +
-                                "<input type='button' class='fr-security-cancel fr-security-btn fr-core-dialog-button' value='" + locData.common.cancel + "' />" +
+                                "<input type='button' class='fr-security-submit fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().common.submit + "' />" +
+                                "<input type='button' class='fr-security-cancel fr-security-btn fr-core-dialog-button' value='" + locData.getLocData().common.cancel + "' />" +
                            "</div>" +
                        "</div>" +
                    "</div>" +
@@ -108,8 +105,7 @@ $(function () {
                 me._clickCancel();
             });
 
-            me._bindEvents();
-            });
+            me._bindEvents();           
         },
         _bindEvents: function(){
             var me = this;
@@ -132,14 +128,14 @@ $(function () {
                 if (me.isInheritParent || me.isRoot) {
                     me.closeDialog();
                 } else {
-                    if (!confirm(locData.security.revertConfirm.format(me.parentName))) return;
+                    if (!confirm(locData.getLocData().security.revertConfirm.format(me.parentName))) return;
 
                     me._inheritParentPolicy();
                 }
             });
 
             me.$operate0.on("click", function () {
-                if (!confirm(locData.security.editConfirm.format(me.parentName))) return;
+                if (!confirm(locData.getLocData().security.editConfirm.format(me.parentName))) return;
 
                 me._breakInherit();
             });
@@ -186,7 +182,7 @@ $(function () {
             });
 
             me.$layer1.delegate(".delete", "click", function (e) {
-                if (!confirm(locData.security.deleteConfirm)) return;
+                if (!confirm(locData.getLocData().security.deleteConfirm)) return;
 
                 var groupuser = $(this).siblings("span").text();
                 me._deletePolicy(groupuser);
@@ -392,7 +388,7 @@ $(function () {
             var groupuser = me.$groupuser.val();
 
             if ($.trim(groupuser) === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.accountMsg);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().security.accountMsg);
                 return null;
             }
 
@@ -406,7 +402,7 @@ $(function () {
 
             //at least one role need select
             if (Roles.length === 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.security.roleEmptyMsg);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().security.roleEmptyMsg);
                 return null;
             }
 
@@ -584,12 +580,12 @@ $(function () {
                 tpl = "<li>" +
                         "<div class='acc'>" +
                             "<span>" + data[i].GroupUserName + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title='" + locData.security.detail + "'>...</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.common.deleteBtn + "</a>" +
-                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.common.edit + "</a>" +
+                            "<a href='javascript:void(0);' class='tip' title='" + locData.getLocData().security.detail + "'>...</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn delete'>" + locData.getLocData().common.deleteBtn + "</a>" +
+                            "<a href='javascript:void(0);' class='funcBtn edit'>" + locData.getLocData().common.edit + "</a>" +
                        "</div>" +
                        "<div class='role'>" +
-                           "<span class='tit'>" + locData.security.roles + ":&nbsp;</span>" +
+                           "<span class='tit'>" + locData.getLocData().security.roles + ":&nbsp;</span>" +
                            "<span class='txt'>" + names.join(", ") + "</span>" +
                        "</div></li>";
 
@@ -608,10 +604,10 @@ $(function () {
                        "<div class='role-name'>" +
                             "<span class='chk'><input class='acc-chk' type='checkbox' data-acc='" + data[i].Name + "' /></span>" +
                             "<span class='acc-name'>" + data[i].Name + "</span>" +
-                            "<a href='javascript:void(0);' class='tip' title=" + locData.security.desp + ">...</a>" +
+                            "<a href='javascript:void(0);' class='tip' title=" + locData.getLocData().security.desp + ">...</a>" +
                        "</div>" +
                         "<div class='desp'>" +
-                           "<span class='tit'>" + locData.security.desp + ":&nbsp;</span>" +
+                           "<span class='tit'>" + locData.getLocData().security.desp + ":&nbsp;</span>" +
                            "<span class='txt'>" + data[i].Description + "</span>" +
                        "</div></li>";
 
@@ -627,12 +623,12 @@ $(function () {
             //index = strTemp.lastIndexOf("/");
             //var returnStr = strTemp.substring(index + 1);
 
-            //return returnStr === "" ? locData.security.home : returnStr;
+            //return returnStr === "" ? locData.getLocData().security.home : returnStr;
             var parentPath = forerunner.helper.getParentPath(curPath);
             return parentPath === null ? "/" : parentPath;
         },
         _getItemName: function (curPath) {
-            return forerunner.helper.getCurrentItemName(curPath, locData.security.home);
+            return forerunner.helper.getCurrentItemName(curPath, locData.getLocData().security.home);
         }
     });
 });

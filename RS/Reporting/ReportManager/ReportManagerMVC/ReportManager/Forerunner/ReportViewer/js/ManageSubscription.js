@@ -16,10 +16,8 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
     * Widget used to manage subscription
@@ -63,14 +61,14 @@ $(function () {
             var $editIcon = me._createDiv(["fr-sub-icon18x18"]);
             $listItem.append($deleteIcon);
             $deleteIcon.addClass("fr-sub-delete-icon");
-            $deleteIcon.attr("title", locData.subscription.deleteSubscription);
+            $deleteIcon.attr("title", locData.getLocData().subscription.deleteSubscription);
             $deleteIcon.on("click", function () {
                 me.options.subscriptionModel.subscriptionModel("deleteSubscription",
                     subInfo.SubscriptionID,
                     function () { me._renderList(); }, function () { me._showDeletionFailure(); });
             });
             $editIcon.addClass("fr-sub-edit-icon");
-            $editIcon.attr("title", locData.subscription.edit);
+            $editIcon.attr("title", locData.getLocData().subscription.edit);
             $editIcon.on("click", function () {
                 me._editSubscription(subInfo.SubscriptionID);
             });
@@ -103,7 +101,7 @@ $(function () {
                 me.$listcontainer.append($list);
             }).fail(
                 function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.loadSubscriptionListFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.loadSubscriptionListFailed);
                 }
             );
         },
@@ -119,7 +117,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
             me.$container = me._createDiv(["fr-core-dialog-innerPage", "fr-core-center"]);
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.subscription.manageSubscription, "fr-managesubscription-cancel", locData.subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.subscription.addNew);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-managesubscription", locData.getLocData().subscription.manageSubscription, "fr-managesubscription-cancel", locData.getLocData().subscription.cancel, "fr-core-dialog-button fr-email-create-id", locData.getLocData().subscription.addNew);
             me.$container.append(headerHtml);
             // Make these async calls and cache the results before they are needed.
             me.options.subscriptionModel.subscriptionModel("getSchedules");

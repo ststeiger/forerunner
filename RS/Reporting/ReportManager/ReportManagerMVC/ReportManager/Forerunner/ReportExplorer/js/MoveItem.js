@@ -9,11 +9,9 @@ $(function () {
     var constants = forerunner.ssr.constants;
     var widgets = constants.widgets;
     var events = constants.events;
-    var locData;
+    var locData = forerunner.localize;
     var common;
     var move ;
-
-
 
     /**
     * Widget used to support item move
@@ -43,10 +41,8 @@ $(function () {
             var me = this;
             me._super();
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
-                common = locData.common;
-                move = locData.move;
+            common = locData.getLocData().common;
+            move = locData.getLocData().move;
             
             if (!me.options.title) me.options.title = move.title;
             me.curPath = null;
@@ -72,7 +68,7 @@ $(function () {
             me.$location = me.$moveContainer.find(".fr-move-location");
 
             me._bindEvents();
-            });
+            
         },
         _bindEvents: function () {
             var me = this;

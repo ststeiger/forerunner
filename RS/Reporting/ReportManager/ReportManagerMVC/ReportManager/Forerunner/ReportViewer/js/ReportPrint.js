@@ -91,14 +91,12 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me.locData = loc;
-            });
+            me.locData = forerunner.localize;
+
         },
         _initBody: function () {
             var me = this;
-            var print = me.locData.print;
+            var print = me.locData.getLocData().print;
 
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
@@ -190,7 +188,7 @@ $(function () {
         },
         _createItems: function (pageLayout) {
             var me = this;
-            var print = me.locData.print;
+            var print = me.locData.getLocData().print;
             var unit = print.unit;
             pageLayout = pageLayout || me._printData;
 
@@ -374,7 +372,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = me.locData.validateError;
+            var error = me.locData.getLocData().validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -386,7 +384,7 @@ $(function () {
         _unitConvert: function (milimeter) {
             var me = this;
             //if inch is the country's culture unit then convert milimeter to inch
-            if (me.locData.print.unit === "in") {
+            if (me.locData.getLocData().print.unit === "in") {
                 return Math.round(milimeter / 25.4 * 100) / 100;
             }
             else {
@@ -396,7 +394,7 @@ $(function () {
         //if inch is the country's culture unit then the source should be inch, otherwise it should be mm (RPL Default).
         _generateUnitConvert: function (source) {
             var me = this;
-            if (me.locData.print.unit === "mm") {
+            if (me.locData.getLocData().print.unit === "mm") {
                 return Math.round(source / 25.4 * 100) / 100;
             }
             else {

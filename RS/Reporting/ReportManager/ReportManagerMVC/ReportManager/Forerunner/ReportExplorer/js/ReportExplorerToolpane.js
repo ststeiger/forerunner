@@ -17,10 +17,8 @@ $(function () {
     var tg = forerunner.ssr.tools.groups;
     var mi = forerunner.ssr.tools.mergedItems;
     var itemActiveClass = "fr-toolbase-persistent-active-light";
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -166,7 +164,7 @@ $(function () {
             var $itemFav = me.element.find("." + tp.itemFav.selectorClass);
             me.folderItems = [$itemHome, $itemRecent, $itemFav];
 
-            me.element.find(".fr-rm-item-keyword").watermark(locData.toolbar.search, forerunner.config.getWatermarkConfig());
+            me.element.find(".fr-rm-item-keyword").watermark(locData.getLocData().toolbar.search, forerunner.config.getWatermarkConfig());
 
             me._updateBtnStates();
         },

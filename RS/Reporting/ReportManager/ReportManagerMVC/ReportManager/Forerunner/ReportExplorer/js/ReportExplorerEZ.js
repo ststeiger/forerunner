@@ -16,10 +16,8 @@ $(function () {
     var helper = forerunner.helper;
     var constants = forerunner.ssr.constants;
     var propertyEnums = forerunner.ssr.constants.properties;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     var viewToBtnMap = {
         catalog: rtb.btnHome.selectorClass,
         favorites: rtb.btnFav.selectorClass,
@@ -249,7 +247,7 @@ $(function () {
         _getLink: function (path, $container, index, transitionName) {
             var me = this,
                 parentPath = (path === "/" ? null : forerunner.helper.getParentPath(path)),
-                name = (forerunner.helper.getCurrentItemName(path) || locData.toolbar.home),
+                name = (forerunner.helper.getCurrentItemName(path) || locData.getLocData().toolbar.home),
                 $link = new $("<span />"),
                 $arrowTag,
                 $forerunnerViewLink,
@@ -258,20 +256,20 @@ $(function () {
             $link.addClass("fr-location-link");
             index++;
             if (parentPath === null) {
-                $link.text(locData.toolbar.home);
+                $link.text(locData.getLocData().toolbar.home);
                 $link.on("click", function () { me._navigateTo("home"); });
                 $container.append($link);
 
                 //show forerunner view name in breadcrumb, search/favorite/recent
                 switch (transitionName) {
                     case "transitionToSearch":
-                        forerunerViewText = locData.toolbar.search;
+                        forerunerViewText = locData.getLocData().toolbar.search;
                         break;
                     case "transitionToFavorites":
-                        forerunerViewText = locData.toolbar.favorites;
+                        forerunerViewText = locData.getLocData().toolbar.favorites;
                         break;
                     case "transitionToRecent":
-                        forerunerViewText = locData.toolbar.recent;
+                        forerunerViewText = locData.getLocData().toolbar.recent;
                         break;
                 }
 
@@ -620,6 +618,7 @@ $(function () {
         },
         _create: function () {
             var me = this;
+            forerunner.ssr._internal.init();
 
             $(window).on("resize", function (event, data) {
                 helper.delay(me, function () {
@@ -646,30 +645,28 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                locData = loc;
 
-                forerunner.config.getCustomSettings(function (settings) {
-                    if (me.options.explorerSettings == null)
-                        me.options.explorerSettings = settings;
+            forerunner.config.getCustomSettings(function (settings) {
+            if (me.options.explorerSettings == null)
+                me.options.explorerSettings = settings;
 
-                    forerunner.config.getDBConfiguration(function (config) {
-                        if (me.options.dbConfig == null)
-                            me.options.dbConfig = config;
+            forerunner.config.getDBConfiguration(function (config) {
+                if (me.options.dbConfig == null)
+                    me.options.dbConfig = config;
 
-                        me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
-                            $container: me.element,
-                            isFullScreen: me.options.isFullScreen
-                        }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({
+                    $container: me.element,
+                    isFullScreen: me.options.isFullScreen
+                }).render();
 
-                        me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
+                me.DefaultAppTemplate.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
 
-                        if (!me.options.navigateTo) {
-                            me._initNavigateTo();
-                        }
-                    });
-                });
+                if (!me.options.navigateTo) {
+                    me._initNavigateTo();
+                }
             });
+        });
+    
 
         },
         _setPropertiesTabs: function (view, path, propertyList) {

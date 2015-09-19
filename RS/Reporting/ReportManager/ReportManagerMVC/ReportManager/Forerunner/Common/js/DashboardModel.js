@@ -6,12 +6,8 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var locData;
+    var locData = forerunner.localize;
     var messages;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-        messages = locData.messages;
-    });
 
     ssr.DashboardModel = function (options) {
         var me = this;
@@ -20,6 +16,8 @@ $(function () {
             reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager/",
             rsInstance: null
         };
+
+        me.messages = locData.getLocData().messages;
 
         // Merge options with the default settings
         if (options) {
@@ -109,7 +107,7 @@ $(function () {
         loadTemplate: function (templateName) {
             var me = this;
 
-            var locData;
+            var locData = forerunner.localize;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text", function (loc) {
                 me.dashboardDef.template = loc;
             });

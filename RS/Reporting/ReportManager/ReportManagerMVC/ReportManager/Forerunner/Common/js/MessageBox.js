@@ -37,7 +37,7 @@ $(function () {
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var locData;
+            var locData = forerunner.localize;
             forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
                 locData = loc;
 
@@ -45,14 +45,14 @@ $(function () {
                     "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                         "<div class='fr-messagebox-innerpage'>" +
                             "<div class='fr-core-dialog-header'>" +
-                                "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
+                                "<div class='fr-messagebox-title'>" + locData.getLocData().dialog.title + "</div>" +
                             "</div>" +
                             "<div class='fr-messagebox-content'>" +
                                 "<span class='fr-messagebox-msg'/>" +
                             "</div>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+                                    "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.getLocData().dialog.close + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +

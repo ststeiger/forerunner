@@ -197,7 +197,7 @@ $(function () {
          */
         writeError: function (errorData) {
             var me = this;
-            var errorTag = me.options.reportViewer.locData.errorTag;
+            var errorTag = me.options.reportViewer.locData.getLocData().errorTag;
             var $cell;
 
             if (errorData.Exception.Type === "LicenseException") {
@@ -1123,10 +1123,10 @@ $(function () {
             }
 
 
-            //NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;            
+            //NewImage.alt = me.options.reportViewer.locData.getLocData().messages.imageNotDisplay;            
             //NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 
-            NewImage.attr("alt", me.options.reportViewer.locData.messages.imageNotDisplay);
+            NewImage.attr("alt", me.options.reportViewer.locData.getLocData().messages.imageNotDisplay);
             NewImage.attr("src", this._getImageURL(RIContext.RS, ImageName));
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
@@ -1861,7 +1861,7 @@ $(function () {
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
             TS.State = { "LastRowIndex": 0, "LastObjType": "", "StartIndex": 0, CellCount: 0 };
-            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.getLocData().messages.loading);
             me._writeTablixRowBatch(TS);
 
             HasFixedRows = TS.HasFixedRows;

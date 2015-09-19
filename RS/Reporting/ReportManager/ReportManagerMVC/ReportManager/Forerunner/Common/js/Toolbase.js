@@ -197,10 +197,12 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
-            if (toolInfo.tooltip) {
-                $tool.attr("title", toolInfo.tooltip);
-            }
-
+            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+                if (toolInfo.tooltip) {
+                    $tool.attr("title", toolInfo.tooltip);
+                }
+            });
+            
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
             }
@@ -606,11 +608,14 @@ $(function () {
             var text;
             var me = this;
 
+            //Make sure loc files is loaded
             if (typeof toolInfo.text === "function")
                 text = toolInfo.text({ $reportViewer: me.options.$reportViewer });
             else
                 text = toolInfo.text;
+            
             return text;
+            
         },
         _removeEvent: function ($toolEl, toolInfo) {
             var me = this;
@@ -648,7 +653,11 @@ $(function () {
             //inilialize widget data
             me.frozen = false;
 
-            me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
+            forerunner.config.getCustomSettings(function () {
+                me.hideDisabledTool = (forerunner.config.getCustomSettingsValue("HideDisabledTool", "on") === "on");
+            });
+
+            
         }
     });  // $.widget
 

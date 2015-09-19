@@ -9,10 +9,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData;
-    forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-        locData = loc;
-    });
+    var locData = forerunner.localize;
+
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -59,7 +57,7 @@ $(function () {
         // Constructor
         _create: function () {
             var me = this;
-
+            forerunner.ssr._internal.init();
             // Make sure the viewerBase _create gets called
             me._super();
         },
@@ -490,7 +488,7 @@ $(function () {
             var me = this;
 
             if (keyword === "") {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.explorerSearch.emptyError, locData.dialog.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().explorerSearch.emptyError, locData.getLocData().dialog.title);
                 return;
             }
 
@@ -513,7 +511,7 @@ $(function () {
                 },
                 success: function (data) {
                     if (data.Exception) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().messages.catalogsLoadFailed);
                     }
                     else {
                         if (data.length) {
@@ -532,14 +530,14 @@ $(function () {
 
                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: me.path });
                     me.removeLoadingIndicator();
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.catalogsLoadFailed);
                 }
             });
         },
         _showNotFound: function () {
             var me = this;
             var $explorer = new $("<div class='fr-report-explorer fr-core-widget'></div>");
-            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.explorerSearch.notFound + "</div>");
+            var $notFound = new $("<div class='fr-explorer-notfound'>" + locData.getLocData().explorerSearch.notFound + "</div>");
             $explorer.append($notFound);
             me.element.append($explorer);
         },
@@ -636,7 +634,7 @@ $(function () {
             }).done(
                  function (data) {
                      if (data.Exception) {
-                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.getLocData().messages.catalogsLoadFailed);
                      }
                      else {
                          me._render(data);
@@ -649,7 +647,7 @@ $(function () {
                     me._trigger(events.afterFetch, null, { reportExplorer: me, lastFetched: me.lastFetched, newPath: path });
                     me.removeLoadingIndicator();
                     console.log(textStatus);
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, textStatus + " - " + errorThrown, locData.getLocData().messages.catalogsLoadFailed);
                 });
         },
         _initCallbacks: function () {
@@ -896,10 +894,10 @@ $(function () {
                     //refresh the page if search folder created succeeded
                     location.reload(true);
                     //bug 1078, not show succeeded dialig, instead just close current dialog
-                    //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderSucceeded, locData.toolbar.searchFolder);
+                    //forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.saveSearchFolderSucceeded, locData.getLocData().toolbar.searchFolder);
                 },
                 error: function (data) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.saveSearchFolderFailed, locData.toolbar.searchFolder);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.saveSearchFolderFailed, locData.getLocData().toolbar.searchFolder);
                 }
             });
         },

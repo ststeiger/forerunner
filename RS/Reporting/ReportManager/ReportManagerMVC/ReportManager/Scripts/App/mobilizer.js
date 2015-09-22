@@ -11,7 +11,8 @@ $(function () {
         forerunner.config.initialize(function () {
             me.explorer = $("body").reportExplorerEZ({
                 
-            });
+            });           
+
         });
         
     });

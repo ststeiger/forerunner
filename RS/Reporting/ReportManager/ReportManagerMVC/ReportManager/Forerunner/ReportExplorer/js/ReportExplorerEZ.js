@@ -677,6 +677,22 @@ $(function () {
             var me = this;
             me.DefaultAppTemplate.$securitySection.forerunnerSecurity("setData", path, "Catalog");
         },
+
+        /**
+         * Get report viewer EZ Object
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportViewerEZ
+         * 
+         * @return {Object} - report ViewerEZ jQuery object
+         */
+        getReportViewerEZ: function () {
+            var me = this;
+            if (!me.DefaultAppTemplate.$mainviewport) {
+                return null;
+            }
+            return me.DefaultAppTemplate.$mainviewport;
+        },
+
         /**
          * Get report explorer object
          *

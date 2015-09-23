@@ -23,7 +23,8 @@ namespace Forerunner.AS.ConfigTool
         #region Parameter properties / definitions
 
         private string _reportPath1 = null;
-        [Parameter(HelpMessage = "Report path 1")]
+        [Parameter(HelpMessage = "Report path 1",
+                   ParameterSetName = "config")]
         [Alias("r1")]
         public string ReportPath1
         {
@@ -38,7 +39,8 @@ namespace Forerunner.AS.ConfigTool
         }
 
         private string _reportPath2 = null;
-        [Parameter(HelpMessage = "Report path 2")]
+        [Parameter(HelpMessage = "Report path 2",
+                   ParameterSetName = "config")]
         [Alias("r2")]
         public string ReportPath2
         {
@@ -53,7 +55,8 @@ namespace Forerunner.AS.ConfigTool
         }
 
         private string _reportPath3 = null;
-        [Parameter(HelpMessage = "Report path 3")]
+        [Parameter(HelpMessage = "Report path 3",
+                   ParameterSetName = "config")]
         [Alias("r3")]
         public string ReportPath3
         {
@@ -137,9 +140,6 @@ namespace Forerunner.AS.ConfigTool
             Properties properties = DefaultProject.Properties;
             properties.Item("WebApplication.StartPageUrl").Value = @"#as-home";
             properties.Item("WebApplication.DebugStartAction").Value = 1;
-
-            // Make sure windows authentication is enabled
-            properties.Item("WebApplication.WindowsAuthenticationEnabled").Value = true;
 
             WriteVerbose("End UpdateProjectSettings()");
         }

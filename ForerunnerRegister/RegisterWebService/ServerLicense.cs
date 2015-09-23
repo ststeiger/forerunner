@@ -283,6 +283,8 @@ namespace ForerunnerLicense
 
         public string Info(string LicenseKey)
         {
+            string Info;
+
             LicenseData licenseData = LoadLicenseFromServer(LicenseKey);
             if (licenseData == null)
             {
@@ -290,8 +292,33 @@ namespace ForerunnerLicense
             }
 
             DateTime curExpiration = licenseData.PurchaseDate + TimeSpan.FromDays(licenseData.LicenseDuration);
+            if (licenseData.MachineData == null)
+            {
+                Info =
+                    "<LicenseResponse>" +
+                    "  <Status>{0}</Status>" +
+                    "  <StatusCode>{1}</StatusCode>" +
+                    "  <SKU>{2}</SKU>" +
+                    "  <Expiration>{3}</Expiration>" +
+                    "  <LastActivation>{4}</LastActivation>" +
+                    "  <IsSubscription>{5}</IsSubscription>" +
+                    "  <Quantity>{6}</Quantity>" +
+                    "  <MachineData>" +
+                    "    <HostName>Key not currently assigned to a host</HostName>" +
+                    "  </MachineData>" +
+                    "</LicenseResponse>";
 
-            string Info =
+                return String.Format(Info,
+                                     "Success",
+                                     "200",
+                                     licenseData.SKU,
+                                     curExpiration.ToLocalTime().ToShortDateString(),
+                                     licenseData.LastActivation.ToLocalTime().ToShortDateString(),
+                                     licenseData.IsSubscription,
+                                     licenseData.Quantity);
+            }
+
+            Info =
                 "<LicenseResponse>" +
                 "  <Status>{0}</Status>" +
                 "  <StatusCode>{1}</StatusCode>" +

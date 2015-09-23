@@ -450,6 +450,7 @@
     <Content Include="AllSamplesV4.nuspec" />
     <Content Include="Web.config.transform" />
     <Content Include="Init.ps1" />
+    <Content Include="Install.ps1" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

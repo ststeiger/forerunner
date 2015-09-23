@@ -85,7 +85,7 @@ robocopy %SRC_ASCONFIG_BIN% %DEST_TOOLS% Forerunner.AS.ConfigTool.dll Forerunner
 if ERRORLEVEL 8 (
 	goto :Error
 )
-robocopy %SRC_ALL_SAMPLES_V4% %DEST_TOOLS% Init.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL
+robocopy %SRC_ALL_SAMPLES_V4% %DEST_TOOLS% Init.ps1 Install.ps1 /LOG+:%NUGET_PACKAGE_LOG% >> NUL
 if ERRORLEVEL 8 (
 	goto :Error
 )

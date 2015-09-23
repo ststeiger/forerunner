@@ -28,18 +28,43 @@ namespace Forerunner.SDK.ConfigTool
         #region Parameter properties / definitions
 
         // License key
-        private string _licenseKey;
-        [Parameter(HelpMessage = "Activation license key")]
-        [Alias("l")]
-        public string LicenseKey
+        private string _activateLicense;
+        [Parameter(HelpMessage = "Activate license key",
+                   ParameterSetName = "activate",
+                   Mandatory = true)]
+        [Alias("al")]
+        public string ActivateLicense
         {
-            get { return _licenseKey; }
-            set { _licenseKey = value; }
+            get { return _activateLicense; }
+            set { _activateLicense = value; }
+        }
+
+        private SwitchParameter _deactivateLicense;
+        [Parameter(HelpMessage = "Deactivate license",
+                   ParameterSetName = "deactivate",
+                   Mandatory = true)]
+        [Alias("dl")]
+        public SwitchParameter DeactivateLicense
+        {
+            get { return _deactivateLicense; }
+            set { _deactivateLicense = value; }
+        }
+
+        private SwitchParameter _showLicense;
+        [Parameter(HelpMessage = "Show license",
+                   ParameterSetName = "show",
+                   Mandatory = true)]
+        [Alias("sl")]
+        public SwitchParameter ShowLicense
+        {
+            get { return _showLicense; }
+            set { _showLicense = value; }
         }
 
         // <add key="Forerunner.IsNative" value="true" />
         private string _isNative;
-        [Parameter(HelpMessage = "'true' = native, 'false' = Power Point")]
+        [Parameter(HelpMessage = "'true' = native, 'false' = Power Point",
+                   ParameterSetName = "config")]
         [Alias("n")]
         public string IsNative
         {
@@ -49,7 +74,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.SharePointHost" value="" />
         private string _sharePointHost;
-        [Parameter(HelpMessage = "URL of the Share Point host, used if IsNative = 'false'")]
+        [Parameter(HelpMessage = "URL of the Share Point host, used if IsNative = 'false'",
+                   ParameterSetName = "config")]
         [Alias("s")]
         public string SharePointHost
         {
@@ -59,7 +85,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.DefaultUserDomain" value="" />
         private string _defaultUserDomain;
-        [Parameter(HelpMessage = "Domain used to authenticate the user")]
+        [Parameter(HelpMessage = "Domain used to authenticate the user",
+                   ParameterSetName = "config")]
         [Alias("ud")]
         public string DefaultUserDomain 
         {
@@ -75,7 +102,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerWSUrl" value="http://localhost/ReportServer" />
         private string _reportServerWSUrl;
-        [Parameter(HelpMessage = "Report Server URL")]
+        [Parameter(HelpMessage = "Report Server URL",
+                   ParameterSetName = "config")]
         [Alias("ssrs")]
         public string ReportServerWSUrl
         {
@@ -85,7 +113,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerDataSource" value="." />
         private string _reportServerDataSource;
-        [Parameter(HelpMessage = "Report Server data source")]
+        [Parameter(HelpMessage = "Report Server data source",
+                   ParameterSetName = "config")]
         [Alias("ds")]
         public string ReportServerDataSource
         {
@@ -95,7 +124,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.UseIntegratedSecurityForSQL" value="" />
         private string _useIntegratedSecurityForSQL;
-        [Parameter(HelpMessage = authenticationHelp)]
+        [Parameter(HelpMessage = authenticationHelp,
+                   ParameterSetName = "config")]
         [Alias("ia")]
         public string UseIntegratedSecurityForSQL
         {
@@ -105,7 +135,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ImpersonateCaller" value="" />
         private string _impersonateCaller;
-        [Parameter(HelpMessage = "Impersonate vsThemeColors logged in user")]
+        [Parameter(HelpMessage = "Impersonate vsThemeColors logged in user",
+                   ParameterSetName = "config")]
         [Alias("im")]
         public string ImpersonateCaller
         {
@@ -115,7 +146,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.UseMobilizerDB" value="true" />
         private string _useMobilizerDB;
-        [Parameter(HelpMessage = "Don't allow any use of the Mobilizer DB functions")]
+        [Parameter(HelpMessage = "Allow or disallow use of the Mobilizer DB functions",
+                   ParameterSetName = "config")]
         [Alias("umdb")]
         public string UseMobilizerDB
         {
@@ -125,7 +157,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.SeperateDB" value="false" />
         private string _seperateDB;
-        [Parameter(HelpMessage = "Use a separate DB for Mobilizer")]
+        [Parameter(HelpMessage = "Use a separate DB for Mobilizer",
+                   ParameterSetName = "config")]
         [Alias("sdb")]
         public string SeperateDB
         {
@@ -135,7 +168,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerDB" value="ReportServer" />
         private string _reportServerDB;
-        [Parameter(HelpMessage = "Report server database name")]
+        [Parameter(HelpMessage = "Report server database name",
+                   ParameterSetName = "config")]
         [Alias("dn")]
         public string ReportServerDB
         {
@@ -145,7 +179,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerDBUser" value="" />
         private string _reportServerDBUser;
-        [Parameter(HelpMessage = "Domain User to log into the DB")]
+        [Parameter(HelpMessage = "Domain User to log into the DB",
+                   ParameterSetName = "config")]
         [Alias("u")]
         public string ReportServerDBUser
         {
@@ -161,7 +196,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerDBPWD" value="" />
         private SecureString _reportServerDBPWD;
-        [Parameter(HelpMessage = "ReportServerDBUser password")]
+        [Parameter(HelpMessage = "ReportServerDBUser password",
+                   ParameterSetName = "config")]
         [Alias("p")]
         public SecureString ReportServerDBPWD
         {
@@ -177,7 +213,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerDBDomain" value="" />
         private string _reportServerDBDomain;
-        [Parameter(HelpMessage = "Report server database domain")]
+        [Parameter(HelpMessage = "Report server database domain",
+                   ParameterSetName = "config")]
         [Alias("dd")]
         public string ReportServerDBDomain
         {
@@ -187,7 +224,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.ReportServerTimeout" value="100000" />
         private string _reportServerTimeout = "100000";
-        [Parameter(HelpMessage = "Report server timeout (milliseconds)")]
+        [Parameter(HelpMessage = "Report server timeout (milliseconds)",
+                   ParameterSetName = "config")]
         [Alias("t")]
         public string ReportServerTimeout
         {
@@ -197,7 +235,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.IgnoreSSLErrors" value="true" />
         private string _ignoreSSLErrors = "true";
-        [Parameter(HelpMessage = "Ignore SSL errors")]
+        [Parameter(HelpMessage = "Ignore SSL errors",
+                   ParameterSetName = "config")]
         [Alias("i")]
         public string IgnoreSSLErrors
         {
@@ -207,7 +246,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.QueueThumbnails" value="false" />
         private string _queueThumbnails = "false";
-        [Parameter(HelpMessage = "Queue thumbnail requests")]
+        [Parameter(HelpMessage = "Queue thumbnail requests",
+                   ParameterSetName = "config")]
         [Alias("q")]
         public string QueueThumbnails
         {
@@ -217,7 +257,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.MobilizerSettingPath" value="Custom\MobilizerSettings.txt"/>
         private string _mobilizerSettingPath = @"Custom\MobilizerSettings.txt";
-        [Parameter(HelpMessage = "Path to the Mobilizer settings file")]
+        [Parameter(HelpMessage = "Path to the Mobilizer settings file",
+                   ParameterSetName = "config")]
         [Alias("m")]
         public string MobilizerSettingPath
         {
@@ -227,7 +268,8 @@ namespace Forerunner.SDK.ConfigTool
 
         // <add key="Forerunner.VersionPath" value="Forerunner\version.txt" />
         private string _versionPath = @"Forerunner\version.txt";
-        [Parameter(HelpMessage = "Path to the Mobilizer build version test file")]
+        [Parameter(HelpMessage = "Path to the Mobilizer build version test file",
+                   ParameterSetName = "config")]
         [Alias("v")]
         public string VersionPath
         {
@@ -236,8 +278,9 @@ namespace Forerunner.SDK.ConfigTool
         }
 
         private SwitchParameter _skipLicenseCheck;
-        [Parameter(HelpMessage = "Causes Set-FRConfig to skip the license check")]
-        [Alias("sl")]
+        [Parameter(HelpMessage = "Causes Set-FRConfig to skip the license check",
+                   ParameterSetName = "config")]
+        [Alias("slc")]
         public SwitchParameter SkipLicenseCheck
         {
             get
@@ -260,24 +303,55 @@ namespace Forerunner.SDK.ConfigTool
         }
         protected override void ProcessRecord()
         {
-            LoadWebConfig();
+            int processingId = 1;
+            string activity = "Updating Forerunner Configuration Settings";
+
             LicenseData data = ClientLicense.GetLicense();
-            if (data != null)
+            if (!SkipLicenseCheck.IsPresent && data == null)
             {
-                LicenseKey = data.LicenseKey;
+                needsActivation = true;
             }
+
+            //
+            // "activate" parameter set
+            if (ActivateLicense != null && ActivateLicense.Length > 0)
+            {
+                WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
+                Activate();
+                return;
+            }
+
+            //
+            // "show" parameter set
+            if (ShowLicense.IsPresent)
+            {
+                WriteProgress(new ProgressRecord(processingId, activity, "ShowActiveLicense()"));
+                ShowActiveLicense();
+                return;
+            }
+
+            //
+            // "deactivate" parameter set
+            if (DeactivateLicense.IsPresent)
+            {
+                WriteProgress(new ProgressRecord(processingId, activity, "Deactivate()"));
+                Deactivate();
+                return;
+            }
+
+            //
+            // "config" parameter set
+            LoadWebConfig();
 
             PromptForMissingParameters();
 
-            int processingId = 1;
-            string activity = "Updating Forerunner Configuration Settings";
             WriteProgress(new ProgressRecord(processingId, activity, "TestConnection()"));
             TestConnection();
 
             if (!SkipLicenseCheck.IsPresent)
             {
                 WriteProgress(new ProgressRecord(processingId, activity, "ActivateLicense()"));
-                ActivateLicense();
+                Activate();
             }
 
             WriteProgress(new ProgressRecord(processingId, activity, "UpdateWebConfig()"));
@@ -366,20 +440,48 @@ namespace Forerunner.SDK.ConfigTool
             WriteVerbose("End TestConnection()" + StaticMessages.connectDBSuccess);
             return true;
         }
-        private Boolean ActivateLicense()
+        private Boolean Deactivate()
         {
-            WriteVerbose("Start ActivateLicense()");
+            WriteVerbose("Start Deactivate()");
 
-            string licenseInfo;
+            ClientLicense.DeActivate();
 
-            if (needsActivation && LicenseKey != null && LicenseKey.Length > 0)
+            WriteObject("License Deactivated");
+            WriteVerbose("End Deactivate()");
+            return true;
+        }
+        private Boolean ShowActiveLicense()
+        {
+            WriteVerbose("Start ShowActiveLicense()");
+            string licenseInfo = ClientLicense.GetLicenseString();
+            if (licenseInfo.Length > 0)
             {
-                WriteVerbose("Activating license");
-                licenseInfo = ClientLicense.ActivateFromKey(LicenseKey);
+                WriteObject(licenseInfo);
             }
             else
             {
-                WriteVerbose("License already active");
+                WriteObject("There is no active license on this machine");
+            }
+
+            WriteVerbose("End ShowActiveLicense()");
+            return true;
+        }
+        private Boolean Activate()
+        {
+            WriteVerbose("Start Activate()");
+
+            string licenseInfo;
+
+            if (needsActivation && ActivateLicense != null && ActivateLicense.Length > 0)
+            {
+                WriteVerbose("Activating license");
+                licenseInfo = ClientLicense.ActivateFromKey(ActivateLicense);
+                WriteObject(String.Format("License Key: {0} activated", ActivateLicense));
+            }
+            else
+            {
+                LicenseData data = ClientLicense.GetLicense();
+                WriteObject(String.Format("License key {0} is active on this machine", data.LicenseKey));
                 licenseInfo = ClientLicense.GetLicenseString();
             }
 
@@ -388,7 +490,7 @@ namespace Forerunner.SDK.ConfigTool
                 WriteVerbose(licenseInfo);
             }
 
-            WriteVerbose("End ActivateLicense()");
+            WriteVerbose("End Activate()");
             return true;
         }
         private Boolean UpdateSourceFiles()
@@ -594,10 +696,9 @@ namespace Forerunner.SDK.ConfigTool
 
             // LicenseKey
             string LicenseKeyPrompt = "";
-            if ((LicenseKey == null || LicenseKey.Length == 0) && !SkipLicenseCheck.IsPresent)
+            if (needsActivation && !SkipLicenseCheck.IsPresent)
             {
-                needsActivation = true;
-                AddPrompt("LicenseKey", LicenseKey, @"Activation License Key (https://www.forerunnersw.com/registerTrial)", ref descriptions, out LicenseKeyPrompt);
+                AddPrompt("LicenseKey", ActivateLicense, @"Activation License Key (https://www.forerunnersw.com/registerTrial)", ref descriptions, out LicenseKeyPrompt);
             }
 
             // DefaultUserDomain
@@ -644,7 +745,7 @@ namespace Forerunner.SDK.ConfigTool
             if (descriptions.Count > 0)
             {
                 results = Host.UI.Prompt(null, null, descriptions);
-                AssignResult(ref _licenseKey, LicenseKeyPrompt, results);
+                AssignResult(ref _activateLicense, LicenseKeyPrompt, results);
                 AssignResult(ref _reportServerWSUrl, ReportServerWSUrlPrompt, results);
                 AssignResult(ref _reportServerDataSource, ReportServerDataSourcePrompt, results);
                 AssignResult(ref _useIntegratedSecurityForSQL, UseIntegratedSecurityForSQLPrompt, results);

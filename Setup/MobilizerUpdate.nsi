@@ -1026,7 +1026,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
   Delete "$INSTDIR\Config\MobilizerConfig.ps1"
   Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.dll"
-  Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool.Help.xml"
+  Delete "$INSTDIR\Config\Forerunner.SDK.ConfigTool-Help.xml"
   Delete "$INSTDIR\Config\PublishFRExtension.dll"
   Delete "$INSTDIR\Config\PublishFRExtension-Help.xml"
   Delete "$INSTDIR\Config\UWS.Configuration.dll"

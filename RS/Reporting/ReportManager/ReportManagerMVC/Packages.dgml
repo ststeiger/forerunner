@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph GraphDirection="LeftToRight" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
+    <Node Id="Forerunner.SSRS" Label="Forerunner.SSRS" Category="Project" />
+    <Node Id="Newtonsoft.Json 7.0.1" Label="Newtonsoft.Json 7.0.1" Category="Package" />
     <Node Id="ReportManager" Label="ReportManager" Category="Project" />
     <Node Id="EntityFramework 5.0.0" Label="EntityFramework 5.0.0" Category="Package" />
     <Node Id="jQuery 1.7.1.1" Label="jQuery 1.7.1.1" Category="Package" />
@@ -22,10 +24,11 @@
     <Node Id="Microsoft.Net.Http 2.0.20710.0" Label="Microsoft.Net.Http 2.0.20710.0" Category="Package" />
     <Node Id="Microsoft.Web.Infrastructure 1.0.0.0" Label="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package" />
     <Node Id="Modernizr 2.5.3" Label="Modernizr 2.5.3" Category="Package" />
-    <Node Id="Newtonsoft.Json 6.0.8" Label="Newtonsoft.Json 6.0.8" Category="Package" />
+    <Node Id="Newtonsoft.Json 7.0.1" Label="Newtonsoft.Json 7.0.1" Category="Package" />
     <Node Id="WebGrease 1.1.0" Label="WebGrease 1.1.0" Category="Package" />
   </Nodes>
   <Links>
+    <Link Source="Forerunner.SSRS" Target="Newtonsoft.Json 7.0.1" Category="Installed Package" />
     <Link Source="jQuery.UI.Combined 1.8.20.1" Target="jQuery 1.7.1.1" Category="Package Dependency" />
     <Link Source="jQuery.Validation 1.9.0.1" Target="jQuery 1.7.1.1" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.Mvc 4.0.20710.0" Target="Microsoft.AspNet.WebPages 2.0.20710.0" Category="Package Dependency" />
@@ -35,7 +38,7 @@
     <Link Source="Microsoft.AspNet.Web.Optimization 1.0.0" Target="WebGrease 1.1.0" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.WebApi 4.0.20710.0" Target="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Microsoft.Net.Http 2.0.20710.0" Category="Package Dependency" />
-    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Newtonsoft.Json 6.0.8" Category="Package Dependency" />
+    <Link Source="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Target="Newtonsoft.Json 7.0.1" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Client 4.0.20710.0" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.Web.Infrastructure 1.0.0.0" Category="Package Dependency" />
     <Link Source="Microsoft.AspNet.WebApi.WebHost 4.0.20710.0" Target="Microsoft.AspNet.WebApi.Core 4.0.20710.0" Category="Package Dependency" />

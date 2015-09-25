@@ -101,7 +101,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Forerunner.SDK.ConfigTool.Help.pshproj" />
+    <None Include="Forerunner.SDK.ConfigTool.Help.pshproj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="MobilizerConfig.ps1" />
   </ItemGroup>
   <ItemGroup>

@@ -16,7 +16,8 @@ namespace Forerunner.Powershell
         #region Properties
 
         private string _projectName;
-        [Parameter(HelpMessage = "Explicitly defines which project you want configured")]
+        [Parameter(HelpMessage = "Explicitly defines which project you want configured",
+                   ParameterSetName = "config")]
         [Alias("pr")]
         public string ProjectName
         {
@@ -31,7 +32,8 @@ namespace Forerunner.Powershell
         }
 
         private string _webConfigPath;
-        [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file")]
+        [Parameter(HelpMessage = "Fully qualified path, including filename to the web.config file",
+                   ParameterSetName = "config")]
         [Alias("w")]
         public string WebConfigPath
         {

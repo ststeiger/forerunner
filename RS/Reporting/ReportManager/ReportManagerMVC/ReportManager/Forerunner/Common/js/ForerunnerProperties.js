@@ -294,7 +294,7 @@ $(function () {
         },
         _createSearchFolder: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.searchFolder + "'><a href='#" + me.guid + "_" + "searchfolder" + "'>" + locData.searchFolder.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.searchFolder + "'><a href='#" + me.guid + "_" + "searchfolder" + "'>" + locData.getLocData().searchFolder.title + "</a></li>");
 
             var $searchfolderDiv = new $(
                 "<div id='" + me.guid + "_" + "searchfolder" + "' class='fr-property-container fr-sf-container'>" +

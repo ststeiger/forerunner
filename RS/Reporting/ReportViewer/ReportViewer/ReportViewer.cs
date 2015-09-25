@@ -66,10 +66,13 @@ namespace Forerunner.SSRS.Viewer
         {
             SSRSServer retval = null;
 
-            SSRSServers.TryGetValue(this.ReportServerURL, out retval);
+            lock (SSRSServers)
+            {
+                SSRSServers.TryGetValue(this.ReportServerURL, out retval);
 
-            if (retval == null)
-                retval = LoadServerData();
+                if (retval == null)
+                    retval = LoadServerData();
+            }
             return retval;
         }
 

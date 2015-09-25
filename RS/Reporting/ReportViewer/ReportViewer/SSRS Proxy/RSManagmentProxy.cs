@@ -18,6 +18,24 @@ namespace Forerunner.SSRS.Management
             this.IsNative = IsNative;
         }
 
+        public ItemNamespaceHeader ItemNamespaceHeaderValue
+        {
+            get
+            {
+                if (IsNative)
+                    return RSNative.ItemNamespaceHeaderValue;
+                else
+                    return RSSPS.ItemNamespaceHeaderValue;
+            }
+            set
+            {
+                if (IsNative)
+                    RSNative.ItemNamespaceHeaderValue = value;
+                else
+                    RSSPS.ItemNamespaceHeaderValue = value;
+            }
+        }
+
         public string Url
         {
             

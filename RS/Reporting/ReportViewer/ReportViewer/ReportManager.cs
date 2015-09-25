@@ -1447,6 +1447,8 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+
+        //For SPS get the Catalogitem from properties
         private CatalogItem GetItemFromPath(string path)
         {
             CatalogItem c = new CatalogItem();
@@ -2549,9 +2551,7 @@ namespace Forerunner.SSRS.Manager
                                 if (SQLReader.IsDBNull(0))
                                 {
                                     itemPath = SQLReader.GetString(8).ToString();
-                                    string[] items = new string[1];
-                                    items[0] = itemPath;
-                                    list.AddRange(GetItemsFromPaths(items));
+                                    list.Add(GetItemFromPath(itemPath));
 
                                 }
                                 else

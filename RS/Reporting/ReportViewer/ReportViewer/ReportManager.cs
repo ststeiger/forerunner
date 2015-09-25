@@ -834,10 +834,10 @@ namespace Forerunner.SSRS.Manager
                         while (SQLReader.Read())
                         {
                             version = SQLReader.GetString(0);
-                            if (version == "S.1.3" || version == "1.3")
+                            if (version == "S.1.3" || version == "1.4")
                                 continue;
                             else
-                                throw new Exception("Incorrect DB Schema!  <br />Expected 1.3  <br /><br />Found <br />" + version + "<br /><br />Please use the configuration tool to install or update the Mobilizer Schema."); 
+                                throw new Exception("Incorrect DB Schema!  <br />Expected 1.4  <br /><br />Found <br />" + version + "<br /><br />Please use the configuration tool to install or update the Mobilizer Schema."); 
                         }
                     }
 
@@ -854,7 +854,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveFavorite(string path)
+               public string SaveFavorite(string path)
         {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
@@ -867,7 +867,7 @@ namespace Forerunner.SSRS.Manager
                             SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             IF NOT EXISTS (SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID)
                             BEGIN
-	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
+	                            INSERT ForerunnerFavorites (ItemID, UserID,SPSPath) SELECT @IID,@UID,@ItemPath
                             END";
 
                 if (SeperateDB)
@@ -881,7 +881,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     SetUserNameParameters(SQLComm, userName);
                     SQLComm.Parameters.AddWithValue("@ItemPath",path);
-                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.Parameters.AddWithValue("@IID", IID);                    
                     SQLComm.ExecuteNonQuery();
                 }
 
@@ -1338,12 +1338,12 @@ namespace Forerunner.SSRS.Manager
 
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT  TOP 1 UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                               SELECT DISTINCT Path, Name, ModifiedDate, c.ItemID, Description, MimeType, c.[Type], c.Hidden
-                               FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                               SELECT DISTINCT Path, Name, ModifiedDate, f.ItemID, Description, MimeType, c.[Type], c.Hidden, f.SPSPath
+                               FROM ForerunnerFavorites f LEFT OUTER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
 
                 if (SeperateDB)
                 {
-                    SQL = @"SELECT DISTINCT ItemID FROM ForerunnerFavorites f WHERE f.UserID = @DomainUser";                    
+                    SQL = @"SELECT DISTINCT ItemID FROM ForerunnerFavorites f WHERE f.UserID = @DomainUser";
                 }
 
                 OpenSQLConn();
@@ -1366,17 +1366,28 @@ namespace Forerunner.SSRS.Manager
                         {
                             while (SQLReader.Read())
                             {
-                                c = new CatalogItem();
-                                c.Path = GetPath(SQLReader.GetString(0));
-                                c.Name = SQLReader.GetString(1);
-                                c.ModifiedDate = SQLReader.GetDateTime(2);
-                                c.ModifiedDateSpecified = true;
-                                c.ID = SQLReader.GetGuid(3).ToString();
-                                c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
-                                c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
-                                c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
-                                c.Hidden = SQLReader.GetBoolean(7);
-                                list.Add(c);
+
+                                //This is a Sharepoint item not stored in the catalog table
+                                if (SQLReader.IsDBNull(0))
+                                {
+                                    string path = SQLReader.GetString(8).ToString();
+                                    list.Add(GetItemFromPath(path));
+                                }
+                                else
+                                {
+                                    c = new CatalogItem();
+                                    c.Path = GetPath(SQLReader.GetString(0));
+                                    c.Name = SQLReader.GetString(1);
+                                    c.ModifiedDate = SQLReader.GetDateTime(2);
+                                    c.ModifiedDateSpecified = true;
+                                    c.ID = SQLReader.GetGuid(3).ToString();
+                                    c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
+                                    c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                                    c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
+                                    c.Hidden = SQLReader.GetBoolean(7);
+                                    list.Add(c);
+                                }
+
                             }
                             return list.ToArray();
                         }
@@ -1391,6 +1402,59 @@ namespace Forerunner.SSRS.Manager
                 }
                 CloseSQLConn();
             }
+        }
+        //For SPS get the Catalogitem from properties
+        private CatalogItem GetItemFromPath(string path)
+        {
+            CatalogItem c = new CatalogItem();
+
+            Property[] props = new Property[6];
+
+            props[0] = new Property();
+            props[0].Name = "Name";
+
+            props[1] = new Property();
+            props[1].Name = "Type";
+
+            props[2] = new Property();
+            props[2].Name = "ModifiedDate";
+
+            props[3] = new Property();
+            props[3].Name = "MimeType";
+
+            props[4] = new Property();
+            props[4].Name = "Description";
+
+            props[5] = new Property();
+            props[5].Name = "ForerunnerHidden";
+
+
+            props = callGetProperties(path, props);
+
+            string mimetype = null;
+            SetMissingMimetype(path, ref mimetype);
+            c.MimeType = mimetype;
+            for (int i = 0; i < props.Length; i++)
+            {
+                if (props[i].Name == "Name")
+                    c.Name = props[i].Value;
+                else if (props[i].Name == "Type")
+                    c.Type = (ItemTypeEnum)Enum.Parse(typeof(ItemTypeEnum), props[i].Value);
+                else if (props[i].Name == "ModifiedDate")
+                    c.ModifiedDate = DateTime.Parse(props[i].Value);
+                else if (props[i].Name == "MimeType")
+                    c.MimeType = props[i].Value;
+                else if (props[i].Name == "Description")
+                    c.Description = props[i].Value;
+
+                else if (props[i].Name == "ForerunnerHidden")
+                    c.Hidden = bool.Parse(props[i].Value);
+            }
+
+            c.Path = path;
+
+
+            return c;
         }
 
         public CatalogItem[] GetRecentReports()
@@ -2353,9 +2417,9 @@ namespace Forerunner.SSRS.Manager
             {
                 impersonator = tryImpersonate();
                 string SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerItemTags WHERE ItemID = @ItemID)
-                                  INSERT ForerunnerItemTags (ItemID, Tags) SELECT @ItemID, @Tags
+                                  INSERT ForerunnerItemTags (ItemID, Tags,SPSPath) SELECT @ItemID, @Tags,@ItemPath
                                ELSE
-                                  UPDATE ForerunnerItemTags SET Tags = @Tags WHERE ItemID = @ItemID";
+                                  UPDATE ForerunnerItemTags SET Tags = @Tags, SPSPath =@ItemPath  WHERE ItemID = @ItemID";
 
                 if (SeperateDB)
                     SQL = @"IF NOT EXISTS (SELECT * FROM ForerunnerItemTags WHERE ItemID = @ItemPath)
@@ -2386,7 +2450,7 @@ namespace Forerunner.SSRS.Manager
         {
             if (UseMobilizerDB == false)
                 return null;
-            
+
             string mimeType;
             string content = Encoding.UTF8.GetString(GetCatalogResource(path, out mimeType));
             string tags = JsonUtility.GetSearchFolderTags(content);
@@ -2401,9 +2465,9 @@ namespace Forerunner.SSRS.Manager
 
                 StringBuilder SQL = new StringBuilder();
 
-                // TODO: Fix for Seperate DB
+
                 if (!SeperateDB)
-                    SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType, c.Hidden FROM [Catalog] c INNER JOIN (SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
+                    SQL.Append(@"SELECT c.[Path], c.Name, c.ModifiedDate, c.[Type], c.ItemID, c.Description, c.MimeType, c.Hidden, SPSPath FROM [Catalog] c RIGHT OUTER JOIN (SELECT ItemID,SPSPath FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
                 else
                     SQL.Append(@"SELECT ItemID FROM ForerunnerItemTags WHERE Tags LIKE '%' + @tag1 + '%'");
 
@@ -2430,34 +2494,46 @@ namespace Forerunner.SSRS.Manager
                             while (SQLReader.Read())
                             {
                                 items.Add(GetPath(SQLReader.GetString(0)));
-                        
+
                             }
                             return GetItemsFromPaths(items.ToArray());
                         }
                         else
                         {
-                           while (SQLReader.Read())
+                            while (SQLReader.Read())
                             {
-                                string itemPath = GetPath(SQLReader.GetString(0));
-                                int itemType = SQLReader.GetInt32(3);
+                                string itemPath = null;
+                                //This is a SPS folder not stored in RS DB
+                                if (SQLReader.IsDBNull(0))
+                                {
+                                    itemPath = SQLReader.GetString(8).ToString();
+                                    list.Add(GetItemFromPath(itemPath));
 
-                                item = new CatalogItem();
-                                item.Path = itemPath;
-                                item.Name = SQLReader.GetString(1);
-                                item.ModifiedDate = SQLReader.GetDateTime(2);
-                                item.ModifiedDateSpecified = true;
-                                item.Type = (ItemTypeEnum)itemType;
-                                item.ID = SQLReader.GetGuid(4).ToString();
-                                item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
-                                item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
-                                item.Hidden = SQLReader.GetBoolean(7);
-                                list.Add(item);
+                                }
+                                else
+                                {
+                                    itemPath = GetPath(SQLReader.GetString(0));
+                                    int itemType = SQLReader.GetInt32(3);
+
+                                    item = new CatalogItem();
+                                    item.Path = itemPath;
+                                    item.Name = SQLReader.GetString(1);
+                                    item.ModifiedDate = SQLReader.GetDateTime(2);
+                                    item.ModifiedDateSpecified = true;
+                                    item.Type = (ItemTypeEnum)itemType;
+                                    item.ID = SQLReader.GetGuid(4).ToString();
+                                    item.Description = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
+                                    item.MimeType = SQLReader.IsDBNull(6) ? "" : SQLReader.GetString(6);
+                                    item.Hidden = SQLReader.GetBoolean(7);
+                                    list.Add(item);
+                                }
                             }
                             return list.ToArray();
-                        }                  
-                   
-                }  
-                }}  
+                        }
+
+                    }
+                }
+            }
             finally
             {
                 CloseSQLConn();

@@ -132,7 +132,7 @@ namespace ReportMannagerConfigTool
                     using (SqlDataReader rd = SQLComm.ExecuteReader())
                     {
                         rd.Read();
-                        if (rd.GetString(0) == "1.3" || rd.GetString(0) == "S.1.3")
+                        if (rd.GetString(0) == "1.4" || rd.GetString(0) == "S.1.3")
                             return true;
                         else
                             return false;                                                
@@ -165,14 +165,14 @@ namespace ReportMannagerConfigTool
                 if (IsIntegrated)
                     impersonator.Impersonate();
 
-                
+
 
                 // You need to update the version number in both functions.  Update and check.!!!!!
-                 string SQL;
-                 if (isReportServerDB(conn))
-                 {
+                string SQL;
+                if (isReportServerDB(conn))
+                {
 
-                     SQL = @"
+                    SQL = @"
 
                            DECLARE @DBVersion varchar(200) 
                            DECLARE @DBVersionPrev varchar(200) 
@@ -180,11 +180,11 @@ namespace ReportMannagerConfigTool
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
                             BEGIN	                            
 	                            CREATE TABLE dbo.ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
-                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.3','0'
+                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.4','0'
                             END
 
 
-                           SELECT @DBVersion = Version, @DBVersionPrev =PreviousVersion  FROM ForerunnerDBVersion                                                        
+                           SELECT @DBVersionPrev= Version  FROM ForerunnerDBVersion                                                        
                             
 
 
@@ -194,7 +194,7 @@ namespace ReportMannagerConfigTool
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE dbo.ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL, SPSPath nvarchar(425) NULL, PRIMARY KEY (ItemID,UserID))
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
@@ -210,7 +210,7 @@ namespace ReportMannagerConfigTool
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerItemTags')
                             BEGIN	                            	                            
-                                CREATE TABLE dbo.ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL, PRIMARY KEY (ItemID))
+                                CREATE TABLE dbo.ForerunnerItemTags(ItemID uniqueidentifier NOT NULL, Tags varchar(200) NOT NULL,SPSPath nvarchar(425) NULL,  PRIMARY KEY (ItemID))
                             END
 
                            /*  Version update Code */
@@ -242,14 +242,21 @@ namespace ReportMannagerConfigTool
                                     SELECT @DBVersionPrev = '1.3'
                                 END
 
-                            IF @DBVersion <> '1.3'
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
+                            IF @DBVersionPrev ='1.3' 
+                                BEGIN
+                                    ALTER TABLE dbo.ForerunnerFavorites ADD SPSPath nvarchar(425) NULL
+                                    ALTER TABLE dbo.ForerunnerItemTags ADD SPSPath nvarchar(425) NULL
+                                    SELECT @DBVersionPrev = '1.4'
+                                END
+
+                            UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.4'  FROM ForerunnerDBVersion
+                            
                              
                             ";
-                 }
-                 else
-                 {
-                     SQL = @"
+                }
+                else
+                {
+                    SQL = @"
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 
                            
@@ -300,15 +307,15 @@ namespace ReportMannagerConfigTool
                                 UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = 'S.1.3'  FROM ForerunnerDBVersion
 
                         ";
-                 }
+                }
                 conn.Open();
                 using (SqlCommand SQLComm = new SqlCommand(SQL, conn))
                 {
                     SQLComm.ExecuteNonQuery();
                 }
             }
-         
-               
+
+
             catch (Exception error)
             {
                 return String.Format(StaticMessages.databaseConnectionFail, error.Message);

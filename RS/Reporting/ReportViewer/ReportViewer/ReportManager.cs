@@ -1413,8 +1413,12 @@ namespace Forerunner.SSRS.Manager
                                 //This is a Sharepoint item not stored in the catalog table
                                 if (SQLReader.IsDBNull(0))
                                 {
-                                    string path = SQLReader.GetString(8).ToString();
-                                    list.Add(GetItemFromPath(path));
+                                    //Igore if NULL, this is error only casued by bug before fixed.
+                                    if (!SQLReader.IsDBNull(8))
+                                    {
+                                        string path = SQLReader.GetString(8).ToString();
+                                        list.Add(GetItemFromPath(path));
+                                    }
                                 }
                                 else
                                 {
@@ -2550,8 +2554,12 @@ namespace Forerunner.SSRS.Manager
                                //This is a SPS folder not stored in RS DB
                                 if (SQLReader.IsDBNull(0))
                                 {
-                                    itemPath = SQLReader.GetString(8).ToString();
-                                    list.Add(GetItemFromPath(itemPath));
+                                    //Igore if NULL, this is error only casued by bug before fixed.
+                                    if (!SQLReader.IsDBNull(8))
+                                    {
+                                        itemPath = SQLReader.GetString(8).ToString();
+                                        list.Add(GetItemFromPath(itemPath));
+                                    }
 
                                 }
                                 else

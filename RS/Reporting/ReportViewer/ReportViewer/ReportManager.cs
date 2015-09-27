@@ -1370,8 +1370,12 @@ namespace Forerunner.SSRS.Manager
                                 //This is a Sharepoint item not stored in the catalog table
                                 if (SQLReader.IsDBNull(0))
                                 {
-                                    string path = SQLReader.GetString(8).ToString();
-                                    list.Add(GetItemFromPath(path));
+                                    //if it was added before bug was fixed ignore, must be deleteled and re-added
+                                    if (!SQLReader.IsDBNull(8))
+                                    {
+                                        string path = SQLReader.GetString(8).ToString();
+                                        list.Add(GetItemFromPath(path));
+                                    }
                                 }
                                 else
                                 {
@@ -2506,8 +2510,12 @@ namespace Forerunner.SSRS.Manager
                                 //This is a SPS folder not stored in RS DB
                                 if (SQLReader.IsDBNull(0))
                                 {
-                                    itemPath = SQLReader.GetString(8).ToString();
-                                    list.Add(GetItemFromPath(itemPath));
+                                    //If null after upgrade ignore.  TODO could delete and re-add
+                                    if (!SQLReader.IsDBNull(8))
+                                    {
+                                        itemPath = SQLReader.GetString(8).ToString();
+                                        list.Add(GetItemFromPath(itemPath));
+                                    }
 
                                 }
                                 else

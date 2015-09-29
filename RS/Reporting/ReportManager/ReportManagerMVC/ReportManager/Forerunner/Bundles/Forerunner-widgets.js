@@ -4674,7 +4674,7 @@ $(function () {
                 // time showTool is called.
                 var $toolEl = me.element.find("." + selectorClass);
                 $toolEl.hide();
-            } else {
+            } else if (forerunner.config.getCustomSettingsValue("Debug", "off") === "on") {
                 console.log("hideTool called with an invalid selector class: " + selectorClass);
             }
         },
@@ -6880,7 +6880,7 @@ $(function () {
         },
         _createSearchFolder: function () {
             var me = this;
-            var $li = new $("<li name='" + propertyEnums.searchFolder + "'><a href='#" + me.guid + "_" + "searchfolder" + "'>" + locData.searchFolder.title + "</a></li>");
+            var $li = new $("<li name='" + propertyEnums.searchFolder + "'><a href='#" + me.guid + "_" + "searchfolder" + "'>" + locData.getLocData().searchFolder.title + "</a></li>");
 
             var $searchfolderDiv = new $(
                 "<div id='" + me.guid + "_" + "searchfolder" + "' class='fr-property-container fr-sf-container'>" +
@@ -20110,7 +20110,7 @@ $(function () {
             }
 
             forerunner.history.history("start");
-
+          
         },
         _onRoute: function (event, data) {
             var me = this;
@@ -20210,6 +20210,7 @@ $(function () {
 
             var path = data.args[0] ? data.args[0].split("?")[0] : null;
             me._getLink(path, $linksection, 0, data.name);
+            $linksection.attr("data-name", data.name).attr("data-path", path);
             $linksection.show();
 
             me._linkResize($linksection);
@@ -20278,8 +20279,20 @@ $(function () {
             $container.append($arrowTag).append($link);
         },
         //compare link section and container width, ellipsis long word to only keep 10 characters.
-        _linkResize: function ($linksection) {
+        _linkResize: function ($linksection,resize) {
             var me = this;
+
+            if (!$linksection)
+                $linksection = me.DefaultAppTemplate.$linksection;
+
+            if (resize === true) {
+                var path = $linksection.attr("data-path");
+                var name = $linksection.attr("data-name");
+                $linksection.html("");
+                me._getLink(path, $linksection, 0, name);
+            }
+                
+
             var $lastLink = $linksection.find(".fr-location-link-last"),
                 text,
                 newText;
@@ -20601,6 +20614,8 @@ $(function () {
                     if (widgets.hasWidget(layout.$mainviewport, widgets.reportViewerEZ)) {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
+
+                    me._linkResize(undefined,true);
 
                     if (me.$reportExplorer && me.$reportExplorer.find(".fr-report-explorer").length) {
                         me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);

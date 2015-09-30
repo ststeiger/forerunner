@@ -16,7 +16,7 @@
     <copyright>Copyright 2015</copyright>
     <tags>SSRS SQL Report Forerunner MVC REST Mobile Sample Mobilizer Example jQuery Widget</tags>
     <dependencies>
-      <dependency id="ForerunnerSDK" version="[4.0.425.0,)" />
+      <dependency id="ForerunnerSDK" version="[5.0,6.0)" />
     </dependencies>
   </metadata>
 </package>

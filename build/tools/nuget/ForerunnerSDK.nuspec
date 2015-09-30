@@ -18,6 +18,7 @@
     <dependencies>
       <dependency id="Microsoft.AspNet.Mvc" version="[4.0.40804.0,6)" />
       <dependency id="Microsoft.AspNet.WebApi" version="[4.0.30506.0,6)" />
+      <dependency id="Newtonsoft.Json" version="7.0.1" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System" targetFramework="net45" />

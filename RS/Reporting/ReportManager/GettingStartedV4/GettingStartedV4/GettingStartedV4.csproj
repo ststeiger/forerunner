@@ -38,22 +38,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Forerunner.Json">
-      <HintPath>..\packages\ForerunnerSDK.4.0.287.0\lib\Forerunner.Json.dll</HintPath>
+    <Reference Include="Forerunner.Json, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
+      <HintPath>..\packages\ForerunnerSDK.5.0.437.0\lib\Forerunner.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Forerunner.SQLReporting">
-      <HintPath>..\packages\ForerunnerSDK.4.0.287.0\lib\Forerunner.SQLReporting.dll</HintPath>
+    <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
+      <HintPath>..\packages\ForerunnerSDK.5.0.437.0\lib\Forerunner.SQLReporting.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="PdfSharp">
-      <HintPath>..\packages\ForerunnerSDK.4.0.287.0\lib\PdfSharp.dll</HintPath>
+    <Reference Include="PdfSharp, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\ForerunnerSDK.5.0.437.0\lib\PdfSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -230,13 +234,12 @@
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_888888_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\jquery-ui-1.10.3.forerunner.css" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.min.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.3.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.3.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.form.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery.validate.1.14.0.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
     <Content Include="Forerunner\Lib\jsTree\jstree.js" />
     <Content Include="Forerunner\Lib\jsTree\themes\default\32px.png" />
@@ -344,6 +347,7 @@
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-AU.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-GB.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
@@ -363,7 +367,9 @@
     <Content Include="Global.asax" />
     <Content Include="readme.txt" />
     <Content Include="sdk\readme.txt" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -380,11 +386,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-    <Content Include="Forerunner\ReportViewer\images\toolpane\Thumbs.db" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\Thumbs.db" />
-    <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />
-    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
-    <Content Include="Forerunner\Common\images\ToolbarIcons\Thumbs.db" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_ReportsLayout.cshtml" />
     <Content Include="Views\Web.config" />
@@ -393,8 +394,15 @@
     <Content Include="GettingStartedV4.nuspec">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.config.transform" />
+    <None Include="Web.config.install.xdt">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="tools\Install.ps1" />
+    <Content Include="Forerunner\ReportViewer\images\toolpane\Thumbs.db" />
+    <Content Include="Forerunner\ReportViewer\images\Toolbar\Thumbs.db" />
+    <Content Include="Forerunner\ReportExplorer\images\ResourceIcons\Thumbs.db" />
+    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
+    <Content Include="Forerunner\Common\images\ToolbarIcons\Thumbs.db" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

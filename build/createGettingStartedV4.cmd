@@ -43,7 +43,7 @@ if ERRORLEVEL 8 (
 )
 
 :: \Content
-robocopy %SRC_GETTING_STARTED_V4% %DEST_CONTENT% Web.config.transform /LOG+:%NUGET_PACKAGE_LOG%
+robocopy %SRC_GETTING_STARTED_V4% %DEST_CONTENT% Web.config.install.xdt /LOG+:%NUGET_PACKAGE_LOG%
 if ERRORLEVEL 8 (
 	goto :Error
 )

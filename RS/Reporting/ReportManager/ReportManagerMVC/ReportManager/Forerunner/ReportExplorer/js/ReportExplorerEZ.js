@@ -617,7 +617,7 @@ $(function () {
                         layout.$mainviewport.reportViewerEZ("windowResize");
                     }
 
-                    if (me.$reportExplorer && me.$reportExplorer.find('.fr-report-explorer').length) {
+                    if (me.$reportExplorer && me.$reportExplorer.find(".fr-report-explorer").length) {
                         me.DefaultAppTemplate.windowResize.call(me.DefaultAppTemplate);
 
                         var $reportExplorerToolbar = me.getReportExplorerToolbar();

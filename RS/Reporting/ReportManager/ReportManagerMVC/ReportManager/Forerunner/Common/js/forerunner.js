@@ -1793,7 +1793,7 @@ $(function () {
             if (data.status === 401 || data.status === 302) {
                 var loginUrl = me._getLoginUrl();
                 var urlParts = document.URL.split("#");
-                var redirectTo = forerunner.config.forerunnerFolder() + "../" + loginUrl + "?ReturnUrl=" + urlParts[0];
+                var redirectTo =  loginUrl + "?ReturnUrl=" + urlParts[0];
                 if (urlParts.length > 1) {
                     redirectTo += "&HashTag=";
                     redirectTo += urlParts[1];

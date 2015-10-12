@@ -526,7 +526,10 @@ namespace ReportManager.Controllers
                     retval = GetReportManager(instance).GetCatalogPermission(path, permission);
                 });
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
             
             
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(retval), "text/JSON");

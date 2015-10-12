@@ -49,17 +49,29 @@ namespace ReportManager.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl, string hashTag)
         {
-            if (ModelState.IsValid && 
-                Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+            if (ModelState.IsValid &&
+                           Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
             {
                 string decodedUrl = HttpUtility.UrlDecode(returnUrl);
                 if (hashTag != null)
-                    decodedUrl += ("#" + hashTag.Replace("/", "%2f").Replace("%2f%2f", "/%2f")).Replace("#view%2f?", "#view/?");
+                {
+                    //find the command string                    
+                    int command = hashTag.IndexOf("/");
+
+                    if (command > 0)
+                        decodedUrl += "#" + hashTag.Substring(0, command + 1) + HttpUtility.UrlEncode(hashTag.Substring(command + 1)).Replace("+", "%20");
+                    else
+                        decodedUrl += "#" + hashTag;
+
+                    //decodedUrl += ("#" + hashTag.Replace("%2f%2f", "/%2f").Replace(":", "%3A").Replace("//", "%2f%2f"));
+                }
                 if (FormsAuthenticationHelper.Login(model.UserName, model.Password, GetTimeout()))
                 {
-                    return CheckNullAndRedirect(returnUrl, decodedUrl);
-                } else {
-                    return CheckNullAndRedirect(returnUrl, decodedUrl);
+                    return CheckNullAndRedirect(returnUrl,  decodedUrl);
+                }
+                else
+                {
+                    return CheckNullAndRedirect(returnUrl,decodedUrl);
                 }
             }
             return View(model);
@@ -78,11 +90,18 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public ActionResult LogOff()
+        public ActionResult LogOff(string returnUrl = null)
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Index", "Home");
+            if (returnUrl == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return Redirect(HttpUtility.UrlDecode(returnUrl));
+            }
         }
     }
 }

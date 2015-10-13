@@ -24,7 +24,7 @@ namespace Forerunner.Security
                     {
                         string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
 
-                        instance.loginUrl = baseUrl + sec.Forms.LoginUrl.Replace("~", "");
+                        instance.loginUrl = sec.Forms.LoginUrl.Replace("~", baseUrl);
                     }
                     isInit = true;
 

@@ -662,11 +662,11 @@ $(function () {
             var me = this;
 
             forerunner.config.getCustomSettings(function (settings) {
-            if (me.options.explorerSettings == null)
+            if (me.options.explorerSettings === null)
                 me.options.explorerSettings = settings;
 
             forerunner.config.getDBConfiguration(function (config) {
-                if (me.options.dbConfig == null)
+                if (me.options.dbConfig === null)
                     me.options.dbConfig = config;
 
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({

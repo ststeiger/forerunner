@@ -529,7 +529,10 @@ namespace ReportManager.Controllers
                     retval = GetReportManager(instance).GetCatalogPermission(path, permission);
                 });
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
             
             
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(retval), "text/JSON");
@@ -837,7 +840,7 @@ namespace ReportManager.Controllers
                     retval = Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings());
                 });
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 return GetEmptyJSONResponse();
                 //return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");

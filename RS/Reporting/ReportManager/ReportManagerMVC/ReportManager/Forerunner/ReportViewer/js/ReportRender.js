@@ -2001,7 +2001,7 @@ $(function () {
             }
 
             var $Drilldown;
-            CellHeight = 0
+            CellHeight = 0;
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex])
                 CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
 

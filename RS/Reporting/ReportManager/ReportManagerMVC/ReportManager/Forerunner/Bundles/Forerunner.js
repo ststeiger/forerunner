@@ -1003,14 +1003,14 @@ $(function () {
                 else {
                     setTimeout(loop, 5);
                 }
-            }
+            };
 
             forerunner.config._initAsync = true;
             me.getDBConfiguration(function () {
                 me._configDone = true;
             });
             forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                me._locDone = true
+                me._locDone = true;
             });
             
             me.getCustomSettings(function () {
@@ -1072,6 +1072,23 @@ $(function () {
      */
     forerunner.helper = {
 
+        /**
+         * Returns the URL parameter for given name
+         *
+         * @member
+         * @param {string} name - Parameter Name
+         *
+         * @return {String} - Parameter Value or NULL
+         */
+        urlParam: function (name) {
+            var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(window.location.href);
+            if (results === null) {
+                return null;
+            }
+            else {
+                return results[1] || 0;
+            }
+        },
         /**
          * Returns a number array sorted in the given direction
          *
@@ -1720,7 +1737,7 @@ $(function () {
 
         locFileLocation: forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer",
         getLocData: function () {
-            return forerunner.localize._getLocData(forerunner.localize.locFileLocation, "json")
+            return forerunner.localize._getLocData(forerunner.localize.locFileLocation, "json");
         },
         /**
          * Returns the language specific data.
@@ -1990,17 +2007,11 @@ $(function () {
 
         _handleRedirect: function (data) {
             var me = this;
+
             if (data.status === 401 || data.status === 302) {
                 me._getLoginUrl(function (loginUrl) {
-                    var urlParts = document.URL.split("#");
-                    if (loginUrl !== "" && urlParts[0].indexOf("?ReturnUrl") < 0 ) {                        
-                        var redirectTo =  loginUrl + "?ReturnUrl=" + urlParts[0];
-                        if (urlParts.length > 1) {
-                            redirectTo += "&HashTag=";
-                            redirectTo += urlParts[1];
-                        }
-                        window.location.href = redirectTo;
-                    }
+                    var redirectTo = loginUrl + "?ReturnUrl=" + encodeURIComponent(window.location.href);
+                    window.location.href = redirectTo;
                 });
             }
         },
@@ -2482,7 +2493,7 @@ $(function () {
          * Show a modal dialog with appContainer and target dialog container specify
          *
          * @function forerunner.dialog#showModalDialog
-         * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+         * @param {Object} $appContainer - The container jQuery object that holds the application
          * @param {Object} target - object that modal dialog apply to
          * @member
          */
@@ -2506,7 +2517,7 @@ $(function () {
         * Close a modal dialog with appContainer and target dialog container specify
         *
         * @function forerunner.dialog#closeModalDialog
-        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+        * @pramm {Object} $appContainer - The container jQuery object that holds the application
         * @param {Object} target - object that modal dialog apply to
         * @member
         */
@@ -2530,7 +2541,7 @@ $(function () {
         * Close all opened modal dialogs in specify appContainer
         *
         * @function forerunner.dialog#closeAllModalDialogs
-        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+        * @pram {Object} $appContainer - The container jQuery object that holds the application
         * @member
         */
         closeAllModalDialogs: function ($appContainer) {
@@ -2551,7 +2562,7 @@ $(function () {
         * Show message box
         *
         * @function forerunner.dialog#showMessageBox
-        * @prop {Object} options.$appContainer - The container jQuery object that holds the application
+        * @param {Object} $appContainer - The container jQuery object that holds the application
         * @param {String} msg - Message content
         * @param {String} caption - Modal dialog caption
         * @member
@@ -2799,7 +2810,7 @@ $(function () {
             if (url === null)
                 return null;
 
-            var options = { "isReportManager" : true, "showBreadCrumb" : true, "useReportManagerSettings": true, "showToolbar" : true, "showParameterArea": "Collapsed", "section" : 1, "Zoom": "100", "deviceInfo": {}};
+            var options = { "isReportManager": true, "showBreadCrumb": true, "useReportManagerSettings": true, "showToolbar": true, "showParameterArea": "Collapsed", "section": 1, "Zoom": "100", "deviceInfo": {} };
             var start = url.indexOf("?") + 1;
             var vars = url.substring(start).split("&");
             for (var i = 0; i < vars.length; i++) {
@@ -2822,12 +2833,12 @@ $(function () {
                     options.zoom = value;
                 else if (key === "rc:section")
                     try {
-                        options.section = parseInt(value,10);
+                        options.section = parseInt(value, 10);
                     } catch (e) {
                         options.section = 1;
                     }
-                else if (key.indexOf("rc:")===0)
-                    options.deviceInfo[decodeURIComponent(pair[0]).substring(3, key.length -1)] = decodeURIComponent(pair[1]);
+                else if (key.indexOf("rc:") === 0)
+                    options.deviceInfo[decodeURIComponent(pair[0]).substring(3, key.length - 1)] = decodeURIComponent(pair[1]);
             }
             return options;
         },
@@ -2859,7 +2870,7 @@ $(function () {
 
             return [format, formatSimple];
         },
-  
+
         init: function () {
             var me = this;
 
@@ -2883,7 +2894,7 @@ $(function () {
             forerunner.styleSheet.updateDynamicRules(forerunner.styleSheet.internalDynamicRules());
             // Put a check in so that this would not barf for the login page.
             if ($.validator) {
-            
+
                 var locData = forerunner.localize;
                 var error = locData.getLocData().validateError;
 
@@ -2939,8 +2950,8 @@ $(function () {
                     },
                     error.invalidTree
                 );
-            }      
+            }
         }
-    }
+    };
 });
 

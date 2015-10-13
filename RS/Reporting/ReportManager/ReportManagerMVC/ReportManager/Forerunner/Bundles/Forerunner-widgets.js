@@ -14364,7 +14364,7 @@ $(function () {
             }
 
             var $Drilldown;
-            CellHeight = 0
+            CellHeight = 0;
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex])
                 CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
 
@@ -20632,11 +20632,11 @@ $(function () {
             var me = this;
 
             forerunner.config.getCustomSettings(function (settings) {
-            if (me.options.explorerSettings == null)
+            if (me.options.explorerSettings === null)
                 me.options.explorerSettings = settings;
 
             forerunner.config.getDBConfiguration(function (config) {
-                if (me.options.dbConfig == null)
+                if (me.options.dbConfig === null)
                     me.options.dbConfig = config;
 
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({

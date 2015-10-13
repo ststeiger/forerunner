@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
+
+  <!-- If system.web is absent -->
+  <system.web xdt:Transform="InsertIfMissing">
+    <compilation debug="true" targetFramework="4.5" />
+    <httpRuntime targetFramework="4.5" />
+    <authentication mode="Windows" />
+  </system.web>
+
+  <!-- If compilation is absent -->
+  <system.web>
+    <compilation debug="true" targetFramework="4.5" xdt:Transform="InsertIfMissing"/>
+  </system.web>
+
+  <!-- If httpRuntime is absent -->
+  <system.web>
+    <httpRuntime targetFramework="4.5" xdt:Transform="InsertIfMissing"/>
+    <authentication mode="Windows" />
+  </system.web>
+
+  <!-- If authentication is absent -->
+  <system.web>
+    <authentication mode="Windows" xdt:Transform="InsertIfMissing"/>
+  </system.web>
+
+  <!-- If runtime tag is absent -->
+  <runtime xdt:Transform="InsertIfMissing">
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+    </assemblyBinding>
+  </runtime>
+
+  <!-- If the binding redirect is already present, the existing entry needs to be removed before inserting the new entry-->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Remove"
+                         xdt:Locator="Condition(./_defaultNamespace:assemblyIdentity/@name='System.Web.Mvc')" >
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+  
+  <!-- Inserting the new binding redirect -->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Insert">
+        <assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35"  />
+        <bindingRedirect oldVersion="4.0.0.0-4.0.0.1" newVersion="4.0.0.1" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <!-- If the binding redirect is already present, the existing entry needs to be removed before inserting the new entry-->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Remove"
+                         xdt:Locator="Condition(./_defaultNamespace:assemblyIdentity/@name='Newtonsoft.Json')" >
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+  <!-- Inserting the new binding redirect -->
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly xdt:Transform="Insert">
+        <assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" />
+        <bindingRedirect oldVersion="0.0.0.0-4.5.0.0" newVersion="7.0.0.0"/>
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+
+</configuration>

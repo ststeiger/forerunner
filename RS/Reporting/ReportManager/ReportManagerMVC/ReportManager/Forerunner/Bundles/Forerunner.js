@@ -998,6 +998,17 @@ $(function () {
      */
     forerunner.helper = {
 
+
+        urlParam: function(name){
+            var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(window.location.href);
+            if (results===null){
+                return null;
+            }
+            else{
+                return results[1] || 0;
+            }
+        },
+
         /**
          * Returns a number array sorted in the given direction
          *
@@ -1794,11 +1805,8 @@ $(function () {
             if (data.status === 401 || data.status === 302) {
                 var loginUrl = me._getLoginUrl();
                 var urlParts = document.URL.split("#");
-                var redirectTo =  loginUrl + "?ReturnUrl=" + urlParts[0];
-                if (urlParts.length > 1) {
-                    redirectTo += "&HashTag=";
-                    redirectTo += urlParts[1];
-                }
+                var redirectTo = loginUrl + "?ReturnUrl=" + encodeURIComponent(window.location.href);
+
                 window.location.href = redirectTo;
             }
         },

@@ -47,24 +47,14 @@ namespace ReportManager.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model, string returnUrl, string hashTag)
+        public ActionResult Login(LoginModel model, string returnUrl, string hashTag = null)
         {
+            //Hashtag not used anyloger.  Not removed for compatability
             if (ModelState.IsValid &&
                            Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
             {
-                string decodedUrl = HttpUtility.UrlDecode(returnUrl);
-                if (hashTag != null)
-                {
-                    //find the command string                    
-                    int command = hashTag.IndexOf("/");
+                string decodedUrl = returnUrl;
 
-                    if (command > 0)
-                        decodedUrl += "#" + hashTag.Substring(0, command + 1) + HttpUtility.UrlEncode(hashTag.Substring(command + 1)).Replace("+", "%20");
-                    else
-                        decodedUrl += "#" + hashTag;
-
-                    //decodedUrl += ("#" + hashTag.Replace("%2f%2f", "/%2f").Replace(":", "%3A").Replace("//", "%2f%2f"));
-                }
                 if (FormsAuthenticationHelper.Login(model.UserName, model.Password, GetTimeout()))
                 {
                     return CheckNullAndRedirect(returnUrl,  decodedUrl);
@@ -100,7 +90,7 @@ namespace ReportManager.Controllers
             }
             else
             {
-                return Redirect(HttpUtility.UrlDecode(returnUrl));
+                return Redirect(returnUrl);
             }
         }
     }

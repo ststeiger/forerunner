@@ -539,7 +539,7 @@ $(function () {
             visibilityOrder: 2,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + encodeURIComponent(window.location.href) ;
                 }
             }
         }
@@ -1341,7 +1341,7 @@ $(function () {
             visibilityOrder: 2,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + encodeURIComponent(window.location.href);
                 }
             }
         },
@@ -1520,7 +1520,7 @@ $(function () {
             text: locData.toolbar.logOff,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + encodeURIComponent(window.location.href);
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-rm-item-logOff"]);
                 }
             }
@@ -1717,7 +1717,7 @@ $(function () {
             events: {
                 click: function (e) {
                     //e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
-                    e.data.$appContainer.trigger('toolbar-fav-click');
+                    e.data.$appContainer.trigger("toolbar-fav-click");
                 }
             }
         },
@@ -1771,7 +1771,7 @@ $(function () {
             visibilityOrder: 12,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + encodeURIComponent(window.location.href);
                 }
             }
         }
@@ -1801,7 +1801,7 @@ $(function () {
             events: {
                 click: function (e) {
                     //e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
-                    e.data.$appContainer.trigger('toolpane-fav-click');
+                    e.data.$appContainer.trigger("toolpane-fav-click");
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                 }
             }
@@ -1834,7 +1834,7 @@ $(function () {
             text: locData.toolbar.logOff,
             events: {
                 click: function (e) {
-                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff?returnUrl=" + encodeURIComponent(window.location.href);
                 }
             }
         },

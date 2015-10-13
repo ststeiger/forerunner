@@ -23,7 +23,7 @@ namespace Forerunner.Security
                     if (instance.mode == System.Web.Configuration.AuthenticationMode.Forms){
                         string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
 
-                        instance.loginUrl = baseUrl + sec.Forms.LoginUrl.Replace("~",""); 
+                        instance.loginUrl = sec.Forms.LoginUrl.Replace("~", baseUrl); 
                     }
                     isInit = true;
                 }

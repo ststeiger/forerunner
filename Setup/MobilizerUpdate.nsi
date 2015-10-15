@@ -308,6 +308,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-au.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-gb.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en.txt"  
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-de.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-es.txt"

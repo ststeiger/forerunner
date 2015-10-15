@@ -9577,24 +9577,25 @@ $(function () {
         },
         _create: function () {
             var me = this;
-           
+            me.contextMenu = locData.getLocData().contextMenu;
+
             // Call contextMenuBase._create()
             me._super();
 
             me.addHeader();
 
-            me._$moveItem = me.addMenuItem("fr-ctx-move-id", contextMenu.move);
-            me._$delete = me.addMenuItem("fr-ctx-delete-id", contextMenu.delLabel);
-            me._$security = me.addMenuItem("fr-ctx-security-id", contextMenu.security);
-            me._$properties = me.addMenuItem("fr-ctx-properties-id", contextMenu.properties);
-            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", contextMenu.linkedReport);
-            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", contextMenu.downloadFile);
-            me._$unFavorite = me.addMenuItem("fr-crx-unFav-id", contextMenu.unFavorite);
+            me._$moveItem = me.addMenuItem("fr-ctx-move-id", me.contextMenu.move);
+            me._$delete = me.addMenuItem("fr-ctx-delete-id", me.contextMenu.delLabel);
+            me._$security = me.addMenuItem("fr-ctx-security-id", me.contextMenu.security);
+            me._$properties = me.addMenuItem("fr-ctx-properties-id", me.contextMenu.properties);
+            me._$linkedReport = me.addMenuItem("fr-ctx-linked-id", me.contextMenu.linkedReport);
+            me._$downloadFile = me.addMenuItem("fr-ctx-download-id", me.contextMenu.downloadFile);
+            me._$unFavorite = me.addMenuItem("fr-crx-unFav-id", me.contextMenu.unFavorite);
         },
         _onClickDelete: function (event, data) {
             var me = this;
             var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
-            if (!window.confirm(contextMenu.deleteConfirm.format(itemName))) return;
+            if (!window.confirm(me.contextMenu.deleteConfirm.format(itemName))) return;
             
             var url = me.options.reportManagerAPI + "/DeleteCatalogItem";
 
@@ -9609,7 +9610,7 @@ $(function () {
                 async: false,
                 success: function (data) {
                     if (data.Warning === "folderNotEmpty") {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, contextMenu.folderNotEmpty);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.contextMenu.folderNotEmpty);
                     } else if (data.Status && data.Status === "Success") {
                         me.options.$reportExplorer.reportExplorer("refresh");
                     }
@@ -9730,7 +9731,7 @@ $(function () {
 
             var itemName = forerunner.helper.getCurrentItemName(me.options.catalogItem.Path);
 
-            if (!window.confirm(contextMenu.unFavConfirm.format(itemName))) return;
+            if (!window.confirm(me.contextMenu.unFavConfirm.format(itemName))) return;
 
             var url = me.options.reportManagerAPI + "/UpdateView?view=favorites&action=delete&path=" + me.options.catalogItem.Path;
 

@@ -386,6 +386,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-au.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-gb.txt"
   
   SetOutPath "$INSTDIR\Forerunner\Dashboard\css"
   File "${LOCALROOT}\Forerunner\Dashboard\css\Dashboard-all.css"
@@ -797,7 +798,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-ro.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
-
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-gb.txt"
+  
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\ajax-loader1.gif"

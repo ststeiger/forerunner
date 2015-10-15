@@ -1340,6 +1340,8 @@ namespace ReportManager.Controllers
                 ImpersonateCaller.RunAsCurrentUser(() =>
                 {
                     GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
+                    CacheData d = GetCacheData(GetReportManager(postValue.instance).GetItem(postValue.path));
+                    d.TagsChecked = false;
                 });
                 
                 resp.StatusCode = HttpStatusCode.OK;

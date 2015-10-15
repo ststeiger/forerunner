@@ -10,5 +10,8 @@ $(function () {
             explorerSettings: explorerSettings,
             dbConfig: dbConfig
         });
+
     });
 });
+
+

@@ -8,9 +8,8 @@ namespace Forerunner.Security
     public class AuthenticationMode
     {
         static private bool isInit = false;
-        System.Web.Configuration.AuthenticationMode mode;
-        string loginUrl = "";
         static private AuthenticationMode instance = new AuthenticationMode();
+        static private AuthenticationSection sec;
 
         static private void Init()
         {
@@ -18,16 +17,9 @@ namespace Forerunner.Security
             {
                 if (!isInit)
                 {
-                    AuthenticationSection sec = (AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication");
-                    instance.mode = sec.Mode;
-                    if (instance.mode == System.Web.Configuration.AuthenticationMode.Forms)
-                    {
-                        string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+                    sec = (AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication");
 
-                        instance.loginUrl = sec.Forms.LoginUrl.Replace("~", baseUrl);
-                    }
                     isInit = true;
-
                 }
             }
         }
@@ -38,8 +30,9 @@ namespace Forerunner.Security
                 Init();
             }
 
-            return instance.mode;
+            return sec.Mode;
         }
+
 
         static public string GetLoginUrl()
         {
@@ -47,7 +40,13 @@ namespace Forerunner.Security
             {
                 Init();
             }
-            return instance.loginUrl;
+            if (sec.Mode == System.Web.Configuration.AuthenticationMode.Forms)
+            {
+                string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+
+                return sec.Forms.LoginUrl.Replace("~", baseUrl);
+            }
+            return null;
         }
     }
 }

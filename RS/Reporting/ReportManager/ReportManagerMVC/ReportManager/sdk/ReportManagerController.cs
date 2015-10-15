@@ -240,7 +240,7 @@ namespace ReportManager.Controllers
             if (ci == null)
                 return new CacheData();
 
-            string key = ci.ID + (Math.Round(ci.ModifiedDate.Ticks / 1000000000000d, 0) * 1000000000000).ToString();
+            string key = ci.ID + ci.ModifiedDate.Ticks.ToString();
 
             if (!CachedProperties.ContainsKey(key))
                 CachedProperties.Add(key,new CacheData());
@@ -1335,9 +1335,7 @@ namespace ReportManager.Controllers
             {
                 ImpersonateCaller.RunAsCurrentUser(() =>
                 {
-                    GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);
-                    CacheData d = GetCacheData(GetReportManager(postValue.instance).GetItem(postValue.path));
-                    d.TagsChecked = false;
+                    GetReportManager(postValue.instance).SaveReportTags(postValue.reportTags, postValue.path);                    
                 });
                 
                 resp.StatusCode = HttpStatusCode.OK;

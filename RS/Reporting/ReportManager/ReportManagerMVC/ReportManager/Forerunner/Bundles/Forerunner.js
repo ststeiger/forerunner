@@ -1089,6 +1089,15 @@ $(function () {
                 return results[1] || 0;
             }
         },
+
+        
+        pushIfNot: function(collection, item){
+            for (var i = 0 ;i< collection.length ;i++){
+                if (collection[i] === item)
+                    return;
+            }
+            collection.push(item);
+        },
         /**
          * Returns a number array sorted in the given direction
          *

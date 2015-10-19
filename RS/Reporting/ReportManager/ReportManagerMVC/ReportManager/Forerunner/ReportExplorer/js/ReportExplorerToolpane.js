@@ -127,9 +127,8 @@ $(function () {
 
             if (me.options.dbConfig.SeperateDB !== true) {
                 
-                tg.explorerItemFolderGroup.tools.push(rep.itemRecent);
-                tg.itemFolderGroup.tools.push(tp.itemRecent);
-                tg.dashboardItemFolderGroup.tools.push(dbtp.itemRecent);
+                forerunner.helper.pushIfNot(tg.explorerItemFolderGroup.tools, rep.itemRecent);                
+                forerunner.helper.pushIfNot(tg.dashboardItemFolderGroup.tools, dbtp.itemRecent);
             }
 
 

@@ -154,6 +154,10 @@ $(function () {
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
             
+            if (me.options.dbConfig.SeperateDB !== true) {
+                forerunner.helper.pushIfNot(tg.itemFolderGroup.tools, tp.itemRecent);                
+            }
+
             me.addTools(1, false, me._viewerItems());
 
             forerunner.ajax.isFormsAuth(function (isForms) {

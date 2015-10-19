@@ -251,7 +251,8 @@ $(function () {
                     instance: me.options.rsInstance,
                     userName: me.options.userName
                 },
-                dataType: "json",         
+                dataType: "json",
+                //async:false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
                         // Add support for build 436 schema.

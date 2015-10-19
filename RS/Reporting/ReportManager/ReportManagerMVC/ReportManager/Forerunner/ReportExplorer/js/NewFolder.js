@@ -40,7 +40,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.newFolder = locData.getLocData().newFolder;
+            var newFolder = locData.getLocData().newFolder;
 
             me._super();
 

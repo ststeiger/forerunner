@@ -1733,7 +1733,7 @@ $(function () {
 
                     if (startPage > endPage) {
                         me.resetFind();
-                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, undefined, me._findDone);
                         return;
                     }
 
@@ -1768,9 +1768,9 @@ $(function () {
                                 }
                                 else {
                                     if (me.finding === true)
-                                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.completeFind, undefined, me._findDone);
                                     else
-                                        me._showMessageBox(me.locData.getLocData().messages.keyNotFound, me._findDone);
+                                        me._showMessageBox(me.locData.getLocData().messages.keyNotFound, undefined, me._findDone);
                                     me.resetFind();
                                 }
                             }
@@ -1792,7 +1792,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind,undefined, me._findDone);
                     me.resetFind();
                     return;
                 }
@@ -1804,7 +1804,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
+                        me._showMessageBox(me.locData.getLocData().messages.completeFind, undefined, me._findDone);
                         me.resetFind();
                     }
                     else {
@@ -1812,7 +1812,7 @@ $(function () {
                     }
                 }
                 else {
-                    me._showMessageBox(me.locData.getLocData().messages.completeFind, me._findDone);
+                    me._showMessageBox(me.locData.getLocData().messages.completeFind, undefined, me._findDone);
                     me.resetFind();
                 }
             }
@@ -2451,15 +2451,27 @@ $(function () {
 
                     if (me.options.jsonPath) {
                         me._renderJson();
+                        me._addSetPageCallback(function () {
+                            //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                            me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                            me._setOptionsZoom();
+                        });
                     } else {
-                        me._loadParameters(me.pageNum);
+                        //Need to call get parameter list to load parameters before calling loadParameters
+                        //This shoule get refactored
+                        me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath,undefined, function () {                        
+                            me._loadParameters(me.pageNum);
+                            me._addSetPageCallback(function () {
+                                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                                me._setOptionsZoom();
+                        
+                            });
+                        });
                     }
 
-                    me._addSetPageCallback(function () {
-                        //_loadPage is designed to async so trigger afterloadreport event as set page down callback
-                        me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
-                        me._setOptionsZoom();
-                    });
+                 
+                    
                 });
             });
         },

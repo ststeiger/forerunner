@@ -194,22 +194,29 @@ namespace ReportManager.Controllers
                 CacheData d = GetCacheData(c);
 
                 if (!d.LocDataChecked)
-                {                    
-                    //save loc data for perf
-                    string ExtProp = GetReportManager(instance).GetProperty(c.Path, "ForerunnerRDLExt");
-                    if (ExtProp != null && ExtProp != "")
+                {
+                    try
                     {
-                        try
+                        //save loc data for perf
+                        string ExtProp = GetReportManager(instance).GetProperty(c.Path, "ForerunnerRDLExt");
+                        if (ExtProp != null && ExtProp != "")
                         {
-                            JObject o = JObject.Parse(ExtProp);
-                            ItemLoc = (JObject)o["localize"];
+                            try
+                            {
+                                JObject o = JObject.Parse(ExtProp);
+                                ItemLoc = (JObject)o["localize"];
+                            }
+                            catch
+                            {
+                            }
+                            d.LocData = ItemLoc;
                         }
-                        catch
-                        {
-                        }
-                        d.LocData= ItemLoc;
+                        d.LocDataChecked = true;
                     }
-                    d.LocDataChecked = true;
+                    catch
+                    {
+                        Logger.Trace(LogType.Warning, "Error getting property ForerunnerRDLExt");
+                    }
                 }
 
                 ItemLoc = d.LocData;
@@ -256,17 +263,24 @@ namespace ReportManager.Controllers
             foreach (CatalogItem c in items)
             {
                 CacheData d = GetCacheData(c);
-                
-                if (!d.SPSHiddenChecked)
+
+                try
                 {
-                    //save for perf                    
-                    string PropHidden = GetReportManager(instance).GetProperty(c.Path, "ForerunnerHidden");
-                    bool hidden = c.Hidden;
-                    bool.TryParse(PropHidden, out hidden);                    
-                    d.SPSHidden = hidden;
-                    d.SPSHiddenChecked = true;
+                    if (!d.SPSHiddenChecked)
+                    {
+                        //save for perf                    
+                        string PropHidden = GetReportManager(instance).GetProperty(c.Path, "ForerunnerHidden");
+                        bool hidden = c.Hidden;
+                        bool.TryParse(PropHidden, out hidden);
+                        d.SPSHidden = hidden;
+                        d.SPSHiddenChecked = true;
+                    }
+                    c.Hidden = d.SPSHidden;
                 }
-                c.Hidden = d.SPSHidden;
+                catch
+                {
+                    Logger.Trace(LogType.Warning, "Error getting property ForerunnerHidden");
+                }
             }
         }
 

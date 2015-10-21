@@ -306,6 +306,8 @@ namespace Forerunner
         {
             try
             {
+                ExceptionLogGenerator.LogException(e);
+                
                 JSONTextWriter w = new JSONTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("Exception");

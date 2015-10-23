@@ -1,8 +1,58 @@
 ﻿
 [
 {
+"ID": "23",
+"Link": "/press?Article=23",
+"Title":"Forerunner Software Announces Public Availability of Version 5.0 ",
+"Description":"Forerunner Mobilizer is the most powerful and cost effective way to amp up 
+SQL Server Reporting Services.  With the release of version 5 customers keep getting more!",
+"Release": "Plano, TX, October 23, 2015",
+"Content": "Mobilizer continues to be the best development tool for SQL Server Reporting Services.  Enabling developers to easy add SSRS reports to MVC and SPA applications.  The fully documented controls can be added to your HTML5 page with just 1 or 2 lines of JavaScript code.
+Mobilizer Version 5 adds even more for developers including:
+<pre>
+	•	Improved support for non .Net development (Node.js, PHP, etc..)
+	•	Easy CORS support (Just one line of js)
+	•	Support for IIS without ASP.Net impersonation
+	•	Improved documentation
+	•	Improved samples and NuGet Packages
+	•	Improved globalization
+	•	Improved error handling and logging
+	•	All async report viewer and render
+	•	JavaScript api to create parameter sets
+</pre>	
+In addition to all of these new developer features, all customers will benefit for performance improvements, asynchronous processing and numerous other improvements. 
+
+Visit <a href=http://www.forerunnersw.com> ForerunnerSW.com</a> ForerunnerSW.com to download your free trial version of Mobilizer today. Find out for yourself how Mobilizer completely optimizes the end user experience of SSRS for mobile BI and how Mobilizer can cost effectively help your organization leverage the power of Microsoft’s SQL Server Reporting Services (SSRS) faster and easier than ever before.
+"
+  },
+{
+"ID": "22",
+"Link": "/press?Article=22",
+"Title":"Forerunner Software release Mobilizer version 5.0 public beta",
+"Description":"Forerunner Mobilizer continues to be the most powerful and cost effective way to amp up 
+SQL Server Reporting Services.  With the release of version 5 customers keep getting more!",
+"Release": "Plano, TX, August 24, 2015",
+"Content": "Mobilizer continues to be the best development tool for SQL Server Reporting Services.  Enabling developers to easy add SSRS reports to MVC and SPA applications.  The fully documented controls can be added to your HTML5 page with just 1 or 2 lines of JavaScript code.
+Mobilizer Version 5 adds even more for developers including:
+<pre>
+	•	Improved support for non .Net development (Node.js, PHP, etc..)
+	•	Easy CORS support (Just one line of js)
+	•	Support for IIS without ASP.Net impersonation
+	•	Improved documentation
+	•	Improved samples and NuGet Packages
+	•	Improved globalization
+	•	Improved error handling and logging
+	•	All async report viewer and render
+	•	JavaScript api to create parameter sets
+</pre>	
+In addition to all of these new developer features, all customers will benefit for performance improvements, asynchronous processing and numerous other improvements. 
+
+Visit <a href=http://www.forerunnersw.com> ForerunnerSW.com</a> ForerunnerSW.com to download your free trial version of Mobilizer today. Find out for yourself how Mobilizer completely optimizes the end user experience of SSRS for mobile BI and how Mobilizer can cost effectively help your organization leverage the power of Microsoft’s SQL Server Reporting Services (SSRS) faster and easier than ever before.
+"
+  },
+{
 "ID": "21",
-"Link": "/press?Article=20",
+"Link": "/press?Article=21",
 "Title":"Forerunner Software announces the Public Availability of Mobilizer 4.0",
 "Description":"Forerunner Software’s Mobilizer 4.0 allows you to leverage the power of SQL Server Reporting Services and take it to the next level across all Mobile and PC browsers. With no per user charges, Mobilizer is the most cost effective way for organizations worldwide to deliver mobile BI.",
 "Release": "Plano, TX, May 4, 2015",

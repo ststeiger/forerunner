@@ -3179,15 +3179,27 @@ $(function () {
                     } else {
                         //Need to call get parameter list to load parameters before calling loadParameters
                         //This shoule get refactored
-                        me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath,undefined, function () {                        
+                        if (me.options.parameterModel) {
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, undefined, function () {
+                                me._loadParameters(me.pageNum);
+                                me._addSetPageCallback(function () {
+                                    //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                                    me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
+                                    me._setOptionsZoom();
+
+                                });
+                            });
+                        }
+                        else {
                             me._loadParameters(me.pageNum);
                             me._addSetPageCallback(function () {
                                 //_loadPage is designed to async so trigger afterloadreport event as set page down callback
                                 me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID(), RDLExtProperty: me.RDLExtProperty });
                                 me._setOptionsZoom();
-                        
+
                             });
-                        });
+                        }
+
                     }
 
                  
@@ -19365,7 +19377,7 @@ $(function () {
             showBreadCrumb: false,
             showParameterArea: "Collapsed",
             zoom: "100",
-            dbConfig: null
+            dbConfig: {}
         },
         _render: function () {
             var me = this;

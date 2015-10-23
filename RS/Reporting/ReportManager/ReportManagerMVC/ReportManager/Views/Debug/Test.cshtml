@@ -116,7 +116,7 @@
                 var $reportViewerEZ = $('body').reportViewerEZ({ });
                 var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
                 
-                $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+                $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
                 var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
                 $toolbar.hide();
                 $toolbar.show();

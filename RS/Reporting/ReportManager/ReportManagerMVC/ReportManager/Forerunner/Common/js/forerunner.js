@@ -1823,14 +1823,13 @@ $(function () {
             var successCallback = options.success;
             options.success = null;
 
-            // TODO V4
-            // We need to enable CORS support
-            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            //if (enableWithCredentials) {
-            //    options.xhrFields = {
-            //        withCredentials: true
-            //    };
-            //}
+            if (forerunner.config.enableCORSWithCredentials) {
+                options.xhrFields = {
+                    withCredentials: true,
+                    crossDomain: true
+                };
+            }
+
 
             if (options.fail)
                 errorCallback = options.fail;

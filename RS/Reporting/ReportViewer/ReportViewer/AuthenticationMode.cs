@@ -42,9 +42,13 @@ namespace Forerunner.Security
             }
             if (sec.Mode == System.Web.Configuration.AuthenticationMode.Forms)
             {
-                string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
-
-                return sec.Forms.LoginUrl.Replace("~", baseUrl);
+                if (sec.Forms.LoginUrl.IndexOf("~") >= 0)
+                {
+                    string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+                    return sec.Forms.LoginUrl.Replace("~", baseUrl);
+                }
+                else
+                    return sec.Forms.LoginUrl;
             }
             return null;
         }

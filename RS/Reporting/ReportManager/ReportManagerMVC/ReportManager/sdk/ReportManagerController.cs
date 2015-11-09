@@ -475,7 +475,10 @@ namespace ReportManager.Controllers
                 });
 
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
 
             HttpResponseMessage resp = this.Request.CreateResponse();
             resp.StatusCode = HttpStatusCode.OK;
@@ -507,7 +510,10 @@ namespace ReportManager.Controllers
                     retval = GetReportManager(instance).GetCatalogImage(ReportPath);
                 });
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
 
             return GetResponseFromBytes(retval, "image/JPEG",true);            
         }
@@ -569,7 +575,10 @@ namespace ReportManager.Controllers
                     result = GetReportManager(instance).GetCatalogResource(path, out mimetype);
                 });
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
             return GetResponseFromBytes(result, mimetype);
         }
 
@@ -593,7 +602,10 @@ namespace ReportManager.Controllers
                     result = GetReportManager(instance).GetCatalogContents(path, itemtype, out mimetype);
                 });
             }
-            catch { }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
+            }
             
             return GetDownloadResponseFromBytes(result, mimetype, path);
         }
@@ -1354,9 +1366,9 @@ namespace ReportManager.Controllers
                 
                 resp.StatusCode = HttpStatusCode.OK;
             }
-            catch
+            catch (Exception e)
             {
-                resp.StatusCode = HttpStatusCode.BadRequest;
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");
             }
 
             return resp;

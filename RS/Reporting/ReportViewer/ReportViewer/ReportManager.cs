@@ -2047,6 +2047,10 @@ namespace Forerunner.SSRS.Manager
             if (info.SubscriptionSchedule.IsMobilizerSchedule)
                 info.SubscriptionSchedule.ScheduleID = null;
             string MatchData = info.SubscriptionSchedule.ScheduleID != null ? info.SubscriptionSchedule.ScheduleID : info.SubscriptionSchedule.MatchData;
+
+            string now = DateTime.Now.AddSeconds(60).ToString("O");
+            MatchData = MatchData.Replace("@Now", now);
+
             Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
             settings.Extension = info.ExtensionSettings.Extension;
             settings.ParameterValues = info.ExtensionSettings.ParameterValues;
@@ -2191,6 +2195,10 @@ namespace Forerunner.SSRS.Manager
             if (info.SubscriptionSchedule.IsMobilizerSchedule)
                 info.SubscriptionSchedule.ScheduleID = null;
             string matchData = info.SubscriptionSchedule.ScheduleID != null ? info.SubscriptionSchedule.ScheduleID : info.SubscriptionSchedule.MatchData;
+
+            string now = DateTime.Now.AddSeconds(60).ToString("O");
+            matchData = matchData.Replace("@Now", now);
+
             Forerunner.SSRS.Management.ExtensionSettings settings = new Management.ExtensionSettings();
             settings.Extension = info.ExtensionSettings.Extension;
             settings.ParameterValues = info.ExtensionSettings.ParameterValues;

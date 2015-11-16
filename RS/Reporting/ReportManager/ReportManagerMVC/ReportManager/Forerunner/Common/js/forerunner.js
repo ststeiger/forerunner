@@ -890,7 +890,7 @@ $(function () {
             if (forerunner.config._customSettings === null) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetMobilizerSetting";
                
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: false,
@@ -959,7 +959,7 @@ $(function () {
             if (forerunner.config._dbConfig === null || jQuery.isEmptyObject(forerunner.config._dbConfig)) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager/GetDBConfig";
 
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: url,
                     dataType: "json",
                     async: false,

@@ -24,6 +24,15 @@
 "Name": "Every Friday at 6PM",
 "MatchData": "<?xml version=\"1.0\" encoding=\"utf-16\" standalone=\"yes\"?><ScheduleDefinition xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><StartDateTime>2013-12-30T18:00:00-08:00</StartDateTime><WeeklyRecurrence><WeeksInterval>1</WeeksInterval><DaysOfWeek><Sunday>false</Sunday><Monday>false</Monday><Tuesday>false</Tuesday><Wednesday>false</Wednesday><Thursday>false</Thursday><Friday>true</Friday><Saturday>false</Saturday></DaysOfWeek></WeeklyRecurrence></ScheduleDefinition>",
 "IsMobilizerSchedule": "True"
+},
+
+{
+"ScheduleID": "cb4656d7-f5bb-4a63-8b6f-82bd8c9300c6",
+"Name": "Send Now",
+"MatchData": "<ScheduleDefinition xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><StartDateTime xmlns=\"http://schemas.microsoft.com/sqlserver/reporting/2010/03/01/ReportServer\">@Now</StartDateTime></ScheduleDefinition>",
+"IsMobilizerSchedule": "True"
 }
+
+
 ]
 }

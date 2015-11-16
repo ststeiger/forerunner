@@ -276,6 +276,9 @@ namespace Forerunner
         internal static string GetPrintPDFDevInfo(string propertyString)
         {
             StringBuilder printProperty = new StringBuilder();
+            if (propertyString == null || propertyString == "")
+                return null;
+
             using (JsonTextReader reader = new JsonTextReader(new StringReader(propertyString)))
             {
                 JsonObject jsonObj = new JsonObject();

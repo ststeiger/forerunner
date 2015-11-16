@@ -21059,7 +21059,7 @@ $(function () {
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Subject") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
-                    if (me._canEditComment) {
+                    if (me._canEditComment && me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
                     }
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {

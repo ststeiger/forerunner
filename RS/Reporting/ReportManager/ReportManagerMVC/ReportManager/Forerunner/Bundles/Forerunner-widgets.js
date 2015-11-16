@@ -21391,7 +21391,9 @@ $(function () {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$subject.val();
                     }
 
-                    me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    if (me._canEditComment && me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "Comment") {
+                        me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$comment.val();
+                    }
 
                     if (me._subscriptionData.ExtensionSettings.ParameterValues[i].Name === "IncludeLink") {
                         me._subscriptionData.ExtensionSettings.ParameterValues[i].Value = me.$includeLink.is(":checked") ? "True" : "False";

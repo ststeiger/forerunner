@@ -2610,8 +2610,13 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            if (me.$printDialog) {
-                me.$printDialog.reportPrint("openDialog");
+            if (forerunner.config.getCustomSettingsValue("FastPrint", "on").toLowerCase() === "on") {
+                me.printReport("");
+            }
+            else {
+                if (me.$printDialog) {
+                    me.$printDialog.reportPrint("openDialog");
+                }
             }
         },
         /**

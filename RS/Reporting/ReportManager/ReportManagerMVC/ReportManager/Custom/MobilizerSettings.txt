@@ -23,5 +23,6 @@
 	"EnableGestures":"on",
 	"BigTablixBatchSize":3000,
 	"AppleFixedToolbarBug":"on",
-	"DefaultViewStyle":"list"
+	"DefaultViewStyle":"list",
+	"FastPrint":"on"
 }

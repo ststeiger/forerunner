@@ -133,7 +133,14 @@ namespace Forerunner.SSRS.JSONRender
                     }
                     else
                     {
-                        w.WriteMember(PropArray[i].Name);
+                        //Formula not used, reduce payload
+                        if (PropArray[i].Name == "Formula")
+                        {
+                            r.RPL.ReadString();
+                            return;
+                        }
+                        else
+                            w.WriteMember(PropArray[i].Name);
                     }
                     switch (PropArray[i].DataType)
                     {
@@ -158,7 +165,10 @@ namespace Forerunner.SSRS.JSONRender
 
                             if (PropArray[i].Name == "SID")
                                 r.LastID = value;
-                            if (PropArray[i].MakeTemp) tmp.Value =value; else w.WriteString(value);
+                            if (PropArray[i].MakeTemp) 
+                                tmp.Value =value; 
+                            else
+                                w.WriteString(value);
                             break;
                         case "Float":
                             if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadFloat(); else w.WriteNumber(r.RPL.ReadFloat());

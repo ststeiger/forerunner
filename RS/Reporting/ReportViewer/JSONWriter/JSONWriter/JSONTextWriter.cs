@@ -113,16 +113,16 @@ namespace Forerunner.JSONWriter
         {
             StringBuilder NewVal = new StringBuilder(Value);
 
-            //escape special char
-            //escape newline
-           // if (Value != null)
-            {
-                NewVal = NewVal
-                    .Replace("\\", "\\\\")
-                    .Replace("\"", "\\\"")
-                    .Replace("\n", "\\n")
-                    .Replace("\r", "\\r");
-            }
+            NewVal
+                .Replace("\\", "\\\\")
+                .Replace("\"", "\\\"")
+                .Replace("\n", "\\n")
+                .Replace("\r", "\\r")
+                .Replace("\t", "\\t")
+                .Replace("/", "\\/")
+                .Replace("\b", "\\b")
+                .Replace("\f", "\\f");
+            
            Append(NewVal.ToString(), true);
             
         }

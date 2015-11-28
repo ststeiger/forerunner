@@ -1663,8 +1663,15 @@ $(function () {
                 $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
                 $Cell.attr("Style", Style);
+
+                
                 $Cell.addClass("fr-r-tC");
                 var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
+
+                //Fix sizing issues in IE8
+                if (forerunner.device.isMSIE8())
+                    RI.css("min-height", height + "mm");
+
                 RI.addClass("fr-r-tCI");
                 //Add Repsponsive table expand
                 if ($Drilldown)

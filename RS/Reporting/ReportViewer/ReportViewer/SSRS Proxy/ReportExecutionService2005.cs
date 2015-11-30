@@ -22,6 +22,7 @@ namespace Forerunner.SSRS.Execution
     using System.Xml.Serialization;
     using System.ComponentModel;
     using System.Net;
+    using System.Globalization;
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.17929")]
@@ -171,7 +172,17 @@ namespace Forerunner.SSRS.Execution
             WebRequest retval = base.GetWebRequest(uri);
 
             string lang = System.Web.HttpContext.Current.Request.Headers.Get("Accept-Language");
-            retval.Headers.Set(HttpRequestHeader.AcceptLanguage, lang);
+            char[] seperator = { ',' };
+
+            if (lang == null)
+                lang = "";
+
+            string[] AcceptLang = lang.Split(seperator);
+            string defaultLang = CultureInfo.CurrentCulture.Name;
+            if (AcceptLang.Length > 0)
+                defaultLang = AcceptLang[0];
+
+            retval.Headers.Set(HttpRequestHeader.AcceptLanguage, defaultLang);
             return retval;
         }
 

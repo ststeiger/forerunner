@@ -17824,15 +17824,8 @@ $(function () {
                 return null;
             }
 
-            var dateFormat = forerunner.ssr._internal.getStandardMomentDateFormat(me.options.$reportViewer.locData);
-            var m = moment(defaultDatetime, dateFormat);
-
-            //check for saved paramter default format
-            if (defaultDatetime.length > 7 &&
-                ((defaultDatetime.substr(4, 1) === "/" && defaultDatetime.substr(7, 1) === "/") ||
-                defaultDatetime.substr(4, 1) === "-" && defaultDatetime.substr(7, 1) === "-")
-                )
-                m = moment(defaultDatetime, "YYYY/MM/DD");
+            var dateFormat = forerunner.ssr._internal.getDateFormat().toUpperCase();
+            var m = moment(defaultDatetime, forerunner.ssr._internal.getStandardMomentDateFormat());
 
             if (!m.isValid()) {
                 me._DebugLog("_getDateTimeFromDefault", {

@@ -17,7 +17,7 @@ using Forerunner.Logging;
 using Management = Forerunner.SSRS.Management;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
+using System.Globalization;
 
 namespace Forerunner
 {
@@ -437,22 +437,29 @@ namespace Forerunner
                     {
                         if (item == null)
                             w.WriteNull();
+                        if (parameter.Type == ParameterTypeEnum.DateTime)
+                        {
+                            // On dates format to transfer format so clinet can display any culture
+                            DateTime isoDate;
+                            string lang = System.Web.HttpContext.Current.Request.Headers.Get("Accept-Language");
+                            char[] seperator = { ',' };
+
+                            if (lang == null)
+                                lang = "";
+
+                            string[] AcceptLang = lang.Split(seperator);
+                            string defaultLang = CultureInfo.CurrentCulture.Name;
+                            if (AcceptLang.Length > 0)
+                                defaultLang = AcceptLang[0];
+
+                            if (!DateTime.TryParse(item, CultureInfo.GetCultureInfoByIetfLanguageTag(defaultLang), System.Globalization.DateTimeStyles.None, out isoDate))
+                                throw new Exception("Can not convert date from lang:" + defaultLang + " date: " + item);
+
+                            string newDate = isoDate.ToString("O");
+                            w.WriteString(newDate);
+                        }
                         else
                             w.WriteString(item);
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-
-
-                w.WriteMember("Dependencies");
-                if (parameter.Dependencies != null)
-                {
-                    w.WriteStartArray();
-                    foreach (string item in parameter.Dependencies)
-                    {
-                        w.WriteString(item);
                     }
                     w.WriteEndArray();
                 }

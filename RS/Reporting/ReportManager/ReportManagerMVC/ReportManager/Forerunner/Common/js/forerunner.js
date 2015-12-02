@@ -1861,14 +1861,12 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            // TODO V4
-            // We need to enable CORS support
-            //var enableWithCredentials = forerunner.config.getCustomSettingsValue("CORSEnableWithCredentials", false);
-            //if (enableWithCredentials) {
-            //    options.xhrFields = {
-            //        withCredentials: true
-            //    };
-            //}
+            if (forerunner.config.enableCORSWithCredentials) {
+                options.xhrFields = {
+                    withCredentials: true,
+                    crossDomain: true
+                };
+            }
 
             return $.getJSON(url, options)
             .done(function (data) {

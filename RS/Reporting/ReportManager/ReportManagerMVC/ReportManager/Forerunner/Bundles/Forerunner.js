@@ -1862,24 +1862,16 @@ $(function () {
         getJSON: function (url, options, done, fail) {
             var me = this;
 
-            if (forerunner.config.enableCORSWithCredentials) {
-                options.xhrFields = {
-                    withCredentials: true,
-                    crossDomain: true
-                };
-            }
+            var requestOptions = {};
+            requestOptions.data = options;
+            requestOptions.done = done;
+            requestOptions.fail = fail;
+            requestOptions.dataType = "json";
+            requestOptions.url = url;
 
-            return $.getJSON(url, options)
-            .done(function (data) {
-                if (done)
-                    done(data);
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                me._handleRedirect(jqXHR);
-                console.log(jqXHR);
-                if (fail)
-                    fail(jqXHR, textStatus, errorThrown, this);
-            });
+            return me.ajax(requestOptions);
+
+
         },
         /**
         * Makes a "POST" type ajax request and if the response status 401 or 302, it will redirect to login page. 

@@ -854,7 +854,7 @@ $(function () {
             var me = this;
 
             if (newPageNum === 0)
-                return;
+                newPageNum = 10000
 
             if (newPageNum === me.curPage || me.lock === 1)
                 return;

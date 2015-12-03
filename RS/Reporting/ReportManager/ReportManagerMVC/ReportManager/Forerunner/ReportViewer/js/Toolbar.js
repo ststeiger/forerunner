@@ -228,12 +228,7 @@ $(function () {
             if (curPage >= maxPage && maxPage !== 0) {
                 me.disableTools([tb.btnNext, tb.btnLastPage]);
             }
-            else {
-                if (maxPage === 0)
-                    me.disableTools([tb.btnLastPage]);
-                else
-                    me.enableTools([tb.btnNext, tb.btnLastPage]);
-            }
+
             if (maxPage === 1) {
                 me.disableTools([tb.btnNav]);
             }

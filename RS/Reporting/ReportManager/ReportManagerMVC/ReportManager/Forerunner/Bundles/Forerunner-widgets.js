@@ -1565,7 +1565,7 @@ $(function () {
             var me = this;
 
             if (newPageNum === 0)
-                return;
+                newPageNum = 10000;
 
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
@@ -8621,12 +8621,7 @@ $(function () {
             if (curPage >= maxPage && maxPage !== 0) {
                 me.disableTools([tb.btnNext, tb.btnLastPage]);
             }
-            else {
-                if (maxPage === 0)
-                    me.disableTools([tb.btnLastPage]);
-                else
-                    me.enableTools([tb.btnNext, tb.btnLastPage]);
-            }
+
             if (maxPage === 1) {
                 me.disableTools([tb.btnNav]);
             }
@@ -8908,13 +8903,7 @@ $(function () {
             if (curPage >= maxPage && maxPage !== 0) {
                 me.disableTools([tp.itemNext, tp.itemLastPage]);
             }
-            else {
-                if (maxPage === 0) {
-                    me.disableTools([tp.itemLastPage]);
-                } else {
-                    me.enableTools([tp.itemNext, tp.itemLastPage]);
-                }
-            }
+           
            
             if (maxPage === 1) {
                 me.disableTools([tp.itemNav]);

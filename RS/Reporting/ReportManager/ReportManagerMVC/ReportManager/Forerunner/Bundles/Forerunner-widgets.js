@@ -14093,7 +14093,13 @@ $(function () {
             if (Rowspans[Obj.ColumnIndex] === 0 || isNaN(Rowspans[Obj.ColumnIndex]))
                 Rowspans[Obj.ColumnIndex] = undefined;
 
-            //TODO: need to do Col spans
+            if (Obj.ColSpan)
+                Colspans[Obj.ColumnIndex] = Obj.ColSpan;
+            else if (Colspans[Obj.ColumnIndex] > 0)
+                Colspans[Obj.ColumnIndex]--;
+
+            if (Colspans[Obj.ColumnIndex] === 0 || isNaN(Colspans[Obj.ColumnIndex]))
+                Colspans[Obj.ColumnIndex] = undefined;
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -14153,7 +14159,7 @@ $(function () {
             }
 
             var $Drilldown;
-            CellHeight = 0
+            CellHeight = 0;
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex])
                 CellHeight = RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].Height;
 
@@ -14221,6 +14227,10 @@ $(function () {
                     }
                     LastColIndex = Obj.ColumnIndex;
 
+                    //Handle Col spans, last col is after the span
+                    if (Obj.ColSpan)
+                        LastColIndex += Obj.ColSpan-1;
+
                     if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
                         CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;
                         var h = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(CellHeight, CellWidth), true));
@@ -14258,7 +14268,7 @@ $(function () {
                 }
                 else if (Obj.Type === "RowHeader") {
                     //Write empty cell
-                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined)
+                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined )
                         $Row.append($("<TD/>").html("&nbsp;"));
                 }
 

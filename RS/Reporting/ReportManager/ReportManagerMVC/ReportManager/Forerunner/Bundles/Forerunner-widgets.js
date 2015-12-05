@@ -14325,7 +14325,13 @@ $(function () {
             if (Rowspans[Obj.ColumnIndex] === 0 || isNaN(Rowspans[Obj.ColumnIndex]))
                 Rowspans[Obj.ColumnIndex] = undefined;
 
-            //TODO: need to do Col spans
+            if (Obj.ColSpan)
+                Colspans[Obj.ColumnIndex] = Obj.ColSpan;
+            else if (Colspans[Obj.ColumnIndex] > 0)
+                Colspans[Obj.ColumnIndex]--;
+
+            if (Colspans[Obj.ColumnIndex] === 0 || isNaN(Colspans[Obj.ColumnIndex]))
+                Colspans[Obj.ColumnIndex] = undefined;
 
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
@@ -14452,6 +14458,10 @@ $(function () {
                             $Row.append($("<TD/>").html("&nbsp;"));
                     }
                     LastColIndex = Obj.ColumnIndex;
+
+                    //Handle Col spans, last col is after the span
+                    if (Obj.ColSpan)
+                        LastColIndex += Obj.ColSpan - 1;
 
                     if (respCols.Columns[Obj.ColumnIndex].show === false && (Obj.Type === "Corner" || Obj.Type === "ColumnHeader")) {
                         CellWidth = RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].Width;

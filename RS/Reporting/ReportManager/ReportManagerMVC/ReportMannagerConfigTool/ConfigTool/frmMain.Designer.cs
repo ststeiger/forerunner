@@ -79,6 +79,8 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabActivation = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtCores = new System.Windows.Forms.TextBox();
             this.btnSplit = new System.Windows.Forms.Button();
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnValidate = new System.Windows.Forms.Button();
@@ -98,8 +100,6 @@
             this.txtLatestVer = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.txtCurrVer = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.txtCores = new System.Windows.Forms.TextBox();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -484,6 +484,17 @@
             this.tabActivation.UseVisualStyleBackColor = true;
             this.tabActivation.Click += new System.EventHandler(this.tabActivation_Click);
             // 
+            // label8
+            // 
+            resources.ApplyResources(this.label8, "label8");
+            this.label8.Name = "label8";
+            // 
+            // txtCores
+            // 
+            resources.ApplyResources(this.txtCores, "txtCores");
+            this.txtCores.Name = "txtCores";
+            this.txtCores.ReadOnly = true;
+            // 
             // btnSplit
             // 
             resources.ApplyResources(this.btnSplit, "btnSplit");
@@ -573,6 +584,7 @@
             resources.ApplyResources(this.tabUpdate, "tabUpdate");
             this.tabUpdate.Name = "tabUpdate";
             this.tabUpdate.UseVisualStyleBackColor = true;
+            this.tabUpdate.Click += new System.EventHandler(this.tabUpdate_Click);
             // 
             // btnUpdateCheck
             // 
@@ -609,17 +621,6 @@
             resources.ApplyResources(this.txtCurrVer, "txtCurrVer");
             this.txtCurrVer.Name = "txtCurrVer";
             this.txtCurrVer.ReadOnly = true;
-            // 
-            // label8
-            // 
-            resources.ApplyResources(this.label8, "label8");
-            this.label8.Name = "label8";
-            // 
-            // txtCores
-            // 
-            resources.ApplyResources(this.txtCores, "txtCores");
-            this.txtCores.Name = "txtCores";
-            this.txtCores.ReadOnly = true;
             // 
             // frmMain
             // 

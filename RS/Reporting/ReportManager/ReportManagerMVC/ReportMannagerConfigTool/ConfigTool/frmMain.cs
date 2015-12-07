@@ -11,7 +11,7 @@ namespace ReportMannagerConfigTool
     public partial class frmMain : Form
     {
         private WinFormHelper winform;
-        private string forerunnerDownload = "http://forerunnersw.com/download/mobilizer/Version4/";
+        private string forerunnerDownload = "http://forerunnersw.com/download/mobilizer/Version5/";
 
         public frmMain()
         {
@@ -708,6 +708,11 @@ namespace ReportMannagerConfigTool
         }
 
         private void txtServerName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabUpdate_Click(object sender, EventArgs e)
         {
 
         }

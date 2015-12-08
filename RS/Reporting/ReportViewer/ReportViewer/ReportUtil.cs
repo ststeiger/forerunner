@@ -437,7 +437,7 @@ namespace Forerunner
                     {
                         if (item == null)
                             w.WriteNull();
-                        if (parameter.Type == ParameterTypeEnum.DateTime)
+                        else if (parameter.Type == ParameterTypeEnum.DateTime)
                         {
                             // On dates format to transfer format so clinet can display any culture
                             DateTime isoDate;

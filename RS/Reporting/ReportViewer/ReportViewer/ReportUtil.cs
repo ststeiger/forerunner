@@ -434,7 +434,7 @@ namespace Forerunner
                     {
                         if (item == null)
                             w.WriteNull();
-                        if (parameter.Type == ParameterTypeEnum.DateTime)
+                        else if (parameter.Type == ParameterTypeEnum.DateTime)
                         {
                             DateTime isoDate;
                             string lang = System.Web.HttpContext.Current.Request.Headers.Get("Accept-Language");

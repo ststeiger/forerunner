@@ -542,6 +542,7 @@
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
     <Content Include="doxygen\Doxyfile" />
+    <Content Include="Views\Debug\DynamicReport.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

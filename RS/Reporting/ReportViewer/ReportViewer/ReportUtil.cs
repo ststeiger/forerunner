@@ -466,6 +466,19 @@ namespace Forerunner
                 else
                     w.WriteString("");
 
+                w.WriteMember("Dependencies");
+                if (parameter.Dependencies != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.Dependencies)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
                 w.WriteMember("ValidValues");
                 if (parameter.ValidValues != null)
                 {

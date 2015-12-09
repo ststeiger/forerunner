@@ -905,11 +905,20 @@ $(function () {
             //update properties: update report properties (tags)
             //for more properties, add to the list
             var permissionList = ["Create Subscription", "Update Properties"];
-            me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","),me.options.rsInstance, function (permission) {
-                me.permissions = permission;
+            
+            if (me.dynamicReport === true) {
+                //Set permissions to something
                 if (done)
                     done();
-            });
+                return;
+            }
+            else {
+                me.permissions = forerunner.ajax.hasPermission(path, permissionList.join(","), me.options.rsInstance, function (permission) {
+                    me.permissions = permission;
+                    if (done)
+                        done();
+                });
+            }
         },
         /**
          * Get current user permission
@@ -1532,6 +1541,27 @@ $(function () {
                 }
             );
         },
+
+        _resetExecution: function(done){
+            var me = this;
+
+            forerunner.ajax.ajax({
+                url: me.options.reportViewerAPI + "/ResetExecution/",
+                data: {
+                    SessionID: me.sessionID,
+                    instance: me.options.rsInstance,
+                },
+                dataType: "json",
+                success: function (data) {                   
+                    done();
+                },
+                fail: function () {
+                    //This should not happen;
+                    //ToDo Show error
+                }
+            });
+
+        },
         /**
          * Refreshes current report
          *
@@ -1550,7 +1580,7 @@ $(function () {
             if (curPage === undefined)
                 curPage = 1;
 
-            me.sessionID = "";
+            
             me.renderTime = new Date().getTime();
 
             me.lock = 1;
@@ -1561,7 +1591,10 @@ $(function () {
             }
             me._resetViewer(true);
             me._trigger(events.refresh);
-            me._loadPage(curPage, false, null, paramList, true);
+
+            me._resetExecution(function () {
+                me._loadPage(curPage, false, null, paramList, true);
+            });
         },
         /**
          * Navigates to the given page
@@ -1573,8 +1606,9 @@ $(function () {
         navToPage: function (newPageNum) {
             var me = this;
 
+            //Go to last page
             if (newPageNum === 0)
-                newPageNum = 10000
+                newPageNum = 1000000;
 
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
@@ -3126,6 +3160,27 @@ $(function () {
             }
             return false;
         },
+
+        /**
+         * Load report with pass path, page number and parameters
+         *
+         * @function $.forerunner.reportViewer#loadReport
+         *
+         * @param {String} reportName - Name of Dynamic Report
+         * @param {Object} sessionID -  SessionID for existing execution
+         * @param {Integer} pageNum - Starting page number
+         * @param {Object} parameters - Optional parameters  (type may be string or object)
+         * @param {Object} RDLExt - Optional RDLExt  (type may be string or object) 
+         */
+        loadDynamicReport: function (reportName,sessionID, pageNum, parameters, RDLExt) {
+            var me = this;
+
+            me.dynamicReport = true;
+            if (RDLExt)
+                me.RDLExtProperty = forerunner.helper.JSONParse(RDLExt);
+            me._loadReport(reportName, pageNum, parameters, sessionID);
+        },
+
         /**
          * Load report with pass path, page number and parameters
          *
@@ -3136,15 +3191,19 @@ $(function () {
          * @param {Object} parameters - Optional parameters  (type may be string or object)
          * @param {Object} sessionID - Optional SessionID for existing execution
          */
-        loadReport: function (reportPath, pageNum, parameters,sessionID) {
+        loadReport: function (reportPath, pageNum, parameters, sessionID) {
+            var me = this;
+
+            me.dynamicReport = false;
+            me._loadReport(reportPath, pageNum, parameters, sessionID);
+        },
+        
+        _loadReport: function (reportPath, pageNum, parameters,sessionID) {
             var me = this;
 
             // For each new report we reset the zoom factor back to 100%
             me._zoomFactor = 100;
-            
-            if (sessionID)
-                me.sessionID = sessionID;
-
+           
             me._checkPermission(reportPath, function () {
                 me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum });
 
@@ -3153,7 +3212,7 @@ $(function () {
                     return;
                 }
 
-                if (me.reportPath && me.reportPath !== "" && me.reportPath !== reportPath) {
+                if ((me.reportPath && me.reportPath !== "" && me.reportPath !== reportPath) || me.dynamicReport === true) {
                     //Do some clean work if it's a new report
                     me.backupCurPage(true);
                     me.sessionID = "";
@@ -3161,6 +3220,8 @@ $(function () {
                     me.hideDocMap();
                     me.element.unmask();
                 }
+                if (sessionID)
+                    me.sessionID = sessionID;
 
                 me._resetViewer();
 
@@ -3184,7 +3245,7 @@ $(function () {
                     } else {
                         //Need to call get parameter list to load parameters before calling loadParameters
                         //This shoule get refactored
-                        if (me.options.parameterModel) {
+                        if (me.options.parameterModel && me.dynamicReport !== true) {
                             me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath, undefined, function () {
                                 me._loadParameters(me.pageNum);
                                 me._addSetPageCallback(function () {
@@ -3233,6 +3294,14 @@ $(function () {
         _getRDLExtProp: function (done) {
             var me = this;
 
+            if (me.dynamicReport === true) {
+                if (!me.RDLExtProperty)
+                    me.RDLExtProperty = {};
+
+                if (done)
+                    done();
+                return;
+            }
             me.property = forerunner.cache.itemProperty[me.reportPath];
 
             if (me.property) {
@@ -19446,7 +19515,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
-                if (me.options.DefaultAppTemplate === null) {
+                if (me.options.DefaultAppTemplate === null && data.viewer.dynamicReport !== true) {
                     //init property dialog in reportviewer
                     layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
                     layout.$propertySection.forerunnerProperties("setProperties", "viewer", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);

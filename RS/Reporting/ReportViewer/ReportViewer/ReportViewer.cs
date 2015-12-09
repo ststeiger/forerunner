@@ -325,6 +325,53 @@ namespace Forerunner.SSRS.Viewer
 
         }
 
+        public void ResetExecution(String SessionID)
+        {
+            rs.Credentials = GetCredentials();
+            rs.ExecutionHeaderValue = new ExecutionHeader();
+            rs.ExecutionHeaderValue.ExecutionID = SessionID;
+            rs.ResetExecution2();
+        }
+
+        public string LoadReportDefinition(string RDL)
+        {
+            rs.Credentials = GetCredentials();
+            byte[] RDLBytes = Encoding.ASCII.GetBytes(RDL);
+            Warning[] RDLWarnings;
+
+            ExecutionInfo2 execInfo = rs.LoadReportDefinition2(RDLBytes, out RDLWarnings);
+
+             JSONTextWriter w = new JSONTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("SessionID");
+            w.WriteString(execInfo.ExecutionID);
+            if (RDLWarnings != null)
+            {
+                w.WriteMember("Warnings");
+                w.WriteStartArray();
+                foreach (Warning warn in RDLWarnings)
+                {
+                    w.WriteStartObject();
+
+                    w.WriteMember("Code");
+                    w.WriteString(warn.Code);
+                    w.WriteMember("Severity");
+                    w.WriteString(warn.Severity);
+                    w.WriteMember("Message");
+                    w.WriteString(warn.Message);
+                    w.WriteMember("ObjectType");
+                    w.WriteString(warn.ObjectType);
+                    w.WriteMember("ObjectName");
+                    w.WriteString(warn.ObjectName);
+
+                    w.WriteEndObject();
+                }
+                w.WriteEndArray();
+            }
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
 
         public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string paramList, string credentials)
         {

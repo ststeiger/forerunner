@@ -24,7 +24,11 @@ namespace ReportManager.Controllers
         public string DSCredentials { get; set; }
         public string Instance { get; set; }
     }
-
+    public class LoadReportDefPostBack
+    {
+        public string RDL { get; set; }
+        public string Instance { get; set; }
+    }
     [ExceptionLog]
     [Authorize]
     public class ReportViewerController :ApiController
@@ -182,6 +186,35 @@ namespace ReportManager.Controllers
         /// Retrieves the JSON representation ReportPath given the ParameterList for the
         /// specified PageNumber.
         /// </summary>
+        /// <param name="postBackValue">RDL</param>
+        /// <returns>JSON object with SessionID to dynamic report</returns>
+        [HttpPost]
+        [ActionName("LoadReportDefinition")]
+        public HttpResponseMessage LoadReportDefinition(LoadReportDefPostBack postBackValue)
+        {
+            try
+            {      
+                string result = "";
+                
+                 ImpersonateCaller.RunAsCurrentUser(() =>                
+                {
+                    result = GetReportViewer(postBackValue.Instance).LoadReportDefinition(postBackValue.RDL);
+                });
+
+                byte[] JSON = Encoding.UTF8.GetBytes(result);
+
+                return GetResponseFromBytes(JSON, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                return ReturnError(e);
+            }
+        }
+        /// <summary>
+        /// Retrieves the JSON representation ReportPath given the ParameterList for the
+        /// specified PageNumber.
+        /// </summary>
         /// <param name="postBackValue">JSON object</param>
         /// <returns>JSON object used to render the report</returns>
         [HttpPost]
@@ -231,6 +264,31 @@ namespace ReportManager.Controllers
             }       
             
         }
+        /// <summary>
+        /// Resets the report, to get new data
+        /// </summary>
+        /// <param name="SessionID">Current session id</param>
+        /// <param name="instance"></param>       
+        [HttpGet]
+        [ActionName("ResetExecution")]
+        public HttpResponseMessage ResetExecution(string SessionID, string instance = null)
+        {
+            try
+            {                
+                ImpersonateCaller.RunAsCurrentUser(() =>
+                {
+                    GetReportViewer(instance).ResetExecution(SessionID);
+                });
+
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{}"), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                return ReturnError(e);
+            }
+
+        }    
 
         /// <summary>
         /// Returns the document map structure for the current SessionID

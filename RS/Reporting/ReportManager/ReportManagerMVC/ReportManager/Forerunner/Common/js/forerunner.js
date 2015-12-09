@@ -2864,15 +2864,15 @@ $(function () {
         },
         //standard date format like YYYY-MM-DD
         getStandardMomentDateFormat: function (locData) {
-            return "YYYY-MM-DD"
+            return "YYYY-MM-DD";
         },
         //both standard and simplified date format like YYYY-M-D
         //this allow people enter data like 2002-1-1 in strict mode
         //moment.js support this from 2.3.0 on, we used 2.5.1 now
         getMomentDateFormat: function (locData) {
             var format = this.getDateFormat().toUpperCase(),
-                           formatSimple = format.replace("DD", "D").replace("MM", "M")
-            formatlongDate = format.replace("YY", "YYYY")
+                           formatSimple = format.replace("DD", "D").replace("MM", "M");
+            formatlongDate = format.replace("YY", "YYYY");
             formatSimplelongDate = formatSimple.replace("YY", "YYYY");
 
             return [format, formatSimple, formatlongDate, formatSimplelongDate];

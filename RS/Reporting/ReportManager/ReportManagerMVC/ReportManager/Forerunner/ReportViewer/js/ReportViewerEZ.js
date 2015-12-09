@@ -132,7 +132,7 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
-                if (me.options.DefaultAppTemplate === null) {
+                if (me.options.DefaultAppTemplate === null && data.viewer.dynamicReport !== true) {
                     //init property dialog in reportviewer
                     layout.$propertySection.forerunnerProperties("option", "rsInstance", me.options.rsInstance);
                     layout.$propertySection.forerunnerProperties("setProperties", "viewer", data.newPath, [propertyEnums.description, propertyEnums.tags, propertyEnums.rdlExtension, propertyEnums.visibility]);

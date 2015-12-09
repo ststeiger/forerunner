@@ -3126,8 +3126,7 @@ $(function () {
             if (!isSameReport) {
                 me.paramLoaded = false;
                 me._removeAutoRefreshTimeout();
-                me.SaveThumbnail = false;
-                me.RDLExtProperty = null;
+                me.SaveThumbnail = false;                
                 me.paramMetadata = null;
             }
             me.scrollTop = 0;

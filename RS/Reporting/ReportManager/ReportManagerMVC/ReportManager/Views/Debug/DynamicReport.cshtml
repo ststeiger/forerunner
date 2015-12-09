@@ -89,34 +89,81 @@
                 //    isFullScreen: true
                 //});
                 
-                var defaultParamsList = {
-                    "ParamsList": [{
-                        "Parameter": "StartDate",
-                        "IsMultiple": "false",
-                        "Type": "DateTime",
-                        "Value": "2003-07-07"
-                    }, {
-                        "Parameter": "EndDate",
-                        "IsMultiple": "false",
-                        "Type": "DateTime",
-                        "Value": "2004-07-07"
-                    }, {
-                        "Parameter": "ProductCategory",
-                        "IsMultiple": "false",
-                        "Type": "Integer",
-                        "Value": "1"
-                    }, {
-                        "Parameter": "ProductSubcategory",
-                        "IsMultiple": "true",
-                        "Type": "Integer",
-                        "Value": ["2"]
-                    }]
-                }
+            var defaultParamsList = {
+                "ParamsList": [{
+                    "Parameter": "StartDate",
+                    "IsMultiple": "false",
+                    "Type": "DateTime",
+                    "Value": "2003-07-07"
+                }, {
+                    "Parameter": "EndDate",
+                    "IsMultiple": "false",
+                    "Type": "DateTime",
+                    "Value": "2004-07-07"
+                }, {
+                    "Parameter": "ProductCategory",
+                    "IsMultiple": "false",
+                    "Type": "Integer",
+                    "Value": "1"
+                }, {
+                    "Parameter": "ProductSubcategory",
+                    "IsMultiple": "true",
+                    "Type": "Integer",
+                    "Value": ["2"]
+                }]
+            };
+
+                var RDLExt = {
+                    "StartDate": {
+                        "JavaScriptActions": [
+                          {
+                              "On": "blur",
+                              "Code": "var c = $(e.data.element);\nvar dt = new Date(Date.parse(c.val()));\nif ( dt.getFullYear() < 2001) \n\n{e.data.setParamError(c,\"Invalid Date\"); }  \nelse\n{e.data.setParamError(c);}"
+                          }
+                        ]
+                    },
+                    "EndDate": {
+                        "JavaScriptActions": [
+                          {
+                              "On": "blur",
+                              "Code": "var c = $(e.data.element);\nvar et = new Date(Date.parse(c.val()));\n var p = e.data.getParameters(); \nvar s = $(p.StartDate);\nvar st = new Date(Date.parse(s.val()));\nif ( st > et) \n\n{e.data.setParamError(c,\"Invalid Date\"); }  \nelse\n{e.data.setParamError(c);}"
+                          }
+                        ]
+                    },
+                    "FullName": {
+                        "JavaScriptActions": [
+                          {
+                              "SharedAction": "ChangeBorder"
+                          }
+                        ]
+                    },
+                    "SaleAmountEmp": {
+                        "JavaScriptActions": [
+                          {
+                              "SharedAction": "ChangeBorder"
+                          }
+                        ]
+                    },
+                    "SharedActions": {
+                        "ChangeBorder": {
+                            "JavaScriptActions": [
+                              {
+                                  "On": "mouseenter",
+                                  "Code": "$(e.data.element).closest('TR').css('outline','5px solid navy'); $('body').hide().show(0);"
+                              },
+                              {
+                                  "On": "mouseleave",
+                                  "Code": "$(e.data.element).closest('TR').css('outline',''); $('body').hide().show(0);"
+                              }
+                            ]
+                        }
+                    }
+                };
 
                 var $reportViewerEZ = $('body').reportViewerEZ({ });
                 var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
                 
-                $reportViewer.reportViewer("loadDynamicReport", "My New Report", "@ViewData["SessionID"]", 1, defaultParamsList);
+                $reportViewer.reportViewer("loadDynamicReport", "My New Report", "@ViewData["SessionID"]", 1, defaultParamsList, RDLExt);
                 var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
 
 

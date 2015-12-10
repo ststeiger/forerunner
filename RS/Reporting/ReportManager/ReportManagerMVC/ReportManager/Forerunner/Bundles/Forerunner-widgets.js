@@ -3161,9 +3161,9 @@ $(function () {
         },
 
         /**
-         * Load report with pass path, page number and parameters
+         * Load a dynamicly created report
          *
-         * @function $.forerunner.reportViewer#loadReport
+         * @function $.forerunner.reportViewer#loadDynamicReport
          *
          * @param {String} reportName - Name of Dynamic Report
          * @param {Object} sessionID -  SessionID for existing execution

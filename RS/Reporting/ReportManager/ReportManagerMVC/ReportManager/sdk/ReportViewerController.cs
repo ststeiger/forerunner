@@ -183,11 +183,11 @@ namespace ReportManager.Controllers
         }
 
         /// <summary>
-        /// Retrieves the JSON representation ReportPath given the ParameterList for the
+        /// Retrieves the session ID for the report created with the given RDL
         /// specified PageNumber.
         /// </summary>
         /// <param name="postBackValue">RDL</param>
-        /// <returns>JSON object with SessionID to dynamic report</returns>
+        /// <returns>JSON object with SessionID and any warnings to dynamic report</returns>
         [HttpPost]
         [ActionName("LoadReportDefinition")]
         public HttpResponseMessage LoadReportDefinition(LoadReportDefPostBack postBackValue)

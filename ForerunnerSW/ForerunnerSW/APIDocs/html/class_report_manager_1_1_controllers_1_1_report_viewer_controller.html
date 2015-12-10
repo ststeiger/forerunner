@@ -132,12 +132,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a00d91f78bbd8bef80b611ecc14285b2d"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#a00d91f78bbd8bef80b611ecc14285b2d">Thumbnail</a> (string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio=1.2, string instance=null)</td></tr>
 <tr class="memdesc:a00d91f78bbd8bef80b611ecc14285b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a thumbnail image of the given ReportPath for the specified page  <a href="#a00d91f78bbd8bef80b611ecc14285b2d">More...</a><br /></td></tr>
 <tr class="separator:a00d91f78bbd8bef80b611ecc14285b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c277f72186e4d843777e24d5c6af4b"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#ab8c277f72186e4d843777e24d5c6af4b">LoadReportDefinition</a> (<a class="el" href="class_report_manager_1_1_controllers_1_1_load_report_def_post_back.html">LoadReportDefPostBack</a> postBackValue)</td></tr>
+<tr class="memdesc:ab8c277f72186e4d843777e24d5c6af4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the session ID for the report created with the given RDL specified PageNumber.  <a href="#ab8c277f72186e4d843777e24d5c6af4b">More...</a><br /></td></tr>
+<tr class="separator:ab8c277f72186e4d843777e24d5c6af4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3529e5c0a53419355a30d98a1ec3f5"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#acf3529e5c0a53419355a30d98a1ec3f5">ReportJSON</a> (<a class="el" href="class_report_manager_1_1_controllers_1_1_parameters_post_back.html">ParametersPostBack</a> postBackValue)</td></tr>
 <tr class="memdesc:acf3529e5c0a53419355a30d98a1ec3f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the JSON representation ReportPath given the ParameterList for the specified PageNumber.  <a href="#acf3529e5c0a53419355a30d98a1ec3f5">More...</a><br /></td></tr>
 <tr class="separator:acf3529e5c0a53419355a30d98a1ec3f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af37ea47174771c2f9c2ed3e269bddd96"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#af37ea47174771c2f9c2ed3e269bddd96">ParameterJSON</a> (<a class="el" href="class_report_manager_1_1_controllers_1_1_parameters_post_back.html">ParametersPostBack</a> postBackValue)</td></tr>
 <tr class="memdesc:af37ea47174771c2f9c2ed3e269bddd96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the parameters for the given ReportPath, PageNumber and current ParameterList.  <a href="#af37ea47174771c2f9c2ed3e269bddd96">More...</a><br /></td></tr>
 <tr class="separator:af37ea47174771c2f9c2ed3e269bddd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09303cb5b684cbf783f93102ff092cda"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#a09303cb5b684cbf783f93102ff092cda">ResetExecution</a> (string SessionID, string instance=null)</td></tr>
+<tr class="memdesc:a09303cb5b684cbf783f93102ff092cda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the report, to get new data  <a href="#a09303cb5b684cbf783f93102ff092cda">More...</a><br /></td></tr>
+<tr class="separator:a09303cb5b684cbf783f93102ff092cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1da75335f542b8e9f98971ea27ab617e"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_viewer_controller.html#a1da75335f542b8e9f98971ea27ab617e">DocMapJSON</a> (string SessionID, string instance=null)</td></tr>
 <tr class="memdesc:a1da75335f542b8e9f98971ea27ab617e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the document map structure for the current SessionID  <a href="#a1da75335f542b8e9f98971ea27ab617e">More...</a><br /></td></tr>
 <tr class="separator:a1da75335f542b8e9f98971ea27ab617e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -371,6 +377,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ab8c277f72186e4d843777e24d5c6af4b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HttpResponseMessage ReportManager.Controllers.ReportViewerController.LoadReportDefinition </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_report_manager_1_1_controllers_1_1_load_report_def_post_back.html">LoadReportDefPostBack</a>&#160;</td>
+          <td class="paramname"><em>postBackValue</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the session ID for the report created with the given RDL specified PageNumber. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">postBackValue</td><td>RDL</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>JSON object with SessionID and any warnings to dynamic report</dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="ae3dd5ea17d2ab8f267a46ab84631279d"></a>
 <div class="memitem">
 <div class="memproto">
@@ -572,6 +603,41 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>JSON object used to render the report</dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a09303cb5b684cbf783f93102ff092cda"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HttpResponseMessage ReportManager.Controllers.ReportViewerController.ResetExecution </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>SessionID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>instance</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Resets the report, to get new data </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">SessionID</td><td>Current session id</td></tr>
+    <tr><td class="paramname">instance</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

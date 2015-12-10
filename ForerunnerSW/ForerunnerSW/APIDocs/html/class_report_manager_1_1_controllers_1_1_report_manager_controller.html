@@ -180,9 +180,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9221f349cb68c27430bf67fbc4b3b94b"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#a9221f349cb68c27430bf67fbc4b3b94b">IsFavorite</a> (string path, string instance=null)</td></tr>
 <tr class="memdesc:a9221f349cb68c27430bf67fbc4b3b94b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests if the given report / resource is contained in the favorites view. Requires the UseMobilizerDB configuration option.  <a href="#a9221f349cb68c27430bf67fbc4b3b94b">More...</a><br /></td></tr>
 <tr class="separator:a9221f349cb68c27430bf67fbc4b3b94b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ed652848fedc06ebb107851436560c2"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#a2ed652848fedc06ebb107851436560c2">GetUserParameters</a> (string reportPath, string instance=null)</td></tr>
-<tr class="memdesc:a2ed652848fedc06ebb107851436560c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns any named parameter sets for the given reportPath and user. Requires the UseMobilizerDB configuration option.  <a href="#a2ed652848fedc06ebb107851436560c2">More...</a><br /></td></tr>
-<tr class="separator:a2ed652848fedc06ebb107851436560c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0426e888745baac95a13f70f48cbfb46"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#a0426e888745baac95a13f70f48cbfb46">GetUserParameters</a> (string reportPath, string instance=null, string userName=null)</td></tr>
+<tr class="memdesc:a0426e888745baac95a13f70f48cbfb46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns any named parameter sets for the given reportPath and user. Requires the UseMobilizerDB configuration option.  <a href="#a0426e888745baac95a13f70f48cbfb46">More...</a><br /></td></tr>
+<tr class="separator:a0426e888745baac95a13f70f48cbfb46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af44beb2719577ab14d264f660c089e82"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#af44beb2719577ab14d264f660c089e82">SaveUserParameters</a> (<a class="el" href="class_report_manager_1_1_controllers_1_1_save_parameters.html">SaveParameters</a> saveParams)</td></tr>
 <tr class="memdesc:af44beb2719577ab14d264f660c089e82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the given named parameter sets. Requires the UseMobilizerDB configuration option.  <a href="#af44beb2719577ab14d264f660c089e82">More...</a><br /></td></tr>
 <tr class="separator:af44beb2719577ab14d264f660c089e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,6 +246,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a979d889a517627e25a9efb83caea2196"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#a979d889a517627e25a9efb83caea2196">GetMobilizerVersion</a> (string instance=null)</td></tr>
 <tr class="memdesc:a979d889a517627e25a9efb83caea2196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current Mobilizer version number  <a href="#a979d889a517627e25a9efb83caea2196">More...</a><br /></td></tr>
 <tr class="separator:a979d889a517627e25a9efb83caea2196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3e5b66e0229924ac3c9214cccad832a"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#ac3e5b66e0229924ac3c9214cccad832a">GetMobilizerLocFile</a> (string LocFile, string instance=null)</td></tr>
+<tr class="memdesc:ac3e5b66e0229924ac3c9214cccad832a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the requested loc file  <a href="#ac3e5b66e0229924ac3c9214cccad832a">More...</a><br /></td></tr>
+<tr class="separator:ac3e5b66e0229924ac3c9214cccad832a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7299aea1d66ccde5d2420205089dfeaf"><td class="memItemLeft" align="right" valign="top">HttpResponseMessage&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_report_manager_1_1_controllers_1_1_report_manager_controller.html#a7299aea1d66ccde5d2420205089dfeaf">GetCatalog</a> (string rootPath, bool showLinkedReport, string instance=null)</td></tr>
 <tr class="memdesc:a7299aea1d66ccde5d2420205089dfeaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns back the entire catalog (so this can be expensive). It is usefully when presenting a dialog where the user can select a report such as the Link Report feature.  <a href="#a7299aea1d66ccde5d2420205089dfeaf">More...</a><br /></td></tr>
 <tr class="separator:a7299aea1d66ccde5d2420205089dfeaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -677,6 +680,42 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="ac3e5b66e0229924ac3c9214cccad832a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">HttpResponseMessage ReportManager.Controllers.ReportManagerController.GetMobilizerLocFile </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>LocFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>instance</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the requested loc file </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">LocFile</td><td></td></tr>
+    <tr><td class="paramname">instance</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the requested loc file</dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a9b974ce586a623cd2c8bb6525d86c6b9"></a>
 <div class="memitem">
 <div class="memproto">
@@ -862,7 +901,7 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2ed652848fedc06ebb107851436560c2"></a>
+<a class="anchor" id="a0426e888745baac95a13f70f48cbfb46"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -876,7 +915,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">string&#160;</td>
-          <td class="paramname"><em>instance</em> = <code>null</code>&#160;</td>
+          <td class="paramname"><em>instance</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>userName</em> = <code>null</code>&#160;</td>
         </tr>
         <tr>
           <td></td>

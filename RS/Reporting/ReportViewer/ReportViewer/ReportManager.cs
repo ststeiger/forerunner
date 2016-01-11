@@ -215,7 +215,7 @@ namespace Forerunner.SSRS.Manager
 
         public static bool ValidateConfig(string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool isRSDB = true)
         {
-            if (!UseMobilizerDB)
+            if (!UseMobilizerDB || ReportServerDataSource == null)
             {
                 return true;
             }
@@ -265,7 +265,9 @@ namespace Forerunner.SSRS.Manager
             this.DBCredentials = DBCredentials;
             rs.Url = URL;
             this.URL = URL;
-            
+
+            if (ReportServerDataSource == null)
+                UseMobilizerDB = false;
 
             rs.Credentials = WSCredentials == null ? null : new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
 

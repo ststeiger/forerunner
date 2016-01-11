@@ -223,10 +223,17 @@ namespace Forerunner
                                 JArray multipleValues = obj["Value"] as JArray;
                                 foreach (String value in multipleValues)
                                 {
-                                    ParameterValue pv = new ParameterValue();
-                                    pv.Name = paramName;
-                                    pv.Value = value;
-                                    list.Add(pv);
+                                    if ((paramType != "String") && value.Trim() == "")
+                                    {
+                                        // do nothing
+                                    }
+                                    else
+                                    {
+                                        ParameterValue pv = new ParameterValue();
+                                        pv.Name = paramName;
+                                        pv.Value = value;
+                                        list.Add(pv);
+                                    }
                                 }
                             }
                         }

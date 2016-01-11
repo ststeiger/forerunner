@@ -9,11 +9,9 @@ $(function () {
         //forerunner.config.enableCORSWithCredentials = true;
 
         forerunner.config.initialize(function () {
-            me.explorer = $("body").reportExplorerEZ({
-                
-            });           
+            me.explorer = $("body").reportExplorerEZ({                
+        });
 
         });
-        
     });
 });

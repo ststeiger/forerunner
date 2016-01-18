@@ -427,29 +427,13 @@ ORDER BY CategoryID</CommandText>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>1</Value>
         </Values>
       </DefaultValue>
       <Prompt>CategoryID</Prompt>
-      <Hidden>true</Hidden>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Test1</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Test2</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>Test3</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="ProductName">
@@ -460,7 +444,6 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>ProductName</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
         <DataSetReference>
           <DataSetName>DataSet1</DataSetName>
@@ -483,13 +466,13 @@ ORDER BY CategoryID</CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductionDate">
       <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>01/01/2001 00:00:00</Value>
         </Values>
       </DefaultValue>
       <Prompt>ProductionDate</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
       <DataType>String</DataType>
@@ -500,41 +483,21 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>IntegerTest</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
     <ReportParameter Name="MultipleValues">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>1</Value>
         </Values>
       </DefaultValue>
       <Prompt>MultipleValues</Prompt>
-      <Hidden>true</Hidden>
       <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Test1</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Test2</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>Test3</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>4</Value>
-            <Label>Test4</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>selected</Value>
-            <Label>&lt;ALL SERVICES&gt;</Label>
-          </ParameterValue>
-        </ParameterValues>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>CategoryID</ValueField>
+          <LabelField>ProductName</LabelField>
+        </DataSetReference>
       </ValidValues>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
@@ -546,7 +509,6 @@ ORDER BY CategoryID</CommandText>
         </Values>
       </DefaultValue>
       <Prompt>FloatTest</Prompt>
-      <Hidden>true</Hidden>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

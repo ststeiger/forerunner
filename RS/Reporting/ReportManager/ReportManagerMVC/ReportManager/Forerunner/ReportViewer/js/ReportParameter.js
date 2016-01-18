@@ -617,6 +617,8 @@ $(function () {
             if (!$parent.hasClass("fr-param-tree-hidden")) {
                 if (param.ValidValues === "") {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
+                    //Hook up null check box to dependency
+                    me._checkDependencies(param);
                 }
 
                 //Add use default option
@@ -2396,6 +2398,18 @@ $(function () {
                     $targetElement.on("change", function () {
                         me._refreshParameters(null, true, dependence);
                     });
+
+                    //if nullable hookup null check box also                    
+                    var $targetElementNull = $(".fr-null-checkbox", $targetElement.parent().parent()).not("[type='hidden']");
+                    if ($targetElementNull.length === 1) {
+
+                        $targetElementNull.on("change", function () {
+                            if ($(this).is(":checked")) {
+                                me._refreshParameters(null, true, dependence);
+                            }
+                        });
+                    }
+
                 });
             }
 

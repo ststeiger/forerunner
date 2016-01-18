@@ -496,7 +496,10 @@ namespace Forerunner
                         w.WriteString(item.Label);
                         //change key from 'Value' to 'value' to adapt jquery.ui auto complete
                         w.WriteMember("Value");
-                        w.WriteString(item.Value);
+                        if (item.Value == null)
+                            w.WriteNull();
+                        else
+                            w.WriteString(item.Value);
                         w.WriteEndObject();
                     }
                     w.WriteEndArray();

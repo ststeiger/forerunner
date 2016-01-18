@@ -13,7 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-
+    var nullPlaceHolder = "**ThisIsNull**";
 
     /**
      * Widget used to manage report parameters
@@ -1093,7 +1093,15 @@ $(function () {
                 position: { of: $container },
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+                    
+                    if (obj.item.value === null) {
+                        $control.attr("backendValue", nullPlaceHolder).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+                    }
+                    else {
+                        $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+                    }
+                        
+
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -2267,7 +2275,7 @@ $(function () {
             if (me._isNullChecked(param)) {
                 return null;
             } else if ($param.hasClass("fr-param-tree-hidden-input")) {
-                if ($param.attr("backendValue") === "" && $param.attr("nullable") === "true") {
+                if ($param.attr("backendValue") === nullPlaceHolder && $param.attr("nullable") === "true") {
                     return null;
                 }
                 return $param.attr("backendValue");
@@ -2276,6 +2284,9 @@ $(function () {
                 return "";
             } else if (forerunner.helper.hasAttr($param, "backendValue")) {
                 //Take care of the big dropdown list
+                if ($param.attr("backendValue") === nullPlaceHolder && $param.attr("nullable") === "true") {
+                    return null;
+                }
                 return $param.attr("backendValue");
             } else if ($param.attr("datatype").toLowerCase() === "datetime") {
                 var m = moment($param.val(), forerunner.ssr._internal.getMomentDateFormat(), true);

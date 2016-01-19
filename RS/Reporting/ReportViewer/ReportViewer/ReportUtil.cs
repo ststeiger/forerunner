@@ -221,19 +221,29 @@ namespace Forerunner
                             else
                             {
                                 JArray multipleValues = obj["Value"] as JArray;
-                                foreach (String value in multipleValues)
+                                if (multipleValues != null)
                                 {
-                                    if ((paramType != "String") && value.Trim() == "")
+                                    foreach (String value in multipleValues)
                                     {
-                                        // do nothing
+                                        if ((paramType != "String") && value.Trim() == "")
+                                        {
+                                            // do nothing
+                                        }
+                                        else
+                                        {
+                                            ParameterValue pv = new ParameterValue();
+                                            pv.Name = paramName;
+                                            pv.Value = value;
+                                            list.Add(pv);
+                                        }
                                     }
-                                    else
-                                    {
-                                        ParameterValue pv = new ParameterValue();
-                                        pv.Name = paramName;
-                                        pv.Value = value;
-                                        list.Add(pv);
-                                    }
+                                }
+                                else
+                                {
+                                    ParameterValue pv = new ParameterValue();
+                                    pv.Name = paramName;
+                                    pv.Value = null;
+                                    list.Add(pv);
                                 }
                             }
                         }
@@ -499,7 +509,10 @@ namespace Forerunner
                         w.WriteString(item.Label);
                         //change key from 'Value' to 'value' to adapt jquery.ui auto complete
                         w.WriteMember("Value");
-                        w.WriteString(item.Value);
+                        if (item.Value == null)
+                            w.WriteNull();
+                        else
+                            w.WriteString(item.Value);
                         w.WriteEndObject();
                     }
                     w.WriteEndArray();

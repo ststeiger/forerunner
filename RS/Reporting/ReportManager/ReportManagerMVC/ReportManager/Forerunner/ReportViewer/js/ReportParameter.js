@@ -13,7 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-
+    var nullPlaceHolder = "***ThisIsNull***";
 
     /**
      * Widget used to manage report parameters
@@ -707,7 +707,8 @@ $(function () {
 
             $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
 
-            if (param.AllowBlank === false) {
+            //Multi value is always required is SSRS
+            if (param.AllowBlank === false || param.MultiValue === true) {
                 me._addRequiredPrompt(param, $control);
             }
         },
@@ -1077,7 +1078,11 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
+                if ((predefinedValue !== undefined && predefinedValue === param.ValidValues[i].Value)) {
+
+                    if (param.ValidValues[i].Value === null)
+                        param.ValidValues[i].Value = nullPlaceHolder;
+
                     $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
@@ -1096,7 +1101,13 @@ $(function () {
                 position: { of: $container },
                 maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem", 50),
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+
+                    if (obj.item.value === null) {
+                        $control.attr("backendValue", nullPlaceHolder).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+                    }
+                    else {
+                        $control.attr("backendValue", obj.item.value).attr("title", obj.item.label).val(obj.item.label).trigger("change", { item: obj.item.value });
+                    }
                     enterLock = true;
 
                     if (me.getNumOfVisibleParameters() === 1) {
@@ -1932,7 +1943,7 @@ $(function () {
             }
 
             //If the list is empty it is not there
-            if (selectAllCheckbox)
+            if ($selectAllCheckbox)
                 $selectAllCheckbox.prop("checked", allItemsSelected);
 
             $dropDownContainer.append($table);
@@ -2224,7 +2235,7 @@ $(function () {
                         return true;
                     }
 
-                    var shouldInclude = input.value !== null && input.value !== "" && me._shouldInclude(input, noValid);
+                    var shouldInclude = input.value !== null && me._shouldInclude(input, noValid);
 
                     if (shouldInclude) {
                         me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });
@@ -2277,7 +2288,7 @@ $(function () {
             if (me._isNullChecked(param)) {
                 return null;
             } else if ($param.hasClass("fr-param-tree-hidden-input")) {
-                if ($param.attr("backendValue") === "" && $param.attr("nullable") === "true") {
+                if ($param.attr("backendValue") === nullPlaceHolder && $param.attr("nullable") === "true") {
                     return null;
                 }
                 return $param.attr("backendValue");
@@ -2286,6 +2297,9 @@ $(function () {
                 return "";
             } else if (forerunner.helper.hasAttr($param, "backendValue")) {
                 //Take care of the big dropdown list
+                if ($param.attr("backendValue") === nullPlaceHolder && $param.attr("nullable") === "true") {
+                    return null;
+                }
                 return $param.attr("backendValue");
             } else if ($param.attr("datatype").toLowerCase() === "datetime") {
                 var m = moment($param.val(), forerunner.ssr._internal.getMomentDateFormat(me.options.$reportViewer.locData), true);

@@ -15946,7 +15946,7 @@ $(function () {
 
             $control.attr("allowblank", param.AllowBlank).attr("nullable", param.Nullable).attr("ErrorMessage", param.ErrorMessage);
 
-            if (param.AllowBlank === false) {
+            if (param.AllowBlank === false || param.MultiValue === true) {
                 me._addRequiredPrompt(param, $control);
             }
         },
@@ -16315,7 +16315,11 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
+                if ((predefinedValue !== undefined && predefinedValue === param.ValidValues[i].Value)) {
+
+                    if (param.ValidValues[i].Value === null)
+                        param.ValidValues[i].Value = nullPlaceHolder;
+
                     $control.val(param.ValidValues[i].Key).attr("title", param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
@@ -17470,7 +17474,7 @@ $(function () {
                         return true;
                     }
 
-                    var shouldInclude = input.value !== null && input.value !== "" && me._shouldInclude(input, noValid);
+                    var shouldInclude = input.value !== null && me._shouldInclude(input, noValid);
 
                     if (shouldInclude) {
                         me._pushParam(a, $input, { Parameter: input.name, IsMultiple: $input.attr("ismultiple"), Type: $input.attr("datatype"), Value: me._isParamNullable(input) });

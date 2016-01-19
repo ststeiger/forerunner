@@ -219,21 +219,33 @@ namespace Forerunner
                             else
                             {
                                 JsonArray multipleValues = obj["Value"] as JsonArray;
-                                foreach (String value in multipleValues)
+                                if (multipleValues != null)
                                 {
-                                    if ((paramType != "String") && value.Trim() == "")
+                                    foreach (String value in multipleValues)
                                     {
-                                        // do nothing
-                                    }
-                                    else
-                                    {
-                                        ParameterValue pv = new ParameterValue();
-                                        pv.Name = paramName;
-                                        pv.Value = value;
-                                        list.Add(pv);
+                                        if ((paramType != "String") && value.Trim() == "")
+                                        {
+                                            // do nothing
+                                        }
+                                        else
+                                        {
+                                            ParameterValue pv = new ParameterValue();
+                                            pv.Name = paramName;
+                                            pv.Value = value;
+                                            list.Add(pv);
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    ParameterValue pv = new ParameterValue();
+                                    pv.Name = paramName;
+                                    pv.Value = null;
+                                    list.Add(pv);
+                                }
+
                             }
+
                         }
                         else
                         {

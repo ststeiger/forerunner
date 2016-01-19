@@ -575,6 +575,7 @@ $(function () {
 
                     if (param.ValidValues !== "") { // Dropdown box
                         bindingEnter = false;
+
                         $element = forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 20) ?
                             me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
                             me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
@@ -1200,6 +1201,11 @@ $(function () {
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionKey = forerunner.helper.htmlEncode(param.ValidValues[i].Key);
                 var optionValue = param.ValidValues[i].Value;
+
+                //Handle NULL
+                if (param.ValidValues[i].Value === null)
+                    optionValue = nullPlaceHolder;
+
                 var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue)) {
@@ -1931,7 +1937,9 @@ $(function () {
                 $table.append($row);
             }
 
-            $selectAllCheckbox.prop("checked", allItemsSelected);
+            //If the list is empty
+            if ($selectAllCheckbox)
+                $selectAllCheckbox.prop("checked", allItemsSelected);
 
             $dropDownContainer.append($table);
 
@@ -2299,8 +2307,11 @@ $(function () {
                 return $param.filter(":checked").val();
             }
             else {
-                //Otherwise handle the case where the parameter has not been touched
-                return $param.val() !== "" ? $param.val() : null;
+                //Otherwise handle the case where the parameter has not been touched or normal drop down
+                if ($param.val() === nullPlaceHolder)
+                    return null;
+
+                return $param.val();
             }
         },
         _hasValidValues: function (param) {

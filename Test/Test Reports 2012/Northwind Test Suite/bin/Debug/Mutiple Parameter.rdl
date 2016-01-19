@@ -398,6 +398,9 @@
         <CommandText>SELECT        CategoryID, ProductName, UnitPrice, ProductID, Discontinued
 FROM            Products
 WHERE        (CategoryID = @CategoryID)
+
+UNION ALL SELECT null,'*All',1,1,0
+
 ORDER BY CategoryID</CommandText>
       </Query>
       <Fields>
@@ -419,7 +422,7 @@ ORDER BY CategoryID</CommandText>
         </Field>
         <Field Name="Discontinued">
           <DataField>Discontinued</DataField>
-          <rd:TypeName>System.Boolean</rd:TypeName>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -438,6 +441,7 @@ ORDER BY CategoryID</CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>Chai</Value>
@@ -447,7 +451,7 @@ ORDER BY CategoryID</CommandText>
       <ValidValues>
         <DataSetReference>
           <DataSetName>DataSet1</DataSetName>
-          <ValueField>ProductName</ValueField>
+          <ValueField>CategoryID</ValueField>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
       </ValidValues>
@@ -491,6 +495,7 @@ ORDER BY CategoryID</CommandText>
           <Value>1</Value>
         </Values>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>MultipleValues</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -499,6 +504,7 @@ ORDER BY CategoryID</CommandText>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="FloatTest">

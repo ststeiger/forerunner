@@ -16159,6 +16159,8 @@ $(function () {
                 //DOn't show nullable if has valid value list, null would have to be in the list
                 if (param.ValidValues === "") {
                     $optionsDiv.append(me._addNullableCheckBox(param, $element, predefinedValue));
+                    //Hook up null check box to dependency
+                    me._checkDependencies(param);
                 }
 
                 //Add use default option
@@ -16305,12 +16307,13 @@ $(function () {
                 $container.append($checkbox).append($label);
 
                 // Check it only if it is really null, not because nobody touched it
-                if (predefinedValue === null && param.State !== "MissingValidValue") {
+                if (predefinedValue === null && param.State !== "MissingValidValue") {                    
                     if (forerunner.device.isFirefox()) {
                         $checkbox[0].checked = true;
                     }
                     $checkbox.trigger("click");
                 }
+
                 return $container;
             }
             else
@@ -17938,6 +17941,18 @@ $(function () {
                     $targetElement.on("change", function () {
                         me._refreshParameters(null, true, dependence);
                     });
+
+                    //if nullable hookup null check box also                    
+                    var $targetElementNull = $(".fr-null-checkbox", $targetElement.parent().parent()).not("[type='hidden']");
+                    if ($targetElementNull.length ===1 ) {
+                       
+                        $targetElementNull.on("change", function () {
+                            if ($(this).is(":checked")) {
+                                me._refreshParameters(null, true, dependence);
+                            }
+                        });
+                    }
+
                 });
             }
 

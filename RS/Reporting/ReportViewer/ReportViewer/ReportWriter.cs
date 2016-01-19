@@ -295,7 +295,6 @@ namespace Forerunner.SSRS.JSONRender
         }
 
         //Semaphone for Dev sku to limite concurency
-        private static Semaphore _lock = new Semaphore(1, 1);
         public JSONTextWriter RPLToJSON(int NumPages)
         {
 
@@ -311,10 +310,10 @@ namespace Forerunner.SSRS.JSONRender
 //#endif
 
             LicenseData License = ClientLicense.GetLicense();
-            if (License.SKU.IndexOf("Dev") >= 0 && !_lock.WaitOne(1))
-                    throw LicenseException.GetException(LicenseException.FailReason.InitializationFailure, "Too Many connections on Dev License");
-                else if (License.SKU.IndexOf("Dev") >= 0)
-                    Thread.Sleep(500);
+           
+            //slow down dev SKU, so not nice in production env
+            if (License.SKU.IndexOf("Dev") >= 0)
+                Thread.Sleep(500);
             try
             {
                 RPL.position = 0;
@@ -389,8 +388,7 @@ namespace Forerunner.SSRS.JSONRender
             }
             finally
             {
-                if (!_lock.WaitOne(0))
-                    _lock.Release();
+
             }
 
         }

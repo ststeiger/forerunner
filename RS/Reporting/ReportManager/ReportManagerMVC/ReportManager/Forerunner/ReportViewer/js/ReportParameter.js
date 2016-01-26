@@ -5,6 +5,7 @@
 
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
+var moment = moment || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};

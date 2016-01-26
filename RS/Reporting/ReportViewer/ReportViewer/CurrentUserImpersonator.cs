@@ -41,7 +41,7 @@ namespace Forerunner.Security
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {

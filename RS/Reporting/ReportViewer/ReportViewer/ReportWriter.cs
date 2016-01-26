@@ -299,8 +299,6 @@ namespace Forerunner.SSRS.JSONRender
 //#endif
 
             LicenseData License = ClientLicense.GetLicense();
-            if (License.SKU.IndexOf("Dev") >= 0)
-                    Thread.Sleep(500);
 
             RPL.position = 0;
 

@@ -1551,7 +1551,7 @@ namespace Forerunner.SSRS.Manager
                 //Need to try catch and return error
                 return getReturnSuccess();
             }
-            catch (Exception e) {
+            catch (Exception ) {
                 return getReturnFailed();
             }
             finally

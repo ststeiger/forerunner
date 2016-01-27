@@ -15773,7 +15773,7 @@ $(function () {
                     return param.DefaultValues;
             }
 
-            return null;
+            return undefined;
         },
         _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
@@ -16153,7 +16153,7 @@ $(function () {
                 else {
                     me._getParameterControlProperty(param, $radioItem);
 
-                    if (predefinedValue && predefinedValue === radioValues[i].value) {
+                    if (predefinedValue !== undefined && predefinedValue === radioValues[i].value) {
                         $radioItem.attr("checked", true);
                     }
 
@@ -16453,7 +16453,7 @@ $(function () {
 
                 var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
-                if ((predefinedValue && predefinedValue === optionValue)) {
+                if ((predefinedValue !== undefined && predefinedValue === optionValue)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
@@ -16928,7 +16928,7 @@ $(function () {
             var valids = param.ValidValues;
             var i;
 
-            if (predefinedValue) {
+            if (predefinedValue !== undefined) {
                 if (param.MultiValue) {
                     var keys = [];
                     for ( i = 0; i < valids.length; i++) {
@@ -17131,7 +17131,7 @@ $(function () {
                     $selectAllCheckbox = $checkbox;
                 }
 
-                if (predefinedValue && me._contains(predefinedValue, value)) {
+                if (predefinedValue !=- undefined && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
                     keys += key + ",";
                     values += value + ",";
@@ -17189,7 +17189,7 @@ $(function () {
             $dropDownContainer.append($table);
 
             //If default value is not valid then dont set it as value
-            if (predefinedValue && me._containsSome(predefinedValue, param.ValidValues)) {
+            if (predefinedValue !== undefined && me._containsSome(predefinedValue, param.ValidValues)) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
                 $hiddenCheckBox.val(JSON.stringify(predefinedValue));               
             }
@@ -17232,7 +17232,7 @@ $(function () {
 
             var $textarea = new $("<textarea class='fr-param-dropdown-textarea fr-paramname-" + param.Name + "-dropdown-textArea' />");
 
-            if (predefinedValue) {
+            if (predefinedValue !== undefined) {
                 $textarea.val(me._getTextAreaValue(predefinedValue, true));
                 $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false)).attr("title", me._getTextAreaValue(predefinedValue, false));
                 $multipleTextArea.attr("jsonValues", JSON.stringify(predefinedValue));

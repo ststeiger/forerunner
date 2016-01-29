@@ -15920,7 +15920,7 @@ $(function () {
                 $control = $element || $(".fr-paramname-" + param.Name, me.$params);
                 // Only non-multi-value parameters can be nullable.
                 if (param.Nullable && defaultValue === null) {
-                    var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + param.Name + "']").first();
+                    var $cb = $(".fr-param-checkbox", me.$params).filter("[name='" + param.Name + "']").first();
                     if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
                         $cb.trigger("click");
                 } else if (param.ValidValues !== "") {

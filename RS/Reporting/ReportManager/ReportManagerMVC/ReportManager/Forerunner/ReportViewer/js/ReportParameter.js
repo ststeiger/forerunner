@@ -1891,7 +1891,7 @@ $(function () {
                     $selectAllCheckbox = $checkbox;
                 }
 
-                if (predefinedValue !=- undefined && me._contains(predefinedValue, value)) {
+                if (predefinedValue !== undefined && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
                     keys += key + ",";
                     values += value + ",";
@@ -2277,7 +2277,7 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            var $cb = $(".fr-null-checkbox", this.$params).filter("[name='" + param.name + "']").first();
             return $cb.length !== 0 && $cb.prop("checked");
         },
         _isParamNullable: function (param) {

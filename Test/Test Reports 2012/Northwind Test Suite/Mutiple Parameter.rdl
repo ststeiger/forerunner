@@ -492,10 +492,9 @@ ORDER BY CategoryID</CommandText>
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>1</Value>
+          <Value>123456</Value>
         </Values>
       </DefaultValue>
-      <AllowBlank>true</AllowBlank>
       <Prompt>MultipleValues</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -505,7 +504,7 @@ ORDER BY CategoryID</CommandText>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
-      <UsedInQuery>True</UsedInQuery>
+      <UsedInQuery>False</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="FloatTest">
       <DataType>String</DataType>

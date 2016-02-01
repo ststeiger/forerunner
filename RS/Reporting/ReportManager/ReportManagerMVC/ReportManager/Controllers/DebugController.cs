@@ -17,12 +17,6 @@ namespace ReportManager.Controllers
         //
         // GET: /
 
-        [AllowAnonymous]
-        public ActionResult Auth()
-        {
-            return View();
-        }
-
         public ActionResult Index()
         {
             return View();

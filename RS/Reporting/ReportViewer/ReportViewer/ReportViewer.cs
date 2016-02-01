@@ -18,6 +18,8 @@ using Forerunner.SSRS.Manager;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using System.Collections.Generic;
+using System.Xml;
+using Newtonsoft.Json;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -1076,11 +1078,39 @@ namespace Forerunner.SSRS.Viewer
             if (ExportType == "WORDOPENXML" && GetServerInfo().GetVersionNumber() < 2011)
                 ExportType = "WORD";
 
+            bool isJSONData = false;
+            if (ExportType == "JSONDATA")
+            {
+                ExportType = "XML";
+                isJSONData = true;
+                devInfo = @"<DeviceInfo><OmitSchema>true</OmitSchema></DeviceInfo>";
+            }
+
+
             if (devInfo == null)
             {
                 devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
             }
             result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
+            FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
+
+            if (isJSONData)
+            {
+                XmlDocument doc = new XmlDocument();
+                string xml = System.Text.Encoding.UTF8.GetString(result);
+                doc.Load(new MemoryStream(result));
+                doc.DocumentElement.Attributes.RemoveNamedItem("xmlns");
+
+                StringBuilder json = new StringBuilder(JsonConvert.SerializeXmlNode(doc,Newtonsoft.Json.Formatting.None,false));
+
+                //Remove the @ for attributes
+                json.Replace(",\"@", ",\"").Replace("{\"@", "{\"");
+                //Remove the XML header, it is always 44 chars
+                json.Remove(1, 44);
+
+                result = Encoding.UTF8.GetBytes(json.ToString());
+                Extension = "json";
+            }
             FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
             return result;
        

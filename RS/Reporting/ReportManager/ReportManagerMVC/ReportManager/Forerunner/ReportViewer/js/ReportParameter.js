@@ -5,6 +5,7 @@
 
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
+var moment = moment || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
@@ -680,7 +681,7 @@ $(function () {
                 $control = $element || $(".fr-paramname-" + param.Name, me.$params);
                 // Only non-multi-value parameters can be nullable.
                 if (param.Nullable && defaultValue === null) {
-                    var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + param.Name + "']").first();
+                    var $cb = $(".fr-param-checkbox", me.$params).filter("[name='" + param.Name + "']").first();
                     if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
                         $cb.trigger("click");
                 } else if (param.ValidValues !== "") {
@@ -1131,7 +1132,8 @@ $(function () {
                         $control.removeClass("fr-param-autocomplete-error");
                     }
 
-                    $control.val() !== "" && $control.valid();
+                    if ($control.val() !== "")
+                        $control.valid();
                 },
                 change: function (event, obj) {
                     if (!obj.item) {
@@ -2277,7 +2279,7 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var $cb = $(".fr-null-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            var $cb = $(".fr-null-checkbox", this.$params).filter("[name='" + param.name + "']").first();
             return $cb.length !== 0 && $cb.prop("checked");
         },
         _isParamNullable: function (param) {
@@ -2532,7 +2534,7 @@ $(function () {
                 var len = children.length;
                 //build a dynamic regular expression to replace the child parameters with empty in cascading case.
                 for (var i = 0; i < len; i++) {
-                    pattern = new RegExp("\{\"Parameter\":\"" + children[i] + "\".+?\},?", ["g"]);
+                    pattern = new RegExp("{\"Parameter\":\"" + children[i] + "\".+?},?", ["g"]);
 
                     result = paramList.replace(pattern, "");
 

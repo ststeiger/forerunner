@@ -15356,9 +15356,12 @@ $(function () {
          */
         updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam, paramMetadata) {
             var me = this;
+
+            //Determin in cascading tree
+            var $li = me.element.find(".fr-param-tree-loading");
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
-            if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
-                var $li = me.element.find(".fr-param-tree-loading");
+            if ($li.length !==0) {
+                
                 me._dataPreprocess(data.ParametersList);
                 var level = $li.parent("ul").attr("level");
 
@@ -15787,12 +15790,18 @@ $(function () {
             var $element = null;
             var useDefaultParam = paramMetadata || param;
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
+            //Add RDL Ext override for cascading tree
+            if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
+                me._parameterDefinitions[param.Name].enableCascadingTree = false;
+            else
+                me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true) {
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
                 $parent.addClass("fr-param-tree-hidden");
@@ -16569,6 +16578,10 @@ $(function () {
 
                 for (var i = 0; i < length; i++) {
                     var isDefault = false;
+
+                    if (param.ValidValues[i].Value === null)
+                        param.ValidValues[i].Value = nullPlaceHolder;
+
                     if (predefinedValue) {
                         if (param.MultiValue) {
                             if (me._contains(predefinedValue, param.ValidValues[i].Value)) {

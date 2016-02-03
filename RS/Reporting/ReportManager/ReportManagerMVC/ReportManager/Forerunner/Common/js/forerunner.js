@@ -1715,7 +1715,7 @@ $(function () {
         _languageList: null,
  
 
-        _getaLangDataFile: function(locFileLocation,langOnly, index,done){
+        _getaLangDataFile: function (locFileLocation, langOnly, index, dataType,done) {
             var me = this;
             var lang;
 
@@ -1726,19 +1726,19 @@ $(function () {
                 lang = lang.substring(0, 2);
 
             if (done) {
-                me._loadFile(locFileLocation, lang, "json", function (file) {
+                me._loadFile(locFileLocation, lang, dataType, function (file) {
                     if (file)
                         done(file);
                     else if (index < me._languageList.length)
-                        me._getaLangDataFile(locFileLocation, langOnly, index + 1, done);
+                        me._getaLangDataFile(locFileLocation, langOnly, index + 1,dataType, done);
                 });
             }
             else {
-                var locData = me._loadFile(locFileLocation, lang);
+                var locData = me._loadFile(locFileLocation, lang,dataType);
                 if (locData)
                     return locData;
                 else if (index < me._languageList.length)
-                    return me._getaLangDataFile(locFileLocation, langOnly, index + 1);
+                    return me._getaLangDataFile(locFileLocation, langOnly, index + 1, dataType);
             }
                 
         },
@@ -1767,15 +1767,15 @@ $(function () {
                 var lang;
                 
                 if (done) {
-                    me._getaLangDataFile(locFileLocation, false, 0, function (langFile) {
+                    me._getaLangDataFile(locFileLocation, false, 0, dataType, function (langFile) {
                         if (langFile)
                             done(langFile);
                         else
-                            me._getaLangDataFile(locFileLocation, true, 0, function (langFile) {
+                            me._getaLangDataFile(locFileLocation, true, 0, dataType, function (langFile) {
                                 if (langFile)
                                     done(langFile);
                                 else
-                                    me._loadFile(locFileLocation, "en", "json", function (langfile) {
+                                    me._loadFile(locFileLocation, "en", dataType, function (langfile) {
                                         done(langFile);
                                     });
 
@@ -1783,14 +1783,15 @@ $(function () {
                     });
                 }
                 else {
-                    langData = me._getaLangDataFile(locFileLocation, false, 0);
+                    langData = me._getaLangDataFile(locFileLocation, false, 0, dataType);
                     if (langData)
                         return langData;
                     else
-                        langData = me._getaLangDataFile(locFileLocation, true, 0);
+                        langData = me._getaLangDataFile(locFileLocation, true, 0, dataType);
 
                     if (!langData)
-                        langData = me._loadFile(locFileLocation, "en");
+                        langData = me._loadFile(locFileLocation, "en", dataType);
+                    return langData;
                 }
                                
             };
@@ -1891,7 +1892,7 @@ $(function () {
                 me._locData[locFileLocation] = {};
 
             var doAsync = false;
-            if (forerunner.config._initAsync === true)
+            if (done)
                 doAsync = true;
 
 

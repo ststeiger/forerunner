@@ -44,7 +44,9 @@ FROM            Categories</CommandText>
         </QueryParameters>
         <CommandText>SELECT        ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued
 FROM            Products
-WHERE        (CategoryID IN (@CatID))</CommandText>
+WHERE        (CategoryID IN (@CatID))
+UNION
+SELECT        NULL AS Expr1, 'All' AS Expr2, NULL AS Expr3, NULL AS Expr4, NULL AS Expr5, NULL AS Expr6, NULL AS Expr7, NULL AS Expr8, NULL AS Expr9, NULL AS Expr10</CommandText>
       </Query>
       <Fields>
         <Field Name="ProductID">
@@ -101,7 +103,8 @@ WHERE        (CategoryID IN (@CatID))</CommandText>
                          Orders.ShipRegion, Orders.ShipPostalCode, Orders.ShipCountry
 FROM            Orders INNER JOIN
                          [Order Details] ON Orders.OrderID = [Order Details].OrderID
-WHERE        ([Order Details].ProductID IN (@Product))</CommandText>
+WHERE        ([Order Details].ProductID IN (@Product)) OR
+                         (@Product IS NULL)</CommandText>
       </Query>
       <Fields>
         <Field Name="OrderID">
@@ -479,7 +482,7 @@ WHERE        OrderID IN (@Orders)</CommandText>
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Globals!ReportName</Value>
+                    <Value>=Globals!ReportServerUrl</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>

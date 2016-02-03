@@ -4639,7 +4639,7 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
                 if (toolInfo.tooltip) {
                     $tool.attr("title", toolInfo.tooltip);
                 }
@@ -6546,10 +6546,7 @@ $(function () {
             var me = this;
 
             var locData = forerunner.localize;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text", function (loc) {
-                me.dashboardDef.template = loc;
-            });
-
+            me.dashboardDef.template = forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text");
         },
 
     };
@@ -7349,7 +7346,7 @@ $(function () {
             if (me.$sfForm.valid()) {
                 var name = $.trim(me._itemName);
                 var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
-                var priorSearchFolder = JSON.parse(me._searchFolder);
+                var priorSearchFolder = forerunner.helper.JSONParse(me._searchFolder);
 
                 if (tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");
@@ -11556,7 +11553,7 @@ $(function () {
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = "''" + $.trim(tagsList[i]) + "''";
+                    tagsList[i] =  $.trim(tagsList[i]) ;
                 }
 
                 var searchfolder = {
@@ -15656,8 +15653,10 @@ $(function () {
          */
         updateParameterPanel: function (data, submitForm, pageNum, renderParamArea, isCascading, savedParam, paramMetadata) {
             var me = this;
+            
+            var $li = me.element.find(".fr-param-tree-loading");
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
-            if (isCascading && me._isDropdownTree && me.enableCascadingTree) {
+            if ($li.length !==0) {
                 var $li = me.element.find(".fr-param-tree-loading");
                 me._dataPreprocess(data.ParametersList);
                 var level = $li.parent("ul").attr("level");
@@ -16073,7 +16072,7 @@ $(function () {
                     return param.DefaultValues;
             }
 
-            return null;
+            return undefined;
         },
         _writeParamControl: function (param, $parent, pageNum, paramMetadata) {
             var me = this;
@@ -16087,12 +16086,18 @@ $(function () {
             var $element = null;
             var useDefaultParam = paramMetadata || param;
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true) {
+            //Add RDL Ext override for cascading tree
+            if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
+                me._parameterDefinitions[param.Name].enableCascadingTree = false;
+            else
+                me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true) {
+            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
                 $parent.addClass("fr-param-tree-hidden");
@@ -16871,6 +16876,10 @@ $(function () {
 
                 for (var i = 0; i < length; i++) {
                     var isDefault = false;
+
+                    if (param.ValidValues[i].Value === null)
+                        param.ValidValues[i].Value = nullPlaceHolder;
+
                     if (predefinedValue) {
                         if (param.MultiValue) {
                             if (me._contains(predefinedValue, param.ValidValues[i].Value)) {
@@ -21087,7 +21096,7 @@ $(function () {
 
             //var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var dashboards;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards", "json", function (loc) {
                 dashboards = loc;
 
                 var templates = dashboards.templates;
@@ -21100,8 +21109,6 @@ $(function () {
         _init: function () {
             var me = this;
             
-            me.createDashboard = locData.getLocData().createDashboard;
-
             // Reinitialize the fields
             me.$dashboardName.val("");
             me.$overwrite.prop({ checked: false });
@@ -21109,11 +21116,12 @@ $(function () {
         _create: function () {
             var me = this;
 
+            me.createDashboard = locData.getLocData().createDashboard;
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", me.createDashboard.title, "fr-cdb-cancel", me.createDashboard.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -21122,7 +21130,7 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardName + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.dashboardName + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     // Dashboard name
@@ -21132,7 +21140,7 @@ $(function () {
                             "</tr>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardTemplate + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.dashboardTemplate + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     // Layout Template 
@@ -21142,7 +21150,7 @@ $(function () {
                             "</tr>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.overwrite + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.overwrite + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     "<input class='fr-cdb-overwrite-id fr-cdb-overwrite-checkbox' type='checkbox'/>" +
@@ -21152,7 +21160,7 @@ $(function () {
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + me.createDashboard.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -21170,7 +21178,7 @@ $(function () {
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
 
-            me.$dashboardName.watermark(createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.$dashboardName.watermark(me.createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -21222,9 +21230,9 @@ $(function () {
             }
 
             if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), me.createDashboard.title);
             } else {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, me.createDashboard.title);
             }
         },
         /**
@@ -29319,12 +29327,12 @@ $(function () {
 
             me._super();
 
-            if (!me.options.title) me.options.title = reportProperties.title;
+            if (!me.options.title) me.options.title = me.reportProperties.title;
 
             me.$form.addClass("fr-rp-form");
 
             var $main = $(
-                "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
+                "<input name='add' type='button' value='" + me.reportProperties.removeReport + "' title='" + me.reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                 // Dropdown container
                 "<div class='fr-rp-dropdown-container'>" +
                     "<input type='text' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' autofocus='autofocus' readonly='readonly' allowblank='false' nullable='false'/>" +
@@ -29338,20 +29346,20 @@ $(function () {
                     "<tr>" +
                         "<td>" +
                             "<h3>" +
-                                "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                "<label class='fr-rp-label fr-rp-section-separator'>" + me.reportProperties.toolbar + "</label>" +
                             "</h3>" +
                         "</td>" +
                     "</tr>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.hideToolbar + "</label>" +
                             "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.minimal + "</label>" +
                             "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.full + "</label>" +
                             "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                     "<tr>" +
@@ -29392,7 +29400,7 @@ $(function () {
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-            me.$reportInput.watermark(reportProperties.selectReport, forerunner.config.getWatermarkConfig());
+            me.$reportInput.watermark(me.reportProperties.selectReport, forerunner.config.getWatermarkConfig());
             me.$reportInput.off("click");
             me.$reportInput.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);

@@ -108,10 +108,7 @@ $(function () {
             var me = this;
 
             var locData = forerunner.localize;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text", function (loc) {
-                me.dashboardDef.template = loc;
-            });
-
+            me.dashboardDef.template = forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/" + templateName,"text");
         },
 
     };

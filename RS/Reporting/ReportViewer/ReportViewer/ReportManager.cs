@@ -1553,7 +1553,7 @@ namespace Forerunner.SSRS.Manager
                     c.Description = SQLReader.IsDBNull(4) ? "" : SQLReader.GetString(4);
                     c.MimeType = SQLReader.IsDBNull(5) ? "" : SQLReader.GetString(5);
                     c.Type = (ItemTypeEnum)SQLReader.GetInt32(6);
-                    c.Hidden = SQLReader.GetBoolean(7);
+                    c.Hidden = SQLReader.IsDBNull(7) ? false : SQLReader.GetBoolean(7);
                     list.Add(c);
 
                 }
@@ -2699,14 +2699,25 @@ namespace Forerunner.SSRS.Manager
 
         private Dictionary<string,byte[]> LocFiles = new Dictionary<string,byte[]>();
         static private string LocFileFolder = ConfigurationManager.AppSettings["Forerunner.LocFileFolder"];
+        static private string DashboardLocFileFolder = ConfigurationManager.AppSettings["Forerunner.DashboardLocFileFolder"];
 
         public byte[] ReadMobilizerLocFile(string path)
         {
+            string FileFolder = null;
+
             if (LocFileFolder == null || LocFileFolder == "")
                 LocFileFolder = "forerunner/reportViewer/Loc/";
 
+            if (DashboardLocFileFolder == null || DashboardLocFileFolder == "")
+                DashboardLocFileFolder = "forerunner/Dashboard/Dashboards/";
+
+            if (path.IndexOf("Dashboard") >= 0)
+                FileFolder = DashboardLocFileFolder;
+            else
+                FileFolder = LocFileFolder;
+
             byte[] result = null;
-            string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + LocFileFolder + Path.GetFileName(path);
+            string filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/") + FileFolder + Path.GetFileName(path);
 
             if (!LocFiles.TryGetValue(filePath, out result))
             {

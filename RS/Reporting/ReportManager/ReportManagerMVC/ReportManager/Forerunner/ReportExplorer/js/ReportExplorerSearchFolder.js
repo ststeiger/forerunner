@@ -124,7 +124,7 @@ $(function () {
                 var tagsList = tags.split(",");
 
                 for (var i = 0; i < tagsList.length; i++) {
-                    tagsList[i] = "''" + $.trim(tagsList[i]) + "''";
+                    tagsList[i] =  $.trim(tagsList[i]) ;
                 }
 
                 var searchfolder = {

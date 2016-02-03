@@ -441,7 +441,6 @@ ORDER BY CategoryID</CommandText>
     </ReportParameter>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
-      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>1</Value>
@@ -455,6 +454,7 @@ ORDER BY CategoryID</CommandText>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
       </ValidValues>
+      <MultiValue>true</MultiValue>
       <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="IsCheap">
@@ -490,6 +490,7 @@ ORDER BY CategoryID</CommandText>
     </ReportParameter>
     <ReportParameter Name="MultipleValues">
       <DataType>String</DataType>
+      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>123456</Value>
@@ -503,8 +504,6 @@ ORDER BY CategoryID</CommandText>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
       </ValidValues>
-      <MultiValue>true</MultiValue>
-      <UsedInQuery>False</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="FloatTest">
       <DataType>String</DataType>

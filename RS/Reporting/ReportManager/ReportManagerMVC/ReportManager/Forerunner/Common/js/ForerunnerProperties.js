@@ -667,7 +667,7 @@ $(function () {
             if (me.$sfForm.valid()) {
                 var name = $.trim(me._itemName);
                 var tags = $.trim(me.$sfForm.find(".fr-sf-foldertags").val());
-                var priorSearchFolder = JSON.parse(me._searchFolder);
+                var priorSearchFolder = forerunner.helper.JSONParse(me._searchFolder);
 
                 if (tags !== priorSearchFolder.tags) {
                     var tagsList = tags.split(",");

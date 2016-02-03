@@ -50,12 +50,12 @@ $(function () {
 
             me._super();
 
-            if (!me.options.title) me.options.title = reportProperties.title;
+            if (!me.options.title) me.options.title = me.reportProperties.title;
 
             me.$form.addClass("fr-rp-form");
 
             var $main = $(
-                "<input name='add' type='button' value='" + reportProperties.removeReport + "' title='" + reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
+                "<input name='add' type='button' value='" + me.reportProperties.removeReport + "' title='" + me.reportProperties.removeReport + "' class='fr-rp-remove-report-id fr-rp-action-button fr-core-dialog-button'/>" +
                 // Dropdown container
                 "<div class='fr-rp-dropdown-container'>" +
                     "<input type='text' class='fr-rp-report-input-id fr-rp-text-input fr-core-input fr-core-cursorpointer' autofocus='autofocus' readonly='readonly' allowblank='false' nullable='false'/>" +
@@ -69,20 +69,20 @@ $(function () {
                     "<tr>" +
                         "<td>" +
                             "<h3>" +
-                                "<label class='fr-rp-label fr-rp-section-separator'>" + reportProperties.toolbar + "</label>" +
+                                "<label class='fr-rp-label fr-rp-section-separator'>" + me.reportProperties.toolbar + "</label>" +
                             "</h3>" +
                         "</td>" +
                     "</tr>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.hideToolbar + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.hideToolbar + "</label>" +
                             "<input class='fr-rp-hide-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.minimal + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.minimal + "</label>" +
                             "<input class='fr-rp-minimal-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                         "<td>" +
-                            "<label class='fr-rp-label fr-rp-separator'>" + reportProperties.full + "</label>" +
+                            "<label class='fr-rp-label fr-rp-separator'>" + me.reportProperties.full + "</label>" +
                             "<input class='fr-rp-full-toolbar-id fr-rp-checkbox' name='hideToolbar' type='checkbox'/>" +
                         "</td>" +
                     "<tr>" +
@@ -123,7 +123,7 @@ $(function () {
             });
 
             me.$reportInput = me.element.find(".fr-rp-report-input-id");
-            me.$reportInput.watermark(reportProperties.selectReport, forerunner.config.getWatermarkConfig());
+            me.$reportInput.watermark(me.reportProperties.selectReport, forerunner.config.getWatermarkConfig());
             me.$reportInput.off("click");
             me.$reportInput.on("click", function (e) {
                 me._onClickTreeDropdown.apply(me, arguments);

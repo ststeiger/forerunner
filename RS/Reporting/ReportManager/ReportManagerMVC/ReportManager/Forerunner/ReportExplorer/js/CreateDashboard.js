@@ -50,7 +50,7 @@ $(function () {
 
             //var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
             var dashboards;
-            forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
+            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards", "json", function (loc) {
                 dashboards = loc;
 
                 var templates = dashboards.templates;
@@ -63,8 +63,6 @@ $(function () {
         _init: function () {
             var me = this;
             
-            me.createDashboard = locData.getLocData().createDashboard;
-
             // Reinitialize the fields
             me.$dashboardName.val("");
             me.$overwrite.prop({ checked: false });
@@ -72,11 +70,12 @@ $(function () {
         _create: function () {
             var me = this;
 
+            me.createDashboard = locData.getLocData().createDashboard;
             me.element.html("");
             me.element.off(events.modalDialogGenericSubmit);
             me.element.off(events.modalDialogGenericCancel);
 
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", createDashboard.title, "fr-cdb-cancel", createDashboard.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-createdashboard", me.createDashboard.title, "fr-cdb-cancel", me.createDashboard.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -85,7 +84,7 @@ $(function () {
                         "<table>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardName + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.dashboardName + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     // Dashboard name
@@ -95,7 +94,7 @@ $(function () {
                             "</tr>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.dashboardTemplate + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.dashboardTemplate + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     // Layout Template 
@@ -105,7 +104,7 @@ $(function () {
                             "</tr>" +
                             "<tr>" +
                                 "<td>" +
-                                    "<label class='fr-cdb-label'>" + createDashboard.overwrite + "</label>" +
+                                    "<label class='fr-cdb-label'>" + me.createDashboard.overwrite + "</label>" +
                                 "</td>" +
                                 "<td>" +
                                     "<input class='fr-cdb-overwrite-id fr-cdb-overwrite-checkbox' type='checkbox'/>" +
@@ -115,7 +114,7 @@ $(function () {
                         // Submit button
                         "<div class='fr-core-dialog-submit-container'>" +
                             "<div class='fr-core-center'>" +
-                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + createDashboard.submit + "' />" +
+                                "<input autofocus='autofocus' type='button' class='fr-cdb-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + me.createDashboard.submit + "' />" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -133,7 +132,7 @@ $(function () {
             me.$dashboardName = me.element.find(".fr-cdb-dashboard-name");
             me.$overwrite = me.element.find(".fr-cdb-overwrite-id");
 
-            me.$dashboardName.watermark(createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
+            me.$dashboardName.watermark(me.createDashboard.namePlaceholder, forerunner.config.getWatermarkConfig());
 
             me.element.find(".fr-cdb-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -185,9 +184,9 @@ $(function () {
             }
 
             if (result.Exception && result.Exception.DetailMessage.toLowerCase().indexOf("invalid resource name") >= 0) {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.invalidName + result.Exception.DetailMessage.substring(21), me.createDashboard.title);
             } else {
-                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, createDashboard.title);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, locData.getLocData().messages.createFailed, me.createDashboard.title);
             }
         },
         /**

@@ -197,11 +197,9 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
-            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                if (toolInfo.tooltip) {
-                    $tool.attr("title", toolInfo.tooltip);
-                }
-            });
+            if (toolInfo.tooltip) {
+                $tool.attr("title", toolInfo.tooltip());
+            }
             
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);

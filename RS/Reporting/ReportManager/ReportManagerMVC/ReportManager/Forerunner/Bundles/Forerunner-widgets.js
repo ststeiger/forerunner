@@ -4639,11 +4639,9 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
-            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer", "json", function (loc) {
-                if (toolInfo.tooltip) {
-                    $tool.attr("title", toolInfo.tooltip);
-                }
-            });
+            if (toolInfo.tooltip) {
+                $tool.attr("title", toolInfo.tooltip());
+            }
             
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
@@ -21093,18 +21091,14 @@ $(function () {
             var me = this;
 
             me.$select = me.element.find(".fr-cdb-template-name");
+            var dashboards = forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards", "json");
 
-            //var dashboards = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards");
-            var dashboards;
-            forerunner.localize._getLocData(forerunner.config.forerunnerFolder() + "Dashboard/dashboards/dashboards", "json", function (loc) {
-                dashboards = loc;
-
-                var templates = dashboards.templates;
-                for (var key in templates) {
-                    var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
-                    me.$select.append($option);
-                }
-            });
+            var templates = dashboards.templates;
+            for (var key in templates) {
+                var $option = $("<option value=" + key + ">" + templates[key] + "</option>");
+                me.$select.append($option);
+            }
+            
         },
         _init: function () {
             var me = this;

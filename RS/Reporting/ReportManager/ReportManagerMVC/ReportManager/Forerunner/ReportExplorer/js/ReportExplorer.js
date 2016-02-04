@@ -146,7 +146,7 @@ $(function () {
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
-            viewStyle && $item.addClass("fr-explorer-item" + viewStyle);
+            if (viewStyle) $item.addClass("fr-explorer-item" + viewStyle);
             if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
             }
@@ -157,7 +157,7 @@ $(function () {
 
             var $anchor = new $("<div />");
             $anchor.addClass("fr-explorer-item-image-link");
-            viewStyle && $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
+            if (viewStyle) $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -243,7 +243,7 @@ $(function () {
             //Image Block
             var $imageblock = new $("<div />");
             $imageblock.addClass("fr-report-item-image-block");
-            viewStyle && $imageblock.addClass("fr-report-item-image-block" + viewStyle);
+            if (viewStyle) $imageblock.addClass("fr-report-item-image-block" + viewStyle);
             $anchor.append($imageblock);
             var outerImage = new $("<div />");            
             $imageblock.append(outerImage);
@@ -275,7 +275,7 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
-                viewStyle && corner.addClass("fr-explorer-item-earcorner" + viewStyle);
+                if (viewStyle) corner.addClass("fr-explorer-item-earcorner" + viewStyle);
 
                 //only draw the page background when it not hidden
                 if (!catalogItem.Hidden) {
@@ -286,7 +286,7 @@ $(function () {
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
-                viewStyle && innerImage.addClass("fr-report-item-inner-image" + viewStyle);
+                if ( viewStyle) innerImage.addClass("fr-report-item-inner-image" + viewStyle);
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
@@ -314,10 +314,10 @@ $(function () {
             //Caption
             var $caption = new $("<div />");
             $caption.addClass("fr-explorer-caption");
-            viewStyle && $caption.addClass("fr-explorer-caption" + viewStyle);
+            if (viewStyle) $caption.addClass("fr-explorer-caption" + viewStyle);
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
+            if (viewStyle) $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
             if (catalogItem.LocalizedName) {
@@ -332,10 +332,10 @@ $(function () {
             //Description
             var $desc = new $("<div />");
             $desc.addClass("fr-explorer-desc-container");
-            viewStyle && $desc.addClass("fr-explorer-desc-container" + viewStyle);
+            if (viewStyle) $desc.addClass("fr-explorer-desc-container" + viewStyle);
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
+            if (viewStyle) $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
             if (catalogItem.LocalizedDescription) {
@@ -400,7 +400,7 @@ $(function () {
                 }
 
                 me.rmListItems[i] = me._generatePCListItem(catalogItem, isSelected);
-                me.rmListItems[i] && me.$UL.append(me.rmListItems[i]);
+                if (me.rmListItems[i]) me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
             me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
@@ -469,7 +469,7 @@ $(function () {
         _loadIframeDone: function (frame) {
             var me = this;
 
-            me.$reportExplorerContainer.length && me.$reportExplorerContainer.hide();
+            if ( me.$reportExplorerContainer.length) me.$reportExplorerContainer.hide();
             me._setIframeHeight(frame);
 
             me._trigger(events.afterFetch, null, { reportExplorer: me });

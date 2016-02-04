@@ -612,7 +612,7 @@ $(function () {
                     success: function (data) {
                         me._rdl = rdl;
 
-                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = rdl;
+                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = forerunner.helper.JSONParse(rdl);
                         me.property = forerunner.cache.itemProperty[path];
 
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });

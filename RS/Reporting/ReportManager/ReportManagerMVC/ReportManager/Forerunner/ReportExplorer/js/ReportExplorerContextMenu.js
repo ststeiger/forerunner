@@ -232,7 +232,7 @@ $(function () {
                     previous = null;
                 }
 
-                data.isUpdate && me.options.$reportExplorer.reportExplorer("refresh");
+                if (data.isUpdate) me.options.$reportExplorer.reportExplorer("refresh");
             });
             me.closeMenu();
         },

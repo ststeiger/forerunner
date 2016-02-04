@@ -306,7 +306,7 @@ $(function () {
             me.$layer1.hide(function () {
                 me.$operate1.hide();
                 //for edit assign the account to the input and add title to show full text
-                !isNew && me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
+                if (!isNew) me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
 
                 me.$layer2.show().scrollTop(0);
                 me.$operate2.show();
@@ -358,7 +358,10 @@ $(function () {
 
                 me.$layer1.find(".funcBtn").show();
 
-                me.isRoot ? me.$revert.hide() : me.$revert.show();
+                if (me.isRoot)
+                    me.$revert.hide();
+                else
+                    me.$revert.show();
             }
 
             //draw layer-2 later after layer-1 done

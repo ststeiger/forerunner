@@ -298,7 +298,7 @@ $(function () {
 
             if (selectorArr && $.isArray(selectorArr)) {
                 $.each(selectorArr, function (Index, Obj) {
-                    Obj.selectorClass && me.showTool(Obj.selectorClass);
+                    if (Obj.selectorClass) me.showTool(Obj.selectorClass);
                 });
             }
         },

@@ -86,7 +86,7 @@ $(function () {
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
-                data.isSubmit && me._updateBtnStates.call(me);
+                if (data.isSubmit) me._updateBtnStates.call(me);
             });
         },
         _isAdmin: function () {

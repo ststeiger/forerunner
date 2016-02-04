@@ -4740,7 +4740,7 @@ $(function () {
 
             if (selectorArr && $.isArray(selectorArr)) {
                 $.each(selectorArr, function (Index, Obj) {
-                    Obj.selectorClass && me.showTool(Obj.selectorClass);
+                    if (Obj.selectorClass) me.showTool(Obj.selectorClass);
                 });
             }
         },
@@ -7289,7 +7289,7 @@ $(function () {
                     success: function (data) {
                         me._rdl = rdl;
 
-                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = rdl;
+                        forerunner.cache.itemProperty[path].ForerunnerRDLExt = forerunner.helper.JSONParse(rdl);
                         me.property = forerunner.cache.itemProperty[path];
 
                         me.options.$appContainer.trigger(events.saveRDLDone, { newRDL: rdl });
@@ -7733,7 +7733,7 @@ $(function () {
             me.$layer1.hide(function () {
                 me.$operate1.hide();
                 //for edit assign the account to the input and add title to show full text
-                !isNew && me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
+                if (!isNew) me.$groupuser.val(groupuser).attr("title", groupuser).attr("readonly", true);
 
                 me.$layer2.show().scrollTop(0);
                 me.$operate2.show();
@@ -7785,7 +7785,10 @@ $(function () {
 
                 me.$layer1.find(".funcBtn").show();
 
-                me.isRoot ? me.$revert.hide() : me.$revert.show();
+                if (me.isRoot)
+                    me.$revert.hide();
+                else
+                    me.$revert.show();
             }
 
             //draw layer-2 later after layer-1 done
@@ -9751,7 +9754,7 @@ $(function () {
                     previous = null;
                 }
 
-                data.isUpdate && me.options.$reportExplorer.reportExplorer("refresh");
+                if (data.isUpdate) me.options.$reportExplorer.reportExplorer("refresh");
             });
             me.closeMenu();
         },
@@ -10079,7 +10082,7 @@ $(function () {
             var $userSettings = me.options.$appContainer.find(".fr-us-section");
             $userSettings.off(events.userSettingsClose());
             $userSettings.on(events.userSettingsClose(), function (e, data) {
-                data.isSubmit && me._updateBtnStates.call(me);
+                if (data.isSubmit) me._updateBtnStates.call(me);
             });
         },
         _isAdmin: function () {
@@ -10357,7 +10360,7 @@ $(function () {
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
-            viewStyle && $item.addClass("fr-explorer-item" + viewStyle);
+            if (viewStyle) $item.addClass("fr-explorer-item" + viewStyle);
             if (isSelected) {
                 $item.addClass("fr-explorer-item-selcted");
             }
@@ -10368,7 +10371,7 @@ $(function () {
 
             var $anchor = new $("<div />");
             $anchor.addClass("fr-explorer-item-image-link");
-            viewStyle && $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
+            if (viewStyle) $anchor.addClass("fr-explorer-item-image-link" + viewStyle);
             //action
             var action;
             if (catalogItem.Type === 1 || catalogItem.Type === 7) {
@@ -10454,7 +10457,7 @@ $(function () {
             //Image Block
             var $imageblock = new $("<div />");
             $imageblock.addClass("fr-report-item-image-block");
-            viewStyle && $imageblock.addClass("fr-report-item-image-block" + viewStyle);
+            if (viewStyle) $imageblock.addClass("fr-report-item-image-block" + viewStyle);
             $anchor.append($imageblock);
             var outerImage = new $("<div />");            
             $imageblock.append(outerImage);
@@ -10486,7 +10489,7 @@ $(function () {
                 var corner = new $("<div />");
                 $imageblock.append(corner);
                 corner.addClass("fr-explorer-item-earcorner");
-                viewStyle && corner.addClass("fr-explorer-item-earcorner" + viewStyle);
+                if (viewStyle) corner.addClass("fr-explorer-item-earcorner" + viewStyle);
 
                 //only draw the page background when it not hidden
                 if (!catalogItem.Hidden) {
@@ -10497,7 +10500,7 @@ $(function () {
                 $imageblock.append(EarImage);
                 var imageSrc = reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
-                viewStyle && innerImage.addClass("fr-report-item-inner-image" + viewStyle);
+                if ( viewStyle) innerImage.addClass("fr-report-item-inner-image" + viewStyle);
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
                 EarImage.addClass("fr-report-item-image-base");
@@ -10525,10 +10528,10 @@ $(function () {
             //Caption
             var $caption = new $("<div />");
             $caption.addClass("fr-explorer-caption");
-            viewStyle && $caption.addClass("fr-explorer-caption" + viewStyle);
+            if (viewStyle) $caption.addClass("fr-explorer-caption" + viewStyle);
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
-            viewStyle && $captiontext.addClass("fr-explorer-item-title" + viewStyle);
+            if (viewStyle) $captiontext.addClass("fr-explorer-item-title" + viewStyle);
 
             var name = catalogItem.Name;
             if (catalogItem.LocalizedName) {
@@ -10543,10 +10546,10 @@ $(function () {
             //Description
             var $desc = new $("<div />");
             $desc.addClass("fr-explorer-desc-container");
-            viewStyle && $desc.addClass("fr-explorer-desc-container" + viewStyle);
+            if (viewStyle) $desc.addClass("fr-explorer-desc-container" + viewStyle);
             var $desctext = new $("<div />");
             $desctext.addClass("fr-explorer-item-desc");
-            viewStyle && $desctext.addClass("fr-explorer-item-desc" + viewStyle);
+            if (viewStyle) $desctext.addClass("fr-explorer-item-desc" + viewStyle);
 
             var description = catalogItem.Description;
             if (catalogItem.LocalizedDescription) {
@@ -10611,7 +10614,7 @@ $(function () {
                 }
 
                 me.rmListItems[i] = me._generatePCListItem(catalogItem, isSelected);
-                me.rmListItems[i] && me.$UL.append(me.rmListItems[i]);
+                if (me.rmListItems[i]) me.$UL.append(me.rmListItems[i]);
             }
             me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
             me.$UL.find(".fr-explorer-item-desc").multiLineEllipsis();
@@ -10680,7 +10683,7 @@ $(function () {
         _loadIframeDone: function (frame) {
             var me = this;
 
-            me.$reportExplorerContainer.length && me.$reportExplorerContainer.hide();
+            if ( me.$reportExplorerContainer.length) me.$reportExplorerContainer.hide();
             me._setIframeHeight(frame);
 
             me._trigger(events.afterFetch, null, { reportExplorer: me });
@@ -15585,8 +15588,7 @@ $(function () {
         _submittedParamsList: null,
         _parameterDefinitions: null,
         _hasPostedBackWithoutSubmitForm: false,
-        _dependencyList: null,
-        _isDropdownTree: true, // indicate whether apply cascading tree
+        _dependencyList: null,        
         _writeParamDoneCallback: null,        
 
         _init: function () {
@@ -15977,60 +15979,7 @@ $(function () {
                     var index = savedParam.Parameter ? savedParam.Parameter : savedParam.Name;
                     var param = me._parameterDefinitions[index];
                     me._setParamValue(param, savedParam.Value);
-                    //if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
-
-                    //    var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
-                    //    //Revert cascading tree status: display text, backend value, tree UI
-                    //    me._setTreeItemStatus(paramDefinition, savedParam, isTopParent);
-                    //    $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
-                    //    $control.attr("backendValue", JSON.stringify(savedParam.Value));
-                    //    continue;
-                    //}
-
-                    //if (paramDefinition.MultiValue) {
-                    //    if (paramDefinition.ValidValues !== "") {
-                    //        $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
-                    //        me._setCheckBoxes($control, savedParam.Value);
-                    //        me._setMultipleInputValues(paramDefinition);
-                    //    } else {
-                    //        $control = $(".fr-paramname-" + paramDefinition.Name);
-                    //        var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
-                    //        $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
-                    //        $control.val(me._getTextAreaValue(savedParam.Value, false));
-                    //        $control.attr("jsonValues", JSON.stringify(savedParam.Value));
-                    //    }
-                    //} else {
-                    //    $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                    //    // Only non-multi-value parameters can be nullable.
-                    //    if (paramDefinition.Nullable && savedParam.Value === null) {
-                    //        var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                    //        if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
-                    //            $cb.trigger("click");
-                    //    } else if (paramDefinition.ValidValues !== "") {
-                    //        if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
-                    //            me._setSelectedIndex($control, savedParam.Value);
-                    //        }
-                    //        else {
-                    //            me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
-                    //        }
-                    //    } else if (paramDefinition.Type === "Boolean") {
-                    //        me._setRadioButton($control, savedParam.Value);
-                    //    } else {
-                    //        if ($control.attr("datatype").toLowerCase() === "datetime") {
-                    //            $control.val(me._getDateTimeFromDefault(savedParam.Value));
-                    //        }
-                    //        else {
-                    //            $control.val(savedParam.Value);
-                    //        }
-                    //    }
-                    //}
                 }
-
-                //set tree selected status after revert
-                //if (me._isDropdownTree && me.enableCascadingTree) {
-                //    me._closeCascadingTree(true);
-                //}
-
                 me._revertLock = false;
             }
         },
@@ -16084,18 +16033,13 @@ $(function () {
             var $element = null;
             var useDefaultParam = paramMetadata || param;
 
-            //Add RDL Ext override for cascading tree
-            if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
-                me._parameterDefinitions[param.Name].enableCascadingTree = false;
-            else
-                me._parameterDefinitions[param.Name].enableCascadingTree = true;
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
+            if ( me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
+            if ( me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
                 $parent.addClass("fr-param-tree-hidden");
@@ -16198,7 +16142,7 @@ $(function () {
             var me = this;
             var $control;
 
-            if (me._isDropdownTree && me.enableCascadingTree && (param.isParent || param.isChild)) {
+            if (me._parameterDefinitions[param.Name].enableCascadingTree && (param.isParent || param.isChild)) {
                 var isTopParent = param.isParent === true && param.isChild !== true;
                 //Revert cascading tree status: display text, backend value, tree UI
                 me._setTreeItemStatus(param, defaultValue, isTopParent);
@@ -16855,7 +16799,7 @@ $(function () {
             //for dropdown list or dropdown with checkbox
             if (!!param.ValidValues) {
                 var predefinedValue = me._getPredefinedValue(param);
-                var hasChild = !!me._dependencyList[param.Name];
+                var hasChild = me._dependencyList[param.Name].length > 0;
                 var length = param.ValidValues.length;
 
                 $list = new $("<ul />");
@@ -17997,12 +17941,13 @@ $(function () {
             var me = this;
 
             //clean cached data
-            me._parameterDefinitions = null;
-            me._dependencyList = null;
-            me._isDropdownTree = true;
-            $.each(parametersList, function (index, param) {
-                me._parameterDefinitions = me._parameterDefinitions || {};
+            me._parameterDefinitions = {};
+            me._dependencyList = [];           
+            $.each(parametersList, function (index, param) {                
                 me._paramValidation = me._paramValidation || {};
+                if (!me._dependencyList[param.Name]) {
+                   me._dependencyList[param.Name] = [];
+                }
 
                 me._parameterDefinitions[param.Name] = param;
 
@@ -18010,33 +17955,46 @@ $(function () {
                     me._paramValidation[param.Name] = [];
                 }
 
+                //Determin and set if parameter can be a tree control based on RDL Extension and settings
+                if (me.enableCascadingTree === false)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = false;
+                else
+                    me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+                if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = false;
+                else if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === true)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                     /*
                        For cascading tree component, only support 1 to 1 relationship
                        for 1-many, many-1, many-many cases show them in standard mode
                     */
-                    if (me._isDropdownTree && param.Dependencies.length > 1) {
-                        me._isDropdownTree = false;
+
+                    if (param.Dependencies.length !== 1) {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
                     me._dependencyList = me._dependencyList || {};
 
                     me._parameterDefinitions[param.Name].isChild = true;
 
-                    if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
-                        me._isDropdownTree = false;
+                    if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
 
                     //handle the hidden cascading parameter case, but I think it should not never happen.
-                    if (me._isDropdownTree && param.Prompt === "") {
-                        me._isDropdownTree = false;
+                    if (param.Prompt === "") {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
 
                     $.each(param.Dependencies, function (index, dependence) {
                         me._parameterDefinitions[dependence].isParent = true;
                         //now we only support cascading tree to dropdown type, if either parent or children don't have validvalues
                         //then we don't apply tree to the element
-                        if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
-                            me._isDropdownTree = false;
+                        if (me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
+                            me._parameterDefinitions[param.Name].enableCascadingTree = false;
                         }
 
                         //Add dependency relationship, format: _dependencyList: { parent1: [childname1, childname2], ... }
@@ -18048,11 +18006,44 @@ $(function () {
                             me._dependencyList[dependence].push(param.Name);
 
                             if (me._dependencyList[dependence].length > 1) {
-                                me._isDropdownTree = false;
+                                me._parameterDefinitions[dependence].enableCascadingTree = false;
                             }
                         }
                     });
                 }
+            });
+
+
+            //check for all dependencies in the tree, if any are false then all are false
+            var checkTree = function (paramName,direction){
+                var retval = true;
+
+                if (me._parameterDefinitions[paramName].enableCascadingTree === false){
+                    retval = false;
+                }
+                
+                if (retval === true && direction === "down") {
+                    if (me._dependencyList[paramName]) {
+                        for (var j = 0; j < me._dependencyList[paramName].length; j++) {
+                            retval = checkTree(me._dependencyList[paramName][j], direction)
+                            if (retval === false)
+                                break;
+                        }
+                    }
+               } 
+                if (retval === true && direction === "up") {
+                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length;i++){
+                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction)
+                        if (retval === false)
+                            break;
+                    }
+                }
+                return retval;
+            }
+            
+            $.each(me._parameterDefinitions, function (index, param) {
+                if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "up");
+                if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "down");
             });
         },
         //Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied        
@@ -21594,7 +21585,7 @@ $(function () {
             var me = this;
             var $input = new $("<INPUT />");
             $input.attr("type", type);
-            name && $input.attr("name", name);
+            if (name) $input.attr("name", name);
 
             if (placeholder)
                 $input.watermark(placeholder, forerunner.config.getWatermarkConfig());

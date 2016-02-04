@@ -317,7 +317,7 @@ $(function () {
             var me = this;
             var $input = new $("<INPUT />");
             $input.attr("type", type);
-            name && $input.attr("name", name);
+            if (name) $input.attr("name", name);
 
             if (placeholder)
                 $input.watermark(placeholder, forerunner.config.getWatermarkConfig());

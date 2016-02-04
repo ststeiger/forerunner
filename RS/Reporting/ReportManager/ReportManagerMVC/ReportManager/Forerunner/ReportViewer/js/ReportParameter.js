@@ -50,8 +50,7 @@ $(function () {
         _submittedParamsList: null,
         _parameterDefinitions: null,
         _hasPostedBackWithoutSubmitForm: false,
-        _dependencyList: null,
-        _isDropdownTree: true, // indicate whether apply cascading tree
+        _dependencyList: null,        
         _writeParamDoneCallback: null,        
 
         _init: function () {
@@ -442,60 +441,7 @@ $(function () {
                     var index = savedParam.Parameter ? savedParam.Parameter : savedParam.Name;
                     var param = me._parameterDefinitions[index];
                     me._setParamValue(param, savedParam.Value);
-                    //if (me._isDropdownTree && me.enableCascadingTree && (paramDefinition.isParent || paramDefinition.isChild)) {
-
-                    //    var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
-                    //    //Revert cascading tree status: display text, backend value, tree UI
-                    //    me._setTreeItemStatus(paramDefinition, savedParam, isTopParent);
-                    //    $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
-                    //    $control.attr("backendValue", JSON.stringify(savedParam.Value));
-                    //    continue;
-                    //}
-
-                    //if (paramDefinition.MultiValue) {
-                    //    if (paramDefinition.ValidValues !== "") {
-                    //        $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
-                    //        me._setCheckBoxes($control, savedParam.Value);
-                    //        me._setMultipleInputValues(paramDefinition);
-                    //    } else {
-                    //        $control = $(".fr-paramname-" + paramDefinition.Name);
-                    //        var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
-                    //        $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
-                    //        $control.val(me._getTextAreaValue(savedParam.Value, false));
-                    //        $control.attr("jsonValues", JSON.stringify(savedParam.Value));
-                    //    }
-                    //} else {
-                    //    $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                    //    // Only non-multi-value parameters can be nullable.
-                    //    if (paramDefinition.Nullable && savedParam.Value === null) {
-                    //        var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                    //        if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
-                    //            $cb.trigger("click");
-                    //    } else if (paramDefinition.ValidValues !== "") {
-                    //        if (forerunner.device.isTouch() && paramDefinition.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
-                    //            me._setSelectedIndex($control, savedParam.Value);
-                    //        }
-                    //        else {
-                    //            me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
-                    //        }
-                    //    } else if (paramDefinition.Type === "Boolean") {
-                    //        me._setRadioButton($control, savedParam.Value);
-                    //    } else {
-                    //        if ($control.attr("datatype").toLowerCase() === "datetime") {
-                    //            $control.val(me._getDateTimeFromDefault(savedParam.Value));
-                    //        }
-                    //        else {
-                    //            $control.val(savedParam.Value);
-                    //        }
-                    //    }
-                    //}
                 }
-
-                //set tree selected status after revert
-                //if (me._isDropdownTree && me.enableCascadingTree) {
-                //    me._closeCascadingTree(true);
-                //}
-
                 me._revertLock = false;
             }
         },
@@ -549,18 +495,13 @@ $(function () {
             var $element = null;
             var useDefaultParam = paramMetadata || param;
 
-            //Add RDL Ext override for cascading tree
-            if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
-                me._parameterDefinitions[param.Name].enableCascadingTree = false;
-            else
-                me._parameterDefinitions[param.Name].enableCascadingTree = true;
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
+            if ( me._parameterDefinitions[param.Name].isParent === true && me._parameterDefinitions[param.Name].isChild !== true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {            
                 //only apply tree view to dropdown type
                 $element = me._writeCascadingTree(param, predefinedValue);
             }
 
-            if (me._isDropdownTree && me.enableCascadingTree && me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
+            if ( me._parameterDefinitions[param.Name].isChild === true && me._parameterDefinitions[param.Name].enableCascadingTree === true) {
                 $element = me._writeCascadingChildren(param, predefinedValue);
                 //if not want sub parameter show then add this class
                 $parent.addClass("fr-param-tree-hidden");
@@ -663,7 +604,7 @@ $(function () {
             var me = this;
             var $control;
 
-            if (me._isDropdownTree && me.enableCascadingTree && (param.isParent || param.isChild)) {
+            if (me._parameterDefinitions[param.Name].enableCascadingTree && (param.isParent || param.isChild)) {
                 var isTopParent = param.isParent === true && param.isChild !== true;
                 //Revert cascading tree status: display text, backend value, tree UI
                 me._setTreeItemStatus(param, defaultValue, isTopParent);
@@ -1320,7 +1261,7 @@ $(function () {
             //for dropdown list or dropdown with checkbox
             if (!!param.ValidValues) {
                 var predefinedValue = me._getPredefinedValue(param);
-                var hasChild = !!me._dependencyList[param.Name];
+                var hasChild = me._dependencyList[param.Name].length > 0;
                 var length = param.ValidValues.length;
 
                 $list = new $("<ul />");
@@ -2462,12 +2403,13 @@ $(function () {
             var me = this;
 
             //clean cached data
-            me._parameterDefinitions = null;
-            me._dependencyList = null;
-            me._isDropdownTree = true;
-            $.each(parametersList, function (index, param) {
-                me._parameterDefinitions = me._parameterDefinitions || {};
+            me._parameterDefinitions = {};
+            me._dependencyList = [];           
+            $.each(parametersList, function (index, param) {                
                 me._paramValidation = me._paramValidation || {};
+                if (!me._dependencyList[param.Name]) {
+                   me._dependencyList[param.Name] = [];
+                }
 
                 me._parameterDefinitions[param.Name] = param;
 
@@ -2475,33 +2417,46 @@ $(function () {
                     me._paramValidation[param.Name] = [];
                 }
 
+                //Determin and set if parameter can be a tree control based on RDL Extension and settings
+                if (me.enableCascadingTree === false)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = false;
+                else
+                    me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+                if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === false)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = false;
+                else if (me.options.RDLExt && me.options.RDLExt[param.Name] && me.options.RDLExt[param.Name].enableCascadingTree === true)
+                    me._parameterDefinitions[param.Name].enableCascadingTree = true;
+
+
                 if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                     /*
                        For cascading tree component, only support 1 to 1 relationship
                        for 1-many, many-1, many-many cases show them in standard mode
                     */
-                    if (me._isDropdownTree && param.Dependencies.length > 1) {
-                        me._isDropdownTree = false;
+
+                    if (param.Dependencies.length !== 1) {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
                     me._dependencyList = me._dependencyList || {};
 
                     me._parameterDefinitions[param.Name].isChild = true;
 
-                    if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
-                        me._isDropdownTree = false;
+                    if (me._hasValidValues(me._parameterDefinitions[param.Name]) === false) {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
 
                     //handle the hidden cascading parameter case, but I think it should not never happen.
-                    if (me._isDropdownTree && param.Prompt === "") {
-                        me._isDropdownTree = false;
+                    if (param.Prompt === "") {
+                        me._parameterDefinitions[param.Name].enableCascadingTree = false;
                     }
 
                     $.each(param.Dependencies, function (index, dependence) {
                         me._parameterDefinitions[dependence].isParent = true;
                         //now we only support cascading tree to dropdown type, if either parent or children don't have validvalues
                         //then we don't apply tree to the element
-                        if (me._isDropdownTree && me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
-                            me._isDropdownTree = false;
+                        if (me._hasValidValues(me._parameterDefinitions[dependence]) === false) {
+                            me._parameterDefinitions[param.Name].enableCascadingTree = false;
                         }
 
                         //Add dependency relationship, format: _dependencyList: { parent1: [childname1, childname2], ... }
@@ -2513,11 +2468,44 @@ $(function () {
                             me._dependencyList[dependence].push(param.Name);
 
                             if (me._dependencyList[dependence].length > 1) {
-                                me._isDropdownTree = false;
+                                me._parameterDefinitions[dependence].enableCascadingTree = false;
                             }
                         }
                     });
                 }
+            });
+
+
+            //check for all dependencies in the tree, if any are false then all are false
+            var checkTree = function (paramName,direction){
+                var retval = true;
+
+                if (me._parameterDefinitions[paramName].enableCascadingTree === false){
+                    retval = false;
+                }
+                
+                if (retval === true && direction === "down") {
+                    if (me._dependencyList[paramName]) {
+                        for (var j = 0; j < me._dependencyList[paramName].length; j++) {
+                            retval = checkTree(me._dependencyList[paramName][j], direction)
+                            if (retval === false)
+                                break;
+                        }
+                    }
+               } 
+                if (retval === true && direction === "up") {
+                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length;i++){
+                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction)
+                        if (retval === false)
+                            break;
+                    }
+                }
+                return retval;
+            }
+            
+            $.each(me._parameterDefinitions, function (index, param) {
+                if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "up");
+                if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "down");
             });
         },
         //Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied        

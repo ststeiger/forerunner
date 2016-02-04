@@ -21,6 +21,7 @@
  * @namespace
  */
 var forerunner = forerunner || {};
+var moment = moment || {};
 
 /**
  * Contains the SQL Server Report data
@@ -2874,8 +2875,8 @@ $(function () {
         getMomentDateFormat: function (locData) {
             var format = this.getDateFormat().toUpperCase(),
                            formatSimple = format.replace("DD", "D").replace("MM", "M");
-            formatlongDate = format.replace("YY", "YYYY");
-            formatSimplelongDate = formatSimple.replace("YY", "YYYY");
+            var formatlongDate = format.replace("YY", "YYYY");
+            var formatSimplelongDate = formatSimple.replace("YY", "YYYY");
 
             return [format, formatSimple, formatlongDate, formatSimplelongDate];
         },

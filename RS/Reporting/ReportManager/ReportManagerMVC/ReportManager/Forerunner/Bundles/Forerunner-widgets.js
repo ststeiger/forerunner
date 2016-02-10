@@ -5473,10 +5473,6 @@ $(function () {
 
             me.bindEvents();
 
-            //Cannot get zoom event so fake it
-            setInterval(function () {
-                me.toggleZoom();
-            }, 100);
             return this;
         },
 
@@ -19364,11 +19360,10 @@ $(function () {
 
             var $toolbar = me.getToolbar();
             if (widgets.hasWidget($toolbar, widgets.toolbar)) {
-                helper.delay(me, function () {
-                // This needs to be delayed for the dashboard case where the size of the report
-                // will dictate the size of the report area and therefore the size of the toolbar
-                me.getToolbar().toolbar("windowResize");
-                }, 100, "_toolbarDelayId");
+                //Make sure the toolbar has the right buttons always
+                setInterval(function () {
+                    me.getToolbar().toolbar("windowResize");
+                }, 100);
             }
         },
         /**

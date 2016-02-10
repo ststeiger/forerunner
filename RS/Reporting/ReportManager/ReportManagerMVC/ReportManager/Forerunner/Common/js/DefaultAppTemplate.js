@@ -147,10 +147,6 @@ $(function () {
 
             me.bindEvents();
 
-            //Cannot get zoom event so fake it
-            setInterval(function () {
-                me.toggleZoom();
-            }, 100);
             return this;
         },
 

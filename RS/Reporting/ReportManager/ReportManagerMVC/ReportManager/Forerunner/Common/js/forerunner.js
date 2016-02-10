@@ -2462,7 +2462,8 @@ $(function () {
         zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
-            //alert(ratio);
+           
+          //alert(ratio);
             return ratio;
         },
         /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */

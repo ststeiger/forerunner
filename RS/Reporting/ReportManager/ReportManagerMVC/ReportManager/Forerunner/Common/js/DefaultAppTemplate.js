@@ -148,11 +148,12 @@ $(function () {
                 }
 
                 me.bindEvents();
-
-                //Cannot get zoom event so fake it
-                setInterval(function () {
-                    me.toggleZoom();
-                }, 100);
+                        
+            //Cannot get zoom event so fake it
+            //Zoom level is not working so just leave toolbar
+            //    setInterval(function () {
+              //      me.toggleZoom();
+              //  }, 100);
                 
             
             return this;

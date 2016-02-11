@@ -113,7 +113,7 @@ $(function () {
             selectorClass: "fr-toolbar-prev-button",
             imageClass: "fr-icons24x24-prev",
             tooltip: function () { return  locData.getLocData().toolbar.previousPage; },
-            visibilityOrder: 4,
+            visibilityOrder: 3,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -189,7 +189,7 @@ $(function () {
             selectorClass: "fr-toolbar-next-button",
             imageClass: "fr-icons24x24-next",
             tooltip:  function () { return locData.getLocData().toolbar.next; },
-            visibilityOrder: 4,
+            visibilityOrder: 3,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);

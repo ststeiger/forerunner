@@ -295,6 +295,10 @@
       <Name>Video Test.rdl</Name>
       <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Mutiple Parameter Null Integer.rdl</Name>
+      <FullPath>Mutiple Parameter Null Integer.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

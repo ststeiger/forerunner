@@ -15658,7 +15658,6 @@ $(function () {
             var $li = me.element.find(".fr-param-tree-loading");
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
             if ($li.length !==0) {
-                var $li = me.element.find(".fr-param-tree-loading");
                 me._dataPreprocess(data.ParametersList);
                 var level = $li.parent("ul").attr("level");
 
@@ -18016,31 +18015,31 @@ $(function () {
 
 
             //check for all dependencies in the tree, if any are false then all are false
-            var checkTree = function (paramName,direction){
+            var checkTree = function (paramName, direction) {
                 var retval = true;
 
-                if (me._parameterDefinitions[paramName].enableCascadingTree === false){
+                if (me._parameterDefinitions[paramName].enableCascadingTree === false) {
                     retval = false;
                 }
-                
+
                 if (retval === true && direction === "down") {
                     if (me._dependencyList[paramName]) {
                         for (var j = 0; j < me._dependencyList[paramName].length; j++) {
-                            retval = checkTree(me._dependencyList[paramName][j], direction)
+                            retval = checkTree(me._dependencyList[paramName][j], direction);
                             if (retval === false)
                                 break;
                         }
                     }
-               } 
+                }
                 if (retval === true && direction === "up") {
-                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length;i++){
-                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction)
+                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length; i++) {
+                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction);
                         if (retval === false)
                             break;
                     }
                 }
                 return retval;
-            }
+            };
             
             $.each(me._parameterDefinitions, function (index, param) {
                 if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "up");

@@ -13321,8 +13321,9 @@ $(function () {
 
             //
 
+            var val = null;
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
                 
                 if (textExt && textExt.localize)
                     val = forerunner.localize.getLocalizedValue(val, textExt.localize);
@@ -14449,8 +14450,6 @@ $(function () {
             if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex] && RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                 HasFixedRows = true;
 
-
-
             //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
             if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidth && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
                 if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
@@ -14466,18 +14465,30 @@ $(function () {
 
                 //Handle missing cells
                 $.each(Rowspans, function (rsIndex, RSObj) {
-                    Rowspans[rsIndex]--;
+                    // No not get NaN
+                    if (Rowspans[rsIndex] !== undefined)
+                        Rowspans[rsIndex]--;
                 });
 
                 $.each(Obj.Cells, function (BRIndex, BRObj) {
-
 
                     //Mark as header
                     if (respCols.ColHeaderRow === Obj.RowIndex)
                         $Row.addClass("fr-render-colHeader");
 
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
+
+                    //Add missing Cells if any
+                    for (var ci = LastColIndex + 1; ci < BRObj.ColumnIndex ; ci++) {
+                        $Row.append($("<TD/>").html("&nbsp;"));
+                    }
+                    LastColIndex = BRObj.ColumnIndex;
+                    //Handle Col spans, last col is after the span
+                    if (BRObj.ColSpan)
+                        LastColIndex += BRObj.ColSpan - 1;
+
                     $Drilldown = undefined;
+
                     if (respCols.Columns[BRObj.ColumnIndex].show) {
                         if (respCols.isResp && respCols.ColHeaderRow !== Obj.RowIndex && BRObj.RowSpan === undefined && $ExtRow && $ExtRow.HasDrill !== true && BRObj.Cell) {
                             //If responsive table add the show hide image and hook up
@@ -14565,10 +14576,14 @@ $(function () {
                     State.CellCount += 1;
 
                 }
-                else if (Obj.Type === "RowHeader") {
+                else if (Obj.Type === "RowHeader" ) {
                     //Write empty cell
-                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined)
-                        $Row.append($("<TD/>").html("&nbsp;"));
+                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined) {
+                        for (var ci = LastColIndex + 1; ci <= Obj.ColumnIndex ; ci++) {
+                            $Row.append($("<TD/>").html("&nbsp;"));
+                        }                        
+                        LastColIndex = Obj.ColumnIndex;
+                    }
                 }
 
             }
@@ -15658,7 +15673,6 @@ $(function () {
             var $li = me.element.find(".fr-param-tree-loading");
             //only refresh tree view if it's a cascading refresh and there is a dropdown tree
             if ($li.length !==0) {
-                var $li = me.element.find(".fr-param-tree-loading");
                 me._dataPreprocess(data.ParametersList);
                 var level = $li.parent("ul").attr("level");
 
@@ -18016,31 +18030,31 @@ $(function () {
 
 
             //check for all dependencies in the tree, if any are false then all are false
-            var checkTree = function (paramName,direction){
+            var checkTree = function (paramName, direction) {
                 var retval = true;
 
-                if (me._parameterDefinitions[paramName].enableCascadingTree === false){
+                if (me._parameterDefinitions[paramName].enableCascadingTree === false) {
                     retval = false;
                 }
-                
+
                 if (retval === true && direction === "down") {
                     if (me._dependencyList[paramName]) {
                         for (var j = 0; j < me._dependencyList[paramName].length; j++) {
-                            retval = checkTree(me._dependencyList[paramName][j], direction)
+                            retval = checkTree(me._dependencyList[paramName][j], direction);
                             if (retval === false)
                                 break;
                         }
                     }
-               } 
+                }
                 if (retval === true && direction === "up") {
-                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length;i++){
-                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction)
+                    for (var i = 0; i < me._parameterDefinitions[paramName].Dependencies.length; i++) {
+                        retval = checkTree(me._parameterDefinitions[paramName].Dependencies[i], direction);
                         if (retval === false)
                             break;
                     }
                 }
                 return retval;
-            }
+            };
             
             $.each(me._parameterDefinitions, function (index, param) {
                 if (param.enableCascadingTree) param.enableCascadingTree = checkTree(param.Name, "up");

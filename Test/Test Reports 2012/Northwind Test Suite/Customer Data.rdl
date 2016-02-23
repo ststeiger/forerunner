@@ -254,6 +254,13 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Address</rd:DefaultName>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>="http://maps.google.com/maps?q=" + Fields!Address.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -286,6 +293,13 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>Phone</rd:DefaultName>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>="tel:" + Fields!Phone.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>

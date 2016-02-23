@@ -71,14 +71,14 @@
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardViewer.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/DashboardEditor.js"></script>
   <script type="text/javascript" src="~/Forerunner/Dashboard/js/ReportProperties.js"></script>
-  
+   
   <script>
     // forerunner is the top level global object
     var forerunner = forerunner || {};
 
     $(document).ready(function () {
     
-        forerunner.config.initialize(function(){
+        //forerunner.config.initialize(function(){
                 //explorer = $("body").reportExplorerEZ({
                 //    explorerSettings: settings,
                 //    dbConfig: config,
@@ -113,13 +113,16 @@
                     }]
                 }
 
-                var $reportViewerEZ = $('body').reportViewerEZ({ });
+                var $reportViewerEZ = $('body').reportViewerEZ({
+                    isReportManager: false,
+                    isFullScreen: false
+                });
                 var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
                 
                 $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
-                var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
-                $toolbar.hide();
-                $toolbar.show();
+                //var $toolbar = $reportViewerEZ.reportViewerEZ("getToolbar");
+                //$toolbar.hide();
+                //$toolbar.show();
 
                 //var parameterModel = $({}).parameterModel({ userName: "Forerunner\\testaccount" });
                 //parameterModel.parameterModel("getAllParameterSets", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008",  function (params) {
@@ -137,7 +140,7 @@
 
 
            
-        });           
+        //});           
     });
 
 

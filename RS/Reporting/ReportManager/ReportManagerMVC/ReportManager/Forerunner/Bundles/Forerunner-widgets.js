@@ -14530,10 +14530,11 @@ $(function () {
                 
                 if (Obj.Cell) {
 
-                    if (Obj.Type === "RowHeader") {
-                        //Write empty cell
-                        if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined)
+                    //Write empty cells
+                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined) {
+                        for (var ci = LastColIndex + 1; ci < Obj.ColumnIndex ; ci++) {
                             $Row.append($("<TD/>").html("&nbsp;"));
+                        }
                     }
                     LastColIndex = Obj.ColumnIndex;
 

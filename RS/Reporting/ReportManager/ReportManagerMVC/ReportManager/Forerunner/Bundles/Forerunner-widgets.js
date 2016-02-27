@@ -13615,7 +13615,10 @@ $(function () {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
 
-                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                //On chrome need to wait until image is loaded
+                window.setTimeout(function () {
+                    $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                }, 200);
             }
 
             //Remove the blue border on ie 8,9,10
@@ -14580,7 +14583,7 @@ $(function () {
                 else if (Obj.Type === "RowHeader" ) {
                     //Write empty cell
                     if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined) {
-                        for (var ci = LastColIndex + 1; ci <= Obj.ColumnIndex ; ci++) {
+                        for (var ci2 = LastColIndex + 1; ci2 <= Obj.ColumnIndex ; ci2++) {
                             $Row.append($("<TD/>").html("&nbsp;"));
                         }                        
                         LastColIndex = Obj.ColumnIndex;

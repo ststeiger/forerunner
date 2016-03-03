@@ -13615,7 +13615,10 @@ $(function () {
                 var strokeColor = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderColor", "ff0000");
                 var strokeWidth = forerunner.config.getCustomSettingsValue("ImageAreaHighlighBorderWidth", "1");
 
-                $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                //On chrome need to give time on cached image
+                window.setTimeout(function () {
+                    $(imageContainer).FRmaphilight({ strokeColor: strokeColor, strokeWidth: strokeWidth });
+                }, 200);
             }
 
             //Remove the blue border on ie 8,9,10
@@ -14478,10 +14481,14 @@ $(function () {
 
                     CellWidth = RIContext.CurrObj.ColumnWidths.Columns[BRObj.ColumnIndex].Width;
 
-                    //Add missing Cells if any
-                    for (var ci = LastColIndex + 1; ci < BRObj.ColumnIndex ; ci++) {
-                        $Row.append($("<TD/>").html("&nbsp;"));
+
+                    //Remove Extra Headers cells that overlap with Body
+                    // For some reason SSRS will have headers and body for the same cell
+                    //If there was an empty RowHeader for same cell, remove and add body row
+                    for (var lci = LastColIndex ; lci >= BRObj.ColumnIndex ; lci--) {
+                        $('td:last-child', $Row).remove();
                     }
+
                     LastColIndex = BRObj.ColumnIndex;
                     //Handle Col spans, last col is after the span
                     if (BRObj.ColSpan)
@@ -14527,17 +14534,17 @@ $(function () {
                 State.CellCount += Obj.Cells.length;
             }
             else {
+                var ci2 = LastColIndex;
                 
+
                 if (Obj.Cell) {
-
-                    //Write empty cells
-                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined) {
-                        for (var ci = LastColIndex + 1; ci < Obj.ColumnIndex ; ci++) {
-                            $Row.append($("<TD/>").html("&nbsp;"));
-                        }
+                    
+                    //Handel missing cells
+                    for ( ci2 = LastColIndex + 1; ci2 < Obj.ColumnIndex && Rowspans[ci2] === undefined  ; ci2++) {
+                        $Row.append($("<TD/>").html("&nbsp;"));
                     }
-                    LastColIndex = Obj.ColumnIndex;
 
+                    LastColIndex = Obj.ColumnIndex;
                     //Handle Col spans, last col is after the span
                     if (Obj.ColSpan)
                         LastColIndex += Obj.ColSpan - 1;
@@ -14577,14 +14584,30 @@ $(function () {
                     State.CellCount += 1;
 
                 }
-                else if (Obj.Type === "RowHeader" ) {
-                    //Write empty cell
-                    if (LastColIndex !== Obj.ColumnIndex - 1 && Obj.ColumnIndex > 0 && Rowspans[Obj.ColumnIndex - 1] === undefined) {
-                        for (var ci = LastColIndex + 1; ci <= Obj.ColumnIndex ; ci++) {
-                            $Row.append($("<TD/>").html("&nbsp;"));
-                        }                        
-                        LastColIndex = Obj.ColumnIndex;
+                else if (Obj.Type !== "ColumnHeader") {
+                    
+                    //add empty cells that where missed
+                    for ( ci2 = LastColIndex + 1; ci2 < Obj.ColumnIndex && Rowspans[ci2] === undefined  ; ci2++) {
+                        $Row.append($("<TD/>").html("&nbsp;"));
                     }
+                    LastColIndex = Obj.ColumnIndex;                    
+                    if (Obj.ColSpan)
+                        LastColIndex += Obj.ColSpan - 1;
+
+                    //Dont write cell if there is a row span unless this is the first row
+                    if (Rowspans[Obj.ColumnIndex] === undefined || Obj.RowSpan > 0 || Obj.ColSpan >0) {
+                        //Write empty cell           
+                        var $td = $("<TD/>").html("&nbsp;");
+                        //Add row span since not added in cell
+                        if (Obj.RowSpan > 0) {
+                            $td.attr("rowspan", Obj.RowSpan);
+                        }
+                        if (Obj.ColSpan > 0) {
+                            $td.attr("colspan", Obj.ColSpan);
+                        }
+                        $Row.append($td);
+                    }
+                   
                 }
 
             }

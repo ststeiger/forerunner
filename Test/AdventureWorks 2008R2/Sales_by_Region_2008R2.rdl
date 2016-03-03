@@ -2335,6 +2335,10 @@ GTRAzczMzMyUV8Dx/tNozSg0QGlmHNlLllfAsmjfgaY0NECvJeSDnphXwLY9MDZjPzRAwsBz7+GaV8CF
             <Height>1.11334in</Height>
             <Width>4.67708in</Width>
             <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+              <ToggleItem>tbScenarioText</ToggleItem>
+            </Visibility>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2882,7 +2886,7 @@ GTRAzczMzMyUV8Dx/tNozSg0QGlmHNlLllfAsmjfgaY0NECvJeSDnphXwLY9MDZjPzRAwsBz7+GaV8CF
         <Height>11.24876in</Height>
         <Style />
       </Body>
-      <Width>10.57293in</Width>
+      <Width>10.57294in</Width>
       <Page>
         <PageHeader>
           <Height>0.55208in</Height>

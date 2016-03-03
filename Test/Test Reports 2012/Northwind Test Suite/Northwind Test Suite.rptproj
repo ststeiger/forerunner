@@ -135,6 +135,10 @@
       <FullPath>Justify.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Late Calls.rdl</Name>
+      <FullPath>Late Calls.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Layout.rdl</Name>
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
@@ -166,6 +170,10 @@
     <ProjectItem>
       <Name>Multiple Cascade Parameters.rdl</Name>
       <FullPath>Multiple Cascade Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Mutiple Parameter Null Integer.rdl</Name>
+      <FullPath>Mutiple Parameter Null Integer.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Mutiple Parameter.rdl</Name>
@@ -296,8 +304,8 @@
       <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Mutiple Parameter Null Integer.rdl</Name>
-      <FullPath>Mutiple Parameter Null Integer.rdl</FullPath>
+      <Name>City of Colorado Springs AutoExempt.rdl</Name>
+      <FullPath>City of Colorado Springs AutoExempt.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

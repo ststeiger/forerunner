@@ -1306,7 +1306,7 @@ $(function () {
         _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault, level) {
             var me = this;
             var $li = new $("<li/>");
-            $li.addClass("fr-param-tree-item").attr("value", value.Value);
+            $li.addClass("fr-param-tree-item").attr("data-value", value.Value);
 
             if (isLast) {
                 $li.addClass("fr-param-tree-item-last");
@@ -1390,7 +1390,7 @@ $(function () {
                     if (hasChild) {
                         siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-open");
                         $.each(siblings, function (index, sibling) {
-                            if ($li.attr("value") === $(sibling).attr("value")) {
+                            if ($li.attr("data-value") === $(sibling).attr("data-value")) {
                                 return true;
                             }
 
@@ -1400,7 +1400,7 @@ $(function () {
                     else {
                         siblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-selected");
                         $.each(siblings, function (index, sibling) {
-                            if ($li.attr("value") === $(sibling).attr("value")) {
+                            if ($li.attr("data-value") === $(sibling).attr("data-value")) {
                                 return true;
                             }
 
@@ -1530,10 +1530,10 @@ $(function () {
             var $param = me.element.find(".fr-paramname-" + parentName);
             //set single selected item as backend value to load data dynamically
             if ($ul.attr("allowmultiple") === "true") {
-                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("value") + "\"]");
+                $param.filter(".fr-param").val("#").attr("backendValue", "[\"" + $item.attr("data-value") + "\"]");
             }
             else {
-                $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("value"));
+                $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("data-value"));
             }
 
             if ($ul.attr("parent")) {
@@ -1566,7 +1566,7 @@ $(function () {
                             temp = [];
 
                             $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
-                                temp.push($(li).attr("value"));
+                                temp.push($(li).attr("data-value"));
                             });
 
                             if (temp.length) {
@@ -1575,7 +1575,7 @@ $(function () {
                         }
                         else {
                             var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
-                            temp = $selected.attr("value");
+                            temp = $selected.attr("data-value");
                             if (temp) {
                                 backendValue = temp;
                             }
@@ -1682,12 +1682,12 @@ $(function () {
             var $li = $parent.children("li");
             $.each($li, function (index, item) {
                 if (param.MultiValue) {
-                    if (me._contains(defaultParam, $(item).attr("value"))) {
+                    if (me._contains(defaultParam, $(item).attr("data-value"))) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
                 else {
-                    if ($(item).attr("value") === defaultParam) {
+                    if ($(item).attr("data-value") === defaultParam) {
                         $(item).children(".fr-param-tree-anchor").trigger("click");
                     }
                 }
@@ -1811,7 +1811,7 @@ $(function () {
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
-            $dropDownContainer.attr("value", param.Name);
+            $dropDownContainer.attr("data-value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
             if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
@@ -1839,7 +1839,7 @@ $(function () {
 
                 var $span = new $("<Span />");
                 var $checkbox = me._createInput(param, "checkbox", false, ["fr-param-dropdown-checkbox", "fr-paramname-" + param.Name + "-dropdown-cb"]);
-                $checkbox.attr("value", value);
+                $checkbox.attr("data-value", value);
 
                 if (isSelectAllItem) {
                     $selectAllCheckbox = $checkbox;
@@ -1888,7 +1888,7 @@ $(function () {
 
                 var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
-                $label.attr("value", value).text(key);
+                $label.attr("data-value", value).text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);
@@ -1942,7 +1942,7 @@ $(function () {
             });
 
             var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-param-not-close", "fr-paramname-" + param.Name + "-dropdown-container"]);
-            $dropDownContainer.attr("value", param.Name);
+            $dropDownContainer.attr("data-value", param.Name);
 
             var $textarea = new $("<textarea class='fr-param-dropdown-textarea fr-paramname-" + param.Name + "-dropdown-textArea' />");
 
@@ -2058,7 +2058,7 @@ $(function () {
         _closeAllDropdown: function () {
             var me = this;
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
-                me._closeDropDownPanel({ Name: $(param).attr("value") });
+                me._closeDropDownPanel({ Name: $(param).attr("data-value") });
             });
             //close auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();

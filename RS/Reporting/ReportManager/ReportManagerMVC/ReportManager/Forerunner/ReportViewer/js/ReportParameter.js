@@ -1913,7 +1913,7 @@ $(function () {
                 }
 
                 $checkbox.on("click", function () {
-                    if (this.value === "Select All") {
+                    if ($(this).attr("data-value") === "Select All") {
                         if (this.checked === true) {
                             $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
                                 this.checked = true;
@@ -1927,10 +1927,10 @@ $(function () {
                     }
                     else {
                         var $parents = $(this).parents("table");
-                        var $selectAll = $parents.find("input[value='Select All']");
+                        var $selectAll = $parents.find("input[data-value='Select All']");
                         if (this.checked === true) {
                             // Being checked so we need to test if the select all needs to be checked
-                            var $notSelectAll = $parents.find("input[value!='Select All']");
+                            var $notSelectAll = $parents.find("input[data-value!='Select All']");
                             var isSelectAll = true;
                             $notSelectAll.each(function (index, element) {
                                 if (element.checked === false) {
@@ -2052,9 +2052,9 @@ $(function () {
                 var hiddenValue = [];
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
-                    if (this.checked && this.value !== "Select All") {
+                    if (this.checked && $(this).attr("data-value") !== "Select All") {
                         showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
-                        hiddenValue.push(this.value);
+                        hiddenValue.push($(this).attr("data-value"));
                     }
                 });
 

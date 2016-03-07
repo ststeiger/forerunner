@@ -295,6 +295,10 @@
       <Name>Video Test.rdl</Name>
       <FullPath>Video Test.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Two Cascading params.rdl</Name>
+      <FullPath>Two Cascading params.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

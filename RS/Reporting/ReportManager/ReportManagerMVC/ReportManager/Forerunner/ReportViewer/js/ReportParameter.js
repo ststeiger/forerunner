@@ -1602,7 +1602,10 @@ $(function () {
                 }
 
                 //Do dependent params, trees can only have one child
-                param = me._parameterDefinitions[me._dependencyList[param.Name][0]];
+                if (me._dependencyList[param.Name])
+                    param = me._parameterDefinitions[me._dependencyList[param.Name][0]];
+                else
+                    param = null;
                     
             }
 

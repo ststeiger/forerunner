@@ -1319,7 +1319,7 @@ $(function () {
 
             var row = $(element).parent().parent().parent();
 
-            //Handle image in talix
+            //Handle image in tablix
             if (row.is("td") === true) {
                 row = row.parent();
             }

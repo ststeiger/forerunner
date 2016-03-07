@@ -357,7 +357,7 @@ FROM            Orders INNER JOIN
                          [Order Details] ON Orders.OrderID = [Order Details].OrderID INNER JOIN
                          EmployeeTerritories ON Orders.EmployeeID = EmployeeTerritories.EmployeeID INNER JOIN
                          Employees ON Orders.EmployeeID = Employees.EmployeeID AND EmployeeTerritories.EmployeeID = Employees.EmployeeID
-WHERE        ([Order Details].ProductID = @ProductID) AND (EmployeeTerritories.TerritoryID = @TerritoryID)</CommandText>
+WHERE        ([Order Details].ProductID IN (@ProductID)) AND (EmployeeTerritories.TerritoryID = @TerritoryID)</CommandText>
       </Query>
       <Fields>
         <Field Name="OrderID">
@@ -608,7 +608,6 @@ WHERE        (RegionID = @RegionID)</CommandText>
           <LabelField>TerritoryDescription</LabelField>
         </DataSetReference>
       </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

@@ -2035,7 +2035,7 @@ $(function () {
                     // For some reason SSRS will have headers and body for the same cell
                     //If there was an empty RowHeader for same cell, remove and add body row
                     for (var lci = LastColIndex ; lci >= BRObj.ColumnIndex ; lci--) {
-                        $('td:last-child', $Row).remove();
+                        $("td:last-child", $Row).remove();
                     }
 
                     LastColIndex = BRObj.ColumnIndex;

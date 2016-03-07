@@ -1998,7 +1998,7 @@ $(function () {
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && $(this).attr("data-value")  !== "Select All") {
                         showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
-                        hiddenValue.push(this.value);
+                        hiddenValue.push($(this).attr("data-value"));
                     }
                 });
 
